@@ -10,20 +10,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
-		<groupId>org.wso2.carbon</groupId>
-		<artifactId>carbon-products</artifactId>
-		<version>4.2.0</version>
-		<relativePath>../../pom.xml</relativePath>
-	</parent>
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wso2.identity</groupId>
 	<artifactId>identity-server-parent</artifactId>
 	<packaging>pom</packaging>
 	<description>WSO2 Identity Server</description>
-	<version>5.0.0</version>
-	<name>WSO2 Identity Server</name>
+	<version>5.1.0-SNAPSHOT</version>
+	<name>WSO2 Identity Server - Parent</name>
 	<url>http://wso2.org/projects/identity</url>
 
 	<modules>
@@ -45,20 +38,27 @@
 
 	<organization>
 		<name>WSO2</name>
-		<url>http://www.wso2.org</url>
+		<url>http://wso2.com</url>
 	</organization>
 
 	<issueManagement>
 		<system>JIRA</system>
-		<url>http://www.wso2.org/jira/browse/IDENTITY</url>
+		<url>https://wso2.org/jira/browse/IDENTITY</url>
 	</issueManagement>
 	<mailingLists>
-		<mailingList>
+		<!--mailingList>
 			<name>Identity Server Developers</name>
 			<subscribe>identity-dev-subscribe@wso2.org</subscribe>
 			<unsubscribe>identity-dev-unsubscribe@wso2.org</unsubscribe>
 			<post>identity-dev@wso2.org</post>
 			<archive>http://wso2.org/mailarchive/identity-dev/</archive>
+		</mailingList-->
+		<mailingList>
+			<name>WSO2 Carbon Developers' List</name>
+			<post>mailto:dev@wso2.org</post>
+			<archive>http://www.wso2.org/mailarchive/dev/</archive>
+			<subscribe>mailto:dev-request@wso2.org?subject=subscribe</subscribe>
+			<unsubscribe>mailto:dev-request@wso2.org?subject=unsubscribe</unsubscribe>
 		</mailingList>
 	</mailingLists>
 
@@ -188,13 +188,13 @@
 		<developer>
                         <name>Prasad Tissera</name>
                         <id>prasad</id>
-                        <email>prasad AT wso2.com</email>
+                        <email>prasadt AT wso2.com</email>
                         <organization>WSO2</organization>
                 </developer>
 		<developer>
                         <name>Pulasti Mahawithana</name>
                         <id>pulasti</id>
-                        <email>pulasti AT wso2.com</email>
+                        <email>pulastim AT wso2.com</email>
                         <organization>WSO2</organization>
                 </developer>
 		<developer>
@@ -207,9 +207,7 @@
  
 	<scm>
 		<connection>scm:svn:https://wso2.org/repos/wso2/trunk/solutions/identity</connection>
-		<developerConnection>
-            scm:svn:https://wso2.org/repos/wso2/trunk/solutions/identity
-        </developerConnection>
+		<developerConnection>scm:svn:https://wso2.org/repos/wso2/trunk/solutions/identity</developerConnection>
 		<url>https://wso2.org/repos/wso2/trunk/solutions/identity</url>
 	</scm>
 
@@ -225,78 +223,103 @@
 				<checksumPolicy>ignore</checksumPolicy>
 			</releases>
 		</repository>
-		<!--moved to nexus <repository> <releases> <enabled>false</enabled> <updatePolicy>always</updatePolicy> 
-			<checksumPolicy>warn</checksumPolicy> </releases> <snapshots> <enabled>true</enabled> 
-			<updatePolicy>never</updatePolicy> <checksumPolicy>fail</checksumPolicy> 
-			</snapshots> <id>apache-snapshots</id> <name>Apache Maven2 SNAPSHOTS</name> 
-			<url>http://people.apache.org/repo/m2-snapshot-repository</url> <layout>default</layout> 
-			</repository> <repository> <releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> 
-			<checksumPolicy>warn</checksumPolicy> </releases> <snapshots> <enabled>true</enabled> 
-			<updatePolicy>never</updatePolicy> <checksumPolicy>warn</checksumPolicy> 
-			</snapshots> <id>apache-ws-snapshots2</id> <name>Apache ws.zones - 2</name> 
-			<url>http://ws.zones.apache.org/repository2</url> </repository> <repository> 
-			<releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> <checksumPolicy>warn</checksumPolicy> 
-			</releases> <snapshots> <enabled>true</enabled> <updatePolicy>never</updatePolicy> 
-			<checksumPolicy>warn</checksumPolicy> </snapshots> <id>wso2-maven2-repo</id> 
-			<name>wso2.org maven2 repo</name> <url>http://dist.wso2.org/maven2</url> 
-			</repository> <repository> <releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> 
-			<checksumPolicy>warn</checksumPolicy> </releases> <snapshots> <enabled>true</enabled> 
-			<updatePolicy>never</updatePolicy> <checksumPolicy>warn</checksumPolicy> 
-			</snapshots> <id>jboss</id> <name>JBoss Repo</name> <url>http://repository.jboss.org/maven2</url> 
-			</repository> <repository> <id>wso2-maven2-snapshot-repository</id> <name>WSO2 
-			Maven2 SNAPSHOTS</name> <url>http://dist.wso2.org/snapshots/maven2</url> 
-			<snapshots> <enabled>true</enabled> <updatePolicy>always</updatePolicy> <checksumPolicy>ignore</checksumPolicy> 
-			</snapshots> <releases> <enabled>false</enabled> </releases> </repository> -->
+
+		<repository>
+			<id>wso2.releases</id>
+			<name>WSO2 internal Repository</name>
+			<url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</repository>
+
+		<repository>
+			<id>wso2.snapshots</id>
+			<name>WSO2 Snapshot Repository</name>
+			<url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
 	</repositories>
+
 
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>snapshot-apache</id>
-			<name>Apache Snapshot repository</name>
-			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+			<id>wso2.releases</id>
+			<name>WSO2 internal Repository</name>
+			<url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>wso2.snapshots</id>
+			<name>Apache Snapshot Repository</name>
+			<url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
 			</snapshots>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
 		</pluginRepository>
-
 		<pluginRepository>
-			<id>snapshot</id>
-			<name>Snapshot repository</name>
-			<url>http://snapshots.maven.codehaus.org/maven2</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>wso2-nexus</id>
+			<name>WSO2 internal Repository</name>
+			<url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
 			<releases>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
 			</releases>
 		</pluginRepository>
-
-		<pluginRepository>
-			<id>wso2-maven2-repository</id>
-			<url>http://dist.wso2.org/maven2</url>
-		</pluginRepository>
-
-		<!--<pluginRepository> <id>tlc</id> <name>TLC Repository</name> <url>http://commons.ucalgary.ca/pub/m2</url> 
-			</pluginRepository> -->
-
 	</pluginRepositories>
 
 	<build>
-		<plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.6</version>
+			</extension>
+		</extensions>
 
+		<plugins>
+			<plugin>
+				<groupId>org.jvnet.maven.incrementalbuild</groupId>
+				<artifactId>incremental-build-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>incremental-build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0</version>
+				<version>3.1</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<encoding>UTF-8</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -308,6 +331,59 @@
 				<version>2.1</version>
 			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-scr-plugin</artifactId>
+					<version>1.7.2</version>
+					<executions>
+						<execution>
+							<id>generate-scr-scrdescriptor</id>
+							<goals>
+								<goal>scr</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
+					<extensions>true</extensions>
+					<configuration>
+						<obrRepository>NONE</obrRepository>
+						<!--<instructions>
+							<_include>-osgi.bnd</_include>
+						</instructions>-->
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<dependencyManagement>
@@ -497,14 +573,14 @@
 
 	<distributionManagement>
 		<repository>
-			<id>wso2-maven2-repository</id>
-			<name>WSO2 Maven2 Repository</name>
-			<url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+			<id>wso2.releases</id>
+			<name>WSO2 internal Repository</name>
+			<url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>wso2-maven2-snapshot-repository</id>
-			<name>WSO2 Maven2 Repository</name>
-			<url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+			<id>wso2.snapshots</id>
+			<name>WSO2 Snapshot Repository</name>
+			<url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
