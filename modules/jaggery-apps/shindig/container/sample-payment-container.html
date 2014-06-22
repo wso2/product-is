@@ -1,0 +1,128 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sample: Virtual Currency Payment</title>
+<!-- default container look and feel -->
+<link rel="stylesheet" href="gadgets.css">
+<style>
+  .gadgets-gadget-chrome {
+    width: 80%;
+    float: none;
+    margin: auto;
+  }
+  .gadgets-gadget {
+    width: 100%;
+  }
+  .desc {
+    color:#007F00;
+  }
+  .desc script {
+    color:#FF0000;
+  }
+</style>
+
+<script type="text/javascript" src="/gadgets/js/shindig-container:rpc:opensocial-payment.js?c=1&debug=1"></script>
+<script type="text/javascript">
+
+function output(message) {
+  document.getElementById("output").innerHTML += gadgets.util.escapeString(message) + "<br/>";
+};
+
+// The container domain.
+var containerHost = 'http://' + window.location.host;
+
+// NOTE: Set the gadget serverBase here to replace 'window.location.host' which is just for demo.
+// The shindig domain must be different from the container domain for security reason.
+var shindigHost = 'http://' + window.location.host;
+
+// The location of the demo app spec. It is located on container domain.
+var demoGadgetSpecs = [
+   containerHost + '/container/sample-payment.xml',
+];
+
+function renderGadgets() {
+  var demoGadgets = [];
+  var chromeIds = [];
+  for (var i = 0; i < demoGadgetSpecs.length; ++i) {
+    var gadget = shindig.container.createGadget({
+        specUrl: demoGadgetSpecs[i],
+        title: ("Sample Payment App - " + i)
+    });
+    gadget.setServerBase(shindigHost + '/gadgets/');
+    shindig.container.addGadget(gadget);
+    chromeIds.push('gadget-chrome-' + i);
+    demoGadgets.push(gadget);
+  }
+  shindig.container.layoutManager.setGadgetChromeIds(chromeIds);
+  for (var i = 0; i < demoGadgets.length; ++i) {
+    shindig.container.renderGadget(demoGadgets[i]);
+  }
+};
+
+
+</script>
+</head>
+<body onLoad="renderGadgets();">
+  <center>
+    <h2>OpenSocial Virtual Currency Proposal Revision #4 Demo</h2>
+
+    <h4>opensocial.requestPayment<br>opensocial.requestPaymentRecords</h4>
+    <div>For detail, please checkout <a href="http://docs.google.com/View?id=dhcrsqrj_0d86fkdfv" target=_blank>proposal doc</a>, 
+      <a href="http://groups.google.com/group/opensocial-and-gadgets-spec/browse_thread/thread/7341f1716e50f4d/8553e6aa696bd088?lnk=gst" target=_blank>discussion thread</a>, and 
+      <a href="http://code.google.com/p/opensocial-virtual-currency" target=_blank>code project</a>.
+    </div>
+    <p class="desc">
+      This page is a container page:<br>
+      <b><script>document.write(window.location.href);</script></b>
+    </p>
+    </center>
+  <div id="gadget-chrome-0" class="gadgets-gadget-chrome"></div>
+
+  <div id="output" style="clear: left;">
+  </div>
+
+  <!-- The counter panel -->
+  <style>
+    .payment-panel {
+      width:700px;
+      height:400px;
+      left:100px;
+      top:200px;
+      position:absolute;
+    }
+    .payment-panel iframe {
+      width:700px;
+      height:400px;
+    }
+  </style>
+  <!-- The payment processor panel, the processor page's domain should be the same as container domain -->
+  <div id="payment-processor" style="display:none;" class="payment-panel">
+    <iframe name="payment-processor-frame" frameborder=0 src="/container/payment-processor.html"></iframe>
+  </div>
+
+  <!-- The payment records processor panel, the processor page's domain should be the same as container domain -->
+  <div id="payment-records-processor" style="display:none;" class="payment-panel">
+    <iframe name="payment-processor-frame" frameborder=0 src="/container/payment-records-processor.html"></iframe>
+  </div>
+
+</body>
+</html>
+

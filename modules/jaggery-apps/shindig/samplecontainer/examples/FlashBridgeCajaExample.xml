@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="Flash Caja Demo"
+      height="200" 
+      description="Demonstrates the use of caja to protect flash gadgets and the flash bridge">
+    <Require feature="caja"></Require>
+    <Require feature="flash"></Require>
+    <Require feature="dynamic-height"></Require>
+  </ModulePrefs>
+  <Content type="html">
+  <![CDATA[
+  Caja does not allow <code>object</code> or <code>embed</code> tags
+  in HTML.  However, Shindig provides a tamed JavaScript API for
+  embedding flash on a page.  To embed a flash file, use
+  <code>Require feature="flash"</code> in your
+  ModulePrefs and <code>gadges.flash.embedFlash</code> in the body of
+  your gadget to embed flash.
+  <p>
+  This example illustrates the use of the flash bridge for enabling
+  communication between the sandboxed flash and the cajoled gadget.
+  <p>
+  The sources for this example are on the <a href="http://code.google.com/p/google-caja/downloads/list">Caja downloads page</a>: 
+  <a href="http://google-caja.googlecode.com/files/Boxed.as">Boxed.as</a>, 
+  <a href="http://google-caja.googlecode.com/files/Boxed.fla">Boxed.fla</a>
+  <div id="flashcontainer" style="width:200; height: 200">
+    You need Flash player 10 and JavaScript enabled to view this video.
+  </div>
+  <button id="btn" onclick='bridge.callSWF("mySWFMethod", [5,6,7]);' disabled>mySWFMethod(5,6,7)</button>
+  <div id="result"></div>
+
+  <script>
+    var bridge;
+    function onFlashBridgeReady() {
+      bridge = gadgets.flash.embedFlash(
+          "http://caja.appspot.com/Boxed.swf",
+          "flashcontainer",
+          10);
+      document.getElementById('btn').disabled = false;
+      gadgets.window.adjustHeight();
+    }
+    
+    function myJSMethod(x, y, z) {
+      document.getElementById("result").innerHTML += "myJSMethod("+[x,y,z]+")<br>";
+      gadgets.window.adjustHeight();
+    }
+    gadgets.window.adjustHeight();
+  </script>
+  ]]>
+  </Content>
+</Module>

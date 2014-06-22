@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         id="WebApp_ID" version="3.0">
+    <display-name>Travelocity.COM</display-name>
+
+    <servlet>
+        <servlet-name>ForwardingServlet</servlet-name>
+        <servlet-class>ForwardingServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForwardingServlet</servlet-name>
+        <url-pattern>/samlsso</url-pattern>
+        <url-pattern>/token</url-pattern>
+        <url-pattern>/openid</url-pattern>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>SSOFilter</filter-name>
+        <filter-class>org.wso2.carbon.identity.sso.agent.SSOAgentFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SSOFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>/samlsso</url-pattern>
+        <url-pattern>/token</url-pattern>
+        <url-pattern>/openid</url-pattern>
+        <url-pattern>/logout</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>SampleContextEventListener</listener-class>
+    </listener>
+
+    <error-page>
+        <exception-type>org.wso2.carbon.identity.sso.agent.exception.SSOAgentException</exception-type>
+        <location>/errors.jsp</location>
+    </error-page>
+
+</web-app>

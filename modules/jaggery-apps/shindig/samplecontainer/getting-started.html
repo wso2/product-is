@@ -1,0 +1,81 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<html>
+<head>
+  <title>OpenSocial Container Sample</title>
+</head>
+
+<body>
+  <h1>OpenSocial Container Sample - Getting started</h1>
+
+  <ul>
+    <li><a href="#Purpose">Purpose</a>
+    <li><a href="#Theory">Theory</a>
+    <li><a href="#Tips">Tips</a>
+  </ul>
+
+  <h2 id="Purpose">Purpose</h2>
+  This sample serves two primary purposes:
+  <ol>
+    <li>To demonstrate how a container can be implemented using a simple
+      example.
+    <li>To create an environment for easy gadget testing. OpenSocial is all
+      about social APIs, which means that gadget testing usually involves
+      multiple user accounts. This container makes testing easy by letting
+      gadgets specify arbitrary state for any number of users.
+  </ol>
+
+  <h2 id="Theory">How it works? (Theory)</h2>
+  As the gadget developer you need to specify two pieces of information:
+  <ol type="a">
+    <li>URL to the gadget definition; and</li>
+    <li>initial state of the container in the form of a URL to a state file.</li>
+  </ol>
+
+  You can find the DTD for the state definition in the docs/state.dtd folder.
+
+  The state definition file allows you to specify the viewer of the gadget,
+  the owner, the friends and the activities of those users. Once the gadget and
+  its state are loaded you can use the gadget in the same way as any other
+  container. At any point you can also dump a snap shot of the state of the
+  environment to an XML file (with the same format as the state definition
+  file).
+
+  <h2 id="Tips">Tips/caveats</h2>
+  <ul>
+    <li>Due to browser security restrictions, your gadget definition
+      file and system state file must be on the same server as the
+      container if you specify a url. The above step by step procedure runs the test container from the local
+      file system. You can also copy the files to a web server and run off it
+      instead.
+    <li>The gadget definition URL is stored in a cookie.
+      You can set the values to empty or clear your cookies to clear existing
+      values for those fields.
+    <li>For easier debugging of your gadget script in Firebug, include the
+      gadget script using a script tag in the gadget definition file, instead
+      of inlining the script. Sometimes Firebug still cannot display the gadget
+      javascript if it is on the local file system. To avoid this, you can untar
+      the package to a web server and access it through an <code>http</code> URL
+      to that server.
+    <li>You always need to specify a state file for the container. At a minimum
+      it must include the viewer name. All other fields are optional.
+  </ul>
+
+</body>
+</html>

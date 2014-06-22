@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="Demo 3-legged OAuth to Shindig"
+               icon="http://localhost:8080/samplecontainer/examples/icon.png">
+    <OAuth>
+      <Service name="shindig">
+        <Request url="http://localhost:8080/oauth/requestToken" />
+        <Authorization url="http://localhost:8080/oauth/authorize?oauth_callback=http://localhost:8080/gadgets/oauthcallback" />
+        <Access url="http://localhost:8080/oauth/accessToken" />
+      </Service>
+    </OAuth>
+    <Require feature="oauthpopup" />
+  </ModulePrefs>
+  <Content type="html">
+      <![CDATA[
+
+    <style>
+    #main {
+        margin: 0px;
+        padding: 0px;
+        font-size: small;
+    }
+    </style>
+
+    <div id="main" style="display: none">
+    </div>
+
+    <div id="approval" style="display: none">
+      <img src="http://localhost:8080/samplecontainer/examples/new.gif">
+      <a href="#" id="personalize">Personalize this gadget</a>
+    </div>
+
+    <div id="waiting" style="display: none">
+      Please click
+      <a href="#" id="approvaldone">I've approved access</a>
+      once you've approved access to your data.
+    </div>
+
+    <script type="text/javascript">
+      function $(x) {
+        return document.getElementById(x);
+      }
+
+      function showOneSection(toshow) {
+        var sections = [ 'main', 'approval', 'waiting' ];
+        for (var i=0; i < sections.length; ++i) {
+          var s = sections[i];
+          var el = $(s);
+          if (s === toshow) {
+            el.style.display = "block";
+          } else {
+            el.style.display = "none";
+          }
+        }
+      }
+
+      function fetchData() {
+        var url = "http://localhost:8080/social/rest/people/@me/@self";
+        var params = {};
+        params[gadgets.io.RequestParameters.CONTENT_TYPE] =
+          gadgets.io.ContentType.TEXT;
+        params[gadgets.io.RequestParameters.AUTHORIZATION] =
+          gadgets.io.AuthorizationType.OAUTH;
+        params[gadgets.io.RequestParameters.METHOD] =
+          gadgets.io.MethodType.GET;
+        params[gadgets.io.RequestParameters.OAUTH_SERVICE_NAME] =
+          "shindig";
+
+        gadgets.io.makeRequest(url, function (response) {
+          if (response.oauthApprovalUrl) {
+            var onOpen = function() {
+              showOneSection('waiting');
+            };
+            var onClose = function() {
+              fetchData();
+            };
+            var popup = new gadgets.oauth.Popup(response.oauthApprovalUrl,
+                null, onOpen, onClose);
+            $('personalize').onclick = popup.createOpenerOnClick();
+            $('approvaldone').onclick = popup.createApprovedOnClick();
+            showOneSection('approval');
+          } else if (response.data) {
+            $('main').appendChild(document.createTextNode(response.data));
+            showOneSection('main');
+          } else {
+            var whoops = document.createTextNode(
+                'OAuth error: ' + response.oauthError + ': ' +
+                response.oauthErrorText);
+            $('main').appendChild(whoops);
+            showOneSection('main');
+          }
+        }, params);
+      }
+
+      gadgets.util.registerOnLoadHandler(fetchData);
+    </script>
+        ]]>
+  </Content>
+</Module>

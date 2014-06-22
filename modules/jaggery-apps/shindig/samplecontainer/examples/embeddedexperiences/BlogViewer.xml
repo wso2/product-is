@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<Module>
+    <ModulePrefs title="Blog Viewer" description="Blog Viewer" height="400" width="650">
+        <Require feature="embedded-experiences"></Require>
+        <Require feature="dynamic-height"></Require>
+        <Require feature="open-views"></Require>
+    </ModulePrefs>
+    <Content type="html" view="embedded_canvas, default">
+        <![CDATA[
+            <style type="text/css">
+                #wrapper {
+                    border: 1px solid black;
+                }
+            </style>
+
+            <script type="text/javascript">
+                function updateBlogViewerInfo(context) {
+                    if(context.openSocial) {
+                        var associatedContext = context.openSocial.associatedContext;
+                        if(associatedContext) {
+                            document.getElementById('source').innerHTML = "<p>The associated context source id is " + associatedContext.id + "</p>";
+                            document.getElementById('type').innerHTML = "<p>The associated context source type is " + associatedContext.type + "</p>";
+                            document.getElementById('target').innerHTML = "<p>The blog title is " + associatedContext.objectReference.target.displayName + "<p>";
+                            document.getElementById('photo').innerHTML = "<p>The title of the new photo is " + associatedContext.objectReference.object.summary + "<p>";
+                        }
+                    }
+                }
+
+                gadgets.util.registerOnLoadHandler(function() {
+                    gadgets.ee.registerContextListener(updateBlogViewerInfo);
+                });
+            </script>
+
+            <div id="wrapper">
+                <div id="source"></div>
+                <div id="type"></div>
+                <div id="target"></div>
+                <div id="photo"></div>
+            </div>
+        ]]>
+    </Content>
+</Module>

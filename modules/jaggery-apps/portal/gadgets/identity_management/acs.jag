@@ -1,0 +1,19 @@
+<%
+
+var log = new Log();
+var samlResponse = request.getParameter('SAMLResponse');
+var sso = require('sso');
+ var samlRespObj = sso.client.getSamlObject(samlResponse);
+
+var sessionId = session.getId();
+//log.info(sessionId);
+var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
+//log.info(sessionObj.loggedInUser);
+var addData = require('controllers/identity-management/add.jag');
+addData.add();
+
+%>
+
+<script type = "text/javascript" >
+window.close();
+</script>

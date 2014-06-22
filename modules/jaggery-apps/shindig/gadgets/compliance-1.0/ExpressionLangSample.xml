@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="Expression Language Test Cases" description="Compliance test for EL features">
+    <Require feature="opensocial-1.0"/>
+    <Require feature="opensocial-templates"/>
+  </ModulePrefs>
+  <Content type="html" view="canvas">
+    <script type="text/os-data">
+      <os:ViewerRequest key='vwr' />
+	  <os:PeopleRequest key='friends' startIndex="1" count="100" />
+	  <os:AlbumsRequest key='myalbums' userid="@viewer" groupid="@self" />
+	  <os:MediaItemsRequest key='mediaItems' userid="@viewer" groupid="@self" albumid="${myalbums[0].id}" count="20" />
+    </script>
+      <style type="text/css">
+        body{
+        background:#CCC;
+        color:blue;
+        }
+		.person{
+		border:3px solid green;
+		background:#AA3;
+		border-radius:3px;
+		padding:3px;
+		}
+		.photo{
+		border:3px solid red;
+		border-radius:3px;
+		padding:3px;
+		margin-bottom:3px;
+		}
+		.row0{
+		  background:lightyellow;
+		  color:black;
+		}
+		.row1{
+		background:orange;
+		color:white;
+		}
+		
+      </style>
+
+
+    <script type="text/os-template">
+      <h1>Expression Language Samples, custom for ${vwr.displayName}</h1>
+<h2>My Albums</h2>
+<div>Total Count of Albums:  ${myalbums.totalResults} (note: this value is not populated if private album access is not granted)</div>
+<div>Start Index:  ${myalbums.startIndex} </div>
+<div>Page Size:  ${myalbums.ItemsPerPage} </div>
+
+        <os:Repeat expression="${myalbums}">
+          <div >
+            <img src="${Cur.thumbnailUrl}" />
+            Album: ${Cur.caption} <br />
+			AlbumId: ${Cur.id}
+          </div>
+        </os:Repeat>
+
+		<h2>First Album's Items</h2>
+<div>Total Count of Media Items:  ${mediaItems.totalResults}</div>
+<div>Start Index:  ${mediaItems.startIndex} </div>
+<div>Page Size:  ${mediaItems.ItemsPerPage} </div>
+		
+		<h3>Alternating Rows Below</h3>
+		
+        <os:Repeat expression="${mediaItems}">
+		${Context.Index%2=0}
+          <div class="photo row${Context.Index%2}" >
+            <img src="${Cur.thumbnailUrl}" />
+            Photo: ${Cur.title} 
+          </div>
+        </os:Repeat>
+
+		<h3>Alternating Rows of Friends With StyleName</h3>
+<div repeat="${friends}" class="row${Context.Index%2}">
+<img src="${Cur.thumbnailUrl}" />&nbsp;${Cur.displayName}
+</div>
+		
+<h2>Simple Math</h2>
+
+1+1=${1+1} <br/>
+Picture count: ${mediaItems.totalResults} <br />
+Picture Count x 2 = ${2*mediaItems.totalResults} <br />
+		
+		
+<h2>Using Variables and JSON</h2>
+<os:Var key="myvar">
+{name:"My Object",
+"state": "Live",
+"colors":[
+"blue", "purple", "red", "orange", "yellow", "green"
+]
+}
+</os:Var>
+		
+
+<div>Object Name: ${myvar.name}</div>
+<div>
+Colors:
+<os:Repeat expression="${myvar.colors}">
+<div style="width:40px;height:40px;float:left;background:${Cur};">&nbsp;</div>
+</os:Repeat>
+</div>
+		
+	  </script>
+  </Content>
+
+</Module>

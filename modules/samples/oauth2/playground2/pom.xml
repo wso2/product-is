@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.identity</groupId>
+        <artifactId>wso2is-identity-samples-oauth2</artifactId>
+        <version>5.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>playground2</artifactId>
+    <packaging>war</packaging>
+    <name>OAuth 2.0 Playground App with WSO2 Identity Server 5.0.0</name>
+    <version>5.0.0</version>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version> 
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>1.6.0.wso2v2</version>
+             <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/axis2-1.6.0.wso2v2.jar</systemPath> 
+        </dependency>
+        <dependency>
+             <groupId>com.google.gdata.wso2</groupId>
+             <artifactId>gdata-core</artifactId>
+            <version>1.0.0.wso2v1</version>
+             <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/gdata-core-1.0.0.wso2v1.jar</systemPath> 
+        </dependency>
+        <dependency>
+            <groupId>com.google.common.wso2</groupId>
+            <artifactId>google-collect</artifactId>
+            <version>1.0.0.wso2v2</version>
+             <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/google-collect-1.0.0.wso2v2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+            <version>1.2.11.wso2v1</version>
+             <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/axiom-1.2.11.wso2v1.jar</systemPath> 
+        </dependency>
+        <dependency>
+            <groupId>org.apache.amber</groupId>
+            <artifactId>oauth2-client</artifactId>
+            <version>0.22.1358727-wso2v1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/amber-0.22.1358727.wso2v1.jar</systemPath>
+        </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
+            <version>4.2.2</version>
+            <scope>system</scope>               
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/org.wso2.carbon.identity.oauth.stub_4.2.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+            <version>4.0.0</version>
+            <scope>system</scope>            
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/org.wso2.carbon.utils-4.0.0.jar</systemPath>            
+        </dependency>
+        <dependency>
+	        <groupId>com.googlecode.json-simple</groupId>
+	        <artifactId>json-simple</artifactId>
+	        <version>1.1</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+    <build>
+	<sourceDirectory>src/main</sourceDirectory>
+        <finalName>playground2</finalName>
+    </build>
+
+</project>

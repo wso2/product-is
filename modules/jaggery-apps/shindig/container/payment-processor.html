@@ -1,0 +1,317 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sample: Payment Processor</title>
+
+<style>
+body, td, div, span, p {
+  font-family:arial,sans-serif;
+}
+body {
+  padding:0px;
+  margin:0px;
+}
+.payment-processor-shadow {
+  filter: alpha(opacity=30);
+  -moz-opacity:.3;
+  opacity:0.3;
+  background-color:#000;
+  width:690px;
+  height:390px;
+  margin:5px 0px 0px 5px;
+  position:absolute;
+  z-index:100;
+}
+.payment-processor-border1 {
+  background-color:#E5ECF9;
+  width:690px;
+  height:390px;
+  position:absolute;
+  z-index:200;
+}
+.payment-processor-border2 {
+  background-color:#FFF;
+  margin:5px;
+  height:380px;
+}
+.payment-processor-content {
+  padding:20px;
+  font-size:13px;
+}
+.payment-processor-content #loading-tab {
+  color:#777;
+}
+.caption {
+  font-weight:bold;
+  width:80px;
+  display:inline;
+}
+.desc {
+  color:#007F00;
+}
+.head {
+  font-weight:bold;
+}
+</style>
+
+
+<script type="text/javascript">
+
+/**
+ * @static
+ * @class A sample payment process panel provides the UI and logic for the real payment excution on
+ *        container api server. 
+ *
+ *        NOTE:
+ *
+ *          All functions or logics or names in this page are customizable. Indeed containers have
+ *          to customize them to make the UI consistent. This sample panel page is embeded in the 
+ *          parent container page as an iframe for better code structure, but indeed it is not 
+ *          necessary. It can be on the same page as container page.
+ *
+ *          You can implement their processor panel page using this file but replace the UI and 
+ *          mock codes, or use your completely own codes.  If you use your own page, just to make 
+ *          sure <code>shindig.paymentprocessor.initPayment</code> function is called with necessary
+ *          callbacks (open and close event handlers) passed in when initializing the page.
+ *
+ */
+var myProcessorPanel = (function() {
+
+  /** Element which holding this processor panel page in parent window. */
+  var parentDiv;
+
+  /** Just a reference to <code>shindig.paymentprocessor</code> object, which holding necessary 
+      parameters needed in the payment process */
+  var processor;
+
+  /**
+   * Called by <code>shindig.paymentprocessor</code> when the counter 
+   * panel is closing.
+   */
+  function closeEvent() {
+    // Set the div in the parent window to invisible.
+    parentDiv.style.display = 'none';
+  };
+
+
+  /**
+   * Draws the pay counter panel UI itself.
+   * (NOTE that this page is a iframe in its parent container window);
+   * Assigns the submit callback and cancel callback to the buttons.
+   * So from this panel, submit or cancel actions can be made.
+   *
+   * @param {Object} paymentJson The payment parameters.
+   * @param {Object} extraParams The extra parameters for the payment 
+   *                 procedure, including handler url, app title and spec.
+   * @param {Function} submitCallback The submit callback in 
+   *                   <code>shindig.paymentprocessor</code>.
+   * @param {Function} cancelCallback The cancel callback in 
+   *                   <code>shindig.paymentprocessor</code>.
+   */
+  function openEvent() {
+    // Set the UI.
+    document.getElementById('loading-tab').style.display = 'none';
+
+    document.getElementById('payment-appname').innerHTML = processor.getParam('appTitle');
+    document.getElementById('payment-appspec').innerHTML = processor.getParam('appSpec');
+    
+    document.getElementById('payment-type').innerHTML = processor.getParam('payment.paymentType');
+    document.getElementById('payment-amount').innerHTML = processor.getParam('payment.amount');
+    document.getElementById('payment-message').innerHTML = processor.getParam('payment.message');
+
+    var items = processor.getParam('payment.items');
+    if (items) {
+      var html = '<table border=1><tbody><tr class=head><td>SKU_ID</td><td>Price</td>' +
+                 '<td>Count</td><td>Description</td></tr>';
+      for (var i = 0; i < items.length; i++) {
+        html += '<tr>' + 
+            '<td>' + items[i]['skuId'] + '</td>' + 
+            '<td>' + items[i]['price'] + '</td>' + 
+            '<td>' + items[i]['count'] + '</td>' + 
+            '<td>' + items[i]['description'] + '</td>' + 
+            '</tr>';
+      }
+      html += '</tbody></table>';
+      document.getElementById('payment-items').innerHTML = html;
+    } else {
+      document.getElementById('payment-items').innerHTML = 'No detail items';
+    }
+
+    document.getElementById('payment-orderedtime').innerHTML = 
+        new Date(processor.getParam('payment.orderedTime')).toLocaleString();
+
+    if (processor.getParam('payment.paymentType') == 'credit') {
+      // If the payment type is 'credit', skip the confirm panel UI and 
+      // call the submitEvent directly.
+      window.setTimeout(submitHandler, 500);
+    } else {
+      // If the payment type is normal 'payment', add click listeners and 
+      // wait for user confirmation.
+      document.getElementById('button-tab').style.display = 'block';
+      document.getElementById('payment-submit').onclick = submitHandler;
+      document.getElementById('payment-cancel').onclick = cancelHandler;
+    }
+
+    // Set the div in the parent window to visible.
+    parentDiv.style.display = 'block';
+  };
+
+  /**
+   * Called by submit button clicked by the user.
+   *
+   * This function should send the pay request to container virtual currency
+   * api with Ajax POST.
+   *
+   * Then usually an acknowledge tab will be shown in the  with a button to
+   * call the callback function.
+   */
+  function submitHandler() {
+    document.getElementById('button-tab').style.display = 'none';
+    document.getElementById('loading-tab').style.display = 'block';
+
+
+    var requestData = processor.getParam('payment');
+    requestData['st'] = processor.getParam('stoken'); // or other security token
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    // Here the logic should be on container sever with communication with app server.  //
+    // See the proposal doc Rivision#4.                                                 //
+    //////////////////////////////////////////////////////////////////////////////////////
+    var sendPaymentRequest = function(ajaxCallback) {
+      // The Server will communicate with App Backend Server then response.
+      // Here is just a fake call. You should replace these codes with actual ajax.
+      // Wait 1 second to simulate the network connection.
+      window.setTimeout(function() {
+        var responseData = {};
+        responseData['submittedTime'] = new Date().getTime();
+
+
+        // Do some fake check here. Can be any type of error during server-to-server roundtrips.
+        if (requestData['amount'] > 1000) {
+          responseData['responseCode'] = 'INSUFFICIENT_MONEY';
+          responseData['responseMessage'] = 'Fake not enough money response!';
+          ajaxCallback(responseData);
+          return;
+        }
+
+        // Simulate success response.
+        responseData['orderId'] = 'ORDER_ID_FROM_APP_' + Math.round(Math.random() * 10000);
+        responseData['executedTime'] = new Date().getTime();
+        responseData['responseCode'] = 'OK';
+        responseData['responseMessage'] = 'Fake success response!';
+        ajaxCallback(responseData);
+
+      }, 1000);
+    };
+    //////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    // Send Ajax Call to Container Virtual Currency API Server.
+    sendPaymentRequest(function(responseData) {
+
+      processor.setParam('payment.responseCode', responseData['responseCode']);
+      processor.setParam('payment.responseMessage', responseData['responseMessage']);
+
+      if (responseData['responseCode'] == 'OK') {
+        // Copy the server generated fields back to processor parameters.
+        processor.setParam('payment.submittedTime', responseData['submittedTime']);
+        processor.setParam('payment.executedTime', responseData['executedTime']);
+        processor.setParam('payment.orderId', responseData['orderId']);
+      }
+
+      // Close the processor panel and return to app.
+      processor.closePayment();
+    });  
+  };
+
+
+  /**
+   * Invoked when cancel button clicked by user.
+   */
+  function cancelHandler() {
+    // You can also show a message to say the order is canceled.
+    // Here just call the callback and return.
+    processor.setParam('payment.responseCode', 'USER_CANCELLED');
+    processor.closePayment();
+  };
+
+
+
+  return {
+    /**
+     * Initializes the counter module. It can be called by this page's <code>body.onload()</code> 
+     * function or in other initializing steps.
+     * Note the <code>shindig.paymentprocessor</code> object is passed from the parent window.
+     */
+    init: function() {
+      // Store the parent node in which there is an iframe holding this page.
+      parentDiv = window.frameElement.parentNode;
+
+      processor = parent.shindig.paymentprocessor;
+
+      // Initialize the paymentprocessor module with four events.
+      // The container need to fully implement these event functions for
+      // UI/Backend interaction.
+      processor.initPayment(openEvent, closeEvent);
+    }
+  };
+
+})();
+
+</script>
+</head>
+<body onload="myProcessorPanel.init();">
+  <!-- Customize the UI -->
+  <div class="payment-processor-shadow"></div>
+  <div class="payment-processor-border1">
+    <div class="payment-processor-border2">
+      <div class="payment-processor-content">
+        <p class="desc">
+          This panel is in an iframe from another page in the same container domain:<br>
+          <b><script>document.write(window.location.href);</script></b>
+        </p>
+        <div class="caption">App Name: </div><span id="payment-appname"></span><br>
+        <div class="caption">App Spec: </div><span id="payment-appspec"></span><br>
+        <br>
+        <div class="caption">Payment Type: </div><span id="payment-type"></span><br>
+        <div class="caption">Amount: </div><span id="payment-amount"></span><br>
+        <div class="caption">Message: </div><span id="payment-message"></span><br>
+        <div class="caption">Items: </div><br><div id="payment-items"></div>
+        <div class="caption">Ordered Time: </div><span id="payment-orderedtime"></span><br>
+        <br>
+        <div id="button-tab" style="display:none;">
+          <button id="payment-submit">Submit</button>
+          <button id="payment-cancel">Cancel</button>
+        </div>
+        <div id="loading-tab" style="display:none">
+          Please wait...
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,27 @@
+{
+    "context" : "/dashboard",
+    "login-required" : "true",
+    "pages" :[
+        {"url" : "account_recovery.jag", "dashboard-styles" : "icon-rotate-left icon-rotate-left-dashboard icon-marketing-styles",
+        "styles" : "icon-rotate-left", "text" : "account_recovery_txt", "desc" : "account_recovery_decs", "displayorder" : "2", "name" : "accountRecovery", "login-required" : "true"},
+        {"url" : "my_profiles.jag", "dashboard-styles" : "icon-user icon-user-dashboard icon-marketing-styles",
+        "styles" : "icon-user", "text" : "my_prof_txt", "desc" : "my_prof_desc", "displayorder" : "1", "name" : "myProfiles", "login-required" : "true"},
+        {"url" : "my_authorized_apps.jag", "dashboard-styles" : "icon-thumbs-up-alt icon-thumbs-up-alt-dashboard icon-marketing-styles",
+        "styles" : "icon-thumbs-up-alt", "text" : "my_authorized_apps_txt", "desc" : "my_authorized_apps_desc", "displayorder" : "3", "name" : "myAuthorizedApps", "login-required" : "true"},
+        {"url" : "multifactor_authentication.jag", "dashboard-styles" : "icon-road icon-road-dashboard icon-marketing-styles",
+        "styles" : "icon-road", "text" : "multifactor_authentication_txt", "desc" : "multifactor_authentication_desc", "displayorder" : "5", "name" : "multifactorAuthentication", "login-required" : "true"},
+        {"url":"openId.jag", "dashboard-styles" : "icon-repeat icon-repeat-dashboard icon-marketing-styles", "styles" : "icon-repeat", "text" : "openId_txt" , "desc" : "openId_desc", "displayorder" : "6", "name" : "openId", "login-required" : "true"},
+        {"url" : "change_password.jag", "dashboard-styles" : "icon-key icon-key-dashboard icon-marketing-styles", "styles" : "icon-key", "text" : "Change_Password_txt", "desc" : "Change_Password_desc", "displayorder" : "7", "name" : "changeMyPwd", "login-required" : "true"},
+        {"url" : "scim_edit.jag", "dashboard-styles" : "", "styles" : "", "text" : "", "desc" : "", "displayorder" : "-1", "login-required" : "true"},
+        {"url" : "index.jag", "dashboard-styles" : "", "styles" : "icon-dashboard", "text" : "index_txt", "desc" : "", "displayorder" : "0", "name" : "dashboard", "login-required" : "true"},
+        {"url" : "self_registration.jag", "dashboard-styles" : "", "styles" : "icon-signin", "text" : "Self_Signup_txt", "desc" : "Self_Signup_desc", "displayorder" : "1", "name" : "selfSignup", "login-required" : "false"},
+        {"url" : "my_scim_providers.jag", "dashboard-styles" : "icon-th icon-th-dashboard icon-marketing-styles",
+        "styles" : "icon-th", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "4", "name" : "mySCIMProviders", "login-required" : "true"}
+    ],
+    "controllers" : [
+        {"urls" : ["scim-providers/edit_finish.jag", "scim-providers/delete_finish.jag"],
+        "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"]},
+        {"urls" : ["user-registration/add.jag"], "login-required" : "false"},
+        {"urls" : ["account_recovery/edit_finish.jag", "multy_factor_auth/edit_finish.jag", "my_auth_apps/my_authorized_app_remove.jag", "pwd_change/edit.jag", "identity-management/edit.jag", "my-profile/edit-finish.jag"]}
+    ]
+}

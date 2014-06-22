@@ -1,0 +1,6 @@
+<module name="gadget" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>gadget</name>
+        <path>scripts/gadget.js</path>
+    </script>
+</module>

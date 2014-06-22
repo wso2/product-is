@@ -1,0 +1,124 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<html>
+<head>
+<title>Metadata Demo</title>
+<style>
+  .gadget {
+    border: solid 1px #000;
+    margin: 10px;
+    float: left;
+    text-align: center;
+  }
+  .gadget h2 {
+    background: #ccf;
+    border-bottom: solid 1px #000;
+    margin: 0;
+    padding: 5px;
+  }
+  .gadget iframe {
+    margin: 5px;
+    border: none;
+    height: 300px;
+    width: 300px;
+  }
+</style>
+</head>
+<script src="/gadgets/js/core.js?c=1"></script>
+<body>
+<script>
+  function makeXhr() {
+    if (window.XMLHttpRequest) {
+      return new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+      var x = new ActiveXObject("Msxml2.XMLHTTP");
+      if (!x) {
+        x = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      return x;
+    }
+  }
+
+  function renderGadgets(obj) {
+    var gadgetList = obj.gadgets;
+    var features = {};
+    for (var i = 0, gadget; gadget = gadgetList[i]; ++i) {
+      var feats = gadget.features || [];
+      for (var j = 0, feature; feature = feats[j]; ++j) {
+        features[feature] = true;
+      }
+    }
+    var libs = [];
+    for (var lib in features) {libs.push(lib);}
+    libs.sort();
+    libs = libs.join(":");
+    for (var i = 0, gadget; gadget = gadgetList[i]; ++i) {
+      var newGadget = document.createElement("div");
+      if (gadget.errors && gadget.errors.length > 0) {
+        newGadget.innerHTML = ["Unable to process gadget: ", gadget.url, ". Errors: <pre>", gadget.errors.join("\n"), "</pre>"].join("");
+      } else {
+        newGadget.innerHTML = ['<h2>', gadget.title, '</h2>',
+          '<iframe src="', gadget.iframeUrl, '&libs=', libs ,'" id="remote_iframe_', gadget.moduleId, '" name="remote_iframe_', gadget.moduleId, '"></iframe>'
+        ].join("");
+      }
+      newGadget.className = "gadget";
+      document.body.appendChild(newGadget);
+    }
+  }
+
+  function processResp(xhr) {
+    if (xhr.readyState !== 4) {return;}
+    renderGadgets(gadgets.json.parse(xhr.responseText));
+  }
+
+  var request = {
+    context: {
+      country: "US",
+      language: "en",
+      view: "default",
+      container: "default"
+    },
+    gadgets: [
+      {
+        url: "http://www.google.com/ig/modules/hello.xml",
+        moduleId: 1
+      },
+      {
+        url: "http://www.labpixies.com/campaigns/todo/todo.xml",
+        moduleId: 2
+      },
+      {
+        url: "http://www.example.org/fake/fake/fake.xml",
+        moduleId: 3
+      }
+    ]
+  };
+
+  var xhr = makeXhr();
+  xhr.open("POST", "/gadgets/metadata", true);
+  xhr.onreadystatechange = function(xobj) {
+    return function() {
+      processResp(xobj);
+    };
+  }(xhr);
+  var req = gadgets.json.stringify(request);
+  xhr.send(req);
+</script>
+</body>
+</html>

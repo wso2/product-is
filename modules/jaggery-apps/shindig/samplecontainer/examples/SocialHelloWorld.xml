@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="Social Hello World"
+               description="The Social Hello World Application Displays multilingual hello messages"
+               thumbnail="http://localhost:8080/"
+               icon="http://localhost:8080/samplecontainer/examples/icon.png">
+    <Require feature="osapi"></Require>
+    <Require feature="settitle"/>
+    <Require feature="dynamic-height"></Require>
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+    <style type="text/css">
+    #helloworlds {
+      margin: 20px;
+      font-family: arial, sans-serif;
+      width: 310px;
+    }
+
+    .person img { margin-bottom: 10px; }
+
+    .person .c0 { color: #008000; }
+    .person .c1 { color: #FF8A00; }
+    .person .c2 { color: #7777CC; }
+    .person .c3 { color: #008000; }
+    .person .c4 { color: #CC0000; }
+    .person .c5 { color: #73A6FF; }
+
+    .person .bubble {
+      background-image: url('/samplecontainer/examples/bubble.gif');
+      background-repeat: no-repeat;
+      width: 202px;
+      height: 66px;
+      padding: 12px 0px 0px 12px;
+      font-weight: bold;
+      font-size: 18px;
+      float: right;
+    }
+
+    .person .bubble .name {
+      width: 150px;
+      text-align: right;
+      font-weight: normal;
+      font-size: 12px;
+      color: #999;
+      position:relative;
+      top: 10px;
+      right: -35px;
+    }
+  </style>
+
+  <script type="text/javascript">
+    // Set title (if supported by container)
+    gadgets.window.setTitle('Social Hello World');
+
+    // List of hellos
+    var hellos = new Array('Hello World', 'Hallo Welt', 'Ciao a tutti', 'Hola mundo',
+      '&#1055;&#1086;&#1103;&#1074;&#1083;&#1077;&#1085;&#1080;&#1077; &#1085;&#1072; &#1089;&#1074;&#1077;&#1090;',
+      '&#12371;&#12435;&#12395;&#12385;&#12399;&#19990;&#30028;', '&#20320;&#22909;&#19990;&#30028;',
+      '&#50668;&#47084;&#48516;, &#50504;&#45397;&#54616;&#49464;&#50836;');
+    var numberOfStyles = 6;   // Number of .c* styles defined in style tag above
+    var viewerCount = 0;      // Number of times 'Say Hello' has been clickec
+    var viewer;               // Current viewer
+
+    /**
+     *  Render the person bubbles to HTML
+     *
+     *  @param data The date provided by osapi requests
+     */
+    render = function(data) {
+      // When Caja is enabled, data is read-only, so make a writeable copy.
+      var allPeople = new Array();
+
+      // Setup the allPeople array
+      if(data.viewerFriends.list) {
+        allPeople = data.viewerFriends.list.concat();
+      } else if(viewer) {
+        allPeople.push(viewer);
+      }
+
+      var viewerData = data.viewerData;
+      viewerCount = getCount(viewerData[viewer.id]);
+
+      var viewerFriendData = data.viewerFriendData;
+      viewerFriendData[viewer.id] = viewerData[viewer.id];
+
+      // We will load this up with all the people 'bubbles'
+      var html = '';
+
+      // Loop through all the people returned and create a 'bubble' for them
+      for (var i = 0; i < allPeople.length; i++) {
+        var count = getCount(viewerFriendData[allPeople[i].id]);
+        if (count == 0) {
+          //continue;
+        }
+
+        html += '<div class="person">';
+        html += '  <div class="bubble c' + count % numberOfStyles + '">' + hellos[count % hellos.length];
+        html += '    <div class="name">' + allPeople[i].name.formatted + ' (' + count + ') ' + allPeople[i].gender;
+        html += '    </div>';
+        html += '  </div>';
+
+        if (allPeople[i].thumbnailUrl && allPeople[i].thumbnailUrl.indexOf('null') == -1) {
+          html += '  <img src="' + allPeople[i].thumbnailUrl + '"/>';
+        } else {
+          html += '  <img src="/samplecontainer/examples/nophoto.gif"/>';
+        }
+
+        html += '  <br style="clear:both">';
+        html += '</div>';
+      }
+
+      // Output all the 'bubbles' to the 'helloworld' div
+      document.getElementById('helloworlds').innerHTML = html;
+
+      // Adjust the height of the gadget to fit the new data
+      gadgets.window.adjustHeight();
+    };
+
+    /**
+     *  Get the current count of the number of times 'Say Hello' has been clicked
+     *
+     *  @param data The date provided by osapi requests
+     */
+    getCount = function(data) {
+      return data && data['count'] ? Number(data['count']) : 0;
+    };
+
+    /**
+     *  Builds the groups select input
+     *
+     *  @param list A array of OpenSocial Groups
+     *  @param totalResults The length of list array
+     */
+    buildGroupsSelect = function(list, totalResults) {
+      var select = document.getElementById('groups_select');
+
+      // Fill element with data
+      select.innerHTML += '<option value="@friends">@friends</option>';
+      for(i = 0; i < totalResults; i++) {
+        select.innerHTML += '<option value="' + list[i].id + '">' + list[i].title + '</option>';
+      }
+    };
+
+    /**
+     *  Get the OpenSocial Groups of the viewer by sending an osapi.groups.get request
+     */
+    getGroups = function() {
+      var req = osapi.groups.get({});
+      req.execute(function(result) {
+        buildGroupsSelect(result.list, result.totalResults);
+      });
+    };
+
+    /**
+     *  Get the Viewer (an OpenSocial Person) by sending an osapi.people.getViewer request
+     */
+    getViewer = function() {
+      var req = osapi.people.getViewer({});
+      req.execute(function(result) {
+        // Set the viewer to the result
+        viewer = result;
+        // Update the 'current_viewer' span
+        document.getElementById('current_viewer').innerHTML = result.name.formatted + " (" + result.id + ")";
+      });
+    };
+
+    /**
+     *  The handler called when the 'Say Hello' button is pressed
+     */
+    sayHelloWorld = function() {
+      viewerCount++;
+      osapi.appdata.update({data:{count:viewerCount}}).execute(processSayHello);
+    };
+
+    /**
+     *  Process the request to 'Say Hello'
+     */
+    processSayHello = function() {
+      // Selected field to have returned
+      var fields = ['id','age','name','gender','profileUrl','thumbnailUrl'];
+
+      // Get the value(groupId) of the group selected
+      var group = document.getElementById('groups_select').value;
+
+      // Make sure there actually is a value
+      if(group == '' || group == null) {
+        // Default to @friends
+        group = '@friends';
+      }
+
+      // Initialize a new batch request
+      var batch = osapi.newBatch();
+
+        // Add to batch: Get the viewer's friends
+        batch.add('viewerFriends',
+          osapi.people.get({
+            groupId: group,   // Only get friend in group selected
+            sortBy: 'name',   // Sort by name
+            fields: fields    // Only return defined fields
+          })
+        );
+        // Add to batch: Get the viewer's data
+        batch.add('viewerData',
+          osapi.appdata.get({
+            keys: ['count']
+          })
+        );
+        // Add to batch: Get the viewer's friend's data
+        batch.add('viewerFriendData',
+          osapi.appdata.get({
+            groupId: group,
+            keys: ['count']
+          })
+        );
+
+      // Execute the batch
+      batch.execute(render);
+    };
+
+    /**
+     *  Initialize data for request
+     */
+    initData = function() {
+      // Get the current viewer
+      getViewer();
+
+      // Get the groups of the current viewer
+      getGroups();
+    };
+
+    gadgets.util.registerOnLoadHandler(initData);
+  </script>
+  <div style="margin-bottom: 1em">
+    Current Viewer:
+    <span id="current_viewer"></span>
+  </div>
+  <div style="margin-bottom: 1em">
+    Select a group:&nbsp;
+    <select id="groups_select"></select>
+    <input type="button" value="Say hello" onclick="sayHelloWorld(); return false;"/>
+  </div>
+  <div id="helloworlds" style="margin: 4px"></div>
+  ]]>
+  </Content>
+</Module>

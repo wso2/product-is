@@ -1,0 +1,80 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+<!ELEMENT container (people, appId?,
+    personAppData?, activities?)>
+
+<!ELEMENT people (person*)>
+
+<!ELEMENT person (friend*, count*, address*)>
+<!ATTLIST person id CDATA #REQUIRED
+    name CDATA #IMPLIED
+    gender CDATA #IMPLIED
+    phone CDATA #IMPLIED
+    thumbnailUrl CDATA #IMPLIED
+    profileUrl CDATA #IMPLIED>
+
+<!ELEMENT friend (#PCDATA)>
+
+<!ELEMENT count (#PCDATA)>
+<!ATTLIST count type CDATA #REQUIRED>
+
+<!ELEMENT address (latitude?, longitude?, streetAddress?, locality?, region?,
+    postalCode?, country?, extendedAddress?, poBox?, unstructuredAddress?)>
+<!ATTLIST address type CDATA #REQUIRED>
+
+<!ELEMENT latitude (#PCDATA)>
+<!ELEMENT longitude (#PCDATA)>
+<!ELEMENT streetAddress (#PCDATA)>
+<!ELEMENT locality (#PCDATA)>
+<!ELEMENT region (#PCDATA)>
+<!ELEMENT postalCode (#PCDATA)>
+<!ELEMENT country (#PCDATA)>
+<!ELEMENT extendedAddress (#PCDATA)>
+<!ELEMENT poBox (#PCDATA)>
+<!ELEMENT unstructuredAddress (#PCDATA)>
+
+<!ELEMENT appId (#PCDATA)>
+
+<!ELEMENT personAppData (data*)>
+
+<!ELEMENT data (#PCDATA)>
+<!ATTLIST data field CDATA #REQUIRED person CDATA #IMPLIED>
+
+<!ELEMENT activities (stream*)>
+
+<!ELEMENT stream (activity*)>
+<!ATTLIST stream title CDATA #REQUIRED
+    url CDATA #IMPLIED
+    userId CDATA #IMPLIED
+    sourceUrl CDATA #IMPLIED
+    faviconUrl CDATA #IMPLIED>
+
+<!ELEMENT activity (mediaItem*)>
+<!ATTLIST activity title CDATA #REQUIRED
+    id CDATA #REQUIRED
+    externalId CDATA #IMPLIED
+    body CDATA #IMPLIED
+    url CDATA #IMPLIED
+    postedTime CDATA #IMPLIED>
+
+<!ELEMENT mediaItem (#PCDATA)>
+<!ATTLIST mediaItem mimeType CDATA #REQUIRED
+    url CDATA #REQUIRED
+    type CDATA #IMPLIED>

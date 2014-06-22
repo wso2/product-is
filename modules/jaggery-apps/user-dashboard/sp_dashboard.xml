@@ -1,0 +1,49 @@
+<ServiceProvider>
+	<ApplicationID>2</ApplicationID>
+	<ApplicationName>wso2_sp_dashboard</ApplicationName>
+	<Description>Default Service Provider</Description>
+	<InboundAuthenticationConfig>
+		<InboundAuthenticationRequestConfigs>
+			<InboundAuthenticationRequestConfig>
+				<InboundAuthKey>wso2.my.dashboard</InboundAuthKey>
+				<InboundAuthType>samlsso</InboundAuthType>
+				<Properties></Properties>
+			</InboundAuthenticationRequestConfig>
+		</InboundAuthenticationRequestConfigs>
+	</InboundAuthenticationConfig>
+	<LocalAndOutBoundAuthenticationConfig>
+		<AuthenticationSteps>
+			<AuthenticationStep>
+				<StepOrder>1</StepOrder>
+				<LocalAuthenticatorConfigs>
+					<LocalAuthenticatorConfig>
+						<Name>BasicAuthenticator</Name>
+						<DisplayName>basicauth</DisplayName>
+						<IsEnabled>true</IsEnabled>
+					</LocalAuthenticatorConfig>
+				</LocalAuthenticatorConfigs>
+				<!-- FederatedIdentityProviders>
+				 <IdentityProvider>
+				       <IdentityProviderName>facebook</IdentityProviderName>
+				       <IsEnabled>true</IsEnabled>
+                                     <DefaultAuthenticatorConfig>
+                                             <FederatedAuthenticatorConfig> 
+                                                     <Name>FacebookAuthenticator</Name>
+                                                     <IsEnabled>true</IsEnabled>
+                                             </FederatedAuthenticatorConfig>
+                                     </DefaultAuthenticatorConfig>
+				 </IdentityProvider>
+				</FederatedIdentityProviders -->
+				<SubjectStep>true</SubjectStep>
+				<AttributeStep>true</AttributeStep>
+			</AuthenticationStep>
+		</AuthenticationSteps>	
+	</LocalAndOutBoundAuthenticationConfig>
+	<RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
+	<InboundProvisioningConfig></InboundProvisioningConfig>
+	<OutboundProvisioningConfig></OutboundProvisioningConfig>
+	<ClaimConfig>
+          <AlwaysSendMappedLocalSubjectId>true</AlwaysSendMappedLocalSubjectId>
+       </ClaimConfig>
+	<PermissionAndRoleConfig></PermissionAndRoleConfig>
+</ServiceProvider>

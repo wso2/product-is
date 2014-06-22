@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<head>
+  <title>OpenSocial Common Container Test Environment</title>
+  <!-- My OpenSocial Beginnings -->
+  <link rel="stylesheet" href="../../../container/gadgets.css"/>
+  <link rel="stylesheet"
+        href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/cupertino/jquery-ui.css"
+        type="text/css" media="all"/>
+
+  <script type="text/javascript" src="../../../gadgets/js/container:open-views:opensearch:rpc:xmlutil:pubsub-2.js?c=1&debug=1&container=default"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="./assembler.js"></script>
+  <script type="text/javascript" src="./viewController.js"></script>
+  <script type="text/javascript" src="./layout.js"></script>
+  <script type="text/javascript" src="./cconviews.js"></script>
+  <script type="text/javascript" src="./search.js"></script>
+
+  <style type="text/css">
+    .portlet-header .ui-icon { float: right; }
+    #content {
+    display: table;
+    width: 100%;
+    }
+
+    #testArea {
+    display: table-cell;
+    width: 75%;
+    padding-left:22px;
+    }
+
+    #controlPanel {
+    display: table-cell;
+    width: 25%;
+    }
+
+    #viewsDropdown, #viewsDropdown ul {
+    list-style: none;
+    }
+    #viewsDropdown, #viewsdropdown * {
+    padding: 0; margin: 0;
+    }
+
+    #viewsDropdown li.li-header {
+    float: right; margin-left: -1px;
+    }
+    #viewsDropdown li.li-header a {
+    display: block;
+    }
+
+    #viewsDropdown li.li-header ul {
+    display: none; border: 1px black solid; text-align: left;
+    }
+
+    #viewsDropdown li.li-header:hover ul {
+    display: block;
+    }
+
+    #viewsDropdown li.li-header ul li a {
+    padding: 5px; height: 17px;
+    }
+
+    #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+
+    .resultTitle {
+    color: blue;
+    }
+
+    .searchEngine {
+    border: 1px solid blue;
+    }
+
+    .widerInput {
+      width: 270px;
+    }
+
+  </style>
+</head>
+
+<body onload="CommonContainer.init();">
+
+  <!--  Need to add in an improved header with links to specification -->
+  <a href="http://opensocial.org/">
+    <img alt="OpenSocial" src="http://docs.opensocial.org/download/attachments/425986/global.logo"/>
+  </a>
+  <span style="float:right">
+    <input type="text" id="query"/>
+    <button name="search" id="searchButton" onclick="updateSearchURLs()">Search</button>
+    <br/><span id="engineList"></span>
+  </span>
+
+  <div id="content">
+
+    <div id="controlPanel">
+
+      <div id="accordionResizerControls"
+           style="padding: 10px; width: 100%; height: 100%;"
+           class="ui-widget-content">
+
+        <div id="accordionGadgetControls">
+          <h3><a href="#">Manage Gadgets</a></h3>
+
+          <div>
+
+            <p>Enter the gadget url (ex.
+            http://localhost:8080/samplecontainer/examples/SocialHelloWorld.xml) and select 'Add' to
+            render the gadget</p>
+
+            <div style='display: block;'>
+	            <input type="text" name="gadgetUrl" id="gadgetUrl"
+	                   class="text ui-widget-content ui-corner-all"
+	                   style="width: 100%"/>
+	            <br />
+	            <button id="preloadAndAddGadget">Preload and Add</button><br />
+	            <button id="addGadget">Add only</button><br />
+	            <button id="preloadGadget">Preload only</button><br />
+            </div>
+           <p>-OR-</p>
+
+            <p>
+            Pick from one of the collections and select Add Gadgets to render the associated gadgets
+            </p>
+            <div style='display: block;'>
+	            <select id="gadgetCollection"> </select>
+	            <button id="addGadgets">Add Gadgets</button>
+            </div>
+
+          </div>
+          <h3><a href="#">Container Events</a></h3>
+
+          <div>
+            <p>
+            Enter the event topic (ex. org.opensocial.container.event.sampleevent)
+            </p>
+
+            <input type="text" name="eventTopic" id="eventTopic"
+                   class="text ui-widget-content ui-corner-all"/>
+            <p>
+            Enter the event payload
+            </p>
+            <div style='display: block;'>
+	            <textarea name="eventPayload" id="eventPayload"
+	                      class="text ui-widget-content ui-corner-all"> </textarea>
+	            <button id="pubEvent">Publish</button>
+            </div>
+          </div>
+          <h3><a href="#">Embedded Experience Gadgets</a></h3>
+
+          <div>
+            <div style='display: block; padding-bottom: 5px'>
+              Enter the embedded experience gadget URL
+            </div>
+            <div style='display: block; padding-bottom: 10px'>
+	            <input type="text" name="eeUrl" id="eeUrl"
+	                   class="text ui-widget-content ui-corner-all widerInput"/>
+            </div>
+
+            <div style='display: block; padding-bottom: 5px;'>
+	            <label style='display: inline-block; width: 75px;' for="eeHeight">Height: </label>
+	            <input type="text" name="eeHeight" id="eeHeight" class="text ui-widget-content ui-corner-all" value="400"></input>
+            </div>
+            <div style='display: block; padding-bottom: 10px;'>
+	            <label style='display: inline-block; width: 75px;' for="eeWidth">Width: </label>
+	            <input type="text" name="eeWidth" id="eeWidth" class="text ui-widget-content ui-corner-all" value="640"></input>
+            </div>
+
+            <p>
+            Enter the context as a JSON String, and select 'Add' to render the embedded experience gadget
+            </p>
+            <textarea name="eecontextPayload" id="eecontextPayload"
+                      class="text ui-widget-content ui-corner-all widerInput"> </textarea>
+            <p><button id="addEmbeddedExperience">Add</button></p>
+          </div>
+        </div>
+        <span class="ui-icon ui-icon-grip-dotted-horizontal" style="margin: 2px auto;"></span>
+
+        <div id="accordionContainerControls">
+          <h3><a href="#">Manage Container</a></h3>
+
+          <div>More to come here with common container....</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="testArea">
+      <div id="accordionResizer"
+           style="padding: 10px; width: 100%; height: 650px;"
+           class="ui-widget-content">
+
+        <div id="accordion">
+          <h3><a href="#">Test Area</a></h3>
+
+          <div>
+            <div id="gadgetArea" class="column">
+            </div>
+            <div id="results"></div>
+          </div>
+        </div>
+
+      <span class="ui-icon ui-icon-grip-dotted-horizontal" style="margin: 2px auto;"></span></div>
+
+      <div id="accordionResizerEvents"
+           style="padding: 10px; width: 100%; height: 350px;"
+           class="ui-widget-content">
+
+        <div id="accordionEvents">
+          <h3><a href="#">events</a></h3>
+
+          <div>
+            <div id="output" class="column"></div>
+          </div>
+
+        </div>
+        <span class="ui-icon ui-icon-grip-dotted-horizontal" style="margin: 2px auto;"></span></div>
+    </div>
+  </div>
+</body>
+</html>

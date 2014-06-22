@@ -1,0 +1,111 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  --><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>Welcome to WSO2 Identity Server v3.2.0!</title>
+        <link href="css/is-docs.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <p>[<a
+                href="http://wso2.org/downloads/identity">Download</a>]| [<a href="index_docs.html">
+            Documentation Home</a>] | [<a href="release-notes.html">Release Note</a>]
+        </p>
+        <h1>Remote User Management Sample Guide</h1>
+
+        <h2>INTRODUCTION</h2>
+
+        <p>In this sample, we demonstrate how to use the remote user management feature to perform
+            user management functionalities from a remote client application.
+            This sample is located in [IdentityServer_Home/Samples/remote-user-mgt]
+        </p>
+
+        <p>Often you may find the requirement of adding, deleting and updating users, roles and user profiles
+            that are managed in the user store of Identity Server, through a custom client application of yours
+            rather than performing that functionality through the management console of Identity Server.
+        </p>
+
+        <p>Remote User Management feature that is installed into Identity Server by default, facilitates
+            the above requirement and the following section briefly describes this feature and how to use it.</p>
+
+        <h2>ABOUT REMOTE USER MANAGEMENT</h2>
+
+        <p>There are two web services APIs that expose the user management functionality in WSO2 carbon.</p>
+            <ol type="1">
+                <li> Remote User Management API: This is recommended to be used by external clients
+                for handling user management of Identity Server.</li>
+                <li> UserAdmin Service: This is mainly to be used by Carbon UI client.</li>
+            </ol>
+
+        <h3>Using Remote User Management API</h3>
+        <p> From server side, this feature provides set of web services as Admin Services exposing user management
+        functionality. For the client side, it provides an api wrapping the generated client stubs for those
+        web services, to be used in your client code. Since this client API that we provide is for java clients, you can
+        use the wsdls of web services and generate stubs and write custom clients in your preferred language.</p>
+
+        <p>Following are the steps for using the remote user management in your client code:</p>
+        <ol type="1">
+            <li> Generate client stubs for AuthenticationAdmin and web service(s) exposing Remote User Management.
+            <p>You can access those wsdls from carbon server itself (i.e:https://localhost:9443/services/AuthenticationAdmin?wsdl),
+                by setting "HideAdminServiceWSDLs" property to false in [IdentityServer_Home]/repository/conf/carbon.xml file.</p></li>
+            <li> Login to the Identity Server back end as Admin user by calling the "login" method of the stub of
+            AuthenticationAdmin.</li>
+            <li> Obtain the authentication cookie from the HTTP header of the response sent from carbon server.</li>
+            <li> Use the above obtained cookie when invoking the AdminServices related to Remote User Management.</li>
+        </ol>
+        <p>You will get a clear understanding about performing above steps if you go through the source code of this sample.</p>
+
+
+        <h2>HOW TO BUILD AND RUN THE SAMPLE</h2>
+
+        <p>To build the samples you need the
+            <a href="http://ant.apache.org/">Apache
+                Ant
+            </a>
+            build tool.
+        </p>
+
+        <h3>Now follow the simple instructions to build and run the sample:</h3>
+        <ol type="1">
+            <li>Run WSO2 Identity Server. See
+                <a href="installation_guide.html">Installation Guide</a>
+                for
+                installation details.
+            </li>
+            <li>Switch to the remote-user-mgt directory, e.g.</li>
+            <pre>cd CARBON_HOME\samples\remote-user-mgt</pre>
+            <li>From there simply type</li>
+            <pre>ant</pre>
+            <p>This will build and run the sample. You willl see a <pre>BUILD SUCCESSFUL</pre>
+            message after successfully executing this sample.</p>
+        </ol>
+
+        <h3>User Management operations performed in this sample:</h3>
+        <p>This sample performs the following user management operations in the following order:</p>
+        <ol type="1">
+            <li>Add a user given the user name and password.</li>
+            <li>Add a role given the role name.</li>
+            <li>Add a user given the user name and password and add user to a role given the role name,
+            at the time of creating the user.</li>
+            <li>List all existing users in the system.</li>
+            <li>Delete a user given a user name.</li>
+        </ol>
+        <p>Now you can login to the management console of Identity Server through a web browser and
+        go to 'Configure'->'Users and Roles'->'Users' or 'Roles' and observe the users and roles
+        created by the remote sample client above.</p>
+    </body>
+</html>

@@ -1,0 +1,64 @@
+<wsp:Policy wsu:Id="SgnEncrAnonymous" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+            xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <wsp:ExactlyOne>
+        <wsp:All>
+            <sp:SymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:ProtectionToken>
+                        <wsp:Policy>
+                            <sp:X509Token
+                                    sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                <wsp:Policy>
+                                    <sp:RequireThumbprintReference/>
+                                    <sp:WssX509V3Token10/>
+                                </wsp:Policy>
+                            </sp:X509Token>
+                        </wsp:Policy>
+                    </sp:ProtectionToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
+                    <sp:Layout>
+                        <wsp:Policy>
+                            <sp:Lax/>
+                        </wsp:Policy>
+                    </sp:Layout>
+                    <sp:IncludeTimestamp/>
+                    <sp:OnlySignEntireHeadersAndBody/>
+                </wsp:Policy>
+            </sp:SymmetricBinding>
+            <sp:SupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:IssuedToken
+                            sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                        <sp:Issuer>
+                            <Address xmlns="http://www.w3.org/2005/08/addressing">https://localhost:9443/services/wso2carbon-sts</Address>
+                        </sp:Issuer>
+                        <sp:RequestSecurityTokenTemplate>
+                            <t:TokenType xmlns:t="http://schemas.xmlsoap.org/ws/2005/02/trust">urn:oasis:names:tc:SAML:2.0:assertion</t:TokenType>
+                            <t:KeyType xmlns:t="http://schemas.xmlsoap.org/ws/2005/02/trust">http://schemas.xmlsoap.org/ws/2005/02/trust/Bearer</t:KeyType>
+                            <t:KeySize xmlns:t="http://schemas.xmlsoap.org/ws/2005/02/trust">256</t:KeySize>
+                            <t:Claims Dialect="http://wso2.org/claims"
+                                      xmlns:t="http://schemas.xmlsoap.org/ws/2005/02/trust"
+                                      xmlns:ic="http://schemas.xmlsoap.org/ws/2005/05/identity">
+                                <ic:ClaimType Uri="http://wso2.org/claims/givenname"/>
+                                <ic:ClaimType Uri="http://wso2.org/claims/emailaddress"/>
+                            </t:Claims>
+                        </sp:RequestSecurityTokenTemplate>
+                        <wsp:Policy>
+                            <sp:RequireInternalReference/>
+                        </wsp:Policy>
+                    </sp:IssuedToken>
+                </wsp:Policy>
+            </sp:SupportingTokens>
+            <!--<sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <sp:Body/>
+            </sp:SignedParts>-->
+            <!--<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <sp:Body/>
+            </sp:EncryptedParts>-->
+        </wsp:All>
+    </wsp:ExactlyOne>
+</wsp:Policy>

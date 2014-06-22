@@ -1,0 +1,110 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
+/* ============ ROUND 2 ============== */
+
+td.albumsTitle {
+    font-family:'comic sans ms';
+    width: 100%;
+    font-size:24px;
+}
+
+td.albumListThumbnail {
+    width: 10%;
+    height: 75px;
+}
+
+td.albumListRight {
+    width: 90%;
+}
+
+td.actionLinks {
+    width:100%;
+    font-size:12px;
+}
+
+td.albumListTitle {
+    font-size:24px;
+    white-space:nowrap;
+    font-family:'comic sans ms';
+}
+
+td.albumListDescription {
+    font-family:'comic sans ms';
+}
+
+.albumsTable {
+    width:100%;
+    border-style:solid;
+    background-color:#b0c4de;
+}
+
+td.mediaItemThumbnail {
+    height:100%;
+}
+
+td.mediaItemBox {
+    width: 150px;
+    height: 100px;
+}
+
+.mediaItemControls {
+
+}
+
+
+/* ============ ROUND 1 ============== */
+.temp1 {background-color:#6495ed;}
+.temp2 {background-color:#e0ffff;}
+.temp3 {
+    background-color:#b0c4de;
+    background-image:url('img_flwr.png');
+    background-repeat:no-repeat;
+    background-position:top right;
+}
+
+td2 {
+    border-style:solid;
+}
+
+td.albumLeft {
+    width:10%;
+}
+
+td.albumRight {
+    width: 90%;
+}
+
+
+
+td.albumEdit {
+    width:100%;
+    text-align:right;
+    vertical-align:middle;
+    font-size:12px;
+}
+
+
+
+.albumTitleStyle {
+    color: blue;
+    
+}
+.albumElement {
+    background-color:#b0c4de;
+}

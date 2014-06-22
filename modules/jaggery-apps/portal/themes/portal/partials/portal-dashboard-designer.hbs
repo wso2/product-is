@@ -1,0 +1,152 @@
+
+<script id="item-template" type="text/x-handlebars-template">
+    <li class="layout_block">
+        <div class="grid_header">
+            <span class="grid_header_controls">
+                <a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                <a class="expand-widget"><i class="icon-resize-full"></i></a>
+                <a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                <a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            </span>
+        </div>
+        <div class="gadget-pref-cont">
+        	
+        </div>
+        <div class="designer-placeholder">
+
+        </div>
+        <div class="add-gadget-item">
+
+        </div>
+        <button class="btn btn-add-gadget">Add Gadget</button>
+
+    </li>
+</script>
+
+<script id="item-template-blank" type="text/x-handlebars-template">
+	<li class="layout_block">
+
+	<div class="add-gadget-item">
+
+	</div>
+
+	</li>
+</script>
+
+<input type="hidden" value="{{mode}}" id="inp-view-mode" />
+<input type="hidden" value="{{dashboard}}" id="inp-dashboard" />
+
+<div id="gridster-cont" class="container-fluid">
+	<span id="dashboardName"></span>
+	<div class="layouts_grid" id="layouts_grid">
+		<input type="hidden" id="inp-layout" value="{{layout}}">
+		<div style="display: none" class="alert-bar"></div>
+		<ul>
+			<div id="grid-guides"></div>
+			<li data-row="1" data-col="1" data-sizex="2" data-sizey="1" class="layout_block static">
+				static
+			</li>
+			<li data-row="1" data-col="3" data-sizex="2" data-sizey="1" class="layout_block static">
+				static
+			</li>
+			<li data-row="1" data-col="5" data-sizex="1" data-sizey="1" class="layout_block static">
+				static
+			</li>
+			<li data-row="1" data-col="6" data-sizex="1" data-sizey="1" class="layout_block static">
+				static
+			</li>
+		</ul>
+	</div>
+
+</div>
+<!-- /container -->
+
+<!-- Modal -->
+<div id="modal-publish" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel"
+aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+		<h3 id="myModalLabel">{{t "Publish Page"}}</h3>
+	</div>
+	<div class="modal-body">
+		<div class="alert alert-block">
+
+			<p>
+				You are about to publish the page titled 'My Nice Page' to the Store. Best check yo self, you're not
+				looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel
+				scelerisque nisl consectetur et.
+			</p>
+		</div>
+		<div>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">Property 1</label>
+
+					<div class="controls">
+						<input type="text" id="inputEmail" placeholder="Property 1">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword">Property 2</label>
+
+					<div class="controls">
+						<input type="password" id="inputPassword" placeholder="Propery 2">
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox">
+							{{t "Check this please"}} </label>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal-footer">
+
+		<button class="btn btn-primary">
+			{{t "Publish"}}
+		</button>
+	</div>
+</div>
+
+<!-- Modal -->
+<div id="modal-add-gadget" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel" aria-hidden="true">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+		<i class="icon-remove"></i>
+	</button>
+	<div id="store-gadget-div"></div>
+</div>
+
+<!-- Modal -->
+<div id="modal-new-dir" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-body">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+
+		<div>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inp-title">{{t "Enter new directory name"}}</label>
+					<div class="controls">
+						<input type="text" id="inp-title" class="input-xlarge">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal-footer">
+
+		<button id="btn-new-site" class="btn btn-primary">
+			{{t "Create directory"}}
+		</button>
+	</div>
+</div>
+
+

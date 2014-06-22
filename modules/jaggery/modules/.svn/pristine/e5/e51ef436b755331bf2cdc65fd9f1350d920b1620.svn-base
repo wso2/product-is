@@ -1,0 +1,10 @@
+<module name="ws" namespace="$ws" expose="true" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <hostObject>
+        <className>org.jaggeryjs.hostobjects.ws.WSRequestHostObject</className>
+        <name>WSRequest</name>
+    </hostObject>
+    <hostObject>
+        <className>org.jaggeryjs.hostobjects.ws.WSStubHostObject</className>
+        <name>WSStub</name>
+    </hostObject>
+</module>

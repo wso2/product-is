@@ -1,0 +1,229 @@
+/* ---------------- template styles ------------------------- */
+
+table#main-table td#header {
+	background-color:#3B003D;
+	background-image:url(../images/back-repeat.png);
+	background-repeat:repeat-x;
+	height:70px;
+	border-bottom:solid 1px #000000;
+}
+
+table#main-table td#menu-panel {
+	border-right: solid 1px #989898;
+	background-position: right top;
+	background-repeat: repeat-y;
+}
+
+
+/* ---------------- header styles ------------------ */
+div#header-div {
+    background-image: url( ../images/is-header-bg.png);
+	height:70px;
+}
+
+div#header-div div.left-logo {
+	background-image: url( ../images/is-logo.png );
+	margin-left:25px;
+	margin-top:22px;
+	position:absolute;
+}
+
+div#header-div div.right-logo {
+	color:#efefef;
+	height:32px;
+	margin-right:20px;
+	line-height: 30px;
+	margin-top:10px;
+	padding-right:0px;
+	padding-top:0px;
+}
+div#header-div div.header-links {
+	margin-top:0px;
+}
+div#header-div div.header-links div.right-links {
+	margin-right: 0px;
+	height: 27px;
+	padding-top: 0px;
+	color:#eeeeee;
+}
+
+div#header-div div.header-links div.right-links a { color:#fff; }
+div#header-div div.header-links div.right-links ul {
+	background-image:none;
+	background-position:left top;
+	background-repeat:repeat-x;
+	padding-left: 25px;
+	padding-right: 15px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+/* ------------- menu styles ---------------------- */
+div#menu {
+}
+
+div#menu ul.main {
+}
+
+div#menu ul.main li {
+}
+
+div#menu ul.main li.normal {
+}
+
+div#menu ul.main li a.menu-home {
+background-image:url(../images/menu_header.png);
+height:28px;
+color:#fff;
+}
+
+div#menu ul.main li.menu-header {
+	background-image: url(../images/is-server-menu-header.png);
+	background-position: left bottom;
+	background-repeat: repeat-x;
+	height: 32px;
+	line-height: 32px;
+	font-weight:600;
+	color:#444;
+}
+
+div#menu ul.main li a.menu-default {
+}
+
+div#menu ul.main li a.menu-default:hover {
+	background-color: #EFECF5;
+	border-bottom: solid 1px #C2B7D8;
+	border-top: solid 1px #C2B7D8;
+	color: #00447C;
+}
+
+div#menu ul.sub {
+}
+
+/* -------------- child no-01 styles -------------- */
+
+div#menu ul.sub li.normal {
+
+}
+
+div#menu ul.sub li a.menu-default {
+}
+
+/* ----------- child no-01 (disabled) styles ------------------- */
+
+div#menu ul.sub li a.menu-disabled-link {
+	}
+
+	div#menu ul.sub li a.menu-disabled-link:hover {
+	}
+
+/* -------------- child no-02 styles -------------- */
+
+div#menu ul.sub li.normal ul.sub li a.menu-default {
+
+}
+
+/* -------------- child no-03 styles -------------- */
+
+div#menu ul.sub li.normal ul.sub li.normal ul.sub li a.menu-default {
+}
+
+/* ------------- footer styles -------------------- */
+
+div#footer-div div.footer-content div.poweredby {
+	background-position: right top;
+}
+
+/* ---- login styles ----- */
+
+
+/* --------------- table styles -------------------- */
+
+.tableOddRow{background-color: white;}
+.tableEvenRow{background-color: #EFECF5;}
+
+.button:hover{
+}
+
+/* =============================================================================================================== */
+
+
+
+.cornerExpand {
+    position: relative;
+    top: 3px;
+    left: -12px;
+    cursor: pointer;
+}
+
+.cornerCollapse {
+    position: relative;
+    top: 3px;
+    left: -12px;
+    cursor: pointer;
+}
+
+/* chanaka */
+
+.form-table td{
+   padding-bottom:5px !important;
+   padding-left:5px !important;
+   padding-top:5px !important;
+   padding-right:10px !important;
+}
+.form-table td div.indented{
+    padding-left:7px !important;
+    color:#595959 !important;
+}
+.form-table-left{
+width:100px;
+}
+
+.longTextField{
+width:270px;
+}
+.rowAlone{
+padding-top:10px;
+padding-bottom:10px;
+}
+.tabedBox{
+border:solid 1px #cccccc;
+margin-left:10px;
+padding:10px;
+margin-bottom:10px;
+}
+
+a.fact-selector-icon-link {
+    background-repeat: no-repeat;
+    background-position: left top;
+    padding-left: 20px;
+    line-height: 17px;
+    height: 17px;
+    float: left;
+    position: relative;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+table#main-table td#middle-content {
+background-position: left top;
+background-repeat: repeat-y;
+background-color:#ffffff;
+}
+div#middle{
+background-color:#ffffff;   
+}
+
+/* new theme 01-07-2013 */
+table#main-table td.vertical-menu-container { background-color:#444; padding-left: 5px; border-top:0px;}
+div.menu-panel-buttons { border-top-left-radius: 7px; border-bottom-left-radius: 7px;  border-top-right-radius: 0px; border-bottom-right-radius: 0px; padding: 15px 3px;}
+div.selected span { font-weight:bold; color:#ffffff; background-color:#555555; }
+div.menu-panel-buttons span {  }
+div.selected { border:0px; background-color:#555555; box-shadow:none; }
+div#middle h2{color:#444;}
+table#main-table td#footer{background:#444;}
+div#menu ul.main li.menu-header img{
+    background: none repeat scroll 0 0 #EFEFEF;
+    border-radius:15px;
+}
+

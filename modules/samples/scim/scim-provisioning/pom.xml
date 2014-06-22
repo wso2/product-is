@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.identity</groupId>
+        <artifactId>wso2is-identity-samples-scim</artifactId>
+        <version>5.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>scim-provisioning</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.charon</groupId>
+            <artifactId>org.wso2.charon.core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient.wso2</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>${orbit.version.commons.httpclient}</version>
+        </dependency>
+    </dependencies>
+
+</project>

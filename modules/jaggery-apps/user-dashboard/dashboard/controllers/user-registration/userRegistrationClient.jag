@@ -1,0 +1,109 @@
+<%
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+
+
+setServerURL();
+log.debug(application.get('serverUrl'));
+
+var serverUrl = application.get('serverUrl');
+serverUrl = serverUrl + "/UserRegistrationAdminService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+
+function addUser(payload){
+    callWSInOnly(webService, serverUrl, "urn:addUser", payload);
+}
+
+function getPasswordRegularExpressions(){
+    return callWSReturnJSON(webService, serverUrl, "urn:getPasswordRegularExpressions");
+}
+
+function readUserFieldsForUserRegistration(claim, xml){
+    if(xml){
+        return callWSReturnXML(webService, serverUrl, "urn:readUserFieldsForUserRegistration", new Array(claim));
+    }else{
+        var result = callWSReturnJSON(webService, serverUrl, "urn:readUserFieldsForUserRegistration", new Array(claim));
+        result.return.fieldValues = util.sortNumber(result.return, 'displayOrder', true, true);
+
+        for(var x = 0; x < result.return.fieldValues.length; x++){
+            var obj = result.return.fieldValues[x];
+            if(obj.required === "false"){
+                obj.required = "";
+            }
+
+        }
+        return result;
+    }
+}
+
+function setServerURL(){
+	
+	var serverUrl = stringify(application.get(SERVER_URL));
+	if(serverUrl === 'null' || serverUrl == null || serverUrl.length <= 0){
+		//Server URL is not specified in the jaggery.conf, therefore using the service url mentioned in the carbon.conf
+		//lg.info("we are here 0");
+		var carbon = require('carbon');
+		//lg.info("we are here 1");
+		var serverConfigService = carbon.server.osgiService('org.wso2.carbon.base.api.ServerConfigurationService');
+		var configContextService = carbon.server.osgiService('org.wso2.carbon.utils.ConfigurationContextService');
+		
+		var configContext = configContextService.getServerConfigContext();
+
+		
+		var ServerConfiguration = Packages.org.wso2.carbon.base.ServerConfiguration;
+	    var mgtTransport = ServerConfiguration.getInstance().getFirstProperty("ManagementTransport");
+	    if (mgtTransport == null || mgtTransport.startsWith("${")) {
+	    	mgtTransport = "https";
+	    }
+	    
+	    var carbonMgtParam = "${carbon.management.port}";
+	    var carbonContext = "${carbon.context}";
+	    
+		var server = serverConfigService.getFirstProperty("ServerURL");
+		var hostName = serverConfigService.getFirstProperty("HostName");
+		var mgtHostName = serverConfigService.getFirstProperty("MgtHostName");
+		
+		
+		var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
+	   var httpsPort =
+	                CarbonUtils.getTransportPort(configContext, mgtTransport) + "";		
+	                
+		application.put("mgtHostName", mgtHostName);		
+		application.put("mgtTransport", mgtTransport);
+		
+	   application.put("httpsPort", httpsPort);
+		
+		if(server.indexOf("local:/") == 0){
+			server = mgtTransport + "://"+ hostName +":" + carbonMgtParam + carbonContext + "/services"
+		}
+
+	    var serverUrl = server;
+		 if (serverUrl.indexOf(carbonMgtParam) != -1) {
+	        serverUrl = serverUrl.replace(carbonMgtParam, httpsPort);
+	    }
+	    if (serverUrl.indexOf(carbonContext) != -1) {
+	        var context = ServerConfiguration.getInstance().getFirstProperty("WebContextRoot");
+	        if (context.equals("/")) {
+	            context = "";
+	        }
+	        serverUrl = serverUrl.replace(carbonContext, context);
+	    }
+	    
+		
+	    if(serverUrl.lastIndexOf('/') === (serverUrl.length - 1)){
+	    	serverUrl = serverUrl.substring(0, serverUrl.length - 1);
+	    }
+		application.put(SERVER_URL, serverUrl);
+		lg.info("connecting to " + serverUrl);
+
+	}
+		
+}
+
+
+%>

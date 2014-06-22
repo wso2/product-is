@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+	<ModulePrefs title="Proxy Tester" height="500">
+		<Require feature="dynamic-height"/>
+		<Require feature="embedded-experiences"/>
+		<Require feature="proxied-form-post"/>
+	</ModulePrefs>
+	<Content type="html"><![CDATA[
+	  <script>
+	    function init() {
+	      gadgets.window.adjustHeight();
+	    }
+
+	    function doPostFile() {
+	      document.getElementById("result").innerHTML = '';
+	      document.getElementById("progbar").style.width = 0;
+
+	      var form = document.getElementById("imageform"),
+	          params = {};
+	      params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+	      params[gadgets.io.RequestParameters.HEADERS] = {
+	        Referer: 'http://bayimg.com/',
+	        Origin: 'http://bayimg.com'
+	      };
+
+	      gadgets.io.proxiedMultipartFormPost(form, params, function(response) {
+	        document.getElementById("progbar").style.width = "100%";
+	        window.doAbort = null;
+	        if (response && response.errors && response.errors.length) {
+	          try {
+	            document.getElementById("result").innerHTML = /<body>(.*)<\/body>/.exec(response.errors[0])[1];
+	          } catch(e) {
+	            document.getElementById("result").innerHTML = 'Error: ' + response.errors[0];
+	          }
+	        } else {
+	          try {
+	            var url = /<img[^>]+alt="Image"[^>]+src="([^"]+)"/.exec(response.text)[1];
+	            document.getElementById("result").innerHTML = '<img src="' + url + '" onload="init();">';
+	          } catch(e) {
+	            document.getElementById("result").innerHTML = 'Error';
+	          }
+	        }
+	        gadgets.window.adjustHeight();
+	      },
+	      function(event, abort) {
+	        if (!window.doAbort)
+	          window.doAbort = abort;
+	        if (event && event.lengthComputable) {
+	          var percent = Math.ceil((event.loaded / event.total) * 100) + "%";
+	          document.getElementById("progbar").style.width = percent;
+	        }
+	      });
+	    }
+
+	     gadgets.util.registerOnLoadHandler(init);
+	  </script>
+
+	  <h3>Upload an image file to bayimg.com</h3>
+	  <form id="imageform" action="http://upload.bayimg.com/upload">
+	    <fieldset>
+	      File: <input type="file" name="file"></input>
+	      <input type="hidden" name="code" value="opensocial"></input>
+	      <input type="hidden" name="tags" value=""></input>
+	    </fieldset>
+	    <input type="button" value="Upload" onClick="doPostFile();"/>
+	    <input type="button" value="Abort" onClick="if (window.doAbort) doAbort();"/>
+	  </form>
+
+	  <div style="border:1px solid rgb(90,90,115); background-color:#ffffff; padding:0px; width:200px; height:20px;overflow:hidden;">
+	    <div id="progbar" style="width:0%; height:100%; background-color:rgb(108,157,222)"></div>
+	  </div>
+
+	  <div id="result"></div>
+	]]></Content>
+</Module>

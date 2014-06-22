@@ -1,0 +1,23 @@
+<module name="process" namespace="$process" expose="false" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <!-- methods -->
+    <method readOnly="true">
+        <className>org.jaggeryjs.hostobjects.process.ProcessHostObject</className>
+        <name>getEnv</name>
+    </method>
+    <method readOnly="true">
+        <className>org.jaggeryjs.hostobjects.process.ProcessHostObject</className>
+        <name>getEnvs</name>
+    </method>
+    <method readOnly="true">
+        <className>org.jaggeryjs.hostobjects.process.ProcessHostObject</className>
+        <name>getProperty</name>
+    </method>
+    <method readOnly="true">
+        <className>org.jaggeryjs.hostobjects.process.ProcessHostObject</className>
+        <name>getProperties</name>
+    </method>
+    <method readOnly="true">
+        <className>org.jaggeryjs.hostobjects.process.ProcessHostObject</className>
+        <name>setProperty</name>
+    </method>
+</module>

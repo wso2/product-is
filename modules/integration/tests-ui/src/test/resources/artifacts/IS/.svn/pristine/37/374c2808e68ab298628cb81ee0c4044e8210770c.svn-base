@@ -1,0 +1,61 @@
+<!-- ~ Copyright WSO2, Inc. (http://wso2.com) ~ ~ Licensed under the Apache 
+	License, Version 2.0 (the "License"); ~ you may not use this file except 
+	in compliance with the License. ~ You may obtain a copy of the License at 
+	~ ~ http://www.apache.org/licenses/LICENSE-2.0 ~ ~ Unless required by applicable 
+	law or agreed to in writing, software ~ distributed under the License is 
+	distributed on an "AS IS" BASIS, ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY 
+	KIND, either express or implied. ~ See the License for the specific language 
+	governing permissions and ~ limitations under the License. -->
+
+<UserManager>
+	<Realm>
+		<Configuration>
+			<AddAdmin>true</AddAdmin>
+			<AdminRole>admin</AdminRole>
+			<AdminUser>
+				<UserName>admin</UserName>
+				<Password>admin</Password>
+			</AdminUser>
+			<EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
+			<Property name="dataSource">jdbc/WSO2CarbonDB</Property>
+		</Configuration>
+		<UserStoreManager
+			class="org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager">
+			<Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager
+			</Property>
+			<Property name="ReadOnly">true</Property>
+			<Property name="Disabled">false</Property>
+			<Property name="MaxUserNameListLength">100</Property>
+			<Property name="ConnectionURL">ldap://localhost:10389</Property>
+			<Property name="ConnectionName">uid=admin,ou=system</Property>
+			<Property name="ConnectionPassword">admin</Property>
+			<Property name="passwordHashMethod">PLAIN_TEXT</Property>
+			<Property name="UserSearchBase">ou=system</Property>
+			<Property name="UserNameListFilter">(objectClass=person)</Property>
+			<Property name="UserNameSearchFilter">(&amp;(objectClass=person)(uid=?))</Property>
+			<Property name="UserNameAttribute">uid</Property>
+			<Property name="ReadGroups">true</Property>
+			<Property name="GroupSearchBase">ou=system</Property>
+			<Property name="GroupNameListFilter">(objectClass=groupOfNames)</Property>
+			<Property name="GroupNameSearchFilter">(&amp;(objectClass=groupOfNames)(cn=?))</Property>
+			<Property name="GroupNameAttribute">cn</Property>
+			<Property name="SharedGroupNameAttribute">cn</Property>
+			<Property name="SharedGroupSearchBase">ou=SharedGroups,dc=wso2,dc=org</Property>
+			<Property name="SharedGroupNameListFilter">(objectClass=groupOfNames)</Property>
+			<Property name="SharedTenantNameListFilter">(objectClass=organizationalUnit)</Property>
+			<Property name="SharedTenantNameAttribute">ou</Property>
+			<Property name="SharedTenantObjectClass">organizationalUnit</Property>
+			<Property name="MembershipAttribute">member</Property>
+			<Property name="UserRolesCacheEnabled">true</Property>
+			<Property name="ReplaceEscapeCharactersAtUserLogin">true</Property>
+			<Property name="MaxRoleNameListLength">100</Property>
+			<Property name="MaxUserNameListLength">100</Property>
+			<Property name="SCIMEnabled">false</Property>
+		</UserStoreManager>
+		<AuthorizationManager
+			class="org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager">
+			<Property name="AdminRoleManagementPermissions">/permission</Property>
+			<Property name="AuthorizationCacheEnabled">true</Property>
+		</AuthorizationManager>
+	</Realm>
+</UserManager>

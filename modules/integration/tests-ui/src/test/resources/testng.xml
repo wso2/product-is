@@ -1,0 +1,24 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="IS_SCIM_TestSuite">
+    <parameter name="useDefaultListeners" value="false"/>
+    <listeners>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformTestManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformReportManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformExecutionManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformAnnotationTransferManager"/>
+    </listeners>
+    <test name="Test - IS" preserve-order="true" parallel="false">
+        <classes>
+
+            <class name="org.wso2.carbon.identity.ui.test.login.ISLoginTestCase"/>
+            <class name="org.wso2.carbon.identity.ui.test.user.mgt.RoleCreationTestCase"/>
+            <class name="org.wso2.carbon.identity.ui.test.policy.ui.SimplePolicyEditorTestCase"/>
+     <!--       <class name="org.wso2.carbon.identity.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.tests.sso.AllClaimURIsTestCase"/>
+            <class name="org.wso2.carbon.identity.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.test.scim.SCIMServiceProviderUserTestCase"/>
+            <class name="org.wso2.carbon.identity.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.test.user.mgt.RoleCreationTestCase"/>
+            <class name="org.wso2.carbon.identity.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.tests.sso.SSOSessionTimeoutTestCase"/>-->
+        </classes>
+    </test>
+</suite>

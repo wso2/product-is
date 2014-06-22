@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+    <ModulePrefs title="TemplateClientAPI">
+        <Require feature="opensocial-templates">
+            <!-- This is required to be present to get access to the JavaScript -->
+            <Param name="client">true</Param>
+            <Param name="requireLibrary">TestTemplateLibrary.xml</Param>
+        </Require>
+        <Optional feature="content-rewrite">
+            <Param name="include-tags"></Param>
+        </Optional>
+    </ModulePrefs>
+    <Content type="html" view="home,profile">
+        <![CDATA[
+        <script type="text/os-template" xmlns:foomod="http://foo.com/module" tag="foomod:HelloWorldModule">
+            <div>Hello World Module</div>
+        </script>
+
+        <div>
+          <p>Simple test of gadget using template library with client API access</p>
+        </div>
+        <script type="text/os-template" xmlns:foo="http://foo.com/" xmlns:foomod="http://foo.com/module">
+          <p>
+            <div>Statically Defined from Module...</div><foomod:HelloWorldModule />
+            <div>Statically Defined from Template...</div><foo:HelloWorld />
+          </p>
+        </script><br/>
+
+        <div>Client Added from Module ...</div>
+        <div><div id='addheremod'/></div><br/>
+
+        <div>Client Added from Template ...</div>
+        <div><div id='addheretemplate'/></div><br/>
+
+        <script type="text/javascript">
+            function handleLoad() {
+                var template = os.getTemplate("foomod:HelloWorldModule");
+                if (template != undefined) {
+                    var placeholder = document.getElementById("addheremod");
+                    template.renderInto(placeholder);
+                } else {
+                    alert('Error: Inline Not Found (Module Defined) - This fails due to OnLoadHandler timing. '
+                        + 'This will succeed if you comment out the template library');
+                }
+
+                template = os.getTemplate("foo:HelloWorld");
+                if (template != undefined) {
+                    var placeholder = document.getElementById("addheretemplate");
+                    template.renderInto(placeholder);
+                } else {
+                    alert('Error: Inline Not Found (Template Defined)');
+                }
+            }
+            gadgets.util.registerOnLoadHandler(handleLoad);
+		</script>
+        ]]>
+    </Content>
+</Module>
