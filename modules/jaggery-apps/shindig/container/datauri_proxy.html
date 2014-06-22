@@ -1,0 +1,69 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<html>
+  <head>
+    <title>Data URI via proxy, sample/test page</title>
+    <script>
+      function makeXhr() {
+        if (window.ActiveXObject) {
+          x = new ActiveXObject("Msxml2.XMLHTTP");
+          if (!x) {
+            x = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          return x;
+        }
+        else if (window.XMLHttpRequest) {
+          return new window.XMLHttpRequest();
+        }
+      }
+
+      function displayViaProxy() {
+        var uri = document.getElementById("contentUri").value;
+        var xhr = makeXhr();
+        xhr.open("GET", "/gadgets/proxy?output=js&container=default&url=" + encodeURIComponent(uri));
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState != 4) {
+            return;
+          } else if (xhr.status != 200) {
+            alert("Error attempting to fetch through proxy: " + xhr.responseText);
+            return;
+          }
+          var responseText = xhr.responseText;
+          var jsonPiece = responseText.length > 100 ? responseText.substring(0, 100) + "..." : responseText;
+          document.getElementById("status").innerHTML = new Date().toString() + ": got data [" + jsonPiece + "]";
+          var json = eval('(' + responseText + ')');
+          document.getElementById("theimage").src = json.dataUri;
+        };
+        xhr.send(null);
+      }
+    </script>
+  </head>
+
+  <body>
+    This page demonstrates the use of the content proxy to retrieve data URI encoded content, by displaying a retrieved URI as an image.<br/><br/>
+    Content URI:
+    <script>
+      document.write('<input type="text" size="100" name="contentUri" id="contentUri" value="' + ("http://" + window.location.host + "/samplecontainer/examples/rewriter/feather.png") + '"/>');
+    </script>
+    &nbsp;<input type="button" name="display" id="display" value="Display!" onclick="displayViaProxy();"/><br/><br/><hr/><br/>
+    <div id="status"></div>
+    <div><img id="theimage" src="" alt="[image will appear here]"/></div>
+  </body>
+
+</html>

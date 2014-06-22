@@ -1,0 +1,91 @@
+.dash-sort select {
+    margin-left: 5px;
+    width: 100px;
+}
+#dash-title {
+   display: inline;
+    font-size: 16px;
+    margin: 0;
+    
+}
+#dash-title:hover{
+    color: auto;
+}
+#dash-nav {
+    display: inline;
+}
+
+#dash-pages li {
+    height: 36px;
+    position: relative;
+    padding: 5px 10px;
+}
+#dash-pages li:nth-child(even) {
+    background: none repeat scroll 0 0 #F5F5F5;
+}
+#dash-pages li a {
+    color: #333333;
+}
+
+#dash-pages li:hover a {
+    color: #16a085;
+}
+#dash-pages li:hover .dash-page-controls {
+    visibility: visible;
+}
+
+#dash-pages li i {
+    color: #888;
+}
+
+#dash-pages .right {
+    text-align: right;
+}
+#dash-pages > ul, #dash-controls > ul, #dash-menu-left > ul {
+    margin: 0;
+}
+#dash-controls ul li {
+    display: inline;
+    margin-right: 10px;
+}
+#dash-sort {
+    width: 100px;
+}
+
+#dash-menu-left li {
+    font-weight: 600;
+    height: 20px;
+    line-height: 20px;
+    padding: 8px 0;
+}
+#dash-menu-left li a {
+    color: #888;
+}
+#dash-menu-left li a.selected {
+    color: #16a085;
+}
+
+#dash-menu-left h4{
+    font-weight:bold;
+    font-size:14px;
+    text-transform:uppercase;
+}
+
+#dash-pages-columns {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: #888888;
+    border-bottom: 1px solid #CCCCCC;
+}
+.dash-page-controls {
+    visibility:hidden;
+    bottom: 3px;
+    color: #CCCCCC;
+    font-size: 11px;
+    left: 27px;
+    line-height: 12px;
+    position: absolute;
+    text-transform: uppercase;
+}

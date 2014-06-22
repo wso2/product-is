@@ -1,0 +1,6 @@
+<module name="i18n" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>i18n</name>
+        <path>scripts/i18n.js</path>
+    </script>
+</module>

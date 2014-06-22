@@ -1,0 +1,51 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+.portlet {
+	width: 500px;
+}
+.portlet-header .ui-icon { 
+ 	float: right; 
+ }
+ 
+ #viewsDropdown, #viewsDropdown ul { 
+   list-style: none; margin: 10px;
+ }
+ #viewsDropdown, #viewsdropdown * {
+   padding: 0; margin: 0; 
+ }
+
+ #viewsDropdown li.li-header {
+   float: right; margin-left: -1px;
+ }
+ #viewsDropdown li.li-header a { 
+   display: block; font-size: small;
+ }
+
+ #viewsDropdown li.li-header ul { 
+   display: none; border: 1px black solid; text-align: left; 
+ }
+ 
+ #viewsDropdown li.li-header:hover ul { 
+   display: block; 
+ }
+
+ #viewsDropdown li.li-header ul li a { 
+   padding: 5px; height: 17px; font-size: small;
+ }

@@ -1,0 +1,77 @@
+<%
+var log = new Log();
+var cookie = request.getParameter("cookie") ;
+var user = request.getParameter("user");
+getUser();
+function getUser(){
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+ try{
+
+var client = require('controllers/account_recovery/identityMgtClient.jag');
+var fieldValues = client.getAllRecoveryQuestions();
+var userChallenges = client.getUserChallengeQuestions(user)
+fieldValues.selectedChalanges = userChallenges.return;
+
+// Get User Challanges
+var selectedChallanges = null;
+if(userChallenges.return != null){
+	selectedChallanges = {};
+	for (var i in userChallenges.return) {
+		if(userChallenges.return[i].id == 'http://wso2.org/claims/challengeQuestion1'){
+			selectedChallanges.challange1 = userChallenges.return[i];
+		}
+		else{
+			selectedChallanges.challange2 = userChallenges.return[i];
+		}
+	}
+
+}
+
+
+var orderedChallanges = {};
+orderedChallanges.challenge1 = [];
+orderedChallanges.challenge2 = [];
+
+var ch1 = 0;
+var ch2 = 0;
+for (var i in fieldValues.return) {
+	if(fieldValues.return[i].questionSetId == 'http://wso2.org/claims/challengeQuestion1'){
+		if(selectedChallanges != null && selectedChallanges.challange1.question == fieldValues.return[i].question ){
+			fieldValues.return[i].selected = "true";
+			fieldValues.return[i].answer = selectedChallanges.challange1.answer;
+		}
+		else{
+			fieldValues.return[i].selected = "false";
+			fieldValues.return[i].answer = "";
+		}
+		orderedChallanges.challenge1[ch1] = fieldValues.return[i];
+		ch1++;
+
+	}	
+	if(fieldValues.return[i].questionSetId == 'http://wso2.org/claims/challengeQuestion2'){
+		if(selectedChallanges != null && selectedChallanges.challange2.question == fieldValues.return[i].question ){
+			fieldValues.return[i].selected = "true";
+			fieldValues.return[i].answer = selectedChallanges.challange2.answer;
+		}
+		else{
+			fieldValues.return[i].selected = "false";
+			fieldValues.return[i].answer = "";
+		}
+		orderedChallanges.challenge2[ch2] = fieldValues.return[i];
+		ch2++;
+
+	}	
+}
+
+print( orderedChallanges );
+    }catch(e){
+print(e);
+        log.error(e);
+            }
+
+}
+
+%>

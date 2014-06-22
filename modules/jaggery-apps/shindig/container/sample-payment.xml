@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="My App Test"
+               author_email="yizi.wu@gmail.com" height="500">
+    <Require feature="opensocial-0.9"/>
+    <Require feature="dynamic-height"/>
+    <Require feature="settitle"/>
+    <Require feature="views"/>
+    <Require feature="rpc"/>
+  </ModulePrefs>
+  <Content type="html">
+    <![CDATA[
+      <style>
+        #main {font-size:13px;}
+        .t {width:300px; margin-left:3px;}
+        .f {border-collapse:collapse;margin-left:10px;}
+        .f tbody tr td {font-size:12px;font-weight:bold;white-space:nowrap;vertical-align:top;}
+        .f tbody tr td span {font-size:10px;white-space:normal;}
+        .desc {color:#007F7F;}
+      </style>
+      <script>
+        function requestPayment() {
+          var params = {};
+          params[opensocial.Payment.Field.AMOUNT] = document.getElementById('amount').value;
+          params[opensocial.Payment.Field.MESSAGE] = document.getElementById('message').value;
+          params[opensocial.Payment.Field.PARAMETERS] = gadgets.util.escapeString(document.getElementById('parameters').value);
+          params[opensocial.Payment.Field.PAYMENT_TYPE] = document.getElementById('creditType').checked ? 
+              opensocial.Payment.PaymentType.CREDIT : opensocial.Payment.PaymentType.PAYMENT;
+
+          var itemParams = {};
+          itemParams[opensocial.BillingItem.Field.SKU_ID] = 'test_sku1';
+          itemParams[opensocial.BillingItem.Field.PRICE] = 20;
+          itemParams[opensocial.BillingItem.Field.COUNT] = 2;
+          itemParams[opensocial.BillingItem.Field.DESCRIPTION] = 'demo description red flower';
+          var item1 = opensocial.newBillingItem(itemParams);
+
+          itemParams = {};
+          itemParams[opensocial.BillingItem.Field.SKU_ID] = 'test_sku2';
+          itemParams[opensocial.BillingItem.Field.PRICE] = 30;
+          itemParams[opensocial.BillingItem.Field.COUNT] = 4;
+          itemParams[opensocial.BillingItem.Field.DESCRIPTION] = 'demo description yellow flower';
+          var item2 = opensocial.newBillingItem(itemParams);
+
+
+          params[opensocial.Payment.Field.ITEMS] = [item1, item2];
+          var payment = opensocial.newPayment(params);
+
+          opensocial.requestPayment(payment, function(responseItem) {
+            document.getElementById('paymentOutput').style.display = 'block';
+            document.getElementById('status').innerHTML = responseItem.hadError() ? 'FAILED' : 'SUCCESS';
+            var data = responseItem.getData();
+            document.getElementById('type').innerHTML = data.getField(opensocial.Payment.Field.PAYMENT_TYPE);
+            document.getElementById('orderid').innerHTML = data.getField(opensocial.Payment.Field.ORDER_ID);
+            document.getElementById('code').innerHTML = data.getField(opensocial.Payment.Field.RESPONSE_CODE);
+            document.getElementById('resmsg').innerHTML = data.getField(opensocial.Payment.Field.RESPONSE_MESSAGE);
+            document.getElementById('orderedtime').innerHTML = new Date(data.getField(opensocial.Payment.Field.ORDERED_TIME)).toLocaleString();
+            document.getElementById('submittedtime').innerHTML = new Date(data.getField(opensocial.Payment.Field.SUBMITTED_TIME)).toLocaleString();
+            document.getElementById('executedtime').innerHTML = new Date(data.getField(opensocial.Payment.Field.EXECUTED_TIME)).toLocaleString();
+
+            gadgets.window.adjustHeight();
+          });
+          document.getElementById('paymentOutput').style.display = 'none';
+
+        };
+
+
+        function requestPaymentRecords() {
+
+          var params = {};
+          params[opensocial.Payment.RecordsRequestFields.MAX] = document.getElementById('max').value;
+          params[opensocial.Payment.RecordsRequestFields.SANDBOX] = document.getElementById('r_sandbox').checked;
+
+          opensocial.requestPaymentRecords(function(responseItem) {
+            document.getElementById('recordsOutput').style.display = 'block';
+            var data = responseItem.getData();
+
+            var html = 'Listing original incomplete payments before request.<br> Payments in bold are fixed manually by user afterward.<br>';
+            for (var i = 0; i < data.length; i++) {
+              var bold = data[i].getField(opensocial.Payment.Field.PAYMENT_COMPLETE);
+              if (bold) html += '<b>';
+              html += data[i].getField(opensocial.Payment.Field.ORDER_ID) + '&emsp;' + 
+                      data[i].getField(opensocial.Payment.Field.AMOUNT) + '&emsp;' + 
+                      data[i].getField(opensocial.Payment.Field.RESPONSE_MESSAGE) + '&emsp;' +
+                      new Date(data[i].getField(opensocial.Payment.Field.EXECUTED_TIME)).toLocaleString();
+              if (bold) html += '</b>';
+              html += '<br>';
+            }
+            document.getElementById('records').innerHTML = html;
+
+            gadgets.window.adjustHeight();
+          }, params);
+
+          document.getElementById('recordsOutput').style.display = 'none';
+        };
+
+        function init() {
+          var req = opensocial.newDataRequest();
+          req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.VIEWER), "req");
+          req.send(function(data) {
+            if (!data.hadError()) {
+              document.getElementById('myname').innerHTML = 'Current Viewer: <b>' + data.get("req").getData().getDisplayName() + '</b>';
+            }
+            gadgets.window.adjustHeight();
+          });
+        };
+        gadgets.util.registerOnLoadHandler(init);
+      </script>
+
+
+      <div id="main">
+        <p class="desc">
+            Here is the app domain inside the gadget iframe, usually different from container domain:<br>
+            <b><script>document.write('http://' + window.location.host + window.location.pathname + location.search.substring(0, 30) + '...');</script></b>
+        </p>
+        <p><span id="myname"></span></p><hr>
+
+        <div id=req>
+          <b>Make a Payment Request: </b><br>
+          <table class=f><tbody>
+          <tr><td>Amount: </td><td><input class=t id=amount value=100></td></tr>
+          <tr><td>Message: </td><td><input class=t id=message value="You are ordering some flowers."></td></tr>
+          <tr><td>Parameters: </td><td><input class=t id=parameters value="{type:'Tulip',quantity:5}"></td></tr>
+          <tr><td>Payment Type: </td><td>
+              <input type=radio id=paymentType name=pt checked><label for=paymentType>Payment</label>
+              <input type=radio id=creditType name=pt><label for=creditType>Credit</label>
+          </td></tr>
+          </tbody></table>
+          <button onclick="requestPayment();">Request Payment</button>
+        </div>
+
+        <div id=paymentOutput style="display:none">
+          <hr>
+          <b>Payment Response: </b><br>
+          <table class=f><tbody>
+          <tr><td>Payment Type: </td><td><span id=type></span></td></tr>
+          <tr><td>Status: </td><td><span id=status></span></td></tr>
+          <tr><td>Order ID: </td><td><span id=orderid></span></td></tr>
+          <tr><td>Response Code: </td><td><span id=code></span></td></tr>
+          <tr><td>Response Message: </td><td><span id=resmsg></span></td></tr>
+          <tr><td>Ordered Time: </td><td><span id=orderedtime></span></td></tr>
+          <tr><td>Submitted Time: </td><td><span id=submittedtime></span></td></tr>
+          <tr><td>Executed Time: </td><td><span id=executedtime></span></td></tr>
+          </tbody></table>
+        </div>
+        <hr>
+
+        <div>
+          <b>Make a Payment Records Request: </b><br>
+          <table class=f><tbody>
+          <tr><td><label for=sandbox>Sandbox: </label></td><td><input type=checkbox id=r_sandbox checked></td></tr>
+          <tr><td>Max: </td><td><input class=t id=max value=3></td></tr>
+          </tbody></table>
+          <button onclick="requestPaymentRecords();">Request Payment Records</button>
+        </div>
+        <div id=recordsOutput style="display:none">
+          <hr>
+          <div id=records></div>
+        </div>
+      </div>
+     ]]>
+  </Content>
+</Module>
+
+

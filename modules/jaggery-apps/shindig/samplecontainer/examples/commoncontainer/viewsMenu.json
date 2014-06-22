@@ -1,0 +1,7 @@
+{ "views":
+  [
+    {"name": "home", "value": "home", "height": "400px", "width": "450px"},
+    {"name": "canvas", "value": "canvas", "height": "500px", "width": "800px"},
+    {"name": "profile", "profile", "height": "500px", "width": "300px"}
+  ]
+}

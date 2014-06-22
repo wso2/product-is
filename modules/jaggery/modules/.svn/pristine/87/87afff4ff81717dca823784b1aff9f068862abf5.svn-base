@@ -1,0 +1,6 @@
+<module name="email" namespace="$email" expose="true" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <hostObject>
+        <className>org.jaggeryjs.hostobjects.email.SenderHostObject</className>
+        <name>Sender</name>
+    </hostObject>
+</module>

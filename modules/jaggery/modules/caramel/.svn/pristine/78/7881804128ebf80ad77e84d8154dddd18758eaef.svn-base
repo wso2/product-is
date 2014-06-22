@@ -1,0 +1,14 @@
+<module name="caramel" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>Caramel.js</name>
+        <path>scripts/Caramel.js</path>
+    </script>
+    <script>
+        <name>caramel-core.js</name>
+        <path>scripts/caramel-core.js</path>
+    </script>
+    <script>
+        <name>caramel.handlebars.js</name>
+        <path>scripts/caramel.handlebars.js</path>
+    </script>
+</module>

@@ -1,0 +1,486 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+    	<groupId>org.wso2.identity</groupId>
+    	<artifactId>identity-server-parent</artifactId>
+    	<version>5.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wso2is</artifactId>
+    <packaging>jar</packaging>
+    <name>Identity Server</name>
+    <url></url>
+    <description>Identity Server: Distribution</description>
+
+    <dependencies>
+       <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+	    <version>1.2.140.wso2v3</version>	
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart</artifactId>
+            <type>mar</type>
+            <version>1.6.1-wso2v12</version>
+      		<exclusions>
+		 <exclusion> 
+          		<groupId>org.apache.neethi</groupId>
+          		<artifactId>neethi</artifactId>
+        	</exclusion>
+       		 <exclusion> 
+         		 <groupId>org.apache.woden</groupId>
+          		<artifactId>woden-api</artifactId>
+        	</exclusion>
+        	<exclusion>  
+          		<groupId>org.apache.woden</groupId>
+          		<artifactId>woden-impl-dom</artifactId>
+        	</exclusion>
+      		</exclusions> 
+        </dependency>   
+        <!--
+              dependency> <groupId>org.wso2.carbon</groupId>
+              <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
+              <version>${carbon.version}</version> </dependency> <dependency>
+              <groupId>org.wso2.carbon</groupId>
+              <artifactId>com.wso2.carbon.multitenancy.theme.mgt</artifactId>
+              <version>${carbon.version}</version > </dependency
+          -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.0-alpha-4</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>unpack-wso2carbon</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon</groupId>
+                                    <artifactId>wso2carbon-core</artifactId>
+                                    <version>4.2.0</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>extract-docs-from-components</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property name="tempdir" value="target/docs-temp"/>
+				<property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;generic_sts_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;manage_saml_sso&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;oauth_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;scim_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
+
+                                <mkdir dir="${tempdir}"/>
+                                <unzip dest="${tempdir}">
+                                    <fileset dir="target">
+                                        <include name="wso2is-${project.version}.zip"/>
+                                    </fileset>
+                                </unzip>
+
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="${product.name}" value="WSO2 Identity Server"/>
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;ServerURL&gt;https://${carbon.local.ip}"
+                                        value="&lt;ServerURL&gt;https://localhost"/>
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;"
+                                        value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;"/>
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;"
+                                        value="&lt;HostName&gt;localhost&lt;/HostName&gt;"/>
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;!--LdapServer&gt;"
+                                        value="&lt;LdapServer&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;/LdapServer--&gt;"
+                                        value="&lt;/LdapServer&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;!--TokenStoreClassName&gt;"
+                                        value="&lt;TokenStoreClassName&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;/TokenStoreClassName--&gt;"
+                                        value="&lt;/TokenStoreClassName&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        token="&lt;/Security&gt;"
+                                        value="${hideMenu}"/>
+
+				<!-- Comment all active UserStoreManagers -->
+                                <replace
+                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        token="&lt;UserStoreManager"
+                                        value="&lt;!--UserStoreManager"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        token="&lt;/UserStoreManager&gt;"
+                                        value="&lt;/UserStoreManager--&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        token="&lt;!--ISUserStoreManager"
+                                        value="&lt;UserStoreManager"/>
+				
+                                <replace
+                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        token="&lt;/ISUserStoreManager--&gt;"
+                                        value="&lt;/UserStoreManager&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;!--ServiceProvider&gt;"
+                                        value="&lt;ServiceProvider&gt;"/>
+
+				 <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;Issuer&gt;&lt;/Issuer&gt;"
+                                        value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
+                                        value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
+                                        value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
+                                        value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
+                                        value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;Audience&gt;&lt;/Audience&gt;"
+                                        value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;/ServiceProvider--&gt;"
+                                        value="&lt;/ServiceProvider&gt;"/>
+
+
+				<!-- Enable KDC for IS -->
+
+                                <copy
+                                        todir="target/wso2carbon-core-4.2.0/repository/components/"
+                                        overwrite="false">
+                                    <fileset
+                                            dir="${tempdir}/wso2is-${project.version}/repository/components/">
+                                    </fileset>            
+                                </copy>
+                                <copy
+                                        todir="target/wso2carbon-core-4.2.0/repository/deployment/client/modules"
+                                        overwrite="false">
+                                    <fileset
+                                            dir="${tempdir}/wso2is-5.0.0/repository/deployment/client/modules">
+                                    </fileset>
+                                </copy>
+
+
+
+	               <copy
+		        todir="target/wso2carbon-core-4.2.0/dbscripts/identity"
+		        overwrite="false">
+		    <fileset
+		            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-4.2.0/dbscripts/identity/">
+		    </fileset>
+		</copy>
+
+                             <path id="h2.classpath">
+                                    <path refid="maven.compile.classpath"/>
+                                </path>
+                                <echo
+                                        message="########### Create Identity Database ##############"/>
+                                <sql
+                                        driver="org.h2.Driver"
+                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-4.2.0/repository/database/WSO2CARBON_DB"
+                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
+                                        onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset
+                                            file="target/wso2carbon-core-4.2.0/dbscripts/identity/application-mgt/h2.sql"/>
+                                </sql>
+                                <sql
+                                        driver="org.h2.Driver"
+                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-4.2.0/repository/database/WSO2CARBON_DB"
+                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
+                                        onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset
+                                            file="target/wso2carbon-core-4.2.0/dbscripts/identity/h2.sql"/>
+                                </sql>
+                                <echo
+                                        message="##################### END ########################"/>
+
+
+                                <delete file="target/wso2is-${project.version}.zip"/>
+                                <delete dir="${tempdir}"/>
+                                <mkdir dir="${tempdir}"/>
+                                <unzip dest="${tempdir}">
+                                    <fileset
+                                            dir="target/wso2carbon-core-4.2.0/repository/components/plugins/">
+                                        <include name="*.ui*.jar"/>
+                                    </fileset>
+                                </unzip>
+                                <move todir="${tempdir}/web/" includeemptydirs="false">
+                                    <fileset dir="${tempdir}/web/">
+                                        <exclude name="**/yui/**"/>
+                                        <exclude name="**/ajax/**"/>
+                                        <exclude name="**/WEB-INF/**"/>
+                                        <include name="**/*.html"/>
+                                        <exclude name="**/editarea/**"/>
+                                        <exclude name="**/codepress/**"/>                                        
+                                    </fileset>
+                                    <mapper type="glob" from="*.html" to="*.xml"/>
+                                </move>
+                                <copy todir="src/site/xdoc" overwrite="false"
+                                      includeemptydirs="false">
+                                    <fileset dir="${tempdir}/web">
+                                        <exclude name="**/yui/**"/>
+                                        <exclude name="**/ajax/**"/>
+                                        <exclude name="**/WEB-INF/**"/>
+                                        <exclude name="**/gadget/**"/>
+                                        <exclude name="**/*.html"/>
+                                        <exclude name="**/*.js"/>
+                                        <exclude name="**/*.jsp"/>
+                                        <exclude name="**/*.xsl"/>
+                                        <exclude name="*.*"/>
+                                        <exclude name="**/template.xml"/>
+                                        <exclude name="**/codepress.xml"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="src/site" overwrite="false" includeemptydirs="false">
+                                    <fileset dir="../documentation/src/site">
+                                    </fileset>
+                                </copy>
+                                <copy todir="src/site" overwrite="true" includeemptydirs="false">
+                                    <fileset dir="../documentation/src/site">
+                                        <exclude name="**/images/*.*"/>
+                                        <exclude name="**/user-mgt-actdir.xml"/>
+                                        <exclude name="**/user-mgt-jdbc.xml"/>
+                                        <exclude name="**/user-mgt-ldap.xml"/>
+					<exclude name="**/user-mgt-ldap-read-write.xml"/>
+                                    </fileset>
+                                    <filterset>
+                                        <filter token="buildNumber" value="${buildNumber}"/>
+                                    </filterset>
+                                </copy>
+                                <copy todir="target/site/" overwrite="false" includeemptydirs="false">
+                                    <fileset dir="src/site/xdoc/">
+                                        <include name="**/images/*.*"/>
+                                    </fileset>
+                                </copy>
+                                <delete dir="${tempdir}"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>finalize</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <delete dir="target/archive-tmp"/>
+                                <delete dir="target/dependency-maven-plugin-markers"/>
+                                <delete dir="target/maven-archiver"/>
+                                <delete dir="target/wso2carbon-core-4.2.0"/>
+                                <delete file="target/wso2is-${project.version}.jar"/>
+                                <delete dir="target/sources"/>
+                                <delete dir="target/site"/>
+                                <delete dir="src/site"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+		<configuration>
+			<reportPlugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+		<version>2.4</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+			</reportPlugins>
+		</configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>--------create-documentation-module----</id>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy_components</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>${basedir}/src/assembly/filter.properties</filter>
+                            </filters>
+                            <descriptors>
+                                <descriptor>src/assembly/dist.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>dist</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>${basedir}/src/assembly/filter.properties</filter>
+                            </filters>
+                            <descriptors>
+                                <descriptor>src/assembly/bin.xml</descriptor>
+                                <descriptor>src/assembly/src.xml</descriptor>
+                                <descriptor>src/assembly/docs.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>maven-buildnumber-plugin</artifactId>
+                <version>0.9.4</version>
+                <configuration>
+                    <format>{0,date,dd MMM yyyy}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+			<plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>auto-clean</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+        </plugins>
+    </build>
+    <!--reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting-->
+</project>

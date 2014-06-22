@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<container>
+  <people>
+    <person id="john.doe" name="John Doe" gender="M">
+      <friend>jane.doe</friend>
+      <friend>george.doe</friend>
+      <friend>maija.m</friend>
+      <count type="inbox">10</count>
+      <address type="office">
+        <latitude>37.78940406684465</latitude>
+        <longitude>-122.40046262741089</longitude>
+        <streetAddress>55 2nd Street, Suite 300</streetAddress>
+        <locality>San Francisco</locality>
+        <region>CA</region>
+        <postalCode>94105</postalCode>
+        <country>United States</country>
+      </address>
+    </person>
+    <person id="jane.doe" name="Jane Doe" phone="867-5309" gender="F">
+      <friend>john.doe</friend>
+      <count type="inbox">3</count>
+    </person>
+    <person id="george.doe" name="George Doe" gender="M">
+      <friend>john.doe</friend>
+    </person>
+    <person id="mario.rossi" name="Mario Rossi" gender="M">
+    </person>
+    <person id="maija.m" name="Maija Meikäläinen" gender="F">
+    </person>
+  </people>
+
+  <personAppData>
+    <data person="george.doe" field="count">2</data>
+    <data person="jane.doe" field="count">7</data>
+  </personAppData>
+
+  <activities>
+    <stream title="jane's photos" userId="jane.doe">
+      <activity title="Jane just posted a photo of a monkey" id="1"
+          body="and she thinks you look like him!">
+        <mediaItem type="IMAGE" mimeType="image/jpeg" url="http://animals.nationalgeographic.com/staticfiles/NGS/Shared/StaticFiles/animals/images/primary/black-spider-monkey.jpg"></mediaItem>
+        <mediaItem type="IMAGE" mimeType="image/jpeg" url="http://image.guardian.co.uk/sys-images/Guardian/Pix/gallery/2002/01/03/monkey300.jpg"></mediaItem>
+      </activity>
+      <activity title="Jane says George likes yoda!" id="1"
+          body="or is it you?">
+        <mediaItem type="IMAGE" mimeType="image/jpeg" url="http://www.funnyphotos.net.au/images/fancy-dress-dog-yoda-from-star-wars1.jpg"></mediaItem>
+      </activity>
+    </stream>
+  </activities>
+  
+  <applications>
+  	<application id="6729">
+		<user>john.doe</user>
+		<user>jane.doe</user>
+	</application>
+  </applications>
+
+</container>

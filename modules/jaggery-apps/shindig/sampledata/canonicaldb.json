@@ -1,0 +1,861 @@
+//
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+
+//  WARNING! Changing this file will affect unit-tests
+//  A canonical JSON backed DB of OpenSocial datastructures in their RESTful forms
+//
+//  Basic structure:
+//  { people : Array<Person>,
+//    activity : Map<Person.Id, Array<Activity>>
+//    data : Map<Person.Id, Map<String,String>>
+//    friendLinks : Map<Person.Id, Array<Person.Id>>
+//    userApplications : Map<Person.Id, Array<Application.Id>>
+//    messages : Map<Person.Id, Map<MessageCollection.Id, MessageCollection>>
+//  }
+//
+//  Notes:
+//   - The structure of Person, Activity MUST! match those in the RESTful spec
+//   - Data for "canonical" user should exercise every field in the spec. And is relied on
+//     for unit-testing so change at your peril
+//   - Consider adding a structure for Map<Person.Id, Array<appId>> to represent installed gadgets
+//
+//  TODO:
+//   - Use URLs for appIds
+//
+//
+{
+"people" : [
+{
+"id" : "canonical",
+"aboutMe" : "I have an example of every piece of data",
+"activities" : ["Coding Shindig"],
+"addresses" : [{
+"country" : "US",
+"latitude" : "28.3043",
+"longitude" : "143.0859",
+"locality" : "who knows",
+"postalCode" : "12345",
+"region" : "Apache, CA",
+"streetAddress" : "1 OpenStandards Way",
+"type" : "home",
+"formatted" : "PoBox 3565, 1 OpenStandards Way, Apache, CA"
+}],
+"age" : 33,
+"bodyType" : {
+"build" : "svelte",
+"eyeColor" : "blue",
+"hairColor" : "black",
+"height" : 1.84,
+"weight" : 74
+},
+"books" : ["The Cathedral & the Bazaar","Catch 22"],
+"cars" : ["beetle","prius"],
+"children" : "3",
+"currentLocation" : {
+"latitude" : "48.858193",
+"longitude" : "2.29419"
+},
+"birthday" : "1975-01-01",
+"displayName" : "Shin Digg",
+"drinker" : {
+"value" : "SOCIALLY",
+"displayValue" : "Socially"
+},
+"emails" : [{
+"value" : "dev@shindig.apache.org",
+"type" : "work"
+}],
+"ethnicity" : "developer",
+"fashion" : "t-shirts",
+"food" : ["sushi","burgers"],
+"gender" : "male",
+"happiestWhen" : "coding",
+"hasApp" : true,
+"heroes" : ["Doug Crockford", "Charles Babbage"],
+"humor" : "none to speak of",
+"interests" : ["PHP","Java"],
+"jobInterests" : "will work for beer",
+"organizations" : [{
+"address" : {
+"formatted" : "1 Shindig Drive"
+},
+"description" : "lots of coding",
+"endDate" : "2010-10-10",
+"field" : "Software Engineering",
+"name" : "Apache.com",
+"salary" : "$1000000000",
+"startDate" : "1995-01-01",
+"subField" : "Development",
+"title" : "Grand PooBah",
+"webpage" : "http://shindig.apache.org/",
+"type" : "job"
+},{
+"address" : {
+"formatted" : "1 Skid Row"
+},
+"description" : "",
+"endDate" : "1995-01-01",
+"field" : "College",
+"name" : "School of hard Knocks",
+"salary" : "$100",
+"startDate" : "1991-01-01",
+"subField" : "Lab Tech",
+"title" : "Gopher",
+"webpage" : "",
+"type" : "job"
+}],
+"languagesSpoken" : ["English","Dutch","Esperanto"],
+"updated" : "2006-06-06T12:12:12Z",
+"livingArrangement" : "in a house",
+"lookingFor" : [
+  {"value" : "RANDOM", "displayValue" : "Random"},
+  {"value" : "NETWORKING", "displayValue" : "Networking"}
+],
+"movies" : ["Iron Man", "Nosferatu"],
+"music" : ["Chieftains","Beck"],
+"name" : {
+"additionalName" : "H",
+"familyName" : "Digg",
+"givenName" : "Shin",
+"honorificPrefix" : "Sir",
+"honorificSuffix" : "Social Butterfly",
+"formatted" : "Sir Shin H. Digg Social Butterfly"
+},
+"networkPresence" : {
+"value" : "ONLINE",
+"displayValue" : "Online"
+},
+"nickname" : "diggy",
+"pets" : "dog,cat",
+"phoneNumbers" : [{
+"value" : "111-111-111",
+"type" : "work"
+},{
+"value" : "999-999-999",
+"type" : "mobile"
+}],
+"politicalViews" : "open leaning",
+"profileSong" : {
+"value" : "http://www.example.org/songs/OnlyTheLonely.mp3",
+"linkText" : "Feelin' blue",
+"type" : "road"
+},
+"profileUrl" : "http://www.example.org/?id=1",
+"profileVideo" : {
+"value" : "http://www.example.org/videos/Thriller.flv",
+"linkText" : "Thriller",
+"type" : "video"
+},
+"quotes" : ["I am therfore I code", "Doh!"],
+"relationshipStatus" : "married to my job",
+"religion" : "druidic",
+"romance" : "twice a year",
+"scaredOf" : "COBOL",
+"sexualOrientation" : "north",
+"smoker" : {
+"value" : "NO",
+"displayValue" : "No"
+},
+"sports" : ["frisbee","rugby"],
+"status" : "happy",
+"tags" : ["C#","JSON","template"],
+"thumbnailUrl" : "/samplecontainer/examples/nophoto.gif",
+"utcOffset" : "-8",
+"turnOffs" : ["lack of unit tests","cabbage"],
+"turnOns" : ["well document code"],
+"tvShows" : ["House","Battlestar Galactica"],
+"urls" : [{
+"value" : "http://www.example.org/?id=1",
+"linkText" : "my profile",
+"type" : "Profile"
+},{
+"value" : "/samplecontainer/examples/nophoto.gif",
+"linkText" : "my awesome picture",
+"type" : "Thumbnail"
+}]
+},
+{
+"id" : "john.doe",
+"displayName" : "Johnny",
+"gender" : "male",
+"hasApp" : true,
+"name" : {
+"familyName" : "Doe",
+"givenName" : "John",
+"formatted" : "John Doe"
+}
+},
+{
+"id" : "jane.doe",
+"displayName" : "Janey",
+"gender" : "female",
+"hasApp" : true,
+"name" : {
+"familyName" : "Doe",
+"givenName" : "Jane",
+"formatted" : "Jane Doe"
+}
+},
+{
+"id" : "george.doe",
+"displayName" : "Georgey",
+"gender" : "male",
+"hasApp" : true,
+"name" : {
+"familyName" : "Doe",
+"givenName" : "George",
+"formatted" : "George Doe"
+}
+},
+{
+"id" : "mario.rossi",
+"displayName" : "Mario",
+"gender" : "male",
+"hasApp" : true,
+"name" : {
+"familyName" : "Rossi",
+"givenName" : "Mario",
+"formatted" : "Mario Rossi"
+}
+},
+{
+"id" : "maija.m",
+"displayName" : "Maija",
+"gender" : "female",
+"hasApp" : true,
+"name" : {
+"familyName" : "Meikäläinen",
+"givenName" : "Maija",
+"formatted" : "Maija Meikäläinen"
+}
+}],
+//
+// ----------------------------- Data ---------------------------------------
+//
+"data" : {
+"canonical" : {
+"count" : "2",
+"size" : "100"
+},
+"john.doe" : {
+"count" : "0"
+},
+"george.doe" : {
+"count" : "2"
+},
+"jane.doe" : {
+"count" : "7"
+}
+},
+"activities" : {
+"canonical" : [{
+"appId" : "1",
+"body" : "Went rafting",
+"bodyId" : "1",
+"externalId" : "http://www.example.org/123456",
+"id" : "1",
+"updated" : "2008-06-06T12:12:12Z",
+"mediaItems" : [{
+"mimeType" : "image/*",
+"type" : "image",
+"url" : "http://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Rafting_em_Brotas.jpg/800px-Rafting_em_Brotas.jpg"
+},{
+"mimeType" : "audio/mpeg",
+"type" : "audio",
+"url" : "http://www.archive.org/download/testmp3testfile/mpthreetest.mp3"
+}],
+"postedTime" : "1111111111",
+"priority" : "0.7",
+"streamFaviconUrl" : "http://upload.wikimedia.org/wikipedia/commons/0/02/Nuvola_apps_edu_languages.gif",
+"streamSourceUrl" : "http://www.example.org/canonical/streamsource",
+"streamTitle" : "All my activities",
+"streamUrl" : "http://www.example.org/canonical/activities",
+"templateParams" : {
+"small" : "true",
+"otherContent" : "and got wet"
+},
+"title" : "My trip",
+"titleId" : "1",
+"url" : "http://www.example.org/canonical/activities/1",
+"userId" : "canonical"
+},{
+"appId" : "1",
+"body" : "Went skiing",
+"bodyId" : "1",
+"externalId" : "http://www.example.org/123457",
+"id" : "1",
+"updated" : "2008-06-10T12:12:12Z",
+"postedTime" : "1111111112",
+"priority" : "0.7",
+"streamFaviconUrl" : "http://upload.wikimedia.org/wikipedia/commons/0/02/Nuvola_apps_edu_languages.gif",
+"streamSourceUrl" : "http://www.example.org/canonical/streamsource",
+"streamTitle" : "All my activities",
+"streamUrl" : "http://www.example.org/canonical/activities",
+"templateParams" : {
+"small" : "true",
+"otherContent" : "and went fast"
+},
+"title" : "My next trip",
+"titleId" : "1",
+"url" : "http://www.example.org/canonical/activities/2",
+"userId" : "canonical"
+}],
+"john.doe" : [{
+"id" : "1",
+"userId" : "john.doe",
+"title" : "yellow",
+"body" : "what a color!"
+}],
+"jane.doe" : [{
+"id" : "1",
+"body" : "and she thinks you look like him",
+"mediaItems" : [{
+"mimeType" : "image/jpeg",
+"type" : "image",
+"url" : "http://animals.nationalgeographic.com/staticfiles/NGS/Shared/StaticFiles/animals/images/primary/black-spider-monkey.jpg"
+},{
+"mimeType" : "image/jpeg",
+"type" : "image",
+"url" : "http://image.guardian.co.uk/sys-images/Guardian/Pix/gallery/2002/01/03/monkey300.jpg"
+}],
+"streamTitle" : "jane's photos",
+"title" : "Jane just posted a photo of a monkey",
+"userId" : "jane.doe"
+},{
+"id" : "2",
+"body" : "or is it you?",
+"mediaItems" : [{
+"mimeType" : "image/jpeg",
+"type" : "image",
+"url" : "http://www.funnyphotos.net.au/images/fancy-dress-dog-yoda-from-star-wars1.jpg"
+}],
+"streamTitle" : "jane's photos",
+"title" : "Jane says George likes yoda!",
+"userId" : "jane.doe"
+}]
+},
+"activityEntries" : {
+	"john.doe": [{
+      "id": "activity1",
+      "title": "John shared new photos with you",
+      "published": "2011-02-10T15:04:55Z",
+      "actor": {
+        "url": "http://example.org/john",
+        "objectType" : "person",
+        "id": "john.doe",
+        "image": {
+          "url": "http://example.org/john/image",
+          "width": 250,
+          "height": 250
+        },
+        "displayName": "John Doe"
+      },
+      "verb": "post",
+      "object" : {
+        "url": "http://example.org/blog/2011/02/entry",
+        "id": "object1"
+      },
+      "target" : {
+        "url": "http://example.org/blog/",
+        "objectType": "blog",
+        "id": "target1",
+        "displayName": "John's Blog"
+      },
+      "openSocial": {
+        "embed" : {
+          "gadget" : "%origin%%contextroot%/samplecontainer/examples/embeddedexperiences/PhotoList.xml",
+          "context" : {
+            "albumName": "Germany 2009",
+            "eeGadget" : "%origin%%contextroot%/samplecontainer/examples/embeddedexperiences/AlbumViewer.xml",
+            "photoUrls": [
+              "http://farm4.static.flickr.com/3495/3925132517_5959dac775.jpg",
+              "http://farm4.static.flickr.com/3629/3394799776_47676abb46.jpg",
+              "http://farm5.static.flickr.com/4009/4413640211_715d924d9b.jpg",
+              "http://farm3.static.flickr.com/2340/3528537244_d2fb037aba.jpg",
+              "http://farm1.static.flickr.com/36/98407782_9c4c5866d1.jpg",
+              "http://farm1.static.flickr.com/48/180544479_bb0d0f6559.jpg",
+              "http://farm3.static.flickr.com/2668/3858018351_1e7b73c0b7.jpg"
+             ]
+           }
+        }
+      }
+	  }, {
+	  	"id": "activity2",
+      "published": "2011-03-10T15:04:55Z",
+      "generator": {
+        "url": "http://example.org/activities-app"
+      },
+      "provider": {
+        "url": "http://example.org/activity-stream"
+      },
+      "title": "John posted a new photo album.",
+      "actor": {
+        "url": "http://example.org/john",
+        "objectType": "person",
+        "id": "john.doe",
+        "image": {
+          "url": "http://example.org/john/image",
+          "width": 250,
+          "height": 250
+        },
+        "displayName": "John Doe"
+      },
+      "verb": "post",
+      "object" : {
+        "url": "http://example.org/album/my_fluffy_cat.jpg",
+        "objectType": "photo",
+        "id": "object2",
+        "summary": "Photo posted",
+        "image": {
+          "url": "http://example.org/album/my_fluffy_cat_thumb.jpg",
+          "width": 250,
+          "height": 250
+        },
+        "upstreamDuplicates" : ["upstream1", "upstream2"],
+        "downstreamDuplicates" : ["downstream1", "downstream2"],
+        "attachments": [
+          {"id": "attachment1", "objectType": "attachment"},
+          {"id": "attachment2", "objectType": "attachment"}
+        ]
+      },
+      "target": {
+        "url": "http://example.org/album/",
+        "objectType": "photo-album",
+        "id": "target2",
+        "displayName": "John's Photo Album",
+        "image": {
+          "url": "http://example.org/album/thumbnail.jpg",
+          "width": 250,
+          "height": 250
+        }
+      },
+      "openSocial": {
+        "embed" : {
+          "gadget" : "%origin%%contextroot%/samplecontainer/examples/embeddedexperiences/AlbumViewer.xml",
+          "context" : {
+            "albumName": "Germany 2009",
+            "photoUrls": [
+              "http://farm4.static.flickr.com/3495/3925132517_5959dac775_t.jpg",
+                 "http://farm4.static.flickr.com/3629/3394799776_47676abb46_t.jpg",
+               "http://farm5.static.flickr.com/4009/4413640211_715d924d9b_t.jpg",
+               "http://farm3.static.flickr.com/2340/3528537244_d2fb037aba_t.jpg",
+               "http://farm1.static.flickr.com/36/98407782_9c4c5866d1_t.jpg",
+               "http://farm1.static.flickr.com/48/180544479_bb0d0f6559_t.jpg",
+               "http://farm3.static.flickr.com/2668/3858018351_1e7b73c0b7_t.jpg"
+             ]
+          }
+        }
+      }
+    }, {
+      "id": "activity3",
+      "published": "2012-06-02T10:02:55Z",
+      "generator": {
+        "url": "http://example.org/activities-app"
+      },
+      "provider": {
+        "url": "http://example.org/activity-stream"
+      },
+      "title": "John posted a new photo to his blog",
+      "actor": {
+        "url": "http://example.org/john",
+        "objectType": "person",
+        "id": "john.doe",
+        "image": {
+          "url": "http://example.org/john/image",
+          "width": 250,
+          "height": 250
+        },
+        "displayName": "John Doe"
+      },
+      "verb": "post",
+      "object": {
+        "summary": "Photo about new world",
+        "id": "object3",
+        "image": {
+          "height": 250,
+          "width": 250,
+          "url": "http://example.org/album/new_world.jpg"
+        },
+        "objectType": "photo",
+        "url": "http://example.org/album/new_world.jpg"
+      },
+      "target": {
+        "url": "http://example.org/blog/",
+        "objectType": "blog",
+        "id": "target3",
+        "displayName": "John's Blog About Life",
+        "image": {
+          "url": "http://example.org/album/thumbnail.jpg",
+          "width": 250,
+          "height": 250
+        }
+      },
+      "openSocial": {
+        "embed" : {
+          "gadget" : "%origin%%contextroot%/samplecontainer/examples/embeddedexperiences/BlogViewer.xml",
+          "context" : {
+            "photoUrl" : "http://example.org/album/new_world.jpg"
+          },
+          "preferredExperience": {
+            "target": {
+              "type": "gadget",
+              "view": "embedded_canvas"
+            },
+            "display": {
+              "type": "text",
+              "label" : "Checkout new photo in John's blog"
+            }
+          }
+        }
+      }
+    }]
+},
+"albums" : {
+	"john.doe": [{
+		"id" : "germany123",
+		"ownerId" : "john.doe",
+  		"thumbnailUrl" : "http://hphotos-snc3.fbcdn.net/hs050.snc3/13734_810445703213_6222631_45135775_1728872_n.jpg",
+  		"title" : "Germany 2009",
+  		"description" : "Garmisch-Partenkirchen for research!",
+  		"location" : { "latitude": 0, "longitude": 0 }
+	}, {
+		"id" : "cruise123",
+		"ownerId" : "john.doe",
+		"thumbnailUrl" : "http://hphotos-snc3.fbcdn.net/hs143.snc3/17062_828584892133_6222631_45795844_8024804_n.jpg",
+		"title" : "Graduation Cruise",
+		"description" : "Graduation cruise!"
+	}, {
+		"id" : "temp123",
+		"ownerId" : "john.doe",
+		"title" : "Album with no Thumbnail",
+		"description" : "I don't have a thumbnail.  I'm a perfect album to delete..."
+	}]
+},
+"mediaItems" : {
+	"john.doe": [{
+		"title" : "Ski Jump",
+		"description" : "We're going to the top!",
+		"id" : "mediaItem2",
+		"albumId" : "germany123",
+		"mimeType" : "image/jpeg",
+		"type" : "image",
+		"thumbnailUrl" : "http://hphotos-snc3.fbcdn.net/hs070.snc3/13734_810445668283_6222631_45135772_741359_n.jpg",
+		"url" : "http://hphotos-snc3.fbcdn.net/hs070.snc3/13734_810445668283_6222631_45135772_741359_n.jpg"
+	}, {
+		"title" : "Frozen",
+		"description" : "Cool effects...",
+		"id" : "mediaItem3",
+		"albumId" : "germany123",
+		"mimeType" : "image/jpeg",
+		"type" : "image",
+		"thumbnailUrl" : "http://sphotos.ak.fbcdn.net/hphotos-ak-snc4/hs369.snc4/45245_928217193203_6222631_49412689_3724203_n.jpg",
+		"url" : "http://sphotos.ak.fbcdn.net/hphotos-ak-snc4/hs369.snc4/45245_928217193203_6222631_49412689_3724203_n.jpg"
+	}, {
+		"title" : "Hotel resort",
+		"id" : "mediaItem4",
+		"albumId" : "germany123",
+		"mimeType" : "image/jpeg",
+		"type" : "image",
+		"thumbnailUrl" : "http://sphotos.ak.fbcdn.net/hphotos-ak-snc3/hs050.snc3/13734_810445788043_6222631_45135783_1591091_n.jpg",
+		"url" : "http://sphotos.ak.fbcdn.net/hphotos-ak-snc3/hs050.snc3/13734_810445788043_6222631_45135783_1591091_n.jpg"
+	}, {
+		"title" : "Authentic? Yes!",
+		"id" : "mediaItem5",
+		"albumId" : "germany123",
+		"mimeType" : "image/jpeg",
+		"type" : "image",
+		"thumbnailUrl" : "http://hphotos-snc3.fbcdn.net/hs050.snc3/13734_810445758103_6222631_45135780_284612_n.jpg",
+		"url" : "http://hphotos-snc3.fbcdn.net/hs050.snc3/13734_810445758103_6222631_45135780_284612_n.jpg"
+	}, {
+		"title" : "Garmisch-Partenkirchen",
+		"id" : "mediaItem6",
+		"albumId" : "germany123",
+		"mimeType" : "image/jpeg",
+		"type" : "image",
+		"thumbnailUrl" : "http://hphotos-snc3.fbcdn.net/hs050.snc3/13734_810445703213_6222631_45135775_1728872_n.jpg",
+		"url" : "http://hphotos-snc3.fbcdn.net/hs050.snc3/13734_810445703213_6222631_45135775_1728872_n.jpg"
+	}]
+},
+//
+// ----------------------------- Data ---------------------------------------
+//
+"friendLinks" : {
+"canonical" : ["john.doe", "jane.doe", "george.doe", "maija.m"],
+"john.doe" : ["jane.doe", "george.doe", "maija.m"],
+"jane.doe" : ["john.doe"],
+"george.doe" : ["john.doe"],
+"maija.m" : []
+},
+//
+// ----------------------------- Groups ---------------------------------------
+//
+"groups":{
+    "canonical":[
+      {
+        "id":{
+          "value":"group0"
+        },
+        "title":"Group 0",
+        "description":"A group where the creater is also a member"
+      },
+      {
+        "id":{
+          "value":"group1"
+        },
+        "title":"Group 1",
+        "description":"A group where the creater is not a membber"
+      }
+    ],
+    "john.doe":[
+      {
+        "id":{
+          "value":"example.com:391nvf03381"
+        },
+        "title":"Group 2",
+        "description":"A group of people"
+      },
+      {
+        "id":{
+          "value":"example.com:390e3kd03"
+        },
+        "title":"Group 3",
+        "description":"Another group of people"
+      }
+    ]
+  },
+"groupMembers":{
+  "example.com:391nvf03381": [
+    "canonical",
+    "john.doe"
+  ],
+  "example.com:390e3kd03": [
+    "canonical",
+    "john.doe",
+    "jane.doe"
+  ]
+},
+//
+//---------------------------- Data For User Applications --------------------------------------------
+//
+"userApplications" : {
+"canonical" : ["9158", "9703", "9143", "8877"],
+"john.doe" : ["8877", "9143", "9158"],
+"jane.doe" : ["9158", "9703"],
+"george.doe" : ["9143"],
+"maija.m" : []
+},
+//
+//--------------------------- Message Collections. -----------------------------------------
+//
+"messages" : {
+"canonical" : {
+  "notification" : {"title" : "Notifications",
+                         "messages" : [
+                           {"id": "1", "title": "whazzup", "type": "notification", "body": "hey dude."},
+                           {"id": "2", "title": "play checkers", "type": "notification", "body": "hot online checkers action"},
+                           {"id": "3", "title": "you won!", "type": "notification", "body": "<b>yes, you really, really won!</b>"}
+
+                           ]},
+  "publicMessage" : { "title" : "Profile Comments",
+        "messages" : [
+          {"id": "1", "senderId": "john.doe", "title": "Hairdo", "type": "publicMessage", "body": "nice &quot;haircut!&quot;", "replies": ["1a","1b"]},
+          {"id": "1a", "senderId": "canonical", "title": "", "type": "publicMessage", "body": "that's not hair, it's a wig!", "inReplyTo": "1"},
+          {"id": "1b", "senderId": "john.doe", "title": "100% polyester", "type": "publicMessage", "body": "only the finest hyrdrocarbons :)","inReplyTo": "1"},
+          {"id": "2", "senderId": "jane.doe", "title": "hola", "type": "publicMessage", "body": "be my bff?"}
+
+        ]},
+  "privateMessage" : {"title" : "Inbox",
+        "messages" : []}
+  
+  },
+  
+"1" : {
+    "notification" : {"title" : "Notifications", "messages" : []},
+    "privateMessage" : {"title" : "Inbox", "messages" : []},
+    "publicMessage" : {"title" : "Inbox", "messages" : []}
+},
+
+"john.doe" : {
+  "notification" : {"title" : "Notifications",
+                          "messages" : [
+                          {"id": "1", "title": "you received a peanut", "type": "notification", "body": "peanuts are healthy"},
+                          {"id": "3", "title": "Group Request", "type": "notification", "body": "Join Cat Lovers Anonymous"}
+                          ]},
+  "privateMessage" : {"title" : "Inbox", "messages" : []},
+  "publicMessage" : {"title" : "Inbox", "messages" : []}
+},
+"jane.doe" : {
+    "notification" : {"title" : "Notifications", "messages" : []},
+    "privateMessage" : {"title" : "Inbox", "messages" : []},
+    "publicMessage" : {"title" : "Inbox", "messages" : []}
+},
+  "george.doe" : {
+        "notification" : {"title" : "Notifications", "messages" : []},
+        "privateMessage" : {"title" : "Inbox", "messages" : []},
+        "publicMessage" : {"title" : "Inbox", "messages" : []}
+  },
+  "maija.m" : { 
+        "notification" : {"title" : "Notifications", "messages" : []},
+        "privateMessage" : {"title" : "Inbox", "messages" : []},
+        "publicMessage" : {"title" : "Inbox", "messages" : []}
+  }
+},
+//
+// Gadgets/App information.  OAuth Consumer Key defaults to the app url.
+//
+"apps" : {
+    "http://localhost:8080%contextroot%/samplecontainer/examples/SocialHelloWorld.xml":
+        { "title" : "Social Hello World",
+          "consumerSecret" : "secret",
+           "icon" : "http://localhost:8080%contextroot%/samplecontainer/examples/icon.png"},
+    "http://localhost:8080%contextroot%/samplecontainer/examples/SocialActivitiesWorld.xml" :
+        { "title" : "Social Activities World",
+          "consumerSecret" : "secret",
+          "icon" : "http://localhost:8080%contextroot%/samplecontainer/examples/icon.png"},
+    "http://localhost:8080%contextroot%/samplecontainer/examples/oauth.xml" :
+        { "title" : "Demo OAuth Gadget",
+          "consumerSecret" : "secret",
+          "icon" : "http://localhost:8080%contextroot%/samplecontainer/examples/icon.png"},
+    "http://localhost:8080%contextroot%/samplecontainer/examples/shindigoauth.xml" :
+        { "title" : "Demo OAuth Gadget",
+          "consumerSecret" : "secret",
+          "icon" : "http://localhost:8080%contextroot%/samplecontainer/examples/icon.png"}
+ },
+ 
+ // Registry of OAuth 2.0 clients with Shindig's service provider.
+ "oauth2" : {
+  "advancedAuthorizationCodeClient" : {
+    "registration" : {
+      "id" : "advancedAuthorizationCodeClient",
+      "secret": "advancedAuthorizationCodeClient_secret",
+      "title": "Most Advanced Authorization Code Client Ever!",
+      "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient/friends",
+      "type" : "confidential",
+      "flow" : "authorization_code"
+    },
+    "authorizationCodes" : {
+      "advancedClient_authcode_1" : {
+        // Authentication code has been consumed since associatedSignature exists
+        "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient/friends",
+        //Setting expiration to -1 makes code permanent
+        "expiration" : -1
+      },
+      "advancedClient_authcode_2" : {
+        "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient/friends",
+        "expiration" : -1
+      }
+    },
+    "accessTokens" : {
+      "advancedClient_accesstoken_1" : {
+        "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient/friends",
+        "expiration" : -1
+      }
+    }
+  },
+  "advancedImplicitClient" : {
+    "registration" : {
+      "id" : "advancedImplicitClient",
+      "title" : "Most Advanced Implicit Client Ever!",
+      "type" : "public",
+      "redirectURI" : "http://localhost:8080/oauthclients/ImplicitClientHelper.html",
+      "flow" : "implicit"
+    }
+  },
+  "testClient" : {
+    "registration" : {
+      "id" : "testClient",
+      "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient",
+      "type" : "public",
+      "flow" : "authorization_code"
+    },
+    "authorizationCodes" : {
+      "testClient_authcode_1" : {
+        "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient",
+        "expiration" : -1
+      },
+      "testClient_authcode_2" : {
+        "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient",
+        "expiration" : -1
+      }
+    },
+    "accessTokens" : {
+      "testClient_accesstoken_1" : {
+        "redirectURI" : "http://localhost:8080/oauthclients/AuthorizationCodeClient",
+        "expiration" : -1
+      }
+    }
+  },
+  "testClientCredentialsClient" : {
+    "registration" : {
+      "id" : "testClientCredentialsClient",
+      "secret": "clientCredentialsClient_secret",
+      "type" : "confidential",
+      "flow" : "client_credentials"
+    },
+      "accessTokens" : {
+        "testClientCredentialsClient_accesstoken_1" : {
+        "expiration" : -1
+      }
+    }
+  },
+  "shindigClient" : {
+    "registration" : {
+      "id" : "shindigClient",
+      "secret": "U78KJM98372AMGL87612993M",
+      "title": "shindig client registered for authorization",
+      "redirectURI" : "http://localhost:8080%contextRoot%/gadgets/oauth2callback",
+      "type" : "confidential",
+      "flow" : "authorization_code"
+  },
+    "authorizationCodes" : {
+      "shindigClient_authcode_1" : {
+        // Authentication code has been consumed since associatedSignature exists
+        "redirectURI" : "http://localhost:8080%contextRoot%/gadgets/oauth2callback",
+        //Setting expiration to -1 makes code permanent
+        "expiration" : -1
+      },
+      "shindigClient_authcode_2" : {
+        "redirectURI" : "http://localhost:8080%contextRoot%/gadgets/oauth2callback",
+        "expiration" : -1
+      }
+    }, 
+    "accessTokens" : {
+      "shindigClient_accesstoken_1" : {
+        "redirectURI" : "http://localhost:8080%contextRoot%/gadgets/oauth2callback",
+        "expiration" : -1
+      }
+    }
+  }
+},
+
+ // duplicates userApplications as above..
+ "permissions": {
+   "john.doe" : { "http://localhost:8080%contextroot%/samplecontainer/examples/SocialHelloWorld.xml" : { "installed" : true},
+                  "http://localhost:8080%contextroot%/samplecontainer/examples/SocialActivitiesWorld.xml" : { "installed" : true}
+   },
+   "canonical" :{ "http://localhost:8080%contextroot%/samplecontainer/examples/SocialHelloWorld.xml" : { "installed" : true},
+                  "http://localhost:8080%contextroot%/samplecontainer/examples/SocialActivitiesWorld.xml" : { "installed" : true}
+   }
+ },
+// Passwords for authenticaiton service
+ "passwords" : {
+    "john.doe" : "password",
+    "jane.doe" : "password",
+    "canonical" : "password"
+  }
+}

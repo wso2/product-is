@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="Shared locked domain with shared-script-frame 2">
+    <Require feature="locked-domain">
+      <!--
+        All participants must be listed for them to all share a locked domain.
+        Gadgets should declare themselves as a participant.
+      -->
+
+      <!-- Change the following to actual deployment locations to test -->
+      <Param name="participant">http://gadgets.another-example.com/SharedLockedDomainDemo1.xml</Param>
+      <Param name="participant">http://gadgets.example.com/SharedLockedDomainDemo2.xml</Param>
+    </Require>
+    <!--
+      The interaction between shared locked-domains and shared-script-frame is:
+      Of the gadgets listed in this shared locked-domain, only 1 script frame will
+      ever be created.  The gadget to render first will have its script frame view
+      rendered.
+    -->
+    <Optional feature="shared-script-frame">
+      <Param name="view">script</Param>
+    </Optional>
+  </ModulePrefs>
+
+  <Content type="html" view="script"><![CDATA[
+    <script type="text/javascript">
+      (function() {
+        var callbacks = [];
+        window.join = function(callback) {
+          callbacks.push(callback);
+        }
+        window.require = {
+          // the script tag url gets mangled
+          baseUrl: "http://download.dojotoolkit.org/release-1.7.0b2/dojo-release-1.7.0b2/dojo",
+          async: 1,
+          callback: function() {
+            window.join = function(callback) { callback(window.require); };
+            while(callbacks.length) {
+              callbacks.shift()(window.require);
+            }
+          }
+        };
+
+        // It would be lovely if we could have plain script tags in here that shindig would ignore.
+        // Because this is now async we must implement join, above.
+        var scr = document.createElement('script');
+        scr.src = 'http://download.dojotoolkit.org/release-1.7.0b2/dojo-release-1.7.0b2/dojo/dojo.js';
+        document.head.appendChild(scr);
+      })();
+    </script>
+  ]]></Content>
+
+  <Content type="html" view="default"><![CDATA[
+    <link rel="stylesheet" type="text/css" href="http://download.dojotoolkit.org/release-1.7.0b2/dojo-release-1.7.0b2/dijit/themes/claro/claro.css"
+    <h2>Default View</h2>
+    <div>I'm loading a few large things, dojo, dijit.Editor, and dijit.Calendar</div>
+    <div id="scriptframetime"></div>
+    <div id="loadscripttime"></div>
+
+    <script type="text/javascript">
+      gadgets.util.registerOnLoadHandler(function() {
+        gadgets.script.getScriptFrame(function(scriptFrame) {
+          var starttime = new Date().getTime();
+          var joinScriptFrame = function() {
+            if (!scriptFrame.join) {
+              setTimeout(joinScriptFrame, 10);
+            }
+            else {
+              scriptFrame.join(function(require) {
+                window.require = require;
+                var checkpoint = new Date().getTime();
+                require(['dojo', 'dijit/Calendar', 'dijit/Editor'], function(dojo, cal, edit) {
+                  dojo.withDoc(window.document, function() {
+                    var endtime = new Date().getTime();
+                    dojo.byId('scriptframetime').innerHTML = 'It took me ' + (checkpoint - starttime) + ' millis to aquire the script frame';
+                    dojo.byId('loadscripttime').innerHTML = 'It took me ' + (endtime - checkpoint) + ' millis to load code.';
+                  });
+                });
+              });
+            }
+          };
+          joinScriptFrame();
+        });
+      });
+    </script>
+  ]]></Content>
+</Module>

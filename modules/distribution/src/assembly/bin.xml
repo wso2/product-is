@@ -1,0 +1,709 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<assembly>
+    <!--<id>bin</id>-->
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target/wso2carbon-core-4.2.0</directory>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/axis2services/sample01.aar</exclude>
+                <exclude>**/axis2services/Echo.aar</exclude>
+                <exclude>**/axis2services/Version.aar</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/version.txt</exclude>
+                <exclude>**/README*</exclude>
+                <exclude>**/carbon.xml</exclude>
+                <exclude>**/axis2/*</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/INSTALL.txt</exclude>
+                <exclude>**/release-notes.html</exclude>
+                <exclude>**/claim-config.xml</exclude>
+                <exclude>**/log4j.properties</exclude>
+                <exclude>**/registry.xml</exclude>
+		<exclude>**/email/email-admin-config.xml</exclude>
+		<exclude>**/dbscripts/**</exclude>
+		<!-- Changes related to Carbon kernel 4.2.0 patches -->
+                <exclude>**/lib/org.wso2.carbon.server-4.2.0.jar</exclude>
+		<exclude>**/lib/org.wso2.ciphertool-1.0.0-wso2v2.jar</exclude>
+                <exclude>**/cipher-text.properties</exclude>
+		<exclude>**/client-truststore.jks</exclude>
+                <exclude>**/cipher-tool.properties</exclude>
+                <exclude>**/authenticators.xml</exclude>
+		<exclude>**/ciphertool.bat</exclude>
+		<exclude>**/wso2carbon-version.txt</exclude>
+                <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-4.2.0</directory>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/wso2server.bat</exclude>
+            </excludes>
+            <includes>
+                <include>**/*.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+        <!--<fileSet>-->
+        <!--<directory>-->
+        <!--../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/advanced/-->
+        <!--</directory>-->
+        <!--<outputDirectory>wso2is-${pom.version}/repository/conf/advanced</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>**/qpid-config.xml</include>-->
+        <!--<include>**/qpid-jmxremote.access</include>-->
+        <!--<include>**/qpid-virtualhosts.xml</include>-->
+        <!--</includes>-->
+        <!--</fileSet>-->
+
+	<!--copying registry dbscripts-->
+        <fileSet>
+            <directory>../jaggery/modules</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/modules</outputDirectory>
+            <!-- Changes related to Carbon kernel 4.2.0 patches -->
+            <includes>
+                <include>**/**.js</include>
+		<include>**/**.xml</include>
+            </includes>
+            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+        </fileSet>
+	<!--Adding my jaggery apps--> 	
+	<!--<fileSet>
+            <directory>../jaggery-apps/my-identity/web</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/my-identity</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet> -->
+	<fileSet>
+            <directory>../jaggery-apps/user-dashboard/dashboard</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/dashboard</outputDirectory>
+            <!-- Changes related to Carbon kernel 4.2.0 patches -->
+            <includes>
+                <include>**/**</include>
+            </includes>
+            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+        </fileSet>
+	<fileSet>
+            <directory>../jaggery-apps/portal</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal</outputDirectory>
+            <!-- Changes related to Carbon kernel 4.2.0 patches -->
+            <includes>
+                <include>**/**</include>
+            </includes>
+            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+        </fileSet>
+	<fileSet>
+            <directory>../jaggery-apps/shindig</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/shindig</outputDirectory>
+            <!-- Changes related to Carbon kernel 4.2.0 patches -->
+            <includes>
+                <include>**/**</include>
+            </includes>
+            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+        </fileSet>
+	<fileSet>
+            <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
+            <!-- Changes related to Carbon kernel 4.2.0 patches -->
+            <excludes>
+                <exclude>db2.sql</exclude>
+                <exclude>mysql.sql</exclude>
+                <exclude>mysql_cluster.sql</exclude>
+            </excludes>
+            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <includes>
+                <include>**/krb5.conf</include>
+                <include>**/jaas.conf</include>
+            </includes>
+	    <!-- Changes related to Carbon kernel 4.2.0 patches -->
+            <excludes>
+                <exclude>**/cipher-text.properties</exclude>
+                <exclude>**/cipher-tool.properties</exclude>
+            </excludes>
+            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/identity
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </fileSet>
+
+	<fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/resources/security/ldif
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/security/ldif</outputDirectory>
+            <includes>
+                <include>identityPerson.ldif</include>
+                <include>scimPerson.ldif</include>
+		<include>wso2Person.ldif</include>
+            </includes>
+        </fileSet>
+        <!--  copying samples -->
+        <!--fileSet>
+            <directory>../samples</directory>
+            <outputDirectory>wso2is-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+        </fileSet-->
+
+        <!-- copy executables in samples with execute permissions -->
+        <!--fileSet>
+            <directory>../samples</directory>
+            <outputDirectory>wso2is-${pom.version}/samples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet-->
+
+        <!-- copy the landing page webapp -->
+        <fileSet>
+            <directory>lib/home</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
+            </outputDirectory>
+        </fileSet>
+	
+		<!--copy jaxrs web app for SCIM feature-->
+		<fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>wso2.war</include>
+            </includes>
+        </fileSet>
+        
+        <!--copy jaxrs web app for OAuth feature-->
+		<fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>oauth2.war</include>
+            </includes>
+        </fileSet>
+
+	 <!--copy web app for application authentication feature -->
+         <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>authenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+
+	 <!--Multitenancy related file -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+                <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+                <include>**/usage-throttling-agent-config.xml</include>
+                <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>../styles/service/src/main/resources/web/styles/css</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
+            <includes>
+                <include>**/**.css</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../styles/service/src/main/resources/web/styles/images</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
+            <includes>
+                <include>**/**.gif</include>
+                <include>**/**.png</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>conf/policies</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/security/policies/xacml/default</outputDirectory>
+        </fileSet>
+
+	<!-- copying runtimes -->
+       	<fileSet>
+       		<directory>../p2-profile-gen/target/wso2carbon-core-4.2.0/lib/runtimes</directory>
+       		<outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/</outputDirectory>
+       		<includes>
+      			 <include>*/**</include>
+       		</includes>
+       </fileSet>
+
+       <!-- Kernal patches -->
+	<fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0001/*.*</include>
+             </includes>
+        </fileSet>
+	<fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0002</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0002/*.*</include>
+             </includes>
+        </fileSet>
+	<fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0003</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0003/*.*</include>
+             </includes>
+        </fileSet>
+	<fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0004</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0004/*.*</include>
+             </includes>
+        </fileSet>
+	<fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0005</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0005/*.*</include>
+             </includes>
+        </fileSet>
+	<fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0006/*.*</include>
+             </includes>
+        </fileSet>
+        <fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0007</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0007/*.*</include>
+             </includes>
+        </fileSet>
+        <fileSet>
+             <directory>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0008</directory>
+             <outputDirectory>wso2is-${pom.version}/repository/components/patches/</outputDirectory>
+             <includes>
+                  <include>**/patch0008/*.*</include>
+             </includes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <!--dependencySet>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/client/modules
+            </outputDirectory>
+            <includes>
+                <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet-->
+    	</dependencySets>
+
+    <files>
+        <file>
+            <source>../../README.txt</source>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../INSTALL.txt</source>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../LICENSE.txt</source>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../release-notes.html</source>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-4.2.0/bin/README.txt</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-4.2.0/bin/version.txt</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <!--file>
+            <source>target/wso2carbon-core-4.2.0/repository/conf/carbon.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file-->
+        <!--file>
+            <source>target/wso2carbon-core-4.2.0/repository/conf/axis2/axis2.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/axis2/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file-->
+	<file>
+            <source>../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/tomcat/webapp-classloading.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/tomcat/webapp-classloading-environments.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/tomcat/context.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-4.2.0/repository/conf/README</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>target/wso2carbon-core-4.2.0/bin/wso2server.bat</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>conf/card.jpg</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <!--claim-config.xml is now copied from the feature installation.>
+        <file>
+            <source>conf/claim-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file-->
+
+        <file>
+            <source>conf/saml1-assertion-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>conf/registry.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <!--identity.xml is now copied from the feature installation.>
+        <file>
+            <source>conf/identity.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file-->
+
+        <!--file>
+            <source>conf/entitlement.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file-->
+
+
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/claim-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+<!--    
+     <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/identity.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+-->
+    <!--identity.xml is now copied from conf . -->
+        <file>
+            <source>conf/identity.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+    <!--identity.xml is now copied from conf . -->
+
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/email/email-admin-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/email</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/identity-mgt.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/entitlement.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/saml2.federation.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/resources/security/sso_redirect.html
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/application-authentication.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/data/is-default-schema.zip
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/data</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/embedded-ldap.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+	<file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/multitenancy/tenant-mgt.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <!-- Stratos specific files -->
+
+	
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/etc/logging-config.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
+            </outputDirectory>
+        </file>
+	 <!-- Including log4j.properties file -->
+     <!--   <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/log4j.properties
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+        </file>  -->
+        <file>
+            <source>conf/log4j.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>    
+
+	<!--copy scim-consumer-config.xml-->
+	<file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/provisioning-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/scim-schema-extension.config
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <file>
+            <source>../jaggery-apps/user-dashboard/sp_dashboard.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/identity/service-providers/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<!--copy url-mapping-config.xml-->
+	<!--file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${patch.version.405}/repository/conf/etc/url-mapping-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/etc</outputDirectory>
+        </file-->
+        <!-- copying event broker config file -->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/event-broker.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+
+	<!-- Changes related to Carbon kernel 4.2.0 patches -->
+        <!-- Files WSO2-CARBON-PATCH-4.2.0-0001 - Start -->
+        <file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0001/dbscripts/db2.sql</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/</outputDirectory>
+	    <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0001/dbscripts/mysql.sql</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/</outputDirectory>
+	    <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0003/dbscripts/mysql_cluster.sql</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/</outputDirectory>
+	    <fileMode>644</fileMode>
+        </file>
+        <!-- Files WSO2-CARBON-PATCH-4.2.0-0002 - Start -->
+        <file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0002/repository/conf/security/cipher-text.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security/</outputDirectory>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0004/bin/ciphertool.bat</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0005/repository/resources/security/client-truststore.jks</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0006/repository/conf/axis2/axis2.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0006/repository/conf/axis2/axis2_client.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0006/repository/conf/axis2/tenant-axis2.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0006/repository/conf/carbon.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0006/lib/org.wso2.carbon.server-4.2.0.jar</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0006/lib/org.wso2.ciphertool-1.0.0-wso2v2.jar</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0008/repository/conf/security/authenticators.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0008/wso2carbon-version.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<file>
+            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-${carbon.kernel.version}-0008/repository/conf/security/cipher-tool.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
+    </files>
+</assembly>

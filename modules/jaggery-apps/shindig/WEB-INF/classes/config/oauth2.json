@@ -1,0 +1,190 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+ 
+/*******************************************************************************
+ * OAuth2Client persistence for the default OAuth2Persister                    *
+ *    org.apache.shindig.gadgets.oauth2.persistence.sample.JSONOAuth2Persister *
+ *                                                                             *
+ * Used in conjunction with the OAuth2 <ModulePrefs> described in:             *
+ *                                                                             *
+ *    http://code.google.com/p/opensocial-resources/issues/detail?id=1209      *
+ *                                                                             *
+ * to attain the information necessary to complete the OAuth 2.0 request       *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+*/
+{
+   "gadgetBindings" : {
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/oauth2_google.xml" : {
+         "googleAPI" : {
+            "clientName"          : "googleApi_client1",
+            "allowModuleOverride" : "true"
+         }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/oauth2_google_shared1.xml" : {
+         "googleAPI" : {
+            "clientName"          : "googleApi_shared_client",
+            "allowModuleOverride" : "true"
+         }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/oauth2_google_shared2.xml" : {
+         "googleAPI" : {
+            "clientName"          : "googleApi_shared_client",
+            "allowModuleOverride" : "true"
+         }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/oauth2_facebook.xml" : {
+          "facebook" : {
+             "clientName"          : "facebook_client1",
+             "allowModuleOverride" : "true"
+          }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/oauth2_windowslive.xml" : {
+          "windows_live" : {
+             "clientName"          : "wl_client1",
+             "allowModuleOverride" : "true"
+          }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/shindig_authorization.xml" : {
+		  "shindigOAuth2Provider" : {
+            "clientName"          : "shindig_client1",
+            "allowModuleOverride" : "true"
+          }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/shindig_client_credentials.xml" : {
+        "shindigOAuth2Provider" : {
+            "clientName"          : "shindig_client2",
+            "allowModuleOverride" : "true"
+          }
+      },
+      "%origin%%contextRoot%/samplecontainer/examples/oauth2/oauth2_spring_proxy.xml" : {
+         "springAPI" : {
+            "clientName"          : "spring_client1",
+            "allowModuleOverride" : "true"
+         }
+      }
+   },
+   "clients" : {
+      "googleApi_client1" : {
+         "providerName"  : "googleAPI",
+         "redirect_uri"  : "%origin%%contextRoot%/gadgets/oauth2callback",
+         "type"          : "confidential",
+         "grant_type"    : "code",
+         "client_id"     : "YOUR_GOOGLE_APP_ID",
+         "client_secret" : "YOUR_GOOGLE_APP_SECRET",
+         "sharedToken"   : "false"
+      },
+      "googleApi_shared_client" : {
+         "providerName"  : "googleAPI",
+         "redirect_uri"  : "%origin%%contextRoot%/gadgets/oauth2callback",
+         "type"          : "confidential",
+         "grant_type"    : "code",
+         "client_id"     : "YOUR_GOOGLE_APP_ID",
+         "client_secret" : "YOUR_GOOGLE_APP_SECRET",
+         "sharedToken"   : "true"
+      },
+      "facebook_client1" : {
+         "providerName"  : "facebook",
+         "redirect_uri"  : "%origin%%contextRoot%/gadgets/oauth2callback",
+         "type"          : "confidential",
+         "grant_type"    : "code",
+         "client_id"     : "YOUR_FACEBOOK_APP_ID",
+         "client_secret" : "YOUR_FACEBOOK_APP_SECRET"
+      },
+      "wl_client1" : {
+         "providerName"  : "wlProvider",
+         "type"          : "confidential",
+         "redirect_uri"  : "%origin%%contextRoot%/gadgets/oauth2callback",
+         "grant_type"    : "code",
+         "client_id"     : "YOUR_WINDOWS_LIVE_APP_ID",
+         "client_secret" : "YOUR_WINDOWS_LIVE_APP_SECRET"
+      } ,
+      "shindig_client1" : {
+         "providerName"  : "shindigOAuth2Provider",
+         "type"          : "confidential",
+         "grant_type"    : "code",
+         "client_id"     : "shindigClient",
+         "client_secret" : "U78KJM98372AMGL87612993M"
+      } ,
+      "shindig_client2" : {
+         "providerName"  : "shindigOAuth2Provider",
+         "type"          : "confidential",
+         "grant_type"    : "code",
+         "client_id"     : "testClientCredentialsClient",
+         "client_secret" : "clientCredentialsClient_secret"
+      },
+      "spring_client1" : {
+         "providerName"  : "springProvider",
+         "redirect_uri"  : "%origin%%contextRoot%/gadgets/oauth2callback",
+         "type"          : "confidential",
+         "grant_type"    : "code",
+         "client_id"     : "tonr",
+         "client_secret" : "secret",
+         "sharedToken"   : "false"
+      }
+   },
+   "providers" : {
+      "googleAPI" : {
+        "client_authentication" : "STANDARD",
+        "usesAuthorizationHeader" : "false",
+        "usesUrlParameter" : "true",
+        "endpoints" : {
+            "authorizationUrl"  : "https://accounts.google.com/o/oauth2/auth",
+            "tokenUrl"          : "https://accounts.google.com/o/oauth2/token"
+        }
+      },
+      "facebook" : {
+         "client_authentication" : "STANDARD",
+        "usesAuthorizationHeader" : "false",
+        "usesUrlParameter" : "true",
+        "endpoints" : {
+            "authorizationUrl"   : "https://www.facebook.com/dialog/oauth",
+            "tokenUrl"           : "https://graph.facebook.com/oauth/access_token"
+        }
+      },
+      "wlProvider" : {
+         "client_authentication" : "STANDARD",
+         "usesAuthorizationHeader" : "false",
+         "usesUrlParameter" : "true",
+         "endpoints" : {
+            "authorizationUrl"   : "https://oauth.live.com/authorize/",
+            "tokenUrl"           : "https://oauth.live.com/token"
+         }
+      },
+      "shindigOAuth2Provider" : {
+         "client_authentication" : "Basic",
+         "usesAuthorizationHeader" : "true",
+         "usesUrlParameter" : "false",
+         "endpoints" : {
+            "authorizationUrl"   : "%origin%%contextRoot%/oauth2/authorize/",
+            "tokenUrl"           : "%origin%%contextRoot%/oauth2/token"
+         }
+      },
+      "springProvider" : {
+         "client_authentication" : "Basic",
+         "usesAuthorizationHeader" : "true",
+         "usesUrlParameter" : "false",
+         "endpoints" : {
+            "authorizationUrl"   : "%origin%/sparklr2/oauth/authorize",
+            "tokenUrl"           : "%origin%/sparklr2/oauth/token"
+         }
+      }
+   }
+}

@@ -1,0 +1,121 @@
+#elfinder {
+    bottom: 0;
+    height: auto !important;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 47px;
+    width: auto !important;
+    background:#FFFFFF;
+}
+
+#btn-new-site {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#newSitebtnCont {
+    height: 15px;
+    line-height: 15px;
+    width: 78px;
+}
+
+#modal-publish .alert {
+    display: none;
+}
+
+#inp-publish-rol-cont, #inp-publish-users-cont {
+    position: relative;
+}
+
+.token-input-list-facebook {
+    position: absolute;
+    right: 57px;
+    left: 0;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+#token-input-inp-publish-roles:focus, #token-input-inp-publish-users:focus {
+    box-shadow: none;
+}
+
+#form-new-app h4:first-child{
+    margin:7px 0 0;
+} 
+form{
+    margin:0;
+}
+
+.designer-layouts {
+    background: url(../img/designer-sprite.png) no-repeat;
+    width: 81px;
+    height: 81px;
+    display: block;
+    overflow: hidden;
+    margin: 0 auto;
+    position: relative;
+    border: 5px solid #fff;
+    border-radius: 4px 4px 4px 4px;
+    transition: border-color .3s;
+}
+
+.designer-plus {
+    background: url(../img/designer-sprite.png) no-repeat;
+    background-position: 0 -364px;
+    left: 6px;
+    position: absolute;
+    top: 7px;
+    width: 68px;
+    height: 68px;
+}
+
+.designer-layouts:hover {
+    border: 5px solid #16A085;
+}
+.designer-layouts-1 {
+    background-position: 0px 0px;
+}
+.designer-layouts-2 {
+    background-position: 0px -91px;
+}
+
+.designer-layouts-3 {
+    background-position: 0px -182px;
+}
+
+.designer-layouts-4 {
+    background-position: 0px -273px;
+}
+
+.designer-layouts-selected{
+    border: 5px solid #16A085; 
+}
+.designer-layouts-1.designer-layouts-selected{ 
+    background-position: -81px 0px;
+}
+.designer-layouts-2.designer-layouts-selected{ 
+    background-position: -81px -91px;
+}
+
+.designer-layouts-3.designer-layouts-selected{ 
+    background-position: -81px -182px;
+}
+
+.designer-layouts-4.designer-layouts-selected{ 
+    background-position: -81px -273px;
+}
+
+.site-just-created{
+	background:  #FFF8BF!important;
+}
+.site-just-after-created{
+        background:  #FFFFFF!important;
+     -webkit-transition-OUT: background 4s linear;
+     -moz-transition: background 4s linear;
+     -o-transition: background 4s linear;
+     -ms-transition: background 4s linear;
+     transition: background 4s linear;
+}

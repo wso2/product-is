@@ -1,0 +1,56 @@
+<div id="assets-container">
+    {{#slice . size="4"}}
+        <div class="row-fluid">
+            {{#each .}}
+                <div class="span3 asset" data-path="{{path}}">
+                    <a href="#">
+                        <div class="asset-icon">
+                            <img src="{{thumbnail}}">
+                        </div>
+                    </a>
+
+                    <div class="asset-details">
+
+                        <div class="asset-name">
+                            <a href="{{url "asset"}}/gadget?asset={{path}}"/><h3>{{name}}</h3></a>
+                        </div>
+                        <div class="asset-rating">
+                            <ul>
+                                <li>
+                                    <i class="icon-star"></i>
+                                </li>
+                                <li>
+                                    <i class="icon-star"></i>
+                                </li>
+                                <li>
+                                    <i class="icon-star"></i>
+                                </li>
+                                <li>
+                                    <i class="icon-star"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="asset-author-category">
+                            <ul>
+                                <li>
+                                    <h4>{{t "Category"}}</h4>
+                                    <a class="asset-category" href="#">API</a>
+                                </li>
+                                <li>
+                                    <h4>{{t "Author"}}</h4>
+                                    <a class="asset-author" href="#">{{provider}}</a>
+                                </li>
+
+                            </ul>
+
+                            <a href="#" class="asset-add-btn">{{t "Add this asset"}}</a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            {{/each}}
+        </div>
+    {{/slice}}
+</div>

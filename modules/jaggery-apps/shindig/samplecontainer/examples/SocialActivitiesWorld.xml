@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+ <ModulePrefs title="Social Activities World"
+              icon="http://localhost:8080/samplecontainer/examples/icon.png">
+   <Require feature="settitle"/>
+   <Require feature="dynamic-height"/>
+ </ModulePrefs>
+ <Content type="html">
+   <![CDATA[
+<style type="text/css">
+  .streamtitle,
+  .socialHeading {
+    font-family:arial,helvetica,sans-serif;
+    font-size:13pt;
+    font-weight:bold;
+  }
+
+  .streamtitle {
+    background-color: #E0ECFF;
+    border-top: 1px solid blue;
+    padding: .25em;
+  }
+
+  .socialDescription a {
+    color:#999999;
+  }
+
+  .streamdescription,
+  .streamdescription a,
+  .streamdescription a:visited {
+    color:#408BFE;
+    font-size:12pt;
+    font-weight:bold;
+    text-decoration:underline;
+    font-family:arial,helvetica,sans-serif;
+  }
+
+  .streamurl a {
+    color:#008000;
+    font-size:10pt;
+    font-family:arial,helvetica,sans-serif;
+    text-decoration:underline;
+  }
+
+  .streamrow {
+    clear: both;
+  }
+
+  .streamrowline {
+    border-bottom:1px solid #DDE9F5;
+    clear:both;
+    height:0px;
+    margin:5px;
+  }
+
+  .streamcontents {
+    padding: .5em;
+  }
+
+  .streamhtmlcontents {
+    color:#333333;
+    font-size:10pt;
+    line-height:130%;
+    padding:2px 0pt 3px 10px;
+    font-family:arial,helvetica,sans-serif;
+  }
+
+  .mediaitems {
+    padding-left: 5em;
+  }
+
+  .addActivityDiv {
+    clear:both;
+    padding-bottom:15px;
+  }
+
+  #addActivityText {
+    color:#999999;
+    font-size:10pt;
+    font-weight:normal;
+    font-family:arial,helvetica,sans-serif;
+  }
+
+  .leftcolumn {
+    float: left;
+    width: 47%;
+  }
+
+  .rightcolumn {
+    float: right;
+    width: 47%;
+  }
+
+  #addActivity {
+    display:none;
+    border: 2px solid blue;
+    padding: .5em;
+  }
+</style>
+
+<script type="text/javascript">
+gadgets.window.setTitle('Social Activities World');
+gadgets.util.registerOnLoadHandler(refreshActivities);
+
+function refreshActivities() {
+  var req = opensocial.newDataRequest();
+  if (!viewer) {
+    req.add(req.newFetchPersonRequest('VIEWER'), 'viewer');
+  }
+  req.add(req.newFetchActivitiesRequest('VIEWER'), 'viewerActivities');
+  req.add(req.newFetchActivitiesRequest('VIEWER_FRIENDS'), 'activities');
+  req.send(handleActivities);
+}
+
+function postNewActivity() {
+  var activityElement = document.getElementById('newActivity');
+  var mediaItem = new Array(opensocial.newActivityMediaItem("image", "http://cdn.davesdaily.com/pictures/784-awesome-hands.jpg", {'type' : 'image'}));
+  var activity = opensocial.newActivity({ 'title' : viewer.getDisplayName() + ' wrote: ' + activityElement.value,
+    'body' : 'write back!', 'mediaItems' : mediaItem});
+
+  activityElement.value = '';
+  opensocial.requestCreateActivity(activity, "HIGH", refreshActivities);
+}
+
+var viewer;
+var activities;
+function handleActivities(dataResponse) {
+  if (!viewer) {
+    viewer = dataResponse.get('viewer').getData();
+  }
+  activities = dataResponse.get('viewerActivities').getData()['activities'].asArray();
+  activities = activities.concat(dataResponse.get('activities').getData()['activities'].asArray());
+  document.getElementById('stream').style.display = 'block';
+
+  var html = '';
+  if (!activities || activities.length == 0) {
+    document.getElementById('stream').innerHTML = 'You do not have any activities yet';
+    return;
+  }
+
+  for (var i = 0; i < activities.length; i++) {
+    html += '<div class="streamrow">';
+
+    html += '<div class="streamdescription"><a href="' + activities[i].url + '">' + activities[i].getField('title') + '</a></div>';
+
+    html += '<div class="streamcontents">';
+    html += '<img src="http://www.gstatic.com/codesite/ph/images/star_on.gif"/>';
+
+    var body = activities[i].getField('body') || '';
+    html += '<span class="streamhtmlcontents">' + body + '</span>';
+    html += '</div>';
+
+    html += '<div class="mediaitems">';
+    var mediaItems = activities[i].getField('mediaItems');
+    if (mediaItems) {
+      for (var j = 0; j < mediaItems.length; j++) {
+        if (mediaItems[j].getField('type') == 'image') {
+          html += '<img height="150px" style="padding-right:.5em;" src="' + mediaItems[j].getField('url') + '"/>';
+        }
+      }
+    }
+    html += '</div>';
+
+    var shortUrl = activities[i].getField('url');
+    if (shortUrl) {
+      if (shortUrl.indexOf('http://') == 0) {
+        shortUrl = shortUrl.substring(7);
+      }
+      html += '<div class="streamurl"><a href="' + activities[i].getField('url') + '">' + shortUrl + '</a></div>';
+    }
+
+    html += '</div>';
+    html += '<div class="streamrowline"></div>';
+  }
+  document.getElementById('stream').innerHTML = html;
+  gadgets.window.adjustHeight();
+}
+
+function hideShowDiv(divToShow, divToHide) {
+  document.getElementById(divToShow).style.display = 'block';
+  document.getElementById(divToHide).style.display = 'none';
+}
+</script>
+
+<div class="streamtitle">Activities from your friends</div>
+<div class="addActivityDiv">
+  <a id="addActivityText" href="#" onclick="hideShowDiv('addActivity','addActivityText'); return false;"> Add your own activity </a>
+  <span id="addActivity">
+    <input id="newActivity" type="text"/>
+    <input type="button" onclick="postNewActivity(); return false;" value="add"/>
+    <input type="button" onclick="hideShowDiv('addActivityText','addActivity'); return false;" value="cancel"/>
+  </span>
+</div>
+<div id="stream" style="display:none"></div>
+
+]]>
+</Content>
+</Module>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<XMLTooling xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.opensaml.org/xmltooling-config ../../src/schema/xmltooling-config.xsd"
+ xmlns:saml1="urn:oasis:names:tc:SAML:1.0:assertion"
+ xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+ xmlns="http://www.opensaml.org/xmltooling-config">
+ 
+    <!-- SAML 1.X Assertion Object providers -->
+    
+    <ObjectProviders>
+
+    
+        <!-- Action -->
+        <ObjectProvider qualifiedName="saml1:Action">
+            <BuilderClass className="org.opensaml.saml1.core.impl.ActionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.ActionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.ActionUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:ActionType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.ActionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.ActionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.ActionUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- Advice -->
+        <ObjectProvider qualifiedName="saml1:Advice">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AdviceBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AdviceMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AdviceUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AdviceType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AdviceBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AdviceMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AdviceUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- Assertion  -->
+        <ObjectProvider qualifiedName="saml1:Assertion">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AssertionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AssertionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AssertionUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AssertionType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AssertionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AssertionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AssertionUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- AssertionIDReference -->
+        <ObjectProvider qualifiedName="saml1:AssertionIDReference">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AssertionIDReferenceBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AssertionIDReferenceMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AssertionIDReferenceUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- Attribute -->
+        <ObjectProvider qualifiedName="saml1:Attribute">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AttributeBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AttributeMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AttributeUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AttributeType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AttributeBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AttributeMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AttributeUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- AttributeDesignator -->
+        <ObjectProvider qualifiedName="saml1:AttributeDesignator">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AttributeDesignatorBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AttributeDesignatorMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AttributeDesignatorUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AttributeDesignatorType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AttributeDesignatorBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AttributeDesignatorMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AttributeDesignatorUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- AttributeStatement -->
+        <ObjectProvider qualifiedName="saml1:AttributeStatement">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AttributeStatementBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AttributeStatementMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AttributeStatementUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AttributeStatementType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AttributeStatementBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AttributeStatementMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AttributeStatementUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- Audience -->
+        <ObjectProvider qualifiedName="saml1:Audience">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AudienceBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AudienceMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AudienceUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- saml1:AudienceRestrictionCondition -->
+        <ObjectProvider qualifiedName="saml1:AudienceRestrictionCondition">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AudienceRestrictionConditionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AudienceRestrictionConditionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AudienceRestrictionConditionUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AudienceRestrictionConditionType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AudienceRestrictionConditionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AudienceRestrictionConditionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AudienceRestrictionConditionUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- AuthenticationStatement -->
+        <ObjectProvider qualifiedName="saml1:AuthenticationStatement">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AuthenticationStatementBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AuthenticationStatementMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AuthenticationStatementUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AuthenticationStatementType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AuthenticationStatementBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AuthenticationStatementMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AuthenticationStatementUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- AuthorityBinding -->
+        <ObjectProvider qualifiedName="saml1:AuthorityBinding">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AuthorityBindingBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AuthorityBindingMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AuthorityBindingUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AuthorityBindingType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AuthorityBindingBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AuthorityBindingMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AuthorityBindingUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- AuthorizationDecisionStatement -->
+        <ObjectProvider qualifiedName="saml1:AuthorizationDecisionStatement">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AuthorizationDecisionStatementBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AuthorizationDecisionStatementMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AuthorizationDecisionStatementUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:AuthorizationDecisionStatementType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.AuthorizationDecisionStatementBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.AuthorizationDecisionStatementMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.AuthorizationDecisionStatementUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- Conditions -->
+        <ObjectProvider qualifiedName="saml1:Conditions">
+            <BuilderClass className="org.opensaml.saml1.core.impl.ConditionsBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.ConditionsMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.ConditionsUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:ConditionsType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.ConditionsBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.ConditionsMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.ConditionsUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- ConfirmationMethod -->
+        <ObjectProvider qualifiedName="saml1:ConfirmationMethod">
+            <BuilderClass className="org.opensaml.saml1.core.impl.ConfirmationMethodBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.ConfirmationMethodMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.ConfirmationMethodUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- DoNotCacheCondition -->
+        <ObjectProvider qualifiedName="saml1:DoNotCacheCondition">
+            <BuilderClass className="org.opensaml.saml1.core.impl.DoNotCacheConditionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.DoNotCacheConditionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.DoNotCacheConditionUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:DoNotCacheConditionType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.DoNotCacheConditionBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.DoNotCacheConditionMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.DoNotCacheConditionUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- Evidence -->
+        <ObjectProvider qualifiedName="saml1:Evidence">
+            <BuilderClass className="org.opensaml.saml1.core.impl.EvidenceBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.EvidenceMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.EvidenceUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:EvidenceType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.EvidenceBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.EvidenceMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.EvidenceUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- NameIdentifier -->
+        <ObjectProvider qualifiedName="saml1:NameIdentifier">
+            <BuilderClass className="org.opensaml.saml1.core.impl.NameIdentifierBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.NameIdentifierMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.NameIdentifierUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:NameIdentifierType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.NameIdentifierBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.NameIdentifierMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.NameIdentifierUnmarshaller" />
+        </ObjectProvider>
+        
+        <!-- Subject -->
+        <ObjectProvider qualifiedName="saml1:Subject">
+            <BuilderClass className="org.opensaml.saml1.core.impl.SubjectBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.SubjectMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.SubjectUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:SubjectType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.SubjectBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.SubjectMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.SubjectUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- SubjectConfirmation -->
+        <ObjectProvider qualifiedName="saml1:SubjectConfirmation">
+            <BuilderClass className="org.opensaml.saml1.core.impl.SubjectConfirmationBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.SubjectConfirmationMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.SubjectConfirmationUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:SubjectConfirmationType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.SubjectConfirmationBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.SubjectConfirmationMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.SubjectConfirmationUnmarshaller" />
+        </ObjectProvider>
+
+        <!-- SubjectLocality -->
+        <ObjectProvider qualifiedName="saml1:SubjectLocality">
+            <BuilderClass className="org.opensaml.saml1.core.impl.SubjectLocalityBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.SubjectLocalityMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.SubjectLocalityUnmarshaller" />
+        </ObjectProvider>
+        
+        <ObjectProvider qualifiedName="saml1:SubjectLocalityType">
+            <BuilderClass className="org.opensaml.saml1.core.impl.SubjectLocalityBuilder" />
+            <MarshallingClass className="org.opensaml.saml1.core.impl.SubjectLocalityMarshaller" />
+            <UnmarshallingClass className="org.opensaml.saml1.core.impl.SubjectLocalityUnmarshaller" />
+        </ObjectProvider>
+    
+    </ObjectProviders>
+    
+</XMLTooling>

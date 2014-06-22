@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes>
+    <platform>
+        <worker>
+            <instance id="is001" type="worker" name="isCluster">
+                <host>localhost</host>
+                <httpport>9763</httpport>
+                <httpsport>9443</httpsport>
+            </instance>
+            <instance id="is002" type="worker" name="isCluster">
+                <host>localhost</host>
+                <httpport>9763</httpport>
+                <httpsport>9443</httpsport>
+            </instance>
+            <instance id="is003" type="worker" name="isCluster">
+                <host>localhost</host>
+                <httpport>9763</httpport>
+                <httpsport>9443</httpsport>
+            </instance>
+        </worker>
+
+        <nodes>
+            <instance id="is001" type="worker" name="isCluster">
+                <host>localhost</host>
+                <httpport>9763</httpport>
+                <httpsport>9443</httpsport>
+            </instance>
+            <instance id="is002" type="worker" name="isCluster">
+                <host>localhost</host>
+                <httpport>9763</httpport>
+                <httpsport>9443</httpsport>
+            </instance>
+        </nodes>
+        <manager>
+            <instance id="ism001" type="worker" name="isCluster">
+                <host>localhost</host>
+                <httpport>9763</httpport>
+                <httpsport>9443</httpsport>
+            </instance>
+
+        </manager>
+        <node id="is001" type="worker" name="isCluster">
+            <host>localhost</host>
+            <httpport>9763</httpport>
+            <httpsport>9443</httpsport>
+        </node>
+        <node id="as002" name="asCluster">
+            <host>localhost</host>
+            <httpport>9764</httpport>
+            <httpsport>9444</httpsport>
+        </node>
+    </platform>
+
+    <esb>
+        <node id="as004" name="esbCluster">
+            <host>dsdsdsds2222222222222222222d</host>
+            <httpport>1222222222222222221</httpport>
+            <httpsport>s222222222222222</httpsport>
+            <nhttpport>s222222222222222</nhttpport>
+            <nhttpsport>s222222222222222</nhttpsport>
+        </node>
+    </esb>
+    <cep>
+        <node id="as003" name="cepCluster">
+            <host>dsdsdsds2333333333</host>
+            <httpport>122223221</httpport>
+            <httpsport>s2222232222</httpsport>
+            <qpidport>s22222322222</qpidport>
+        </node>
+    </cep>
+</nodes>

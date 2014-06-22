@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="VOIP Gadget" height="250">
+    <Require feature="selection"/>
+    <Require feature="open-views"/>
+    <Require feature="actions">
+      <Param name="action-contributions"><![CDATA[
+        <action id="org-samplevoip-chatwithperson" dataType="opensocial.Person" label="Chat" tooltip="Chat" />
+        <action id="org-samplevoip-callbyperson" dataType="opensocial.Person" label="Call" tooltip="Call" />
+        <action id="org-samplevoip-globalcall" path="container/navigationLinks" label="VOIP Call" tooltip="Call using VOIP" />
+      ]]></Param>
+    </Require>
+    <Optional feature="settitle"/>
+    <Optional feature="dynamic-height"/>
+  </ModulePrefs>
+  <Content type="html" view="dialog"><![CDATA[
+    <script>
+
+    </script>
+  ]]></Content>
+
+  <Content type="html"><![CDATA[
+    <script>
+      function status(str) {
+        document.getElementById("status").innerHTML = str;
+        if (gadgets.util.hasFeature('dynamic-height')) {
+          gadgets.window.adjustHeight();
+        }
+      }
+
+      function findFirstPerson(selection) {
+        selection = [].concat(selection);
+        var person;
+        for (var i = 0, selected; !person && (selected = selection[i]); i++) {
+          if (selected.type && selected.dataObject && selected.type.toLowerCase() == 'opensocial.person') {
+            person = selected.dataObject;
+          }
+        }
+        return person;
+      }
+
+      function chat(selection) {
+        var person = findFirstPerson(selection);
+        if (!person) {
+           return status('No person info!');
+        }
+
+        var params = {
+          viewTarget: 'modalDialog',
+          view: 'chat',
+          viewParams: person
+        };
+
+        status('Chat started with <span class="name">' + person.displayName + '</span> ...');
+        gadgets.views.openGadget(function(result){
+          status('Chat with <span class="name">' + person.displayName + '</span> ended.');
+        }, function(){}, params);
+      }
+
+      function call(selection) {
+        var person = findFirstPerson(selection),
+            params = {
+		          viewTarget: 'modalDialog',
+		          view: 'call',
+		          viewParams: person
+		        };
+
+        if (person) {
+          status('Call started with <span class="name">' + person.displayName + '</span> ...');
+        } else {
+          status('Call started...');
+        }
+        gadgets.views.openGadget(function(result) {
+          if (result) {
+            status('Call with <span class="name">' + result + '</span> ended.');
+          } else {
+            status('Call ended.');
+          }
+        }, function(){}, params);
+      }
+
+      gadgets.util.registerOnLoadHandler(function() {
+        if (gadgets.actions) {
+          gadgets.actions.updateAction({
+            id: "org-samplevoip-chatwithperson",
+            callback: chat
+          });
+
+          gadgets.actions.updateAction({
+            id: "org-samplevoip-callbyperson",
+            callback: call
+          });
+
+          gadgets.actions.updateAction({
+            id: "org-samplevoip-globalcall",
+            callback: call
+          });
+        }
+
+        if (gadgets.util.hasFeature('dynamic-height')) {
+          gadgets.window.adjustHeight();
+        }
+      });
+    </script>
+    <div>VOIP Status:</div>
+    <div id="status"></div>
+  ]]></Content>
+
+  <Content type="html" view="chat"><![CDATA[
+    <script>
+      gadgets.util.registerOnLoadHandler(function() {
+        var person = gadgets.views.getParams();
+        if (!person) {
+          gadgets.views.setReturnValue('No person!');
+          gadgets.views.close();
+        }
+
+        if(gadgets.util.hasFeature('settitle')) {
+          gadgets.window.setTitle('Chat with ' + person.displayName);
+        }
+        var url = gadgets.io.getProxyUrl(person.thumbnailUrl || 'http://www.gravatar.com/avatar?d=mm');
+        document.getElementById('thumbnail').setAttribute('src', url);
+
+        document.getElementById('chatlog').innerHTML += '<div><span class="them">' + person.displayName + ':</span>Hi!</div>';
+        if (gadgets.util.hasFeature('dynamic-height')) {
+          gadgets.window.adjustHeight();
+        }
+        document.getElementById('chatmessage').focus();
+      });
+
+      function sendMessage(elem, event) {
+        if (event.keyCode == 13) {
+          var log = document.getElementById('chatlog');
+          log.innerHTML += '<div><span class="me">Me:</span>' + elem.value + '</div>';
+          log.scrollTop = log.scrollHeight;
+          elem.value="";
+        }
+      }
+    </script>
+
+    <style>
+      #container { padding-left: 110px; }
+      #thumbnail { width: 100px; height: 100px; margin-left: -110px; float: left; }
+      #chatarea { width: 100%; }
+      #chatlog { height: 100px; width: 100%; display: block; overflow-y: auto; }
+      #chatmessage { width: 100%; display: block; }
+      .me { color: red; margin-right: 5px; }
+      .them { color: blue; margin-right: 5px; }
+    </style>
+
+    <div id="container">
+      <img src="" id="thumbnail">
+      <div id="chatarea">
+        <div id="chatlog"></div>
+        <input type="text" id="chatmessage" onkeyup="sendMessage(this, event);"></input>
+      </div>
+    </div>
+  ]]></Content>
+
+  <Content type="html" view="call"><![CDATA[
+    <script>
+      gadgets.util.registerOnLoadHandler(function() {
+        var person = gadgets.views.getParams();
+        if (!person) {
+
+        } else {
+	        if(gadgets.util.hasFeature('settitle')) {
+	          gadgets.window.setTitle('Chat with ' + person.displayName);
+	        }
+	        var url = gadgets.io.getProxyUrl(person.thumbnailUrl || 'http://www.gravatar.com/avatar?d=mm');
+	        document.getElementById('thumbnail').setAttribute('src', url);
+	        document.getElementById('callarea').innerHTML = 'Calling ' + person.displayName;
+        }
+
+        if (gadgets.util.hasFeature('dynamic-height')) {
+          gadgets.window.adjustHeight();
+        }
+      });
+    </script>
+
+    <style>
+      #container { padding-left: 110px; }
+      #thumbnail { width: 100px; height: 100px; margin-left: -110px; float: left; }
+      #callarea { width: 100%; }
+    </style>
+
+    <div id="container">
+      <img src="" id="thumbnail">
+      <div id="callarea"></div>
+    </div>
+  ]]></Content>
+</Module>

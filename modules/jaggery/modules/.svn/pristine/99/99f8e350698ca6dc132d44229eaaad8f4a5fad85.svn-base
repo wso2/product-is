@@ -1,0 +1,10 @@
+<module name="oauth" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <hostObject>
+        <className>org.jaggeryjs.hostobjects.oauth.OAuthHostObject</className>
+        <name>OAuthProvider</name>
+    </hostObject>
+    <script>
+        <name>APIs</name>
+        <path>scripts/media_connect.js</path>
+    </script>
+</module>
