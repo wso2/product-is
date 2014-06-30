@@ -27,7 +27,7 @@ function edit(){
             var resp = oauthClient.revoke(req);
             if(resp['return']['error'] === 'false'){
                 log.info("Successfully revoked the authorization from the application");
-  //              response.sendRedirect("../../my_authorized_apps.jag?s=1&sMsg=revoke_success");
+                response.sendRedirect("../../my_authorized_apps.jag?s=1&sMsg=revoke_success");
             }else{
                 var errorMsg = resp['return']['errorMsg'];
                 response.sendRedirect("../../index.jag?e=1&error=" + errorMsg);

@@ -6,7 +6,7 @@
     <Content type="html" view="default">
         <![CDATA[
         <div class='icon-key icon-key-dashboard icon-marketing-styles'></div>
-        Change current account password.
+        User can change current password frequently for more security.
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
 
         <link rel="stylesheet" href="/portal/gadgets/pwd_change/js/ui/css/main.css">
@@ -56,7 +56,7 @@
             var userName = null;
             $(function WindowLoad(event) {
 
-                url = 'wss://localhost:9443/dashboard/session_manager.jag';
+                url = 'wss://localhost:9443/my-dashboard/session_manager.jag';
                 ws = new WebSocket(url);
 
                 ws.onopen = function () {
@@ -86,8 +86,7 @@
                     data:$('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
                 })
                         .done(function (data) {
-			cancel();
-			//message({content:'Successfully changed the password',type:'info', cbk:function(){} });
+			message({content:'Successfully changed the password',type:'info', cbk:function(){} });
 
                         })
                         .fail(function () {

@@ -26,7 +26,7 @@ function cancelProcessToLogin(parameters){
     var messageDisplay = function (params) {
            $('#messageModal').html($('#confirmation-data').html());
            if(params.title == undefined){
-               $('#messageModal h3.modal-title').html('Dashboard');
+               $('#messageModal h3.modal-title').html('My Identity');
            }else{
                $('#messageModal h3.modal-title').html(params.title);
            }
@@ -77,7 +77,7 @@ function cancelProcessToLogin(parameters){
            }
            params.content = '<table class="msg-table"><tr><td class="imageCell '+params.type+'"><i class="'+icon+'"></i></td><td class="messageText-wrapper"><span class="messageText">'+params.content+'</span></td></tr></table>';
            if(params.type == "confirm"){
-              if( params.title == undefined ){ params.title = "Dashboard"}
+              if( params.title == undefined ){ params.title = "My Identity"}
               messageDisplay({content:params.content,title:params.title ,buttons:[
                   {name:"Yes",cssClass:"btn btn-primary",cbk:function() {
                       $('#messageModal').modal('hide');
@@ -99,7 +99,7 @@ function cancelProcessToLogin(parameters){
                if(params.type == "warning"){ type = "Warning"}
                if(params.type == "error"){ type = "Error"}
            }
-           messageDisplay({content:params.content,title:"Dashboard " + type,buttons:[
+           messageDisplay({content:params.content,title:"My - Identity " + type,buttons:[
                {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                    $('#messageModal').modal('hide');
                    if(params.cbk && typeof params.cbk == "function")

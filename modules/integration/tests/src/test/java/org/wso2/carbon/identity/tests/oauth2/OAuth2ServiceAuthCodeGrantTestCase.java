@@ -102,12 +102,14 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends ISIntegrationTest{
     	reqDto.setCallbackUrl("https://localhost:8080/oauthPlayground");
     	reqDto.setConsumerKey(consumerKey);
     	reqDto.setResponseType("code");
-    	reqDto.setScopes(new String[]{"openid"});
+    	reqDto.setScopes(new String[]{"test"});
     	reqDto.setUsername(adminUsername);
     	
     	OAuth2AuthorizeRespDTO resDto = oauth2client.authorize(reqDto);
     	
     	Assert.assertNotNull(resDto, "Authorization response is null.");
+    	Assert.assertTrue(resDto.getAuthenticated(), "Authentication is false.");
+    	Assert.assertTrue(resDto.getAuthorized(), "Authorization is false.");
     	Assert.assertNotNull(resDto.getAuthorizationCode(), "Authorization code is null.");
 
     	authCode = resDto.getAuthorizationCode();
@@ -147,16 +149,16 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends ISIntegrationTest{
     public void testValidateAccessToken() throws Exception {
 
         OAuth2TokenValidationRequestDTO valReq = new OAuth2TokenValidationRequestDTO();
-        OAuth2AccessTokenReqDTO accessTokenDto =  new OAuth2AccessTokenReqDTO();
-//        accessTokenDto.setTokenType("bearer");
-//        accessTokenDto.setIdentifier(accessToken);
-//        valReq.setAccessToken(accessTokenDto);
+        OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDto =  new OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
+        accessTokenDto.setTokenType("bearer");
+        accessTokenDto.setIdentifier(accessToken);
+        valReq.setAccessToken(accessTokenDto);
 
         OAuth2TokenValidationResponseDTO responseDTO = oauth2TokenValidationClient.validateToken(valReq);
         Assert.assertTrue(responseDTO.getValid(), " Invalid Token ");
     }
     
-    @Test(groups = "wso2.is", description = "Check Oauth2 revoke token", dependsOnMethods="testValidateClientInfo")
+    @Test(groups = "wso2.is", description = "Check Oauth2 revoke token", dependsOnMethods="testValidateAccessToken")
     public void testRevokeTokenByOAuthClient() throws Exception {
     	
     	OAuthRevocationRequestDTO revokeRequestDTO =  new OAuthRevocationRequestDTO();

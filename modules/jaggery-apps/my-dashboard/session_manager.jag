@@ -1,0 +1,18 @@
+<%
+var log = new Log();
+var cookie = session.get('auth-cookie');
+var user = session.get('user');
+	var jsonString = '{"cookie":"' +cookie+'","user":"'+user+'"}';
+//print(parse(jsonString));
+log.debug('Authentication Cookie ' +cookie);
+webSocket.ontext = function (data) {
+    var ws = this;
+    setTimeout(function () {
+     ws.send(jsonString);
+    }, 0);
+};
+      
+//webSocket.onbinary = function (stream) {
+//    log.info('Client Streamed : ' + stream.toString());
+//};
+%>

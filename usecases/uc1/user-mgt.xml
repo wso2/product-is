@@ -1,0 +1,132 @@
+<!--
+  ~ Copyright WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+        
+<UserManager>
+    <Realm>
+        <Configuration>
+		<AddAdmin>true</AddAdmin>
+                <AdminRole>admins</AdminRole>
+                <AdminUser>
+                     <UserName>chamadmin</UserName>
+                     <Password>XXXXXXXXXX</Password>
+                </AdminUser>
+                <ReservedRoleNames>identity,test555</ReservedRoleNames>
+                <RestrictedDomainsForSelfSignUp>APACHEDS</RestrictedDomainsForSelfSignUp>         
+                <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
+                <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
+                <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder</Property>
+	    <!-- Use the following MultiTenantRealmConfigBuilder with LDAP based UserStoreManagers-->
+	    <!--Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.CommonLDAPRealmConfigBuilder</Property-->
+        </Configuration>
+	<!-- Following is the default user store manager. This user store manager is based on embedded-apacheds LDAP. It reads/writes users and roles into the 		     default apacheds LDAP user store. Descriptions about each of the following properties can be found in user management documentation of the 	 respective product. In case if user core cache domain is needed to identify uniquely set property <Property name="UserCoreCacheIdentifier">domain</Property>
+	     Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens when building configurations for products. -->
+
+
+	<!-- Following is the configuration for internal JDBC user store. This user store manager is based on JDBC. In case if application needs to manage 		     passwords externally set property <Property name="PasswordsExternallyManaged">true</Property>. In case if user core cache domain is needed to 			identify uniquely set property <Property name="UserCoreCacheIdentifier">domain</Property>. Furthermore properties, IsEmailUserName and 	     			DomainCalculation are readonly properties. 
+	     Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens when building configurations for products. -->	
+        <!--UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
+	    <Property name="ReadOnly">false</Property>
+            <Property name="MaxUserNameListLength">100</Property>
+            <Property name="IsEmailUserName">false</Property>
+            <Property name="DomainCalculation">default</Property>
+            <Property name="PasswordDigest">SHA-256</Property>
+            <Property name="StoreSaltedPassword">true</Property>
+            <Property name="UserNameUniqueAcrossTenants">false</Property>
+            <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
+            <Property name="PasswordJavaScriptRegEx">^[\\S]{5,30}$</Property>
+	    <Property name="UsernameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
+	    <Property name="UsernameJavaScriptRegEx">^[\\S]{3,30}$</Property>
+	    <Property name="RolenameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
+	    <Property name="RolenameJavaScriptRegEx">^[\\S]{3,30}$</Property>
+            <Property name="UserRolesCacheEnabled">true</Property>
+	    <Property name="maxFailedLoginAttempt">0</Property>
+        </UserStoreManager-->
+
+
+
+	    
+	<UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager">
+            <Property name="DomainName">WSO2.COM</Property> 
+            <Property name="defaultRealmName">WSO2.ORG</Property>
+            <Property name="kdcEnabled">false</Property>
+            <Property name="ConnectionURL">ldaps://10.100.3.131:636</Property> 
+            <Property name="ConnectionName">CN=Administrator,CN=Users,DC=wso2,DC=com</Property>
+            <Property name="ConnectionPassword">Wso2123#qa1</Property>
+            <Property name="passwordHashMethod">PLAIN_TEXT</Property>
+            <Property name="UserSearchBase">OU=IS,DC=WSO2,DC=Com</Property>
+            <Property name="UserEntryObjectClass">user</Property>
+            <Property name="UserNameAttribute">sAMAccountName</Property>
+            <Property name="DisplayNameAttribute">cn</Property>
+            <Property name="isADLDSRole">false</Property>
+            <Property name="userAccountControl">512</Property>
+            <Property name="UserNameListFilter">(objectClass=user)</Property>
+            <Property name="UserNameSearchFilter">(&amp;(objectClass=user)(sAMAccountName=?))</Property>
+            <Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+            <Property name="UsernameJavaScriptRegEx">^[\\S]{3,30}$</Property>
+            <Property name="PasswordJavaScriptRegEx">^[\\S]{5,30}$</Property>
+            <Property name="RolenameJavaScriptRegEx">^[\\S]{3,30}$</Property>
+            <Property name="RolenameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+            <Property name="ReadLDAPGroups">true</Property>
+            <Property name="WriteLDAPGroups">false</Property>
+            <Property name="EmptyRolesAllowed">true</Property>
+            <Property name="GroupSearchBase">OU=IS,DC=WSO2,DC=Com</Property>
+            <Property name="GroupEntryObjectClass">group</Property>
+            <Property name="GroupNameAttribute">sAMAccountName</Property>
+            <Property name="MembershipAttribute">member</Property>
+            <Property name="GroupNameListFilter">(objectcategory=group)</Property>
+            <Property name="GroupNameSearchFilter">(&amp;(objectClass=group)(sAMAccountName=?))</Property>
+            <Property name="UserRolesCacheEnabled">true</Property>
+            <Property name="Referral">follow</Property>
+            <Property name="BackLinksEnabled">true</Property>
+            <Property name="maxFailedLoginAttempt">0</Property>
+        </UserStoreManager>
+
+
+	
+
+        <AuthorizationManager
+            class="org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager">
+            <Property name="AdminRoleManagementPermissions">/permission</Property>
+	    <Property name="AuthorizationCacheEnabled">true</Property>
+        </AuthorizationManager>
+    </Realm>
+</UserManager>
+
+<!--*******Description of some of the configuration properties used in user-mgt.xml*********************************
+
+DomainName - This property must be used by all secondary user store managers in multiple user store configuration. 
+	     DomainName is a unique identifier given to the user store. Users must provide both the domain name and 
+	     username at log-in as "DomainName\Username"
+
+UserRolesCacheEnabled - This is to indicate whether to cache role list of a user. By default it is set to true.
+                        You may need to disable it if user-roles are changed by external means and need to reflect
+                        those changes in the carbon product immediately.
+
+ReplaceEscapeCharactersAtUserLogin - This is to configure whether escape characters in user name needs to be replaced at user login.
+				     Currently the identified escape characters that needs to be replaced are '\' & '\\'
+
+UserDNPattern - This property will be used when authenticating users. During authentication we do a bind. But if the user is login with
+                email address or some other property we need to first lookup LDAP and retreive DN for the user. This involves an additional step. 
+                If UserDNPattern is specified the DN will be contructed using the pattern specified in this property. Performance of this is much better than looking
+                up DN and binding user.
+
+passwordHashMethod - This says how the password should be stored. Allowed values are as follows,
+                     SHA - Uses SHA digest method
+                     MD5 - Uses MD 5 digest method
+                     PLAIN_TEXT - Plain text passwords
+                     In addition to above this supports all digest methods supported by http://docs.oracle.com/javase/6/docs/api/java/security/MessageDigest.html.
+DomainName - This is used with Multiple User Store feature - when you want to connect to more than one user store at a time. In that case, we identify the secondary user stores by the DomainName property. We do not define this property for the primary user store. Example format of this property element would be: <Property name="DomainName">domain.com</Property>
+-->

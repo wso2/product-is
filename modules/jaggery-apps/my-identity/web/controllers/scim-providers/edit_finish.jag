@@ -1,0 +1,98 @@
+<%
+
+var log = new Log();
+var scimClient = require('/controllers/scim-providers/scimAdminClient.jag');
+
+var i18n = session.get("i18n");
+
+function edit(){
+
+    try{
+    	
+        try{
+            require('../../authenticationHandler.jag');
+
+        }catch(e){
+            log.error(e);
+            response.sendRedirect("login.jag?e=1&error=AuthenticationFail");
+            return;
+        }
+
+    	var userName = session.get("user");
+//		var consumerId = userName + session.get("tenant.domain");
+        
+        var operation = request.getParameter("op");
+        var isEdit = operation === "e";
+
+        var provider = request.getParameter("providerId");
+        var userName = request.getParameter("userName");
+        var password = request.getParameter("pwd");
+        var userEPURL = request.getParameter("userEndpoint");
+        var groupEPURL = request.getParameter("grpEndpoint");
+
+        var providers = session.get("scimProviders");
+        var editProvider  = null;
+        if(isEdit){
+            for each (var p in providers){
+                if(p.providerId === provider){
+                    editProvider = p;
+                    break;
+                }
+            }
+        }
+
+        if(isEdit && editProvider == null){
+            response.sendRedirect("../../my_scim_providers.jag?e=1&error=provider_name_incorrect");
+            return;
+        }
+
+        var updateReq = <con:updateUserProvider xmlns:con="http://config.common.scim.identity.carbon.wso2.org" xmlns:xsd="http://config.common.scim.identity.carbon.wso2.org/xsd">
+                 <con:consumerId></con:consumerId>
+              </con:updateUserProvider>
+
+        var addReq = <con:addUserProvider xmlns:con="http://config.common.scim.identity.carbon.wso2.org" xmlns:xsd="http://config.common.scim.identity.carbon.wso2.org/xsd">
+                 <con:consumerId></con:consumerId>
+              </con:addUserProvider>
+
+
+        var req = <con:scimProviderDTO xmlns:con="http://config.common.scim.identity.carbon.wso2.org" xmlns:xsd="http://config.common.scim.identity.carbon.wso2.org/xsd">
+                                      <xsd:bulkEPURL></xsd:bulkEPURL>
+                                      <xsd:groupEPURL></xsd:groupEPURL>
+                                      <xsd:password></xsd:password>
+                                      <xsd:providerId></xsd:providerId>
+                                      <xsd:userEPURL></xsd:userEPURL>
+                                      <xsd:userName></xsd:userName>
+                                   </con:scimProviderDTO>
+                                                                         
+        req.*::providerId.setChildren(provider);
+        req.*::userName.setChildren(userName);
+        req.*::password.setChildren(password);
+        req.*::userEPURL.setChildren(userEPURL);
+        req.*::groupEPURL.setChildren(groupEPURL);
+
+        if(isEdit){
+//            updateReq.*::consumerId.setChildren(consumerId);
+            updateReq.appendChild(req);
+            scimClient.updateUserSCIMProvider(updateReq);
+
+        }else{
+//            addReq.*::consumerId.setChildren(consumerId);
+            addReq.appendChild(req);
+            log.debug(addReq);
+            scimClient.addUserSCIMProvider(addReq);
+        }
+
+        response.sendRedirect("../../my_scim_providers.jag?s=1&sMsg=scim_pro_succ");
+    }
+    catch(e){
+        log.error(e);
+        response.sendRedirect("../../index.jag?e=1&error=" + e);
+
+    }
+
+}
+
+edit();
+
+
+%>
