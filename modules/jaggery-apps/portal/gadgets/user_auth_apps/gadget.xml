@@ -6,7 +6,7 @@
     <Content type="html" view="default">
         <![CDATA[
         <div class='icon-thumbs-up-alt icon-thumbs-up-alt-dashboard icon-marketing-styles'></div>
-        Manage OAuth authorized application.  
+        Account recovery feature helps you to recover your account secure way . We use challenge questions so no one else is capable of accessing your account
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
 
         <link rel="stylesheet" href="/portal/gadgets/user_auth_apps/js/ui/css/main.css">
@@ -57,7 +57,7 @@
             var userName = null;
             $(function WindowLoad(event) {
 
-                url = 'wss://localhost:9443/dashboard/session_manager.jag';
+                url = 'wss://localhost:9443/my-dashboard/session_manager.jag';
                 ws = new WebSocket(url);
 
                 ws.onopen = function () {
@@ -78,36 +78,8 @@
 
                         })
                                 .done(function (data) {
-    var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
-        "  <div class=\"modal-dialog\">\n" +
-        "    <div class=\"modal-content\">\n" +
-        "      <div class=\"modal-header\">\n" +
-        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
-        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
-        "      </div>\n" +
-        "      <div class=\"modal-body\">\n" +
-        "        <p>One fine body&hellip;</p>\n" +
-        "      </div>\n" +
-        "      <div class=\"modal-footer\">\n" +
-        "      </div>\n" +
-        "    </div>\n" +
-        "  </div>\n" +
-        "</div>";
-
-
-
-      json = $.parseJSON(data);
-      if(json == null){
-	        $("#message").append(element);
-            message({content:'No authorized applications found !', type:'info', cbk:function () {
-            cancel();
-            } });
-            
-}
-else {
-
+                                    json = $.parseJSON(data);
                                     drawPage();
-}
 
                                 })
                                 .fail(function () {

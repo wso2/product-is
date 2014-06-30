@@ -1,0 +1,6 @@
+{
+    "name": "default",
+    "firstName": "admin",
+    "lastName": "admin",
+    "role":"admin,Internal/everyone"
+}

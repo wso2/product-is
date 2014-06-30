@@ -94,8 +94,8 @@
          %>
 </div>
 
- <!-- <h2 class="dashboard-title">Identity & Entitlement quick start dashboard</h2> -->
-        <%-- <table class="tip-table">
+ <h2 class="dashboard-title">Identity & Entitlement quick start dashboard</h2>
+        <table class="tip-table">
             <tr>
                 <td class="tip-top user-profile"></td>
                 <td class="tip-empty"></td>
@@ -192,9 +192,9 @@
                 <td class="tip-empty"></td>
                 <td class="tip-bottom"></td>
             </tr>
-        </table> --%>
-	<!-- <div class="tip-table-div"></div> -->
-       <%--  <table class="tip-table">
+        </table>
+	<div class="tip-table-div"></div>
+        <table class="tip-table">
             <tr>
                 <td class="tip-top oauth"></td>
                 <td class="tip-empty"></td>
@@ -291,7 +291,7 @@
                 <td class="tip-empty"></td>
                 <td class="tip-bottom"></td>
             </tr>
-        </table> --%>
+        </table>
 <p>
     <br/>
 </p> </div>

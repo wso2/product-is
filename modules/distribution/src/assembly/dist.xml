@@ -24,7 +24,7 @@
 		<!-- Copying p2 profile and osgi bundles-->
 		<fileSet>
 			<directory>
-				../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/components
+				../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/components
 			</directory>
 			<outputDirectory>wso2is-${pom.version}/repository/components
 			</outputDirectory>

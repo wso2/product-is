@@ -249,16 +249,15 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	Assert.assertNotNull(bean, "Check verify user answer has failed with null return");
 	}
     
-//	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
-//    @Test(groups = "wso2.is", description = "Check getting supported claims")
-//	public void testGetUserIdentitySupportedClaims() throws Exception { 
-//		loginManger.login("admin", "admin", isServer.getBackEndUrl());
-//    	UserIdentityClaimDTO[] bean = infoRecoveryClient.getUserIdentitySupportedClaims("http://wso2.org/claims");
-//    	Assert.assertNotNull(bean, "Getting supported claims has failed with null return");
-//	}
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+    @Test(groups = "wso2.is", description = "Check getting supported claims", dependsOnMethods = "testGetAllChallengeQuestions")
+	public void testGetUserIdentitySupportedClaims() throws Exception { 
+    	UserIdentityClaimDTO[] bean = infoRecoveryClient.getUserIdentitySupportedClaims("http://wso2.org/claims");
+    	Assert.assertNotNull(bean, "Getting supported claims has failed with null return");
+	}
     
 	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
-    @Test(groups = "wso2.is", description = "Check user account verification", dependsOnMethods = "testVerifyUserChallengeAnswer")
+    @Test(groups = "wso2.is", description = "Check user account verification", dependsOnMethods = "testGetUserIdentitySupportedClaims")
 	public void testVerifyUserAccount() throws Exception { 
     	UserIdentityClaimDTO[] claims =  new UserIdentityClaimDTO[2];
     	UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();

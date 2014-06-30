@@ -21,7 +21,8 @@
 	<parent>
 		<groupId>org.wso2.identity</groupId>
 		<artifactId>identity-features</artifactId>
-		<version>5.0.0</version>
+		<version>5.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -103,7 +104,7 @@
 								<bundleDef>com.sun.xml.bind.wso2:jaxb</bundleDef>
 							</bundles>
 							<importFeatures>
-								<importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+								<importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}</importFeatureDef>
 							</importFeatures>
 						</configuration>
 					</execution>
