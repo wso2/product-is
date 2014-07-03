@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            android:title="Server Settings">
+
+        <EditTextPreference
+                android:key="edittext_preference_host"
+                android:title="Host"
+                android:summary="Enter Hostname"
+                android:dialogTitle="Host" />
+        
+        <EditTextPreference
+                android:key="edittext_preference_port"
+                android:title="PORT"
+                android:summary="Enter Port Number"
+                android:dialogTitle="Port" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
