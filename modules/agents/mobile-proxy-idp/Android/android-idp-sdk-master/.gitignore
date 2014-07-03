@@ -1,0 +1,7 @@
+## generic files to ignore
+.idea/*
+target/*
+android-idp-sdk.iml
+android-idp-sdk.ipr
+android-idp-sdk.iws
+/target

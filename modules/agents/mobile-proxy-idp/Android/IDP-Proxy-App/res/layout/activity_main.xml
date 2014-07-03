@@ -1,0 +1,122 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+    <ScrollView android:layout_height="match_parent"
+        android:layout_width="match_parent">
+	<RelativeLayout android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/btnUploadImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnLogin"
+        android:layout_alignRight="@+id/btnLogin"
+        android:layout_below="@+id/btnLogin"
+        android:layout_marginTop="18dp"
+        android:visibility="gone"
+        android:text="Upload Profile Image" />
+    
+    <TextView android:id="@+id/txtServerLabel"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Server Address"
+        android:textSize="18sp"/>
+    
+    <EditText android:id="@+id/txtServer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_marginTop="10dip"
+        android:layout_below="@+id/txtServerLabel"
+        android:layout_centerHorizontal="true"
+        android:ems="10"/>
+    
+    <TextView android:id="@+id/txtPortLabel"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dip"
+        android:layout_below="@+id/txtServer"
+        android:text="Port"
+        android:textSize="18sp"/>
+    
+    <EditText android:id="@+id/txtPort"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_marginTop="10dip"
+        android:layout_below="@+id/txtPortLabel"
+        android:layout_centerHorizontal="true"
+        android:ems="10"/>
+
+     <TextView android:id="@+id/txtProfilePic"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"  
+     android:layout_below="@+id/txtPort"  
+     android:layout_marginTop="10dip"   
+     android:text="Profile Picture"
+     android:textSize="18sp"/>
+        
+     <LinearLayout android:id="@+id/linLayout2"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="10dip"
+         android:layout_marginBottom="10dip"
+         android:layout_below="@+id/txtProfilePic"  
+         android:orientation="vertical">
+         
+          <ImageView android:id="@+id/prof_pic"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:adjustViewBounds="true"
+          android:layout_gravity="center_vertical"
+          android:layout_marginBottom="5dp"
+          android:background="@drawable/profile_pic_blank"/>
+          
+          <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Tap to edit \nprofile picture"
+              android:textSize="12sp"
+              android:layout_marginLeft="20dp"
+              android:gravity="center"
+              android:textColor="@android:color/black"
+              android:lines="2"/>
+          
+     </LinearLayout>
+    
+    <Button android:id="@+id/btnSave"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_marginTop="20dip"
+        android:background="@drawable/btn_orange"
+        style="@style/ButtonText"
+        android:layout_below="@+id/linLayout2"/>
+    
+    <Button android:id="@+id/btnContinue"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:visibility="gone"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/btn_orange"
+        style="@style/ButtonText"
+        android:layout_below="@+id/btnSave"/>
+    
+	</RelativeLayout>
+	</ScrollView>
+</RelativeLayout>

@@ -1,0 +1,1 @@
+This is from a java resource in aar-lib1.
