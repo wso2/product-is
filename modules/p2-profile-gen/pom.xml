@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.wso2.identity</groupId>
 		<artifactId>identity-server-parent</artifactId>
-		<version>5.0.1-SNAPSHOT</version>
+		<version>5.1.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -146,8 +146,8 @@
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.um.ws.service.feature:${carbon.platform.version}</featureArtifactDef>
 
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:5.0.1-SNAPSHOT</featureArtifactDef>
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:5.0.1-SNAPSHOT</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:5.1.0-SNAPSHOT</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:5.1.0-SNAPSHOT</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.feature:${carbon.platform.version}</featureArtifactDef>
 								<!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.iwa.feature:${carbon.platform.version}</featureArtifactDef-->
@@ -159,7 +159,7 @@
 								<!-- Features related to Cloud Identity -->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.user.mgt.feature:${carbon.platform.version}</featureArtifactDef>
 								<!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef-->
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:5.0.1-SNAPSHOT</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:5.1.0-SNAPSHOT</featureArtifactDef>
 								<!--featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.server.feature:${carbon.platform.version}</featureArtifactDef-->
 								<!--featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${carbon.platform.version}</featureArtifactDef-->
 								<!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
@@ -342,7 +342,7 @@
 								</feature>
 								<feature>
 									<id>org.wso2.identity.styles.feature.group</id>
-									<version>5.0.1-SNAPSHOT</version>
+									<version>5.1.0-SNAPSHOT</version>
 								</feature>
 								<!--feature>
 									<id>org.wso2.carbon.identity.sts.passive.feature.group</id>
@@ -350,7 +350,7 @@
 								</feature-->
 								<feature>
 									<id>org.wso2.identity.utils.feature.group</id>
-									<version>5.0.1-SNAPSHOT</version>
+									<version>5.1.0-SNAPSHOT</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.identity.oauth.feature.group</id>
@@ -372,7 +372,7 @@
 								</feature-->
 								<feature>
 									<id>org.wso2.identity.ui.feature.group</id>
-									<version>5.0.1-SNAPSHOT</version>
+									<version>5.1.0-SNAPSHOT</version>
 								</feature>
 								<!--feature>
                                     <id>org.wso2.stratos.identity.saml2.sso.mgt.server.feature.group</id>
