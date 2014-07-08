@@ -33,12 +33,16 @@
     <description>Identity Server: Distribution</description>
 
     <dependencies>
-
+       <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+	    <version>1.2.140.wso2v3</version>	
+        </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
-            <version>1.6.1-wso2v6</version>
+            <version>1.6.1-wso2v12</version>
       		<exclusions>
 		 <exclusion> 
           		<groupId>org.apache.neethi</groupId>
@@ -145,6 +149,37 @@
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
                                         value="&lt;ServiceProvider&gt;"/>
+
+				 <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;Issuer&gt;&lt;/Issuer&gt;"
+                                        value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
+                                        value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
+                                        value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
+                                        value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
+                                        value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
+
+				<replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
+                                        token="&lt;Audience&gt;&lt;/Audience&gt;"
+                                        value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
+
 				<replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;/ServiceProvider--&gt;"
@@ -167,6 +202,48 @@
                                             dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
+
+
+
+	               <copy
+		        todir="target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity"
+		        overwrite="false">
+		    <fileset
+		            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity/">
+		    </fileset>
+		</copy>
+
+                             <path id="h2.classpath">
+                                    <path refid="maven.compile.classpath"/>
+                                </path>
+                                <echo
+                                        message="########### Create Identity Database ##############"/>
+                                <sql
+                                        driver="org.h2.Driver"
+                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/database/WSO2CARBON_DB"
+                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
+                                        onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset
+                                            file="target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity/application-mgt/h2.sql"/>
+                                </sql>
+                                <sql
+                                        driver="org.h2.Driver"
+                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/database/WSO2CARBON_DB"
+                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
+                                        onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset
+                                            file="target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity/h2.sql"/>
+                                </sql>
+                                <echo
+                                        message="##################### END ########################"/>
+
+
                                 <delete file="target/wso2is-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>
@@ -240,7 +317,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-4.3.0-SNAPSHOT"/>
-                                <delete file="target/wso2is-${project.version}.jar"/>
+                                <delete file="target/wso2is-5.1.0-SNAPSHOT.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>

@@ -79,10 +79,14 @@
 		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
 		<!-- Default validity period for application access tokens in seconds -->
 		<UserAccessTokenDefaultValidityPeriod>3600</UserAccessTokenDefaultValidityPeriod>
+		<!-- Validity period for refresh token -->		
+		<RefreshTokenValidityPeriod>84600</RefreshTokenValidityPeriod>
 		<!-- Timestamp skew in seconds -->
 		<TimestampSkew>300</TimestampSkew>
 		<!-- Enable OAuth caching -->
 		<EnableOAuthCache>true</EnableOAuthCache>
+		<!-- Enable renewal of refresh token for refresh_token grant -->
+		<RenewRefreshTokenForRefreshGrant>true</RenewRefreshTokenForRefreshGrant>
 		<!-- Process the token before storing it in database, e.g. encrypting -->
 		<TokenPersistenceProcessor>org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor</TokenPersistenceProcessor>
 		<!-- Supported Client Autnetication Methods -->
@@ -122,10 +126,10 @@
 		    	<GrantTypeName>urn:ietf:params:oauth:grant-type:saml2-bearer</GrantTypeName>
 			<GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.saml.SAML2BearerGrantHandler</GrantTypeHandlerImplClass>
 		    </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>iwa:ntlm</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.iwa.ntlm.NTLMAuthenticationGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>
+		    <SupportedGrantType>
+                        <GrantTypeName>iwa:ntlm</GrantTypeName>
+                        <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.iwa.ntlm.NTLMAuthenticationGrantHandler</GrantTypeHandlerImplClass>
+                    </SupportedGrantType>
 		</SupportedGrantTypes>
 		<OAuthCallbackHandlers>
 			<OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler" />
@@ -189,6 +193,7 @@
 	</MultifactorAuthentication>
 
 	<SSOService>
+		<EntityId>localhost</EntityId>
 		<IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
 		<SingleLogoutRetryCount>5</SingleLogoutRetryCount>
 		<SingleLogoutRetryInterval>60000</SingleLogoutRetryInterval> <!-- in milli seconds -->
@@ -202,9 +207,11 @@
 		<SAMLSSOEncrypter>org.wso2.carbon.identity.sso.saml.builders.encryption.DefaultSSOEncrypter</SAMLSSOEncrypter>
                 <SAMLSSOSigner>org.wso2.carbon.identity.sso.saml.builders.signature.DefaultSSOSigner</SAMLSSOSigner>
                 <SAML2HTTPRedirectSignatureValidator>org.wso2.carbon.identity.sso.saml.validators.SAML2HTTPRedirectDeflateSignatureValidator</SAML2HTTPRedirectSignatureValidator>
+                <!--SAMLSSOResponseBuilder>org.wso2.carbon.identity.sso.saml.builders.DefaultResponseBuilder</SAMLSSOResponseBuilder-->
 
 		<!-- SAML Token validity period in minutes -->
                 <SAMLResponseValidityPeriod>5</SAMLResponseValidityPeriod>
+                <UseAuthenticatedUserDomain>false</UseAuthenticatedUserDomain>
 	</SSOService>
 
 	<EntitlementSettings>
@@ -228,6 +235,7 @@
 			</KeyStore>
 		</ThirftBasedEntitlementConfig>
 	</EntitlementSettings>
+
 	<SCIMAuthenticators>
 		<Authenticator class="org.wso2.carbon.identity.scim.provider.auth.BasicAuthHandler">
 			<Property name="Priority">5</Property>

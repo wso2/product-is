@@ -18,7 +18,7 @@
 <SSOIdentityProviderConfig>
 	    <ServiceProvider>
 	    <Issuer>wso2.my.dashboard</Issuer>
-	    <AssertionConsumerService>https://localhost:9443/my-dashboard/acs</AssertionConsumerService>
+	    <AssertionConsumerService>https://localhost:9443/dashboard/acs</AssertionConsumerService>
 		<EnableSingleLogout>false</EnableSingleLogout>
 	    	<SignResponse>true</SignResponse>
 	    	<EnableAttributeProfile>false</EnableAttributeProfile>
