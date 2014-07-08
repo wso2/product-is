@@ -35,22 +35,24 @@
                 <exclude>**/version.txt</exclude>
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <exclude>**/axis2/*</exclude>
+                <!--exclude>**/axis2/*</exclude-->
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
-                <exclude>**/userRP.jks</exclude>
-                <exclude>**/wso2is-user-certs.jks</exclude>
                 <exclude>**/log4j.properties</exclude>
                 <exclude>**/registry.xml</exclude>
 		<exclude>**/email/email-admin-config.xml</exclude>
 		<exclude>**/dbscripts/**</exclude>
 		<!-- Changes related to Carbon kernel 4.2.0 patches -->
-                <!--exclude>**/lib/org.wso2.carbon.server-4.2.0.jar</exclude>
-                <exclude>**/repository/conf/security/cipher-text.properties</exclude>
-                <exclude>**/repository/conf/security/cipher-tool.properties</exclude>
-                <exclude>**/axis2/*</exclude-->
+                <!--exclude>**/lib/org.wso2.carbon.server-4.2.0.jar</exclude-->
+		<!--exclude>**/lib/org.wso2.ciphertool-1.0.0-wso2v2.jar</exclude-->
+                <!--exclude>**/cipher-text.properties</exclude-->
+		<!--exclude>**/client-truststore.jks</exclude-->
+                <!--exclude>**/cipher-tool.properties</exclude-->
+                <!--exclude>**/authenticators.xml</exclude-->
+		<!--exclude>**/ciphertool.bat</exclude-->
+		<!--exclude>**/wso2carbon-version.txt</exclude-->
                 <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
             </excludes>
         </fileSet>
@@ -127,11 +129,11 @@
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
             <!-- Changes related to Carbon kernel 4.2.0 patches -->
-            <excludes>
+            <!--excludes>
                 <exclude>db2.sql</exclude>
                 <exclude>mysql.sql</exclude>
                 <exclude>mysql_cluster.sql</exclude>
-            </excludes>
+            </excludes-->
             <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
         </fileSet>
         <fileSet>
@@ -144,12 +146,13 @@
                 <include>**/jaas.conf</include>
             </includes>
 	    <!-- Changes related to Carbon kernel 4.2.0 patches -->
-            <excludes>
+            <!--excludes>
                 <exclude>**/cipher-text.properties</exclude>
                 <exclude>**/cipher-tool.properties</exclude>
-            </excludes>
+            </excludes-->
             <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
         </fileSet>
+
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/identity
