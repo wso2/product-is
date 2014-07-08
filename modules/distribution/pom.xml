@@ -21,7 +21,7 @@
     <parent>
     	<groupId>org.wso2.identity</groupId>
     	<artifactId>identity-server-parent</artifactId>
-    	<version>5.0.1-SNAPSHOT</version>
+    	<version>5.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -117,6 +117,9 @@
                                     </fileset>
                                 </unzip>
 
+                                <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
+                                </unzip-->
+
 				<!-- Comment all active UserStoreManagers -->
                                 <replace
                                         file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/user-mgt.xml"
@@ -139,11 +142,11 @@
                                         value="&lt;/UserStoreManager&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
                                         value="&lt;ServiceProvider&gt;"/>
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
 
@@ -161,7 +164,7 @@
                                         todir="target/wso2carbon-core-${carbon.platform.version}/repository/deployment/client/modules"
                                         overwrite="false">
                                     <fileset
-                                            dir="${tempdir}/wso2is-5.0.1-SNAPSHOT/repository/deployment/client/modules">
+                                            dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
                                 <delete file="target/wso2is-${project.version}.zip"/>

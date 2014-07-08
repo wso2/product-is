@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.identity</groupId>
     	<artifactId>identity-server-styles-parent</artifactId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
