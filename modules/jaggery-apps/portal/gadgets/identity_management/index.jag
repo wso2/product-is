@@ -11,13 +11,10 @@ session.put('user', user);
  try{
 
 var IDPServiceClient = require('controllers/identity-management/IdentityProviderServiceClient.jag');
-var profileServiceClient = require('controllers/identity-management/UserProfileMgtServiceClient.jag');
-
-
-var fieldValues = IDPServiceClient.getPrimaryOpenID(user);
+//var fieldValues = IDPServiceClient.getPrimaryOpenID(user);
+var fieldValues = IDPServiceClient.getAllOpenIds(user);
 fieldValues.primary = IDPServiceClient.getPrimaryOpenID(user).return;
-fieldValues.associatedID = profileServiceClient.getAssociatedIDs().return;
-log.debug(fieldValues);
+log.info(fieldValues.return);
 
 print( fieldValues );
     }catch(e){

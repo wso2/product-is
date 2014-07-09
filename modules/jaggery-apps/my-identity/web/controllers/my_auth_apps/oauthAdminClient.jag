@@ -1,0 +1,26 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/OAuthAdminService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function revoke(req){
+    var result = callWSReturnJSON(webService, serverUrl, "urn:revokeAuthzForAppsByResoureOwner", null, req);
+    return result;
+
+}
+
+
+function getAppsAuthorizedByUser(){
+
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getAppsAuthorizedByUser", null);
+    return result;
+}
+
+%>

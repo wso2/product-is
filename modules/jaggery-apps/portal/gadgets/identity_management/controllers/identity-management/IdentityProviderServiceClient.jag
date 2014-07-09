@@ -25,10 +25,6 @@ function removeOpenId(payload){
     callWSInOnly(webService, serverUrl, "urn:removeOpenID", payload);
 }
 
-function addOpenID(payload){
-    callWSInOnly(webService, serverUrl, "urn:addOpenID", payload);
-}
-
 function getPrimaryOpenID(userName){
     var userNameWithoutDomain = userName;
     var domain = session.get("domainName");

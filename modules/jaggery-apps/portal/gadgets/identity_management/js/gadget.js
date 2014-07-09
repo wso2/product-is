@@ -6,41 +6,46 @@ function drawPage() {
         "            <thead>\n" +
         "                <tr>\n" +
         "                    <th>Social Login</th>\n" +
-        "                    <th>Identity Provider</th>\n" +
-        "                    <th>Action</th>\n" +
+        "                    <th>&nbsp;</th>\n" +
         "                </tr>\n" +
         "            </thead>\n";
 
     var body = "            <tbody>\n";
-            body = body + "                <tr>\n" +
-                "                    <td>" + json.return + "</td>\n" +
-                "                    <td> Primary OpenID </td>" +
-                "                    <td> </td>" ;
     if (json != null) {
-        if (isArray(json.associatedID)) {
+        if (isArray(json.return)) {
 
-            for (var i in json.associatedID) {
+            for (var i in json.return) {
                 body = body + "                <tr>\n" +
-                    "                    <td>" + json.associatedID[i].split(/:(.+)?/)[1] + "</td>\n" +
-                    "                    <td>" + json.associatedID[i].split(':')[0] + "</td>\n" +
-                    "                    <td>\n"+
-"                        <a title=\"\" onclick=\"validate('" + json.associatedID[i]
+                    "                    <td>" + json.return[i] + "</td>\n" +
+                    "                    <td>\n";
+                if (json.return[i] == json.primary) {
+                    // "                    {{#if this.primary}}\n" +
+                    body = body + "Primary OpenID";
+                } else {
+                    //  "                    {{else}}\n" +
+                    body = body + "                        <a title=\"\" onclick=\"validate('" + json.return[i]
                         + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" +
-                        "                        Remove</a>\n"+
-"                    </td>\n" +
+                        "                        Remove</a>\n";
+                }
+                body = body + "                    </td>\n" +
                     "                </tr>\n";
             }
         }
-        else if(json.associatedID != null) {
+        else {
             body = body + "                <tr>\n" +
-                    "                    <td>" + json.associatedID.split(/:(.+)?/)[1] + "</td>\n" +
-                    "                    <td>" + json.associatedID.split(':')[0] + "</td>\n" +
-                "                    <td>\n"+
-"                        <a title=\"\" onclick=\"validate('" + json.associatedID
-                        + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" +
-                        "                        Remove</a>\n"+
-"                    </td>\n" +
-                    "                </tr>\n";
+                "                    <td>" + json.return + "</td>\n" +
+                "                    <td>\n";
+            if (json.return == json.primary) {
+                // "                    {{#if this.primary}}\n" +
+                body = body + "Primary OpenID";
+            } else {
+                //  "                    {{else}}\n" +
+                body = body + "                        <a title=\"\" onclick=\"validate('" + json.return
+                    + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" +
+                    "                        Remove</a>\n";
+            }
+            body = body + "                    </td>\n" +
+                "                </tr>\n";
         }
     }
     body = body + "            </tbody>\n" +
@@ -53,11 +58,11 @@ function drawPage() {
 }
 
 function itemRemove(providerId) {
-    var str = "/portal/gadgets/identity_management/controllers/identity-management/removeID.jag";
+    var str = "/portal/gadgets/identity_management/controllers/identity-management/edit.jag";
     $.ajax({
         url:str,
         type:"POST",
-        data:"idpID=" + providerId.split(':')[0] + "&associatedID=" +providerId.split(/:(.+)?/)[1]+ "&cookie=" + cookie + "&user=" + userName
+        data:"id=" + providerId + "&cookie=" + cookie + "&user=" + userName
     })
         .done(function (data) {
             cancel();
@@ -108,7 +113,7 @@ function validate(appName) {
 }
 
 function itemRemoveValidate(appName) {
-    var msg = "You are about to remove  Id " + appName.split(/:(.+)?/)[1] + " From IDP " +appName.split(':')[0] +". Do you want to proceed?";
+    var msg = "You are about to remove " + appName + ". Do you want to proceed?";
     message({content:msg, type:'confirm', okCallback:function () {
         itemRemove(appName);
     }, cancelCallback:function () {
