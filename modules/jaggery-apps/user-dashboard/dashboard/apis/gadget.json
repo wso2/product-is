@@ -68,5 +68,19 @@
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "user_profile"
+    },
+    {
+        "wid":"42",
+        "x":"5",
+        "y":"3",
+        "title":"My Certificates",
+        "width":"2",
+        "height":"1",
+        "prefs":"{}",
+        "wclass":"",
+        "url":"https://localhost:9443/portal/gadgets/certificate_authority/gadget.xml",
+        "permissions":["/permission/admin/login"],
+        "authorized":"true",
+        "id" : "certificate_authority"
     }
 ]}

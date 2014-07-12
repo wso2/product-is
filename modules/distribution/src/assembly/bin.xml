@@ -255,6 +255,17 @@
             </includes>
         </fileSet>
 
+        <!--copy web app for certificate authority feature -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>ca.war</include>
+            </includes>
+        </fileSet>
+
 
 	 <!--Multitenancy related file -->
         <fileSet>
