@@ -6,7 +6,8 @@
 	<test name="Test - IS" preserve-order="true" parallel="false">
 		<packages>
        		<package name="org.wso2.carbon.identity.tests.user.store.config.*" />
-			<package name="org.wso2.carbon.identity.tests.user.profile.mgt.*" />  
+			<package name="org.wso2.carbon.identity.tests.user.profile.mgt.*" />
+            <package name="org.wso2.carbon.identity.tests.certificateauthority.*"/>
 <!-- 			 <package name="org.wso2.carbon.identity.tests.openid.*" />  -->
 		</packages>
 
