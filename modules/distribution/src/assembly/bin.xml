@@ -157,7 +157,7 @@
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/identity
             </directory>
-            <outputDirectory>wso2is-${project.version}/repository/conf/identity</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <includes>
                 <include>**/*.xml</include>
             </includes>
@@ -167,7 +167,7 @@
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/resources/security/ldif
             </directory>
-            <outputDirectory>wso2is-${project.version}/repository/resources/security/ldif</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/security/ldif</outputDirectory>
             <includes>
                 <include>identityPerson.ldif</include>
                 <include>scimPerson.ldif</include>
