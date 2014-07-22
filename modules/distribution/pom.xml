@@ -15,7 +15,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
@@ -112,7 +112,7 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp"/>
-				<property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;generic_sts_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;manage_saml_sso&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;oauth_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;scim_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
+				                <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;generic_sts_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;manage_saml_sso&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;oauth_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;scim_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
 
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -123,6 +123,45 @@
 
                                 <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
                                 </unzip-->
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="${product.name}" value="WSO2 Identity Server"/>
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;ServerURL&gt;https://${carbon.local.ip}"
+                                        value="&lt;ServerURL&gt;https://localhost"/>
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;"
+                                        value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;"/>
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;"
+                                        value="&lt;HostName&gt;localhost&lt;/HostName&gt;"/>
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;!--LdapServer&gt;"
+                                        value="&lt;LdapServer&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;/LdapServer--&gt;"
+                                        value="&lt;/LdapServer&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;!--TokenStoreClassName&gt;"
+                                        value="&lt;TokenStoreClassName&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;/TokenStoreClassName--&gt;"
+                                        value="&lt;/TokenStoreClassName&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
+                                        token="&lt;/Security&gt;"
+                                        value="${hideMenu}"/>
 
 				<!-- Comment all active UserStoreManagers -->
                                 <replace
