@@ -1211,7 +1211,7 @@
 	WARRANTIES OR CONDITIONS OF ANY ~ KIND, either express or implied. See the 
 	License for the ~ specific language governing permissions and limitations 
 	~ under the License. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!--parent>
@@ -1236,7 +1236,7 @@
 		<module>modules/distribution</module>
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
-	<!--	<module>modules/integration</module> -->
+		<module>modules/integration</module>
 <!--		<module>modules/samples</module> -->
 	</modules>
 
@@ -1697,6 +1697,7 @@
 		<jaxb.wso2.version>2.2.5.wso2v1</jaxb.wso2.version>
 		<kaptcha.wso2.version>2.3.0.wso2v1</kaptcha.wso2.version>
 		<version.commons.logging>1.1.1</version.commons.logging>
+        <emma.version>2.1.5320</emma.version>
 	</properties>
 
     <repositories>

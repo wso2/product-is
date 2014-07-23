@@ -35,7 +35,7 @@
                 <exclude>**/version.txt</exclude>
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <!--exclude>**/axis2/*</exclude-->
+                <exclude>**/axis2/*</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
@@ -165,7 +165,7 @@
 
 	<fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/resources/security/ldif
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/resources/security/ldif
             </directory>
             <outputDirectory>wso2is-${pom.version}/repository/resources/security/ldif</outputDirectory>
             <includes>
