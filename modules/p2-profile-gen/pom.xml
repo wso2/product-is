@@ -92,8 +92,9 @@
 							<publishArtifactRepository>true</publishArtifactRepository>
 							<featureArtifacts>
 								<!--jaggery features-->	
-								<featureArtifactDef>org.jaggeryjs:org.jaggeryjs.server.feature:0.9.0-SNAPSHOT-10252013</featureArtifactDef>
+								<featureArtifactDef>org.jaggeryjs:org.jaggeryjs.server.feature:${jaggeryjs.version}</featureArtifactDef>
 
+                                <!--Carbon features-->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.platform.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>-->
@@ -146,8 +147,8 @@
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.um.ws.service.feature:${carbon.platform.version}</featureArtifactDef>
 
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:5.1.0-SNAPSHOT</featureArtifactDef>
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:5.1.0-SNAPSHOT</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:${project.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:${project.version}</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.feature:${carbon.platform.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.iwa.feature:${carbon.platform.version}</featureArtifactDef>
@@ -158,8 +159,8 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authorization.feature:${carbon.platform.version}</featureArtifactDef>
 								<!-- Features related to Cloud Identity -->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.user.mgt.feature:${carbon.platform.version}</featureArtifactDef>
-								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:5.1.0-SNAPSHOT</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tenant.common.feature:${carbon.platform.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:${project.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${carbon.platform.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>-->
@@ -208,7 +209,7 @@
 
 								<feature>
 		                            <id>org.jaggeryjs.server.feature.group</id>
-		                            <version>0.9.0-SNAPSHOT-10252013</version>
+		                            <version>${jaggeryjs.version}</version>
                                 </feature>
 								<feature>
 								   <id>org.wso2.store.feature.group</id>
@@ -369,13 +370,13 @@
 								</feature>
 
 								<!-- Features required for Cloud Identity -->
-								<!--<feature>-->
-									<!--<id>org.wso2.carbon.stratos.common.feature.group</id>-->
-									<!--<version>2.2.0</version>-->
-								<!--</feature>-->
+								<feature>
+									<id>org.wso2.carbon.tenant.common.feature.group</id>
+									<version>${carbon.platform.version}</version>
+								</feature>
 								<feature>
 									<id>org.wso2.identity.ui.feature.group</id>
-									<version>5.1.0-SNAPSHOT</version>
+									<version>${project.version}</version>
 								</feature>
 								<!--<feature>-->
                                     <!--<id>org.wso2.stratos.identity.saml2.sso.mgt.server.feature.group</id>-->
@@ -745,7 +746,7 @@
 		</plugins>
 	</build>
 	<properties>
-        	<stratos.version>2.2.0</stratos.version>
+
             <wso2.store.version>1.0.0</wso2.store.version>
     	</properties>
 </project>
