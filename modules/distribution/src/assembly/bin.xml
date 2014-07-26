@@ -640,6 +640,12 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/thrift-authentication.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
 	<!--copy url-mapping-config.xml-->
 	<!--file>
             <source>
