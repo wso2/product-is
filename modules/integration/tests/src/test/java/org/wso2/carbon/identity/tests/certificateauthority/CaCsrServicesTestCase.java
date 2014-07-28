@@ -28,6 +28,8 @@ import org.wso2.carbon.identity.certificateauthority.stub.CsrDTO;
 import org.wso2.carbon.identity.certificateauthority.stub.CsrMetaInfo;
 import org.wso2.carbon.identity.tests.ISIntegrationTest;
 
+import java.rmi.RemoteException;
+
 public class CaCsrServicesTestCase extends ISIntegrationTest {
 
     /*
@@ -90,7 +92,7 @@ public class CaCsrServicesTestCase extends ISIntegrationTest {
         Assert.assertEquals(2,csrList.length,"User 1 added two requests, but "+csrList.length+" returned");
     }
 
-    @Test(groups = "wso2.is", description = "Check get added CSR of other users", dependsOnMethods="testGetCsr")
+    @Test(groups = "wso2.is", description = "Check get added CSR of other users", dependsOnMethods="testGetCsr", expectedExceptions = RemoteException.class)
     public void testGetCsrOfOtherUser() throws Exception{
         super.init(3);
         clientServiceClient = new CAClientServiceClient(isServer.getBackEndUrl(),
@@ -102,7 +104,7 @@ public class CaCsrServicesTestCase extends ISIntegrationTest {
 
         CsrDTO csr = clientServiceClient.getCsr(serialNo3);
         Assert.assertNotNull(csr);
-        csr = clientServiceClient.getCsr(serialNo1);    //todo:fail
+        csr = clientServiceClient.getCsr(serialNo1);    //should fail
     }
 
 }
