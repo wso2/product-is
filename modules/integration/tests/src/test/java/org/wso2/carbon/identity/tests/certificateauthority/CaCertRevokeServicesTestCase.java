@@ -27,6 +27,8 @@ import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CACl
 import org.wso2.carbon.identity.certificateauthority.stub.CertificateDTO;
 import org.wso2.carbon.identity.tests.ISIntegrationTest;
 
+import java.rmi.RemoteException;
+
 public class CaCertRevokeServicesTestCase extends ISIntegrationTest{
 
     /*
@@ -85,24 +87,27 @@ public class CaCertRevokeServicesTestCase extends ISIntegrationTest{
     public void testRevokeByAdmin() throws Exception{
         adminServiceClient.revokeCertificate(serialNo3,CaResources.RevokeReason.REVOCATION_REASON_UNSPECIFIED_VAL);
         CertificateDTO certificate3 = clientServiceClient.getCertificate(serialNo3);
-        Assert.assertEquals("Revoked",certificate3.getCertificateMetaInfo().getStatus(),"Certificate is not revoked");
+        Assert.assertEquals(CaResources.CertificateStatus.REVOKED,certificate3.getCertificateMetaInfo().getStatus(),
+                "Certificate is not revoked");
     }
 
     @Test(groups = "wso2.is", description = "Test revoking certificate by client")
     public void testRevokeByClient() throws Exception{
         clientServiceClient.revokeCertificate(serialNo2,CaResources.RevokeReason.REVOCATION_REASON_KEYCOMPROMISE_VAL);
         CertificateDTO certificate2 = clientServiceClient.getCertificate(serialNo2);
-        Assert.assertEquals("Revoked",certificate2.getCertificateMetaInfo().getStatus(),"Certificate is not revoked");
+        Assert.assertEquals(CaResources.CertificateStatus.REVOKED,certificate2.getCertificateMetaInfo().getStatus(),"Certificate is not revoked");
     }
 
-    @Test(groups = "wso2.is", description = "Test revoking certificate by other client")
+    @Test(groups = "wso2.is", description = "Test revoking certificate by other client",
+            expectedExceptions = RemoteException.class)
     public void testRevokeByOtherClient() throws Exception{
         CertificateDTO certificate1 = clientServiceClient2.getCertificate(serialNo1);  //todo fail
-        Assert.assertEquals("Active",certificate1.getCertificateMetaInfo().getStatus(),"Certificate is not active");
+        Assert.assertEquals(CaResources.CertificateStatus.ACTIVE,certificate1.getCertificateMetaInfo().getStatus(),
+                "Certificate is not active");
 
 
         clientServiceClient2.revokeCertificate(serialNo1,CaResources.RevokeReason
-                .REVOCATION_REASON_KEYCOMPROMISE_VAL); //todo fail
+                .REVOCATION_REASON_KEYCOMPROMISE_VAL);
     }
 
 
