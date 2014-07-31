@@ -226,17 +226,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>emma</groupId>
-            <artifactId>emma</artifactId>
-            <version>${emma.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>SecVerifier</artifactId>
-            <version>${carbon.platform.version}</version>
-            <type>aar</type>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.api</artifactId>
             <version>${test.framework.version}</version>
@@ -271,5 +260,4 @@
     <properties>
         <test.framework.version>4.2.6</test.framework.version>
         <is.version>${project.parent.version}</is.version>
-        <emma.version>2.1.5320</emma.version>
     </properties></project>
