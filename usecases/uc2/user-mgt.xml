@@ -1,0 +1,65 @@
+<!--
+  ~ Copyright WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+        
+<UserManager>
+    <Realm>
+        <Configuration>
+		<AddAdmin>true</AddAdmin>
+                <AdminRole>admins</AdminRole>
+                <AdminUser>
+                     <UserName>user1</UserName>
+                     <Password>XXXXXX</Password>
+                </AdminUser>
+                <ReservedRoleNames>identity,test555</ReservedRoleNames>
+                <RestrictedDomainsForSelfSignUp>APACHEDS</RestrictedDomainsForSelfSignUp>         
+            <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
+            <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
+            <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder</Property>
+        </Configuration>
+		
+        <UserStoreManager class="org.wso2.carbon.informix.jdbc.user.store.INFORMIXJDBCUserStoreManager">
+            <Property name="dataSource">jdbc/WmDB</Property>
+            <Property name="ReadOnly">true</Property>
+            <Property name="MaxUserNameListLength">100</Property>
+            <Property name="IsEmailUserName">false</Property>
+            <Property name="DomainCalculation">default</Property>
+            <Property name="PasswordDigest">SHA-256</Property>
+            <Property name="StoreSaltedPassword">true</Property>
+            <Property name="UserNameUniqueAcrossTenants">false</Property>
+            <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
+            <Property name="PasswordJavaScriptRegEx">^[\\S]{5,30}$</Property>
+            <Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+            <Property name="UsernameJavaScriptRegEx">^[\\S]{3,30}$</Property>
+            <Property name="RolenameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+            <Property name="RolenameJavaScriptRegEx">^[\\S]{3,30}$</Property>
+            <Property name="UserRolesCacheEnabled">false</Property>
+            <Property name="maxFailedLoginAttempt">0</Property>	
+            <Property name="DomainName">INFORMIX</Property>
+            <Property name="InternalJDBCRolesOnly">true</Property>
+            <Property name="SelectUserSQL">SELECT * FROM SAS_PASS WHERE SAS_USERID=?</Property>
+            <Property name="IsUserExistingSQL">SELECT TRIM(SAS_USERID) FROM SAS_PASS WHERE SAS_USERID=? </Property>
+            <Property name="UserFilterSQL">SELECT TRIM(SAS_USERID) FROM SAS_PASS WHERE SAS_USERID LIKE ?  ORDER BY SAS_USERID</Property>
+        </UserStoreManager>
+
+
+
+        <AuthorizationManager
+            class="org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager">
+            <Property name="AdminRoleManagementPermissions">/permission</Property>
+	    <Property name="AuthorizationCacheEnabled">true</Property>
+        </AuthorizationManager>
+    </Realm>
+</UserManager>

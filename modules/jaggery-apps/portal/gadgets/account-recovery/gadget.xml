@@ -6,7 +6,7 @@
     <Content type="html" view="default">
         <![CDATA[
         <div class='icon-rotate-left icon-rotate-left-dashboard icon-marketing-styles'></div>
-        Update account recovery challenge questions.
+        Account recovery feature helps you to recover your account secure way . We use challenge questions so no one else is capable of accessing your account
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
 
         <link rel="stylesheet" href="/portal/gadgets/account-recovery/js/ui/css/main.css">
@@ -57,7 +57,7 @@
             var userName = null;
             $(function WindowLoad(event) {
 
-                url = 'wss://localhost:9443/dashboard/session_manager.jag';
+                url = 'wss://localhost:9443/my-dashboard/session_manager.jag';
                 ws = new WebSocket(url);
 
                 ws.onopen = function () {
@@ -109,8 +109,7 @@
                     data:$('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
                 })
                         .done(function (data) {
-			//message({content:'Successfully updated the recovery questions',type:'info', cbk:function(){} });
-            		cancel();
+			message({content:'Successfully updated the recovery questions',type:'info', cbk:function(){} });
 
                         })
                         .fail(function () {

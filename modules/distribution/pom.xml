@@ -15,13 +15,13 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
     	<groupId>org.wso2.identity</groupId>
     	<artifactId>identity-server-parent</artifactId>
-    	<version>5.0.0</version>
+    	<version>5.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -88,7 +88,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon</groupId>
                                     <artifactId>wso2carbon-core</artifactId>
-                                    <version>4.2.0</version>
+                                    <version>${carbon.platform.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
@@ -112,7 +112,7 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp"/>
-				<property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;generic_sts_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;manage_saml_sso&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;oauth_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;scim_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
+				                <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;generic_sts_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;manage_saml_sso&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;oauth_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;scim_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
 
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -121,104 +121,106 @@
                                     </fileset>
                                 </unzip>
 
+                                <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
+                                </unzip-->
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="${product.name}" value="WSO2 Identity Server"/>
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;ServerURL&gt;https://${carbon.local.ip}"
                                         value="&lt;ServerURL&gt;https://localhost"/>
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;"
                                         value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;"/>
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;"
                                         value="&lt;HostName&gt;localhost&lt;/HostName&gt;"/>
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;!--LdapServer&gt;"
                                         value="&lt;LdapServer&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;/LdapServer--&gt;"
                                         value="&lt;/LdapServer&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;!--TokenStoreClassName&gt;"
                                         value="&lt;TokenStoreClassName&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0006/repository/conf/carbon.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml"
                                         token="&lt;/Security&gt;"
                                         value="${hideMenu}"/>
 
 				<!-- Comment all active UserStoreManagers -->
                                 <replace
-                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/user-mgt.xml"
                                         token="&lt;UserStoreManager"
                                         value="&lt;!--UserStoreManager"/>
 
                                 <replace
-                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/user-mgt.xml"
                                         token="&lt;/UserStoreManager&gt;"
                                         value="&lt;/UserStoreManager--&gt;"/>
 
                                 <replace
-                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/user-mgt.xml"
                                         token="&lt;!--ISUserStoreManager"
                                         value="&lt;UserStoreManager"/>
 				
                                 <replace
-                                        file="target/wso2carbon-core-4.2.0/repository/conf/user-mgt.xml"
+                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/user-mgt.xml"
                                         token="&lt;/ISUserStoreManager--&gt;"
                                         value="&lt;/UserStoreManager&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
                                         value="&lt;ServiceProvider&gt;"/>
 
 				 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;Issuer&gt;&lt;/Issuer&gt;"
                                         value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
                                         value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
                                         value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
                                         value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
                                         value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;Audience&gt;&lt;/Audience&gt;"
                                         value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
 
 				<replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-4.2.0/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
 
@@ -226,27 +228,27 @@
 				<!-- Enable KDC for IS -->
 
                                 <copy
-                                        todir="target/wso2carbon-core-4.2.0/repository/components/"
+                                        todir="target/wso2carbon-core-${carbon.platform.version}/repository/components/"
                                         overwrite="false">
                                     <fileset
                                             dir="${tempdir}/wso2is-${project.version}/repository/components/">
                                     </fileset>            
                                 </copy>
                                 <copy
-                                        todir="target/wso2carbon-core-4.2.0/repository/deployment/client/modules"
+                                        todir="target/wso2carbon-core-${carbon.platform.version}/repository/deployment/client/modules"
                                         overwrite="false">
                                     <fileset
-                                            dir="${tempdir}/wso2is-5.0.0/repository/deployment/client/modules">
+                                            dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
 
 
 
 	               <copy
-		        todir="target/wso2carbon-core-4.2.0/dbscripts/identity"
+		        todir="target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity"
 		        overwrite="false">
 		    <fileset
-		            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-4.2.0/dbscripts/identity/">
+		            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity/">
 		    </fileset>
 		</copy>
 
@@ -257,25 +259,25 @@
                                         message="########### Create Identity Database ##############"/>
                                 <sql
                                         driver="org.h2.Driver"
-                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-4.2.0/repository/database/WSO2CARBON_DB"
+                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/database/WSO2CARBON_DB"
                                         userid="wso2carbon" password="wso2carbon" autocommit="true"
                                         onerror="continue">
                                     <classpath>
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="target/wso2carbon-core-4.2.0/dbscripts/identity/application-mgt/h2.sql"/>
+                                            file="target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity/application-mgt/h2.sql"/>
                                 </sql>
                                 <sql
                                         driver="org.h2.Driver"
-                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-4.2.0/repository/database/WSO2CARBON_DB"
+                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/database/WSO2CARBON_DB"
                                         userid="wso2carbon" password="wso2carbon" autocommit="true"
                                         onerror="continue">
                                     <classpath>
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="target/wso2carbon-core-4.2.0/dbscripts/identity/h2.sql"/>
+                                            file="target/wso2carbon-core-${carbon.platform.version}/dbscripts/identity/h2.sql"/>
                                 </sql>
                                 <echo
                                         message="##################### END ########################"/>
@@ -286,7 +288,7 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset
-                                            dir="target/wso2carbon-core-4.2.0/repository/components/plugins/">
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/">
                                         <include name="*.ui*.jar"/>
                                     </fileset>
                                 </unzip>
@@ -353,8 +355,8 @@
                                 <delete dir="target/archive-tmp"/>
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
-                                <delete dir="target/wso2carbon-core-4.2.0"/>
-                                <delete file="target/wso2is-${project.version}.jar"/>
+                                <delete dir="target/wso2carbon-core-4.3.0-SNAPSHOT"/>
+                                <delete file="target/wso2is-5.1.0-SNAPSHOT.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>

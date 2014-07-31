@@ -12,13 +12,13 @@
 		limitations under the License.
 	-->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
     	<groupId>org.wso2.identity</groupId>
     	<artifactId>identity-server-parent</artifactId>
-    	<version>5.0.0</version>
+    	<version>5.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -46,12 +46,12 @@
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.styles</artifactId>
-                <version>${identity.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
-                <version>${stratos.identity.version}</version>
+                <version>${stratos.version.221}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>

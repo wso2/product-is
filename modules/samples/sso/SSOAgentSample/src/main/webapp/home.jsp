@@ -64,8 +64,6 @@
         <script type="text/javascript">
             location.href = "index.jsp";
         </script>
-
-
 <%
         return;
     }
