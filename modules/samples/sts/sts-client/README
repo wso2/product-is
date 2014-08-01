@@ -1,0 +1,16 @@
+This sample demonstrates how to use Security Token Service (STS) of Identity 
+Server to obtain Security Tokens and to use them at a service such as WSO2 
+Enterprise Service Bus' Echo service. 
+
+This sample supports:
+1. SAML2.0 / SAML 1.0
+2. Bearer / HOK Subject Confirmation Methods
+3. Authentication via UT and X.509 certificates (non-repudiation) 
+
+These can be configured using the 'client.properties' file.
+
+Note on Authentication via X.509 certificates
+---------------------------------------------
+To use X.509 certificates based authentication, keystores at sample and 
+Identity Server should be configured.
+  

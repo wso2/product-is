@@ -1,0 +1,121 @@
+<%
+include("../util/constants.jag");
+
+var getUserProfile = "<mgt:getUserProfile xmlns:mgt=\"http://mgt.profile.user.identity.carbon.wso2.org\">\n" +
+                                                "<mgt:username>{0}</mgt:username>\n" +
+                                                "<mgt:profileName>{1}</mgt:profileName>\n" +
+                                                "</mgt:getUserProfile>";
+
+var getProfileFieldsForInternalStore = "<mgt:getProfileFieldsForInternalStore xmlns:mgt=\"http://mgt.profile.user.identity.carbon.wso2.org\"/>";
+
+var getAppsAuthorizedByUser = "<xsd:getAppsAuthorizedByUser xmlns:xsd=\"http://org.apache.axis2/xsd\"/>";
+
+var getAllChallengeQuestions = "<ser:getAllChallengeQuestions xmlns:ser=\"http://services.mgt.identity.carbon.wso2.org\" />";
+
+var getChallengeQuestionsOfUser = "<ser:getChallengeQuestionsOfUser xmlns:ser=\"http://services.mgt.identity.carbon.wso2.org\">\n" +
+                                    "<ser:userName>{0}</ser:userName>\n" +
+                                   "</ser:getChallengeQuestionsOfUser>\n";
+var getAllUserProviders = "<con:getAllUserProviders xmlns:con=\"http://config.common.scim.identity.carbon.wso2.org\">\n" +
+             "<con:consumerId>{0}</con:consumerId>\n" +
+          "</con:getAllUserProviders>\n";
+
+var getUserIM = "<xsd:getUserIM xmlns:xsd=\"http://org.apache.axis2/xsd\">\n" +
+             "<xsd:userId>{0}</xsd:userId>\n" +
+          "</xsd:getUserIM>\n";
+
+var hasXMPPSettings = "<xsd:hasXMPPSettings xmlns:xsd=\"http://org.apache.axis2/xsd\">\n" +
+             "<xsd:userId>{0}</xsd:userId>\n" +
+          "</xsd:hasXMPPSettings>\n";
+
+var getXmppSettings = "<xsd:getXmppSettings xmlns:xsd=\"http://org.apache.axis2/xsd\">\n"+
+             "<xsd:userId>{0}</xsd:userId>\n"+
+          "</xsd:getXmppSettings>\n";
+
+var getAllOpenIDs = "<xsd:getAllOpenIDs xmlns:xsd=\"http://org.apache.axis2/xsd\">\n"+
+                   "<xsd:userName>{0}</xsd:userName>\n"+
+                "</xsd:getAllOpenIDs>";
+
+var getPrimaryOpenID = "<xsd:getPrimaryOpenID xmlns:xsd=\"http://org.apache.axis2/xsd\">\n" +
+             "<xsd:userName>{0}</xsd:userName>\n"+
+          "</xsd:getPrimaryOpenID>";
+
+var readUserFieldsForUserRegistration = "<xsd:readUserFieldsForUserRegistration xmlns:xsd=\"http://org.apache.axis2/xsd\">\n" +
+             "<xsd:dialect>{0}</xsd:dialect>\n" +
+          "</xsd:readUserFieldsForUserRegistration>";
+
+var getPasswordRegularExpressions = "<xsd:getPasswordRegularExpressions xmlns:xsd=\"http://org.apache.axis2/xsd\"/>";
+
+
+var addCSR =  "<xsd:addCsr xmlns:xsd=\"http://org.apache.axis2/xsd\"><xsd:csrContent>{0}</xsd:csrContent></xsd:addCsr>";
+var getCSRList = "<xsd:getCsrList xmlns:xsd=\"http://org.apache.axis2/xsd\" />";
+var getCSR = "<xsd:getCsr xmlns:xsd=\"http://org.apache.axis2/xsd\"><xsd:serial>{0}</xsd:serial></xsd:getCsr>";
+var getPubCert = "  <xsd:getPubCert xmlns:xsd=\"http://org.apache.axis2/xsd\"><xsd:serialNo>{0}</xsd:serialNo></xsd:getPubCert>"
+
+var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.carbon.wso2.org\">\n" +
+                     "<aut:username>{0}</aut:username>\n"+
+                     "<aut:password>{1}</aut:password>\n"+
+                     "<aut:remoteAddress>{2}</aut:remoteAddress>\n"+
+                  "</aut:login>";
+
+
+var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
+
+
+application.put("xsd:addCsr", addCSR);
+application.put("xsd:getCsrList", getCSRList);
+application.put("xsd:getCsr", getCSR);
+application.put("xsd:getPubCert", getPubCert);
+application.put("urn:getProfileFieldsForInternalStore", getProfileFieldsForInternalStore);
+application.put("urn:getAppsAuthorizedByUser", getAppsAuthorizedByUser);
+application.put("urn:getAllChallengeQuestions", getAllChallengeQuestions);
+application.put("urn:getChallengeQuestionsOfUser", getChallengeQuestionsOfUser);
+application.put("urn:getAllUserProviders", getAllUserProviders);
+application.put("urn:getUserIM", getUserIM);
+application.put("urn:getXmppSettings", getXmppSettings);
+application.put("urn:hasXMPPSettings", hasXMPPSettings);
+application.put("urn:getAllOpenIDs", getAllOpenIDs);
+application.put("urn:getPrimaryOpenID", getPrimaryOpenID);
+application.put("urn:readUserFieldsForUserRegistration", readUserFieldsForUserRegistration);
+application.put("urn:getPasswordRegularExpressions", getPasswordRegularExpressions);
+if(!application.get(SAML_ENABLED)){
+	application.put("urn:login", login);
+}
+application.put("urn:getUserInfo", getUserInfo);
+
+
+
+function getPayload(method, param){
+
+    var payload = application.get(method);
+
+    if(payload != null){
+        if(param instanceof Array){
+            for(var x = 0; x < param.length; x++){
+                payload = format(payload, param[x], x);
+            }
+        }else{
+            payload = format(payload, param, 0);
+        }
+    }
+
+    return payload;
+}
+
+function format(variable, value, index){
+    var placeHolder = "{" + index + "}";
+    var index = variable.indexOf(placeHolder);
+    if(index > -1){
+        var data = variable.split(placeHolder);
+        var newData = data[0] + value;
+        if(data.length > 1){
+            newData += data[1];
+        }
+
+        return newData;
+    }
+
+    return variable;
+}
+
+
+%>

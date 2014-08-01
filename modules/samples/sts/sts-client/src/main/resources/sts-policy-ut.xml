@@ -1,0 +1,46 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+            xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+            wsu:Id="UTOverTransport">
+    <wsp:ExactlyOne>
+        <wsp:All>
+            <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:TransportToken>
+                        <wsp:Policy>
+                            <sp:HttpsToken RequireClientCertificate="false"/>
+                        </wsp:Policy>
+                    </sp:TransportToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
+                    <sp:Layout>
+                        <wsp:Policy>
+                            <sp:Lax/>
+                        </wsp:Policy>
+                    </sp:Layout>
+                    <sp:IncludeTimestamp/>
+                </wsp:Policy>
+            </sp:TransportBinding>
+            <sp:SignedSupportingTokens
+                    xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <wsp:Policy>
+                    <sp:UsernameToken
+                            sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient"/>
+                    <wsp:Policy>
+								<sp:WssUsernameToken10/>
+							</wsp:Policy>
+                </wsp:Policy>
+            </sp:SignedSupportingTokens>
+            <!--rampart:RampartConfig xmlns:rampart="http://ws.apache.org/rampart/policy">
+                <rampart:user>FOO.COM/dulanja</rampart:user>
+                <rampart:passwordCallbackClass>org.wso2.security.sts.sample.PasswordCBHandler</rampart:passwordCallbackClass>
+                <rampart:timestampPrecisionInMilliseconds>true
+                </rampart:timestampPrecisionInMilliseconds>
+                <rampart:timestampTTL>300</rampart:timestampTTL>
+                <rampart:timestampMaxSkew>300</rampart:timestampMaxSkew>
+            </rampart:RampartConfig-->
+        </wsp:All>
+    </wsp:ExactlyOne>
+</wsp:Policy>

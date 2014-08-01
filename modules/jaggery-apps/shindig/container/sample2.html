@@ -1,0 +1,69 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sample: Dynamic Height</title>
+<!-- default container look and feel -->
+<link rel="stylesheet" href="gadgets.css">
+<script type="text/javascript" src="/gadgets/js/shindig-container:rpc.js?c=1&debug=1"></script>
+<script type="text/javascript">
+var my = {};
+
+my.gadgetSpecUrls = [
+  'http://www.google.com/ig/modules/horoscope.xml',
+  'http://www.google.com/ig/modules/aue07otr.xml',
+  'http://www.labpixies.com/campaigns/todo/todo.xml'
+];
+
+
+// This container lays out and renders gadgets itself.
+
+my.LayoutManager = function() {
+  shindig.LayoutManager.call(this);
+};
+
+my.LayoutManager.inherits(shindig.LayoutManager);
+
+my.LayoutManager.prototype.getGadgetChrome = function(gadget) {
+  var chromeId = 'gadget-chrome-' + gadget.id;
+  return chromeId ? document.getElementById(chromeId) : null;
+};
+
+my.init = function() {
+  shindig.container.layoutManager = new my.LayoutManager();
+};
+
+my.renderGadgets = function() {
+  for (var i = 0; i < my.gadgetSpecUrls.length; ++i) {
+    var gadget = shindig.container.createGadget(
+        {specUrl: my.gadgetSpecUrls[i]});
+    shindig.container.addGadget(gadget);
+    shindig.container.renderGadget(gadget);
+  }
+};
+</script>
+</head>
+<body onLoad="my.init();my.renderGadgets();">
+  <h2>Sample: Dynamic Height</h2>
+  <div id="gadget-chrome-0" class="gadgets-gadget-chrome"></div>
+  <div id="gadget-chrome-1" class="gadgets-gadget-chrome"></div>
+  <div id="gadget-chrome-2" class="gadgets-gadget-chrome"></div>
+</body>
+</html>

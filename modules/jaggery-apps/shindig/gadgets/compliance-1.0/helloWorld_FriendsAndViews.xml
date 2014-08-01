@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="OSML Hello World" description="A classic Hello World sample application for OSML"
+  thumbnail="http://c1.ac-images.myspacecdn.com/images02/93/l_9d2ca5019ff9456abdcf743ea5e898d8.png"
+  >
+    <Require feature="opensocial-1.0"/>
+    <Require feature="opensocial-templates"/>
+
+<Icon>http://developer.myspace.com/views/static/img/editsource_on.png</Icon>
+
+  </ModulePrefs>
+  <Content type="html" view="canvas">
+    <script type="text/os-data">
+      <os:ViewerRequest key='vwr' />
+      <os:PeopleRequest key='myfriends' userid="@viewer" groupid="@friends" />
+    </script>
+
+
+    <script type="text/os-template">
+      <style type="text/css">
+        body{
+        background:black;
+        color:white;
+        }
+		.person{
+		border:3px solid green;
+		background:#AA3;
+		border-radius:3px;
+		padding:3px;
+      </style>
+      <h1>Hello world, ${vwr.displayName}</h1>
+
+        <os:Repeat expression="${Top.myfriends}">
+          <div class="person">
+            <img src="${Cur.thumbnailUrl}" />
+            Friend: ${Cur.displayName} 
+          </div>
+        </os:Repeat>
+
+
+	  </script>
+  </Content>
+
+  <Content type="html" view="profile">
+    <script type="text/os-template">
+<img src="${vwr.thumbnailUrl}" />
+	Hello world, ${vwr.displayName}
+at profile
+</script>
+  </Content>
+
+  <Content type="html" view="home">
+    <script type="text/os-template">
+I'm at home.
+But where's my content?
+</script>
+  </Content>
+
+
+
+</Module>
+
+

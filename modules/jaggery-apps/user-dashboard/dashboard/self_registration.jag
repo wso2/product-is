@@ -1,0 +1,48 @@
+<%
+var log = new Log();
+
+var selfReg = require('/controllers/user-registration/userRegistrationClient.jag');
+var util = require("util/utility.jag");
+var constants = require("util/constants.jag");
+
+var claim = constants.DEFAULT_CLAIM_URL;
+if(session.get('openid') != null){
+    claim = constants.OPENID_REG_CLAIM_URL;
+}
+
+function doRender(){
+	try{
+
+
+
+		var fieldValues = selfReg.readUserFieldsForUserRegistration(claim);
+		var pwdRegexps = selfReg.getPasswordRegularExpressions();
+		
+		var i18n = util.initI18N();
+		
+		var json = {};
+		json.fieldValues = fieldValues;
+		var pwdObjs = stringify(pwdRegexps['return']);
+
+		if(pwdObjs.indexOf("[{") < 0){
+            var pwdObjsAray = [];
+            pwdObjsAray.push(pwdRegexps['return']);
+            pwdRegexps['return'] = pwdObjsAray;
+		}
+		json.pwdRegexps = pwdRegexps;
+		
+		session.put("pwdReg", pwdRegexps['return']);
+		log.debug(session.get('pwdReg'));
+		
+//log.info(json);
+//drawPage(json);
+print(json);
+	}catch(e){
+		log.error(e);
+        response.sendRedirect("index.jag?e=1&error=service_invok_error");
+		
+	}
+}
+
+doRender();
+%>

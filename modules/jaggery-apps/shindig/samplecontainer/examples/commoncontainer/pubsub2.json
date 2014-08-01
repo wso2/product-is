@@ -1,0 +1,8 @@
+{ "Events":
+  [
+    {"topic": "org.opensocial.event.social.person.selected", "value": "12345"},
+    {"topic": "org.opensocial.event.social.person.updtaed", "value": "12345"},                  
+    {"topic": "org.opensocial.event.container.ee.render", "value": "someContext"},
+    {"topic": "org.opensocial.event.container.itemSelected", "value": "ItemSelected"}
+  ]
+}

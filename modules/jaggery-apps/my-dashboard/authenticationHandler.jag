@@ -1,0 +1,15 @@
+<%
+
+include("util/constants.jag");
+var log = new Log();
+
+
+function authenticate(){
+ if(session.get('user') == null){
+            throw 'InvalidLogin';
+       }
+}
+
+authenticate();
+
+%>

@@ -1,0 +1,156 @@
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sample: PubSub-2</title>
+<!-- default container look and feel -->
+<link rel="stylesheet" href="gadgets.css">
+<script type="text/javascript" src="/gadgets/js/shindig-container:pubsub-2.js?c=1&debug=1"></script>
+<script type="text/javascript">
+var my = {};
+
+my.gadgetSpecUrls = [
+  'http://' + window.location.host + '/container/sample-pubsub-2-publisher.xml',
+  'http://' + window.location.host + '/container/sample-pubsub-2-subscriber.xml',
+  'http://' + window.location.host + '/container/sample-pubsub-2-subscriber.xml'
+];
+
+my.LayoutManager = function() {
+  shindig.LayoutManager.call(this);
+};
+
+my.LayoutManager.inherits(shindig.LayoutManager);
+
+my.LayoutManager.prototype.getGadgetChrome = function(gadget) {
+  var chromeId = 'gadget-chrome-' + gadget.id;
+  return document.getElementById(chromeId);
+};
+
+my.init = function() {
+  gadgets.pubsub2router.init(
+    {
+      onSubscribe: function(topic, container) {
+        log(container.getClientID() + " subscribes to topic '" + topic + "'");
+        return true;
+        // return false to reject the request.
+      },
+      onUnsubscribe: function(topic, container) {
+        log(container.getClientID() + " unsubscribes from topic '" + topic + "'");
+      },
+      onPublish: function(topic, data, pcont, scont) {
+        log(pcont.getClientID() + " publishes '" + data + "' to topic '" + topic + "' subscribed by " + scont.getClientID());
+        return true;
+        // return false to reject the request.
+      }
+    });
+  shindig.container.layoutManager = new my.LayoutManager();
+};
+
+my.renderGadgets = function() {
+  for (var i = 0; i < my.gadgetSpecUrls.length; ++i) {
+    var gadget = shindig.container.createGadget(
+        {specUrl: my.gadgetSpecUrls[i], title: (i ? "Subscriber" : "Publisher"), debug: true});
+    shindig.container.addGadget(gadget);
+    shindig.container.renderGadget(gadget);
+  }
+};
+
+my.printMetadata = function() {
+  var request = {
+    context: {
+      country: "default",
+      language: "default",
+      view: "default",
+      container: "default"
+    },
+    gadgets: [
+      {  url: my.gadgetSpecUrls[0],
+        moduleId: 1
+      },
+      { url: my.gadgetSpecUrls[1],
+        moduleId: 1
+      },
+      { url: my.gadgetSpecUrls[2],
+        moduleId: 1
+      }
+    ]
+  };
+
+  var makeRequestParams = {
+    "CONTENT_TYPE" : "JSON",
+    "METHOD" : "POST",
+    "POST_DATA" : gadgets.json.stringify(request)
+  };
+
+  var url = "http://" + window.location.host + "/gadgets/metadata";
+
+  gadgets.io.makeNonProxiedRequest(url,
+    handleJSONResponse,
+    makeRequestParams,
+    "application/javascript"
+  );  
+  
+  function handleJSONResponse(obj) {
+    var metadata = obj.data.gadgets;
+    for (var i = 0; i < metadata.length; i++) {
+      var gadget = metadata[i].url.match( /.*\/([^/]+)$/ )[1];
+      var topics = metadata[i].featureDetails['pubsub-2'].parameters.topics;
+      for (var j = 0; j < topics.length; j++) {
+        var topic = topics[j];
+        // Depending on how the gadget metadata was written, the topic metadata may be either a
+        // string or an object (parsed from the XML).
+        if (typeof(topic) == "string") {
+          var attrs = topic.match( /\w+=(?:"[^"]*"|'[^']*')/g );
+          topic = {};
+          for (var k = 0; k < attrs.length; k++) {
+            var pairs = attrs[k].match( /(\w+)=(?:"([^"]*)"|'([^']*)')/ );
+            var attr = pairs[1],
+                value = pairs[2] || pairs[3];
+            topic[attr] = value === "true" ? true :
+                          value === "false" ? false :
+                          value;
+          }
+        }
+        
+        log( "<" + gadget + "> " + (topic.subscribe ? "subscribes " + (topic.publish ? "and " : "") : "") +
+            (topic.publish ? "publishes " : "") + "on the event topic <" + topic.name + "> " +
+            (topic.title ? "('" + topic.title + "') " : "") +
+            (topic.type ? "[event type is '" + topic.type + "']" : "") );
+      }
+    }
+  }
+}
+function log(message) {
+  document.getElementById("output").innerHTML += gadgets.util.escapeString(message) + "<br/>";
+}
+</script>
+</head>
+<body onLoad="my.init();my.renderGadgets();">
+  <h2>Sample: PubSub-2</h2>
+  <div id="gadget-chrome-0" class="gadgets-gadget-chrome"></div>
+  <div id="gadget-chrome-1" class="gadgets-gadget-chrome"></div>
+  <div id="gadget-chrome-2" class="gadgets-gadget-chrome"></div>
+  <div style="clear: left;">
+    <input type="button" value="Print gadgets' pubsub metadata" onclick="my.printMetadata()"/>
+  </div>
+  <div id="output" style="clear: left;">
+  </div>
+</body>
+</html>

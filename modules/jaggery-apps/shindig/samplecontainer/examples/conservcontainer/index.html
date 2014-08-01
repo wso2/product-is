@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<html>
+	<head>
+		<link rel="stylesheet" href="../../../container/gadgets.css">
+		<link rel="stylesheet" href="portlet.css">
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../../gadgets/js/core:container:rpc:selection:actions.js?c=1&debug=1&container=default"></script>	
+		<script type="text/javascript" src="ConServContainer.js"></script>
+		<script type="text/javascript" src="viewController.js"></script>
+		<script type="text/javascript" src="layout.js"></script>
+		<script type="text/javascript">
+			var my = {};
+			var str = '/conservcontainer/';
+			var base = location.href.substr(0, location.href.indexOf(str)+str.length);
+			my.gadgetSpecUrls = [ base + 'sample-selection-listener.xml', base + 'sample-actions-runner.xml'];
+			my.renderGadgets = function() {
+					$(".gadgetUrl")[0].value = base + "sample-actions-voip.xml";
+				  // uncomment this to render gadgets specified in my.gadgetSpecUrls
+				  for (var i = 0; i < my.gadgetSpecUrls.length; ++i) {
+				    //var gadgetSite = CommonContainer.renderGadget(my.gadgetSpecUrls[i], "gadget-chrome-"+i);
+				    CommonContainer.addGadgetToPage(my.gadgetSpecUrls[i]);
+				  }
+			};
+			function onPreloadGadget() {
+				var gadgetSpecUrl = $(".gadgetUrl")[0].value;
+				CommonContainer.addGadgetToPage(gadgetSpecUrl, true);
+			}
+			function onAddGadget() {
+				var gadgetSpecUrl = $(".gadgetUrl")[0].value;
+				CommonContainer.addGadgetToPage(gadgetSpecUrl, false);
+			}
+			function log(message) {
+			  document.getElementById("output").innerHTML += gadgets.util.escapeString(message) + "<br/>";
+			}
+			function setSelection(selection) {
+			  CommonContainer.selection.setSelection(selection);
+			}
+		</script>
+		
+		<style type="text/css">
+		     #helloworlds {
+		       margin: 20px;
+		       font-family: arial, sans-serif;
+		       width: 310px;
+		     }
+		     div.person img {
+		       margin-bottom: 10px;
+		     }
+		     div.bubble {
+		       background-image: url(../../../samplecontainer/examples/bubble.gif);
+		       background-repeat: no-repeat;
+		       width: 202px;
+		       height: 66px;
+		       padding: 12px 0px 0px 12px;
+		       font-weight: bold;
+		       font-size: 18px;
+		       float: right;
+		     }
+		     .c0 { color: #008000; }
+		     .c1 { color: #FF8A00; }
+		     .c2 { color: #7777CC; }
+		     .c3 { color: #008000; }
+		     .c4 { color: #CC0000; }
+		     .c5 { color: #73A6FF; }
+		     div.name, div.personAction {
+		       width: 150px;
+		       text-align: right;
+		       font-weight: normal;
+		       font-size: 12px;
+		       color: #999;
+		       position:relative;
+		       top: 10px;
+		       right: -35px;
+		       margin: 5px;
+		     }
+		     #globalMenubar {
+				font-family: Arial;
+				color: #666666;
+				text-align: right;
+				padding: 10px;
+			}
+	    </style>
+	
+	    <script type="text/javascript">
+		     var hellos = new Array('Hello World', 'Hallo Welt', 'Ciao a tutti', 'Hola mundo',
+		       '&#1055;&#1086;&#1103;&#1074;&#1083;&#1077;&#1085;&#1080;&#1077; &#1085;&#1072; &#1089;&#1074;&#1077;&#1090;',
+		       '&#12371;&#12435;&#12395;&#12385;&#12399;&#19990;&#30028;',
+		       '&#20320;&#22909;&#19990;&#30028;',
+		       '&#50668;&#47084;&#48516;, &#50504;&#45397;&#54616;&#49464;&#50836;');
+		     var numberOfStyles = 6;
+		     var viewerCount;
+		     var allPeople, viewerFriendData;
+		     var selected_id = null;
+
+		     function highlight(id) {
+		     	if (selected_id == id) return;
+		     	element = document.getElementById("person_"+id);
+				element.style.background = "#73A6FF";
+		     }
+
+		     function unhighlight(id) {
+		     	if (selected_id == id) return;
+		     	element = document.getElementById("person_"+id);
+				element.style.background = "#FFF";
+		     }
+
+		     function select(id) {
+		     	 if (selected_id != null) {
+		     		 unselect = selected_id;
+		     		 selected_id = null;
+		     		 unhighlight(unselect);
+		     	 }
+		     	 selected_id = id;
+		     	 element = document.getElementById("person_"+id);
+				   element.style.background = "#CCC";
+				
+				   // set selection
+				   setSelection([{
+				     type: 'opensocial.Person',
+				     dataObject: allPeople[id]
+				   }]);
+		     }
+
+		     function render(data) {
+		       var viewer = data.viewer;
+		       allPeople = data.viewerFriends.list;
+		       if (viewer) {
+		         allPeople.push(viewer);
+		       }
+		
+		       var viewerData = data.viewerData;
+		       viewerCount = getCount(viewerData[viewer.id]);
+		
+		       viewerFriendData = data.viewerFriendData;
+		       viewerFriendData[viewer.id] = viewerData[viewer.id];
+		
+		       var html = '';
+		       for (var i = 0; i < allPeople.length; i++) {
+		         var count = getCount(viewerFriendData[allPeople[i].id]);
+		         if (count == 0) {
+		           //continue;
+		         }
+		         html += '<div class="personActions"></div>';
+		         html += '<div id="person_'+i+'" ';
+		         html += 'class="person" onMouseDown="select('+i+');" onMouseOver="highlight('+i+');" onMouseOut="unhighlight('+i+');">';
+		         html += '<div id="bubble_'+i+'" class="bubble c' + count % numberOfStyles + '">';
+		         html += hellos[count % hellos.length];
+		         html += '<div class="name">' + allPeople[i].name.formatted + ' (' + count + ') ' + allPeople[i].gender;
+		         html += '</div></div>';
+		
+		         if (allPeople[i].thumbnailUrl
+		             && allPeople[i].thumbnailUrl.indexOf('null') == -1) {
+		           html += '<img src="' + allPeople[i].thumbnailUrl + '"/>';
+		         } else {
+		           html += '<img src="../../../samplecontainer/examples/nophoto.gif"/>';
+		         }
+		         html += '<br style="clear:both"></div>';
+		       }
+		       document.getElementById('helloworlds').innerHTML = html;
+		     }
+		
+		     function getCount(data) {
+		       return data && data['count'] ? Number(data['count']) : 0;
+		     }
+		
+		     function initData() {
+		       var fields = ['id', 'displayName', 'age','name','gender','profileUrl','thumbnailUrl'];
+		       var batch = osapi.newBatch();
+		       batch.add('viewer', osapi.people.getViewer({sortBy:'name',fields:fields}));
+		       batch.add('viewerFriends', osapi.people.getViewerFriends({sortBy:'name',fields:fields}));
+		       batch.add('viewerData', osapi.appdata.get({keys:['count']}));
+		       batch.add('viewerFriendData', osapi.appdata.get({groupId:'@friends',keys:['count']}));
+		       batch.execute(render);
+		     }
+		     gadgets.util.registerOnLoadHandler(initData);
+	   </script>
+
+	</head>
+
+	<body onLoad="my.renderGadgets(); initData();">
+		<div id="globalMenubar" width="100%">
+		    <input type="text" id="action_id_field" value="org.samplevoip.chatwithperson"/>
+		    <input type="button" value="Run Action" onclick="runAction()"/>
+		</div>
+		<h2>Sample: Action+Selection Service</h2>
+		<p>Press preload to preload the voip gadget.  You will see actions appear that
+		   have been contributed declaratively by the voip gadget.  Select a person
+		   object from the list and then select one of the actions.  This will
+		   render the voip gadget and execute the selected action.  Finally, you can
+		   close the gadget by pressing the 'x' icon and the action will be removed.
+		   You can also use the Sample Selection Listener gadget to view the contents
+		   of the currently selected object.
+		<div id="helloworlds" style="margin: 4px; float: left;">
+		</div>
+		<div style="font-family:Arial">
+		Preload Gadget: <input type="text" class="gadgetUrl" />
+	  	<input type="submit" value="Preload" onclick="onPreloadGadget();"/>
+		<input type="submit" value="Add" onclick="onAddGadget();"/>
+		</div>
+	  	<div id="gadgetArea" class="column" style="float: left;">
+	  	</div>
+	</body>
+</html>

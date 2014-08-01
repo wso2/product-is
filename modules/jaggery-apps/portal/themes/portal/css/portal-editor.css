@@ -1,0 +1,119 @@
+
+
+.navbar .brand{
+     background:url('../img/logo-ide.png') no-repeat top left;
+     width:250px;
+}
+#tabs-files {
+    background: #ECF0F1;
+    margin-bottom: 0;
+}
+#tabs-files > li {
+    font-size: 13px;
+    position: relative;
+}
+#tabs-files > li:hover > a.tab-close {
+    	background: none repeat scroll 0 0 #EE8484 !important;
+    border-radius: 50% 50% 50% 50% !important;
+
+}
+#tabs-files > li > a {
+    border-radius: 0;
+    padding-top: 0;
+    padding-bottom: 5px;
+    outline: none;
+    padding-right: 26px;
+    margin-top: 4px;
+}
+#tabs-files > li:first-child {
+    margin-left: 6px;
+}
+
+a.tab-close {
+    background: none repeat scroll 0 0 transparent !important;
+    border: medium none !important;
+    display: inline;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0 !important;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+        height: 14px;
+    width: 14px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	a.tab-close {
+		top: 4px;
+	}
+}
+a.tab-close > .icon-remove{
+	position:relative;
+	top:-3px;
+	left:2px;
+}
+#tabs-files > li:hover > a.tab-close > .icon-remove{
+	color:#F2F2F2;
+}
+.tab-content {
+    position: relative;
+}
+.tab-content .alert {
+    position: absolute;
+    right: -150px;
+    top: 0;
+    z-index: 99;
+    display: none;
+    font-weight: bold;
+    color: #34495E;
+    display: inline-block;
+}
+
+#file-tree {
+    bottom: 0;
+    height: auto !important;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 41px;
+    width: auto !important;
+}
+
+#editor-start {
+    background: #ECF0F1;
+    text-align: center;
+    color: #34495E;
+    text-shadow: 0 2px 0 #FFFFFF;
+}
+#editor-start i {
+    font-size: 128px;
+    line-height: normal;
+    display: block;
+    color:#C9D5D8;
+}
+
+.modal-footer .btn-primary {
+    color: #FFF;
+}
+
+
+.alert-bar {
+    background-color: rgba(242, 222, 222, 0.95);
+    border-color: rgba(185, 74, 72, 0.33);
+    border-radius: 0 0 0 0;
+    border-style: solid;
+    border-width: 1px 0;
+    display: block;
+    left: 0;
+    line-height: 34px;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: -3px;
+    z-index: 9;
+}
+
+#editor-page{
+    position:relative;
+}

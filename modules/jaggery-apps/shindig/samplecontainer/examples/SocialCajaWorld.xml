@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+ <ModulePrefs title="Caja Demo"
+    title_url="http://www.cajadores.com/"
+    height="200" 
+    author="Jasvir Nagra" 
+    author_email="jasvir@gmail.com"> 
+   <Require feature="caja"></Require>
+   <Require feature="dynamic-height"></Require>
+ </ModulePrefs>
+ <Content type="html">
+   <![CDATA[
+    <style type="text/css">
+      body { font-family: arial,sans-serif,helvetica; background-color: #E5ECF9; }
+      p,td,span,input,label { font-family: arial,sans-serif, helvetica; font-size:12px }
+      .intro { background-color: #FFFFFF; text-align: center; border: 1px solid; width: 80%; padding: 5px; margin-left: auto; margin-right:auto; overflow:scroll; }
+      .source { background-color: #FFFFFF; text-align: center; border: 1px solid; width: 80%; padding: 5px; margin-left: auto; margin-right:auto; overflow:scroll; }
+      .problem { background-color: #E5ECF9; text-align: center; border-top: 1px solid #6B90DA; padding: 5px; }
+      .explanation { font-size:80%; background-color: #E5ECF9; text-align: center; border: 1px; width: 80%; margin-left: auto; margin-right:auto; padding:5px; }
+      .attack { background:#E5ECF9 none repeat scroll 0 0;
+        text-align:left;
+        border: 1px;
+        padding: 10px 10px;
+      }
+      a.visitattack { color: #0000ff; }
+      a.visitattack:visited { color: #000000; }
+      .name { background:#C3D9FF none repeat scroll 0 0; padding:4px 3px 3px 4px;}
+    </style>
+    <div id="intro">
+      Try out these examples in the Shindig sample container by turning the "use caja" flag on or off. 
+    </div>
+    <div id="attacks">
+      <div id="attack1" class="attack">
+        <div class="name">Redirection</div>
+        <div class="problem">
+          <script>var godoevil = function() { top.location = "http://www.thinkfu.com/evil.gif"; document.getElementById("redirection-result").innerHTML = "Gadget trying to redirect page";  };</script>
+          <form>
+            <input type="button" value="Go Do Evil Redirection" onclick="godoevil()" >
+          </form>
+          <label for="redirection-result">Result:</label><div id="redirection-result"></div>
+        </div>
+        <label for="attack1source">Source:</label><div id="attack1source" class="source">
+        top.location = "http://www.thinkfu.com/evil.gif";
+        </div>
+        <div class="explanation">
+You want to allow gadgets in your page but browsers allow any gadget
+(including one that is in an iframe) to access and navigate the
+browser window.  For example, a gadget can redirect the container
+to a phishing site to steal your password.
+
+Caja does not enforce a policy of its own.  Instead it gives
+containers stricter control over a gadget can do.  For example, it
+allows the container to decide whether a gadget can read or set
+variables such as <code>top.location</code>.  A careful choice of
+policy allows a container to protect its users from being unwittingly
+redirected to phishing and malware sites.
+        </div>
+      </div> 
+
+      <div id="attack2" class="attack">
+        <div class="name">Sniffing User History</div>
+        <div class="problem">
+        <a id="googlesniff" class="visitattack" href="http://www.google.com">Link to Google.com</a>
+            <p>
+            <label for="toplocation">User recently visited Google.com:</label><div id="googlesniff-result"></div>
+        <script>
+          var link = document.getElementById("googlesniff");
+	  var computedColor;
+          if(document.defaultView) {
+               var computedStyle = document.defaultView.getComputedStyle(link, null);
+               try { computedColor = computedStyle.getPropertyValue('color');}catch(e){}
+          } else {
+          	computedColor = link.currentStyle && link.currentStyle['color'];
+          }
+          document.getElementById("googlesniff-result").innerHTML = computedColor == '#000000' || computedColor == 'rgb(0, 0, 0)' ? "Yes!" : "Unknown";
+        </script>
+        </div>
+        <label for="attack2source">Source:</label><div id="attack2source" class="source">
+        var computedStyle = document.defaultView.getComputedStyle(link, null);<br>
+        var computedColor = computedStyle.getPropertyValue('color');<br>
+        var visited = computedColor == '#000000' || computedColor == 'rgb(0, 0, 0)' ? "Yes!" : "Unknown";<br>
+        </div>
+        <div class="explanation">
+When you visit a website, your browser helpfully colors links to that
+site with a different color.  Unfortunately a malicious gadget can use
+this computed style to detect if you have visited particular sites.
+In this way, a malicious gadget try to determine your gender, your
+news tastes, your political leaning, the name of your bank and other
+sensitive information by analyzing the sites you visit.
+
+By default Caja protects users against such leakage of information by
+not granting access to computed styles.
+        </div>
+      </div>
+      <div id="attack3" class="attack">
+        <div class="name">Script Injection</div>
+        <div class="problem">
+        <script>
+          function displayResult() { 
+            var blogComment = document.createElement('div');
+            blogComment.innerHTML = document.getElementById("resultGen").value;
+            document.getElementById("result").appendChild(blogComment);
+          }
+        </script>
+        <form>Enter a comment on my blog:<input id="resultGen" type="text" size="50" value="<b>just some bold text nothing to see here dudes.</b><script defer>alert('XSS Exploited!');</script>"><br>
+        <input type="button" value="Display Comment" onclick="displayResult();"></form><br>
+        <label for="result">Comment:</label><div id="result"></div>
+        </div>
+        <label for="attack3source">Source:</label><div id="attack3source" class="source">
+          var blogComment = document.createElement('div');
+          blogComment.innerHTML = "&lt;b&gt;user entered text which happens to contain a &lt;script&gt; tag.&lt;/b&gt;&lt;script defer&gt;alert('muahahaa');&lt;/script&gt;";
+          document.getElementById("result").appendChild(blogComment);
+        </div>
+        <div class="explanation">
+You want to allow a user to enter comments in your blog using HTML but
+you don't want them to be able to enter scripts which steal cookies of
+other readers of your blog.  In this example, user input is being
+assigned directly to innerHTML.  On some browsers this has no effect
+but on IE, this will result in the embedded script being executed.
+
+Caja prevents such attacks by sanitizing strings before inserting them into the DOM.  
+        </div>
+      </div> 
+      <div id="attack4" class="attack">
+        <div class="name">Cookie Stealing</div>
+        <div class="problem">
+        Document cookie: <div id="cookie"></div>
+        <script>document.getElementById('cookie').innerHTML = (""+document.cookie).substring(0, 10) + "...";</script>
+        </div>
+        <label for="attack4source">Source:</label><div id="attack4source" class="source">
+document.getElementById('cookie').innerHTML = document.cookie
+        </div>
+        <div class="explanation">
+You want to inline gadgets in your page but you don't want it to steal
+your viewer's cookies.  In this example, you can see if a gadget you
+use sets cookies and if a malicious gadget can access it.
+
+ Caja disallows access to any variable which the container does not
+ explicitly grant a gadget access to.  Unless a container explicitly
+ grants a gadget access to your cookies, a gadget is unable to access
+ it.
+        </div>
+      </div>
+<script>gadgets.window.adjustHeight();</script>
+  ]]>
+  </Content>
+</Module>

@@ -1,0 +1,1 @@
+This is from an asset in aar-lib1.

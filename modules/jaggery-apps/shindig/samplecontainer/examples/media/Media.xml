@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+    <ModulePrefs title="Albums and MediaItems">
+        <Require feature="osapi"/>
+        <Require feature="dynamic-height"/>
+        <Require feature="pubsub-2">
+		  <Param name="topics">
+		    <![CDATA[ 
+		    <Topic title="MediaItem Created" name="org.apache.shindig.mediaItem.created" description="Publishes MediaItem created events." type="org.opensocial.data.mediaItem" publish="true"/>
+		    <Topic title="MediaItem Updated" name="org.apache.shindig.mediaItem.updated" description="Publishes MediaItem updated events." type="org.opensocial.data.mediaItem" publish="true"/>
+		    <Topic title="MediaItem Deleted" name="org.apache.shindig.mediaItem.deleted" description="Publishes MediaItem deleted events." type="org.opensocial.data.mediaItem" publish="true"/>
+		    <Topic title="Album Created" name="org.apache.shindig.album.created" description="Publishes Album created events." type="org.opensocial.data.album" publish="true">
+		    <Topic title="Album Updated" name="org.apache.shindig.album.updated" description="Publishes Album updated events." type="org.opensocial.data.album" publish="true">
+		    <Topic title="Album Deleted" name="org.apache.shindig.album.deleted" description="Publishes Album deleted events." type="org.opensocial.data.album" publish="true">
+		    ]]>
+		  </Param>
+		</Require>
+    </ModulePrefs>
+    
+    <Content type="html"><![CDATA[
+    <html>
+        <head>	
+            <!-- Source imports -->
+            <script src='http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js' type='text/javascript' djConfig='parseOnLoad:true, isDebug:true'></script>
+            <script src='Social.js' type='text/javascript'></script>
+            <script src='MediaUI.js' type='text/javascript'></script>
+            
+            
+            <!-- Styling -->
+            <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dijit/themes/tundra/tundra.css"></link>
+            <link rel="stylesheet" type="text/css" href="styles.css">
+            <style type="text/css">
+            </style>
+            
+            <!-- DOJO requires -->
+            <script type='text/javascript'>
+                dojo.require('dijit.form.Button');
+                dojo.require('dijit.form.Form');
+                dojo.require('dijit.form.TextBox');
+                dojo.require('dijit.form.ValidationTextBox');
+                dojo.require('dijit.Dialog');
+                dojo.require('dijit.form.Textarea');
+                dojo.require('dijit.layout.ContentPane');
+                dojo.require('dijit.layout.TabContainer');
+            </script>
+            
+            <!-- JavaScript -->
+            <script type="text/javascript"> 
+                <!-- Entry point to the gadget -->
+                function init() {
+                    console.log("dojo initialized");
+                    new MediaUI(new SocialWrapper()).init();
+                }
+
+                <!-- Register entry point -->
+                gadgets.util.registerOnLoadHandler(function() {
+                    dojo.addOnLoad(init);
+                });
+            </script>
+        </head>
+        <body class="tundra">
+        </body>
+    </html>
+    ]]></Content>
+</Module>

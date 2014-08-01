@@ -1,0 +1,36 @@
+<%
+
+var log = new Log();
+var userName = session.get("user");
+var caClient = require('ca-client.jag');
+include("../wsUtil.jag");
+
+var i18n = session.get("i18n");
+
+
+function getCertificateFromSerialNo() {
+    var cookie = session.get('auth-cookie');
+    if(cookie == null){
+        var cookie = request.getParameter("cookie");
+        session.put('auth-cookie', cookie);
+    }
+    if(userName==null){
+        var cookie = request.getParameter("user");
+        session.put('user', cookie);
+    }
+    var serialNo = request.getParameter("serialNo");
+
+    var result;
+
+
+
+    try {
+        result = caClient.getCertificate(serialNo);
+    } catch (e) {
+        return e.toString();
+    }
+
+    print(result.return);
+}
+getCertificateFromSerialNo();
+%>

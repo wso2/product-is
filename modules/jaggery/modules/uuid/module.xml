@@ -1,0 +1,7 @@
+<module name="uuid" namespace="$uuid" expose="false" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <!-- methods -->
+    <method readOnly="true">
+        <className>org.jaggeryjs.hostobjects.uuid.UUIDHostObject</className>
+        <name>generate</name>
+    </method>       
+</module>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<Server xmlns="http://wso2.org/projects/carbon/carbon.xml">
+
+	<OpenIDServerUrl>https://test-org.wso2.com:9443/openidserver</OpenIDServerUrl>
+
+	<OpenIDUserPattern>https://test-org.wso2.com:9443/openid/</OpenIDUserPattern>
+	<!-- If the users must be prompted for approval -->
+	<OpenIDSkipUserConsent>false</OpenIDSkipUserConsent>
+	<!-- Expiry time of the OpenID RememberMe token in minutes -->
+	<OpenIDRememberMeExpiry>7200</OpenIDRememberMeExpiry>
+
+     <JDBCPersistenceManager>
+        <DataSource>
+        	<!-- Include a data source name (jndiConfigName) from the set of data sources defined in master-datasources.xml -->
+        	<Name>jdbc/WSO2CarbonDB</Name>
+    	</DataSource>
+		<!-- If the identity database is created from another place and if it is required to skip schema initialization during the server start up, set the following
+		 property to "true". -->
+		<!-- <SkipDBSchemaCreation>false</SkipDBSchemaCreation> -->
+    </JDBCPersistenceManager>
+
+	<!--
+      Security configurations
+    -->
+	<Security>
+		<UserTrustedRPStore>
+			<Location>${carbon.home}/repository/resources/security/userRP.jks</Location>
+			<!-- Keystore type (JKS/PKCS12 etc.)-->
+			<Type>JKS</Type>
+			<!-- Keystore password-->
+			<Password>wso2carbon</Password>
+			<!-- Private Key password-->
+			<KeyPassword>wso2carbon</KeyPassword>
+		</UserTrustedRPStore>
+
+		<!--
+			The directory under which all other KeyStore files will be stored
+		-->
+		<KeyStoresDir>${carbon.home}/conf/keystores</KeyStoresDir>
+	</Security>
+
+	<Identity>
+		<IssuerPolicy>SelfAndManaged</IssuerPolicy>
+		<TokenValidationPolicy>CertValidate</TokenValidationPolicy>
+		<BlackList></BlackList>
+		<WhiteList></WhiteList>
+		<System>
+			<KeyStore></KeyStore>
+			<StorePass></StorePass>
+		</System>
+	</Identity>
+
+	<OAuth>
+		<RequestTokenUrl>https://localhost:9443/oauth/request-token</RequestTokenUrl>
+		<AccessTokenUrl>https://localhost:9443/oauth/access-token</AccessTokenUrl>
+		<AuthorizeUrl>https://localhost:9443/oauth/authorize-url</AuthorizeUrl>
+		<!-- Default validity period for Authorization Code in seconds -->
+		<AuthorizationCodeDefaultValidityPeriod>300</AuthorizationCodeDefaultValidityPeriod>
+		<!-- Default validity period for Access Token in seconds -->
+		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
+		<!-- Timestamp skew in seconds -->
+		<TimestampSkew>300</TimestampSkew>
+		<!-- Enable OAuth caching. This cache has the replication support. -->
+		<EnableOAuthCache>true</EnableOAuthCache>
+		<!-- Configure the security measures needs to be done prior to store the token in the database,
+		such as hashing, encrypting, etc.-->
+		<TokenPersistencePreprocessor>org.wso2.carbon.identity.oauth.preprocessor.PlainTextTokenPersistencePreprocessor</TokenPersistencePreprocessor>
+		<!-- Supported Response Types -->
+		<SupportedResponseTypes>token,code</SupportedResponseTypes>
+		<!-- Supported Grant Types -->
+		<SupportedGrantTypes>authorization_code,password,refresh_token,client_credentials</SupportedGrantTypes>
+		<OAuthCallbackHandlers>		
+				<OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
+		</OAuthCallbackHandlers>
+	</OAuth>
+
+	<MultifactorAuthentication>
+		<XMPPSettings>
+			<XMPPConfig>
+				<XMPPProvider>gtalk</XMPPProvider>
+				<XMPPServer>talk.google.com</XMPPServer>
+				<XMPPPort>5222</XMPPPort>
+				<XMPPExt>gmail.com</XMPPExt>
+				<XMPPUserName>multifactor1@gmail.com</XMPPUserName>
+				<XMPPPassword>wso2carbon</XMPPPassword>
+			</XMPPConfig>
+		</XMPPSettings>
+	</MultifactorAuthentication>
+
+    	<SSOService>
+    	    <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
+    	</SSOService>
+    	
+    	<EntitlementSettings>
+	<!-- Uncomment this to enable on-demand policy loading -->
+                <!--OnDemandPolicyLoading>
+                        <Enable>true</Enable>
+                        <MaxInMemoryPolicies>100</MaxInMemoryPolicies>
+                </OnDemandPolicyLoading-->
+		<DecisionCaching>
+			<Enable>true</Enable>
+			<CachingInterval>36000</CachingInterval>
+		</DecisionCaching>
+		<AttributeCaching>
+			<Enable>true</Enable>
+		</AttributeCaching>
+		<ThirftBasedEntitlementConfig>
+			<EnableThriftService>true</EnableThriftService>
+			<ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
+			<ClientTimeout>10000</ClientTimeout>
+			<KeyStore>
+				<Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
+				<Password>wso2carbon</Password>
+			</KeyStore>
+		</ThirftBasedEntitlementConfig>
+        </EntitlementSettings>
+</Server>

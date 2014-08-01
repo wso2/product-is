@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<Module>
+	<ModulePrefs
+		title="Test Gadget and Container Domain Configuration"
+		description="Tests Gadget and Container domain configuration by trying to access container page information from within a gadget"
+	>
+	</ModulePrefs>
+	<Content type="html">
+  <![CDATA[
+	<div id="msgDiv" />
+    <script type="text/javascript">
+		function testDomain(){
+			var msgDiv = document.getElementById("msgDiv");
+			var msg;
+			if (!doTest()) {
+				msg = "Fail! Gadget was able to see container page's location: " + window.parent.location;
+			} else {
+				msg = "Success! Gadget could not get container page's information.";
+			}
+			msgDiv.innerHTML = msg;
+		};
+
+		function doTest() {
+			// First simple test, just try to get at the parent window's location
+			try {
+				var loc = "" + window.parent.location;
+				return false;
+			} catch (err) {
+				// Expected.  Do nothing.
+			}
+
+			// Keep lowering the domain to try to get on the same domain as the container page.
+			// Some (all?) browsers will allow two windows to communicate if they have both set
+			// document.domain to be the same value.  If the container has set document.domain
+			// and the gadget can lower it's domain to that same domain, then we want to mark
+			// that as a failure.
+			var domain = document.domain;
+			var split = domain.split('.');
+			var success = true;
+			while (split.length > 0) {
+				try {
+					// Stringifying the location of another window is subject to same origin policy
+					var loc = "" + window.parent.location;
+
+					// If we got here, the above didn't throw an exception so we know we failed.
+					success = false;
+					break;
+				} catch (err) {
+					// Expected.  Do nothing
+				}
+				split.shift();
+				try {
+					document.domain = split.join('.');
+				} catch (err) {
+					// This will happen (in FF at least), if we try to set document.domain to "com" or "org".
+					// Consider this the end of the test
+					break;
+				}
+			}
+			return success;
+		}
+		gadgets.util.registerOnLoadHandler(testDomain);
+    </script>
+  ]]>
+	</Content>
+</Module>

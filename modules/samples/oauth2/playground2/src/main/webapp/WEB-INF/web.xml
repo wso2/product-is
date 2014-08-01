@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <display-name>Archetype Created Web Application</display-name>
+
+    <context-param>
+        <description>setup</description>
+        <param-name>setup</param-name>
+        <param-value>IS</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>OAuth2ClientServlet</servlet-name>
+        <servlet-class>org.wso2.sample.identity.oauth2.OAuth2ClientServlet</servlet-class>
+        <init-param>
+             <description>serverUrl</description>
+             <param-name>serverUrl</param-name>
+             <param-value>https://localhost:9443/services/</param-value>
+        </init-param>
+        <init-param>
+             <description>userName</description>
+             <param-name>userName</param-name>
+             <param-value>admin</param-value>
+        </init-param>
+        <init-param>
+             <description>password</description>
+             <param-name>password</param-name>
+             <param-value>admin</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>        
+    </servlet>
+
+    <servlet>
+        <servlet-name>OAuth2AccessResourcePage</servlet-name>
+        <jsp-file>/oauth2-access-resource.jsp</jsp-file>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    
+   <servlet-mapping>
+        <servlet-name>OAuth2ClientServlet</servlet-name>
+        <url-pattern>/oauth2client</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OAuth2AccessResourcePage</servlet-name>
+        <url-pattern>/oauth2-access-resource.jsp</url-pattern>
+    </servlet-mapping>
+
+</web-app>

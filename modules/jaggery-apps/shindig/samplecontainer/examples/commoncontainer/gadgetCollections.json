@@ -1,0 +1,94 @@
+{ "collections":
+        [
+            {
+            "name": "Publish Subscribe Demo",
+            "Description": "This is a sample pub/sub demo showcasing the pubsub-2 feature",
+            "apps" : [
+                     {"name": "publisher", "url": "/container/sample-pubsub-2-publisher.xml"},
+                     {"name": "subscriber", "url": "/container/sample-pubsub-2-subscriber.xml"}
+                     ]
+             },
+             {
+            "name": "Activity Streams Sample",
+            "Description": "Simple gadget to test base ActivityStreams implementation in features",
+            "apps" : [
+                     {"name": "ActivityStreams Sample", "url": "/samplecontainer/examples/ActivityStreams/ActivityStreamGadget.xml"}
+                     ]
+             },
+                         {
+            "name": "Sample Media Items Gadget",
+            "Description": "This is a sample pub/sub demo showcasing the pubsub-2 feature",
+            "apps" : [
+                     {"name": "publisher", "url": "/samplecontainer/examples/media/Media.xml"}
+                     ]
+             },
+             {
+             "name": "ToDo & Horoscope",
+             "Description": "Sample gadgets used in the simple sample (sample1.html)",
+             "apps" : [
+                      {"name": "Horoscope", "url": "http://www.google.com/ig/modules/horoscope.xml"},
+                      {"name": "TODO", "url": "http://www.labpixies.com/campaigns/todo/todo.xml"}
+                      ]
+             },
+             {
+             "name": "Sample Media Items Gadget with openGadget API",
+             "Description": "Sample gadget used in the view enhancements sample",
+             "apps" : [
+                     {"name": "publisher", "url": "/samplecontainer/examples/media-openGadgets/Media.xml"}
+                     ]
+             },
+             {
+             "name": "OpenSearch Demo",
+             "Description": "Sample gadgets used for opensearch",
+             "apps" : [
+                      {"name": "Twitter", "url": "http://hosting.gmodules.com/ig/gadgets/file/109228598702359180066/twitterfinal.xml"},
+                      {"name": "MySpace", "url": "http://hosting.gmodules.com/ig/gadgets/file/109228598702359180066/myspacefinal.xml"}
+                      ]
+             },
+             {
+             "name": "OAuth2 Demo with Google Provider",
+             "Description": "OAuth2 Demo with Google Provider",
+             "apps" : [
+                      {"name": "oauth2_authorization_g", "url": "/samplecontainer/examples/oauth2/oauth2_google.xml"}
+                      ]
+             },
+             {
+             "name": "OAuth2 Demo with Facebook Provider",
+             "Description": "OAuth2 Demo with Facebook Provider",
+             "apps" : [
+                      {"name": "oauth2_authorization_f", "url": "/samplecontainer/examples/oauth2/oauth2_facebook.xml"}
+                      ]
+             },
+             {
+             "name": "OAuth2 Demo with Windows Live Provider",
+             "Description": "OAuth2 Demo with Windows Live Provider",
+             "apps" : [
+                      {"name": "oauth2_authorization_w", "url": "/samplecontainer/examples/oauth2/oauth2_windowslive.xml"}
+                      ]
+             },
+             {
+             "name": "OAuth2 Demo with Shindig Provider (Authorization Code)",
+             "Description": "OAuth2 Demo with Shindig Provider (Authorization Code)",
+             "apps" : [
+                      {"name": "oauth2_authorization_s", "url": "/samplecontainer/examples/oauth2/shindig_authorization.xml"}
+                      ]
+             },
+             {
+             "name": "OAuth2 Demo with Shindig Provider (Client Credentials)",
+             "Description": "OAuth2 Demo with Shindig Provider (Client Credentials)",
+             "apps" : [
+                      {"name": "oauth2_client_credentials_s", "url": "/samplecontainer/examples/oauth2/shindig_client_credentials.xml"}
+                      ]
+             },
+             {
+             "name" : "Test Gadget and Container Domain Configuration",
+             "Description" : "Tests Gadget and Container domain configuration by trying to access container page information from within a gadget",
+             "apps" : [ {"name" : "Domain Test", "url" : "/samplecontainer/examples/ContainerGadgetDomainTest.xml"} ]
+             },
+             {
+             "name" : "Sample gadget for context proxy with OAuth2",
+             "Description" : "Sample gadget that demonstrate use of context proxy to retrieve resources protected by OAuth2",
+             "apps" : [ {"name" : "oauth2_context_proxy", "url" : "/samplecontainer/examples/oauth2/oauth2_spring_proxy.xml"} ]
+             }
+         ]
+}

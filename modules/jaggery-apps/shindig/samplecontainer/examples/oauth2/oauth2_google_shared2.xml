@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+  <ModulePrefs title="Demo OAuth2 Authorization Code Gadget, uses sharedToken (2)">
+    <OAuth2>
+      <Service name="googleAPI" scope="https://www.google.com/m8/feeds/">
+      </Service>
+    </OAuth2>
+    <Require feature="oauthpopup" />
+  </ModulePrefs>
+  <Content type="html">
+      <![CDATA[
+
+    <style>
+    #main {
+        margin: 0px;
+        padding: 0px;
+        font-size: small;
+    }
+    </style>
+
+    <div id="main" style="display: none">
+    </div>
+
+    <div id="approval" style="display: none">
+      <a href="#" id="personalize">Personalize this gadget</a>
+      <ol>
+        <b><u>In order to use this Demo Gadget you must</u></b>
+        <li>Have or create a Google account and know your userid and password</li>
+        <li>Register a new application at <a href="https://code.google.com/apis/console">https://code.google.com/apis/console</a></li>
+        <li>Make sure your app's "Redirect URIs" applies to your shindig environment (e.g. http://localhost:8080/gadgets/oauth2callback)</li>
+        <li>Update the Google client "Client ID" and "Client Secret" in the OAuth2 persistence (default is <code>config/oauth2.json</code>)</li>
+        <li>Restart the server</li>
+        <li>Click the link above to initiate the authorization process</li>
+      </ol>
+    </div>
+
+    <div id="waiting" style="display: none">
+      Please click
+      <a href="#" id="approvaldone">I've approved access</a>
+      once you've approved access to your data.
+    </div>
+
+    <div id="error" style="display: none;background-color:yellow;font-size:xx-small;" title="An error occured processing your request">
+       <div id="error_code"><u>code:</u></div>
+       <div id="error_uri"><u>uri:</u></div>
+       <div id="error_description"><u>description:</u></div>
+       <div id="error_explanation"><u>explanation:</u></div>
+       <div id="error_trace"><u>trace:</u></div>
+    </div>
+
+    <script type="text/javascript">
+      function getElement(x) {
+        return document.getElementById(x);
+      }
+
+      function showOneSection(toshow) {
+        var sections = [ 'main', 'approval', 'waiting', 'error' ];
+        for (var i=0; i < sections.length; ++i) {
+          var s = sections[i];
+          var el = getElement(s);
+          if (s === toshow) {
+            el.style.display = "block";
+          } else {
+            el.style.display = "none";
+          }
+        }
+      }
+
+      function fetchData() {
+        url = "https://www.google.com/m8/feeds/contacts/default/full";
+        var params = {};
+        params[gadgets.io.RequestParameters.CONTENT_TYPE] =
+          gadgets.io.ContentType.TEXT;
+        params[gadgets.io.RequestParameters.AUTHORIZATION] =
+          gadgets.io.AuthorizationType.OAUTH2;
+        params[gadgets.io.RequestParameters.METHOD] =
+          gadgets.io.MethodType.GET;
+        params[gadgets.io.RequestParameters.OAUTH_SERVICE_NAME] = "googleAPI";
+        params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = "0";
+
+        gadgets.io.makeRequest(url, function (response) {
+          if (response.oauthApprovalUrl) {
+            var onOpen = function() {
+              showOneSection('waiting');
+            };
+            var onClose = function() {
+              fetchData();
+            };
+            var popup = new gadgets.oauth.Popup(response.oauthApprovalUrl,
+                null, onOpen, onClose);
+            getElement('personalize').onclick = popup.createOpenerOnClick();
+            getElement('approvaldone').onclick = popup.createApprovedOnClick();
+            showOneSection('approval');
+          } else if (response.data) {
+            getElement('main').appendChild(document.createTextNode(response.data));
+            showOneSection('main');
+          } else {
+             getElement('error_code').appendChild(document.createTextNode(response.oauthError));
+             getElement('error_uri').appendChild(document.createTextNode(response.oauthErrorUri));
+             getElement('error_description').appendChild(document.createTextNode(response.oauthErrorText));
+             getElement('error_explanation').appendChild(document.createTextNode(response.oauthErrorExplanation));
+             getElement('error_trace').appendChild(document.createTextNode(response.oauthErrorTrace));
+            showOneSection('error');
+          }
+        }, params);
+      }
+
+      gadgets.util.registerOnLoadHandler(fetchData);
+    </script>
+        ]]>
+  </Content>
+</Module>

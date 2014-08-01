@@ -1,0 +1,3 @@
+@echo off
+java  -cp lib\axiom-1.2.11.wso2v1.jar;lib\axis2-1.6.1.wso2v4.jar;lib\commons-codec-1.3.0.wso2v1.jar;lib\commons-httpclient-3.1.0.wso2v1.jar;lib\commons-logging-1.1.1.jar;lib\httpcore-4.1.0.wso2v1.jar;lib\neethi-2.0.4.wso2v3.jar;lib\org.wso2.carbon.identity.entitlement.stub_4.0.7.jar;lib\org.wso2.carbon.um.ws.api.stub-4.0.8.jar;lib\org.wso2.securevault-1.0.0.jar;lib\wsdl4j-1.6.2.wso2v2.jar;lib\XmlSchema-1.4.7.wso2v1.jar;target\org.wso2.carbon.identity.samples.entitlement.kmarket.trading-1.0.0.jar org.wso2.carbon.identity.samples.entitlement.kmarket.trading.KMarketAccessControl  setup
+

@@ -1,0 +1,172 @@
+<!--
+  ~  Licensed to the Apache Software Foundation (ASF) under one
+  ~  or more contributor license agreements.  See the NOTICE file
+  ~  distributed with this work for additional information
+  ~  regarding copyright ownership.  The ASF licenses this file
+  ~  to you under the Apache License, Version 2.0 (the
+  ~  "License"); you may not use this file except in compliance
+  ~  with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Welcome to WSO2 Identity Server v5.0.0!</title>
+    <link href="css/is-docs.css" rel="stylesheet"/>
+</head>
+
+<body>
+<h1>WSO2 Identity Server : An Open Source Identity and Entitlement Management Server</h1>
+
+<h3>WSO2 Identity Server v5.0.0 Release Note</h3>
+
+<h3>20 December 2013</h3>
+
+<p>
+    The WSO2 Identity Server team is pleased to announce the release of version 5.0.0 of
+    the WSO2 Identity Server (IS).
+</p>
+
+<p>WSO2 Identity Server is an open source Identity and Entitlement management server having support
+    for XACML, SAML, OAuth, OpenID, OpenID Connect, SCIM and heterogeneous user stores.</p>
+
+<p>
+    WSO2 Identity Server is developed on top of the revolutionary
+    <a href="http://wso2.com/products/carbon">WSO2 Carbon platform</a>,
+    an OSGi based framework that provides seamless modularity to your SOA via
+    componentization.</p>
+
+<p>All the major features have been developed as pluggable Carbon components.</p>
+
+<p>
+    You can download this distribution from <a href="http://wso2.com/products/identity-server/">
+    http://wso2.com/products/identity-server/</a>.</p>
+
+<p>The online documentation is available at
+    <a href="http://docs.wso2.org/wiki/display/IS460/WSO2+Identity+Server+Documentation">
+        http://docs.wso2.org/wiki/display/IS460/WSO2+Identity+Server+Documentation.</a></p>
+
+<h2>How to Run </h2>
+<ol>
+    <li>Extract the downloaded zip</li>
+    <li>Go to the bin directory in the extracted folder</li>
+    <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
+    <li>If you need to start the OSGi console with the server use the property
+        -DosgiConsole when starting the server. The INSTALL.txt file found on the
+        installation directory will give you a comprehensive set of options and
+        properties that can be passed into the startup script</li>
+</ol>
+<h2>New Features In This Release</h2>
+<ul>
+<li>Comprehensive support for multiple user stores.</li>
+<li>User Store Management user interface.</li>
+<li>Per tenant/organization user stores.</li>
+<li>OAuth 2.0 based authentication for SCIM.</li>
+<li>OpenID Connect Basic Client Profile</li>
+<li>SAML2 grant type for OAuth 2.0.</li>
+<li>Trusted SAML2 Identity Provider Management user interface.</li>
+<li>Multiple trusted Identity Providers per tenant/organization.</li>
+<li>Ability customize login pages for SAML2, OAuth, OpenID Connect, Passive STS and OpenID outside IS.</li>
+<li>User account locking.</li>
+<li>User name/password validation policies.</li>
+<li>Account recovery with email address or secret questions.</li>
+<li>SAML2 Web SSSO HTTP POST binding (Authentication Request).</li>
+<li>Seamless integration with Google Apps and Salesforce.</li>
+<li>Improved XACML editor.</li>
+<li>Ability to define grant types per OAuth 2.0 applications.</li>
+</ul>
+
+<h2>Key Features of WSO2 Identity Server</h2>
+<ul>
+	<li>Entitlement Engine with XACML 3.0/2.0 and WS-XACML support.</li>
+	<li>OAuth Authorization Server with OAuth 2.0/1.0a support.</li>
+	<li>Identity Provisioning with SCIM 1.1.</li>
+	<li>SAML 2.0 Web Browser SSO Identity Provider.</li> 
+	<li>OpenID 2.0 OpenID Provider.</li>
+	<li>Claim based Security Token Service(STS) with SAML 2.0/1.1 support.</li>
+	<li>Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.</li>
+	<li>Integrated Windows Authentication and webSEAL authentication.</li>
+	<li>XMPP based multi-factor authentication.</li>
+	<li>Improved User Management.</li>
+	<li>Claim Management.</li>
+	<li>User Profiles and Profile Management.</li>
+	<li>XKMS.</li>
+    <li>Separable front-end and back-end - a single front-end server can be used to administer
+        several back-end servers.
+    </li>
+</ul>
+<h2>Issues Fixed in This Release</h2>
+<p>
+    This release of WSO2 Identity Server comes with a number of bug fixes, both in the base Carbon
+    framework and in the Identity Server specific components. All the issues which have been
+    fixed in this release can be found at:
+</p>
+<ul>
+        <li><a href="https://wso2.org/jira/issues/?filter=11290">Fixed Issues for WSO2 Identity Server 4.5.1</a></li>
+</ul>
+<h2>Known Issues</h2>
+<p>
+    All the known issues in WSO2 Identity Server 5.0.0 are reported at:
+</p>
+<ul>
+        <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=11277">Known issues in WSO2 Identity Server 5.0.0</a></li>
+</ul>
+<h2>How You Can Contribute</h2>
+<h3>
+    Mailing Lists
+</h3>
+<p>
+    Join our mailing list and correspond with the developers directly.
+</p>
+<ul>
+    <li>
+        Developer list : <a href="mailto:dev@wso2.org">dev@wso2.org</a>
+        | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
+        | <a href="http://wso2.org/mailarchive/dev/">Mail Archive</a>
+    </li>
+    <li>
+        User forum   : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
+    </li>
+</ul>
+<h3>
+    Reporting Issues
+</h3>
+<p>
+    We encourage you to report issues, documentation faults and feature requests regarding
+    WSO2 Identity Server or in the Carbon base framework through the public
+    <a href="https://wso2.org/jira/browse/IDENTITY">WSO2 Identity Server JIRA</a> or <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
+</p>
+<h2>Support</h2>
+
+<p>
+    We are committed to ensuring that your enterprise middleware deployment is completely supported
+    from evaluation to
+    production. Our unique approach ensures that all support leverages our open development
+    methodology and is provided by
+    the very same engineers who build the technology.
+
+    For more details and to take advantage of this unique opportunity
+    <a target="_blank" href="http://wso2.com/support/">
+        http://wso2.com/support/</a>
+</p>
+
+<p>For more information about WSO2 Identity Server, please see <a
+        href="http://wso2.com/products/identity-server">http://wso2.com/products/identity-server</a> or visit
+    the <a href="http://wso2.org/library">WSO2 Oxygen Tank</a> developer portal for addition
+    resources.</p>
+
+<p>Thank you for your interest in WSO2 Identity Server.</p>
+
+<p>Copyright WSO2 Inc.</p>
+</body>
+</html>

@@ -1,0 +1,133 @@
+/* ---------------- template styles ------------------------- */
+
+table#main-table td#header {
+	background-image: url( ../images/is-header-bg.png);
+}
+
+table#main-table td#menu-panel {
+	border-right: solid 1px #EE8C4E;
+}
+table#main-table td#header{
+    height:79px;
+}	
+
+/* ---------------- header styles ------------------ */
+div#header-div {
+    background-image: url( ../images/is-page-bg.png);
+    height:79px;
+}
+
+div#header-div div.left-logo {
+	background-image: url( ../images/is-header-logo.png );
+    margin-left: 40px;
+    margin-top: 25px;
+}
+
+div#header-div div.right-logo {
+	color: #76340c;
+    margin-top:18px;
+} 
+div#header-div div.header-links{
+    margin-top: -10px;
+    font-size:11px;
+}
+/* ------------- menu styles ---------------------- */
+div#menu {
+}
+
+div#menu ul.main {
+}
+
+div#menu ul.main li {
+    border-bottom:solid 1px #ccc;
+    background: -moz-linear-gradient(left, #fcf8ef, #fcf8ef);
+    background: -webkit-gradient(linear, left center, right center, from(#fcf8ef), to(#fcf8ef));
+    *background-color:#fcf8ef;
+}
+div#menu ul.main li.normal {
+    border:none;
+}
+
+div#menu ul.main li a.menu-home {
+    color: #E86C1F;
+    background-image: url(../images/is-home-bg.gif);
+}
+
+div#menu ul.main li a.menu-home:hover {
+	color: #f47b20;
+	background-image: none;
+	background-color: #FBE3D1;
+}
+
+div#menu ul.main li.menu-header {
+    border-top:solid 1px #999;
+    border-bottom:solid 1px #999;
+    background-image: -webkit-gradient( linear, left top, left bottom, from( #ffffff ), to( #efefef ) ); /* mozilla - FF3.6+ */
+    background-image: -moz-linear-gradient( top, #ffffff 0%, #efefef 100% ); /* IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient( gradientType = 0, startColorStr = #ffffff, endColorStr = #efefef ); /* IE8 */
+    -ms-filter: progid: DXImageTransform . Microsoft . gradient( gradientType = 0, startColorStr = #ffffff, endColoStr = #efefef );
+}
+
+div#menu ul.main li a.menu-default {
+}
+
+div#menu ul.main li a.menu-default:hover {
+	background-color: #FDF3EB;
+	border-bottom: solid 1px #F9D3B8;
+	border-top: solid 1px #F9D3B8;
+	color: #00447C;
+}
+div#menu ul.sub li.menu-disabled-link{
+    background-color:#ececec;
+}
+div#menu ul.sub {
+} 
+
+/* -------------- child no-01 styles -------------- */
+
+div#menu ul.sub li.normal {
+
+}
+
+div#menu ul.sub li a.menu-default {
+} 
+
+/* ----------- child no-01 (disabled) styles ------------------- */
+	
+div#menu ul.sub li a.menu-disabled-link {
+	}
+	
+	div#menu ul.sub li a.menu-disabled-link:hover {
+	} 
+
+/* -------------- child no-02 styles -------------- */
+
+div#menu ul.sub li.normal ul.sub li a.menu-default {
+
+}
+
+/* -------------- child no-03 styles -------------- */
+
+div#menu ul.sub li.normal ul.sub li.normal ul.sub li a.menu-default {
+}
+/* ------------- footer styles -------------------- */
+
+div#footer-div div.footer-content div.poweredby {
+	background-image: url( ../images/axis2-powered.gif);
+}
+
+/* ---- login styles ----- */
+
+
+/* --------------- table styles -------------------- */
+
+.tableOddRow{background-color: white;}
+.tableEvenRow{background-color: #eeeffb;}
+
+.button:hover{
+	/*background-image:url(../images/is-button-bg-hover.gif);
+	border:solid 1px #F9D3B8;*/
+}
+strong{
+font-family: "Verdana","Lucida Grande","Lucida Sans","Microsoft Sans Serif", "Lucida Sans Unicode","Sans-serif","trebuchet ms" !important;
+}
