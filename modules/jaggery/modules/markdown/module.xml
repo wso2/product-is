@@ -1,6 +1,0 @@
-<module name="markdown" xmlns="http://wso2.org/projects/jaggery/module.xml">
-    <script>
-        <name>markdown</name>
-        <path>scripts/markdown.js</path>
-    </script>
-</module>

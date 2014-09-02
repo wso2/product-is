@@ -1,0 +1,43 @@
+<%
+(function(){
+    var user = session.get(LOGGED_IN_USER);
+    if(user === null) {
+        response.sendRedirect('/dashboard');
+    } else {
+        var config = require('/conf.js').config(),
+                sso = require('sso'),
+                sso_sessions = application.get('sso_sessions'),
+                sessionId = session.getId(),
+                encodedSAMLLogoutRequest = sso.client.getEncodedSAMLLogoutRequest(user, sso_sessions[session.getId()], config.ssoConfiguration.issuer),
+                relayState = '/dashboard',
+                //postUrl = "https://" + process.getProperty('carbon.local.ip') + ":" + process.getProperty('https.port');
+                postUrl = config.ssoConfiguration.identityProviderURL;
+
+        var log = new Log();
+
+        log.debug("store session index : " + sso_sessions[session.getId()]);
+
+
+        %>
+        <div>
+           <p>You are now redirected to Stratos Identity. If the
+           redirection fails, please click the post button.</p>
+
+            <form id="logoutForm" method="post" action="<%=postUrl%>">
+            <p>
+                <input type="hidden" name="SAMLRequest"
+                      value="<%= encodedSAMLLogoutRequest %>"/>
+                <input type="hidden" name="RelayState" value="<%= relayState %>"/>
+                 <input type="hidden" name="SSOAuthSessionID" value="<%= sessionId %>"/>
+                <button type="submit">POST</button>
+            </p>
+            </form>
+        </div>
+        <script type = "text/javascript" >
+                       document.forms[0].submit();
+        </script>
+
+         <%
+    }
+}());
+%>

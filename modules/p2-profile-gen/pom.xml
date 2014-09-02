@@ -93,6 +93,17 @@
 							<featureArtifacts>
 								<!--jaggery features-->	
 								<featureArtifactDef>org.jaggeryjs:org.jaggeryjs.server.feature:${jaggeryjs.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:ws.feature:${ws.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:oauth.feature:${oauth.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:email.feature:${email.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:uuid.feature:${uuid.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:process.feature:${process.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:caramel.feature:${caramel.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:carbon.feature:${carbon.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:handlebars.feature:${handlebars.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:markdown.feature:${markdown.module.verion}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:gadget.feature:${gadget.module.version}</featureArtifactDef>
+                                <featureArtifactDef>org.jaggeryjs.modules:i18n.feature:${i18n.module.version}</featureArtifactDef>
 
                                 <!--Carbon features-->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.platform.version}</featureArtifactDef>
@@ -176,34 +187,7 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.feature:${carbon.platform.version}</featureArtifactDef>
 
 								<!-- Store feature for SSO-->
-                                <!--todo: Store features need to be enabled when ES is stable and deployed to nexus-->
-				                <!--<featureArtifactDef>org.wso2.store:org.wso2.store.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.extensions.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tenant.throttling.agent.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tenant.deployment.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tenant.usage.agent.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ws.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.lifecycle.management.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.community.features.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.metadata.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.governance.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.module.mgt.feature:${carbon.platform.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.jaggeryjs.modules:caramel.feature:1.0.1</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.jaggeryjs.modules:handlebars.feature:1.0.0</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.jaggeryjs.modules:markdown.feature:1.0.0</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:rxt.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:utils.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:event.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:sso.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:ues.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:permission.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:store.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:claims.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:registration.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.store.modules:login.feature:${wso2.store.version}</featureArtifactDef>-->
-				                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.social.feature:1.1.0-SNAPSHOT</featureArtifactDef>-->
-                                <!--end of store features-->
+                                <featureArtifactDef>org.wso2.store.modules:sso.feature:${wso2.store.version}</featureArtifactDef>
 
 								<!-- Identity Provisioning Feature -->						
 				                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.provisioning.server.feature:${carbon.platform.version}</featureArtifactDef>
@@ -233,117 +217,59 @@
 							<destination>${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/components</destination>
 							<deleteOldProfileFiles>true</deleteOldProfileFiles>
 							<features>
-
 								<feature>
 		                            <id>org.jaggeryjs.server.feature.group</id>
 		                            <version>${jaggeryjs.version}</version>
                                 </feature>
-                                <!--todo: Store features need to be enabled when ES is stable and deployed to nexus-->
-								<!--<feature>-->
-								   <!--<id>org.wso2.store.feature.group</id>-->
-								   <!--<version>${wso2.store.version}</version>-->
-							    <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.registry.associations.dependencies.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.registry.extensions.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.registry.ws.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.tenant.throttling.agent.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.tenant.deployment.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.tenant.usage.agent.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.governance.lifecycle.management.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.registry.community.features.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.governance.metadata.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.registry.ui.menu.governance.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.module.mgt.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.jaggeryjs.modules.caramel.feature.group</id>-->
-                                    <!--<version>1.0.1</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.jaggeryjs.modules.handlebars.feature.group</id>-->
-                                    <!--<version>1.0.0</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.jaggeryjs.modules.markdown.feature.group</id>-->
-                                    <!--<version>1.0.0</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.rxt.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.utils.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.event.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.sso.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.ues.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.permission.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.store.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.claims.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.registration.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.store.modules.login.feature.group</id>-->
-                                    <!--<version>${wso2.store.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.social.feature.group</id>-->
-                                    <!--<version>1.1.0-SNAPSHOT</version>-->
-                                <!--</feature>-->
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.ws.feature.group</id>
+                                        <version>${ws.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.oauth.feature.group</id>
+                                        <version>${oauth.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.email.feature.group</id>
+                                        <version>${email.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.uuid.feature.group</id>
+                                        <version>${uuid.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.process.feature.group</id>
+                                        <version>${process.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.caramel.feature.group</id>
+                                        <version>${caramel.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.carbon.feature.group</id>
+                                        <version>${carbon.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.handlebars.feature.group</id>
+                                        <version>${handlebars.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.markdown.feature.group</id>
+                                        <version>${markdown.module.verion}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.gadget.feature.group</id>
+                                        <version>${gadget.module.version}</version>
+                                    </feature>
+                                    <feature>
+                                        <id>org.jaggeryjs.modules.i18n.feature.group</id>
+                                        <version>${i18n.module.version}</version>
+                                    </feature>
 
+                                <feature>
+                                    <id>org.wso2.store.modules.sso.feature.group</id>
+                                    <version>${wso2.store.version}</version>
+                                </feature>
 
                                 <!--end of store features-->
 
@@ -881,8 +807,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<properties>
-            <wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
-            <wso2.social.feature.version>1.1.0-SNAPSHOT</wso2.social.feature.version>
-    	</properties>
 </project>

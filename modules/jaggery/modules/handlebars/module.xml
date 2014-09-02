@@ -1,6 +1,0 @@
-<module name="handlebars" xmlns="http://wso2.org/projects/jaggery/module.xml">
-    <script>
-        <name>handlebars</name>
-        <path>scripts/handlebars.js</path>
-    </script>
-</module>
