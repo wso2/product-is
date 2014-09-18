@@ -295,5 +295,6 @@
         <phase name="PolicyDetermination"/>
         <phase name="MessageOut"/>
         <phase name="Security"/>
+	<phase name="Transport"/>
     </phaseOrder>
 </axisconfig>
