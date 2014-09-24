@@ -32,12 +32,18 @@
     <name>Identity Server Integration Tests</name>
     <packaging>pom</packaging>
     <modules>
+<<<<<<< HEAD
         <module>tests-common/admin-clients</module>
         <module>tests-common/integration-test-utils</module>
         <module>tests-common/ui-pages</module>
         <module>tests-integration</module>
         <module>tests-ui-integration</module>
         <!--<module>tests</module>-->
+=======
+        <module>tests-common</module>
+        <module>tests-integration</module>
+        <module>tests-ui-integration</module>
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
     </modules>
     <build>
         <plugins>

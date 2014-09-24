@@ -1236,6 +1236,10 @@
 		<module>modules/distribution</module>
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
+<<<<<<< HEAD
+=======
+        <!--todo: disabling integration until the migration to the new framework-->
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 		<module>modules/integration</module>
 <!--		<module>modules/samples</module> -->
 	</modules>
@@ -1595,6 +1599,7 @@
 				<version>${carbon.version}</version>
 			</dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <dependency>
                 <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-server</artifactId>
@@ -1609,6 +1614,10 @@
                 <version>${test.framework.util.version}</version>
                 <scope>test</scope>
             </dependency>
+=======
+
+            <!--Dependency for Integration Tests-->
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.engine</artifactId>
@@ -1629,6 +1638,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
+<<<<<<< HEAD
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${carbon.platform.version}</version>
                 <scope>test</scope>
@@ -1637,6 +1647,10 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
                 <version>${carbon.platform.version}</version>
+=======
+                <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+                <version>${test.framework.util.version}</version>
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1658,6 +1672,7 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+<<<<<<< HEAD
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
                 <version>${project.version}</version>
@@ -1669,6 +1684,72 @@
                 <version>${carbon.platform.version}</version>
                 <scope>test</scope>
 >>>>>>> 71e8c09... Introduce new integration test modules backend/UI
+=======
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-android-driver</artifactId>
+                    </exclusion>
+                </exclusions>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.opera</groupId>
+                <artifactId>operadriver</artifactId>
+                <version>${operadriver.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-remote-driver</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.core</artifactId>
+                <version>${carbon.platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>1.2.140.wso2v3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.uncommons</groupId>
+                <artifactId>reportng</artifactId>
+                <version>1.1.4</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.testng</groupId>
+                        <artifactId>testng</artifactId>
+                    </exclusion>
+                </exclusions>
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
             </dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -1778,6 +1859,7 @@
         <jaggeryjs.version>0.9.0-SNAPSHOT</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <shindig.version>2.5.0-beta5</shindig.version>
         <ws.module.version>1.1.0</ws.module.version>
         <oauth.module.version>1.0.0</oauth.module.version>
@@ -1795,6 +1877,14 @@
         <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
 >>>>>>> 71e8c09... Introduce new integration test modules backend/UI
+=======
+
+        <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
+        <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
+        <operadriver.version>0.8.1</operadriver.version>
+        <selenium.version>2.40.0</selenium.version>
+        <testng.version>6.1.1</testng.version>
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 	</properties>
 
     <repositories>

@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+=======
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 
     <parent>
         <groupId>org.wso2.identity</groupId>
@@ -10,6 +15,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
+<<<<<<< HEAD
     <modelVersion>4.0.0</modelVersion>
     <name>WSO2 IS - Integration Test Utils Module</name>
     <artifactId>org.wso2.identity.integration.common.utils</artifactId>
@@ -20,3 +26,56 @@
     </dependencies>
 
 </project>
+=======
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.wso2.identity</groupId>
+  <artifactId>org.wso2.identity.integration.common.utils</artifactId>
+  <packaging>jar</packaging>
+  <name>integration-test-utils</name>
+  
+      <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.engine</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.extensions</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+            <scope>compile</scope>
+        </dependency>
+          <dependency>
+              <groupId>org.wso2.carbon</groupId>
+              <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+              <scope>compile</scope>
+          </dependency>
+          <dependency>
+              <groupId>org.wso2.carbon</groupId>
+              <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+              <scope>compile</scope>
+          </dependency>
+        <dependency>
+            <groupId>org.wso2.identity</groupId>
+            <artifactId>org.wso2.identity.integration.common.clients</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests

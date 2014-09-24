@@ -2,6 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<<<<<<< HEAD
+=======
+    <modelVersion>4.0.0</modelVersion>
+
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 
     <parent>
         <groupId>org.wso2.identity</groupId>
@@ -10,6 +15,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
+<<<<<<< HEAD
     <modelVersion>4.0.0</modelVersion>
     <name>WSO2 IS - Integration UI Pages Module</name>
     <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
@@ -38,3 +44,33 @@
         </dependency>
     </dependencies>
 </project>
+=======
+    <name>Identity Integration Test UI Pages</name>
+    <packaging>jar</packaging>
+    <artifactId>ui-pages</artifactId>
+     <dependencies>
+         <dependency>
+             <groupId>org.seleniumhq.selenium</groupId>
+             <artifactId>selenium-java</artifactId>
+             <scope>compile</scope>
+             <exclusions>
+                 <exclusion>
+                     <groupId>org.seleniumhq.selenium</groupId>
+                     <artifactId>selenium-android-driver</artifactId>
+                 </exclusion>
+             </exclusions>
+         </dependency>
+         <dependency>
+             <groupId>com.opera</groupId>
+             <artifactId>operadriver</artifactId>
+             <scope>compile</scope>
+             <exclusions>
+                 <exclusion>
+                     <groupId>org.seleniumhq.selenium</groupId>
+                     <artifactId>selenium-remote-driver</artifactId>
+                 </exclusion>
+             </exclusions>
+         </dependency>
+     </dependencies>
+</project>
+>>>>>>> 15c18f2... adding Integration tests modules and migrated tests
