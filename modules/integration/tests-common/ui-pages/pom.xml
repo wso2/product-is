@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <parent>
+        <groupId>org.wso2.identity</groupId>
+        <artifactId>identity-integration-tests</artifactId>
+        <version>5.1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <name>Identity Integration Test UI Pages</name>
+    <packaging>jar</packaging>
+    <artifactId>ui-pages</artifactId>
+     <dependencies>
+         <dependency>
+             <groupId>org.seleniumhq.selenium</groupId>
+             <artifactId>selenium-java</artifactId>
+             <scope>compile</scope>
+             <exclusions>
+                 <exclusion>
+                     <groupId>org.seleniumhq.selenium</groupId>
+                     <artifactId>selenium-android-driver</artifactId>
+                 </exclusion>
+             </exclusions>
+         </dependency>
+         <dependency>
+             <groupId>com.opera</groupId>
+             <artifactId>operadriver</artifactId>
+             <scope>compile</scope>
+             <exclusions>
+                 <exclusion>
+                     <groupId>org.seleniumhq.selenium</groupId>
+                     <artifactId>selenium-remote-driver</artifactId>
+                 </exclusion>
+             </exclusions>
+         </dependency>
+     </dependencies>
+</project>
