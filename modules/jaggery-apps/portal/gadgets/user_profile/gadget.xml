@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-    <ModulePrefs title="User Profile">
+    <ModulePrefs title="My Profile">
         <Require feature="pubsub-2"/>
     </ModulePrefs>
     <Content type="html" view="default">
         <![CDATA[
         <div class='icon-user icon-user-dashboard icon-marketing-styles'></div>
-        Update your user profile or add multiple user profiles.The values from your profile will be used to populate
-        your OpenID profiles
+        Update your profile or add multiple user profiles.
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
 
         <link rel="stylesheet" href="/portal/gadgets/user_profile/js/ui/css/main.css">
@@ -25,7 +24,7 @@
             $(function () {
                 $('.max_view').click(function () {
                     gadgets.Hub.publish('org.wso2.is.dashboard', {
-                        msg:'A message from User profile',
+                        msg:'A message from My profile',
                         id:"user_profile  .expand-widget"
                     });
                 });
@@ -65,7 +64,7 @@
             var userName = null;
             $(function WindowLoad(event) {
 
-                url = 'wss://localhost:9443/my-dashboard/session_manager.jag';
+                url = 'wss://localhost:9443/dashboard/session_manager.jag';
                 ws = new WebSocket(url);
 
                 ws.onopen = function () {
@@ -112,7 +111,8 @@
                     data:$('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
                 })
                         .done(function (data) {
-			message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+			cancel();
+			//message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
 
                         })
                         .fail(function () {

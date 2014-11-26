@@ -19,6 +19,8 @@
 package org.wso2.carbon.identity.tests.user.mgt;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -206,16 +208,31 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
     @Test(groups = "wso2.is", description = "Check update roles of user", dependsOnMethods = "testUpdateRoleName")
     public void testUpdateRolesOfUser() throws Exception {
-    	
-    	String[] roleList = new String[]{"umRole1"};
-//    	userMgtClient.addRemoveRolesOfUser("user3", null, new String[]{"testRole"});
-    	
-    	userMgtClient.updateRolesOfUser("user3", roleList);    	    	
-    	Assert.assertTrue(nameExists(userMgtClient.getRolesOfUser("user3", "umRole1", 10), "umRole1"), "Adding umRole1 to user has failed");
-    	
-//    	Calling with same user list should delete the users.
-    	userMgtClient.updateRolesOfUser("user3", roleList);
-    	Assert.assertFalse(nameExists(userMgtClient.getUsersOfRole("user3", "umRole1", 10), "umRole1"), "Deleting umRole1 from user has failed");
+
+        List<String> newRoleList = new ArrayList<String>();
+        FlaggedName[] currentRoleList = userMgtClient.getRolesOfUser("user3", null, 0);
+        if (currentRoleList != null) {
+            for (FlaggedName role : currentRoleList) {
+                if (role.getSelected()) {
+                    newRoleList.add(role.getItemName());
+                }
+            }
+        }
+
+        if (!newRoleList.contains("umRole1")) {
+            newRoleList.add("umRole1");
+        }
+
+        userMgtClient.updateRolesOfUser("user3",
+                newRoleList.toArray(new String[newRoleList.size()]));
+        Assert.assertTrue(nameExists(userMgtClient.getRolesOfUser("user3", "umRole1", 10),
+                "umRole1"), "Adding umRole1 to user has failed");
+
+        newRoleList.remove("umRole1");
+        userMgtClient.updateRolesOfUser("user3",
+                newRoleList.toArray(new String[newRoleList.size()]));
+        Assert.assertFalse(nameExists(userMgtClient.getUsersOfRole("user3", "umRole1", 10),
+                "umRole1"), "Deleting umRole1 from user has failed");
 
     }
     

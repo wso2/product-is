@@ -10,6 +10,7 @@
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken" %>
 <%@ page import="org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_TokenValidationContextParam" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
 
 <%
     OAuth2ServiceClient client = new OAuth2ServiceClient();
@@ -44,6 +45,8 @@
         try {
             // Validate the OAuth access token.
             OAuth2TokenValidationResponseDTO oauthResponse = client.validateAuthenticationRequest(oauthReq);
+            session.setAttribute(OAuth2Constants.TOKEN_VALIDATION, Boolean.toString(oauthResponse.getValid()));
+
             if (!oauthResponse.getValid()) {
                 String errorMsg = oauthResponse.getErrorMsg();
                 if(errorMsg == null){

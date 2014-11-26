@@ -16,15 +16,7 @@
         {"url" : "index.jag", "dashboard-styles" : "", "styles" : "icon-dashboard", "text" : "index_txt", "desc" : "", "displayorder" : "0", "name" : "dashboard", "login-required" : "true"},
         {"url" : "self_registration.jag", "dashboard-styles" : "", "styles" : "icon-signin", "text" : "Self_Signup_txt", "desc" : "Self_Signup_desc", "displayorder" : "1", "name" : "selfSignup", "login-required" : "false"},
         {"url" : "my_scim_providers.jag", "dashboard-styles" : "icon-th icon-th-dashboard icon-marketing-styles",
-        "styles" : "icon-th", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "4", "name" : "mySCIMProviders", "login-required" : "true"},
-        {"url" : "certificate_authority.jag", "dashboard-styles" : "icon-lock icon-lock-dashboard icon-marketing-styles",
-            "styles" : "icon-lock", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "5", "name" : "CA", "login-required" : "true"},
-        {"url" : "certificate_authority_list.jag", "dashboard-styles" : "icon-list icon-list-dashboard icon-marketing-styles",
-            "styles" : "icon-list", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "6", "name" : "CA", "login-required" : "true"},
-        {"url" : "certificate_authority_upload.jag", "dashboard-styles" : "icon-upload icon-upload-dashboard icon-marketing-styles",
-            "styles" : "icon-upload", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "5", "name" : "CA", "login-required" : "true"},
-        {"url" : "certificate_authority_gen.jag", "dashboard-styles" : "icon-file icon-gen-dashboard icon-marketing-styles",
-            "styles" : "icon-file", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "5", "name" : "CA", "login-required" : "true"}
+        "styles" : "icon-th", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "4", "name" : "mySCIMProviders", "login-required" : "true"}
     ],
     "controllers" : [
         {"urls" : ["scim-providers/edit_finish.jag", "scim-providers/delete_finish.jag"],

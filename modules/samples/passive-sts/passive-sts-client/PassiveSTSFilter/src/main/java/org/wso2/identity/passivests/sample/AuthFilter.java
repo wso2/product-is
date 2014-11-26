@@ -32,6 +32,7 @@ public class AuthFilter implements Filter {
     private String replyUrl; //wreply
     private String realm; //wtrealm
     private String displayFullResponse;
+    private String additionalRequestParams;
     
 	public void destroy() {
 	}
@@ -44,7 +45,7 @@ public class AuthFilter implements Filter {
 		    
         if(request.getParameter("wresult") == null || request.getParameter("wresult").isEmpty()){
           String redirectUrl =  idpUrl + "?wa=" + action + "&wreply=" + replyUrl + "&wtrealm=" + realm;
-          response.sendRedirect(redirectUrl);
+          response.sendRedirect(redirectUrl + "&" + additionalRequestParams);
           return;
         }
         
@@ -106,5 +107,6 @@ public class AuthFilter implements Filter {
 	    replyUrl = fConfig.getInitParameter("replyUrl");
 	    realm = fConfig.getInitParameter("realm");
 	    displayFullResponse = fConfig.getInitParameter("displayFullResponse");
+	    additionalRequestParams = fConfig.getInitParameter("requestParams");
 	}
 }

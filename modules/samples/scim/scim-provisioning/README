@@ -67,5 +67,5 @@ You will notice that the group created in step 5 above is now deleted in Identit
 
 You can also observe the provisioning of above SCIM operations to other SCIM providers - such as other
 Identity Server nodes by configuring SCIM providers in the current Identity Server node, as described in the documentation
-which can be found at: http://docs.wso2.org/wiki/display/IS460/Registering+SCIM+Providers
+which can be found at: http://docs.wso2.org/wiki/display/IS510/Registering+SCIM+Providers
 

@@ -13,7 +13,7 @@
 		<init-param>
 			<!-- A unique identifier for this SAML 2.0 Service Provider application -->
 			<param-name>Issuer</param-name>
-			<param-value>saml2.sso.demo</param-value>
+			<param-value>travelocity.com</param-value>
 		</init-param>
 		<init-param>
 			<!-- The URL of the SAML 2.0 Identity Provider -->
@@ -23,7 +23,7 @@
 		<init-param>
 			<!-- The URL of the SAML 2.0 Assertion Consumer (or this Servlet) -->
 			<param-name>ConsumerUrl</param-name>
-			<param-value>https://localhost:9444/saml2.sso.demo/consumer</param-value>
+			<param-value>https://localhost:8443/saml2.sso.demo/consumer</param-value>
 		</init-param>
 		<init-param>
 			<!-- Identifier given for the Service Provider for SAML 2.0 attribute exchange -->

@@ -13,4 +13,4 @@ Note on Authentication via X.509 certificates
 ---------------------------------------------
 To use X.509 certificates based authentication, keystores at sample and 
 Identity Server should be configured.
-  
+

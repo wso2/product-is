@@ -193,18 +193,18 @@ public class EntitlementPolicyAdminServiceTestCase extends ISIntegrationTest {
         entitlementPolicyClient.publish(POLICY_1_ID);
     }
 
-    @Test(groups = "wso2.is", description = "Check getting subscriber Ids", dependsOnMethods="testGetSubscriberIds")
+    @Test(groups = "wso2.is", description = "Check getting subscriber Ids", dependsOnMethods="testPublish")
     public void testOrderPolicy() throws Exception{
         entitlementPolicyClient.orderPolicy(POLICY_1_ID, 1);
     }
 
-    @Test(groups = "wso2.is", description = "Check getting subscriber Ids", dependsOnMethods="testPublish")
-    public void testEnableDisablePolicy() throws Exception{
-        entitlementPolicyClient.enableDisablePolicy(POLICY_1_ID, false);
-        entitlementPolicyClient.enableDisablePolicy(POLICY_1_ID, true);
-    }
+//    @Test(groups = "wso2.is", description = "Check getting subscriber Ids", dependsOnMethods="testOrderPolicy")
+//    public void testEnableDisablePolicy() throws Exception{
+//        entitlementPolicyClient.enableDisablePolicy(POLICY_1_ID, false);
+//        entitlementPolicyClient.enableDisablePolicy(POLICY_1_ID, true);
+//    }
 
-    @Test(groups = "wso2.is", description = "Check getting subscriber", dependsOnMethods="testEnableDisablePolicy")
+    @Test(groups = "wso2.is", description = "Check getting subscriber", dependsOnMethods="testOrderPolicy")
     public void testUpdateSubscriber() throws Exception{
         PublisherDataHolder holder = new PublisherDataHolder();
         holder.setModuleName("test2");
