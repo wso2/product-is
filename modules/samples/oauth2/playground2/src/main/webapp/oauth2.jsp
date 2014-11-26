@@ -3,9 +3,8 @@
 <%@page import="org.json.simple.parser.JSONParser"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
-
+<%@page import="com.nimbusds.jwt.SignedJWT"%>
 <%
-
 String error = request.getParameter("error");    
 String grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
 
@@ -260,13 +259,7 @@ try {
               		
                     if (idToken != null) { 
                     	try {
-            				String base64Body = idToken.split("\\.")[1];
-            				byte[] decoded = Base64.decodeBase64(base64Body.getBytes());
-            				String json = new String(decoded);
-            				JSONParser parser = new JSONParser();
-            				Object obj = parser.parse(json);
-            				JSONObject jsonObject = (JSONObject) obj;
-            				name = (String) jsonObject.get("sub");
+            				name = SignedJWT.parse(idToken).getJWTClaimsSet().getSubject();
             			} catch (Exception e) {
             				//ignore
             			}
@@ -279,7 +272,7 @@ try {
                         <tbody>  
                           <tr>
                               <td><label>Logged In User :</label></td>
-                              <td><label><%=name%></label></td>
+                              <td><label id="loggedUser"><%=name%></label></td>
                           </tr> 
                           <tr>
                               <td><label>Access Token :</label></td>

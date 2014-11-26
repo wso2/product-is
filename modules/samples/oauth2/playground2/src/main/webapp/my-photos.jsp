@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
+<%
+    String valid = ((session.getAttribute(OAuth2Constants.TOKEN_VALIDATION) == null) ? "" : (String) session.getAttribute(OAuth2Constants.TOKEN_VALIDATION));
+%>
 <html><head>
 <title>WSO2 OAuth2 Playground</title>
 <meta charset="UTF-8">
@@ -51,7 +54,8 @@
 </tr>
     
 </table>
-</div>
+<input type="hidden" id="valid" name="valid" value="<%=valid%>">
 
+</div>
 </body>
 </html>

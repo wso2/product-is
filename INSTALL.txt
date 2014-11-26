@@ -1,7 +1,7 @@
-Installing  WSO2 Identity Server 5.0.0
+Installing  WSO2 Identity Server 5.1.0
 ======================================
 
-WSO2 Identity Server 5.0.0 can be run either in standalone mode or as a web application within a
+WSO2 Identity Server 5.1.0 can be run either in standalone mode or as a web application within a
 servlet container.
 
 1. The directory containing this INSTALL file will the root and it will be
@@ -57,4 +57,4 @@ Software Requirements
 3. The Management Console requires full Javascript enablement of the Web browser.
    
 
-For more details see http://docs.wso2.org/wiki/display/IS460/Installation+Prerequisites
+For more details see http://docs.wso2.org/wiki/display/IS510/Installation+Prerequisites

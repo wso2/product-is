@@ -5,6 +5,8 @@ if [ -z "$JAVA_HOME" ]; then
   exit 1
 fi
 
-export CLASSPATH=$CLASSPATH:lib/*:target/org.wso2.carbon.identity.samples.sts-4.2.0-SNAPSHOT.jar
-$JAVA_HOME/bin/java org.wso2.carbon.identity.samples.sts.Client
+
+export CLASSPATH=$CLASSPATH:../../../lib/*:../../../target/org.wso2.carbon.identity.samples.sts-4.2.0-SNAPSHOT.jar
+$JAVA_HOME/bin/java org.wso2.carbon.identity.samples.sts.Client $@
+
 

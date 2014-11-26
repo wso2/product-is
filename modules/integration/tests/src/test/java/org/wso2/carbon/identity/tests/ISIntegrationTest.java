@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.tests;
 
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.api.clients.identity.user.store.config.UserStoreConfigAdminServiceClient;
@@ -33,6 +32,8 @@ import org.wso2.carbon.identity.user.store.configuration.stub.api.Property;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 public abstract class ISIntegrationTest {
@@ -184,4 +185,13 @@ public abstract class ISIntegrationTest {
                 .getEnvironmentSettings().executionEnvironment();
     }
 
+    public void setSystemproperties() {
+        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
+                + "products" + File.separator + "wso2carbon.jks");
+        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
+        System.setProperty("javax.net.ssl.trustStorePassword",
+                "wso2carbon");
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+    }
+   
 }
