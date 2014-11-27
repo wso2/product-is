@@ -1239,8 +1239,12 @@
 <<<<<<< HEAD
 =======
         <!--todo: disabling integration until the migration to the new framework-->
+<<<<<<< HEAD
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 		<module>modules/integration</module>
+=======
+		<!--module>modules/integration</module-->
+>>>>>>> 1b474f9... Removing integration tests from build temporily
 <!--		<module>modules/samples</module> -->
 	</modules>
 
