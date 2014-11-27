@@ -391,6 +391,12 @@
 				<artifactId>org.wso2.carbon.identity.sso.saml.ui</artifactId>
 				<version>${carbon.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.apache.shindig</groupId>
+                <artifactId>shindig-server</artifactId>
+                <version>${shindig.version}</version>
+                <type>war</type>
+            </dependency>
 
             <!--Dependency for Integration Tests-->
             <dependency>
@@ -606,9 +612,21 @@
 		<version.commons.logging>1.1.1</version.commons.logging>
         <emma.version>2.1.5320</emma.version>
         <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
-        <jaggeryjs.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggeryjs.version>
+        <jaggeryjs.version>0.9.0-SNAPSHOT</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
-
+        <shindig.version>2.5.0-beta5</shindig.version>
+        <ws.module.version>1.1.0</ws.module.version>
+        <oauth.module.version>1.0.0</oauth.module.version>
+        <email.module.version>1.0.0</email.module.version>
+        <uuid.module.version>1.0.0</uuid.module.version>
+        <process.module.version>1.0.0</process.module.version>
+        <caramel.module.version>1.0.1</caramel.module.version>
+        <carbon.module.version>1.1.0</carbon.module.version>
+        <handlebars.module.version>1.0.0</handlebars.module.version>
+        <markdown.module.verion>1.0.0</markdown.module.verion>
+        <gadget.module.version>1.0.0</gadget.module.version>
+        <i18n.module.version>1.0.0</i18n.module.version>
+        <wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
         <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <operadriver.version>0.8.1</operadriver.version>

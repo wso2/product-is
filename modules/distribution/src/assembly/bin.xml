@@ -80,15 +80,23 @@
         <!--</fileSet>-->
 
 	<!--copying registry dbscripts-->
+        <!--<fileSet>-->
+            <!--<directory>../jaggery/modules</directory>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/modules</outputDirectory>-->
+            <!--&lt;!&ndash; Changes related to Carbon kernel 4.2.0 patches &ndash;&gt;-->
+            <!--<includes>-->
+                <!--<include>**/**.js</include>-->
+		<!--<include>**/**.xml</include>-->
+            <!--</includes>-->
+            <!--&lt;!&ndash; End - Changes related to Carbon kernel 4.2.0 patches &ndash;&gt;-->
+        <!--</fileSet>-->
+
         <fileSet>
-            <directory>../jaggery/modules</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/modules</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/modules</outputDirectory>
-            <!-- Changes related to Carbon kernel 4.2.0 patches -->
             <includes>
-                <include>**/**.js</include>
-		<include>**/**.xml</include>
+                <include>**/**</include>
             </includes>
-            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
         </fileSet>
 	<!--Adding my jaggery apps--> 	
 	<!--<fileSet>
@@ -116,14 +124,22 @@
             </includes>
             <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
         </fileSet>
-	<fileSet>
-            <directory>../jaggery-apps/shindig</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/shindig</outputDirectory>
-            <!-- Changes related to Carbon kernel 4.2.0 patches -->
+	<!--<fileSet>-->
+            <!--<directory>../jaggery-apps/shindig</directory>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/shindig</outputDirectory>-->
+            <!--&lt;!&ndash; Changes related to Carbon kernel 4.2.0 patches &ndash;&gt;-->
+            <!--<includes>-->
+                <!--<include>**/**</include>-->
+            <!--</includes>-->
+            <!--&lt;!&ndash; End - Changes related to Carbon kernel 4.2.0 patches &ndash;&gt;-->
+        <!--</fileSet>-->
+        <fileSet>
+            <directory>target/shindig</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/shindig
+            </outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
-            <!-- End - Changes related to Carbon kernel 4.2.0 patches -->
         </fileSet>
 	<fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
