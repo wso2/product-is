@@ -1,6 +1,5 @@
-<%@ page import="org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs" %>
 <!--
-~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
 ~ WSO2 Inc. licenses this file to you under the Apache License,
 ~ Version 2.0 (the "License"); you may not use this file except
@@ -16,10 +15,10 @@
 ~ specific language governing permissions and limitations
 ~ under the License.
 -->
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig" %>
+<%@ page import="org.wso2.carbon.identity.sso.agent.SSOAgentConstants" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css/cart-styles.css">
@@ -66,26 +65,29 @@
         <hr />
         <a href="../avis.com"> Avis.COM </a>
         <div class="product-box">
-            <h2>Click <a href="samlsso">here</a> to login with <img src="images/saml2-logo.png" height="22" width="60"/> from <img src="images/identity_logo.gif" height="20" width="120"/></h2>
+            <h2>Click <a href="samlsso?SAML2.HTTPBinding=HTTP-Redirect">here</a> to login with <img src="images/saml2-logo.png" height="22" width="60"/>
+                (Redirect binding) from <img src="images/identity_logo.gif" height="20" width="120"/></h2>
             <hr/>
-            <h2>Click <a href="openid?claimed_id=<%=SSOAgentConfigs.getOpenIdProviderUrl()%>">here</a> to login with <img src="images/openid-logo.svg" height="20" width="55"/> from <img src="images/identity_logo.gif" height="20" width="120"/></h2>
+            <h2>Click <a href="samlsso?SAML2.HTTPBinding=HTTP-POST">here</a> to login with
+                <img src="images/saml2-logo.png" height="22" width="60"/> (Post Binding) from <img
+                    src="images/identity_logo.gif" height="20" width="120"/></h2>
             <hr/>
-            <h2>Click <a href="openid?claimed_id=https://www.google.com/accounts/o8/id">here</a> to login with <img src="images/google-openid.png" height="20" width="75"/></h2>
+            <h2>Click <a href="openid?OpenId.ClaimedId=<%=((SSOAgentConfig)getServletContext().getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME)).getOpenId().getProviderURL()%>">here</a> to login with <img src="images/openid-logo.svg" height="20" width="55"/> from <img src="images/identity_logo.gif" height="20" width="120"/></h2>
             <hr/>
-            <h2>Click <a href="openid?claimed_id=http://myopenid.com">here</a> to login with <img src="images/myopenid-logo.png" height="20" width="75"/></h2>
+            <h2>Click <a href="openid?OpenId.ClaimedId=https://www.google.com/accounts/o8/id">here</a> to login with <img src="images/google-openid.png" height="20" width="75"/></h2>
             <hr/>
             <fieldset>
                 <legend>Login with your Claimed OpenID URI</legend>
                 <form action="openid" method="post">
                     <div align="center">
-                        <input type="text" name="claimed_id" size="30"/> <input type="submit" name="login" value="Login"/>
+                        <input type="text" name="OpenId.ClaimedId" size="30"/> <input type="submit" name="login" value="Login"/>
                     </div>
                 </form>
             </fieldset>
         </div>
     </div>
     <div id="footer-area">
-        <p>©2013 WSO2</p>
+        <p>©2014 WSO2</p>
     </div>
 </div>
 </body>

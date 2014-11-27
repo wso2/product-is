@@ -28,6 +28,7 @@ public final class OAuth2Constants {
     public static final String OAUTH2_AUTHZ_ENDPOINT = "authorizeEndpoint";
     public static final String OAUTH2_ACCESS_ENDPOINT = "accessEndpoint";
     public static final String ACCESS_TOKEN = "access_token";
+    public static final String TOKEN_VALIDATION = "valid";
 
     public static final String OAUTH_VERSION_1A = "aoauth-1.0a";
     public static final String OAUTH_VERSION_2 = "oauth-2.0";

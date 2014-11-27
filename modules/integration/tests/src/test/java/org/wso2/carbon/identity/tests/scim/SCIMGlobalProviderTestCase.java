@@ -148,13 +148,9 @@ public class SCIMGlobalProviderTestCase extends MasterSCIMInitiator {
 
     private boolean isProviderUserAvailable() throws Exception {
         boolean userAvailable = false;
-        FlaggedName[] userList = userMgtProviderClient.listAllUsers(scimuser, 10);
         for (int loopCount = 0; loopCount <= 5; loopCount++) {
-            for (FlaggedName user : userList) {
-                if (user.getItemName().contains(scimuser)) {
-                    userAvailable = true;
-                }
-            }
+            Thread.sleep(1000);
+            userAvailable= userMgtProviderClient.userNameExists(ProductConstant.DEFAULT_PRODUCT_ROLE,scimuser);
             if (userAvailable)
                 break;
         }

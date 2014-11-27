@@ -33,7 +33,7 @@
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
         <!--todo: disabling integration until the migration to the new framework-->
-		<module>modules/integration</module>
+		<!--module>modules/integration</module-->
 <!--		<module>modules/samples</module> -->
 	</modules>
 
@@ -589,8 +589,8 @@
 		<carbon.version>${wso2carbon.version}</carbon.version>
 		<carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
-		<orbit.version.axiom>1.2.11.wso2v5-SNAPSHOT</orbit.version.axiom>
-		<orbit.version.axis2>1.6.1.wso2v11-SNAPSHOT</orbit.version.axis2>
+		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
+		<orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
 		<stratos.version.221>2.2.1</stratos.version.221>
 		<stratos.version.220>2.2.0</stratos.version.220>
 		<apache.derby.wso2.version>10.3.2.1wso2v1</apache.derby.wso2.version>
