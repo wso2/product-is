@@ -176,8 +176,8 @@
 
     <!--<transportSender name="jms"-->
     <!--class="org.apache.axis2.transport.jms.JMSSender"/>-->
-    <transportSender name="tcp"
-                     class="org.apache.axis2.transport.tcp.TCPTransportSender"/>
+    <!--transportSender name="tcp"
+                     class="org.apache.axis2.transport.tcp.TCPTransportSender"/-->
     <transportSender name="local"
                      class="org.apache.axis2.transport.local.LocalTransportSender"/>
     <transportSender name="http"
