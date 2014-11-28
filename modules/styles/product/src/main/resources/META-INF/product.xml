@@ -18,7 +18,7 @@
 <product xmlns="http://products.wso2.org/carbon">
     <properties>
        <property name="userforum">http://stackoverflow.com/questions/tagged/wso2/</property>
-       <property name="userguide">http://docs.wso2.org/wiki/display/IS500/WSO2+Identity+Server+Documentation</property>
+       <property name="userguide">http://docs.wso2.org/wiki/display/IS510/WSO2+Identity+Server+Documentation</property>
        <property name="mailinglist">http://wso2.org/mail</property>
        <property name="issuetracker">http://wso2.org/jira/browse/IDENTITY</property>
     </properties>

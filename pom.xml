@@ -1240,11 +1240,15 @@
 =======
         <!--todo: disabling integration until the migration to the new framework-->
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 		<module>modules/integration</module>
 =======
 		<!--module>modules/integration</module-->
 >>>>>>> 1b474f9... Removing integration tests from build temporily
+=======
+		<module>modules/integration</module>
+>>>>>>> d11e346... Added more changes from previous commits
 <!--		<module>modules/samples</module> -->
 	</modules>
 
@@ -1877,6 +1881,7 @@
         <gadget.module.version>1.0.0</gadget.module.version>
         <i18n.module.version>1.0.0</i18n.module.version>
         <wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
+<<<<<<< HEAD
 =======
         <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
@@ -1884,6 +1889,9 @@
 =======
 
         <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
+=======
+        <test.framework.version>4.3.1</test.framework.version>
+>>>>>>> d11e346... Added more changes from previous commits
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
