@@ -16,8 +16,8 @@
             <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>
         </classes>-->
         <packages>
-            <package name="org.wso2.identity.integration.test.user.mgt"/>
-            <package name="org.wso2.identity.integration.test.user.store"/>
+            <!--package name="org.wso2.identity.integration.test.user.mgt"/>
+            <package name="org.wso2.identity.integration.test.user.store"/-->
         </packages>
     </test>
 
