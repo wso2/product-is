@@ -178,8 +178,8 @@ response.sendRedirect("login.jag");
 <input type="hidden" value="design" id="inp-view-mode"/>
 <input type="hidden" value="my-dashboard" id="inp-dashboard"/>
 <%=session.get(LOGGED_IN_USER)%>
-<iframe style="display: none;height: 0;width: 0;"
-        src="http://localhost:9763/store/hidden-logger.jag?user=<%=session.get(LOGGED_IN_USER)%>"></iframe>
+<!--iframe style="display: none;height: 0;width: 0;"
+        src="http://localhost:9763/store/hidden-logger.jag?user=<%=session.get("LOGGED_IN_USER")%>"></iframe-->
 
 <div id="gridster-cont" class="container-fluid">
 <div id="dashboardName"><i class="icon-th-large"></i> <span></span></div>
