@@ -2,8 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
 
     <parent>
         <groupId>org.wso2.identity</groupId>
@@ -12,31 +10,31 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <name>Identity Integration Test UI Pages</name>
+    <modelVersion>4.0.0</modelVersion>
+    <name>WSO2 IS - Integration UI Pages Module</name>
+    <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
     <packaging>jar</packaging>
-    <artifactId>ui-pages</artifactId>
-     <dependencies>
-         <dependency>
-             <groupId>org.seleniumhq.selenium</groupId>
-             <artifactId>selenium-java</artifactId>
-             <scope>compile</scope>
-             <exclusions>
-                 <exclusion>
-                     <groupId>org.seleniumhq.selenium</groupId>
-                     <artifactId>selenium-android-driver</artifactId>
-                 </exclusion>
-             </exclusions>
-         </dependency>
-         <dependency>
-             <groupId>com.opera</groupId>
-             <artifactId>operadriver</artifactId>
-             <scope>compile</scope>
-             <exclusions>
-                 <exclusion>
-                     <groupId>org.seleniumhq.selenium</groupId>
-                     <artifactId>selenium-remote-driver</artifactId>
-                 </exclusion>
-             </exclusions>
-         </dependency>
-     </dependencies>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.engine</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.extensions</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
