@@ -32,9 +32,12 @@
     <name>Identity Server Integration Tests</name>
     <packaging>pom</packaging>
     <modules>
-        <module>tests-common</module>
+        <module>tests-common/admin-clients</module>
+        <module>tests-common/integration-test-utils</module>
+        <module>tests-common/ui-pages</module>
         <module>tests-integration</module>
         <module>tests-ui-integration</module>
+        <!--<module>tests</module>-->
     </modules>
     <build>
         <plugins>
@@ -56,11 +59,7 @@
                 <version>2.7.2</version>
                 <inherited>false</inherited>
                 <configuration>
-                   <!-- <includes>
-                        <include>**/*TestServerManager.java</include>
-                        <include>**/*TestCase.java</include>
-                    </includes>-->
-                    <systemProperties>
+                        <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
                             ${basedir}/../distribution/target/wso2is-${project.version}.zip
@@ -146,11 +145,6 @@
             <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
-            <groupId>emma</groupId>
-            <artifactId>emma</artifactId>
-            <version>${emma.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>SecVerifier</artifactId>
             <version>${carbon.platform.version}</version>
@@ -175,5 +169,4 @@
     <properties>
         <clarity.version>4.2.1</clarity.version>
     </properties>
-
 </project>
