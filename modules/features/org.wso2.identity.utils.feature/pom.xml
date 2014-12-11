@@ -41,7 +41,7 @@
 				<artifactId>hibernate</artifactId>
 			</dependency>
 			<dependency>
-			    <groupId>net.sf.ehcache.wso2</groupId>
+				<groupId>net.sf.ehcache.wso2</groupId>
 				<artifactId>ehcache</artifactId>
 			</dependency>
 			<dependency>
