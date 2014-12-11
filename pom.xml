@@ -1542,7 +1542,7 @@
 				<groupId>net.sf.ehcache.wso2</groupId>
 				<artifactId>ehcache</artifactId>
 				<version>${ehcache.version}</version>
-				</dependency>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.bcel.wso2</groupId>
 				<artifactId>bcel</artifactId>
