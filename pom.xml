@@ -324,6 +324,11 @@
 				<version>${hibernate.wso2.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>net.sf.ehcache.wso2</groupId>
+				<artifactId>ehcache</artifactId>
+				<version>${ehcache.version}</version>
+				</dependency>
+			<dependency>
 				<groupId>org.apache.bcel.wso2</groupId>
 				<artifactId>bcel</artifactId>
 				<version>${bcel.wso2.version}</version>
@@ -485,6 +490,7 @@
 		<stratos.version.220>2.2.0</stratos.version.220>
 		<apache.derby.wso2.version>10.3.2.1wso2v1</apache.derby.wso2.version>
 		<hibernate.wso2.version>3.2.5.ga-wso2v1</hibernate.wso2.version>
+		<ehcache.version>1.5.0.wso2v3</ehcache.version>
 		<bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>		
 		<asm.wso2.version>3.1.wso2v1</asm.wso2.version>
 		<cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
