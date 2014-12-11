@@ -68,6 +68,10 @@
                 <groupId>com.sun.xml.bind.wso2</groupId>
                 <artifactId>jaxb</artifactId>
             </dependency>
+			<dependency>
+			    <groupId>net.sf.ehcache.wso2</groupId>
+				<artifactId>ehcache</artifactId>
+				</dependency>
 	</dependencies>
 
 	<build>
@@ -94,6 +98,7 @@
 							<bundles>
 								<bundleDef>org.apache.derby.wso2:derby</bundleDef>
 								<bundleDef>org.hibernate.wso2:hibernate</bundleDef>
+								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
 								<bundleDef>asm.wso2:asm</bundleDef>
 								<bundleDef>cglib.wso2:cglib</bundleDef>
