@@ -41,6 +41,10 @@
 				<artifactId>hibernate</artifactId>
 			</dependency>
 			<dependency>
+				<groupId>net.sf.ehcache.wso2</groupId>
+				<artifactId>ehcache</artifactId>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.bcel.wso2</groupId>
 				<artifactId>bcel</artifactId>
 			</dependency>
