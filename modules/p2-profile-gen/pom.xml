@@ -140,6 +140,7 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${carbon.platform.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${carbon.platform.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.mgt.feature:${carbon.platform.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.common.server.feature:${carbon.platform.version}</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.platform.version}</featureArtifactDef>
 								<!-- Authenticators -->
@@ -485,6 +486,10 @@
 								     <id>org.wso2.carbon.identity.application.authentication.framework.server.feature.group</id>
 								     <version>${carbon.platform.version}</version>
 								 </feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.common.server.feature.group</id>
+									<version>${carbon.platform.version}</version>
+								</feature>
 								 <feature>
 								     <id>org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group</id>
 								     <version>${carbon.platform.version}</version>
