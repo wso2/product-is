@@ -165,6 +165,11 @@
             <artifactId>org.wso2.carbon.automation.utils</artifactId>
             <version>${clarity.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.engine</artifactId>
+            <version>4.3.1</version>
+        </dependency>
     </dependencies>
     <properties>
         <clarity.version>4.2.1</clarity.version>
