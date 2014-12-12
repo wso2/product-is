@@ -75,7 +75,7 @@
 			<dependency>
 			    <groupId>net.sf.ehcache.wso2</groupId>
 				<artifactId>ehcache</artifactId>
-				</dependency>
+			</dependency>
 	</dependencies>
 
 	<build>
