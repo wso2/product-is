@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.wso2.identity</groupId>
         <artifactId>wso2is-identity-samples-oauth2</artifactId>
-        <version>5.0.0</version>
+        <version>5.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -31,9 +31,9 @@
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-            <version>1.6.0.wso2v2</version>
+            <version>1.6.1.wso2v11</version>
              <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/axis2-1.6.0.wso2v2.jar</systemPath> 
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/axis2-1.6.1.wso2v2.jar</systemPath>
         </dependency>
         <dependency>
              <groupId>com.google.gdata.wso2</groupId>

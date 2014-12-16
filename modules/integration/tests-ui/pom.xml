@@ -269,7 +269,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <test.framework.version>4.2.6</test.framework.version>
+        <test.framework.version>4.2.1</test.framework.version>
         <emma.version>2.1.5320</emma.version>
     </properties>
 </project>

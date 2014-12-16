@@ -33,8 +33,8 @@
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
         <!--todo: disabling integration until the migration to the new framework-->
-		<!--<module>modules/integration</module>-->
-<!--		<module>modules/samples</module> -->
+		<module>modules/integration</module>
+		<module>modules/samples</module>
 	</modules>
 
 	<licenses>
@@ -396,6 +396,44 @@
 				<artifactId>org.wso2.carbon.identity.sso.saml.ui</artifactId>
 				<version>${carbon.version}</version>
 			</dependency>
+
+			<!--Integration test dependencies-->
+			<dependency>
+				<groupId>org.wso2.carbon.automation</groupId>
+				<artifactId>org.wso2.carbon.automation.engine</artifactId>
+				<version>${test.framework.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automation</groupId>
+				<artifactId>org.wso2.carbon.automation.extensions</artifactId>
+				<version>${test.framework.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automation</groupId>
+				<artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+				<version>${test.framework.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon</groupId>
+				<artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+				<version>${platform.integration.utils.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon</groupId>
+				<artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+				<version>${platform.integration.utils.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon</groupId>
+				<artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+				<version>${stub.version}</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -484,14 +522,14 @@
 		<carbon.version>${wso2carbon.version}</carbon.version>
 		<carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
-		<orbit.version.axiom>1.2.11.wso2v5-SNAPSHOT</orbit.version.axiom>
-		<orbit.version.axis2>1.6.1.wso2v11-SNAPSHOT</orbit.version.axis2>
+		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
+		<orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
 		<stratos.version.221>2.2.1</stratos.version.221>
 		<stratos.version.220>2.2.0</stratos.version.220>
 		<apache.derby.wso2.version>10.3.2.1wso2v1</apache.derby.wso2.version>
 		<hibernate.wso2.version>3.2.5.ga-wso2v1</hibernate.wso2.version>
 		<ehcache.version>1.5.0.wso2v3</ehcache.version>
-		<bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>		
+		<bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>
 		<asm.wso2.version>3.1.wso2v1</asm.wso2.version>
 		<cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
 		<axis2.jibx.wso2.version>${orbit.version.axis2}</axis2.jibx.wso2.version>
@@ -500,10 +538,33 @@
 		<jaxb.wso2.version>2.2.5.wso2v1</jaxb.wso2.version>
 		<kaptcha.wso2.version>2.3.0.wso2v1</kaptcha.wso2.version>
 		<version.commons.logging>1.1.1</version.commons.logging>
-        <emma.version>2.1.5320</emma.version>
-        <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
-        <jaggeryjs.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggeryjs.version>
-        <stratos.version>2.2.0</stratos.version>
+		<emma.version>2.1.5320</emma.version>
+		<wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
+		<jaggeryjs.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggeryjs.version>
+		<stratos.version>2.2.0</stratos.version>
+		<shindig.version>2.5.0-beta5</shindig.version>
+		<ws.module.version>1.1.0</ws.module.version>
+		<oauth.module.version>1.0.0</oauth.module.version>
+		<email.module.version>1.0.0</email.module.version>
+		<uuid.module.version>1.0.0</uuid.module.version>
+		<process.module.version>1.0.0</process.module.version>
+		<caramel.module.version>1.0.1</caramel.module.version>
+		<carbon.module.version>1.1.0</carbon.module.version>
+		<handlebars.module.version>1.0.0</handlebars.module.version>
+		<markdown.module.verion>1.0.0</markdown.module.verion>
+		<gadget.module.version>1.0.0</gadget.module.version>
+		<i18n.module.version>1.0.0</i18n.module.version>
+		<wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
+		<test.framework.version>4.3.1</test.framework.version>
+		<test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
+		<operadriver.version>0.8.1</operadriver.version>
+		<selenium.version>2.40.0</selenium.version>
+		<testng.version>6.1.1</testng.version>
+		<test.framework.version>4.3.1</test.framework.version>
+		<platform.integration.utils.version>4.3.0-SNAPSHOT</platform.integration.utils.version>
+		<stub.version>4.3.0-SNAPSHOT</stub.version>
+		<identity.integration.ui.pages.version>5.1.0-SNAPSHOT</identity.integration.ui.pages.version>
+		<orbit.version.commons.httpclient>3.1.0.wso2v2</orbit.version.commons.httpclient>
 	</properties>
 
     <repositories>
