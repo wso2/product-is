@@ -26,7 +26,7 @@ import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CAAd
 import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CAClientServiceClient;
 import org.wso2.carbon.identity.certificateauthority.stub.CsrDTO;
 import org.wso2.carbon.identity.certificateauthority.stub.CsrMetaInfo;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.rmi.RemoteException;
 
@@ -57,15 +57,13 @@ public class CaCsrServicesTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(2);
-         clientServiceClient = new CAClientServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
+         clientServiceClient = new CAClientServiceClient(backendURL, sessionCookie);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        super.init(0);
-        CAAdminServiceClient adminServiceClient = new CAAdminServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
+        super.init();
+        CAAdminServiceClient adminServiceClient = new CAAdminServiceClient(backendURL, sessionCookie);
         adminServiceClient.deleteCSR(serialNo1);
         adminServiceClient.deleteCSR(serialNo2);
         adminServiceClient.deleteCSR(serialNo3);
@@ -95,8 +93,7 @@ public class CaCsrServicesTestCase extends ISIntegrationTest {
     @Test(groups = "wso2.is", description = "Check get added CSR of other users", dependsOnMethods="testGetCsr", expectedExceptions = RemoteException.class)
     public void testGetCsrOfOtherUser() throws Exception{
         super.init(3);
-        clientServiceClient = new CAClientServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
+        clientServiceClient = new CAClientServiceClient(backendURL, sessionCookie);
         serialNo3 = clientServiceClient.addCsr(CaResources.csr3);
 
         CsrMetaInfo[] csrList = clientServiceClient.getCsrList();

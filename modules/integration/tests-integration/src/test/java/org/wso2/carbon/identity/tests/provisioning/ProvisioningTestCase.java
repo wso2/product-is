@@ -29,20 +29,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.automation.api.clients.authenticators.AuthenticatorClient;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.core.annotations.SetEnvironment;
-import org.wso2.carbon.automation.core.environmentcontext.ContextProvider;
-import org.wso2.carbon.automation.core.environmentcontext.GroupContextProvider;
-import org.wso2.carbon.automation.core.environmentcontext.environmentvariables.EnvironmentContext;
-import org.wso2.carbon.automation.core.environmentcontext.environmentvariables.GroupContext;
-import org.wso2.carbon.automation.core.utils.UserInfo;
-import org.wso2.carbon.automation.core.utils.UserListCsvReader;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.ProvisioningConnectorConfig;
@@ -50,7 +42,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundProvisioning
 import org.wso2.carbon.identity.application.common.model.xsd.JustInTimeProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.identity.tests.scim.utils.SCIMResponseHandler;
 import org.wso2.carbon.identity.tests.utils.BasicAuthHandler;
 import org.wso2.carbon.identity.tests.utils.BasicAuthInfo;
@@ -167,7 +159,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
 
     @Test(alwaysRun = true, description = "Add SCIM Provisioning user", priority = 1)
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void createUser() throws Exception {
 
         buildSCIMProvisioningConnector(PORT_OFFSET_0);
@@ -193,7 +185,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Add SCIM provisioning user on second server",
             expectedExceptions = org.apache.wink.client.ClientRuntimeException.class,
             dependsOnMethods = "createUser")
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void createUserForSecondServer() throws Exception {
 
         buildSCIMProvisioningConnector(PORT_OFFSET_1);
@@ -318,7 +310,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     private void createServiceClientsForServerOne() throws Exception {
 
         try {
-            String sessionId = isServer.getSessionCookie();
+            String sessionId = sessionCookie;
             if (sessionId == null || sessionId.isEmpty()) {
                 AuthenticatorClient authenticatorClient = new AuthenticatorClient(String.format
                         (servicesUrl, DEFAULT_PORT + PORT_OFFSET_0));
@@ -438,7 +430,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     }
 
     private boolean isUserExists(String userName) throws Exception {
-        FlaggedName[] nameList = userMgtServiceClients.get(PORT_OFFSET_2).listUsers(userName, 100);
+        FlaggedName[] nameList = userMgtServiceClients.get(PORT_OFFSET_2).listAllUsers(userName, 100);
         for (FlaggedName name : nameList) {
             if (name.getItemName().contains(userName)) {
                 return true;

@@ -19,11 +19,11 @@
 package org.wso2.identity.integration.common.clients.mgt;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.mgt.stub.AccountCredentialMgtConfigServiceCallbackHandler;
 import org.wso2.carbon.identity.mgt.stub.AccountCredentialMgtConfigServiceIdentityMgtServiceExceptionException;
 import org.wso2.carbon.identity.mgt.stub.AccountCredentialMgtConfigServiceStub;
 import org.wso2.carbon.identity.mgt.stub.dto.EmailTemplateDTO;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
 

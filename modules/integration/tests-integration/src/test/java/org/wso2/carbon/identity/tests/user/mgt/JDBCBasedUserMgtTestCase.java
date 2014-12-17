@@ -24,9 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.core.annotations.SetEnvironment;
-import org.wso2.carbon.automation.core.utils.serverutils.ServerConfigurationManager;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
 public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
@@ -35,7 +36,7 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 	private ServerConfigurationManager scm;
 	private File userMgtServerFile;
 
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 		super.testInit();
@@ -46,7 +47,7 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 		File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
 				+ File.separator + "JdbcUserMgtConfig.xml");
 
-		scm = new ServerConfigurationManager(isServer.getBackEndUrl());
+		scm = new ServerConfigurationManager(backendURL, TestUserMode.SUPER_TENANT_ADMIN);
 		scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
 		scm.restartGracefully();
 
@@ -63,13 +64,13 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
 
-		if (nameExists(userMgtClient.listUsers("user1", 100), "user1")) {
+		if (nameExists(userMgtClient.listAllUsers("user1", 100), "user1")) {
 			userMgtClient.deleteUser("user1");
 		}
-		if (nameExists(userMgtClient.listUsers("user2", 100), "user2")) {
+		if (nameExists(userMgtClient.listAllUsers("user2", 100), "user2")) {
 			userMgtClient.deleteUser("user2");
 		}
-		if (nameExists(userMgtClient.listUsers("user3", 100), "user3")) {
+		if (nameExists(userMgtClient.listAllUsers("user3", 100), "user3")) {
 			userMgtClient.deleteUser("user3");
 		}
 		if (nameExists(userMgtClient.listRoles("umRole1", 100), "umRole1")) {

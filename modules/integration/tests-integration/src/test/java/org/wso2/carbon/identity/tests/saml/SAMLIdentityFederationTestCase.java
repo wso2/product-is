@@ -79,7 +79,8 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         //servers getting ready...
         Thread.sleep(10000);
 
-        super.createServiceClients(PORT_OFFSET_0, isServer.getSessionCookie(), true, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+        super.createServiceClients(PORT_OFFSET_0, sessionCookie, true, new IdentityConstants
+                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
         super.createServiceClients(PORT_OFFSET_10, null, false, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
     }
 

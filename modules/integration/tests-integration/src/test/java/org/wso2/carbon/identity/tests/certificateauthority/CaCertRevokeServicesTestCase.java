@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CAAdminServiceClient;
 import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CAClientServiceClient;
 import org.wso2.carbon.identity.certificateauthority.stub.CertificateDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.rmi.RemoteException;
 
@@ -53,14 +53,12 @@ public class CaCertRevokeServicesTestCase extends ISIntegrationTest{
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(2);
-        clientServiceClient = new CAClientServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
+        super.init();
+        clientServiceClient = new CAClientServiceClient(backendURL, sessionCookie);
         super.init(3);
-        clientServiceClient2 = new CAClientServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
-        super.init(0);
-        adminServiceClient = new CAAdminServiceClient(isServer.getBackEndUrl(),isServer.getSessionCookie());
+        clientServiceClient2 = new CAClientServiceClient(backendURL, sessionCookie);
+        super.init();
+        adminServiceClient = new CAAdminServiceClient(backendURL, sessionCookie);
 
         //todo: can this run after sign services test case
         serialNo1 = clientServiceClient.addCsr(CaResources.csr1);

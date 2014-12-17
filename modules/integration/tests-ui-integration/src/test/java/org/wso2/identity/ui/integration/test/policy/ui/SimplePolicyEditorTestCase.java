@@ -8,14 +8,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.api.selenium.configuretab.RoleHomePage;
-import org.wso2.carbon.automation.api.selenium.home.HomePage;
-import org.wso2.carbon.automation.api.selenium.login.LoginPage;
-import org.wso2.carbon.automation.api.selenium.util.UIElementMapper;
-import org.wso2.carbon.automation.core.BrowserManager;
-import org.wso2.carbon.automation.core.ProductConstant;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.identity.integration.common.ui.page.LoginPage;
+import org.wso2.identity.integration.common.ui.page.util.UIElementMapper;
 import org.wso2.identity.ui.integration.test.ISIntegrationUITest;
 
 /**
@@ -40,8 +35,7 @@ public class SimplePolicyEditorTestCase extends ISIntegrationUITest {
 		driver.get(getLoginURL(ProductConstant.IS_SERVER_NAME));
         EnvironmentBuilder builder = new EnvironmentBuilder().is(5);
         EnvironmentVariables environment =builder.build().getIs();
-        System.out.printf(environment.getBackEndUrl());
-		
+
 	}
 
 	@Test(groups = "wso2.is", description = "verify last deny rule in simple policy editor")

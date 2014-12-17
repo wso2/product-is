@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.tests.user.store.config;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
@@ -26,15 +25,17 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
-import org.wso2.carbon.user.api.Property;
 import org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager;
+import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
+import org.wso2.carbon.user.api.Property;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -47,6 +48,7 @@ public class UserStoreConfigAdminTestCase extends ISIntegrationTest {
     private File srcFile = new File("../src/test/resources/wso2_com.xml");
     private File destFile;
     private UserStoreConfigAdminServiceClient userStoreConfigurationClient;
+    private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
     private String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
     private String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
@@ -54,8 +56,8 @@ public class UserStoreConfigAdminTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
-        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        super.init();
+        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
     }
 
     @Test(groups = "wso2.is", description = "Check user store manager implementations")
@@ -82,7 +84,8 @@ public class UserStoreConfigAdminTestCase extends ISIntegrationTest {
         }
         UserStoreDTO userStoreDTO = userStoreConfigurationClient.createUserStoreDTO(jdbcClass, "lanka.com", propertyDTOs);
         userStoreConfigurationClient.addUserStore(userStoreDTO);
-        Assert.assertTrue("Domain addition via DTO has failed.", waitForUserStoreDeployment("lanka.com"));
+        Assert.assertTrue("Domain addition via DTO has failed.", userStoreConfigUtils.waitForUserStoreDeployment
+                ("lanka.com"));
 
     }
 
@@ -106,7 +109,8 @@ public class UserStoreConfigAdminTestCase extends ISIntegrationTest {
     @Test(groups = "wso2.is", description = "Delete user store", dependsOnMethods = "testAddDuplicateUserStore")
     public void testDeleteUserStore() throws Exception {
         userStoreConfigurationClient.deleteUserStore("lanka.com");
-        Assert.assertTrue("Deletion of user store has failed", waitForUserStoreUnDeployment("lanka.com"));
+        Assert.assertTrue("Deletion of user store has failed", userStoreConfigUtils.waitForUserStoreUnDeployment
+                ("lanka.com"));
 
     }
 

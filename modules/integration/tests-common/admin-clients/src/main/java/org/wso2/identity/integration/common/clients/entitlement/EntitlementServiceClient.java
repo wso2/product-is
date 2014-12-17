@@ -19,13 +19,13 @@ package org.wso2.identity.integration.common.clients.entitlement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceCallbackHandler;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceException;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceIdentityException;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceStub;
 import org.wso2.carbon.identity.entitlement.stub.dto.AttributeDTO;
 import org.wso2.carbon.identity.entitlement.stub.dto.EntitledResultSetDTO;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
 

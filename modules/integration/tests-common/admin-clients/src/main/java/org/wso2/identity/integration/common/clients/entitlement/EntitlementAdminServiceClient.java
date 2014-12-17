@@ -23,12 +23,12 @@ import java.rmi.RemoteException;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyFinderDataHolder;
 import org.wso2.carbon.identity.entitlement.stub.dto.PIPFinderDataHolder;
 import org.wso2.carbon.identity.entitlement.stub.dto.PDPDataHolder;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementAdminServiceIdentityException;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementAdminServiceStub;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class EntitlementAdminServiceClient {
 

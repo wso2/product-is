@@ -33,15 +33,16 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.core.annotations.SetEnvironment;
-import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
 import java.util.ArrayList;
 
 public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbstractIntegrationTest{
-	private LoginLogoutUtil logManger;
+	private AuthenticatorClient logManger;
 	private String adminUsername;
 	private String adminPassword;
 	private String accessToken;
@@ -58,11 +59,12 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 		super.init(0);
-		logManger = new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()), isServer
-				.getProductVariables().getHostName());
+		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();
-		logManger.login(adminUsername, adminPassword, isServer.getBackEndUrl());
+		logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+				isServer.getSuperTenant().getTenantAdmin().getPassword(),
+				isServer.getInstance().getHosts().get("default"));
 
 		setSystemproperties();
 		client = new DefaultHttpClient();
@@ -75,7 +77,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
 	 * After cache timeout new token should issued after it revoked
 	 * @throws Exception
 	 */
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.platform_user})
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
 	@Test(groups = {"wso2.am"}, description = "Revoke token after cache timed out")
 	public void testRevokeTokenAfterCacheTimedOut() throws Exception {
 		//Application utils

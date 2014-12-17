@@ -28,9 +28,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.core.annotations.SetEnvironment;
-import org.wso2.carbon.automation.core.utils.serverutils.ServerConfigurationManager;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
 public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
@@ -39,7 +39,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
 	private ServerConfigurationManager scm;
 	private File userMgtServerFile;
 
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 		super.testInit();
@@ -50,7 +50,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
 		File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
 				+ File.separator + "readOnlyLdapUserMgtConfig.xml");
 
-		scm = new ServerConfigurationManager(isServer.getBackEndUrl());
+		scm = new ServerConfigurationManager(isServer);
 		scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
 		scm.restartGracefully();
 		super.testInit();
@@ -81,14 +81,14 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
 
 	}
 	
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
 	@Test(groups = "wso2.is", description = "Get all the role names")
     public void testGetAllRoleNames() throws Exception {	
 //		TODO - Why read only admin role non-exists?
 //		Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames("admin", 100), "admin"), "Getting all user role names has failed.");		
     }
 	
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check role addition", dependsOnMethods="testGetAllRoleNames", expectedExceptions = RemoteException.class)
     public void testAddRole() throws Exception{
     	userMgtClient.addRole("umRole2", null, new String[]{"login"}, false);
@@ -96,7 +96,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
 				"user store is read only");
     }
     
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check delete role", dependsOnMethods="testAddRole", expectedExceptions = RemoteException.class)
 	public void testDeleteRole() throws Exception {
     	userMgtClient.deleteRole("admin");

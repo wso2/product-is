@@ -20,7 +20,7 @@ package org.wso2.carbon.identity.tests.server.mgt;
 
 
 import org.wso2.carbon.automation.core.ProductConstant;
-import org.wso2.carbon.automation.core.tests.ServerStartupBaseTest;
+import org.wso2.carbon.integration.common.tests.ServerStartupBaseTest;
 
 public class ServerStartupTestCase extends ServerStartupBaseTest {
 

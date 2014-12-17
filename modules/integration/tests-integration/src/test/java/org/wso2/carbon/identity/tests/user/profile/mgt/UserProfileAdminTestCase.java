@@ -24,29 +24,29 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
 import org.wso2.carbon.identity.tests.user.mgt.UserMgtTestCase;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
-public class UserProfileAdminTestCase extends ISIntegrationTest{
+public class UserProfileAdminTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(UserMgtTestCase.class);
     private UserProfileMgtServiceClient userProfileMgtClient;
     private UserManagementClient userMgtClient;
-    private LoginLogoutUtil logManger;
+    private AuthenticatorClient logManger;
     
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
-        logManger = new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()), isServer
-                .getProductVariables().getHostName());
+        super.init();
+        logManger = new AuthenticatorClient(backendURL);
         
-        userProfileMgtClient = new UserProfileMgtServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-        userMgtClient = new UserManagementClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
+        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
         
         userMgtClient.addUser("user1", "passWord1@", new String[]{"admin"}, "default");
     }
@@ -100,7 +100,9 @@ public class UserProfileAdminTestCase extends ISIntegrationTest{
 //    TODO - setting user profile will be failed.Need debug.
     @Test(groups = "wso2.is", description = "Check set user profiles")
     public void testSetUserProfile() throws Exception {    	
-    	logManger.login("admin", "admin", isServer.getBackEndUrl());
+    	logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                isServer.getSuperTenant().getTenantAdmin().getPassword(),
+                isServer.getInstance().getHosts().get("default"));
     	
         UserProfileDTO profile = new UserProfileDTO();
         profile.setProfileName("testProfile");
@@ -130,6 +132,6 @@ public class UserProfileAdminTestCase extends ISIntegrationTest{
 //        Assert.assertNotNull(userProfileMgtClient.getUserProfile("user1", "testProfile"), "Cannot get user profile due to Null return");
 //        Assert.assertEquals(getProfile.getProfileName(), "testProfile", "Set user profiles has failed.");
         
-        logManger.logout();
+        logManger.logOut();
     }
 }

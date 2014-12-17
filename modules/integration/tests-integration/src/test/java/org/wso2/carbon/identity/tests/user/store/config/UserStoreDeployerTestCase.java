@@ -25,13 +25,14 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 
 import java.io.File;
 import java.rmi.RemoteException;
@@ -42,6 +43,7 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(UserStoreDeployerTestCase.class);
     public static final String USERSTORES = "userstores";
     private static final String deploymentDirectory = CarbonUtils.getCarbonRepository() + USERSTORES;
+    private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private String userStoreConfigFilePath;
     private File srcFile = new File("../src/test/resources/wso2_com.xml");
     private File destFile;
@@ -55,12 +57,11 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
+        super.init();
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
         userStoreConfigFilePath = deploymentDirectory + File.separator;
-        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
-        userMgtClient = new UserManagementClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
     }
 
     @Test(groups = "wso2.is", description = "Deploy a user store config file")
@@ -68,7 +69,8 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
         destFile = new File(userStoreConfigFilePath + srcFile.getName());
 
         FileUtils.copyFile(srcFile, destFile);
-        Assert.assertTrue("After 30s user store is still not deployed.", waitForUserStoreDeployment("wso2.com"));
+        Assert.assertTrue("After 30s user store is still not deployed.", userStoreConfigUtils
+                .waitForUserStoreDeployment("wso2.com"));
     }
 
     @Test(groups = "wso2.is", description = "Test multiple user stores", dependsOnMethods = "testDroppingFile")
@@ -104,7 +106,8 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
         destFile = new File(userStoreConfigFilePath + srcFile.getName());
 
         FileUtils.forceDelete(destFile);
-        Assert.assertTrue("After 30s user store is still not deleted.", waitForUserStoreUnDeployment("wso2.com"));
+        Assert.assertTrue("After 30s user store is still not deleted.", userStoreConfigUtils
+                .waitForUserStoreUnDeployment("wso2.com"));
     }
 
     @AfterClass(alwaysRun = true)

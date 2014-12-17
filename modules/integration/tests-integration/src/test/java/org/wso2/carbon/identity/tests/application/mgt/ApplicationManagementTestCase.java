@@ -1,5 +1,5 @@
 /*
-*  Copyright (c)  WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -25,7 +25,7 @@ import org.testng.annotations.*;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +36,11 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
+        super.init();
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null
                         , null);
-        applicationManagementServiceClient = new ApplicationManagementServiceClient(isServer
-                .getSessionCookie()
-                , isServer.getBackEndUrl(), configContext);
+        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
 
     }
 
@@ -338,8 +336,7 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
                 .createConfigurationContextFromFileSystem(null
                         , null);
         IdentityProviderMgtServiceClient identityProviderMgtServiceClient
-                = new IdentityProviderMgtServiceClient(isServer.getSessionCookie()
-                , isServer.getBackEndUrl(), configContext);
+                = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
 
         org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider identityProvider
                 = new org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider();

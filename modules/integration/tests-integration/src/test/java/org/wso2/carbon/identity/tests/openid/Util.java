@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.identity.tests.openid;
 
+
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDParameterDTO;
 
 public class Util {

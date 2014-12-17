@@ -35,7 +35,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisionin
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.identity.tests.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -66,9 +66,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected void init(int userId) throws Exception {
 		super.init(userId);
 		appMgtclient =
-		               new ApplicationManagementServiceClient(isServer.getSessionCookie(),
-		                                                      isServer.getBackEndUrl(), null);
-		adminClient = new OauthAdminClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+		               new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+		adminClient = new OauthAdminClient(backendURL, sessionCookie);
 	}
 
 	/**
@@ -260,8 +259,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * 
 	 * @param client
 	 *            - http client
-	 * @param sessionDataKeyConsent
-	 *            - session consent data
+	 * @param consumerSecret
+	 *            - consumer secret
 	 * @return http response
 	 * @throws ClientProtocolException
 	 * @throws IOException

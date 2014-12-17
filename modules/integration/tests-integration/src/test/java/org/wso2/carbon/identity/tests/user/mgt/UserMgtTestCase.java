@@ -29,13 +29,13 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class UserMgtTestCase extends ISIntegrationTest {
 
@@ -45,14 +45,12 @@ public class UserMgtTestCase extends ISIntegrationTest {
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
-		super.init(0);
+		super.init();
 		
-		logManger = new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()), isServer
-				.getProductVariables().getHostName());
-		userMgtClient = new UserManagementClient(isServer.getBackEndUrl(),
-		                                         isServer.getSessionCookie());
+		logManger = new LoginLogoutUtil();
+		userMgtClient = new UserManagementClient(backendURL, sessionCookie);
 
-		if (!nameExists(userMgtClient.listUsers("testAdminUser", 100), "testAdminUser")) {
+		if (!nameExists(userMgtClient.listAllUsers("testAdminUser", 100), "testAdminUser")) {
 			userMgtClient.addUser("testAdminUser", "testAdminUser@123", new String[] { "admin" },
 			                      "default");
 		}
@@ -97,7 +95,7 @@ public class UserMgtTestCase extends ISIntegrationTest {
 
 	@Test(groups = "wso2.is", description = "Get the users by user name")
 	public void testListUsersByUserName() throws Exception {
-		FlaggedName[] names = userMgtClient.listUsers("testAdminUser", -1);
+		FlaggedName[] names = userMgtClient.listAllUsers("testAdminUser", -1);
 		Assert.assertEquals(names[0].getItemName(), "testAdminUser");
 	}
 

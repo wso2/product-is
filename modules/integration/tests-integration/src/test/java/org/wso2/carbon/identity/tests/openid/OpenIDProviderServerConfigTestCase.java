@@ -23,9 +23,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.common.clients.openid.OpenIDProviderServiceClient;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDProviderInfoDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.clients.openid.OpenIDProviderServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class OpenIDProviderServerConfigTestCase extends ISIntegrationTest {
 
@@ -34,9 +34,9 @@ public class OpenIDProviderServerConfigTestCase extends ISIntegrationTest {
 	
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
+        super.init();
         
-        openidServiceClient = new OpenIDProviderServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        openidServiceClient = new OpenIDProviderServiceClient(backendURL, sessionCookie);
         adminUserName = userInfo.getUserName();
     }
     

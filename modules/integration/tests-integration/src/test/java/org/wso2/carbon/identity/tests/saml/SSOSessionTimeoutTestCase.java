@@ -24,11 +24,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOServiceClient;
-import org.wso2.carbon.automation.core.ProductConstant;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.carbon.automation.core.utils.serverutils.ServerConfigurationManager;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 
@@ -44,7 +42,7 @@ public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
     public void testInit() throws Exception {
         super.init();
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer.getBackEndUrl());
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         String identityXMLFile = ProductConstant.getResourceLocations(ProductConstant.IS_SERVER_NAME) +
                 separator + "conf" + separator + "identity.xml";
         File srcFile = new File(identityXMLFile);
@@ -57,8 +55,7 @@ public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
     public void testSSOSessionTimeout()
             throws Exception {
         SAMLSSOServiceClient ssoServiceClient =
-                new SAMLSSOServiceClient(isServer.getBackEndUrl(),
-                        isServer.getSessionCookie());
+                new SAMLSSOServiceClient(backendURL, sessionCookie);
         int ssoTimeoutVal = ssoServiceClient.getSSOSessionTimeout();
         Assert.assertEquals(ssoTimeoutVal,"120");
     }

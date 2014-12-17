@@ -21,7 +21,6 @@ import java.rmi.RemoteException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.um.ws.api.stub.ArrayOfString;
 import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
@@ -29,6 +28,7 @@ import org.wso2.carbon.um.ws.api.stub.PermissionDTO;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
 import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class RemoteUserStoreManagerServiceClient {
 

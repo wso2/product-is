@@ -25,7 +25,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementAdminServiceClient;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class EntitlementAdminServiceTestCase extends ISIntegrationTest{
 	
@@ -35,9 +35,8 @@ public class EntitlementAdminServiceTestCase extends ISIntegrationTest{
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(0);
-		entitlementAdminClient = new EntitlementAdminServiceClient(isServer.getBackEndUrl(),
-				isServer.getSessionCookie());
+		super.init();
+		entitlementAdminClient = new EntitlementAdminServiceClient(backendURL, sessionCookie);
 	}
 
 	@AfterClass(alwaysRun = true)
