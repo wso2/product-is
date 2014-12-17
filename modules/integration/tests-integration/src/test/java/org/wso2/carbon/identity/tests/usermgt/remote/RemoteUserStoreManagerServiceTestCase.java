@@ -24,14 +24,14 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -73,8 +73,8 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
-        remoteUserStoreManagerClient = new RemoteUserStoreManagerServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        super.init();
+        remoteUserStoreManagerClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
 
     @AfterClass(alwaysRun = true)
@@ -91,7 +91,7 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
         remoteUserStoreManagerClient.addRole(role2, null, null);
 
         //Add role1 with configure, login, manage, monitor, protected permissions
-        UserManagementClient userMgtClient = new UserManagementClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        UserManagementClient userMgtClient = new UserManagementClient(backendURL, sessionCookie);
         String[] permissions = {"/permission/admin/configure/",
                                 "/permission/admin/login",
                                 "/permission/admin/manage/",
@@ -107,7 +107,7 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
     @Test(priority = 2, groups = "wso2.is", description = "Test addUser and isExistingUser operations")
     public void testAddUser()
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException,
-                   UserStoreException {
+            UserStoreException, RemoteUserStoreManagerServiceUserStoreExceptionException {
         //add users
         String[] roleList1 = new String[1];
         roleList1[0] = new String(role1);
@@ -400,7 +400,8 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
     public void testUpdateCredential()
             throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException {
 
-        RemoteUserStoreManagerServiceClient rmtUserStoreManager = new RemoteUserStoreManagerServiceClient(isServer.getBackEndUrl(), user2, user2Pwd);
+        RemoteUserStoreManagerServiceClient rmtUserStoreManager = new RemoteUserStoreManagerServiceClient(backendURL, user2,
+                user2Pwd);
         rmtUserStoreManager.updateCredential(user2, user2NewPwd, user2Pwd);
 
         //TODO: user old credentials get authenticated even after updating the credentials for some time. Therefore comment out below assertion until get fixed

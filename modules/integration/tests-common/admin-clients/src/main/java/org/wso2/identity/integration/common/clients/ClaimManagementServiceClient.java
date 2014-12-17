@@ -21,10 +21,10 @@ package org.wso2.identity.integration.common.clients;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceException;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
+import org.wso2.carbon.claim.mgt.stub.dto.ClaimDialectDTO;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimMappingDTO;
 
 import java.rmi.RemoteException;
@@ -63,9 +63,67 @@ public class ClaimManagementServiceClient {
         claimMappingDTO.setMappedAttribute(mappedAttribute);
         claimManagementServiceStub.addNewClaimMapping(claimMappingDTO);
 
-
     }
 
-    //TODO Add other methods in this admin service
+    public void removeClaimMapping(String dialectURI, String claimURI)
+            throws RemoteException, Exception {
+        try {
+            claimManagementServiceStub.removeClaimMapping(dialectURI, claimURI);
+        } catch (RemoteException e) {
+            throw new RemoteException("Unable to remove claim Mapping ", e);
+        }
+    }
 
+    public ClaimDialectDTO[] getClaimMappings() throws RemoteException, Exception {
+        try {
+            return claimManagementServiceStub.getClaimMappings();
+        } catch (RemoteException e) {
+            throw new RemoteException("Error while getting claim mappings ", e);
+        }
+    }
+
+    public ClaimDialectDTO getClaimMappingByDialect(String dialect)
+            throws RemoteException, Exception {
+        try {
+            return claimManagementServiceStub.getClaimMappingByDialect(dialect);
+        } catch (RemoteException e) {
+            throw new RemoteException("Unable while getting claim Mapping by dialect", e);
+        }
+    }
+
+    public void addNewClaimDialect(ClaimDialectDTO claimDialectDTO)
+            throws RemoteException, Exception {
+        try {
+            claimManagementServiceStub.addNewClaimDialect(claimDialectDTO);
+        } catch (RemoteException e) {
+            throw new RemoteException("Unable to add new claim dialect", e);
+        }
+    }
+
+    public void addNewClaimMapping(ClaimMappingDTO claimMappingDTO)
+            throws RemoteException, Exception {
+        try {
+            claimManagementServiceStub.addNewClaimMapping(claimMappingDTO);
+        } catch (RemoteException e) {
+            throw new RemoteException("Unable to add new claim Mapping", e);
+        }
+    }
+
+    public void updateClaimMapping(ClaimMappingDTO claimMappingDTO)
+            throws RemoteException, Exception {
+        try {
+            claimManagementServiceStub.upateClaimMapping(claimMappingDTO);
+        } catch (RemoteException e) {
+            throw new RemoteException("Unable to update claim Mapping", e);
+        }
+    }
+
+    public void removeClaimDialect(String dialectURI)
+            throws RemoteException, Exception {
+        try {
+            claimManagementServiceStub.removeClaimDialect(dialectURI);
+        } catch (RemoteException e) {
+            throw new RemoteException("Unable to remove claim dialect", e);
+        }
+    }
 }

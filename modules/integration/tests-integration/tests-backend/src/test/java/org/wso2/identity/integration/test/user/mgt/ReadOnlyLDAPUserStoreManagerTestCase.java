@@ -58,7 +58,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole), "Role name doesn't exists");
         Assert.assertTrue(userMgtClient.userNameExists(newUserRole, newUserName), "User name doesn't exists");
 
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, automationContext.getInstance().getHosts().get("default"));
+        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
 
@@ -68,7 +68,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                                           + File.separator + "readOnlyLdapUserMgtConfig.xml");
 
-        scm = new ServerConfigurationManager(automationContext);
+        scm = new ServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
@@ -76,7 +76,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void userLoginTest() throws Exception {
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, automationContext.getInstance().getHosts().get("default"));
+        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
     }

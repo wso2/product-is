@@ -18,7 +18,8 @@
 
 package org.wso2.carbon.identity.tests.utils;
 
-import org.wso2.carbon.automation.core.TestServerManager;
+
+import org.wso2.carbon.integration.framework.TestServerManager;
 
 import java.io.IOException;
 import java.util.Map;

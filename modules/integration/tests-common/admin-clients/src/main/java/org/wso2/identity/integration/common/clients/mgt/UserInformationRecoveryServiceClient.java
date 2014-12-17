@@ -21,7 +21,6 @@ package org.wso2.identity.integration.common.clients.mgt;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.dto.UserIdentityClaimDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionDTO;
@@ -31,6 +30,7 @@ import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceIdentityExceptionException;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceIdentityMgtServiceExceptionException;
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 
 public class UserInformationRecoveryServiceClient {

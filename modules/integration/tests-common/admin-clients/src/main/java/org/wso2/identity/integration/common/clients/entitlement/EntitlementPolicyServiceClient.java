@@ -22,13 +22,13 @@ import java_cup.version;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.entitlement.stub.dto.PaginatedPolicySetDTO;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceStub;
 import org.wso2.carbon.identity.entitlement.stub.dto.PaginatedStatusHolder;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 import org.wso2.carbon.identity.entitlement.stub.dto.PublisherDataHolder;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 import org.xml.sax.SAXException;
 
 import javax.activation.DataHandler;

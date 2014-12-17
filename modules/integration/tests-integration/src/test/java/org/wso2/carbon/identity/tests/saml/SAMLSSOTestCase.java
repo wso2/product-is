@@ -36,12 +36,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
+import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 
 import java.io.BufferedReader;
@@ -151,19 +151,16 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
+        super.init();
 
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null
                         , null);
         applicationManagementServiceClient =
-                new ApplicationManagementServiceClient(isServer.getSessionCookie()
-                        , isServer.getBackEndUrl(), configContext);
+                new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
         ssoConfigServiceClient =
-                new SAMLSSOConfigServiceClient(isServer.getBackEndUrl(),
-                        isServer.getSessionCookie());
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
+                new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
         httpClient = new DefaultHttpClient();
 

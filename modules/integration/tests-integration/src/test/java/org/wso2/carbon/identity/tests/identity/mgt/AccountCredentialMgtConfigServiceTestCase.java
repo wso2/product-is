@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.clients.mgt.AccountCredentialMgtConfigServiceClient;
 import org.wso2.carbon.identity.mgt.stub.AccountCredentialMgtConfigServiceIdentityMgtServiceExceptionException;
 import org.wso2.carbon.identity.mgt.stub.dto.EmailTemplateDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.rmi.RemoteException;
 
@@ -47,7 +47,7 @@ public class AccountCredentialMgtConfigServiceTestCase extends ISIntegrationTest
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        accCredentialMgtConfigServiceClient = new AccountCredentialMgtConfigServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        accCredentialMgtConfigServiceClient = new AccountCredentialMgtConfigServiceClient(backendURL, sessionCookie);
     }
 
     @AfterClass(alwaysRun = true)

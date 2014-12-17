@@ -20,7 +20,6 @@ package org.wso2.identity.integration.common.clients.oauth;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuthRevocationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuthRevocationResponseDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2ClientValidationResponseDTO;
@@ -29,6 +28,7 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AccessTokenReqDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeRespDTO;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class Oauth2ServiceClient {
 

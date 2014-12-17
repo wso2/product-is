@@ -21,12 +21,12 @@ package org.wso2.carbon.identity.tests.sts;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.api.clients.security.SecurityAdminServiceClient;
 import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.serverutils.ServerConfigurationManager;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.carbon.integration.common.admin.client.SecurityAdminServiceClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 
@@ -44,17 +44,16 @@ public class SAML2TokenRenweTestCase extends ISIntegrationTest {
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(0);
-		scm = new ServerConfigurationManager(isServer.getBackEndUrl());
-		sasc = new SecurityAdminServiceClient(isServer.getBackEndUrl(),
-				isServer.getSessionCookie());
+		super.init();
+		scm = new ServerConfigurationManager(isServer);
+		sasc = new SecurityAdminServiceClient(backendURL, sessionCookie);
 		EnvironmentBuilder builder = new EnvironmentBuilder();
 		String path = builder.getFrameworkSettings().getEnvironmentVariables()
 				.getKeystorePath();
 		String KeyStoreName = path.substring(
 				path.lastIndexOf(File.separator) + 1, path.length());
 		SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(
-				isServer.getBackEndUrl(), isServer.getSessionCookie());
+				backendURL, sessionCookie);
 		securityAdminServiceClient.applySecurity("wso2carbon-sts", "1",
 				new String[] { "everyone", "*", "admin" },
 				new String[] { KeyStoreName }, KeyStoreName);

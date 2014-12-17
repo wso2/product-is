@@ -21,10 +21,10 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.scim.common.stub.config.SCIMProviderDTO;
 import org.wso2.identity.integration.common.clients.scim.SCIMConfigAdminClient;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
-import org.wso2.carbon.identity.scim.common.stub.config.SCIMProviderDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class SCIMUserProviderTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(SCIMUserProviderTestCase.class);
@@ -38,9 +38,8 @@ public class SCIMUserProviderTestCase extends ISIntegrationTest {
         super.init(2);
         userInfo = UserListCsvReader.getUserInfo(providerUserId);
         scimConfigAdminClient =
-                new SCIMConfigAdminClient(isServer.getBackEndUrl(),
-                        isServer.getSessionCookie());
-        scim_Provider_url = "https://" + isServer.getBackEndUrl() + "/wso2/scim/";
+                new SCIMConfigAdminClient(backendURL, sessionCookie);
+        scim_Provider_url = "https://" + backendURL + "/wso2/scim/";
 
     }
 

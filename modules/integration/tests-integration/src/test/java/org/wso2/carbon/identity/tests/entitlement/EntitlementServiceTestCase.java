@@ -27,7 +27,7 @@ import org.wso2.identity.integration.common.clients.entitlement.EntitlementServi
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceException;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceUserProfileExceptionException;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
@@ -75,10 +75,10 @@ public class EntitlementServiceTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
-        entitlementPolicyClient = new EntitlementPolicyServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-        entitlementServiceClient = new EntitlementServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-        userProfileMgtClient = new UserProfileMgtServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        super.init();
+        entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
+        entitlementServiceClient = new EntitlementServiceClient(backendURL, sessionCookie);
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
     }
 
     @Test(groups = "wso2.is", description = "Check set user profile")

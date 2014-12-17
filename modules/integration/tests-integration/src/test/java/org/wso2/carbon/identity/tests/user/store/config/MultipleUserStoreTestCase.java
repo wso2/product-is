@@ -24,14 +24,15 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.core.annotations.SetEnvironment;
-import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertNull;
@@ -46,28 +47,29 @@ public class MultipleUserStoreTestCase extends ISIntegrationTest {
     private String domain = "wso2999.org";
     private String newDomain = "wso2new.org";
     private UserStoreConfigAdminServiceClient userStoreConfigurationClient;
+    private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private String dbURL = "jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000";
     private String driverName = "org.h2.Driver";
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
+        super.init();
         userManagementClient =
-                new UserManagementClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+                new UserManagementClient(backendURL, sessionCookie);
         userStoreConfigurationClient =
-                new UserStoreConfigAdminServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Add new user store")
     public void testAddNewUserStore() throws Exception {
         addJDBCUserStore(dbURL, driverName, "wso2carbon", "wso2carbon", false, "testUserStore", domain);
         assertTrue("User store not deployed within expected time interval",
-                waitForUserStoreDeployment(domain));
+                userStoreConfigUtils.waitForUserStoreDeployment(domain));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Add a new user and new Role to store",
             dependsOnMethods = "testAddNewUserStore")
     public void testNewUserLogin() throws Exception {
@@ -75,48 +77,45 @@ public class MultipleUserStoreTestCase extends ISIntegrationTest {
         userManagementClient.addRole(domain + "/" + SECONDARY_ROLE, new String[]{domain + "/" + TEST_SECONDARY_USER},
                 new String[]{"/permission/admin/login"});
 
-        LoginLogoutUtil loginLogoutUtil =
-                new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()),
-                        isServer.getProductVariables().getHostName());
+        AuthenticatorClient loginLogoutUtil =
+                new AuthenticatorClient(backendURL);
 
         assertNotNull("User not logged in",
                 loginLogoutUtil.login(domain + "/" + TEST_SECONDARY_USER, TEST_SECONDARY_USER,
-                        isServer.getBackEndUrl()));
+                        backendURL));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Disable user store", dependsOnMethods = "testNewUserLogin",
             expectedExceptions = LoginAuthenticationExceptionException.class)
     public void testDisableUserStore() throws Exception {
         userStoreConfigurationClient.changeUserStoreState(domain, true);
-        assertTrue("User store is active even after 15 min", waitForUserStoreUnDeployment(domain));
+        assertTrue("User store is active even after 15 min", userStoreConfigUtils.waitForUserStoreUnDeployment(domain));
 
-        LoginLogoutUtil loginLogoutUtil =
-                new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()),
-                        isServer.getProductVariables().getHostName());
+        AuthenticatorClient loginLogoutUtil =
+                new AuthenticatorClient(backendURL);
 
         assertNull("User is logged in after disabling the user store",
-                loginLogoutUtil.login(domain + "/" + TEST_SECONDARY_USER, TEST_SECONDARY_USER, isServer.getBackEndUrl()));
+                loginLogoutUtil.login(domain + "/" + TEST_SECONDARY_USER, TEST_SECONDARY_USER, backendURL));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Re-enable user store", dependsOnMethods = "testDisableUserStore")
     public void testEnableUserStoreAgain() throws Exception {
         userStoreConfigurationClient.changeUserStoreState(domain, false);
         Thread.sleep(10000);
         assertTrue("User store not deployed within expected time interval",
-                waitForUserStoreDeployment(domain));
+                userStoreConfigUtils.waitForUserStoreDeployment(domain));
 
-        LoginLogoutUtil loginLogoutUtil =
-                new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()),
-                        isServer.getProductVariables().getHostName());
+        AuthenticatorClient loginLogoutUtil =
+                new AuthenticatorClient(backendURL);
 
         assertNotNull("User not logged in",
                 loginLogoutUtil.login(domain + "/" + TEST_SECONDARY_USER, TEST_SECONDARY_USER,
-                        isServer.getBackEndUrl()));
+                        backendURL));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Re-enable user store", dependsOnMethods = "testEnableUserStoreAgain")
     public void testUpdateUserStore() throws Exception {
 
@@ -124,7 +123,7 @@ public class MultipleUserStoreTestCase extends ISIntegrationTest {
                 false, "testUserStore", newDomain);
         userStoreConfigurationClient.updateUserStoreWithDomainName(domain, userStoreDTO);
         assertTrue("User store not deployed within expected time interval",
-                waitForUserStoreDeployment(newDomain));
+                userStoreConfigUtils.waitForUserStoreDeployment(newDomain));
     }
 
 
@@ -134,29 +133,28 @@ public class MultipleUserStoreTestCase extends ISIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Re-enable user store", dependsOnMethods = "testUpdateUserStore")
     public void testLoginAfterDomainChange() throws Exception {
-        LoginLogoutUtil loginLogoutUtil =
-                new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()),
-                        isServer.getProductVariables().getHostName());
+        AuthenticatorClient loginLogoutUtil =
+                new AuthenticatorClient(backendURL);
 
         userManagementClient.addRole(newDomain + "/" + SECONDARY_ROLE + "1", new String[]{newDomain +
                 "/" + TEST_SECONDARY_USER}, new String[]{"/permission/admin/login"});
 
         assertNotNull("User not logged in",
                 loginLogoutUtil.login(newDomain + "/" + TEST_SECONDARY_USER, TEST_SECONDARY_USER,
-                        isServer.getBackEndUrl()));
+                        backendURL));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Add new user store", dependsOnMethods = "testLoginAfterDomainChange",
             expectedExceptions = Exception.class)
     public void testAddUserStoreAgain() throws Exception {
         addJDBCUserStore(dbURL, driverName, "wso2carbon", "wso2carbon", false, "testUserStore", newDomain);
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Add new user store", dependsOnMethods = "testAddUserStoreAgain")
     public void testDeleteStoreAndUsers() throws Exception {
 
@@ -165,13 +163,14 @@ public class MultipleUserStoreTestCase extends ISIntegrationTest {
         userManagementClient.deleteRole(newDomain + "/" + SECONDARY_ROLE);
 
         userStoreConfigurationClient.deleteUserStoresSet(new String[]{newDomain});
-        assertTrue("User store was not deleted successfully", waitForUserStoreUnDeployment(newDomain));
+        assertTrue("User store was not deleted successfully", userStoreConfigUtils.waitForUserStoreUnDeployment
+                (newDomain));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @AfterClass(alwaysRun = true)
     public void cleanupTest() throws Exception {
-        if (waitForUserStoreDeployment(newDomain)) {
+        if (userStoreConfigUtils.waitForUserStoreDeployment(newDomain)) {
             userStoreConfigurationClient.deleteUserStoresSet(new String[]{newDomain});
             log.info("User store - " + newDomain + "deleted");
         }

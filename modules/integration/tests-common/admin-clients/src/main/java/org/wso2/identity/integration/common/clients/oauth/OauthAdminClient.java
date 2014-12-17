@@ -20,10 +20,10 @@ package org.wso2.identity.integration.common.clients.oauth;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceException;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class OauthAdminClient {
 

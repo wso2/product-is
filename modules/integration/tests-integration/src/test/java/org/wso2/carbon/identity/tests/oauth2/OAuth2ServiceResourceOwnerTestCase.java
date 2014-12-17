@@ -28,10 +28,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.tests.utils.DataExtractUtil;
 import org.wso2.carbon.identity.tests.utils.OAuth2Constant;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
 import java.io.File;
 import java.net.URL;
@@ -43,7 +44,7 @@ import java.util.Map;
 import static org.wso2.carbon.identity.tests.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractIntegrationTest {
-	private LoginLogoutUtil logManger;
+	private AuthenticatorClient logManger;
 	private String adminUsername;
 	private String adminPassword;
 	private String accessToken;
@@ -56,11 +57,12 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 		super.init(0);
-		logManger = new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()), isServer
-				.getProductVariables().getHostName());
+		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();
-		logManger.login(adminUsername, adminPassword, isServer.getBackEndUrl());
+		logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+				isServer.getSuperTenant().getTenantAdmin().getPassword(),
+				isServer.getInstance().getHosts().get("default"));
 
 		setSystemproperties();
 		client = new DefaultHttpClient();

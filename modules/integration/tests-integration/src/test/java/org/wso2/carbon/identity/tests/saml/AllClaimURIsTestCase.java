@@ -24,34 +24,29 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
-import org.wso2.carbon.automation.core.utils.UserInfo;
-import org.wso2.carbon.automation.core.utils.UserListCsvReader;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 
 import java.rmi.RemoteException;
 
 public class AllClaimURIsTestCase {
 
-//    private static final Log log = LogFactory.getLog(AllClaimURIsTestCase.class);
-//    private EnvironmentVariables identityServer;
+    private static final Log log = LogFactory.getLog(AllClaimURIsTestCase.class);
+    private EnvironmentVariables identityServer;
 
-//    @BeforeTest(alwaysRun = true)
-//    public void testInit() throws LoginAuthenticationExceptionException, RemoteException {
-//        int userId = 2;
-//        UserInfo userInfo = UserListCsvReader.getUserInfo(userId);
-//        EnvironmentBuilder builder = new EnvironmentBuilder().is(userId);
-//        identityServer = builder.build().getIs();
-//    }
-//
-//    @Test(groups = "wso2.is", description = "Get all claims")
-//    public void testAllClaims()
-//            throws Exception {
-//        SAMLSSOConfigServiceClient ssoConfigurationClient =
-//                new SAMLSSOConfigServiceClient(identityServer.getBackEndUrl(),
-//                                               identityServer.getSessionCookie());
-//        ssoConfigurationClient.getClaimURIs();
-//    }
+    @BeforeTest(alwaysRun = true)
+    public void testInit() throws LoginAuthenticationExceptionException, RemoteException {
+        int userId = 2;
+        Netapi32Util.UserInfo userInfo = UserListCsvReader.getUserInfo(userId);
+        EnvironmentBuilder builder = new EnvironmentBuilder().is(userId);
+        identityServer = builder.build().getIs();
+    }
+
+    @Test(groups = "wso2.is", description = "Get all claims")
+    public void testAllClaims()
+            throws Exception {
+        SAMLSSOConfigServiceClient ssoConfigurationClient =
+                new SAMLSSOConfigServiceClient(identityServer.getBackEndUrl(),
+                                               identityServer.getSessionCookie());
+        ssoConfigurationClient.getClaimURIs();
+    }
 
 }

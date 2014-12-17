@@ -21,12 +21,12 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.common.clients.openid.OpenIDProviderServiceClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDClaimDTO;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDParameterDTO;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDUserProfileDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.clients.openid.OpenIDProviderServiceClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 
 public class OpenIDUserProfileTestCase extends ISIntegrationTest {
@@ -52,10 +52,10 @@ public class OpenIDUserProfileTestCase extends ISIntegrationTest {
 	
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
+        super.init();
         
-        openidServiceClient = new OpenIDProviderServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        openidServiceClient = new OpenIDProviderServiceClient(backendURL, sessionCookie);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
     
     @AfterClass(alwaysRun = true)

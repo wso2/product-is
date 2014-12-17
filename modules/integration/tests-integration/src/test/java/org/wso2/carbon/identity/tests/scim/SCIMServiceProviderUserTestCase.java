@@ -30,7 +30,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.automation.core.environmentcontext.ContextProvider;
 import org.wso2.carbon.automation.core.environmentcontext.environmentvariables.EnvironmentContext;
 import org.wso2.carbon.automation.core.environmentcontext.environmentvariables.GroupContext;
@@ -41,6 +40,7 @@ import org.wso2.carbon.automation.core.utils.UserInfo;
 import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.carbon.identity.tests.utils.BasicAuthInfo;
 import org.wso2.carbon.identity.tests.scim.utils.SCIMResponseHandler;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.objects.User;
@@ -232,7 +232,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
 
     private boolean isUserExists() throws Exception {
         boolean userExists = false;
-        FlaggedName[] nameList = userMgtClient.listUsers(userName, 100);
+        FlaggedName[] nameList = userMgtClient.listAllUsers(userName, 100);
         for (FlaggedName name : nameList) {
             if (name.getItemName().contains(userName)) {
                 userExists = true;
@@ -243,7 +243,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
 
     private boolean isAllUsersExists(String response) throws Exception {
         boolean usersExists = false;
-        FlaggedName[] nameList = userMgtClient.listUsers(userName, 100);
+        FlaggedName[] nameList = userMgtClient.listAllUsers(userName, 100);
         for (FlaggedName name : nameList) {
 
             if (response.contains(name.getItemName())) {

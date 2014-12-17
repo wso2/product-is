@@ -28,7 +28,6 @@ import org.apache.axis2.AxisFault;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 
 public class XmlParserTestUtils {
 

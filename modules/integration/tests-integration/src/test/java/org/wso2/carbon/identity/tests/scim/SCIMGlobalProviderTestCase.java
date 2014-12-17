@@ -24,8 +24,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.identity.integration.common.clients.scim.SCIMConfigAdminClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
 import org.wso2.carbon.automation.core.MultipleServersManager;
 import org.wso2.carbon.automation.core.ProductConstant;
 import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
@@ -137,7 +137,7 @@ public class SCIMGlobalProviderTestCase extends MasterSCIMInitiator {
 
     private boolean isConsumerUserAvailable() throws Exception {
         boolean userAvailable = false;
-        FlaggedName[] userList = userMgtConsumerClient.listUsers(scimuser, 10);
+        FlaggedName[] userList = userMgtConsumerClient.listAllUsers(scimuser, 10);
         for (FlaggedName user : userList) {
             if (user.getItemName().contains(scimuser)) {
                 userAvailable = true;

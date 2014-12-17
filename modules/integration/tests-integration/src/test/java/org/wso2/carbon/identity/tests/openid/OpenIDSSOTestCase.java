@@ -35,10 +35,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.carbon.automation.core.utils.serverutils.ServerConfigurationManager;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.BufferedReader;
@@ -105,15 +105,14 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
-        super.init(0);
+        super.init();
 
         if (config.getUserConsent() == OpenIDUtils.UserConsent.SKIP){
             changeISConfiguration();
-            super.init(0);
+            super.init();
         }
 
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(isServer.getBackEndUrl(),
-                isServer.getSessionCookie());
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
 
     @AfterClass(alwaysRun = true)
@@ -466,7 +465,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
                 + File.separator + "openId" + File.separator
                 + "identity-skipuserconsent.xml");
 
-        scm = new ServerConfigurationManager(isServer.getBackEndUrl());
+        scm = new ServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
         scm.restartGracefully();
     }

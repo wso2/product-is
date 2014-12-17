@@ -21,11 +21,11 @@ package org.wso2.carbon.automation.api.clients.identity.certificateauthority;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.identity.certificateauthority.stub.CAAdminServiceCaException;
 import org.wso2.carbon.identity.certificateauthority.stub.CAAdminServiceException;
 import org.wso2.carbon.identity.certificateauthority.stub.CAAdminServiceStub;
 import org.wso2.carbon.identity.certificateauthority.stub.CsrMetaInfo;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
 

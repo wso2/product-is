@@ -19,6 +19,7 @@
 package org.wso2.carbon.identity.tests.entitlement;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,9 +32,7 @@ import org.wso2.carbon.identity.entitlement.stub.dto.PaginatedPolicySetDTO;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 import org.wso2.carbon.identity.entitlement.stub.dto.PublisherDataHolder;
 import org.wso2.carbon.identity.entitlement.stub.dto.PublisherPropertyDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class EntitlementPolicyAdminServiceTestCase extends ISIntegrationTest {
 
@@ -99,9 +98,8 @@ public class EntitlementPolicyAdminServiceTestCase extends ISIntegrationTest {
 	
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(0);
-		entitlementPolicyClient = new EntitlementPolicyServiceClient(isServer.getBackEndUrl(),
-				isServer.getSessionCookie());
+		super.init();
+		entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL,sessionCookie);
 	}
 
 	@AfterClass(alwaysRun = true)

@@ -22,11 +22,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class UserProfileMgtTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(UserProfileMgtTestCase.class);
@@ -35,10 +35,10 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(0);
-        userMgtClient = new UserManagementClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        super.init();
+        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
         userMgtClient.addUser("user1", "passWord1@", new String[]{"admin"}, "default");
-        userProfileMgtClient = new UserProfileMgtServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
     }
 
     @Test(groups = "wso2.is", description = "Check get user profiles")

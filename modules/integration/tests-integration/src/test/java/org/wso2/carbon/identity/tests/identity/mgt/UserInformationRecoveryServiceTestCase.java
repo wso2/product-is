@@ -26,27 +26,28 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.api.clients.claim.mgt.ClaimAdminClient;
-import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.identity.integration.common.clients.mgt.UserInformationRecoveryServiceClient;
-import org.wso2.carbon.automation.api.clients.user.mgt.UserManagementClient;
-import org.wso2.carbon.automation.core.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.core.annotations.SetEnvironment;
-import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
-import org.wso2.carbon.automation.core.utils.serverutils.ServerConfigurationManager;
-import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimMappingDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.integration.framework.LoginLogoutUtil;
+import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
+import org.wso2.identity.integration.common.clients.mgt.UserInformationRecoveryServiceClient;
+import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionIdsDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.UserChallengesDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.UserIdentityClaimDTO;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.clients.ClaimManagementServiceClient;
 
 /*
  * TODO - Need to update all the methods with confirmation return check.
@@ -57,17 +58,17 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     private UserInformationRecoveryServiceClient infoRecoveryClient;
 	private UserManagementClient userMgtClient;
 	private UserProfileMgtServiceClient profileClient;
-	private ClaimAdminClient claimMgtClient;
-	private LoginLogoutUtil loginManger;
+	private ClaimManagementServiceClient claimMgtClient;
+	private AuthenticatorClient loginManger;
 	private ServerConfigurationManager scm;
 	private File identityMgtServerFile;
     private File axisServerFile;
 	private String confKey;
 	
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
 	@BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-		super.init(0);
+		super.init();
         String carbonHome = CarbonUtils.getCarbonHome();
 		identityMgtServerFile = new File(carbonHome + File.separator
 				+ "repository" + File.separator + "conf" + File.separator
@@ -82,22 +83,23 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		File axisConfigFile = new File(getISResourceLocation()
 				+ File.separator + "identityMgt" + File.separator
 				+ "axis2.xml");
-        scm = new ServerConfigurationManager(isServer.getBackEndUrl());
+        scm = new ServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityMgtServerFile, true);
         scm.applyConfigurationWithoutRestart(axisConfigFile, axisServerFile, true);
         scm.restartGracefully();
 
-        super.init(0);
+        super.init();
         
-		loginManger = new LoginLogoutUtil(Integer.parseInt(isServer.getProductVariables().getHttpsPort()), isServer
-				.getProductVariables().getHostName());
-		userMgtClient = new UserManagementClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-		infoRecoveryClient = new UserInformationRecoveryServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-		profileClient = new UserProfileMgtServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+		loginManger = new AuthenticatorClient(backendURL);
+		userMgtClient = new UserManagementClient(backendURL, sessionCookie);
+		infoRecoveryClient = new UserInformationRecoveryServiceClient(backendURL, sessionCookie);
+		profileClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
 		
-        loginManger.login("admin", "admin", isServer.getBackEndUrl());
+        loginManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+				isServer.getSuperTenant().getTenantAdmin().getPassword(),
+				isServer.getInstance().getHosts().get("default"));
         
-        claimMgtClient = new ClaimAdminClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
+        claimMgtClient = new ClaimManagementServiceClient(backendURL, sessionCookie);
 		ClaimDTO claim1 = new ClaimDTO();
 		claim1.setDialectURI("http://wso2.org/claims");
 		claim1.setClaimUri("http://wso2.org/claims/identity/passwordTimestamp");
@@ -132,19 +134,19 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
         userMgtClient.addRole("umRole11", new String[]{"user11"}, new String[]{"/permission/admin/login"}, false);
      }
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
     	
-    	loginManger.logout();
-    	if(nameExists(userMgtClient.listUsers("user11", 100), "user11")) {
+    	loginManger.logOut();
+    	if(nameExists(userMgtClient.listAllUsers("user11", 100), "user11")) {
     		userMgtClient.deleteUser("user11");
     	}       
        
         if(nameExists(userMgtClient.listRoles("umRole11", 100), "umRole11")){
         	userMgtClient.deleteRole("umRole11");
         }
-    	if(nameExists(userMgtClient.listUsers("user2", 100), "user2")) {
+    	if(nameExists(userMgtClient.listAllUsers("user2", 100), "user2")) {
     		userMgtClient.deleteUser("user2");
     	}   
 		File identityMgtDefaultFile = new File(getISResourceLocation()
@@ -159,13 +161,14 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 
     }
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check identity mgt with listing users")
 	public void testListUsers() throws Exception {    	
-    	Assert.assertTrue(nameExists(userMgtClient.listUsers("user11", 100), "user11"), "Listing user with identity mgt enabled has failed.");
+    	Assert.assertTrue(nameExists(userMgtClient.listAllUsers("user11", 100), "user11"), "Listing user with " +
+				"identity mgt enabled has failed.");
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check get captcha", dependsOnMethods = "testListUsers")
 	public void testGetCaptcha() throws Exception { 
     	CaptchaInfoBean bean = infoRecoveryClient.getCaptcha();
@@ -178,7 +181,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
      * verifyUser() -> sendRecoveryNotification() -> verifyConfirmationCode() -> updatePassword()
      * Since cannot answer the question the test need to carryout with Captcha.Verification.Internally.Managed=false
      */
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check verify user", dependsOnMethods = "testGetCaptcha")
 	public void testVerifyUser() throws Exception { 
     	VerificationBean bean = infoRecoveryClient.verifyUser("user11", null);
@@ -188,7 +191,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	confKey = bean.getKey();
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check recovery notification sending", dependsOnMethods = "testVerifyUser")
 	public void testSendRecoveryNotification() throws Exception { 
     	UserProfileDTO profile = profileClient.getUserProfile("user11", "default");
@@ -208,7 +211,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check verify confirmation code", dependsOnMethods = "testSendRecoveryNotification")
 	public void testVerifyConfirmationCode() throws Exception { 
     	VerificationBean bean = infoRecoveryClient.verifyConfirmationCode("user11", confKey, null);
@@ -218,7 +221,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 //    	NotificationDataDTO dataDto = bean.getNotificationData();
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check update password", dependsOnMethods = "testVerifyConfirmationCode")
 	public void testUpdatePassword() throws Exception { 
     	VerificationBean bean = infoRecoveryClient.updatePassword("user11", confKey, "passWord2@");
@@ -227,28 +230,28 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 //    	String value = loginManger.login("user11", "passWord2@", isServer.getBackEndUrl());
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check getting all challenge questions", dependsOnMethods = "testSendRecoveryNotification")
 	public void testGetAllChallengeQuestions() throws Exception { 
     	ChallengeQuestionDTO[] bean = infoRecoveryClient.getAllChallengeQuestions();
     	Assert.assertNotNull(bean, "Getting supported claims has failed with null return");
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check getting challenge question ids", dependsOnMethods = "testGetAllChallengeQuestions")
 	public void testGetUserChallengeQuestionIds() throws Exception { 
     	ChallengeQuestionIdsDTO bean = infoRecoveryClient.getUserChallengeQuestionIds("user11", confKey);
     	Assert.assertNotNull(bean, "Getting challenge question ids has failed with null return");
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check get user challenge question", dependsOnMethods = "testGetUserChallengeQuestionIds")
 	public void testGetUserChallengeQuestion() throws Exception { 
     	UserChallengesDTO bean = infoRecoveryClient.getUserChallengeQuestion("user11", confKey, "");
     	Assert.assertNotNull(bean, "Getting challenge question has failed with null return");
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check verify user challenge question", dependsOnMethods = "testGetUserChallengeQuestion")
 	public void testVerifyUserChallengeAnswer() throws Exception { 
     	VerificationBean bean = infoRecoveryClient.verifyUserChallengeAnswer("user11", confKey, "", "");
@@ -263,7 +266,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 //    	Assert.assertNotNull(bean, "Getting supported claims has failed with null return");
 //	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check user account verification", dependsOnMethods = "testVerifyUserChallengeAnswer")
 	public void testVerifyUserAccount() throws Exception { 
     	UserIdentityClaimDTO[] claims =  new UserIdentityClaimDTO[2];
@@ -282,7 +285,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	Assert.assertNotNull(bean, "Verifying user account has failed with null return");
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check user registration", dependsOnMethods = "testVerifyUserAccount")
 	public void testRegisterUser() throws Exception { 
     	UserIdentityClaimDTO[] claims =  new UserIdentityClaimDTO[2];
@@ -302,7 +305,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	confKey = bean.getKey();
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.is", description = "Check user registration confirmation", dependsOnMethods = "testRegisterUser")
 	public void testConfirmUserSelfRegistration() throws Exception { 
     	VerificationBean bean = infoRecoveryClient.confirmUserSelfRegistration("user2", confKey, null, null);

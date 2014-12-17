@@ -20,13 +20,7 @@ package org.wso2.identity.ui.integration.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.automation.core.ProductConstant;
-import org.wso2.carbon.automation.core.utils.UserInfo;
-import org.wso2.carbon.automation.core.utils.UserListCsvReader;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentBuilder;
-import org.wso2.carbon.automation.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.carbon.automation.core.utils.environmentutils.ProductUrlGeneratorUtil;
-import org.wso2.carbon.automation.core.utils.frameworkutils.FrameworkFactory;
+
 
 public abstract class ISIntegrationUITest {
 

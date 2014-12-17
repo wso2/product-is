@@ -22,10 +22,9 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.api.selenium.home.HomePage;
-import org.wso2.carbon.automation.api.selenium.login.LoginPage;
-import org.wso2.carbon.automation.core.BrowserManager;
-import org.wso2.carbon.automation.core.ProductConstant;
+import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
+import org.wso2.identity.integration.common.ui.page.LoginPage;
+import org.wso2.identity.integration.common.ui.page.main.HomePage;
 import org.wso2.identity.ui.integration.test.ISIntegrationUITest;
 
 
