@@ -20,15 +20,8 @@ package org.wso2.identity.integration.common.clients.openid;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDAuthRequestDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDAuthResponseDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDRememberMeDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDUserRPDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDProviderInfoDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDUserProfileDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDClaimDTO;
-import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDParameterDTO;
 import org.wso2.carbon.identity.provider.openid.stub.OpenIDProviderServiceStub;
+import org.wso2.carbon.identity.provider.openid.stub.dto.*;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class OpenIDProviderServiceClient {

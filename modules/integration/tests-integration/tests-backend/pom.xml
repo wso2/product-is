@@ -250,6 +250,12 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+            <version>${test.framwork.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 

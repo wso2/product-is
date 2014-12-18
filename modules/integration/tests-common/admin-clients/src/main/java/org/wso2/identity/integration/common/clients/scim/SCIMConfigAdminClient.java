@@ -19,11 +19,10 @@
 package org.wso2.identity.integration.common.clients.scim;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.scim.common.stub.SCIMConfigAdminServiceIdentitySCIMExceptionException;
 import org.wso2.carbon.identity.scim.common.stub.SCIMConfigAdminServiceStub;
 import org.wso2.carbon.identity.scim.common.stub.config.SCIMProviderDTO;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
 

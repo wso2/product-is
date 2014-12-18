@@ -24,6 +24,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CAAdminServiceClient;
 import org.wso2.carbon.automation.api.clients.identity.certificateauthority.CAClientServiceClient;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.certificateauthority.stub.CertificateDTO;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 

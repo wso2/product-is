@@ -23,7 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.scim.common.stub.config.SCIMProviderDTO;
 import org.wso2.identity.integration.common.clients.scim.SCIMConfigAdminClient;
-import org.wso2.carbon.automation.core.utils.UserListCsvReader;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class SCIMUserProviderTestCase extends ISIntegrationTest {
