@@ -27,6 +27,7 @@ import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDialectDTO;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimMappingDTO;
 
+
 import java.rmi.RemoteException;
 
 public class ClaimManagementServiceClient {
