@@ -32,6 +32,7 @@ import org.wso2.carbon.identity.user.store.configuration.stub.api.Property;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -49,6 +50,7 @@ public class ISIntegrationTest {
     protected User userInfo;
     protected ContextUrls identityContextUrls;
     private static String jdbcClassName = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
+    private LoginLogoutClient loginLogoutClient;
 
     protected void init() throws Exception {
         init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -62,6 +64,13 @@ public class ISIntegrationTest {
         identityContextUrls = isServer.getContextUrls();
         tenantInfo = isServer.getContextTenant();
         userInfo = tenantInfo.getContextUser();
+    }
+
+    protected void init(String instance, String domainKey, String userKey) throws Exception {
+        isServer = new AutomationContext("IS", instance, domainKey, userKey);
+        loginLogoutClient = new LoginLogoutClient(isServer);
+        sessionCookie = loginLogoutClient.login();
+        backendURL = isServer.getContextUrls().getBackEndUrl();
     }
 
     protected String login() throws Exception{

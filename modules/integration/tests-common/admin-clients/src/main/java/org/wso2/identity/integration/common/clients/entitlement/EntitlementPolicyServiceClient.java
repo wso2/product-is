@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.common.clients.entitlement;
 
-import java_cup.version;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -209,7 +208,7 @@ public class EntitlementPolicyServiceClient {
 
     public void publishToPDP(String[] policies, String action, boolean enabled, String version, int order) throws RemoteException {
         try {
-            entitlementPolicyAdminServiceStub.publishToPDP(policies, action, version, enabled, order);
+            entitlementPolicyAdminServiceStub.publishToPDP(policies, action, version, order);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
         }
@@ -217,7 +216,7 @@ public class EntitlementPolicyServiceClient {
 
     public void publishPolicies(String[] policies, String[] subscriberIds, String action, boolean enabled, String version, int order) throws RemoteException {
         try {
-            entitlementPolicyAdminServiceStub.publishPolicies(policies, subscriberIds, action, version, enabled, order);
+            entitlementPolicyAdminServiceStub.publishPolicies(policies, version, action, order, subscriberIds);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
         }

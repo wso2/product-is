@@ -27,7 +27,7 @@ import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.PermissionDTO;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class RemoteUserStoreManagerServiceClient {
@@ -72,7 +72,7 @@ public class RemoteUserStoreManagerServiceClient {
      * @param claimValues           Properties of the user
      * @param profileName           The name of the profile where claims should be added
      * @param requirePasswordChange Require the password change
-     * @throws org.wso2.carbon.user.core.UserStoreException
+     * @throws org.wso2.carbon.user.api.UserStoreException
      * @throws java.rmi.RemoteException
      * @throws org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException
      */

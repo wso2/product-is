@@ -73,7 +73,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
     public void startCarbonServer(int portOffset, Map<String, String> startupParameters)
             throws IOException, LoginAuthenticationExceptionException {
-        CarbonTestServerManager serverManager = new CarbonTestServerManager(System.getProperty("carbon.zip"), startupParameters);
+        CarbonTestServerManager serverManager = new CarbonTestServerManager(System.getProperty("carbon.zip"), portOffset);
         serverManagers.put(portOffset, serverManager);
         serverManager.startServer();
     }

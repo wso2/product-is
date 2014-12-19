@@ -106,8 +106,8 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
 
     @Test(priority = 2, groups = "wso2.is", description = "Test addUser and isExistingUser operations")
     public void testAddUser()
-            throws RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException,
-            UserStoreException, RemoteUserStoreManagerServiceUserStoreExceptionException {
+            throws RemoteException,
+            org.wso2.carbon.user.api.UserStoreException, RemoteUserStoreManagerServiceUserStoreExceptionException {
         //add users
         String[] roleList1 = new String[1];
         roleList1[0] = new String(role1);

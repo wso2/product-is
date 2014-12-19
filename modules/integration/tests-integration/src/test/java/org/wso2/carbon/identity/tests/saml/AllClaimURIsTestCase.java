@@ -29,24 +29,24 @@ import java.rmi.RemoteException;
 
 public class AllClaimURIsTestCase {
 
-    private static final Log log = LogFactory.getLog(AllClaimURIsTestCase.class);
-    private EnvironmentVariables identityServer;
-
-    @BeforeTest(alwaysRun = true)
-    public void testInit() throws LoginAuthenticationExceptionException, RemoteException {
-        int userId = 2;
-        Netapi32Util.UserInfo userInfo = UserListCsvReader.getUserInfo(userId);
-        EnvironmentBuilder builder = new EnvironmentBuilder().is(userId);
-        identityServer = builder.build().getIs();
-    }
-
-    @Test(groups = "wso2.is", description = "Get all claims")
-    public void testAllClaims()
-            throws Exception {
-        SAMLSSOConfigServiceClient ssoConfigurationClient =
-                new SAMLSSOConfigServiceClient(identityServer.getBackEndUrl(),
-                                               identityServer.getSessionCookie());
-        ssoConfigurationClient.getClaimURIs();
-    }
+//    private static final Log log = LogFactory.getLog(AllClaimURIsTestCase.class);
+//    private EnvironmentVariables identityServer;
+//
+//    @BeforeTest(alwaysRun = true)
+//    public void testInit() throws LoginAuthenticationExceptionException, RemoteException {
+//        int userId = 2;
+//        Netapi32Util.UserInfo userInfo = UserListCsvReader.getUserInfo(userId);
+//        EnvironmentBuilder builder = new EnvironmentBuilder().is(userId);
+//        identityServer = builder.build().getIs();
+//    }
+//
+//    @Test(groups = "wso2.is", description = "Get all claims")
+//    public void testAllClaims()
+//            throws Exception {
+//        SAMLSSOConfigServiceClient ssoConfigurationClient =
+//                new SAMLSSOConfigServiceClient(identityServer.getBackEndUrl(),
+//                                               identityServer.getSessionCookie());
+//        ssoConfigurationClient.getClaimURIs();
+//    }
 
 }

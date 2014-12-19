@@ -32,42 +32,42 @@ public class SCIMUserProviderTestCase extends ISIntegrationTest {
     public static final int providerUserId = 2;
     private String scim_Provider_url;
 
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
-        super.init(2);
-        userInfo = UserListCsvReader.getUserInfo(providerUserId);
-        scimConfigAdminClient =
-                new SCIMConfigAdminClient(backendURL, sessionCookie);
-        scim_Provider_url = "https://" + backendURL + "/wso2/scim/";
-
-    }
-
-    @Test(description = "Add user service provider", priority = 1)
-    public void testAddUserProvider() throws Exception {
-        boolean providerAvailable = false;
-        scimConfigAdminClient.addUserProvider(userInfo.getUserName() + "@carbon.super", providerId,
-                userInfo.getUserName(), userInfo.getPassword(),
-                scim_Provider_url + "Users", scim_Provider_url + "Groups");
-        Thread.sleep(5000);
-        SCIMProviderDTO[] scimProviders = scimConfigAdminClient.listUserProviders(userInfo.getUserName() +
-                "@carbon.super", providerId);
-        for (SCIMProviderDTO scimProvider : scimProviders) {
-            if (scimProvider.getProviderId().equals(providerId)) {
-                providerAvailable = true;
-            }
-        }
-        Assert.assertTrue(providerAvailable, "Provider adding failed");
-    }
-
-    @Test(description = "delete user service provider", dependsOnMethods = {"testAddUserProvider"}, priority = 2)
-    public void testDeleteUserProvider() {
-        boolean providerDeleted = false;
-        try {
-            scimConfigAdminClient.deleteUserProvider(userInfo.getUserName() + "@carbon.super", providerId);
-            providerDeleted = true;
-        }  catch (Exception e) {
-            log.error("Provider [" + providerId + "] delete failed.", e);
-        }
-        Assert.assertTrue(providerDeleted, "Provider [" + providerId + "] delete failed");
-    }
+//    @BeforeClass(alwaysRun = true)
+//    public void testInit() throws Exception {
+//        super.init();
+//        userInfo = UserListCsvReader.getUserInfo(providerUserId);
+//        scimConfigAdminClient =
+//                new SCIMConfigAdminClient(backendURL, sessionCookie);
+//        scim_Provider_url = "https://" + backendURL + "/wso2/scim/";
+//
+//    }
+//
+//    @Test(description = "Add user service provider", priority = 1)
+//    public void testAddUserProvider() throws Exception {
+//        boolean providerAvailable = false;
+//        scimConfigAdminClient.addUserProvider(userInfo.getUserName() + "@carbon.super", providerId,
+//                userInfo.getUserName(), userInfo.getPassword(),
+//                scim_Provider_url + "Users", scim_Provider_url + "Groups");
+//        Thread.sleep(5000);
+//        SCIMProviderDTO[] scimProviders = scimConfigAdminClient.listUserProviders(userInfo.getUserName() +
+//                "@carbon.super", providerId);
+//        for (SCIMProviderDTO scimProvider : scimProviders) {
+//            if (scimProvider.getProviderId().equals(providerId)) {
+//                providerAvailable = true;
+//            }
+//        }
+//        Assert.assertTrue(providerAvailable, "Provider adding failed");
+//    }
+//
+//    @Test(description = "delete user service provider", dependsOnMethods = {"testAddUserProvider"}, priority = 2)
+//    public void testDeleteUserProvider() {
+//        boolean providerDeleted = false;
+//        try {
+//            scimConfigAdminClient.deleteUserProvider(userInfo.getUserName() + "@carbon.super", providerId);
+//            providerDeleted = true;
+//        }  catch (Exception e) {
+//            log.error("Provider [" + providerId + "] delete failed.", e);
+//        }
+//        Assert.assertTrue(providerDeleted, "Provider [" + providerId + "] delete failed");
+//    }
 }

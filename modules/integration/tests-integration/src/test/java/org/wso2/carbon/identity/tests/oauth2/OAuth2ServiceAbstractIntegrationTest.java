@@ -28,6 +28,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
@@ -59,14 +60,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Initialize
 	 * 
-	 * @param userId
+	 * @param userMode
 	 *            - User Id
 	 * @throws Exception
 	 */
-	protected void init(int userId) throws Exception {
-		super.init(userId);
-		appMgtclient =
-		               new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+	protected void init(TestUserMode userMode) throws Exception {
+		super.init(userMode);
+		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
 	}
 

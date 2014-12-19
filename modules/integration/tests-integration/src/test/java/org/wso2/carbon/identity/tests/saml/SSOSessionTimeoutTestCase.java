@@ -24,6 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -35,7 +36,6 @@ import static java.io.File.separator;
 public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
 
     private static final Log log = LogFactory.getLog(SSOSessionTimeoutTestCase.class);
-    private EnvironmentVariables identityServer;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
@@ -43,9 +43,10 @@ public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
         super.init();
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        String identityXMLFile = ProductConstant.getResourceLocations(ProductConstant.IS_SERVER_NAME) +
+        String identityXMLFile = TestConfigurationProvider.getResourceLocation("IS") +
                 separator + "conf" + separator + "identity.xml";
         File srcFile = new File(identityXMLFile);
+//        TestConfigurationProvider.getResourceLocation("IS");
 
         serverConfigurationManager.applyConfiguration(srcFile);
         super.init();
