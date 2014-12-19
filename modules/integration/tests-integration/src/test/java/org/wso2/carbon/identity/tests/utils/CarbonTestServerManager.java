@@ -29,8 +29,8 @@ public class CarbonTestServerManager extends TestServerManager {
     public CarbonTestServerManager() {
     }
 
-    public CarbonTestServerManager(String carbonZip, Map<String, String> startupParameterMap) {
-        super(carbonZip, startupParameterMap);
+    public CarbonTestServerManager(String carbonZip, int portOffset) {
+        super(carbonZip, portOffset);
     }
 
     public CarbonTestServerManager(int portOffset) {

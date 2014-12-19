@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.tests.utils.DataExtractUtil;
 import org.wso2.carbon.identity.tests.utils.OAuth2Constant;
@@ -56,7 +57,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(0);
+		super.init(TestUserMode.SUPER_TENANT_USER);
 		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();

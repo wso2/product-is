@@ -24,7 +24,6 @@ import org.wso2.carbon.integration.common.tests.ServerStartupBaseTest;
 
 public class ServerStartupTestCase extends ServerStartupBaseTest {
 
-    @Override
     public String getProductName() {
         return ProductConstant.IS_SERVER_NAME;
     }

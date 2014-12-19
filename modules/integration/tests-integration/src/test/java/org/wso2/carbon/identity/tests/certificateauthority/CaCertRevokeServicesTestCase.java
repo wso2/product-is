@@ -43,71 +43,73 @@ public class CaCertRevokeServicesTestCase extends ISIntegrationTest{
     * User 2 try to revoke cert1, It should fail
     *
     * */
-
-    private CAClientServiceClient clientServiceClient;
-    private CAClientServiceClient clientServiceClient2;
-    private CAAdminServiceClient adminServiceClient;
-
-    private String serialNo1;
-    private String serialNo2;
-    private String serialNo3;
-
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
-        super.init();
-        clientServiceClient = new CAClientServiceClient(backendURL, sessionCookie);
-        super.init(3);
-        clientServiceClient2 = new CAClientServiceClient(backendURL, sessionCookie);
-        super.init();
-        adminServiceClient = new CAAdminServiceClient(backendURL, sessionCookie);
-
-        //todo: can this run after sign services test case
-        serialNo1 = clientServiceClient.addCsr(CaResources.csr1);
-        serialNo2 = clientServiceClient.addCsr(CaResources.csr2);
-        serialNo3 = clientServiceClient.addCsr(CaResources.csr3);
-
-        adminServiceClient.signCSR(serialNo1, 30);
-        adminServiceClient.signCSR(serialNo2, 30);
-        adminServiceClient.signCSR(serialNo3, 30);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
-        adminServiceClient.deleteCSR(serialNo1);
-        adminServiceClient.deleteCSR(serialNo2);
-        adminServiceClient.deleteCSR(serialNo3);
-
-        adminServiceClient.deleteCertificate(serialNo1);
-        adminServiceClient.deleteCertificate(serialNo2);
-        adminServiceClient.deleteCertificate(serialNo3);
-    }
-
-    @Test(groups = "wso2.is", description = "Test revoking certificate by admin")
-    public void testRevokeByAdmin() throws Exception{
-        adminServiceClient.revokeCertificate(serialNo3,CaResources.RevokeReason.REVOCATION_REASON_UNSPECIFIED_VAL);
-        CertificateDTO certificate3 = clientServiceClient.getCertificate(serialNo3);
-        Assert.assertEquals(CaResources.CertificateStatus.REVOKED,certificate3.getCertificateMetaInfo().getStatus(),
-                "Certificate is not revoked");
-    }
-
-    @Test(groups = "wso2.is", description = "Test revoking certificate by client")
-    public void testRevokeByClient() throws Exception{
-        clientServiceClient.revokeCertificate(serialNo2,CaResources.RevokeReason.REVOCATION_REASON_KEYCOMPROMISE_VAL);
-        CertificateDTO certificate2 = clientServiceClient.getCertificate(serialNo2);
-        Assert.assertEquals(CaResources.CertificateStatus.REVOKED,certificate2.getCertificateMetaInfo().getStatus(),"Certificate is not revoked");
-    }
-
-    @Test(groups = "wso2.is", description = "Test revoking certificate by other client",
-            expectedExceptions = RemoteException.class)
-    public void testRevokeByOtherClient() throws Exception{
-        CertificateDTO certificate1 = clientServiceClient2.getCertificate(serialNo1);  //todo fail
-        Assert.assertEquals(CaResources.CertificateStatus.ACTIVE,certificate1.getCertificateMetaInfo().getStatus(),
-                "Certificate is not active");
-
-
-        clientServiceClient2.revokeCertificate(serialNo1,CaResources.RevokeReason
-                .REVOCATION_REASON_KEYCOMPROMISE_VAL);
-    }
+/*
+Commented out till the feature is fully complete
+ */
+//    private CAClientServiceClient clientServiceClient;
+//    private CAClientServiceClient clientServiceClient2;
+//    private CAAdminServiceClient adminServiceClient;
+//
+//    private String serialNo1;
+//    private String serialNo2;
+//    private String serialNo3;
+//
+//    @BeforeClass(alwaysRun = true)
+//    public void testInit() throws Exception {
+//        super.init();
+//        clientServiceClient = new CAClientServiceClient(backendURL, sessionCookie);
+//        super.init(3);
+//        clientServiceClient2 = new CAClientServiceClient(backendURL, sessionCookie);
+//        super.init();
+//        adminServiceClient = new CAAdminServiceClient(backendURL, sessionCookie);
+//
+//        //todo: can this run after sign services test case
+//        serialNo1 = clientServiceClient.addCsr(CaResources.csr1);
+//        serialNo2 = clientServiceClient.addCsr(CaResources.csr2);
+//        serialNo3 = clientServiceClient.addCsr(CaResources.csr3);
+//
+//        adminServiceClient.signCSR(serialNo1, 30);
+//        adminServiceClient.signCSR(serialNo2, 30);
+//        adminServiceClient.signCSR(serialNo3, 30);
+//    }
+//
+//    @AfterClass(alwaysRun = true)
+//    public void atEnd() throws Exception {
+//        adminServiceClient.deleteCSR(serialNo1);
+//        adminServiceClient.deleteCSR(serialNo2);
+//        adminServiceClient.deleteCSR(serialNo3);
+//
+//        adminServiceClient.deleteCertificate(serialNo1);
+//        adminServiceClient.deleteCertificate(serialNo2);
+//        adminServiceClient.deleteCertificate(serialNo3);
+//    }
+//
+//    @Test(groups = "wso2.is", description = "Test revoking certificate by admin")
+//    public void testRevokeByAdmin() throws Exception{
+//        adminServiceClient.revokeCertificate(serialNo3,CaResources.RevokeReason.REVOCATION_REASON_UNSPECIFIED_VAL);
+//        CertificateDTO certificate3 = clientServiceClient.getCertificate(serialNo3);
+//        Assert.assertEquals(CaResources.CertificateStatus.REVOKED,certificate3.getCertificateMetaInfo().getStatus(),
+//                "Certificate is not revoked");
+//    }
+//
+//    @Test(groups = "wso2.is", description = "Test revoking certificate by client")
+//    public void testRevokeByClient() throws Exception{
+//        clientServiceClient.revokeCertificate(serialNo2,CaResources.RevokeReason.REVOCATION_REASON_KEYCOMPROMISE_VAL);
+//        CertificateDTO certificate2 = clientServiceClient.getCertificate(serialNo2);
+//        Assert.assertEquals(CaResources.CertificateStatus.REVOKED,certificate2.getCertificateMetaInfo().getStatus(),"Certificate is not revoked");
+//    }
+//
+//    @Test(groups = "wso2.is", description = "Test revoking certificate by other client",
+//            expectedExceptions = RemoteException.class)
+//    public void testRevokeByOtherClient() throws Exception{
+//        CertificateDTO certificate1 = clientServiceClient2.getCertificate(serialNo1);  //todo fail
+//        Assert.assertEquals(CaResources.CertificateStatus.ACTIVE,certificate1.getCertificateMetaInfo().getStatus(),
+//                "Certificate is not active");
+//
+//
+//        clientServiceClient2.revokeCertificate(serialNo1,CaResources.RevokeReason
+//                .REVOCATION_REASON_KEYCOMPROMISE_VAL);
+//    }
 
 
 

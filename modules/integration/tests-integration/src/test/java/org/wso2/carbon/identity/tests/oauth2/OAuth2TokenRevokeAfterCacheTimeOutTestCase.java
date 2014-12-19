@@ -35,6 +35,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
@@ -58,7 +59,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(0);
+		super.init(TestUserMode.SUPER_TENANT_USER);
 		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();
