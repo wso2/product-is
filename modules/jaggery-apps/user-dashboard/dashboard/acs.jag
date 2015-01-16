@@ -74,7 +74,7 @@ if (samlResponse != null) {
 					    
 					    response.sendRedirect("index.jag");
 					}else{
-					    response.sendRedirect("landing.html?e=1&error=login_fail" );
+					    response.sendRedirect("landing.jag?e=1&error=login_fail" );
 					}
 
                 }
@@ -82,7 +82,7 @@ if (samlResponse != null) {
 
     } else {
         session.invalidate();
-        response.sendRedirect('landing.html');
+        response.sendRedirect('landing.jag');
     }
 }else if (samlRequest != null) {
 	// if saml request is a log out request, then invalidate session.
