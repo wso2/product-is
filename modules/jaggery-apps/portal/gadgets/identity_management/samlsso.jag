@@ -1,9 +1,11 @@
 <%
 
 include("util/constants.jag");
-
+var util = require("util/utility.jag");
+var commonUtil = require("/util/utility.jag");
 
 var lg = new Log();
+commonUtil.setServerURL();
 initAuthenticationProtocol();
 
 var samlConfig = application.get(SAML_PROPERTIES);
@@ -40,18 +42,15 @@ function initAuthenticationProtocol(){
 		
 		var sys = Packages.java.lang.System;
 		var carbonHome = sys.getProperty("carbon.home");
-		var serverUrl = "https://localhost:9443/services";
+		var serverUrl = util.getServerUrl();
 		var server = stringify(serverUrl);
 		if(server.indexOf("[") > -1 || server.indexOf("]") > -1){
 			serverUrl = serverUrl[0];
 		}
 		lg.info(samlConfig);
 		lg.info(serverUrl);
-		
-		var mgtHostName = application.get("mgtHostName");		
-		var mgtTransport =  application.get("mgtTransport");
-	   var httpsPort = application.get("httpsPort");
-		
+
+		var serverCoreUrl = application.get(SERVER_CORE_URL);
 		for (var prop in samlConfig){
 			if (samlConfig.hasOwnProperty(prop)) {
 				var value = samlConfig[prop];
@@ -63,7 +62,7 @@ function initAuthenticationProtocol(){
 						value = value;
 					}else{
 						//value = mgtTransport + "://" + mgtHostName + ":" + httpsPort + "/" + (value);
-						value = "https://localhost:9443" + "/" + (value);
+						value = serverCoreUrl + "/" + (value);
 					}
 
 				}

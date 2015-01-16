@@ -4,8 +4,8 @@ var log = new Log();
 var selfReg = require('/controllers/user-registration/userRegistrationClient.jag');
 
 var constants = require("../../util/constants.jag");
-
-var i18n = session.get("i18n");
+var util = require("../../util/utility.jag");
+var i18n = util.initI18N();
 
 function edit(){
 	var messages = i18n.localize("messages");
@@ -31,7 +31,7 @@ function edit(){
         var retypePwd = request.getParameter("retypePwd");
 
         if(pwd != retypePwd){
-			response.sendRedirect("../../landing.html?e=1&error=password_doesnt_match" );
+			response.sendRedirect("../../landing.jag?e=1&error=password_doesnt_match" );
 			return;
         }
 
@@ -50,7 +50,7 @@ function edit(){
         }
 
         if(!validPwd){
-			response.sendRedirect("../../landing.html?e=1&error=" + messages["pwd"] + " " + messages["not_valid"] );
+			response.sendRedirect("../../landing.jag?e=1&error=" + messages["pwd"] + " " + messages["not_valid"] );
 			return;
         }
 
@@ -73,7 +73,7 @@ function edit(){
            log.debug(value);
            var isValid = validate(value, f);
            if(!isValid){
-           		response.sendRedirect("../../landing.html?e=1&error=" + value + " " + messages["not_valid"] );           
+           		response.sendRedirect("../../landing.jag?e=1&error=" + value + " " + messages["not_valid"] );
                	return;
            }
 

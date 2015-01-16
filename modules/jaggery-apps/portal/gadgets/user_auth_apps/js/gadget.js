@@ -46,7 +46,7 @@ function drawPage() {
 }
 
 function itemRemove(appName) {
-    var str = "/portal/gadgets/user_auth_apps/controllers/my_auth_apps/my_authorized_app_remove.jag";
+    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_auth_apps/controllers/my_auth_apps/my_authorized_app_remove.jag";
     $.ajax({
         url:str,
         type:"POST",

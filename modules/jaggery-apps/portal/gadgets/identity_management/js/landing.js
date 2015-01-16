@@ -3,7 +3,7 @@ $(function () {
     $('.register').click(function (e) {
 	e.preventDefault();
 	var json = "";
- var str = "/portal/gadgets/identity_management/idpManager.jag"
+ var str = PROXY_CONTEXT_PATH + "/portal/gadgets/identity_management/idpManager.jag"
 
         $.ajax({
             type:"GET",
@@ -62,7 +62,7 @@ function drawPage2(json) {
         "    <div class=\"container content-section-wrapper\">\n" +
                "        <div class=\"row\">\n" +
                "            <div class=\"col-lg-12 content-section\">\n" +
-               "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\" action=\"/portal/gadgets/identity_management/controllers/identity-management/associateID.jag?\" >\n" +
+               "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\" action=\"" + PROXY_CONTEXT_PATH + "/portal/gadgets/identity_management/controllers/identity-management/associateID.jag?\" >\n" +
                "";
        var body = "" ;
                              
@@ -144,7 +144,7 @@ associateID();
 }
 
 function associateID() {
-  var str = "/portal/gadgets/identity_management/controllers/identity-management/associateID.jag";
+  var str = PROXY_CONTEXT_PATH + "/portal/gadgets/identity_management/controllers/identity-management/associateID.jag";
                 $.ajax({
                     url:str,
                     type:"POST",
