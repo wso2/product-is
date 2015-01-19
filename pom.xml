@@ -1902,7 +1902,11 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
+<<<<<<< HEAD
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+        <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
+>>>>>>> de12bd2... # Please enter the commit message for your changes. Lines starting
 	</properties>
 
     <repositories>

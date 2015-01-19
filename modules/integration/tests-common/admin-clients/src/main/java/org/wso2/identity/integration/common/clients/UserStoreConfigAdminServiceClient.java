@@ -23,7 +23,11 @@ import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdm
 import org.wso2.carbon.identity.user.store.configuration.stub.api.Properties;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+<<<<<<< HEAD
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
+=======
+import org.wso2.carbon.integration.framework.utils.AuthenticateStubUtil;
+>>>>>>> de12bd2... # Please enter the commit message for your changes. Lines starting
 
 
 public class UserStoreConfigAdminServiceClient {

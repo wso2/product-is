@@ -25,6 +25,7 @@
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.engine</artifactId>
+<<<<<<< HEAD
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -35,6 +36,9 @@
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+=======
+            <version>4.3.1</version>
+>>>>>>> de12bd2... # Please enter the commit message for your changes. Lines starting
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -48,6 +52,14 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+<<<<<<< HEAD
+=======
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+>>>>>>> de12bd2... # Please enter the commit message for your changes. Lines starting
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
             <scope>compile</scope>
