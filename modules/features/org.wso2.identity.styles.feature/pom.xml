@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core.ui.feature</artifactId>
-            <version>${carbon.platform.version}</version>
+            <version>${carbon.kernel.version}</version>
             <type>zip</type>
         </dependency>
 	</dependencies>
@@ -70,7 +70,7 @@
 								<bundleDef>org.wso2.identity:org.wso2.identity.styles</bundleDef>
 							</bundles>
 							<importFeatures>
-								<importFeatureDef>org.wso2.carbon.core.ui:${carbon.platform.version}</importFeatureDef>
+								<importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>
 							</importFeatures>
 						</configuration>
 					</execution>

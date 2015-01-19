@@ -1489,7 +1489,7 @@
 			<dependency>
 				<groupId>org.wso2.carbon</groupId>
 				<artifactId>org.wso2.carbon.ui</artifactId>
-				<version>${carbon.platform.version}</version>
+				<version>${carbon.kernel.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.felix</groupId>
@@ -1584,7 +1584,7 @@
 			<dependency>
 				<groupId>org.wso2.carbon</groupId>
 				<artifactId>org.wso2.carbon.core</artifactId>
-				<version>${carbon.platform.version}</version>
+				<version>${carbon.kernel.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.axis2.wso2</groupId>
@@ -1694,7 +1694,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
 >>>>>>> 71e8c09... Introduce new integration test modules backend/UI
 =======
@@ -1850,7 +1850,7 @@
 		<axis2.wso2.version>${orbit.version.axis2}</axis2.wso2.version>
 		<axiom.wso2.version>${orbit.version.axiom}</axiom.wso2.version>
 		<carbon.version>${wso2carbon.version}</carbon.version>
-		<carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
+		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 		<orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>

@@ -43,7 +43,7 @@
                					<artifactItem>
 								 	<groupId>org.wso2.carbon</groupId>
 									<artifactId>wso2carbon-core</artifactId>
-									<version>${carbon.platform.version}</version>
+									<version>${carbon.kernel.version}</version>
 									<type>zip</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>target</outputDirectory>
@@ -91,7 +91,7 @@
 							<publishArtifacts>true</publishArtifacts>
 							<publishArtifactRepository>true</publishArtifactRepository>
 							<featureArtifacts>
-								<!--jaggery features-->	
+								<!--jaggery features-->
 								<featureArtifactDef>org.jaggeryjs:org.jaggeryjs.server.feature:${jaggeryjs.version}</featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:ws.feature:${ws.module.version}</featureArtifactDef>
                                 <featureArtifactDef>org.jaggeryjs.modules:oauth.feature:${oauth.module.version}</featureArtifactDef>
@@ -180,8 +180,8 @@
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:2.2.1</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.user.cassandra.feature:4.2.0</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.core.feature:${carbon.platform.version}</featureArtifactDef>
-                						<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.core.runtime.feature:${carbon.platform.version}</featureArtifactDef>   
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.core.feature:${carbon.kernel.version}</featureArtifactDef>
+                						<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.core.runtime.feature:${carbon.kernel.version}</featureArtifactDef>
 
 								<!-- DepSync feature -->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.server.feature:${carbon.platform.version}</featureArtifactDef>
@@ -215,9 +215,10 @@
 							<p2AgentLocation>${basedir}/target/p2-agent</p2AgentLocation>
 							<metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
 							<artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
-							<destination>${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/components</destination>
+							<destination>${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/components</destination>
 							<deleteOldProfileFiles>true</deleteOldProfileFiles>
 							<features>
+
 								<feature>
 		                            <id>org.jaggeryjs.server.feature.group</id>
 		                            <version>${jaggeryjs.version}</version>
@@ -272,7 +273,7 @@
                                     <version>${wso2.store.version}</version>
                                 </feature>
 
-                                <!--end of store features-->
+                                   <!--end of store features-->
 
                                 <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
@@ -795,11 +796,11 @@
 						<configuration>
 							<tasks>
 								<replace token="false" value="true"
-									dir="target/wso2carbon-core-${carbon.platform.version}/repository/components">
+									dir="target/wso2carbon-core-${carbon.kernel.version}/repository/components">
 									<include name="**/bundles.info" />
 								</replace>
                                 <replace
-                                        file="target/wso2carbon-core-${carbon.platform.version}/repository/conf/tomcat/context.xml"
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml"
                                         token="&lt;Context&gt;"
                                         value="&lt;Context crossContext=&quot;true&quot;&gt;"/>
 							</tasks>
