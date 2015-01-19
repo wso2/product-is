@@ -589,7 +589,6 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
 	</properties>
 

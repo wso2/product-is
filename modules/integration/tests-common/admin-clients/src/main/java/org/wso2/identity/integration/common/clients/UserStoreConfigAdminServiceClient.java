@@ -23,7 +23,7 @@ import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdm
 import org.wso2.carbon.identity.user.store.configuration.stub.api.Properties;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
-import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
+import org.wso2.carbon.integration.framework.utils.AuthenticateStubUtil;
 
 
 public class UserStoreConfigAdminServiceClient {

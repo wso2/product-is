@@ -27,6 +27,12 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.xml.sax.SAXException;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class ISIntegrationTest {
 
