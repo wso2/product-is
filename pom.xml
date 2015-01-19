@@ -273,7 +273,7 @@
 			<dependency>
 				<groupId>org.wso2.carbon</groupId>
 				<artifactId>org.wso2.carbon.ui</artifactId>
-				<version>${carbon.platform.version}</version>
+				<version>${carbon.kernel.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.felix</groupId>
@@ -368,7 +368,7 @@
 			<dependency>
 				<groupId>org.wso2.carbon</groupId>
 				<artifactId>org.wso2.carbon.core</artifactId>
-				<version>${carbon.platform.version}</version>
+				<version>${carbon.kernel.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.axis2.wso2</groupId>
@@ -460,7 +460,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
             </dependency>
 		</dependencies>
@@ -549,7 +549,7 @@
 		<axis2.wso2.version>${orbit.version.axis2}</axis2.wso2.version>
 		<axiom.wso2.version>${orbit.version.axiom}</axiom.wso2.version>
 		<carbon.version>${wso2carbon.version}</carbon.version>
-		<carbon.kernel.version>4.3.0-SNAPSHOT</carbon.kernel.version>
+		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 		<orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
@@ -569,7 +569,7 @@
 		<version.commons.logging>1.1.1</version.commons.logging>
         <emma.version>2.1.5320</emma.version>
         <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
-        <jaggeryjs.version>0.9.0.ALPHA5.wso2v1-SNAPSHOT</jaggeryjs.version>
+        <jaggeryjs.version>0.9.0-SNAPSHOT</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <shindig.version>2.5.0-beta5</shindig.version>
         <ws.module.version>1.1.0</ws.module.version>
