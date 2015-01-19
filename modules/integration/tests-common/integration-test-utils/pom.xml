@@ -26,6 +26,7 @@
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.engine</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -39,6 +40,8 @@
 =======
             <version>4.3.1</version>
 >>>>>>> de12bd2... # Please enter the commit message for your changes. Lines starting
+=======
+>>>>>>> 140a4d6... moving version to parent pom
             <scope>compile</scope>
         </dependency>
         <dependency>
