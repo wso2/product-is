@@ -1,0 +1,30 @@
+{
+    "assetsUrlPrefix": "/assets",
+    "extensionsUrlPrefix": "/extensions",
+    "subscriptionsUrlPrefix": "/subscriptions",
+    "tenantConfigs": "/_system/config/store/configs/store.json",
+    "socialCommentsEnable": true,
+    "cached": false,
+    "server": {
+        "https": "%https.host%",
+        "http": "%http.host%"
+    },
+    "lifeCycleBehaviour":{
+        "visibleIn":["Published"]
+    },
+    "socialAppConnectionInfo":{
+        "script":"https://localhost:9443/social/export-js/social.js",
+        "scriptType":"text/javascript",
+        "socialAppUrl":"../../../social/"
+    },
+    "ssoConfiguration": {
+        "enabled": true,
+        "issuer": "wso2.my.dashboard",
+        "identityProviderURL": "%https.carbon.local.ip%/samlsso",
+        "keyStorePassword": "wso2carbon",
+        "identityAlias": "wso2carbon",
+        "responseSigningEnabled": "true",
+        "storeAcs" : "%https.host%/dashboard/acs",
+        "keyStoreName": "/repository/resources/security/wso2carbon.jks"
+    }
+}

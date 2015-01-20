@@ -1,5 +1,5 @@
 <!--
-~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
 ~ WSO2 Inc. licenses this file to you under the Apache License,
 ~ Version 2.0 (the "License"); you may not use this file except
@@ -72,7 +72,7 @@
         <hr/>
     </div>
     <div id="footer-area">
-        <p>©2013 WSO2</p>
+        <p>©2015 WSO2</p>
     </div>
 </div>
 </body>

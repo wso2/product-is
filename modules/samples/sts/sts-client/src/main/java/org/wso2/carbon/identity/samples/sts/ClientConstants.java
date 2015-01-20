@@ -4,8 +4,7 @@ import java.io.File;
 
 public abstract class ClientConstants {
     
-    public static final String RESOURCE_PATH = System.getProperty("user.dir") + File.separator + 
-            "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+    public static final String RESOURCE_PATH = System.getProperty("user.dir") + File.separator;
     public static final String PROPERTIES_FILE_PATH =  RESOURCE_PATH + "client.properties";
     
     //property file keys
@@ -30,7 +29,7 @@ public abstract class ClientConstants {
     public static final String USER_CERTIFICATE_PASSWORD = "user.cert.password";
     public static final String PASSWORD_CALLBACK_CLASS = "password.callback.class";
     public static final String KEYSTORE_PASSWORD = "keystore.password";
-    
+    public static final String ENABLE_RENEW = "enable.renew";
     //property file values
     public static final String SUBJECT_CONFIRMATION_BEARER = "b";
     public static final String SUBJECT_CONFIRMATION_HOLDER_OF_KEY = "h";

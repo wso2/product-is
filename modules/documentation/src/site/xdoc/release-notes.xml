@@ -21,19 +21,19 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
-    <title>Welcome to WSO2 Identity Server v5.0.0!</title>
+    <title>Welcome to WSO2 Identity Server v5.1.0!</title>
     <link href="css/is-docs.css" rel="stylesheet"/>
 </head>
 
 <body>
 <h1>WSO2 Identity Server : An Open Source Identity and Entitlement Management Server</h1>
 
-<h3>WSO2 Identity Server v5.0.0 Release Note</h3>
+<h3>WSO2 Identity Server v5.1.0 Release Note</h3>
 
 <h3>20 December 2013</h3>
 
 <p>
-    The WSO2 Identity Server team is pleased to announce the release of version 5.0.0 of
+    The WSO2 Identity Server team is pleased to announce the release of version 5.1.0 of
     the WSO2 Identity Server (IS).
 </p>
 
@@ -53,8 +53,8 @@
     http://wso2.com/products/identity-server/</a>.</p>
 
 <p>The online documentation is available at
-    <a href="http://docs.wso2.org/wiki/display/IS460/WSO2+Identity+Server+Documentation">
-        http://docs.wso2.org/wiki/display/IS460/WSO2+Identity+Server+Documentation.</a></p>
+    <a href="http://docs.wso2.org/wiki/display/IS510/WSO2+Identity+Server+Documentation">
+        http://docs.wso2.org/wiki/display/IS510/WSO2+Identity+Server+Documentation.</a></p>
 
 <h2>How to Run </h2>
 <ol>
@@ -116,10 +116,10 @@
 </ul>
 <h2>Known Issues</h2>
 <p>
-    All the known issues in WSO2 Identity Server 5.0.0 are reported at:
+    All the known issues in WSO2 Identity Server 5.1.0 are reported at:
 </p>
 <ul>
-        <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=11277">Known issues in WSO2 Identity Server 5.0.0</a></li>
+        <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=11277">Known issues in WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>How You Can Contribute</h2>
 <h3>

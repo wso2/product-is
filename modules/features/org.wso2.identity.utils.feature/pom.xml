@@ -41,6 +41,10 @@
 				<artifactId>hibernate</artifactId>
 			</dependency>
 			<dependency>
+				<groupId>net.sf.ehcache.wso2</groupId>
+				<artifactId>ehcache</artifactId>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.bcel.wso2</groupId>
 				<artifactId>bcel</artifactId>
 			</dependency>
@@ -94,6 +98,7 @@
 							<bundles>
 								<bundleDef>org.apache.derby.wso2:derby</bundleDef>
 								<bundleDef>org.hibernate.wso2:hibernate</bundleDef>
+								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
 								<bundleDef>asm.wso2:asm</bundleDef>
 								<bundleDef>cglib.wso2:cglib</bundleDef>
@@ -104,7 +109,7 @@
 								<bundleDef>com.sun.xml.bind.wso2:jaxb</bundleDef>
 							</bundles>
 							<importFeatures>
-								<importFeatureDef>org.wso2.carbon.core.server:${carbon.platform.version}</importFeatureDef>
+								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
 							</importFeatures>
 						</configuration>
 					</execution>

@@ -80,7 +80,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest{
         		break;
         	}
 		}
-        Assert.assertEquals(displayValue, "user1", "Getting user profile has failed.");
+        Assert.assertTrue("user1".equals(displayValue) || "user1".equals(displayValue), "Getting user profile has failed.");
     }
     
 //    @Test(groups = "wso2.is", description = "Check get ProfileFields For InternalStore ")

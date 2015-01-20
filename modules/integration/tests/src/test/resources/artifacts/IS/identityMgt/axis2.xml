@@ -399,7 +399,7 @@
                      class="org.apache.axis2.transport.mail.MailTransportSender">
         <parameter name="mail.smtp.from">testuserchamath@gmail.com</parameter>
         <parameter name="mail.smtp.user">testuserchamath@gmail.com</parameter>
-        <parameter name="mail.smtp.password">chamath123</parameter>
+        <parameter name="mail.smtp.password">passWord1@</parameter>
         <parameter name="mail.smtp.host">smtp.gmail.com</parameter>
 
         <parameter name="mail.smtp.port">587</parameter>

@@ -1,173 +1,232 @@
 /*
-*  Copyright (c)  WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.identity.tests.oauth2;
 
+import org.apache.catalina.startup.Tomcat;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import org.wso2.carbon.automation.api.clients.identity.oauth.Oauth2ServiceClient;
-import org.wso2.carbon.automation.api.clients.identity.oauth.Oauth2TokenValidationClient;
-import org.wso2.carbon.automation.api.clients.identity.oauth.OauthAdminClient;
 import org.wso2.carbon.automation.core.utils.LoginLogoutUtil;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.*;
-import org.wso2.carbon.identity.tests.ISIntegrationTest;
+import org.wso2.carbon.identity.tests.utils.DataExtractUtil;
+import org.wso2.carbon.identity.tests.utils.OAuth2Constant;
 
-public class OAuth2ServiceAuthCodeGrantTestCase extends ISIntegrationTest{
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.wso2.carbon.identity.tests.utils.DataExtractUtil.KeyValue;
+
+public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
 	private LoginLogoutUtil logManger;
-    private String adminUsername;
-    private String adminPassword;
-    private Oauth2ServiceClient oauth2client;
-    private OauthAdminClient adminClient;
-    private Oauth2TokenValidationClient oauth2TokenValidationClient;
-	private String consumerKey;
+	private String adminUsername;
+	private String adminPassword;
 	private String accessToken;
-	private String authCode;
+	private String sessionDataKeyConsent;
+	private String sessionDataKey;
+	private String authorizationCode;
+	private String consumerKey;
 	private String consumerSecret;
-    
+
+	private DefaultHttpClient client;
+	private Tomcat tomcat;
+
 	@BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+	public void testInit() throws Exception {
 
-        super.init(0);
-        logManger = new LoginLogoutUtil(isServer.getBackEndUrl());
-        
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
-        
-        logManger.login(adminUsername, adminPassword, isServer.getBackEndUrl());
-        
-        oauth2client = new Oauth2ServiceClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-        adminClient = new OauthAdminClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-        oauth2TokenValidationClient = new Oauth2TokenValidationClient(isServer.getBackEndUrl(), isServer.getSessionCookie());
-    }
-    
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
-        
-    	adminClient.removeOAuthApplicationData(consumerKey);
-    	
-        logManger = null;
-        oauth2client = null;
-        consumerKey = null;
-        accessToken = null;
-    }
-    
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
-    public void testRegisterApplication() throws Exception {
-    	
-    	OAuthConsumerAppDTO app = new OAuthConsumerAppDTO();
-    	app.setApplicationName("oauthTestApp");
-    	app.setCallbackUrl("https://localhost:8080/oauthPlayground");
-    	app.setGrantTypes("authorization_code");
-    	app.setOAuthVersion("OAuth-2.0");
-    	
-    	adminClient.registerOAuthApplicationData(app);
-    	
-    	OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
-    	
-    	Assert.assertNotNull(appDtos, "getAllOAuthApplicationData returned null.");
-    	
-    	for (OAuthConsumerAppDTO appDto : appDtos) {
-	        if(appDto.getApplicationName().equals("oauthTestApp")) {
-	        	consumerKey = appDto.getOauthConsumerKey();
-	        	consumerSecret = appDto.getOauthConsumerSecret();
-	        }
-        }
-    	
-    	Assert.assertNotNull(consumerKey, "Consumer key is null.");
-    }
-    
-    @Test(groups = "wso2.is", description = "Check Oauth2 authorize request", dependsOnMethods="testRegisterApplication")
-    public void testAuthorize() throws Exception {
+		super.init(0);
+		logManger = new LoginLogoutUtil(isServer.getBackEndUrl());
+		adminUsername = userInfo.getUserName();
+		adminPassword = userInfo.getPassword();
+		logManger.login(adminUsername, adminPassword, isServer.getBackEndUrl());
+		client = new DefaultHttpClient();
 
-    	OAuth2AuthorizeReqDTO reqDto = new OAuth2AuthorizeReqDTO();
-    	reqDto.setCallbackUrl("https://localhost:8080/oauthPlayground");
-    	reqDto.setConsumerKey(consumerKey);
-    	reqDto.setResponseType("code");
-    	reqDto.setScopes(new String[]{"test"});
-    	reqDto.setUsername(adminUsername);
-    	
-    	OAuth2AuthorizeRespDTO resDto = oauth2client.authorize(reqDto);
-    	
-    	Assert.assertNotNull(resDto, "Authorization response is null.");
-    	Assert.assertTrue(resDto.getAuthenticated(), "Authentication is false.");
-    	Assert.assertTrue(resDto.getAuthorized(), "Authorization is false.");
-    	Assert.assertNotNull(resDto.getAuthorizationCode(), "Authorization code is null.");
+		setSystemproperties();
+	}
 
-    	authCode = resDto.getAuthorizationCode();
-    	
-    }
-    
-    @Test(groups = "wso2.is", description = "Check Oauth2 token issue", dependsOnMethods="testAuthorize")
-    public void testIssueAccessToken() throws Exception {
-    	
-    	OAuth2AccessTokenReqDTO reqDto = new OAuth2AccessTokenReqDTO();
-    	reqDto.setAuthorizationCode(authCode);
-    	reqDto.setGrantType("authorization_code");
-    	reqDto.setClientId(consumerKey);
-    	reqDto.setClientSecret(consumerSecret);
-    	reqDto.setCallbackURI("https://localhost:8080/oauthPlayground");
+	@AfterClass(alwaysRun = true)
+	public void atEnd() throws Exception {
+		deleteApplication();
+		removeOAuthApplicationData();
+		stopTomcat(tomcat);
 
-    	OAuth2AccessTokenRespDTO resDto = oauth2client.issueAccessToken(reqDto);
-    	
-    	Assert.assertNotNull(resDto, "issue token response is null.");
-    	Assert.assertNotNull(resDto.getAccessToken(), "Access Token is null");
-    	
-    	accessToken = resDto.getAccessToken();
-    }
-    
-    @Test(groups = "wso2.is", description = "Check Oauth2 validate access token", dependsOnMethods="testIssueAccessToken")
-    public void testValidateClientInfo() throws Exception {
-    	
-    	OAuth2ClientValidationResponseDTO resDto = oauth2client.validateClientInfo(consumerKey, "https://localhost:8080/oauthPlayground");
-    	
-    	Assert.assertNotNull(resDto, "Validation response is null.");
-    	Assert.assertTrue(resDto.getValidClient(), "Valid client is false");
-    	Assert.assertEquals(resDto.getCallbackURL(), "https://localhost:8080/oauthPlayground");
-    	Assert.assertEquals(resDto.getApplicationName(), "oauthTestApp");
-    }
-    //todo: Compilation error from the code below
-//    @Test(groups = "wso2.is", description = "Check Oauth2 validate access token", dependsOnMethods="testValidateClientInfo")
-//    public void testValidateAccessToken() throws Exception {
-//
-//        OAuth2TokenValidationRequestDTO valReq = new OAuth2TokenValidationRequestDTO();
-//        OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDto =  new OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-//        accessTokenDto.setTokenType("bearer");
-//        accessTokenDto.setIdentifier(accessToken);
-//        valReq.setAccessToken(accessTokenDto);
-//
-//        OAuth2TokenValidationResponseDTO responseDTO = oauth2TokenValidationClient.validateToken(valReq);
-//        Assert.assertTrue(responseDTO.getValid(), " Invalid Token ");
-//    }
-    
-    @Test(groups = "wso2.is", description = "Check Oauth2 revoke token", dependsOnMethods="testValidateAccessToken")
-    public void testRevokeTokenByOAuthClient() throws Exception {
-    	
-    	OAuthRevocationRequestDTO revokeRequestDTO =  new OAuthRevocationRequestDTO();
-    	revokeRequestDTO.setConsumerKey(consumerKey);
-    	revokeRequestDTO.setConsumerSecret(consumerSecret);
-    	revokeRequestDTO.setToken(accessToken);
-    	
-    	OAuthRevocationResponseDTO revokeResponseDTO = oauth2client.revokeTokenByOAuthClient(revokeRequestDTO);
-    	
-    	Assert.assertNotNull(revokeRequestDTO, "Revoke token response is null.");
-    }
+		logManger = null;
+		consumerKey = null;
+		accessToken = null;
+	}
+
+	@Test(alwaysRun = true, description = "Deploy playground application")
+	public void testDeployPlaygroundApp() {
+		try {
+			tomcat = getTomcat();
+			URL resourceUrl =
+			                  getClass().getResource(File.separator + "samples" + File.separator +
+			                                                 "playground2.war");
+			startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
+
+		} catch (Exception e) {
+			Assert.fail("Playground application deployment failed.", e);
+		}
+	}
+
+	@Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods = "testDeployPlaygroundApp")
+	public void testRegisterApplication() throws Exception {
+
+		OAuthConsumerAppDTO appDto = createApplication();
+		Assert.assertNotNull(appDto, "Application creation failed.");
+
+		consumerKey = appDto.getOauthConsumerKey();
+		Assert.assertNotNull(consumerKey, "Application creation failed.");
+
+		consumerSecret = appDto.getOauthConsumerSecret();
+	}
+
+	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
+	public void testSendAuthorozedPost() throws Exception {
+
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+		urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
+		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
+		urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
+		urlParameters.add(new BasicNameValuePair("scope", ""));
+
+		HttpResponse response =
+		                        sendPostRequestWithParameters(client, urlParameters,
+		                                                      OAuth2Constant.AUTHORIZED_USER_URL);
+		Assert.assertNotNull(response, "Authorized response is null");
+
+		Header locationHeader =
+		                        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+		Assert.assertNotNull(locationHeader, "Authorized response header is null");
+		EntityUtils.consume(response.getEntity());
+
+		response = sendGetRequest(client, locationHeader.getValue());
+		Assert.assertNotNull(response, "Authorized user response is null.");
+
+		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		keyPositionMap.put("name=\"sessionDataKey\"", 1);
+		List<KeyValue> keyValues =
+		                           DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
+		Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
+
+		sessionDataKey = keyValues.get(0).getValue();
+		Assert.assertNotNull(sessionDataKey, "Session data key is null.");
+		EntityUtils.consume(response.getEntity());
+	}
+
+	@Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
+	public void testSendLoginPost() throws Exception {
+		HttpResponse response = sendLoginPost(client, sessionDataKey);
+		Assert.assertNotNull(response, "Login request failed. Login response is null.");
+
+		Header locationHeader =
+		                        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+		Assert.assertNotNull(locationHeader, "Login response header is null");
+		EntityUtils.consume(response.getEntity());
+
+		response = sendGetRequest(client, locationHeader.getValue());
+		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
+		List<KeyValue> keyValues =
+		                           DataExtractUtil.extractSessionConsentDataFromResponse(response,
+		                                                                                 keyPositionMap);
+		Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
+		sessionDataKeyConsent = keyValues.get(0).getValue();
+		EntityUtils.consume(response.getEntity());
+
+		Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
+	}
+
+	@Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
+	public void testSendApprovalPost() throws Exception {
+		HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+		Assert.assertNotNull(response, "Approval response is invalid.");
+
+		Header locationHeader =
+		                        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+		Assert.assertNotNull(locationHeader, "Approval Location header is null.");
+		EntityUtils.consume(response.getEntity());
+
+		response = sendPostRequest(client, locationHeader.getValue());
+		Assert.assertNotNull(response, "Get Activation response is invalid.");
+
+		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		keyPositionMap.put("Authorization Code", 1);
+		List<KeyValue> keyValues =
+		                           DataExtractUtil.extractTableRowDataFromResponse(response,
+		                                                                           keyPositionMap);
+		Assert.assertNotNull(response, "Authorization Code key value is invalid.");
+		authorizationCode = keyValues.get(0).getValue();
+		Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+		EntityUtils.consume(response.getEntity());
+
+	}
+
+	@Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
+	public void testGetAccessToken() throws Exception {
+		HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
+		Assert.assertNotNull(response, "Error occured while getting access token.");
+		EntityUtils.consume(response.getEntity());
+
+		response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
+		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		keyPositionMap.put("name=\"accessToken\"", 1);
+		List<KeyValue> keyValues =
+		                           DataExtractUtil.extractInputValueFromResponse(response,
+		                                                                         keyPositionMap);
+		Assert.assertNotNull(keyValues, "Access token Key value is null.");
+		accessToken = keyValues.get(0).getValue();
+		Assert.assertNotNull(accessToken, "Access token is null.");
+
+		EntityUtils.consume(response.getEntity());
+
+	}
+
+	@Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testGetAccessToken")
+	public void testValidateAccessToken() throws Exception {
+
+		HttpResponse response = sendValidateAccessTokenPost(client, accessToken);
+		Assert.assertNotNull(response, "Validate access token response is invalid.");
+
+		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		keyPositionMap.put("name=\"valid\"", 1);
+
+		List<KeyValue> keyValues =
+		                           DataExtractUtil.extractInputValueFromResponse(response,
+		                                                                         keyPositionMap);
+		Assert.assertNotNull(keyValues, "Access token Key value is null.");
+		String valid = keyValues.get(0).getValue();
+		Assert.assertEquals(valid, "true", "Token Validation failed");
+
+		EntityUtils.consume(response.getEntity());
+	}
+
 }

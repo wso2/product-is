@@ -1,5 +1,5 @@
 <!--
-~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
 ~ WSO2 Inc. licenses this file to you under the Apache License,
 ~ Version 2.0 (the "License"); you may not use this file except
@@ -18,8 +18,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Iterator" %>
-<%@ page import="org.wso2.carbon.identity.sso.agent.bean.SSOAgentSessionBean" %>
-<%@ page import="org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs" %>
+<%@ page import="org.wso2.carbon.identity.sso.agent.bean.LoggedInSessionBean" %>
+<%@ page import="org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig" %>
+<%@ page import="org.wso2.carbon.identity.sso.agent.SSOAgentConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -30,27 +31,31 @@
 </head>
 <%
     String claimedId = null;
-    String subject = null;
+    String subjectId = null;
     Map<String, List<String>> openIdAttributes = null;
-    Map<String, String> samlSSOAttributes = null;
-    SSOAgentSessionBean.AccessTokenResponseBean accessTokenResponseBean = null;
+    Map<String, String> saml2SSOAttributes = null;
+    if(request.getSession(false) != null &&
+            request.getSession(false).getAttribute(SSOAgentConstants.SESSION_BEAN_NAME) == null){
+        request.getSession().invalidate();
+%>
+        <script type="text/javascript">
+        location.href = "index.jsp";
+        </script>
+<%
+        return;
+    }
+    SSOAgentConfig ssoAgentConfig = (SSOAgentConfig)getServletContext().getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
+    LoggedInSessionBean sessionBean = (LoggedInSessionBean)session.getAttribute(SSOAgentConstants.SESSION_BEAN_NAME);
+    LoggedInSessionBean.AccessTokenResponseBean accessTokenResponseBean = null;
 
-    if(session.getAttribute(SSOAgentConfigs.getSessionBeanName()) != null){
-        if(((SSOAgentSessionBean)session.getAttribute(
-                SSOAgentConfigs.getSessionBeanName())).getOpenIDSessionBean() != null) {
-            claimedId = ((SSOAgentSessionBean)session.getAttribute(
-                    SSOAgentConfigs.getSessionBeanName())).getOpenIDSessionBean().getClaimedId();
-            openIdAttributes = ((SSOAgentSessionBean)session.getAttribute(
-                    SSOAgentConfigs.getSessionBeanName())).getOpenIDSessionBean().getOpenIdAttributes();
-        } else if(((SSOAgentSessionBean)session.getAttribute(
-                SSOAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean() != null) {
-            subject = ((SSOAgentSessionBean)session.getAttribute(
-                    SSOAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean().getSubjectId();
-            samlSSOAttributes = ((SSOAgentSessionBean)session.getAttribute(
-                    SSOAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean().getSAMLSSOAttributes();
-            accessTokenResponseBean = ((SSOAgentSessionBean) session.getAttribute(
-                    SSOAgentConfigs.getSessionBeanName())).getSAMLSSOSessionBean()
-                    .getAccessTokenResponseBean();
+    if(sessionBean != null){
+        if(sessionBean.getOpenId() != null) {
+            claimedId = sessionBean.getOpenId().getClaimedId();
+            openIdAttributes = sessionBean.getOpenId().getSubjectAttributes();
+        } else if(sessionBean.getSAML2SSO() != null) {
+            subjectId = sessionBean.getSAML2SSO().getSubjectId();
+            saml2SSOAttributes = sessionBean.getSAML2SSO().getSubjectAttributes();
+            accessTokenResponseBean = sessionBean.getSAML2SSO().getAccessTokenResponseBean();
         } else {
 %>
             <script type="text/javascript">
@@ -113,9 +118,9 @@
         <hr />
         <div class="product-box">
             <%
-                if(subject != null){
+                if(subjectId != null){
             %>
-                    <h2> You are logged in as <%=subject%></h2>
+                    <h2> You are logged in as <%=subjectId%></h2>
             <%
                 } else if (claimedId != null) {
             %>
@@ -126,8 +131,8 @@
             <a href="../avis.com/home.jsp"> Avis.COM </a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.jsp">Go to Login page</a><br/>
             <table>
                 <%
-                    if(samlSSOAttributes != null){
-                        for (Map.Entry<String, String> entry:samlSSOAttributes.entrySet()) {
+                    if(saml2SSOAttributes != null){
+                        for (Map.Entry<String, String> entry:saml2SSOAttributes.entrySet()) {
                 %>
                             <tr>
                                 <td><%=entry.getKey()%></td>
@@ -157,17 +162,17 @@
                 %>
             </table>
             <%
-                if (subject != null) {
+                if (subjectId != null) {
                     if(accessTokenResponseBean != null) {
             %>
                         <u><b>Your OAuth2 Access Token details</b></u>
-                        <div style="text-indent: 50px">Token Type: <%=accessTokenResponseBean.getToken_type()%> <br/></div>
-                        <div style="text-indent: 50px">Access Token: <%=accessTokenResponseBean.getAccess_token()%> <br/></div>
-                        <div style="text-indent: 50px">Refresh Token: <%=accessTokenResponseBean.getRefresh_token()%> <br/></div>
-                        <div style="text-indent: 50px">Expiry In: <%=accessTokenResponseBean.getExpires_in()%> <br/></div>
+                        <div style="text-indent: 50px">Token Type: <%=accessTokenResponseBean.getTokenType()%> <br/></div>
+                        <div style="text-indent: 50px">Access Token: <%=accessTokenResponseBean.getAccessToken()%> <br/></div>
+                        <div style="text-indent: 50px">Refresh Token: <%=accessTokenResponseBean.getRefreshToken()%> <br/></div>
+                        <div style="text-indent: 50px">Expiry In: <%=accessTokenResponseBean.getExpiresIn()%> <br/></div>
             <%
                     } else {
-                        if(SSOAgentConfigs.isSAML2GrantEnabled()){
+                        if(ssoAgentConfig.isOAuth2SAML2GrantEnabled()){
             %>
                             <a href="token">Request OAuth2 Access Token</a><br/>
             <%
@@ -178,19 +183,19 @@
             %>
             <hr/>
             <%
-                if(subject != null && SSOAgentConfigs.isSLOEnabled()){
+                if(subjectId != null && ssoAgentConfig.getSAML2().isSLOEnabled()){
             %>
-                    <form action="logout">
-                        <input type="submit" value="Logout">
-                    </form>
+            <a href="logout?SAML2.HTTPBinding=HTTP-Redirect">Logout (HTTPRedirect)
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="logout?SAML2.HTTPBinding=HTTP-POST">Logout (HTTP Post)</a><br/>
+
             <%
                 }
             %>
         </div>
     </div>
     <div id="footer-area">
-        <p>©2013 WSO2</p>
-    </div-->
+        <p>©2014 WSO2</p>
+    </div>
 </div>
 </body>
 </html>

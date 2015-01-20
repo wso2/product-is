@@ -61,6 +61,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	private LoginLogoutUtil loginManger;
 	private ServerConfigurationManager scm;
 	private File identityMgtServerFile;
+    private File axisServerFile;
 	private String confKey;
 	
 	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
@@ -75,7 +76,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 				+ File.separator + "identityMgt" + File.separator
 				+ "identity-mgt-enabled.properties");
         	
-		File axisServerFile = new File(carbonHome + File.separator
+		axisServerFile = new File(carbonHome + File.separator
 				+ "repository" + File.separator + "conf" + File.separator
 				+ "axis2" + File.separator + "axis2.xml");
 		File axisConfigFile = new File(getISResourceLocation()
@@ -148,7 +149,11 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		File identityMgtDefaultFile = new File(getISResourceLocation()
 				+ File.separator + "identityMgt" + File.separator
 				+ "identity-mgt-default.properties");
+        File axisConfigDefaultFile = new File(getISResourceLocation()
+                + File.separator + "identityMgt" + File.separator
+                + "axis2-default.xml");
         scm.applyConfigurationWithoutRestart(identityMgtDefaultFile, identityMgtServerFile, true);
+        scm.applyConfigurationWithoutRestart(axisConfigDefaultFile, axisServerFile, true);
 		scm.restartGracefully();
 
     }
@@ -249,15 +254,16 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	Assert.assertNotNull(bean, "Check verify user answer has failed with null return");
 	}
     
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
-    @Test(groups = "wso2.is", description = "Check getting supported claims", dependsOnMethods = "testGetAllChallengeQuestions")
-	public void testGetUserIdentitySupportedClaims() throws Exception { 
-    	UserIdentityClaimDTO[] bean = infoRecoveryClient.getUserIdentitySupportedClaims("http://wso2.org/claims");
-    	Assert.assertNotNull(bean, "Getting supported claims has failed with null return");
-	}
+//	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
+//    @Test(groups = "wso2.is", description = "Check getting supported claims")
+//	public void testGetUserIdentitySupportedClaims() throws Exception { 
+//		loginManger.login("admin", "admin", isServer.getBackEndUrl());
+//    	UserIdentityClaimDTO[] bean = infoRecoveryClient.getUserIdentitySupportedClaims("http://wso2.org/claims");
+//    	Assert.assertNotNull(bean, "Getting supported claims has failed with null return");
+//	}
     
 	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.integration_all })
-    @Test(groups = "wso2.is", description = "Check user account verification", dependsOnMethods = "testGetUserIdentitySupportedClaims")
+    @Test(groups = "wso2.is", description = "Check user account verification", dependsOnMethods = "testVerifyUserChallengeAnswer")
 	public void testVerifyUserAccount() throws Exception { 
     	UserIdentityClaimDTO[] claims =  new UserIdentityClaimDTO[2];
     	UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
