@@ -538,9 +538,13 @@
                                      <version>${carbon.platform.version}</version>
                                  </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
+                                    <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
+                                 <feature>
+                                    <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                 </feature>
 							</features>
 						</configuration>
 					</execution>
