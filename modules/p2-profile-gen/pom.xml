@@ -195,9 +195,7 @@
 
 								<!-- SAML Request/Response Validator Toolkit Feature -->						
 				                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.platform.version}</featureArtifactDef>
-
-                                <!--Certificate Authority Feature-->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.certificateauthority.feature:${carbon.platform.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.notification.mgt.feature:${carbon.platform.version}</featureArtifactDef>
 
 							</featureArtifacts>
 						</configuration>
@@ -535,11 +533,7 @@
                                      <version>${carbon.platform.version}</version>
                                  </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.certificateauthority.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
+                                    <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
 							</features>
