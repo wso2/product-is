@@ -1,0 +1,10 @@
+<%
+
+var SERVER_URL = "serverUrl";
+var SERVER_CORE_URL = "serverCoreUrl";
+
+var MGT_HOST_NAME = "mgtHostName";
+var MGT_TRANSPORT = "mgtTransport";
+var HTTPS_PORT = "httpsPort";
+var PROXY_CONTEXT_PATH = "ProxyContextPath";
+%>

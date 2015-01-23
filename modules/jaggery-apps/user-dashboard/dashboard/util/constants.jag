@@ -11,10 +11,16 @@ var USER_HEADER = "user-header";
 
 var I18N = "i18n";
 var SERVER_URL = "serverUrl";
+var SERVER_CORE_URL = "serverCoreUrl";
 
 var AUTH_CONFIG_PARSED = "auth.config.parsed";
 var SAML_ENABLED = "saml.enabled";
 
 var SAML_RESPONSE = "saml.response";
-var SAML_PROPERTIES = "saml.config"
+var SAML_PROPERTIES = "saml.config";
+
+var MGT_HOST_NAME = "mgtHostName";
+var MGT_TRANSPORT = "mgtTransport";
+var HTTPS_PORT = "httpsPort";
+var PROXY_CONTEXT_PATH = "ProxyContextPath";
 %>
