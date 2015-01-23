@@ -53,7 +53,7 @@ function drawPage() {
 }
 
 function itemRemove(providerId) {
-    var str = "/portal/gadgets/identity_management/controllers/identity-management/removeID.jag";
+    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/identity_management/controllers/identity-management/removeID.jag";
     $.ajax({
         url:str,
         type:"POST",

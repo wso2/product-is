@@ -1,8 +1,24 @@
 <%
+include("util/constants.jag");
+
 var user = session.get('user');
 var log = new Log();
+var util = require("util/utility.jag");
+
+util.setServerURL();
+
 if(user == null){
 response.sendRedirect("login.jag");
+}
+
+var httpsCoreUrl = application.get(SERVER_CORE_URL);
+if (httpsCoreUrl === 'null' || httpsCoreUrl == null || httpsCoreUrl.length <= 0) {
+    httpsCoreUrl = '';
+}
+
+var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
+if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.length <= 0) {
+    proxyContextPath = '';
 }
 
 %>
@@ -28,14 +44,17 @@ response.sendRedirect("login.jag");
     <link rel="stylesheet" type="text/css" href="css/jquery.gridster.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/portal-dashboard-designer.css"/>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-
+    <script>
+        var isServerURL = "<%=httpsCoreUrl%>";
+        var isProxyContextPath = "<%=proxyContextPath%>";
+    </script>
     <script src="js/jquery-1.8.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/jquery-ui-1.10.1.custom.min.js"></script>
     <script src="js/jquery.gridster.with-extras.min.js"></script>
     <script src="js/handlebars.js"></script>
-    <script src="/portal/themes/portal/js/shindig.js"></script>
+    <script src="<%=proxyContextPath%>/portal/themes/portal/js/shindig.js"></script>
     <script src="js/UESContainer.js"></script>
     <script src="js/portal-dashboard-designer.js"></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -45,7 +64,7 @@ response.sendRedirect("login.jag");
     <![endif]-->
 
     <!-- Fav and touch icons -->
-    <link rel="shortcut icon" href="/portal/themes/portal/favicon.ico">
+    <link rel="shortcut icon" href="<%=proxyContextPath%>/portal/themes/portal/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144"
           href="img/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114"
@@ -78,7 +97,7 @@ response.sendRedirect("login.jag");
                             session.get(LOGGED_IN_USER) %> <b class="caret"></b></a>
                         <ul class="dropdown-menu dropdown-account" role="menu" aria-labelledby="dLabel">
                             <li>
-                                <a href="/dashboard/samlsso.jag?logout=true"><i class="icon-signout"></i> Sign
+                                <a href="<%=proxyContextPath%>/dashboard/samlsso.jag?logout=true"><i class="icon-signout"></i> Sign
                                     out</a>
                             </li>
 
@@ -178,8 +197,6 @@ response.sendRedirect("login.jag");
 <input type="hidden" value="design" id="inp-view-mode"/>
 <input type="hidden" value="dashboard" id="inp-dashboard"/>
 <%=session.get(LOGGED_IN_USER)%>
-<iframe style="display: none;height: 0;width: 0;"
-        src="http://localhost:9763/store/hidden-logger.jag?user=<%=session.get(LOGGED_IN_USER)%>"></iframe>
 
 <div id="gridster-cont" class="container-fluid">
 <div id="dashboardName"><i class="icon-th-large"></i> <span></span></div>
@@ -283,7 +300,7 @@ response.sendRedirect("login.jag");
 </li>
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="2"
-    data-url="https://localhost:9443/portal/gadgets/user_profile/gadget.xml" data-wid="39" data-prefs="{}"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/user_profile/gadget.xml" data-wid="39" data-prefs="{}"
     data-title="User Profiles">
     <div class="grid_header">
         <h3></h3>
@@ -305,7 +322,7 @@ response.sendRedirect("login.jag");
 </li>
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="3" data-row="2"
-    data-url="http://localhost:9763/portal/gadgets/user_auth_apps/gadget.xml" data-wid="40" data-prefs="{}"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/user_auth_apps/gadget.xml" data-wid="40" data-prefs="{}"
     data-title="Authorized Apps">
     <div class="grid_header">
         <h3></h3>
@@ -327,7 +344,7 @@ response.sendRedirect("login.jag");
 </li>
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="3"
-    data-url="http://localhost:9763/portal/gadgets/account-recovery/gadget.xml" data-wid="41" data-prefs="{}"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/account-recovery/gadget.xml" data-wid="41" data-prefs="{}"
     data-title="Account Recovery">
     <div class="grid_header">
         <h3></h3>
@@ -349,7 +366,7 @@ response.sendRedirect("login.jag");
 </li>
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="3"
-    data-url="http://localhost:9763/portal/gadgets/identity_management/gadget.xml" data-wid="42" data-prefs="{}"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/identity_management/gadget.xml" data-wid="42" data-prefs="{}"
     data-title="Social Login">
     <div class="grid_header">
         <h3></h3>
@@ -372,7 +389,7 @@ response.sendRedirect("login.jag");
 </li>
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="3" data-row="3"
-    data-url="http://localhost:9763/portal/gadgets/pwd_change/gadget.xml" data-wid="43" data-prefs="{}"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/pwd_change/gadget.xml" data-wid="43" data-prefs="{}"
     data-title="Change Password">
     <div class="grid_header">
         <h3></h3>
@@ -396,7 +413,7 @@ response.sendRedirect("login.jag");
 </li>
 
 <li id ="sample4" class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="2"
-    data-url="http://localhost:9763/portal/gadgets/scim_providers/gadget.xml" data-wid="44" data-prefs="{}"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/scim_providers/gadget.xml" data-wid="44" data-prefs="{}"
     data-title="SCIM Providers">
     <div class="grid_header">
         <h3></h3>

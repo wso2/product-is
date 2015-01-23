@@ -1,0 +1,7 @@
+{
+    "proxy" : {
+        "proxyHost" : "",
+        "proxyHTTPSPort" : "",
+        "proxyContextPath" : ""
+    }
+}

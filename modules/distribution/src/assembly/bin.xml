@@ -676,6 +676,14 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/msg-mgt.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
 
 	<!-- Changes related to Carbon kernel 4.2.0 patches -->
         <!-- Files WSO2-CARBON-PATCH-4.2.0-0001 - Start -->
