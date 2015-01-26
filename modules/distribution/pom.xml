@@ -373,7 +373,7 @@
                                 <delete dir="target/archive-tmp"/>
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
-                                <delete dir="target/wso2carbon-core-4.3.0-SNAPSHOT"/>
+                                <delete dir="target/wso2carbon-core-4.3.0"/>
                                 <delete file="target/wso2is-5.1.0-SNAPSHOT.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
