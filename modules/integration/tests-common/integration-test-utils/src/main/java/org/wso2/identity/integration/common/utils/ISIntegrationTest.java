@@ -67,7 +67,7 @@ public class ISIntegrationTest {
     }
 
     protected void init(String instance, String domainKey, String userKey) throws Exception {
-        isServer = new AutomationContext("IS", instance, domainKey, userKey);
+        isServer = new AutomationContext("IDENTITY", instance, domainKey, userKey);
         loginLogoutClient = new LoginLogoutClient(isServer);
         sessionCookie = loginLogoutClient.login();
         backendURL = isServer.getContextUrls().getBackEndUrl();

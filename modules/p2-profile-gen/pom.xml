@@ -106,16 +106,17 @@
                                 <featureArtifactDef>org.jaggeryjs.modules:i18n.feature:${i18n.module.version}</featureArtifactDef>
 
                                 <!--Carbon features-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${carbon.cxf.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.soaptracer.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.platform.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:4.3.0</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.soaptracer.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.cxf.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xkms.mgt.feature:${carbon.platform.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${carbon.platform.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${carbon.cxf.version}</featureArtifactDef>
+								<!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.cxf.version}</featureArtifactDef-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xfer.feature:${carbon.platform.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.mex.feature:${carbon.platform.version}</featureArtifactDef>-->
 
@@ -152,7 +153,7 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.authenticator.facebook.server.feature:${carbon.platform.version}</featureArtifactDef> 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.authenticator.openid.server.feature:${carbon.platform.version}</featureArtifactDef>  
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.platform.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.cxf.version}</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.platform.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.platform.version}</featureArtifactDef>
@@ -276,11 +277,11 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.cxf.version}</version>
                                 </feature>
 								<feature>
                                     <id>org.wso2.carbon.webapp.mgt.server.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
+                                    <version>${carbon.cxf.version}</version>
                                 </feature>
 								<!--<feature>-->
                                     <!--<id>org.wso2.carbon.jaxws.webapp.mgt.server.feature.group</id>-->
@@ -288,11 +289,11 @@
                                 <!--</feature>-->
 								<feature>
 									<id>org.wso2.carbon.logging.mgt.feature.group</id>
-									<version>${carbon.platform.version}</version>
+									<version>4.3.0</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
-									<version>${carbon.platform.version}</version>
+									<version>${carbon.cxf.version}</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.ldap.server.feature.group</id>
@@ -300,15 +301,15 @@
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.system.statistics.feature.group</id>
-									<version>${carbon.platform.version}</version>
+									<version>${carbon.cxf.version}</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.soaptracer.feature.group</id>
-									<version>${carbon.platform.version}</version>
+									<version>${carbon.cxf.version}</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.security.mgt.feature.group</id>
-									<version>${carbon.platform.version}</version>
+									<version>${carbon.cxf.version}</version>
 								</feature>
 								<!--<feature>-->
 									<!--<id>org.wso2.carbon.xkms.mgt.feature.group</id>-->
@@ -317,6 +318,10 @@
 								<feature>
 									<id>org.wso2.carbon.sts.feature.group</id>
 									<version>${carbon.platform.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.logging.mgt.server.feature.group</id>
+									<version>4.3.0</version>
 								</feature>
 								<!--<feature>-->
 									<!--<id>org.wso2.carbon.xfer.feature.group</id>-->
