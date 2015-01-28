@@ -72,6 +72,10 @@
                 <groupId>com.sun.xml.bind.wso2</groupId>
                 <artifactId>jaxb</artifactId>
             </dependency>
+			<dependency>
+			    <groupId>net.sf.ehcache.wso2</groupId>
+				<artifactId>ehcache</artifactId>
+			</dependency>
 	</dependencies>
 
 	<build>

@@ -150,20 +150,25 @@
             <version>${carbon.kernel.version}</version>
             <type>aar</type>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.api</artifactId>-->
+            <!--<version>${clarity.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.core</artifactId>-->
+            <!--<version>${clarity.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.utils</artifactId>-->
+            <!--<version>${clarity.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.api</artifactId>
-            <version>${clarity.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.core</artifactId>
-            <version>${clarity.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.utils</artifactId>
-            <version>${clarity.version}</version>
+            <artifactId>org.wso2.carbon.automation.engine</artifactId>
+            <version>${test.framework.version}</version>
         </dependency>
     </dependencies>
     <properties>

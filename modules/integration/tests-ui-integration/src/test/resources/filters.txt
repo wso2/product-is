@@ -20,3 +20,5 @@
 -org.wso2.carbon.security.*
 -org.wso2.carbon.identity.mgt.services.UserIdentityManagementService
 -org.wso2.carbon.identity.mgt.services.UserAccountRecoveryService
+-org.wso2.carbon.caching.core.identity.*
+-org.wso2.carbon.caching.core.permissiontree.*
