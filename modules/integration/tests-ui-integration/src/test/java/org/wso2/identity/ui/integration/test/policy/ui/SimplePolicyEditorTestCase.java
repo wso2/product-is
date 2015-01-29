@@ -29,12 +29,12 @@ public class SimplePolicyEditorTestCase extends ISIntegrationUITest {
 	@BeforeClass(alwaysRun = true)
 	public void setUp() throws Exception {
 		super.init();
-		System.out.println(" ************* setup *************** ");
 		driver = BrowserManager.getWebDriver();
-		
-		driver.get(getLoginURL(ProductConstant.IS_SERVER_NAME));
-        EnvironmentBuilder builder = new EnvironmentBuilder().is(5);
-        EnvironmentVariables environment =builder.build().getIs();
+
+		driver.get(getLoginURL());
+		//ToDO migrate to new test environment
+//        EnvironmentBuilder builder = new EnvironmentBuilder().is(5);
+//        EnvironmentVariables environment =builder.build().getIs();
 
 	}
 
