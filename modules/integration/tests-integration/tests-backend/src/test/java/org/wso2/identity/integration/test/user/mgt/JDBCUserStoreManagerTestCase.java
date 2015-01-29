@@ -39,7 +39,7 @@ public class JDBCUserStoreManagerTestCase extends UserManagementServiceAbstractT
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                                           + File.separator + "JdbcUserMgtConfig.xml");
 
-        scm = new ServerConfigurationManager(automationContext);
+        scm = new ServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
         doInit();
 

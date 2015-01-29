@@ -156,25 +156,48 @@
             <version>${carbon.kernel.version}</version>
             <type>aar</type>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.api</artifactId>-->
+            <!--<version>${clarity.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.core</artifactId>-->
+            <!--<version>${clarity.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.utils</artifactId>-->
+            <!--<version>${clarity.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.engine</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.extensions</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.automation</groupId>-->
+            <!--<artifactId>org.wso2.carbon.automation.test.utils</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon</groupId>-->
+            <!--<artifactId>org.wso2.carbon.integration.common.utils</artifactId>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.api</artifactId>
-            <version>${clarity.version}</version>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.core</artifactId>
-            <version>${clarity.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.utils</artifactId>
-            <version>${clarity.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.engine</artifactId>
-            <version>4.3.1</version>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
         </dependency>
     </dependencies>
     <properties>

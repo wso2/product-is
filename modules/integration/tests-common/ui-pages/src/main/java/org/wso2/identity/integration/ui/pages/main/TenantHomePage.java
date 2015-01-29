@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.wso2.carbon.automation.api.selenium.util.UIElementMapper;
+import org.wso2.identity.integration.common.ui.page.util.UIElementMapper;
 import org.wso2.identity.integration.ui.pages.login.LoginPage;
 
 import java.io.IOException;

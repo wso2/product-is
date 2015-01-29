@@ -67,7 +67,23 @@
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.identity</groupId>
+            <artifactId>org.wso2.identity.integration.common.clients</artifactId>
+            <version>5.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+<<<<<<< HEAD
 
 </project>
 =======
@@ -123,3 +139,6 @@
     </dependencies>
 </project>
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+</project>
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration

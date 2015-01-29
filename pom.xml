@@ -1241,6 +1241,7 @@
         <!--todo: disabling integration until the migration to the new framework-->
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 		<module>modules/integration</module>
 =======
@@ -1249,6 +1250,9 @@
 =======
 		<module>modules/integration</module>
 >>>>>>> d11e346... Added more changes from previous commits
+=======
+		<module>modules/integration</module>
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
 <!--		<module>modules/samples</module> -->
 	</modules>
 
@@ -1613,6 +1617,7 @@
 			</dependency>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <dependency>
                 <groupId>org.apache.shindig</groupId>
                 <artifactId>shindig-server</artifactId>
@@ -1631,6 +1636,16 @@
 
             <!--Dependency for Integration Tests-->
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+
+            <!-- Dependencies for Automation Test Framework-->
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon</groupId>-->
+                <!--<artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>-->
+                <!--<version>${test.framework.util.version}</version>-->
+                <!--<scope>test</scope>-->
+            <!--</dependency>-->
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.engine</artifactId>
@@ -1652,6 +1667,9 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${carbon.platform.version}</version>
                 <scope>test</scope>
@@ -1660,21 +1678,29 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
                 <version>${carbon.platform.version}</version>
+<<<<<<< HEAD
 =======
                 <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
                 <version>${test.framework.util.version}</version>
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+<<<<<<< HEAD
                 <version>${test.framework.util.version}</version>
+=======
+                <version>${carbon.platform.version}</version>
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
+<<<<<<< HEAD
                 <version>${test.framework.util.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -1686,6 +1712,24 @@
             </dependency>
             <dependency>
 <<<<<<< HEAD
+=======
+                <version>${carbon.platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon</groupId>
+				<artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+				<version>${carbon.platform.version}</version>
+				<scope>test</scope>
+			</dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+                <version>${carbon.platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
                 <version>${project.version}</version>
@@ -1696,6 +1740,7 @@
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
                 <version>${carbon.kernel.version}</version>
                 <scope>test</scope>
+<<<<<<< HEAD
 >>>>>>> 71e8c09... Introduce new integration test modules backend/UI
 =======
                 <groupId>org.wso2.carbon</groupId>
@@ -1764,6 +1809,15 @@
                 </exclusions>
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
             </dependency>
+=======
+            </dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>6.1.1</version>
+				<scope>test</scope>
+			</dependency>
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
 		</dependencies>
 	</dependencyManagement>
 
@@ -1844,7 +1898,7 @@
 	<properties>
 		<carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
 		<stratos.identity.version>${stratos.version}</stratos.identity.version>
-		<identity.version>${wso2carbon.version}</identity.version>
+		<identity.version>5.1.0-SNAPSHOT</identity.version>
 		<bcprov.jdk13.version>140</bcprov.jdk13.version>
 		<bcprov.jdk15.version>132</bcprov.jdk15.version>
 		<axis2.wso2.version>${orbit.version.axis2}</axis2.wso2.version>
@@ -1874,6 +1928,9 @@
         <stratos.version>2.2.0</stratos.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
         <shindig.version>2.5.0-beta5</shindig.version>
         <ws.module.version>1.1.0</ws.module.version>
         <oauth.module.version>1.0.0</oauth.module.version>
@@ -1887,6 +1944,7 @@
         <gadget.module.version>1.0.0</gadget.module.version>
         <i18n.module.version>1.0.0</i18n.module.version>
         <wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
         <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
@@ -1907,6 +1965,13 @@
 =======
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
 >>>>>>> de12bd2... # Please enter the commit message for your changes. Lines starting
+=======
+        <test.framework.version>4.3.1</test.framework.version>
+        <test.framework.util.version>4.3.1</test.framework.util.version>
+        <operadriver.version>0.8.1</operadriver.version>
+        <selenium.version>2.40.0</selenium.version>
+        <testng.version>6.1.1</testng.version>
+>>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
 	</properties>
 
     <repositories>
