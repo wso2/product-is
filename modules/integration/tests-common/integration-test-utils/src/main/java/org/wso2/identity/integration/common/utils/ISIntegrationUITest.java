@@ -24,7 +24,7 @@ import javax.xml.xpath.XPathExpressionException;
 public class ISIntegrationUITest extends ISIntegrationTest {
 
     protected String getLoginURL() throws XPathExpressionException {
-        return UrlGenerationUtil.getLoginURL(automationContext.getInstance());
+        return UrlGenerationUtil.getLoginURL(isServer.getInstance());
     }
 
 }

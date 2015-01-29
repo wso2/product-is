@@ -36,5 +36,10 @@
             <artifactId>org.wso2.carbon.automation.extensions</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

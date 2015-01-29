@@ -29,7 +29,7 @@ import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
-import org.wso2.carbon.integration.common.admin.client.UserProfileMgtAdminServiceClient;
+import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
@@ -108,7 +108,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole), "Role name doesn't exists");
         Assert.assertTrue(userMgtClient.userNameExists(newUserRole, newUserName), "User name doesn't exists");
 
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, automationContext.getInstance().getHosts().get("default"));
+        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
 
@@ -261,14 +261,14 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     public void testChangePasswordOfUser() throws Exception {
         Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 0), newUserName)
                 , "user Does not belongs to user role " + newUserRole);
-        Assert.assertTrue(authenticatorClient.login(newUserName, newUserPassword, automationContext
+        Assert.assertTrue(authenticatorClient.login(newUserName, newUserPassword, isServer
                 .getInstance().getHosts().get("default")).contains("JSESSIONID"), "Session Cookie not found");
         authenticatorClient.logOut();
 
         userMgtClient.changePassword(newUserName, "passwordS1@");
         newUserPassword = "passwordS1@";
 
-        String value = authenticatorClient.login(newUserName, newUserPassword, automationContext.getInstance().getHosts().get("default"));
+        String value = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
 
         Assert.assertTrue((value.indexOf("JSESSIONID") != -1), "User password change failed. login not return session cookie");
         authenticatorClient.logOut();
@@ -279,7 +279,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @Test(groups = "wso2.is", description = "Check get shared of current user", dependsOnMethods = "testChangePasswordOfUser")
     public void testGetRolesOfCurrentUser() throws Exception {
 
-        String session = authenticatorClient.login(newUserName, newUserPassword, automationContext.getInstance().getHosts().get("default"));
+        String session = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
         UserManagementClient client = new UserManagementClient(backendURL, session);
         Assert.assertTrue(nameExists(client.getRolesOfCurrentUser(), newUserRole), "Getting current user roles has failed.");
 
@@ -289,11 +289,11 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check list users by claim value", dependsOnMethods = "testGetRolesOfCurrentUser")
     public void testListUserByClaim() throws Exception {
-        UserProfileMgtAdminServiceClient userProfileMgtAdminServiceClient
-                = new UserProfileMgtAdminServiceClient(backendURL, getSessionCookie());
+        UserProfileMgtServiceClient userProfileMgtServiceClient
+                = new UserProfileMgtServiceClient(backendURL, getSessionCookie());
         UserProfileDTO profile
-                = userProfileMgtAdminServiceClient.getUserProfile(newUserName, "default");
-        UserFieldDTO[] fields = userProfileMgtAdminServiceClient.getProfileFieldsForInternalStore().getFieldValues();
+                = userProfileMgtServiceClient.getUserProfile(newUserName, "default");
+        UserFieldDTO[] fields = userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues();
         String profileConfigs = profile.getProfileName();
         for (UserFieldDTO field : fields) {
             if (field.getDisplayName().equalsIgnoreCase("Last Name")) {
@@ -319,7 +319,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         newProfile.setProfileName(profile.getProfileName());
         newProfile.setFieldValues(fields);
         newProfile.setProfileConifuration(profileConfigs);
-        userProfileMgtAdminServiceClient.setUserProfile(newUserName, newProfile);
+        userProfileMgtServiceClient.setUserProfile(newUserName, newProfile);
 
 
         ClaimValue claimValue = new ClaimValue();
