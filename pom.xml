@@ -1237,12 +1237,15 @@
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <!--todo: disabling integration until the migration to the new framework-->
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+>>>>>>> 85b33d0... Fresh branch with new test migration, after carbon version migration - 4.3.1 test framework - enabled testng.xml
 		<module>modules/integration</module>
 =======
 		<!--module>modules/integration</module-->
