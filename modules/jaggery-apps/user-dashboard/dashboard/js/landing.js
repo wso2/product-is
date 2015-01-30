@@ -2,8 +2,12 @@
 $(function () {
     $('.register').click(function () {
         document.getElementById('light').style.display='block';
-        document.getElementById('fade').style.display='block'
-        var str = "/dashboard/self_registration.jag"
+        document.getElementById('fade').style.display='block';
+        var serverUrlBase = document.getElementById('serverUrlBase').innerHTML;
+        if (serverUrlBase == null) {
+            serverUrlBase = '';
+        }
+        var str = serverUrlBase + "/dashboard/self_registration.jag";
 
         $.ajax({
             type:"GET",

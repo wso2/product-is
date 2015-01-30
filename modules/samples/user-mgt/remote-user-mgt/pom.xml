@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-            <version>${wso2carbon.version}</version>
+            <version>${carbon.kernel.version}</version>
         </dependency>
     </dependencies>
 

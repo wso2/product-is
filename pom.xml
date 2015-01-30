@@ -32,7 +32,6 @@
 		<module>modules/distribution</module>
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
-        <!--todo: disabling integration until the migration to the new framework-->
 		<module>modules/integration</module>
 <!--		<module>modules/samples</module> -->
 	</modules>
