@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.identity.integration.test.usermgt.remote;
+package org.wso2.identity.integration.test.user.mgt.remote;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
