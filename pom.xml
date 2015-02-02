@@ -1238,6 +1238,7 @@
 		<module>modules/dashboard</module>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <!--todo: disabling integration until the migration to the new framework-->
 <<<<<<< HEAD
@@ -1256,6 +1257,9 @@
 =======
 		<module>modules/integration</module>
 >>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
+=======
+		<!--<module>modules/integration</module>-->
+>>>>>>> 706fa08... Disabled tests..
 <!--		<module>modules/samples</module> -->
 	</modules>
 

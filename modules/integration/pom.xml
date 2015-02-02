@@ -36,6 +36,7 @@
         <module>tests-common/admin-clients</module>
         <module>tests-common/integration-test-utils</module>
         <module>tests-common/ui-pages</module>
+<<<<<<< HEAD
         <!--module>tests-integration</module-->
         <!--module>tests-ui-integration</module-->
         <!--<module>tests</module>-->
@@ -44,6 +45,11 @@
         <module>tests-integration</module>
         <module>tests-ui-integration</module>
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+        <module>tests-integration</module>
+        <module>tests-ui-integration</module>
+        <module>tests</module>
+>>>>>>> 706fa08... Disabled tests..
     </modules>
     <build>
         <plugins>
