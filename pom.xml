@@ -1259,8 +1259,12 @@
 >>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
 =======
 		<!--<module>modules/integration</module>-->
+<<<<<<< HEAD
 >>>>>>> 706fa08... Disabled tests..
 <!--		<module>modules/samples</module> -->
+=======
+		<!--<module>modules/samples</module>-->
+>>>>>>> 4b7d085... Disabled tests..
 	</modules>
 
 	<licenses>

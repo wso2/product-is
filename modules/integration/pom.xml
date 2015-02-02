@@ -48,8 +48,12 @@
 =======
         <module>tests-integration</module>
         <module>tests-ui-integration</module>
+<<<<<<< HEAD
         <module>tests</module>
 >>>>>>> 706fa08... Disabled tests..
+=======
+        <!--<module>tests</module>-->
+>>>>>>> 4b7d085... Disabled tests..
     </modules>
     <build>
         <plugins>
