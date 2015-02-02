@@ -16,14 +16,14 @@
 *under the License.
 */
 
-package org.wso2.identity.integration.common.clients.user.store.config;
+package org.wso2.identity.integration.common.clients;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdminServiceStub;
 import org.wso2.carbon.identity.user.store.configuration.stub.api.Properties;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
-import org.wso2.identity.integration.common.clients.AuthenticateStub;
+import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
 
 
 public class UserStoreConfigAdminServiceClient {
@@ -39,7 +39,7 @@ public class UserStoreConfigAdminServiceClient {
     public UserStoreConfigAdminServiceClient(String backendServerURL, String sessionCookie) throws AxisFault {
         String serviceURL = backendServerURL + "UserStoreConfigAdminService";
         stub = new UserStoreConfigAdminServiceStub(serviceURL);
-        AuthenticateStub.authenticateStub(sessionCookie, stub);
+        AuthenticateStubUtil.authenticateStub(sessionCookie, stub);
 
     }
 
@@ -52,7 +52,7 @@ public class UserStoreConfigAdminServiceClient {
     public UserStoreConfigAdminServiceClient(String backendServerURL, String userName, String password) throws AxisFault {
         String serviceURL = backendServerURL + "UserStoreConfigAdminService";
         stub = new UserStoreConfigAdminServiceStub(serviceURL);
-        AuthenticateStub.authenticateStub(userName, password, stub);
+        AuthenticateStubUtil.authenticateStub(userName, password, stub);
 
     }
 

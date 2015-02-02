@@ -8,7 +8,7 @@
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"http://localhost:9763/portal/gadgets/pwd_change/gadget.xml",
+        "url":"/portal/gadgets/pwd_change/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "pwd_change"
@@ -22,7 +22,7 @@
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"http://localhost:9763/portal/gadgets/account-recovery/gadget.xml",
+        "url":"/portal/gadgets/account-recovery/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "account_recovery"
@@ -36,7 +36,7 @@
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"http://localhost:9763/portal/gadgets/identity_management/gadget.xml",
+        "url":"/portal/gadgets/identity_management/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "identity_management" 
@@ -50,7 +50,7 @@
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"http://localhost:9763/portal/gadgets/user_auth_apps/gadget.xml",
+        "url":"/portal/gadgets/user_auth_apps/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "user_auth_apps"
@@ -64,7 +64,7 @@
         "height":"1",
         "prefs":"{}",
         "wclass":"",
-        "url":"https://localhost:9443/portal/gadgets/user_profile/gadget.xml",
+        "url":"/portal/gadgets/user_profile/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "user_profile"

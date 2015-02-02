@@ -436,13 +436,13 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${test.framework.util.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${test.framework.util.version}</version>
                 <scope>test</scope>
             </dependency>
 			<dependency>
@@ -454,7 +454,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
-                <version>${carbon.platform.version}</version>
+                <version>${test.framework.util.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -597,10 +597,12 @@
         <i18n.module.version>1.0.0</i18n.module.version>
         <wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
         <test.framework.version>4.3.1</test.framework.version>
-        <test.framework.util.version>4.3.1</test.framework.util.version>
+        <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
+        <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
+        <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
 	</properties>
 
     <repositories>
