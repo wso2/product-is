@@ -42,7 +42,7 @@
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
-            <version>1.6.1-wso2v12</version>
+            <version>1.6.1-wso2v13</version>
       		<exclusions>
 		 <exclusion> 
           		<groupId>org.apache.neethi</groupId>
