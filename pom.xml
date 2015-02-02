@@ -1642,6 +1642,7 @@
 =======
 
             <!-- Dependencies for Automation Test Framework-->
+<<<<<<< HEAD
             <!--<dependency>-->
                 <!--<groupId>org.wso2.carbon</groupId>-->
                 <!--<artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>-->
@@ -1649,6 +1650,14 @@
                 <!--<scope>test</scope>-->
             <!--</dependency>-->
 >>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
+=======
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+                <version>${test.framework.util.version}</version>
+                <scope>test</scope>
+            </dependency>
+>>>>>>> e2031e9... Fresh branch with new test migration, after carbon version migration - 4.3.1 test framework - enabled testng.xml
             <dependency>
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.engine</artifactId>
@@ -1901,7 +1910,7 @@
 	<properties>
 		<carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
 		<stratos.identity.version>${stratos.version}</stratos.identity.version>
-		<identity.version>5.1.0-SNAPSHOT</identity.version>
+		<product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
 		<bcprov.jdk13.version>140</bcprov.jdk13.version>
 		<bcprov.jdk15.version>132</bcprov.jdk15.version>
 		<axis2.wso2.version>${orbit.version.axis2}</axis2.wso2.version>
