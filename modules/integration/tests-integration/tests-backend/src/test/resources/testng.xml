@@ -20,7 +20,7 @@
             <package name="org.wso2.identity.integration.test.user.store"/>
         </packages>-->
         <classes>
-             <class name="org.wso2.identity.integration.test.IdentityXmlParserTestCase"/>
+             <!--class name="org.wso2.identity.integration.test.IdentityXmlParserTestCase"/>
              <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase"/>
              <class name="org.wso2.identity.integration.test.saml.AllClaimURIsTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
@@ -28,7 +28,7 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
 
             <class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />
-             <!--<class name="org.wso2.identity.integration.test.saml.SSOSessionTimeoutTestCase"/> -->
+             <class name="org.wso2.identity.integration.test.saml.SSOSessionTimeoutTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
              <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLdapBasedUserMgtTestCase"/>
@@ -40,12 +40,12 @@
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
             <class name="org.wso2.identity.integration.test.openid.OpenIDUserProfileTestCase" />
-            <!--<class name="UserInformationRecoveryServiceTestCase"/>-->
-            <!--<class name="ApplicationManagementTestCase"/>-->
+            <class name="UserInformationRecoveryServiceTestCase"/>
+            <class name="ApplicationManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.sts.SAML2TokenRenweTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase" />
-            <!--<class name="AccountCredentialMgtConfigServiceTestCase"/>-->
-            <!--<class name="IdentityProviderMgtServiceTestCase"/>-->
+            <class name="AccountCredentialMgtConfigServiceTestCase"/>
+            <class name="IdentityProviderMgtServiceTestCase"/>-
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ApplicationManagementTestCase"/>
@@ -56,7 +56,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceImplicitGrantTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase" />
-            <class name="org.wso2.identity.integration.test.usermgt.remote.RemoteUserStoreManagerServiceTestCase"/>
+            <class name="org.wso2.identity.integration.test.usermgt.remote.RemoteUserStoreManagerServiceTestCase"/-->
 
         </classes>
 
