@@ -56,7 +56,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceImplicitGrantTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase" />
-            <class name="org.wso2.identity.integration.test.usermgt.remote.RemoteUserStoreManagerServiceTestCase"/-->
+            <class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase"/-->
 
         </classes>
 
