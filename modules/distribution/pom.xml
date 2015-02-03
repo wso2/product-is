@@ -42,6 +42,10 @@
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
+<<<<<<< HEAD
+=======
+            <version>1.6.1-wso2v13</version>
+>>>>>>> 4b7d0858ed343b835ce1cd1f54dc2286e5313066
       		<exclusions>
             <exclusion>
                 <groupId>org.apache.neethi</groupId>

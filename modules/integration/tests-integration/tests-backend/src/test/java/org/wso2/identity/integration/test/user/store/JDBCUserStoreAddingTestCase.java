@@ -25,7 +25,9 @@ import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.clients.UserStoreConfigAdminServiceClient;
+import org.wso2.carbon.user.core.common.UserStore;
+import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
+import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.user.mgt.UserManagementServiceAbstractTest;
 
 import java.io.File;
@@ -34,6 +36,7 @@ import java.util.List;
 
 public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTest {
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
+    private UserStoreConfigUtils userStoreConfigUtils =  new UserStoreConfigUtils();
     private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
     private final String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
     private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
@@ -107,7 +110,8 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId, propertyDTOs);
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
-        Assert.assertTrue(waitForUserStoreDeployment(domainId), "Domain addition via DTO has failed.");
+        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(domainId), "Domain addition via DTO has " +
+                "failed.");
 
     }
 
@@ -125,7 +129,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
         Assert.assertTrue(userMgtClient.userNameExists(domainId.toUpperCase() + "/" + newUserRole
                 , domainId.toUpperCase() + "/" + newUserName), "User name doesn't exists");
 
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, automationContext
+        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer
                 .getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
@@ -135,7 +139,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
     public void disableUserStore() throws Exception {
         userStoreConfigAdminServiceClient.up
 
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, automationContext
+        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer
                 .getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
@@ -150,22 +154,6 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
         userMgtClient.deleteRole(domainId.toUpperCase() + "/" + newUserRole);
         Assert.assertFalse(Utils.nameExists(userMgtClient.getAllRolesNames(newUserRole, 100), newUserRole), "User Role still exist");
     }*/
-
-    private boolean waitForUserStoreDeployment(String domain) throws Exception {
-        long waitTime = System.currentTimeMillis() + 30000; //wait for 45 seconds
-        while (System.currentTimeMillis() < waitTime) {
-            UserStoreDTO[] userStoreDTOs = userStoreConfigAdminServiceClient.getActiveDomains();
-            for (UserStoreDTO userStoreDTO : userStoreDTOs) {
-                if (userStoreDTO != null) {
-                    if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
-                        return true;
-                    }
-                }
-            }
-            Thread.sleep(1000);
-        }
-        return false;
-    }
 
 
     @Override
