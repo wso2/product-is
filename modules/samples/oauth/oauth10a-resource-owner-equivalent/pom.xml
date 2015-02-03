@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.wso2.identity</groupId>
         <artifactId>wso2is-identity-samples-oauth10a</artifactId>
-        <version>5.0.0</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -85,22 +85,18 @@
 		<dependency>
 			<groupId>org.apache.axis2.wso2</groupId>
 			<artifactId>axis2</artifactId>
-			<version>1.6.1.wso2v6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gdata.wso2</groupId>
 			<artifactId>gdata-core</artifactId>
-			<version>1.47.0.wso2v1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-			<version>${carbon.platform.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-            <version>${carbon.platform.version}</version>
         </dependency>
     </dependencies>
 </project>

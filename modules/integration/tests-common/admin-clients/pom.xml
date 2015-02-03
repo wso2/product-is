@@ -15,8 +15,4 @@
     <artifactId>org.wso2.identity.integration.common.clients</artifactId>
     <packaging>jar</packaging>
 
-    <dependencies>
-
-    </dependencies>
-
 </project>

@@ -54,8 +54,8 @@
                         </Private-Package>
                         <Import-Package>
                             com.wso2.carbon.governance.tenant.ui.servlets.*,
-                            javax.servlet; version=2.4.0,
-                            javax.servlet.http; version=2.4.0,
+                            javax.servlet; version="${sevlet.api.version}",
+                            javax.servlet.http; version="${sevlet.api.version}",
                             org.apache.lucene.*,
                             *;resolution:=optional
                         </Import-Package>

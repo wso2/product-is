@@ -43,7 +43,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.4.1</version>
                 <executions>
                     <execution>
                         <id>auto-clean</id>
@@ -56,20 +55,19 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.7.2</version>
                 <inherited>false</inherited>
                 <configuration>
                         <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../distribution/target/wso2is-${project.version}.zip
+                            ${basedir}/../distribution/target/wso2is-${product.identity.version}.zip
                         </carbon.zip>
                         <sec.verifier.dir>
                             ${basedir}/target/security-verifier/
                         </sec.verifier.dir>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <samples.dir>${basedir}/../samples/product</samples.dir>
-                        <extracted.dir>wso2is-${project.version}</extracted.dir>
+                        <extracted.dir>wso2is-${product.identity.version}</extracted.dir>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
@@ -77,7 +75,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -122,51 +119,39 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.integration.framework</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
-            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.certificateauthority.stub</artifactId>
-            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
-            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>SecVerifier</artifactId>
-            <version>${carbon.kernel.version}</version>
             <type>aar</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.api</artifactId>
-            <version>${clarity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.core</artifactId>
-            <version>${clarity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.utils</artifactId>
-            <version>${clarity.version}</version>
         </dependency>
     </dependencies>
-    <properties>
-        <clarity.version>4.2.1</clarity.version>
-    </properties>
 </project>

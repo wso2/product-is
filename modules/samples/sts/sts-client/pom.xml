@@ -2,11 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.wso2.identity</groupId>
+        <artifactId>wso2is-identity-samples-sts</artifactId>
+        <version>5.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.identity.samples.sts</artifactId>
-    <version>4.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>STS Client</name>
     
@@ -22,59 +28,48 @@
         <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
-            <version>1.2.11.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-            <version>1.6.1.wso2v4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.neethi.wso2</groupId>
             <artifactId>neethi</artifactId>
-            <version>2.0.4.wso2v3</version>
         </dependency>
         <dependency>
             <groupId>opensaml.wso2</groupId>
             <artifactId>opensaml2</artifactId>
-            <version>2.0.0.alpha1-wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <version>3.2.1</version>
             <artifactId>org.wso2.carbon.addressing</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-core</artifactId>
-            <version>1.6.1.wso2v8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-policy</artifactId>
-            <version>1.6.1.wso2v8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart-trust</artifactId>
-            <version>1.6.1.wso2v9</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/rampart-trust-1.6.1-wso2v9.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.security.wso2</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.5.11.wso2v2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.1.3.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>xalan.wso2</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.0.wso2v1</version>
         </dependency>
     </dependencies>
     <build>
