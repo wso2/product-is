@@ -16,6 +16,7 @@
     <artifactId>org.wso2.identity.integration.common.clients</artifactId>
     <packaging>jar</packaging>
 
+<<<<<<< HEAD
     <dependencies>
 
         <dependency>
@@ -112,3 +113,6 @@
 
 </project>
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
+=======
+</project>
+>>>>>>> c4dabc8... Fixing product-is POMs to pick dependency versions from root POM

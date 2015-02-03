@@ -57,7 +57,7 @@
                             org.osgi.framework,
                             org.osgi.service.http,
                             org.wso2.carbon.ui,
-                            javax.servlet.*;version="2.4.0",
+                            javax.servlet.*;version="${sevlet.api.version}",
                             *;resolution:=optional
                         </Import-Package>
                         <Fragment-Host>org.wso2.carbon.ui</Fragment-Host>
