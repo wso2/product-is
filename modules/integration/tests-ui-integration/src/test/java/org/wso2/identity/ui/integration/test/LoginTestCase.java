@@ -33,7 +33,7 @@ public class LoginTestCase extends ISIntegrationUiBaseTest {
         driver.get(getLoginURL());
     }
 
-    @Test(groups = "is.ui.tests", description = "login to ss server as admin")
+    @Test(groups = "is.ui.tests", description = "login to is server as admin")
     public void testLogin() throws Exception {
         driver.get(getLoginURL());
         LoginPage loginPage = new LoginPage(driver);

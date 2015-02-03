@@ -10,8 +10,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <name>Identity Test Module</name>
-    <artifactId>org.wso2.carbon.identity.integration.test</artifactId>
+    <name>Identity Test Back-end Module</name>
+    <artifactId>org.wso2.carbon.identity.integration.backend.test</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -21,15 +21,28 @@
                 <inherited>false</inherited>
                 <version>2.12.4</version>
                 <configuration>
-                    <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
-                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
-                    <testFailureIgnore>false</testFailureIgnore>
-                    <disableXmlReport>false</disableXmlReport>
-                    <parallel>false</parallel>
+                    <!--argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine-->
+                    <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
                     <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+
                     <systemProperties>
+                        <property>
+                            <name>maven.test.haltafterfailure</name>
+                            <value>false</value>
+                        </property>
+                        <property>
+                            <name>carbon.zip</name>
+                            <value>
+                                ${basedir}/../../distribution/target/wso2is-${project.version}.zip
+                            </value>
+                        </property>
+                        <property>
+                            <name>samples.dir</name>
+                            <value>${basedir}/../../../samples/product</value>
+                        </property>
                         <property>
                             <name>framework.resource.location</name>
                             <value>
@@ -47,10 +60,6 @@
                             <value>false</value>
                         </property>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-                        <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
-                        <carbon.zip>
-                            ${basedir}/../../../distribution/target/wso2is-${project.version}.zip
-                        </carbon.zip>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
@@ -102,7 +111,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.identity</groupId>
                                     <artifactId>wso2is</artifactId>
-                                    <version>${project.version}</version>
+                                    <version>5.1.0</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
@@ -110,6 +119,93 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>copy-travelocity</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>org.wso2.sample.is.sso.agent</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-playground2</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>playground2</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-passivests</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples
+                            </outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>PassiveSTSSampleApp</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-travelocity-openid</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity</groupId>
+                                    <artifactId>org.wso2.sample.is.sso.agent</artifactId>
+                                    <version>1.3.0</version>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent-openid
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>packaging-war-artifacts-openid</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-smartconsumerwithclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-smartconsumerwithoutclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-dumbconsumerwithclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-dumbconsumerwithoutclaims"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -159,7 +255,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2is-${project.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2is-${is.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -180,7 +276,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2is-${project.version}/repository/conf/axis2/
+                                        ${basedir}/target/tobeCopied/wso2is-${is.version}/repository/conf/axis2/
                                     </directory>
                                     <includes>
                                         <include>**/*.xml</include>
@@ -201,7 +297,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2is-${project.version}/repository/deployment/client/modules
+                                        ${basedir}/target/tobeCopied/wso2is-${is.version}/repository/deployment/client/modules
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
@@ -216,27 +312,16 @@
     </build>
 
     <dependencies>
-
+        <dependency>
+            <groupId>emma</groupId>
+            <artifactId>emma</artifactId>
+            <version>${emma.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.user.core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database.wso2</groupId>
-            <artifactId>h2-database-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.uncommons</groupId>
-            <artifactId>reportng</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.testng</groupId>
-                    <artifactId>testng</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>SecVerifier</artifactId>
+            <version>${carbon.version}</version>
+            <type>aar</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.identity</groupId>
@@ -250,7 +335,84 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+            <version>4.3.2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.charon</groupId>
+            <artifactId>org.wso2.charon.core</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wink</groupId>
+            <artifactId>wink-client</artifactId>
+            <version>1.1.3-incubating</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.security</groupId>
+            <artifactId>wss4j</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.identity</groupId>
+            <artifactId>org.wso2.sample.is.sso.agent</artifactId>
+            <version>1.3.0</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.identity</groupId>
+            <artifactId>PassiveSTSSampleApp</artifactId>
+            <version>1.0</version>
+            <type>war</type>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.wso2.carbon.automation</groupId>-->
+        <!--<artifactId>org.wso2.carbon.automation.api</artifactId>-->
+        <!--<version>4.2.8</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.wso2.carbon.automation</groupId>-->
+        <!--<artifactId>org.wso2.carbon.automation.api</artifactId>-->
+        <!--<version>4.2.8</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.wso2.carbon.automation</groupId>-->
+        <!--<artifactId>org.wso2.carbon.automation.core</artifactId>-->
+        <!--<version>4.2.8</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+            <version>4.3.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.identity</groupId>
+            <artifactId>playground2</artifactId>
+            <version>5.1.0</version>
+            <type>war</type>
+        </dependency>
     </dependencies>
-
-
-</project>
+    <properties>
+        <test.framework.version>4.3.1</test.framework.version>
+        <is.version>5.1.0</is.version>
+        <emma.version>2.1.5320</emma.version>
+    </properties></project>
