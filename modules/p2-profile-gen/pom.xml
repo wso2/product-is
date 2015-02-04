@@ -104,27 +104,27 @@
                                 <featureArtifactDef>org.jaggeryjs.modules:i18n.feature:${i18n.module.version}</featureArtifactDef>
 
                                 <!--Carbon features-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.deployment.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${carbon.deployment.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.webapp.mgt.server.feature:${carbon.cxf.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.commons.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${carbon.commons.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.kernel.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.soaptracer.feature:${carbon.commons.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.compatibility.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.databridge.datapublisher.feature:${datapublisher.compatibility.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.soaptracer.feature:${carbon.compatibility.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${security.mgt.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xkms.mgt.feature:${carbon.platform.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${carbon.cxf.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xfer.feature:${carbon.platform.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.mex.feature:${carbon.platform.version}</featureArtifactDef>-->
 
 								<!-- registry related features -->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.kernel.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${carbon.registry.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.profiles.feature:${carbon.registry.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.registry.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${clarity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.profiles.feature:${carbon.compatibility.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.contentsearch.feature:${carbon.cxf.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.compatibility.version}</featureArtifactDef>
 								<!-- Directory server related features -->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.feature:${carbon.compatibility.version}</featureArtifactDef>
 								<!-- identity related features -->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.provider.feature:${carbon.identity.version}</featureArtifactDef>
@@ -272,7 +272,7 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
-                                    <version>${carbon.deployment.version}</version>
+                                    <version>${carbon.cxf.version}</version>
                                 </feature>
 								<feature>
                                     <id>org.wso2.carbon.webapp.mgt.server.feature.group</id>

@@ -821,7 +821,11 @@
     </distributionManagement>
 
 	<properties>
-		<carbon.identity.version>4.3.1</carbon.identity.version>
+		<carbon.identity.version>4.3.1-SNAPSHOT</carbon.identity.version>
+		<carbon.cxf.version>4.2.2</carbon.cxf.version>
+		<carbon.compatibility.version>4.2.0</carbon.compatibility.version>
+		<datapublisher.compatibility.version>4.2.3</datapublisher.compatibility.version>
+		<security.mgt.version>4.2.5</security.mgt.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
 		<stratos.identity.version>${stratos.version}</stratos.identity.version>
 		<product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
@@ -840,10 +844,10 @@
         <wss4j.wso2.version>1.5.11.wso2v9</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
         <charon.version>2.0.0</charon.version>
-        <xalan.version>1.7.2</xalan.version>
+        <xalan.version>2.7.2</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1.wso2v14</rampart.wso2.version>
-        <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
+        <orbit.version.commons.httpclient>3.1.0.wso2v2</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.1.3.wso2v1</httpcore.wso2.version>
         <httpclient.version>4.0.1</httpclient.version>
