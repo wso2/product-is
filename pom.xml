@@ -821,7 +821,11 @@
     </distributionManagement>
 
 	<properties>
-		<carbon.identity.version>4.3.1</carbon.identity.version>
+		<carbon.identity.version>4.3.1-SNAPSHOT</carbon.identity.version>
+		<carbon.cxf.version>4.2.2</carbon.cxf.version>
+		<carbon.compatibility.version>4.2.0</carbon.compatibility.version>
+		<datapublisher.compatibility.version>4.2.3</datapublisher.compatibility.version>
+		<security.mgt.version>4.2.5</security.mgt.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
 		<stratos.identity.version>${stratos.version}</stratos.identity.version>
 		<product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
