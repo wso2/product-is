@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.wso2.identity</groupId>
+        <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
         <version>5.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
@@ -109,7 +109,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.identity</groupId>
+                                    <groupId>org.wso2.is</groupId>
                                     <artifactId>wso2is</artifactId>
                                     <version>5.1.0</version>
                                     <type>zip</type>
@@ -170,7 +170,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.identity</groupId>
+                                    <groupId>org.wso2.is</groupId>
                                     <artifactId>org.wso2.sample.is.sso.agent</artifactId>
                                     <version>1.3.0</version>
                                     <type>war</type>
@@ -373,13 +373,13 @@
             <version>1.7.0</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.identity</groupId>
+            <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.sample.is.sso.agent</artifactId>
             <version>1.3.0</version>
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.identity</groupId>
+            <groupId>org.wso2.is</groupId>
             <artifactId>PassiveSTSSampleApp</artifactId>
             <version>1.0</version>
             <type>war</type>
@@ -405,7 +405,7 @@
             <version>4.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.identity</groupId>
+            <groupId>org.wso2.is</groupId>
             <artifactId>playground2</artifactId>
             <version>5.1.0</version>
             <type>war</type>

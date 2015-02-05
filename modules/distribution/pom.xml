@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-    	<groupId>org.wso2.identity</groupId>
+    	<groupId>org.wso2.is</groupId>
     	<artifactId>identity-server-parent</artifactId>
     	<version>5.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
@@ -385,7 +385,7 @@
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
                                 <delete dir="target/wso2carbon-core-4.3.0"/>
-                                <delete file="target/wso2is-5.1.0-SNAPSHOT.jar"/>
+                                <delete file="target/wso2is-5.1.0.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>

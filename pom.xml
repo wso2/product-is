@@ -1222,7 +1222,7 @@
 
 
     <modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.identity</groupId>
+	<groupId>org.wso2.is</groupId>
 	<artifactId>identity-server-parent</artifactId>
 	<packaging>pom</packaging>
 	<description>WSO2 Identity Server</description>
@@ -1236,6 +1236,7 @@
 		<module>modules/distribution</module>
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1269,6 +1270,8 @@
 =======
         <!--module>modules/samples</module-->
 >>>>>>> c4dabc8... Fixing product-is POMs to pick dependency versions from root POM
+=======
+>>>>>>> fd7075a... updating groupID to org.wso2.is
 	</modules>
 
 	<licenses>
@@ -2229,7 +2232,6 @@
 		<version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
         <jaggeryjs.version>0.9.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
 <<<<<<< HEAD
@@ -2266,6 +2268,7 @@
         <wso2.store.version>2.0.0</wso2.store.version>
 >>>>>>> 54179db... Buildable product with released versions
         <test.framework.version>4.3.1</test.framework.version>
+<<<<<<< HEAD
 >>>>>>> d11e346... Added more changes from previous commits
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <operadriver.version>0.8.1</operadriver.version>
@@ -2285,6 +2288,14 @@
         <testng.version>6.1.1</testng.version>
 >>>>>>> baa5a81... Fresh branch with new test migration, after carbon version migration
 =======
+=======
+        <!--<test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>-->
+        <operadriver.version>0.8.1</operadriver.version>
+        <selenium.version>2.40.0</selenium.version>
+        <testng.version>6.1.1</testng.version>
+        <!--<test.framework.version>4.3.1-SNAPSHOT</test.framework.version>-->
+        <!--<test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>-->
+>>>>>>> fd7075a... updating groupID to org.wso2.is
         <clarity.version>4.2.1</clarity.version>
         <carbon.deployment.version>4.3.1</carbon.deployment.version>
 <<<<<<< HEAD
