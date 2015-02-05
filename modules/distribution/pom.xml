@@ -20,7 +20,7 @@
     <parent>
     	<groupId>org.wso2.is</groupId>
     	<artifactId>identity-server-parent</artifactId>
-    	<version>5.1.0</version>
+    	<version>5.1.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -186,7 +186,7 @@
                                     </fileset>
                                 </copy>
                                 <copy file="src/repository/resources/shindig/index.jsp" todir="target/shindig" />
-                                <!--<zip destfile="target/ROOT.war" basedir="target/shindig"   />-->
+                                <!--<zip destfile="target/ROOT.war" basedir="target/shindig" />-->
                                 <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
                                     log4j.logger.net.sf.ehcache=ERROR
                                 </concat>
