@@ -10,7 +10,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.identity</groupId>
     <artifactId>org.wso2.identity.ui.integration.test</artifactId>
     <packaging>jar</packaging>
     <name>org.wso2.identity.ui.integration.test</name>
@@ -101,7 +100,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.identity</groupId>
+                                    <groupId>org.wso2.is</groupId>
                                     <artifactId>wso2is</artifactId>
                                     <version>${project.version}</version>
                                     <type>zip</type>
