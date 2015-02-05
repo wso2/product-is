@@ -7,8 +7,7 @@
 	WARRANTIES OR CONDITIONS OF ANY ~ KIND, either express or implied. See the 
 	License for the ~ specific language governing permissions and limitations 
 	~ under the License. -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -22,7 +21,7 @@
 	<artifactId>identity-server-parent</artifactId>
 	<packaging>pom</packaging>
 	<description>WSO2 Identity Server</description>
-	<version>5.1.0-SNAPSHOT</version>
+	<version>5.1.0</version>
 	<name>WSO2 Identity Server</name>
 	<url>http://wso2.org/projects/identity</url>
 
@@ -802,7 +801,7 @@
 
 	<properties>
 		<carbon.identity.version>4.3.3</carbon.identity.version>
-        <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
+        <product.identity.version>5.1.0</product.identity.version>
 		<stratos.identity.version>${stratos.version}</stratos.identity.version>
 		<bcprov.jdk13.version>140</bcprov.jdk13.version>
 		<bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -931,7 +930,7 @@
         <url>https://github.com/wso2/product-is.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-is.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-is.git</connection>
-        <tag>HEAD</tag>
+        <tag>identity-server-parent-5.1.0</tag>
     </scm>
 
 
