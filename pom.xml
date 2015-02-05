@@ -582,8 +582,8 @@
                 <version>${charon.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-httpclient.wso2</groupId>
-                <artifactId>commons-httpclient</artifactId>
+                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <artifactId>httpclient</artifactId>
                 <version>${orbit.version.commons.httpclient}</version>
             </dependency>
             <dependency>
@@ -670,6 +670,12 @@
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.styles</artifactId>
                 <version>${product.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core.ui.feature</artifactId>
+                <version>${product.identity.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -821,7 +827,7 @@
     </distributionManagement>
 
 	<properties>
-		<carbon.identity.version>4.3.1</carbon.identity.version>
+		<carbon.identity.version>4.3.2</carbon.identity.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
 		<stratos.identity.version>${stratos.version}</stratos.identity.version>
 		<product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
@@ -840,7 +846,7 @@
         <wss4j.wso2.version>1.5.11.wso2v9</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
         <charon.version>2.0.0</charon.version>
-        <xalan.version>1.7.2</xalan.version>
+        <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1.wso2v14</rampart.wso2.version>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
@@ -875,7 +881,7 @@
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
         <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
-        <jaggeryjs.version>0.9.0-SNAPSHOT</jaggeryjs.version>
+        <jaggeryjs.version>0.9.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <shindig.version>2.5.0-beta5</shindig.version>
         <ws.module.version>1.1.0</ws.module.version>
@@ -890,7 +896,7 @@
         <markdown.module.verion>1.0.0</markdown.module.verion>
         <gadget.module.version>1.0.0</gadget.module.version>
         <i18n.module.version>1.0.0</i18n.module.version>
-        <wso2.store.version>1.2.0-SNAPSHOT</wso2.store.version>
+        <wso2.store.version>2.0.0</wso2.store.version>
         <test.framework.version>4.3.1</test.framework.version>
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <operadriver.version>0.8.1</operadriver.version>
@@ -900,8 +906,9 @@
         <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
         <clarity.version>4.2.1</clarity.version>
         <carbon.deployment.version>4.3.1</carbon.deployment.version>
-        <carbon.registry.version>4.3.1</carbon.registry.version>
-        <carbon.multitenancy.version>4.3.1</carbon.multitenancy.version>
+        <carbon.registry.version>4.3.0</carbon.registry.version>
+        <carbon.multitenancy.version>4.3.3</carbon.multitenancy.version>
+        <jaggery.extensions.version>1.2.0</jaggery.extensions.version>
 	</properties>
 
     <repositories>
