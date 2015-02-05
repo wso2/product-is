@@ -156,8 +156,8 @@
 
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.um.ws.service.feature:${carbon.identity.version}</featureArtifactDef>
 
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:${product.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:${product.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.is:org.wso2.identity.styles.feature:${product.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.is:org.wso2.identity.utils.feature:${product.identity.version}</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.iwa.feature:${carbon.identity.version}</featureArtifactDef>
@@ -169,7 +169,7 @@
 								<!-- Features related to Cloud Identity -->
 								<featureArtifactDef>org.wso2.carbon.commons:org.wso2.carbon.user.mgt.feature:${carbon.commons.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:${product.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.is:org.wso2.identity.ui.feature:${product.identity.version}</featureArtifactDef>
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.server.feature:${carbon.platform.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${carbon.platform.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>-->
