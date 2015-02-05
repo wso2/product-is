@@ -18,8 +18,8 @@
             <artifactId>org.wso2.charon.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient.wso2</groupId>
-            <artifactId>commons-httpclient</artifactId>
+            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <artifactId>httpclient</artifactId>
         </dependency>
     </dependencies>
 

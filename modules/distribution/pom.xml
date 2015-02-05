@@ -43,9 +43,13 @@
             <artifactId>rampart</artifactId>
             <type>mar</type>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <version>1.6.1-wso2v13</version>
 =======
 >>>>>>> c4dabc8... Fixing product-is POMs to pick dependency versions from root POM
+=======
+            <version>1.6.1-wso2v14</version>
+>>>>>>> 54179db... Buildable product with released versions
       		<exclusions>
             <exclusion>
                 <groupId>org.apache.neethi</groupId>
