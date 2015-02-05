@@ -18,7 +18,7 @@
 
 
     <modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.identity</groupId>
+	<groupId>org.wso2.is</groupId>
 	<artifactId>identity-server-parent</artifactId>
 	<packaging>pom</packaging>
 	<description>WSO2 Identity Server</description>
@@ -32,8 +32,6 @@
 		<module>modules/distribution</module>
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
-		<!--<module>modules/integration</module>-->
-		<!--<module>modules/samples</module>-->
 	</modules>
 
 	<licenses>
@@ -855,7 +853,6 @@
 		<version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <wso2carbon.version>4.3.0-SNAPSHOT</wso2carbon.version>
         <jaggeryjs.version>0.9.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <shindig.version>2.5.0-beta5</shindig.version>
@@ -873,12 +870,12 @@
         <i18n.module.version>1.0.0</i18n.module.version>
         <wso2.store.version>2.0.0</wso2.store.version>
         <test.framework.version>4.3.1</test.framework.version>
-        <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
+        <!--<test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>-->
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <test.framework.version>4.3.1-SNAPSHOT</test.framework.version>
-        <test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>
+        <!--<test.framework.version>4.3.1-SNAPSHOT</test.framework.version>-->
+        <!--<test.framework.util.version>4.3.0-SNAPSHOT</test.framework.util.version>-->
         <clarity.version>4.2.1</clarity.version>
         <carbon.deployment.version>4.3.1</carbon.deployment.version>
         <carbon.registry.version>4.3.0</carbon.registry.version>
