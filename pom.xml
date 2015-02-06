@@ -733,6 +733,71 @@
                 <artifactId>wink-client</artifactId>
                 <version>1.1.3-incubating</version>
             </dependency>
+            <dependency>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>1.2.140.wso2v3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart</groupId>
+                <artifactId>rampart</artifactId>
+                <type>mar</type>
+                <version>1.6.1-wso2v14</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shindig</groupId>
+                <artifactId>shindig-server</artifactId>
+                <version>${shindig.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.idp.mgt.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity</groupId>
+                <artifactId>org.wso2.identity.integration.common.clients</artifactId>
+                <version>${product.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity</groupId>
+                <artifactId>org.wso2.identity.integration.common.utils</artifactId>
+                <version>${product.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <scope>test</scope>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -870,6 +935,8 @@
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
+        <test.framework.version>4.3.1</test.framework.version>
+        <test.framework.util.version>4.3.0</test.framework.util.version>
         <project.scm.id>my-scm-server</project.scm.id>
 
     </properties>

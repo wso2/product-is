@@ -36,13 +36,11 @@
        <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
-	        <version>1.2.140.wso2v3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
-            <version>1.6.1-wso2v14</version>
       		<exclusions>
             <exclusion>
                 <groupId>org.apache.neethi</groupId>
@@ -61,7 +59,6 @@
         <dependency>
             <groupId>org.apache.shindig</groupId>
             <artifactId>shindig-server</artifactId>
-            <version>${shindig.version}</version>
             <type>war</type>
         </dependency>
         <!--
