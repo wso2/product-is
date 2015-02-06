@@ -966,7 +966,7 @@
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
-                <version>${project.version}</version>
+                <version>${product.identity.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
