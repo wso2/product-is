@@ -36,12 +36,12 @@
        <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
-	        <version>1.2.140.wso2v3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             <version>1.6.1-wso2v13</version>
@@ -50,6 +50,8 @@
 =======
             <version>1.6.1-wso2v14</version>
 >>>>>>> 54179db... Buildable product with released versions
+=======
+>>>>>>> 8e353e8... removed unused dependancies
       		<exclusions>
             <exclusion>
                 <groupId>org.apache.neethi</groupId>
@@ -69,10 +71,13 @@
             <groupId>org.apache.shindig</groupId>
             <artifactId>shindig-server</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <version>${shindig.version}</version>
 =======
 	        <version>${shindig.version}</version>
 >>>>>>> 3b8225a... Adding shindig version
+=======
+>>>>>>> 8e353e8... removed unused dependancies
             <type>war</type>
         </dependency>
         <!--
