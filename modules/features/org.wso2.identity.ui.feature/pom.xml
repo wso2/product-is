@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
-		<groupId>org.wso2.identity</groupId>
+		<groupId>org.wso2.is</groupId>
 		<artifactId>identity-features</artifactId>
 		<version>5.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
@@ -38,11 +38,6 @@
             <groupId>org.wso2.identity</groupId>
             <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.ui.menu.stratos</artifactId>-->
-	    <!--<version>${stratos.version.220}</version>	-->
-        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -72,8 +67,6 @@
                             <bundles>
                                 <bundleDef>
                                     org.wso2.identity:org.wso2.stratos.identity.dashboard.ui
-                                </bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.stratos
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

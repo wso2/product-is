@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.identity</groupId>
+        <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
         <version>5.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -155,7 +155,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.identity</groupId>
+                                    <groupId>org.wso2.is</groupId>
                                     <artifactId>wso2is</artifactId>
                                     <version>${project.version}</version>
                                     <type>zip</type>
@@ -256,31 +256,26 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
-            <version>${test.framework.util.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
-            <version>${test.framework.util.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.identity</groupId>
             <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
-            <version>${product.identity.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.wink</groupId>
             <artifactId>wink-client</artifactId>
-            <version>1.1.3-incubating</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.charon</groupId>
             <artifactId>org.wso2.charon.core</artifactId>
-            <version>2.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
