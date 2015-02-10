@@ -33,7 +33,7 @@ function drawPage() {
         body = body + " </label>\n" +
             "\n" +
             "                    <div class=\"controls\">";
-        if(json.return.fieldValues[i].displayName !="QR Code URL"){ 
+        if(json.return.fieldValues[i].displayName !="Enable TOTP"){ 
 
 
             if (json.return.fieldValues[i].readOnly == "true") {
@@ -60,17 +60,17 @@ function drawPage() {
             if(encoding !="Invalid"){
 
                 if(json.return.fieldValues[i].fieldValue!=""){
-                    body +="        <input type=\"checkbox\" checked name=\"totpenable\" onclick=\"validateCheckBox();\"/>"+
+                    body +="        <input type=\"checkbox\" checked name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+
                            "        <img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\">";
 
                 }else{
-                    body +="        <input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\"/>"+
+                    body +="        <input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+
                            "        <img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\" style=\"Display:none\">";
                 }
 
             }else{
    
-                body +="        <input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\"/>"+ "<label id=\"tokenInvalid\" class=\"control-label\">Invalid Token</label>"+
+                body +="        <input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+ "<label id=\"tokenInvalid\" style=\"margin-left:20px\">Invalid Token Please Reconfigure</label>"+
                        "        <img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\" style=\"Display:none\">";
 
             }
