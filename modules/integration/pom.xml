@@ -51,11 +51,15 @@
         <module>tests-common</module>
 >>>>>>> af732ea... Fixing integration test module IS
         <module>tests-integration</module>
+<<<<<<< HEAD
         <module>tests-ui-integration</module>
 <<<<<<< HEAD
         <module>tests</module>
 >>>>>>> 706fa08... Disabled tests..
 =======
+=======
+        <!--<module>tests-ui-integration</module>-->
+>>>>>>> 07910be... Fixing integration test module IS - excluding integration ui test module
         <!--<module>tests</module>-->
 >>>>>>> 4b7d085... Disabled tests..
     </modules>
