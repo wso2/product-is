@@ -32,7 +32,7 @@
     <name>Identity Server : Samples</name>
 
     <modules>
-        <module>user-mgt</module>
+        <!--<module>user-mgt</module>-->
         <module>scim</module>
         <module>oauth</module>
         <module>oauth2</module>

@@ -33,6 +33,7 @@
     <packaging>pom</packaging>
     <modules>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <module>tests-common/admin-clients</module>
         <module>tests-common/integration-test-utils</module>
         <module>tests-common/ui-pages</module>
@@ -46,6 +47,9 @@
         <module>tests-ui-integration</module>
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 =======
+=======
+        <module>tests-common</module>
+>>>>>>> af732ea... Fixing integration test module IS
         <module>tests-integration</module>
         <module>tests-ui-integration</module>
 <<<<<<< HEAD
@@ -76,14 +80,14 @@
                         <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../distribution/target/wso2is-${product.identity.version}.zip
+                            ${basedir}/../distribution/target/wso2is-${project.version}.zip
                         </carbon.zip>
                         <sec.verifier.dir>
                             ${basedir}/target/security-verifier/
                         </sec.verifier.dir>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <samples.dir>${basedir}/../samples/product</samples.dir>
-                        <extracted.dir>wso2is-${product.identity.version}</extracted.dir>
+                        <extracted.dir>wso2is-${project.version}</extracted.dir>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
@@ -133,23 +137,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.integration.framework</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.commons</groupId>
             <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.identity.certificateauthority.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
         </dependency>
         <dependency>
@@ -157,6 +153,7 @@
             <artifactId>SecVerifier</artifactId>
             <type>aar</type>
         </dependency>
+<<<<<<< HEAD
         <!--<dependency>-->
             <!--<groupId>org.wso2.carbon.automation</groupId>-->
             <!--<artifactId>org.wso2.carbon.automation.api</artifactId>-->
@@ -213,5 +210,11 @@
             <artifactId>org.wso2.carbon.automation.utils</artifactId>
 >>>>>>> c4dabc8... Fixing product-is POMs to pick dependency versions from root POM
         </dependency>
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+        </dependency>
+>>>>>>> af732ea... Fixing integration test module IS
     </dependencies>
 </project>

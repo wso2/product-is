@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package test.java.org.wso2.carbon.identity.tests.saml;
+package org.wso2.identity.integration.test.saml;
 
 
 import org.apache.commons.logging.Log;

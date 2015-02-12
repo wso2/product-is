@@ -3,15 +3,15 @@
 <suite name="identity-suite">
     <parameter name="useDefaultListeners" value="false"/>
     <listeners>
-        <listener class-name="org.wso2.carbon.automation.core.PlatformTestManager"/>
-        <listener class-name="org.wso2.carbon.automation.core.PlatformReportManager"/>
-        <listener class-name="org.wso2.carbon.automation.core.PlatformExecutionManager"/>
-        <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
-        <listener class-name="org.wso2.carbon.automation.core.PlatformAnnotationTransferManager"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
     </listeners>
     <test name="verifyServer" preserve-order="true" parallel="false">
         <classes>
-            <class name="ServerStartupTestCase"/>
+            <!--<class name="ServerStartupTestCase"/>-->
         </classes>
     </test>
 </suite>

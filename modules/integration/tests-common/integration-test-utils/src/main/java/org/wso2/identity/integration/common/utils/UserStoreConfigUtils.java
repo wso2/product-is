@@ -20,6 +20,7 @@ package org.wso2.identity.integration.common.utils;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 
+
 /**
  * The Util class which carries common functionality required by the user store configuration scenarios
  */

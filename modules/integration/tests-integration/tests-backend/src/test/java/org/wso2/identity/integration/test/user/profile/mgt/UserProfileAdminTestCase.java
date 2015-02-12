@@ -27,14 +27,13 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.identity.integration.test.user.mgt.UserMgtTestCase;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class UserProfileAdminTestCase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(UserMgtTestCase.class);
+    private static final Log log = LogFactory.getLog(UserProfileAdminTestCase.class);
     private UserProfileMgtServiceClient userProfileMgtClient;
     private UserManagementClient userMgtClient;
     private AuthenticatorClient logManger;

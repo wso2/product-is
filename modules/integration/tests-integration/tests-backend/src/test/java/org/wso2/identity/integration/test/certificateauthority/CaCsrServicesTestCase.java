@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.certificateauthority;
 
+
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class CaCsrServicesTestCase extends ISIntegrationTest {

@@ -27,15 +27,14 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.tests.CarbonTestServerManager;
+import org.wso2.carbon.integration.common.extensions.carbonserver.CarbonServerManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -53,7 +52,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
-    private Map<Integer, CarbonTestServerManager> serverManagers;
+   // private Map<Integer, CarbonServerManager> serverManagers;
     private Map<Integer, Tomcat> tomcatServers;
     private HttpClient httpClient;
     private String servicesUrl = "https://localhost:%s/services/";
@@ -65,21 +64,21 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
         identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
         samlSSOConfigServiceClients = new HashMap<Integer, SAMLSSOConfigServiceClient>();
-        serverManagers = new HashMap<Integer, CarbonTestServerManager>();
+      //  serverManagers = new HashMap<Integer, CarbonServerManager>();
         httpClient = new DefaultHttpClient();
         tomcatServers = new HashMap<Integer, Tomcat>();
     }
 
-    public void startCarbonServer(int portOffset, Map<String, String> startupParameters)
-            throws Exception {
-        CarbonTestServerManager serverManager = new CarbonTestServerManager(isServer, portOffset);
-        serverManagers.put(portOffset, serverManager);
-        serverManager.startServer();
-    }
+//    public void startCarbonServer(int portOffset, Map<String, String> startupParameters)
+//            throws Exception {
+//        CarbonServerManager serverManager = new CarbonServerManager(isServer);
+//        serverManagers.put(portOffset, serverManager);
+//       // serverManager.startServerUsingCarbonHome("/Users/dharshana/product-is/product-is/modules/integration/tests-integration/tests-backend/target",serverManager);
+//    }
 
-    public void stopCarbonServer(int portOffset) throws Exception {
-        serverManagers.get(portOffset).stopServer();
-    }
+//    public void stopCarbonServer(int portOffset) throws Exception {
+//       // serverManagers.get(portOffset).serverShutdown(portOffset);
+//    }
 
     public HttpClient getHttpClient() {
         return httpClient;
@@ -111,22 +110,22 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         }
     }
 
-    public void addServiceProvider(int portOffset, String applicationName) throws Exception {
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(applicationName);
-        serviceProvider.setDescription("This is a test Service Provider");
-        applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
-    }
-
-    public ServiceProvider getServiceProvider(int portOffset, String applicationName)
-            throws Exception {
-        return applicationManagementServiceClients.get(portOffset).getApplication(applicationName);
-    }
-
-    public void updateServiceProvider(int portOffset, ServiceProvider serviceProvider)
-            throws Exception {
-        applicationManagementServiceClients.get(portOffset).updateApplicationData(serviceProvider);
-    }
+//    public void addServiceProvider(int portOffset, String applicationName) throws Exception {
+//        ServiceProvider serviceProvider = new ServiceProvider();
+//        serviceProvider.setApplicationName(applicationName);
+//        serviceProvider.setDescription("This is a test Service Provider");
+//        applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
+//    }
+//
+//    public ServiceProvider getServiceProvider(int portOffset, String applicationName)
+//            throws Exception {
+//        return applicationManagementServiceClients.get(portOffset).getApplication(applicationName);
+//    }
+//
+//    public void updateServiceProvider(int portOffset, ServiceProvider serviceProvider)
+//            throws Exception {
+//        applicationManagementServiceClients.get(portOffset).updateApplicationData(serviceProvider);
+//    }
 
     public void deleteServiceProvider(int portOffset, String applicationName) throws Exception {
         applicationManagementServiceClients.get(portOffset).deleteApplication(applicationName);

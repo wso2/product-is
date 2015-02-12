@@ -29,6 +29,7 @@
         <!--<module>tests</module>-->
     </modules>
 
+<<<<<<< HEAD
     <!--<build>-->
         <!--<plugins>-->
             <!--<plugin>-->
@@ -427,6 +428,8 @@
     </build>
 >>>>>>> c4dabc8... Fixing product-is POMs to pick dependency versions from root POM
 
+=======
+>>>>>>> af732ea... Fixing integration test module IS
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
@@ -441,39 +444,20 @@
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
-            <version>4.3.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.idp.mgt.stub</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.identity</groupId>
-            <artifactId>org.wso2.identity.integration.common.clients</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -492,17 +476,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.identity</groupId>
-            <artifactId>org.wso2.identity.integration.common.utils</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
             <scope>test</scope>
         </dependency>
@@ -512,13 +491,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
