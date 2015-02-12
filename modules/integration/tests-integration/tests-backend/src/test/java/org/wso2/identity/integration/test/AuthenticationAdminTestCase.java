@@ -27,7 +27,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
-import org.wso2.carbon.integration.framework.ClientConnectionUtil;
+import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 
 import java.rmi.RemoteException;
 
@@ -42,7 +42,7 @@ public class AuthenticationAdminTestCase {
 
     @BeforeClass(groups = {"wso2.is"})
     public void setUp() {
-        ClientConnectionUtil.waitForPort(9443);
+        ClientConnectionUtil.waitForPort(9443,"localhost");
     }
 
     @Test (groups = "wso2.is")

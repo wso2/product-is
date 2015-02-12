@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.identity.integration.common.clients;
+package org.wso2.identity.integration.common.clients.user.store.config;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdminServiceStub;

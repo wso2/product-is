@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.sts;
 
+
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import static org.testng.Assert.assertTrue;

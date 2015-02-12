@@ -32,6 +32,8 @@
 		<module>modules/distribution</module>
 		<module>modules/styles</module>
 		<module>modules/dashboard</module>
+		<!--<module>modules/samples</module>-->
+		<module>modules/integration</module>
 	</modules>
 
 	<licenses>
@@ -396,30 +398,10 @@
 			</dependency>
 
             <!-- Dependencies for Automation Test Framework-->
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
-                <version>${test.framework.util.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.engine</artifactId>
-                <version>${test.framework.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.extensions</artifactId>
-                <version>${test.framework.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
-                <version>${test.framework.version}</version>
-                <scope>test</scope>
-            </dependency>
+
+
+
+
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
@@ -621,22 +603,22 @@
                 <version>${httpcore.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
@@ -676,11 +658,7 @@
                 <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
                 <version>${stratos.version.221}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.integration.framework</artifactId>
-                <version>${carbon.kernel.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -688,17 +666,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.identity.certificateauthority.stub</artifactId>
-                <version>${carbon.identity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
@@ -708,21 +681,8 @@
                 <version>${carbon.kernel.version}</version>
                 <type>aar</type>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.api</artifactId>
-                <version>${clarity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.core</artifactId>
-                <version>${clarity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.utils</artifactId>
-                <version>${clarity.version}</version>
-            </dependency>
+
+
             <dependency>
                 <groupId>emma</groupId>
                 <artifactId>emma</artifactId>
@@ -750,54 +710,164 @@
                 <version>${shindig.version}</version>
                 <type>war</type>
             </dependency>
+
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.integration.common.tests</artifactId>
-                <version>${carbon.identity.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
-                <version>${carbon.identity.version}</version>
-                <scope>test</scope>
+				<version>${carbon.identity.version}</version>
+				<scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.idp.mgt.stub</artifactId>
                 <version>${carbon.identity.version}</version>
-                <scope>test</scope>
+				<scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.common.clients</artifactId>
                 <version>${product.identity.version}</version>
-                <scope>test</scope>
+				<scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.common.utils</artifactId>
                 <version>${product.identity.version}</version>
-                <scope>test</scope>
+				<scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
                 <version>${carbon.identity.version}</version>
-                <scope>test</scope>
+				<scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
                 <version>${carbon.identity.version}</version>
-                <scope>test</scope>
+				<scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.user.core</artifactId>
                 <version>${carbon.kernel.version}</version>
-                <scope>test</scope>
+				<scope>compile</scope>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.identity</groupId>
+				<artifactId>org.wso2.carbon.identity.mgt.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.identity</groupId>
+				<artifactId>org.wso2.carbon.identity.sso.saml.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.identity</groupId>
+				<artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.identity</groupId>
+				<artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.identity</groupId>
+				<artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.identity</groupId>
+				<artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.wso2.carbon.automation</groupId>
+				<artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+				<version>${carbon.automation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automation</groupId>
+				<artifactId>org.wso2.carbon.automation.engine</artifactId>
+				<version>${carbon.automation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automation</groupId>
+				<artifactId>org.wso2.carbon.automation.extensions</artifactId>
+				<version>${carbon.automation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automationutils</groupId>
+				<artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+				<version>${carbon.automationutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automationutils</groupId>
+				<artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+				<version>${carbon.automationutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.automationutils</groupId>
+				<artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+				<version>${carbon.automationutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.is</groupId>
+				<artifactId>org.wso2.identity.integration.common.clients</artifactId>
+				<version>${project.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.is</groupId>
+				<artifactId>org.wso2.identity.integration.common.utils</artifactId>
+				<version>${project.version}</version>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.charon</groupId>
+				<artifactId>org.wso2.charon.core</artifactId>
+				<version>${wso2.charon.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wink</groupId>
+				<artifactId>wink-client</artifactId>
+				<version>${apache.wink.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.ws.security</groupId>
+				<artifactId>wss4j</artifactId>
+				<version>${apache.ws.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${javax.servlet.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.openejb</groupId>
+				<artifactId>openejb-core</artifactId>
+				<version>${apache.openejb.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.openejb</groupId>
+				<artifactId>openejb-core</artifactId>
+				<version>${apache.openejb.version}</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -927,7 +997,6 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <clarity.version>4.2.1</clarity.version>
         <carbon.deployment.version>4.3.1</carbon.deployment.version>
         <carbon.registry.version>4.3.0</carbon.registry.version>
         <carbon.multitenancy.version>4.3.3</carbon.multitenancy.version>
@@ -935,10 +1004,15 @@
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
-        <test.framework.version>4.3.1</test.framework.version>
-        <test.framework.util.version>4.3.0</test.framework.util.version>
-        <project.scm.id>my-scm-server</project.scm.id>
-
+		<carbon.automation.version>4.3.1</carbon.automation.version>
+		<carbon.automationutils.version>4.3.0</carbon.automationutils.version>
+		<wso2.charon.version>2.0.0</wso2.charon.version>
+		<apache.wink.version>1.1.3-incubating</apache.wink.version>
+		<apache.ws.security.version>1.6.9</apache.ws.security.version>
+		<javax.servlet.version>2.5</javax.servlet.version>
+		<slf4j.version>1.7.0</slf4j.version>
+		<apache.openejb.version>4.5.2</apache.openejb.version>
+		<project.scm.id>my-scm-server</project.scm.id>
     </properties>
 
     <repositories>

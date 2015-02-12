@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package test.java.org.wso2.carbon.identity.tests.user.profile.mgt;
+package org.wso2.identity.integration.test.user.profile.mgt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

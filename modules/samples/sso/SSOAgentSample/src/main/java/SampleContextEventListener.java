@@ -1,8 +1,4 @@
-import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.util.SSOAgentConfigs;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;

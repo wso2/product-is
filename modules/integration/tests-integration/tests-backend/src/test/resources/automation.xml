@@ -32,10 +32,6 @@
         -->
         <executionEnvironment>standalone</executionEnvironment>
         <!--
-         Change this to user/tenant to execute test with user mode or tenant mode
-        -->
-        <multiTenantMode>false</multiTenantMode>
-        <!--
          Change this to true if you want to generate coverage statistics
         -->
         <coverage>false</coverage>
