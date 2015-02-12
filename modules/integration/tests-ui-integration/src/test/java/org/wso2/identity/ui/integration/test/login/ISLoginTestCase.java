@@ -23,9 +23,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
-import org.wso2.identity.integration.common.ui.page.LoginPage;
-import org.wso2.identity.integration.common.ui.page.main.HomePage;
 import org.wso2.identity.integration.common.utils.ISIntegrationUITest;
+import org.wso2.identity.integration.ui.pages.login.LoginPage;
+import org.wso2.identity.integration.ui.pages.main.HomePage;
 
 
 public class ISLoginTestCase extends ISIntegrationUITest {

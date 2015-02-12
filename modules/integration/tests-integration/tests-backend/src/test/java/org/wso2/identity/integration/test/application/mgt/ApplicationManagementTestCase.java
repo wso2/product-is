@@ -25,6 +25,9 @@ import org.testng.annotations.*;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
+import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenticatorConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.util.ArrayList;

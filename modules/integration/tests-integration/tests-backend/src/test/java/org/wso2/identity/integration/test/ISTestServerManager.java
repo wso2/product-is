@@ -22,7 +22,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.wso2.carbon.integration.framework.TestServerManager;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
+
 
 import java.io.IOException;
 
@@ -34,9 +36,13 @@ public class ISTestServerManager extends TestServerManager {
 
     private static final Log log = LogFactory.getLog(ISTestServerManager.class);
 
+    protected ISTestServerManager(AutomationContext context) {
+        super(context);
+    }
+
     @Override
     @BeforeSuite(timeOut = 300000)
-    public String startServer() throws IOException {
+    public String startServer() throws Exception {
         String carbonHome = super.startServer();
         System.setProperty("carbon.home", carbonHome);
         // Adding the following sleep to avoid random test failures
