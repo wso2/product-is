@@ -54,6 +54,16 @@ var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.ca
 
 var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
 
+var startFIDORegistration = "<xsd:startRegistration xmlns:xsd=\"http://org.apache.axis2/xsd\">\n"+
+                    "<xsd:username>{0}</xsd:userName>\n"+
+                    "<xsd:appID>{1}</xsd:appID>\n"+
+                    "</xsd:startRegistration>";
+
+var finishRegistration = "<xsd:finishRegistration xmlns:xsd=\"http://org.apache.axis2/xsd\">\n"+
+                    "<xsd:response>{0}</xsd:response>\n"+
+                    "<xsd:username>{1}</xsd:userName>\n"+
+                    "<xsd:appID>{2}</xsd:appID>\n"+
+                    "</xsd:finishRegistration>";
 
 application.put("urn:getUserProfile", getUserProfile);
 application.put("urn:getProfileFieldsForInternalStore", getProfileFieldsForInternalStore);
@@ -72,6 +82,8 @@ if(!application.get(SAML_ENABLED)){
 	application.put("urn:login", login);
 }
 application.put("urn:getUserInfo", getUserInfo);
+application.put("urn:startFIDORegistration", startFIDORegistration);
+application.put("urn:finishRegistration", finishRegistration);
 
 
 

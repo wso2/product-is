@@ -1,6 +1,7 @@
 function drawPage() {
     console.log(json);
     var output = "";
+    var u2fScript="<script src=\"chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js\"></script>";
     var start = "<div class=\"container-fluid\" style=\"width:95%\">\n" +
         "    <div class=\"row\">\n" +
         "        <div class=\"col-lg-12\">\n" +
@@ -52,7 +53,17 @@ function drawPage() {
         "        </div>\n" +
         "    </div>";
 
-    output = start + body + endString;
+    var fido = "                <div class=\"control-group\">\n" +
+        "                    <div class=\"controls\">\n" +
+        "                        <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" value=\"Attach FIDO Token\"/>\n" +
+        "                    </div>\n" +
+        "                </div>\n" +
+        "            <!--</form>-->\n" +
+        "        </div>\n" +
+        "        </div>\n" +
+        "    </div>";
+
+    output = u2fScript + start + body + fido + endString;
     $("#gadgetBody").empty();
     $("#gadgetBody").append(output);
 }

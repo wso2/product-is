@@ -45,6 +45,7 @@
         <script src="/portal/gadgets/wso2-dev/js/jquery.dependClass-0.1.js" type="text/javascript"></script>
         <script src="/portal/gadgets/wso2-dev/js/jquery.slider.js" type="text/javascript"></script>
         <script src="/portal/themes/portal/js/UESContainer.js"></script>
+        <!--script src="chrome-extension://pfboblefjcgdjicmnffhdgionmgcdmne/u2f-api.js"></script-->
 
         <link rel="stylesheet" href="/portal/gadgets/user_profile/js/ui/css/main.css">
         <link rel="stylesheet" href="/portal/gadgets/user_profile/js/ui/css/bootstrap.css">
@@ -125,14 +126,77 @@
 
             }
 
+            //fido client code
+    		var request;
+ 			var loggedInUser;
+
+ 			function talkToDevice(){
+ 				setTimeout(function() {
+     			u2f.register(request.registerRequests, request.authenticateRequests,
+     			function(data) {
+         			console.log(data);
+         			var form = document.getElementById('fidoForm');
+         			var reg = document.getElementById('tokenResponse');
+         			if(data.errorCode) {
+             			alert("U2F failed with error: " + data.errorMessage);
+             			return;
+         			}
+         		    reg.value=JSON.stringify(data);
+         		    //form.submit();
+         		    var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-finish.jag";
+                    $.ajax({
+                        url:str,
+                        type:"POST",
+                        data: $('#fidoForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                    })
+                    .done(function(data){
+                        message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+                    })
+                    .fail(function () {
+                            message({content:'Error while updating Profile',type:'error', cbk:function(){} });
+
+                    });
+
+     			});
+ 			}, 10000);
+
+ 			}
+
+
+            function startFIDO() {
+
+                var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-start.jag";
+                $.ajax({
+                    url:str,
+                    type:"POST",
+                    data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                })
+                  .done(function (data) {
+			            request = data;
+			            talkToDevice();
+			            message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+
+                  })
+                  .fail(function () {
+                        message({content:'Error while updating Profile',type:'error', cbk:function(){} });
+
+                  })
+                  .always(function () {
+                            console.log('completed');
+                  });
+
+            }
+
         </script>
 
 
         <form id="gadgetForm" class="form-horizontal">
             <div id="gadgetBody"></div>
-	    <div id="message"></div>
+	        <div id="message"></div>
         </form>
-
+        <form id="fidoForm">
+        	<input type="hidden" id="tokenResponse"/>
+        </form>
         ]]>
     </Content>
 </Module>
