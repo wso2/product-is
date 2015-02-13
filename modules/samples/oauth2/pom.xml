@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2is-identity-samples-oauth2</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : OAuth2.0 Samples with Identity Server 5.0.0</name>
+    <name>Identity Server : OAuth2.0 Samples with Identity Server 5.1.0</name>
 
     <modules>
         <module>playground2</module>
