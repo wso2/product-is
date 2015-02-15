@@ -52,6 +52,9 @@ var userName = request.getParameter("user");
 
         for each (var f in fieldValues){
             var paramName = f.*::['claimUri'].text().toString();
+	    if(paramName=="http://wso2.org/claims/identity/encoding"||paramName=="http://wso2.org/claims/identity/qrcodeurl"){
+                continue;
+            }
             var value = request.getParameter(paramName);
 
             var isValid = validate(value, f);
