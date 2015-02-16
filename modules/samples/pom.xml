@@ -36,9 +36,9 @@
         <module>scim</module>
         <module>oauth</module>
         <module>oauth2</module>
-        <!--<module>sso</module>-->
-	<!--<module>xacml</module>-->
-	<!--<module>sts</module>-->
+        <module>sso</module>
+	<module>xacml</module>
+	<module>sts</module>
 	<!--<module>passive-sts</module>-->
     </modules>
 

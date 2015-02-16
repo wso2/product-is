@@ -1109,6 +1109,11 @@
                 <version>${wss4j.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.rampart</groupId>
+                <artifactId>rampart-trust</artifactId>
+                <version>1.6.1-wso2v14</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.httpcomponents.wso2</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpcore.wso2.version}</version>
