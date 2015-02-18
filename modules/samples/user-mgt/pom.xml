@@ -33,7 +33,7 @@
 
     <modules>
         <module>remote-user-mgt</module>
-        <module>SampleCustomeUserStoreManager</module>
+        <!--<module>SampleCustomeUserStoreManager</module>-->
     </modules>
 
 </project>

@@ -55,8 +55,6 @@
         <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart-trust</artifactId>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/rampart-trust-1.6.1-wso2v9.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.security.wso2</groupId>

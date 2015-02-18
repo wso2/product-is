@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>wso2is-identity-samples-passivests</artifactId>
+        <artifactId>PassiveSTSSample</artifactId>
         <version>5.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -13,7 +13,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>PassiveSTSSampleApp</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
     
     <repositories>
         <repository>
@@ -42,7 +41,7 @@
             <artifactId>commons-lang</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.identity</groupId>
+            <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.identity.passivests.filter</artifactId>
         </dependency>
 		<dependency>
