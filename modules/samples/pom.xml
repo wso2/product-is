@@ -32,14 +32,14 @@
     <name>Identity Server : Samples</name>
 
     <modules>
-        <!--<module>user-mgt</module>-->
+        <module>user-mgt</module>
         <module>scim</module>
         <module>oauth</module>
         <module>oauth2</module>
         <module>sso</module>
 	<module>xacml</module>
 	<module>sts</module>
-	<!--<module>passive-sts</module>-->
+	<module>passive-sts</module>
     </modules>
 
 </project>
