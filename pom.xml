@@ -580,86 +580,166 @@
 
 	<inceptionYear>2007</inceptionYear>
 
-	<developers>
-		<developer>
-			<name>Ruchith Fernando</name>
-			<id>ruchith</id>
-			<email>ruchith AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Dimuthu Leelaratne</name>
-			<id>dimuthul</id>
-			<email>dimuthul AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Dumindu Perera</name>
-			<id>dumindu</id>
-			<email>dumindu AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Saminda Abeyruwan</name>
-			<id>saminda</id>
-			<email>saminda AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Nandana Mihindukulasooriya</name>
-			<id>nandana</id>
-			<email>nandana AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Prabath Siriwardena</name>
-			<id>prabath</id>
-			<email>prabath AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Thilina Buddhika</name>
-			<id>thilina</id>
-			<email>thilinab AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Amila Jayasekara</name>
-			<id>amilaj</id>
-			<email>amilaj AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Asela Pathberiya</name>
-			<id>asela</id>
-			<email>asela AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Hasini Gunasinghe</name>
-			<id>hasini</id>
-			<email>hasini AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Manjula Rathnayake</name>
-			<id>manjula</id>
-			<email>manjular AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Suresh Attanayake</name>
-			<id>suresh</id>
-			<email>suresh AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Johann Nallathamby</name>
-			<id>johann</id>
-			<email>johann AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Ruchith Fernando</name>
+            <id>ruchith</id>
+            <email>ruchith AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Dimuthu Leelaratne</name>
+            <id>dimuthul</id>
+            <email>dimuthul AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Dumindu Perera</name>
+            <id>dumindu</id>
+            <email>dumindu AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Saminda Abeyruwan</name>
+            <id>saminda</id>
+            <email>saminda AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Nandana Mihindukulasooriya</name>
+            <id>nandana</id>
+            <email>nandana AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Prabath Siriwardena</name>
+            <id>prabath</id>
+            <email>prabath AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Thilina Buddhika</name>
+            <id>thilina</id>
+            <email>thilinab AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Amila Jayasekara</name>
+            <id>amilaj</id>
+            <email>amilaj AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Asela Pathberiya</name>
+            <id>asela</id>
+            <email>asela AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Hasini Gunasinghe</name>
+            <id>hasini</id>
+            <email>hasini AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Manjula Rathnayake</name>
+            <id>manjula</id>
+            <email>manjular AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Suresh Attanayake</name>
+            <id>suresh</id>
+            <email>suresh AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Johann Nallathamby</name>
+            <id>johann</id>
+            <email>johann AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Dulanja Liyanage</name>
+            <id>dulanja</id>
+            <email>dulanja AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Ishara Karunarathna</name>
+            <id>ishara</id>
+            <email>isharak AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Darshana Gunawardana</name>
+            <id>darshana</id>
+            <email>darshana AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Pushpalanka Jayawardana</name>
+            <id>pushpalanka</id>
+            <email>lanka AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Chamath Gunawardana</name>
+            <id>chamath</id>
+            <email>chamathg AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Thanuja Jayasinghe</name>
+            <id>thanuja</id>
+            <email>thanuja AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Isura Karunarathna</name>
+            <id>isura</id>
+            <email>isura AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Prasad Tissera</name>
+            <id>prasad</id>
+            <email>prasad AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Pulasthi Mahawithana</name>
+            <id>pulasthi</id>
+            <email>pulasthi AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Hasintha Indrajee</name>
+            <id>hasintha</id>
+            <email>hasintha AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Gayan Gunawardana</name>
+            <id>gayan</id>
+            <email>gayan AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Tharindu Edirisinghe</name>
+            <id>tharindue</id>
+            <email>tharindue AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Chanaka Jayasena</name>
+            <id>chanaka</id>
+            <email>chanaka AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+    </developers>
+
+
     <pluginRepositories>
         <pluginRepository>
             <id>wso2-maven2-repository</id>
