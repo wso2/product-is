@@ -22,7 +22,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.wso2.carbon</groupId>
 	<artifactId>oauth10a-resource-owner-equivalent</artifactId>
-	<version>1.0.0</version>
 	<name>WSO2 Carbon - OAuth10a Resource Owner Equivalent</name>
 	<description>Sample for OAuth2 Resource Owner Password Grant Type equivalent flow in OAuth1.0a</description>
 	<url>http://wso2.org</url>
