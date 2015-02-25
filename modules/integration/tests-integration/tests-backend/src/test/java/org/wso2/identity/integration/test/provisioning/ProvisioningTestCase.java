@@ -1,31 +1,54 @@
-/*
-*  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
-
-package org.wso2.identity.integration.test.provisioning;
-
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-
-public class ProvisioningTestCase extends ISIntegrationTest {
-
+///*
+//*  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//*
+//*  WSO2 Inc. licenses this file to you under the Apache License,
+//*  Version 2.0 (the "License"); you may not use this file except
+//*  in compliance with the License.
+//*  You may obtain a copy of the License at
+//*
+//*    http://www.apache.org/licenses/LICENSE-2.0
+//*
+//* Unless required by applicable law or agreed to in writing,
+//* software distributed under the License is distributed on an
+//* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+//* KIND, either express or implied.  See the License for the
+//* specific language governing permissions and limitations
+//* under the License.
+//*/
+//
+//package org.wso2.identity.integration.test.provisioning;
+//
+//import com.sun.xml.internal.ws.api.PropertySet;
+//import org.testng.Assert;
+//import org.testng.annotations.AfterClass;
+//import org.testng.annotations.BeforeClass;
+//import org.testng.annotations.Test;
+//import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+//import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+//import org.wso2.carbon.automation.engine.context.AutomationContext;
+//import org.wso2.carbon.automation.engine.context.TestUserMode;
+//import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
+//import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
+//import org.wso2.carbon.identity.application.common.model.idp.xsd.ProvisioningConnectorConfig;
+//import org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider;
+//import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+//import org.wso2.charon.core.client.SCIMClient;
+//import org.wso2.charon.core.schema.SCIMConstants;
+//import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+//import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+//import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+//import org.wso2.identity.integration.test.utils.BasicAuthInfo;
+//
+//import javax.annotation.Resource;
+//import java.util.HashMap;
+//import java.util.Map;
+//
+//public class ProvisioningTestCase extends ISIntegrationTest {
+//
 //    private String servicesUrl = "https://localhost:%s/services/";
 //
 //
-//    private Map<Integer, CarbonTestServerManager> serverManagers;
+//    private Map<Integer, MultipleServersManager> serverManagers;
 //    private Map<Integer, UserManagementClient> userMgtServiceClients;
 //    private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
 //    private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
@@ -55,33 +78,37 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 //    public static final int PORT_OFFSET_1 = 1;
 //    public static final int PORT_OFFSET_2 = 2;
 //
-//    protected EnvironmentVariables isServer;
+//
 //    protected SCIMClient scimClient;
 //
 //    @BeforeClass(alwaysRun = true)
 //    public void testInit() throws Exception {
-//        //super.init(0);
+//        super.init();
 //        userMgtServiceClients = new HashMap<Integer, UserManagementClient>();
 //        identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
 //        applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
 //
-//        EnvironmentBuilder builder = new EnvironmentBuilder().is(0);
-//        isServer = builder.build().getIs();
+//        AutomationContext consumerContext = new AutomationContext("IDENTITY","identity002",
+//                TestUserMode.SUPER_TENANT_USER);
 //        startOtherCarbonServers();
 //
 //        createServiceClientsForServerOne();
 //        createServiceClientsForServerTwo();
 //        createServiceClientsForServerThree();
+//        TestServerManager scimServerManager = new TestServerManager(consumerContext,2 );
+//
+//        MultipleServersManager scimConsumerServer1 = new MultipleServersManager();
+//        scimConsumerServer1.startServers(scimServerManager);
+//
+//     //   provider_userInfo = UserListCsvReader.getUserInfo(adminUserId);
+//      //  GroupContextProvider consumerGroupContext = new GroupContextProvider();
+//       // GroupContext consumerGroup = consumerGroupContext.getGroupContext("node1")
+//      //  ContextProvider consumer = new ContextProvider();
+//      //  EnvironmentContext consumerNodeContext = consumer.getNodeContext(consumerGroup.getNode().
+//       //         getNodeId(), adminUserId);
+//      //  backendUrl = consumerNodeContext.getBackEndUrl();
 //
 //
-//        provider_userInfo = UserListCsvReader.getUserInfo(adminUserId);
-//        GroupContextProvider consumerGroupContext = new GroupContextProvider();
-//        GroupContext consumerGroup = consumerGroupContext.getGroupContext("node1");
-//
-//        ContextProvider consumer = new ContextProvider();
-//        EnvironmentContext consumerNodeContext = consumer.getNodeContext(consumerGroup.getNode().
-//                getNodeId(), adminUserId);
-//        backendUrl = consumerNodeContext.getBackEndUrl();
 //        int port = Integer.parseInt(consumerNodeContext.getWorkerVariables().getHttpsPort());
 //        scim_url_0 = "https://" + consumerNodeContext.getWorkerVariables().getHostName() + ":" +
 //                String.valueOf(port + PORT_OFFSET_0) + "/wso2/scim/";
@@ -181,11 +208,11 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 //        proConnector.setEnabled(true);
 //        fedIdp.setDefaultProvisioningConnectorConfig(proConnector);
 //
-//        Property userNameProp = new Property();
+//        PropertySet.Property userNameProp = new PropertySet.Property();
 //        userNameProp.setName("scim-username");
 //        userNameProp.setValue("admin");
 //
-//        Property passwordProp = new Property();
+//        PropertySet.Property passwordProp = new PropertySet.Property();
 //        passwordProp.setConfidential(true);
 //        passwordProp.setName("scim-password");
 //        passwordProp.setValue("admin");
@@ -428,4 +455,4 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 //            throw new Exception("Interruption Occurred ");
 //        }
 //    }
-}
+//}

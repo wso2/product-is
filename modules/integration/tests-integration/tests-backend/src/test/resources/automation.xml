@@ -146,25 +146,25 @@
             </tenant>
         </superTenant>
         <tenants>
-            <tenant domain="wso2.com" key="wso2">
-                <admin>
-                    <user key="admin">
-                        <userName>admin</userName>
-                        <password>admin</password>
-                    </user>
-                </admin>
-                <users>
-                    <user key="user1">
-                        <userName>testuser11</userName>
-                        <password>testuser11</password>
-                    </user>
-                    <user key="user2">
-                        <userName>testuser21</userName>
-                        <password>testuser21</password>
-                    </user>
+            <!--<tenant domain="wso2.com" key="wso2">-->
+                <!--<admin>-->
+                    <!--<user key="admin">-->
+                        <!--<userName>admin</userName>-->
+                        <!--<password>admin</password>-->
+                    <!--</user>-->
+                <!--</admin>-->
+                <!--<users>-->
+                    <!--<user key="user1">-->
+                        <!--<userName>testuser11</userName>-->
+                        <!--<password>testuser11</password>-->
+                    <!--</user>-->
+                    <!--<user key="user2">-->
+                        <!--<userName>testuser21</userName>-->
+                        <!--<password>testuser21</password>-->
+                    <!--</user>-->
 
-                </users>
-            </tenant>
+                <!--</users>-->
+            <!--</tenant>-->
         </tenants>
     </userManagement>
     <!--
@@ -189,6 +189,19 @@
 
                 </properties>
             </instance>
+
+            <instance name="identity002" type="standalone" nonBlockingTransportEnabled="false">
+                <hosts>
+                    <host type="default">localhost</host>
+                </hosts>
+                <ports>
+                    <port type="http">9764</port>
+                    <port type="https">9444</port>
+                </ports>
+                <properties>
+
+                </properties>
+            </instance>
         </productGroup>
     </platform>
 
@@ -197,6 +210,11 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.carbon.integration.common.extensions.carbonserver.CarbonServerExtension</name>
+                    <!--<parameter name="-DportOffset" value="0" />-->
+                    <!--<parameter name="cmdArg" value="debug 5005" />-->
+                </class>
+                <class>
+                    <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
                     <!--<parameter name="-DportOffset" value="0" />-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

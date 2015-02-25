@@ -33,6 +33,7 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
@@ -46,6 +47,7 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
 	protected AuthenticatorClient loginManger;
     private String adminUsername;
     private String adminPassword;
+    private String hostName;
    
     protected void testInit() throws Exception {
         super.init();
@@ -243,16 +245,16 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
     @Test(groups = "wso2.is", description = "Check change user password", dependsOnMethods = "testUpdateRolesOfUser")
     public void testChangePassword() throws Exception {
 
-    	loginManger.login("testuser11", "testuser11", backendURL);
+    	loginManger.login("testuser11", "testuser11@", hostName);
     	loginManger.logOut();
 
-    	userMgtClient.changePassword("testuser11", "testUser11");
+    	userMgtClient.changePassword("testuser11", "testuser11@");
 
-    	String value = loginManger.login("testuser11", "testUser11", backendURL);
+    	String value = loginManger.login("testuser11", "testuser11@", hostName);
 
     	Assert.assertTrue((value.indexOf("JSESSIONID") != -1), "User password change failed.");
 		//Before logout try to revert the password change
-		userMgtClient.changePassword("testuser11", "testuser11");
+		userMgtClient.changePassword("testuser11", "testuser11@");
     	loginManger.logOut();
 
     }
@@ -263,7 +265,7 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
 
     	userMgtClient.addRole("umRole5", new String[]{"testuser11"}, new String[]{"admin"}, false);
 
-    	loginManger.login("testuser11", "testuser11", backendURL);
+    	loginManger.login("testuser11", "testuser11@", hostName);
 
     	Assert.assertTrue(nameExists(userMgtClient.getRolesOfCurrentUser(), "umRole5"), "Getting current user roles has failed.");
 

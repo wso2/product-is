@@ -47,7 +47,7 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 		File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
 				+ File.separator + "JdbcUserMgtConfig.xml");
 
-		scm = new ServerConfigurationManager(backendURL, TestUserMode.SUPER_TENANT_ADMIN);
+		scm = new ServerConfigurationManager(isServer);
 		scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
 		scm.restartGracefully();
 
@@ -56,9 +56,13 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 		userMgtClient.addUser("user1", "passWord1@", null, "default");
 		userMgtClient.addUser("user2", "passWord1@", null, "default");
         userMgtClient.addUser("user3", "passWord1@", new String[]{"admin"}, "default");
+
+        userMgtClient.addUser("testuser11", "testuser11@", null, "default");
+        userMgtClient.addUser("testuser12", "testuser11@", null, "default");
+        userMgtClient.addUser("testuser13", "testuser11@", new String[]{"admin"}, "default");
         
-		userMgtClient.addRole("umRole1", null, new String[] { "/permission/admin/login" }, false);
-		userMgtClient.addRole("umRole3", new String[]{"user1"}, new String[]{"login"}, false);
+		userMgtClient.addRole("umRole1", new String[]{"testuser11"}, new String[] { "/permission/admin/login" }, false);
+		userMgtClient.addRole("umRole3", new String[]{"user1", "testuser11"}, new String[]{"login"}, false);
 	}
 
 	@AfterClass(alwaysRun = true)
