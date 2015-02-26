@@ -189,8 +189,12 @@
 
 								<!-- Identity Provisioning Feature -->						
 				                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.salesforce.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.spml.server.feature:${carbon.identity.version}</featureArtifactDef>
 
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.google.server.feature:${carbon.identity.version}</featureArtifactDef>
+
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.scim.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- SAML Request/Response Validator Toolkit Feature -->						
 				                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
@@ -516,6 +520,19 @@
                                  </feature>
 								 <feature>
                                      <id>org.wso2.carbon.identity.provisioning.connector.spml.server.feature.group</id>
+                                     <version>${carbon.identity.version}</version>
+                                 </feature>
+
+				<feature>
+                                     <id>org.wso2.carbon.identity.provisioning.connector.google.server.feature.group</id>
+                                     <version>${carbon.identity.version}</version>
+                                 </feature>
+				<feature>
+                                     <id>org.wso2.carbon.identity.provisioning.connector.salesforce.server.feature.group</id>
+                                     <version>${carbon.identity.version}</version>
+                                 </feature>
+				<feature>
+                                     <id>org.wso2.carbon.identity.provisioning.connector.scim.server.feature.group</id>
                                      <version>${carbon.identity.version}</version>
                                  </feature>
 								 <feature>
