@@ -262,7 +262,7 @@
         <dependency>
             <groupId>org.wso2.identity</groupId>
             <artifactId>ui-pages</artifactId>
-            <version>${project.version}</version>
+            <version>${product.identity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
