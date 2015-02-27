@@ -12,7 +12,6 @@
     </parent>
 
     <artifactId>org.wso2.sample.is.sso.agent</artifactId>
-    <version>1.2.0</version>
     <packaging>war</packaging>
     <name>Travelocity.COM ServiceProvider / RelyingParty Webapp</name>
     <dependencies>
