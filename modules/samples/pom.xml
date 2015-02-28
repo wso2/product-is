@@ -40,6 +40,7 @@
         <module>xacml</module>
         <module>sts</module>
         <module>passive-sts</module>
+        <module>openid</module>
     </modules>
 
 </project>
