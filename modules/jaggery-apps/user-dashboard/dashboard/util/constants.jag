@@ -23,4 +23,6 @@ var MGT_HOST_NAME = "mgtHostName";
 var MGT_TRANSPORT = "mgtTransport";
 var HTTPS_PORT = "httpsPort";
 var PROXY_CONTEXT_PATH = "ProxyContextPath";
+
+var CONNECTED_ACCOUNTS="connected-accounts";
 %>

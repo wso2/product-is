@@ -1,6 +1,8 @@
 <%
 
 var userInfoClient = require('/controllers/login-logout/loggedUserInfoAdminClient.jag');
+var userAccountConnectorClient = require('/controllers/account-connection/userAccountConnectorClient.jag');
+
 include("/util/constants.jag");
 var util = require("/util/utility.jag");
 var loginClient = require('/controllers/login-logout/SAML2SSOAuthenticationClient.jag');
@@ -71,7 +73,19 @@ if (samlResponse != null) {
 					    header = parse(stringify(header));
 					    
 					    session.put(USER_HEADER, header);
-					    
+
+                        //Get connected Accounts
+                        try {
+                            var connectedAccounts = userAccountConnectorClient.getConnectedAccountsOfUser();
+                            if (connectedAccounts != null && connectedAccounts.length > 0) {
+                                session.put(CONNECTED_ACCOUNTS, connectedAccounts);
+                            } else {
+                                session.remove(CONNECTED_ACCOUNTS);
+                            }
+                        } catch(e){
+                            log.error(e);
+                        }
+
 					    response.sendRedirect("index.jag");
 					}else{
 					    response.sendRedirect("landing.jag?e=1&error=login_fail" );

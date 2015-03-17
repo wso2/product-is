@@ -7,8 +7,8 @@ var util = require("util/utility.jag");
 
 util.setServerURL();
 
-if(user == null){
-response.sendRedirect("login.jag");
+if (user == null) {
+    response.sendRedirect("login.jag");
 }
 
 var httpsCoreUrl = application.get(SERVER_CORE_URL);
@@ -93,18 +93,35 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
                     <li>
 
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> <%=
-                            session.get(LOGGED_IN_USER) %> <b class="caret"></b></a>
-                        <ul class="dropdown-menu dropdown-account" role="menu" aria-labelledby="dLabel">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i>
+                        <%=session.get(LOGGED_IN_USER) %> <b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-account" role="menu"
+                        aria-labelledby="dLabel">
                             <li>
                                 <a href="<%=proxyContextPath%>/dashboard/samlsso.jag?logout=true"><i class="icon-signout"></i> Sign
                                     out</a>
-                            </li>
-
+                            </li>                        <%
+                                if (session.get("connected-accounts") != null) {
+                                var connectedAccounts = session.get("connected-accounts");
+                                if (connectedAccounts.length > 0) { %>
+                                        <div class="dropdown_separator"><span>Switch To</span></div>
+                                    <%
+                                    for (var i in connectedAccounts) {
+                                        %>
+                                            <li class="associated_accounts">
+                                                <a href="javascript:void(0)" onclick="switchAccount('<%=(connectedAccounts[i].indexOf("@carbon.super") >= 0 ? connectedAccounts[i].split("@carbon.super")[0] : connectedAccounts[i])%>');">
+                                                    <i class="icon-user pdR2p"></i><%=(connectedAccounts[i].indexOf("@carbon.super") >= 0 ? connectedAccounts[i].split("@carbon.super")[0] : connectedAccounts[i])%>
+                                                </a>
+                                            </li>
+                                    <%
+                                    }
+                                }
+                                } else {
+                                    log.info("No connections");
+                                }
+                                %>
                         </ul>
-
                     </li>
-
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -412,6 +429,22 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 </li>
 
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="3"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/connected_accounts/gadget.xml" data-wid="45" data-prefs="{}"
+    data-title="Manage Connected Accounts">
+    <div class="grid_header">
+        <h3></h3>
+        <span class="grid_header_controls">
+            <a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+            <a class="expand-widget"><i class="icon-resize-full"></i></a>
+            <a class="shrink-widget"><i class="icon-resize-small"></i></a>
+            <a class="close-widget" href="#"><i class="icon-remove"></i></a>
+        </span>
+    </div>
+    <div class="gadget-pref-cont"></div>
+    <div class="add-gadget-item"></div>
+</li>
+
 <li id ="sample4" class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="2"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/scim_providers/gadget.xml" data-wid="44" data-prefs="{}"
     data-title="SCIM Providers">
@@ -527,6 +560,37 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 <script>
 
+
+function switchAccount(user) {
+    $.ajax({
+               url: "userAssociationHandler.jag",
+               type: "POST",
+               data: "&user=" + user,
+               success: function (data) {
+                   var resp = $.parseJSON(data);
+                   if (resp.success == true) {
+                       window.location = ('index.jag');
+                   } else {
+                       if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                           window.location = 'logout.jag';
+                       } else {
+                           //if (resp.message != null && resp.message.length > 0) {
+                           //    message({content: resp.message, type: 'error', cbk: function () {
+                           //    }});
+                           //} else {
+                           //    message({content: 'Error occurred while switching user account.', type: 'error',
+                           //cbk: function () {
+                           //    }});
+                           //}
+                       }
+                   }
+               },
+               error: function (e) {
+                   //message({content: 'Error occurred while switching user account.', type: 'error', cbk: function () {
+                   //}});
+               }
+           });
+}
 
     $(function () {
 
