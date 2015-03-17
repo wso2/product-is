@@ -1245,6 +1245,7 @@
             </dependency>
             <dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <groupId>org.wso2.carbon</groupId>
 <<<<<<< HEAD
                 <artifactId>org.wso2.carbon.tools.core</artifactId>
@@ -1316,12 +1317,18 @@
                 <artifactId>json-smart</artifactId>
                 <version>${json.smart.version}</version>
 =======
+=======
+                <groupId>org.wso2.carbon</groupId>
+>>>>>>> 5c439fd... Commiting connected account gadget
                 <artifactId>org.wso2.carbon.core.ui.feature</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
+<<<<<<< HEAD
 =======
 >>>>>>> b65e8fb... updating release branch to use snpashots of carbon-commons and IS repos
+=======
+>>>>>>> 5c439fd... Commiting connected account gadget
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
                 <version>${stratos.version.221}</version>
@@ -3257,7 +3264,11 @@
 				<version>${carbon.identity.version}</version>
 				<scope>compile</scope>
 			</dependency>
-
+        		<dependency>
+            			<groupId>org.wso2.carbon.identity</groupId>
+            			<artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+        		</dependency>
 			<dependency>
 				<groupId>org.wso2.carbon.automation</groupId>
 				<artifactId>org.wso2.carbon.automation.test.utils</artifactId>
