@@ -611,11 +611,6 @@
                 <version>${opensaml.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml</artifactId>
-                <version>${openws.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>xalan</groupId>
                 <artifactId>xalan</artifactId>
                 <version>${xalan.version}</version>
@@ -920,11 +915,6 @@
 				<version>${apache.ws.security.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>${javax.servlet.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
@@ -1024,7 +1014,7 @@
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
-        <opensaml.version>2.2.3</opensaml.version>
+        <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v10-SNAPSHOT</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
