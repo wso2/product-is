@@ -611,11 +611,6 @@
                 <version>${opensaml.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml</artifactId>
-                <version>${openws.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>xalan</groupId>
                 <artifactId>xalan</artifactId>
                 <version>${xalan.version}</version>
@@ -920,11 +915,6 @@
 				<version>${apache.ws.security.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>${javax.servlet.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
@@ -950,6 +940,11 @@
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2-client</artifactId>
                 <version>${axis2.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbusds.version}</version>
             </dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -1024,7 +1019,7 @@
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
-        <opensaml.version>2.2.3</opensaml.version>
+        <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v10-SNAPSHOT</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
@@ -1096,6 +1091,7 @@
 		<slf4j.version>1.7.0</slf4j.version>
 		<apache.openejb.version>4.5.2</apache.openejb.version>
         <axis2.client.version>1.6.1.wso2v11</axis2.client.version>
+        <nimbusds.version>2.26.1</nimbusds.version>
 		<project.scm.id>my-scm-server</project.scm.id>
     </properties>
 

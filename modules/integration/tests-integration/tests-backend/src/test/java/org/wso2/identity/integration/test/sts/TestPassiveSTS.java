@@ -107,7 +107,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Update service provider with passiveSTS configs",
-            dependsOnMethods = "testAddSP")
+            dependsOnMethods = { "testAddSP" })
     public void testUpdateSP() throws Exception {
 
         serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
@@ -134,7 +134,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Update service provider with claim configurations",
-            dependsOnMethods = "testUpdateSP")
+            dependsOnMethods = { "testUpdateSP" })
     public void testAddClaimConfiguration() throws Exception {
 
         serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
@@ -150,7 +150,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
-            dependsOnMethods = "testAddClaimConfiguration")
+            dependsOnMethods = {"testDeployPassiveSTSSampleApp", "testAddClaimConfiguration"})
     public void testInvokePassiveSTSSampleApp() throws IOException {
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
         HttpResponse response = client.execute(request);
@@ -169,7 +169,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Send login post request", dependsOnMethods =
-            "testInvokePassiveSTSSampleApp")
+            { "testInvokePassiveSTSSampleApp" })
     public void testSendLoginRequestPost() throws Exception {
 
         HttpPost request = new HttpPost(COMMON_AUTH_URL);
@@ -195,7 +195,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Test PassiveSTS Claims",
-            dependsOnMethods = "testSendLoginRequestPost")
+            dependsOnMethods = { "testSendLoginRequestPost" })
     public void testPassiveSTSClaims() {
 
         Assert.assertTrue(resultPage.contains(GIVEN_NAME_CLAIM_URI), "Claim givenname is expected");

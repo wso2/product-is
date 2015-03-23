@@ -23,6 +23,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.*;
@@ -49,7 +50,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SAMLSSOTestCase extends ISIntegrationTest {
 
@@ -242,16 +245,16 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing SAML SSO Claims", groups = "wso2.is",
             dependsOnMethods = { "testSAMLSSOLogin" })
     public void testClaims(){
-//        String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
-//
-//        switch (config.getClaimType()){
-//            case LOCAL:
-//                assertLocalClaims(claimString);
-//                break;
-//            case NONE:
-//                assertNoneClaims(claimString);
-//                break;
-//        }
+        String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
+
+        switch (config.getClaimType()){
+            case LOCAL:
+                assertLocalClaims(claimString);
+                break;
+            case NONE:
+                assertNoneClaims(claimString);
+                break;
+        }
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
@@ -285,29 +288,29 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     public static SAMLConfig[][] samlConfigProvider(){
         return  new SAMLConfig[][]{
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE)},
-                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL)},
-                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE)},
-                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL)},
+//                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL)},
+//                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE)},
+//                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL)},
         };
     }
 
-//    private void assertLocalClaims(String claims){
-//        Map<String, String> attributeMap = extractClaims(claims);
-//        Assert.assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
-//        Assert.assertEquals(attributeMap.get(firstNameClaimURI), NICKNAME,
-//                "Expected claim value for nickname is " + NICKNAME);
-//        Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
-//        Assert.assertEquals(attributeMap.get(lastNameClaimURI), USERNAME,
-//                "Expected claim value for lastname is " + USERNAME);
-//        Assert.assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
-//        Assert.assertEquals(attributeMap.get(emailClaimURI), EMAIL,
-//                "Expected claim value for email is " + EMAIL);
-//    }
+    private void assertLocalClaims(String claims){
+        Map<String, String> attributeMap = extractClaims(claims);
+        Assert.assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
+        Assert.assertEquals(attributeMap.get(firstNameClaimURI), NICKNAME,
+                "Expected claim value for nickname is " + NICKNAME);
+        Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
+        Assert.assertEquals(attributeMap.get(lastNameClaimURI), USERNAME,
+                "Expected claim value for lastname is " + USERNAME);
+        Assert.assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
+        Assert.assertEquals(attributeMap.get(emailClaimURI), EMAIL,
+                "Expected claim value for email is " + EMAIL);
+    }
 
-//    private void assertNoneClaims(String claims){
-//        String[] dataArray = StringUtils.substringsBetween(claims, "<td>", "</td>");
-//        Assert.assertNull(dataArray, "Claims are not expected for " + config);
-//    }
+    private void assertNoneClaims(String claims){
+        String[] dataArray = StringUtils.substringsBetween(claims, "<td>", "</td>");
+        Assert.assertNull(dataArray, "Claims are not expected for " + config);
+    }
 
     private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
             throws LifecycleException {
@@ -413,22 +416,22 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         return result.toString();
     }
 
-//    private Map<String,String> extractClaims(String claimString){
-//        String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
-//        Map<String,String> attributeMap = new HashMap<String, String>();
-//        String key = null;
-//        String value;
-//        for (int i = 0; i< dataArray.length; i++){
-//            if((i%2) == 0){
-//                key = dataArray[i];
-//            }else{
-//                value = dataArray[i].trim();
-//                attributeMap.put(key,value);
-//            }
-//        }
-//
-//        return attributeMap;
-//    }
+    private Map<String,String> extractClaims(String claimString){
+        String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
+        Map<String,String> attributeMap = new HashMap<String, String>();
+        String key = null;
+        String value;
+        for (int i = 0; i< dataArray.length; i++){
+            if((i%2) == 0){
+                key = dataArray[i];
+            }else{
+                value = dataArray[i].trim();
+                attributeMap.put(key,value);
+            }
+        }
+
+        return attributeMap;
+    }
 
     private void createApplication() throws Exception{
         ServiceProvider serviceProvider = new ServiceProvider();
