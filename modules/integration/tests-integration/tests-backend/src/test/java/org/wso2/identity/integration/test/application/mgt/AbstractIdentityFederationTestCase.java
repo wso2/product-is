@@ -27,14 +27,17 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.extensions.carbonserver.CarbonServerManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -52,10 +55,10 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
-   // private Map<Integer, CarbonServerManager> serverManagers;
+    protected Map<Integer, AutomationContext> automationContextMap;
     private Map<Integer, Tomcat> tomcatServers;
     private HttpClient httpClient;
-    private String servicesUrl = "https://localhost:%s/services/";
+    private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = 9443;
 
     public void initTest() throws Exception {
@@ -64,21 +67,26 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
         identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
         samlSSOConfigServiceClients = new HashMap<Integer, SAMLSSOConfigServiceClient>();
-      //  serverManagers = new HashMap<Integer, CarbonServerManager>();
+        automationContextMap = new HashMap<Integer, AutomationContext>();
         httpClient = new DefaultHttpClient();
         tomcatServers = new HashMap<Integer, Tomcat>();
+        manager = new MultipleServersManager();
+
+        automationContextMap.put(0, isServer);
     }
 
-//    public void startCarbonServer(int portOffset, Map<String, String> startupParameters)
-//            throws Exception {
-//        CarbonServerManager serverManager = new CarbonServerManager(isServer);
-//        serverManagers.put(portOffset, serverManager);
-//       // serverManager.startServerUsingCarbonHome("/Users/dharshana/product-is/product-is/modules/integration/tests-integration/tests-backend/target",serverManager);
-//    }
+    public void startCarbonServer(int portOffset, AutomationContext context, Map<String, String> startupParameters)
+            throws Exception {
 
-//    public void stopCarbonServer(int portOffset) throws Exception {
-//       // serverManagers.get(portOffset).serverShutdown(portOffset);
-//    }
+        automationContextMap.put(portOffset, context);
+        CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
+                                                                      startupParameters);
+        manager.startServers(server);
+    }
+
+    public void stopCarbonServer(int portOffset) throws Exception {
+        manager.startServers();
+    }
 
     public HttpClient getHttpClient() {
         return httpClient;
@@ -88,44 +96,62 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         httpClient.getConnectionManager().shutdown();
     }
 
-    public void createServiceClients(int portOffset, String sessionId, boolean loggedIn,
-                                     IdentityConstants.ServiceClientType[] clientTypes)
+    public void createServiceClients(int portOffset, String sessionCookie,
+                                     IdentityConstants.ServiceClientType[] adminClients)
             throws Exception {
-        if (!loggedIn) {
-            AuthenticatorClient authenticatorClient = new AuthenticatorClient(String.format(servicesUrl, DEFAULT_PORT + portOffset));
-            sessionId = authenticatorClient.login("admin", "admin", null);
+
+        if (adminClients == null) {
+            return;
         }
 
-        if (sessionId != null && clientTypes != null) {
-            ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
-            for (IdentityConstants.ServiceClientType clientType : clientTypes) {
+        String serviceUrl = getSecureServiceUrl(portOffset,
+                                                automationContextMap.get(portOffset).getContextUrls()
+                                                        .getSecureServiceUrl());
+
+        if (sessionCookie == null) {
+            AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
+
+            sessionCookie = authenticatorClient.login(automationContextMap.get(portOffset).getSuperTenant().getTenantAdmin()
+                                                              .getUserName(),
+                                                      automationContextMap.get(portOffset).getSuperTenant()
+                                                              .getTenantAdmin().getPassword(),
+                                                      automationContextMap.get(portOffset).getDefaultInstance()
+                                                              .getHosts().get("default"));
+        }
+
+        if (sessionCookie != null) {
+            ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
+                    (null, null);
+            for (IdentityConstants.ServiceClientType clientType : adminClients) {
                 if (IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT.equals(clientType)) {
-                    applicationManagementServiceClients.put(portOffset, new ApplicationManagementServiceClient(sessionId, String.format(servicesUrl, DEFAULT_PORT + portOffset), configContext));
+                    applicationManagementServiceClients.put(portOffset, new ApplicationManagementServiceClient
+                            (sessionCookie, serviceUrl, configContext));
                 } else if (IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT.equals(clientType)) {
-                    identityProviderMgtServiceClients.put(portOffset, new IdentityProviderMgtServiceClient(sessionId, String.format(servicesUrl, DEFAULT_PORT + portOffset), configContext));
+                    identityProviderMgtServiceClients.put(portOffset, new IdentityProviderMgtServiceClient(sessionCookie,
+                                                                                                           serviceUrl));
                 } else if (IdentityConstants.ServiceClientType.SAML_SSO_CONFIG.equals(clientType)) {
-                    samlSSOConfigServiceClients.put(portOffset, new SAMLSSOConfigServiceClient(String.format(servicesUrl, DEFAULT_PORT + portOffset), sessionId));
+                    samlSSOConfigServiceClients.put(portOffset, new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie));
                 }
             }
         }
     }
 
-//    public void addServiceProvider(int portOffset, String applicationName) throws Exception {
-//        ServiceProvider serviceProvider = new ServiceProvider();
-//        serviceProvider.setApplicationName(applicationName);
-//        serviceProvider.setDescription("This is a test Service Provider");
-//        applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
-//    }
-//
-//    public ServiceProvider getServiceProvider(int portOffset, String applicationName)
-//            throws Exception {
-//        return applicationManagementServiceClients.get(portOffset).getApplication(applicationName);
-//    }
-//
-//    public void updateServiceProvider(int portOffset, ServiceProvider serviceProvider)
-//            throws Exception {
-//        applicationManagementServiceClients.get(portOffset).updateApplicationData(serviceProvider);
-//    }
+    public void addServiceProvider(int portOffset, String applicationName) throws Exception {
+        ServiceProvider serviceProvider = new ServiceProvider();
+        serviceProvider.setApplicationName(applicationName);
+        serviceProvider.setDescription("This is a test Service Provider");
+        applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
+    }
+
+    public ServiceProvider getServiceProvider(int portOffset, String applicationName)
+            throws Exception {
+        return applicationManagementServiceClients.get(portOffset).getApplication(applicationName);
+    }
+
+    public void updateServiceProvider(int portOffset, ServiceProvider serviceProvider)
+            throws Exception {
+        applicationManagementServiceClients.get(portOffset).updateApplicationData(serviceProvider);
+    }
 
     public void deleteServiceProvider(int portOffset, String applicationName) throws Exception {
         applicationManagementServiceClients.get(portOffset).deleteApplication(applicationName);
@@ -268,5 +294,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
+    private String getSecureServiceUrl(int portOffset, String baseUrl) {
+        return baseUrl.replace("9443", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+    }
 
 }
