@@ -43,7 +43,6 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-//import org.wso2.identity.integration.common.utils.ISIntegrationTomcatServerManager;
 
 import java.io.BufferedReader;
 import java.io.File;
