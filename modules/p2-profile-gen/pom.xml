@@ -131,7 +131,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provider.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.xacml.feature:${carbon.identity.version}</featureArtifactDef>
@@ -197,9 +197,14 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.scim.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- SAML Request/Response Validator Toolkit Feature -->						
 				                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
+<<<<<<< HEAD
                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- User Account Connector Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
+=======
+                                <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
+
+>>>>>>> 4bfbd46... use java8support branches as dependencies
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -359,10 +364,10 @@
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-								<feature>
-	                                <id>org.wso2.carbon.identity.mgt.feature.group</id>
-	                                <version>${carbon.identity.version}</version>
-		                        </feature>
+								<!--<feature>-->
+	                                <!--<id>org.wso2.carbon.identity.mgt.feature.group</id>-->
+	                                <!--<version>${carbon.identity.version}</version>-->
+		                        <!--</feature>-->
 								<feature>
 									<id>org.wso2.carbon.identity.relying.party.feature.group</id>
 									<version>${carbon.identity.version}</version>
@@ -430,10 +435,6 @@
 								</feature>
 
 								<!-- Features required for Cloud Identity -->
-								<feature>
-									<id>org.wso2.carbon.tenant.common.feature.group</id>
-									<version>${carbon.multitenancy.version}</version>
-								</feature>
 								<feature>
 									<id>org.wso2.identity.ui.feature.group</id>
 									<version>${product.identity.version}</version>
@@ -552,6 +553,7 @@
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+<<<<<<< HEAD
                                  <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -560,6 +562,12 @@
                                     <id>org.wso2.carbon.identity.user.account.connector.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                  </feature>
+=======
+                                 <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.notification.mgt.feature.group</id>-->
+                                    <!--<version>${carbon.identity.version}</version>-->
+                                 <!--</feature>-->
+>>>>>>> 4bfbd46... use java8support branches as dependencies
 							</features>
 						</configuration>
 					</execution>
