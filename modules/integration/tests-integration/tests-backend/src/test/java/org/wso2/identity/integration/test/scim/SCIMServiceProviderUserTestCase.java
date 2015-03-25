@@ -29,7 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
@@ -41,14 +40,12 @@ import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
+import org.wso2.identity.integration.test.scim.utils.SCIMUtils;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 
-import java.rmi.RemoteException;
-
-public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
+public class SCIMServiceProviderUserTestCase {
     private static final Log log = LogFactory.getLog(SCIMServiceProviderUserTestCase.class);
-    public static final int providerUserId = 0;
-    public static final int consumerUserId = 0;
+    private static final String USERNAME = "SCIMUser1";
     String scimUserId = null;
     private User provider_userInfo;
     UserManagementClient userMgtClient;
@@ -56,6 +53,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
     String serviceEndPoint = null;
     String backendUrl = null;
     String sessionCookie = null;
+    private SCIMClient scimClient;
 
     @BeforeClass(alwaysRun = true)
     public void initiate() throws Exception {
@@ -73,26 +71,28 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         scimClient = new SCIMClient();
     }
 
-    @Test(alwaysRun = true, description = "Add SCIM user", priority = 1)
+    @Test(alwaysRun = true, description = "Add SCIM user")
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
     public void createUser() throws Exception {
         //create SCIM client
-        String encodedUser = getScimUser();
+        String encodedUser = SCIMUtils.getEncodedSCIMUser(scimClient, USERNAME, "test",
+                             new String[] { "scimuser1@gmail.com", "scimuser1@wso2.com" }, "SCIMUser1", "password1",
+                             "sinhala", "0772202595");
         //create a apache wink ClientHandler to intercept and identify response messages
-        Resource userResource = getResource(scimClient, scim_url);
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(provider_userInfo);
+        Resource userResource = SCIMUtils.getUserResource(scimClient, scim_url);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         String response = userResource.
                 header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
                 post(String.class, encodedUser);
         log.info(response);
         scimUserId = response.split(",")[0].split(":")[1].replace('"', ' ').trim();
-        userMgtClient.listUsers(userName, 100);
+        userMgtClient.listUsers(USERNAME, 100);
         Assert.assertTrue(isUserExists());
         Assert.assertNotNull(scimUserId);
     }
 
-    @Test(alwaysRun = true, description = "Get SCIM user", priority = 2)
+    @Test(alwaysRun = true, description = "Get SCIM user", dependsOnMethods = { "createUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void getUser() {
         //create a apache wink ClientHandler to intercept and identify response messages
@@ -103,7 +103,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         clientConfig.handlers(new ClientHandler[]{responseHandler});
         //create a wink rest client with the above config
         RestClient restClient = new RestClient(clientConfig);
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(provider_userInfo);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         //create resource endpoint to access a known user resource.
         Resource userResource = restClient.resource(scim_url + "Users/" + scimUserId);
         String response = userResource.
@@ -113,10 +113,10 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
 
         //decode the response
         log.info(response);
-        Assert.assertTrue(response.contains(userName));
+        Assert.assertTrue(response.contains(""));
     }
 
-    @Test(alwaysRun = true, description = "list all SCIM users", priority = 3)
+    @Test(alwaysRun = true, description = "list all SCIM users", dependsOnMethods = { "getUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void listUser() throws Exception {
         //create SCIM client
@@ -130,7 +130,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         //create a wink rest client with the above config
         RestClient restClient = new RestClient(clientConfig);
 
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(provider_userInfo);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         //create resource endpoint to access a known user resource.
         Resource userResource = restClient.resource(scim_url + "Users");
         String response = userResource.
@@ -140,7 +140,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         Assert.assertTrue(isAllUsersExists(response));
     }
 
-    @Test(alwaysRun = true, description = "filter all SCIM users", priority = 4)
+    @Test(alwaysRun = true, description = "filter all SCIM users", dependsOnMethods = { "listUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void filterUser() throws Exception {
         //create SCIM client
@@ -154,17 +154,17 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         //create a wink rest client with the above config
         RestClient restClient = new RestClient(clientConfig);
 
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(provider_userInfo);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         //create resource endpoint to access a known user resource.
-        Resource userResource = restClient.resource(scim_url + "Users?filter=userNameEqdharshana");
+        Resource userResource = restClient.resource(scim_url + "Users?filter=userNameEq" + USERNAME);
         String response = userResource.
                 header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON)
                 .get(String.class);
-        Assert.assertTrue(response.contains("\"userName\":\"dharshana\""));
+        Assert.assertTrue(response.contains("\"userName\":\"" + USERNAME + "\""));
     }
 
-    @Test(alwaysRun = true, description = "Update SCIM user", priority = 5)
+    @Test(alwaysRun = true, description = "Update SCIM user", dependsOnMethods = { "filterUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void UpdateUser() throws Exception {
         String updatedMiddleName = "testChange11";
@@ -177,10 +177,13 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         clientConfig.handlers(new ClientHandler[]{responseHandler});
         //create a wink rest client with the above config
         RestClient restClient = new RestClient(clientConfig);
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(provider_userInfo);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         //create resource endpoint to access a known user resource.
         Resource userResource = restClient.resource(scim_url + "Users/" + scimUserId);
-        org.wso2.charon.core.objects.User decodedUser = getScimUserUnEncoded();
+        org.wso2.charon.core.objects.User decodedUser = SCIMUtils
+                .getSCIMUser(scimClient, USERNAME, "test",
+                             new String[] { "scimuser1@gmail.com", "scimuser1@wso2.com" }, "SCIMUser1", "password1",
+                             "sinhala", "0772202595");
         decodedUser.setDisplayName(updatedMiddleName);
         decodedUser.setWorkEmail(updatedEmail, true);
 
@@ -203,7 +206,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         Assert.assertTrue(response.contains(updatedMiddleName));
     }
 
-    @Test(alwaysRun = true, description = "Delete SCIM user", priority = 6)
+    @Test(alwaysRun = true, description = "Delete SCIM user", dependsOnMethods = { "UpdateUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void DeleteUser() throws Exception {
         ClientConfig clientConfig = new ClientConfig();
@@ -211,7 +214,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
         responseHandler.setSCIMClient(scimClient);
         clientConfig.handlers(new ClientHandler[]{responseHandler});
         RestClient restClient = new RestClient(clientConfig);
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(provider_userInfo);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         Resource userResource = restClient.resource(scim_url + "Users/" + scimUserId);
         String response = userResource.
                 header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
@@ -225,9 +228,9 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
 
     private boolean isUserExists() throws Exception {
         boolean userExists = false;
-        FlaggedName[] nameList = userMgtClient.listAllUsers(userName, 100);
+        FlaggedName[] nameList = userMgtClient.listAllUsers(USERNAME, 100);
         for (FlaggedName name : nameList) {
-            if (name.getItemName().contains(userName)) {
+            if (name.getItemName().contains(USERNAME)) {
                 userExists = true;
             }
         }
@@ -236,7 +239,7 @@ public class SCIMServiceProviderUserTestCase extends MasterSCIMInitiator {
 
     private boolean isAllUsersExists(String response) throws Exception {
         boolean usersExists = false;
-        FlaggedName[] nameList = userMgtClient.listAllUsers(userName, 100);
+        FlaggedName[] nameList = userMgtClient.listAllUsers(USERNAME, 100);
         for (FlaggedName name : nameList) {
 
             if (response.contains(name.getItemName())) {
