@@ -48,14 +48,15 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <!--SCIM Test Cases-->
             <class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />
-            <!--<class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />-->
-            <!--<class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />-->
+            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
+            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
         </classes>
     </test>
 
-    <test name="is-saml-sequential-tests" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
         </classes>
     </test>
+
 </suite>
