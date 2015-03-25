@@ -80,29 +80,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         this.config = configBean;
     }
 
-    @BeforeSuite
-    public void initTest() throws Exception {
-        log.info("Starting Tomcat");
-
-        tomcatServer = getTomcat();
-
-        URL resourceURL;
-        for (OpenIDUtils.AppType appType: OpenIDUtils.AppType.values()){
-            resourceURL = getClass().getResource(File.separator + "samples" + File.separator + appType.getArtifact()
-                    + ".war");
-            tomcatServer.addWebapp(tomcatServer.getHost(), "/" + appType.getArtifact(), resourceURL.getPath());
-        }
-
-        tomcatServer.start();
-    }
-
-    @AfterSuite
-    public void clearTest() throws Exception {
-        log.info("Stopping Tomcat");
-        tomcatServer.stop();
-        tomcatServer.destroy();
-    }
-
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
@@ -113,6 +90,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        startTomcat();
     }
 
     @AfterClass(alwaysRun = true)
@@ -122,6 +100,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = null;
+        stopTomcat();
     }
 
     @BeforeMethod
@@ -197,6 +176,22 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
             assertLogin(results);
         }
+    }
+
+    private void startTomcat() throws Exception {
+        log.info("Starting Tomcat");
+        tomcatServer = getTomcat();
+        URL resourceURL =
+                getClass().getResource(File.separator + "samples" + File.separator + config.getAppType().getArtifact()
+                                       + ".war");
+        tomcatServer.addWebapp(tomcatServer.getHost(), "/" + config.getAppType().getArtifact(), resourceURL.getPath());
+        tomcatServer.start();
+    }
+
+    private void stopTomcat() throws Exception {
+        log.info("Stopping Tomcat");
+        tomcatServer.stop();
+        tomcatServer.destroy();
     }
 
     private HttpResponse executePhaseBeforeApproval() throws IOException {

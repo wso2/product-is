@@ -85,9 +85,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
     //Claim Uris
-    private static final String firstNameClaimURI = "http://axschema.org/namePerson/first";
-    private static final String lastNameClaimURI = "http://axschema.org/namePerson/last";
-    private static final String emailClaimURI = "http://axschema.org/contact/email";
+    private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
+    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
+    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private static final String profileName = "default";
 
@@ -170,8 +170,11 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         //Starting tomcat
         log.info("Starting Tomcat");
         tomcatServer = getTomcat();
-        URL resourceUrl = getClass().getResource(File.separator + "samples"
-                + File.separator + "org.wso2.sample.is.sso.agent.war");
+
+        //TODO: Uncomment below once the tomcat dependency issue is resolved
+//        URL resourceUrl = getClass()
+//                .getResource(File.separator + "samples" + File.separator + "org.wso2.sample.is .sso.agent.war");
+        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
         startTomcat(tomcatServer, "/travelocity.com", resourceUrl.getPath());
 
     }
@@ -288,9 +291,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     public static SAMLConfig[][] samlConfigProvider(){
         return  new SAMLConfig[][]{
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE)},
-//                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL)},
-//                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE)},
-//                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL)},
+                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL)},
+                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE)},
+                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL)},
         };
     }
 
