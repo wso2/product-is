@@ -191,6 +191,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         //Stopping tomcat
         tomcatServer.stop();
         tomcatServer.destroy();
+        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

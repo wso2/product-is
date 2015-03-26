@@ -192,6 +192,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         log.info("Stopping Tomcat");
         tomcatServer.stop();
         tomcatServer.destroy();
+        Thread.sleep(10000);
     }
 
     private HttpResponse executePhaseBeforeApproval() throws IOException {

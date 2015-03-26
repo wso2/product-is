@@ -379,5 +379,22 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
 
 		return exists;
 	}
+
+    protected boolean userNameExists(String[] allNames, String inputName) {
+
+        boolean exists = false;
+
+        for (String name : allNames) {
+            if (inputName.equals(name)) {
+                return true;
+            } else {
+                exists = false;
+            }
+        }
+
+        return exists;
+    }
+
+
 	
 }

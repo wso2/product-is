@@ -78,13 +78,14 @@ public class TestPassiveSTS extends ISIntegrationTest {
         if(tomcat != null){
             tomcat.stop();
             tomcat.destroy();
+            Thread.sleep(10000);
         }
     }
 
     @Test(alwaysRun = true, description = "Deploy PassiveSTSSampleApp")
     public void testDeployPassiveSTSSampleApp() {
         try {
-            Tomcat tomcat = getTomcat();
+            tomcat = getTomcat();
             URL resourceUrl = getClass().getResource(File.separator + "samples"
                     + File.separator + "PassiveSTSSampleApp.war");
             startTomcat(tomcat, PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
@@ -212,7 +213,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     private Tomcat getTomcat() {
-        tomcat = new Tomcat();
+        Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
         tomcat.setPort(8080);
         tomcat.setBaseDir("");

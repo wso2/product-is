@@ -212,9 +212,11 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         tomcat.start();
     }
 
-    public void stopTomcat(int port) throws LifecycleException {
+    public void stopTomcat(int port) throws LifecycleException, InterruptedException {
         tomcatServers.get(port).stop();
         tomcatServers.get(port).destroy();
+        tomcatServers.remove(port);
+        Thread.sleep(10000);
     }
 
     public void addWebAppToTomcat(int port, String webAppUrl, String webAppPath)
