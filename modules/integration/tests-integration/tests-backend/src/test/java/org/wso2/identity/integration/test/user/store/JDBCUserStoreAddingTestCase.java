@@ -28,6 +28,7 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.user.mgt.UserManagementServiceAbstractTest;
 
@@ -50,7 +51,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
-        doInit();
+        super.init();
         userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, getSessionCookie());
         testAddJDBCUserStore();
     }
@@ -69,6 +70,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
     @Test(groups = "wso2.is", description = "Check add user store via DTO", dependsOnMethods = "testAvailableUserStoreClasses")
     private void testAddJDBCUserStore() throws Exception {
 
+        Thread.sleep(10000);
 //        Property[] properties = (new JDBCUserStoreManager()).getDefaultUserStoreProperties().getMandatoryProperties();
         PropertyDTO[] propertyDTOs = new PropertyDTO[9];
         for (int i = 0; i < 9; i++) {

@@ -43,6 +43,7 @@ import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFedera
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,8 +79,13 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         startCarbonServer(PORT_OFFSET_1, context, startupParameters);
 
 //TODO: Need to fix tomcat issue
-//        super.startTomcat(TOMCAT_8080);
-//        super.addWebAppToTomcat(TOMCAT_8080, "/travelocity.com", getClass().getResource(File.separator + "samples" + File.separator + "org.wso2.sample.is.sso.agent.war").getPath());
+        super.startTomcat(TOMCAT_8080);
+//        super.addWebAppToTomcat(TOMCAT_8080, "/travelocity.com", getClass().getResource(File.separator + "samples" +
+//                                                                                        File.separator + "org.wso2.sample.is.sso.agent.war").getPath());
+
+        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+        super.addWebAppToTomcat(TOMCAT_8080, "/travelocity.com", resourceUrl.getPath());
+
 
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
                 .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
@@ -96,10 +102,10 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
-        super.stopHttpClient();
+        super.stopCarbonServer(PORT_OFFSET_1);
+        super.stopTomcat(TOMCAT_8080);
 
-        //super.stopCarbonServer(PORT_OFFSET_1);
-        //super.stopTomcat(TOMCAT_8080);
+        super.stopHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check create identity provider in primary IS")
@@ -182,30 +188,30 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
     }
 
-//    @Test(groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
-//    public void testSAMLToSAMLFederation() throws Exception {
-//
-//        HttpClient client = getHttpClient();
-//
-//        String sessionId = sendSAMLRequestToPrimaryIS(client);
-//        Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
-//
-//        String redirectURL = authenticateWithSecondaryIS(client, sessionId);
-//        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
-//
-//        Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
-//        Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
-//        Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
-//
-//        redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
-//        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
-//
-//        String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
-//        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
-//
-//        boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
-//        Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
-//    }
+    @Test(groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
+    public void testSAMLToSAMLFederation() throws Exception {
+
+        HttpClient client = getHttpClient();
+
+        String sessionId = sendSAMLRequestToPrimaryIS(client);
+        Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
+
+        String redirectURL = authenticateWithSecondaryIS(client, sessionId);
+        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
+
+        Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
+        Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
+        Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
+
+        redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
+        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
+
+        String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
+        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
+
+        boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
+        Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+    }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
 
@@ -336,7 +342,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9453/samlsso");
+        property.setValue("https://localhost:9444/samlsso");
         properties[2] = property;
 
         property = new Property();

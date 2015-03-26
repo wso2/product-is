@@ -81,7 +81,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         super.startTomcat(TOMCAT_8080);
 //        super.addWebAppToTomcat(TOMCAT_8080, "/travelocity.com", getClass().getResource(File.separator + "samples" + File.separator + "org.wso2.sample.is.sso.agent.war").getPath());
         super.addWebAppToTomcat(TOMCAT_8080, PASSIVE_STS_SAMPLE_APP_NAME,
-                getClass().getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war").getPath());
+                                getClass().getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war").getPath());
         //servers getting ready...
         Thread.sleep(10000);
 
@@ -101,10 +101,10 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
-        super.stopHttpClient();
-
         super.stopCarbonServer(PORT_OFFSET_1);
         super.stopTomcat(TOMCAT_8080);
+
+        super.stopHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check create identity provider in primary IS")
@@ -156,13 +156,13 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
             }
         }
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs " +
-                "in primary IS");
+                                   "in primary IS");
     }
 
 
     @Test(groups = "wso2.is", description = "Check update service provider in primary IS with " +
-            "Passive STS configs",
-            dependsOnMethods = "testCreateServiceProviderInPrimaryIS")
+                                            "Passive STS configs",
+          dependsOnMethods = "testCreateServiceProviderInPrimaryIS")
     public void testUpdateServiceProviderInPrimaryISWithPassiveSTSConfigs() throws Exception {
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(serviceProvider, "Service provider in Primary IS not Exists");
@@ -190,20 +190,20 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         if (configs != null) {
             for (InboundAuthenticationRequestConfig config : configs) {
                 if (PASSIVESTS_REALM.equals(config.getInboundAuthKey()) && PASSIVESTS_INBOUND_AUTH_TYPE.equals(config
-                        .getInboundAuthType())) {
+                                                                                                                       .getInboundAuthType())) {
                     success = true;
                     break;
                 }
             }
         }
         Assert.assertTrue(success, "Failed to update service provider with inbound PASSIVESTS " +
-                "configs in primary IS");
+                                   "configs in primary IS");
 
     }
 
     @Test(alwaysRun = true, description = "Update primary IS service provider with claim " +
-            "configurations",
-            dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithPassiveSTSConfigs")
+                                          "configurations",
+          dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithPassiveSTSConfigs")
     public void testUpdateServiceProviderInPrimaryISWithClaimConfigs() throws Exception {
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
@@ -213,14 +213,14 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
         Assert.assertEquals(updatedClaimConfig.getClaimMappings()[0].getLocalClaim().getClaimUri(),
-                givenNameClaimURI, "Failed update given name claim uri");
+                            givenNameClaimURI, "Failed update given name claim uri");
 
         Assert.assertEquals(updatedClaimConfig.getClaimMappings()[1].getLocalClaim().getClaimUri(),
-                emailClaimURI, "Failed update email claim uri");
+                            emailClaimURI, "Failed update email claim uri");
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
-            dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithClaimConfigs")
+          dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithClaimConfigs")
     public void testInvokePassiveSTSSampleApp() throws IOException {
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
         HttpResponse response = client.execute(request);
@@ -231,7 +231,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
-                keyPositionMap);
+                                                                                           keyPositionMap);
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
