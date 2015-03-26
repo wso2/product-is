@@ -66,7 +66,6 @@
 
 <iframe id="my_iframe" src="https://localhost:9443/oauth2/authorize" onload="callout();">
 </iframe>
-Hellosdsdsdsd <%=opResponse%>
 </body>
 </html>
 
