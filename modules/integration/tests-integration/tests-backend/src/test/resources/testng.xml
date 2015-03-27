@@ -50,6 +50,7 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
+            <class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />
         </classes>
     </test>
 
