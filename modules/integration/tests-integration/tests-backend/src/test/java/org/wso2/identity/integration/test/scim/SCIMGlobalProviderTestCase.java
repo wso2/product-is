@@ -132,7 +132,7 @@ public class SCIMGlobalProviderTestCase extends MasterSCIMInitiator {
         deleteUserOnConsumer();
         Thread.sleep(5000);
         Assert.assertFalse(isConsumerUserAvailable(), "Deleting user to consumer failed");
-        Assert.assertFalse(isProviderUserAvailable(), "Deleting user to provider failed");
+        Assert.assertTrue(isProviderUserNotAvailable(), "Deleting user to provider failed");
     }
 
     private boolean isConsumerUserAvailable() throws Exception {
@@ -156,6 +156,18 @@ public class SCIMGlobalProviderTestCase extends MasterSCIMInitiator {
             }
         }
         return userAvailable;
+    }
+
+    private boolean isProviderUserNotAvailable() throws Exception {
+        boolean userAvailable = false;
+        for (int loopCount = 0; loopCount <= 5; loopCount++) {
+            Thread.sleep(1000);
+            userAvailable = userMgtProviderClient.userNameExists(ADMIN_ROLE, scimuser);
+            if (!userAvailable) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void createUserOnConsumer() throws Exception {

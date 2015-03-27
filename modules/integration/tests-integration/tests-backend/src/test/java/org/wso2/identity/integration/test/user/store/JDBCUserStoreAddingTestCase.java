@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.user.store;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
@@ -31,29 +32,40 @@ import org.wso2.identity.integration.common.clients.user.store.config.UserStoreC
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.user.mgt.UserManagementServiceAbstractTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTest {
+public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils =  new UserStoreConfigUtils();
     private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
     private final String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
     private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
     private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
-    private final String domainId = "WSO2.COM";
+    private final String domainId = "WSO2TEST.COM";
     private final String userStoreDBName = "JDBC_USER_STORE_DB";
     private final String dbUserName = "wso2automation";
     private final String dbUserPassword = "wso2automation";
+    private UserManagementClient userMgtClient;
+    private AuthenticatorClient authenticatorClient;
+    private String newUserName = "WSO2TEST.COM/userStoreUser";
+    private String newUserRole = "WSO2TEST.COM/jdsbUserStoreRole";
+    private String  newUserPassword = "password";
+    private PropertyDTO[] propertyDTOs;
 
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, getSessionCookie());
-        testAddJDBCUserStore();
+        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+        userStoreConfigAdminServiceClient.deleteUserStore(domainId);
     }
 
     @Test(groups = "wso2.is", description = "Check user store manager implementations")
@@ -70,9 +82,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
     @Test(groups = "wso2.is", description = "Check add user store via DTO", dependsOnMethods = "testAvailableUserStoreClasses")
     private void testAddJDBCUserStore() throws Exception {
 
-        Thread.sleep(10000);
-//        Property[] properties = (new JDBCUserStoreManager()).getDefaultUserStoreProperties().getMandatoryProperties();
-        PropertyDTO[] propertyDTOs = new PropertyDTO[9];
+        propertyDTOs = new PropertyDTO[9];
         for (int i = 0; i < 9; i++) {
             propertyDTOs[i] = new PropertyDTO();
         }
@@ -124,13 +134,12 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
         authenticatorClient = new AuthenticatorClient(backendURL);
 
 
-        userMgtClient.addRole(domainId + "/" + newUserRole, null, new String[]{"/permission/admin/login"});
-        Assert.assertTrue(userMgtClient.roleNameExists(domainId.toUpperCase() + "/" + newUserRole)
+        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
+        Assert.assertTrue(userMgtClient.roleNameExists(newUserRole)
                 , "Role name doesn't exists");
 
-        userMgtClient.addUser(domainId.toUpperCase() + "/" + newUserName, newUserPassword, new String[]{newUserRole}, null);
-        Assert.assertTrue(userMgtClient.userNameExists(domainId.toUpperCase() + "/" + newUserRole
-                , domainId.toUpperCase() + "/" + newUserName), "User name doesn't exists");
+        userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);
+        Assert.assertTrue(userMgtClient.userNameExists(newUserRole, newUserName), "User name doesn't exists");
 
         String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer
                 .getInstance().getHosts().get("default"));
@@ -138,40 +147,26 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
         authenticatorClient.logOut();
     }
 
-/*    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
-    public void disableUserStore() throws Exception {
-        userStoreConfigAdminServiceClient.up
+//    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
+//    public void disableUserStore() throws Exception {
+//        propertyDTOs[6].setValue("true");
+//        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId,
+//                                                                                         propertyDTOs);
+//        userStoreConfigAdminServiceClient.updateUserStore(userStoreDTO);
+//        Thread.sleep(5000);
+//        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer
+//                .getInstance().getHosts().get("default"));
+//        Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
+//        authenticatorClient.logOut();
+//    }
 
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer
-                .getInstance().getHosts().get("default"));
-        Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
-        authenticatorClient.logOut();
-    }*/
-/*
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void deleteUserFromJDBCUserStore() throws Exception {
-        userMgtClient.deleteUser(domainId.toUpperCase() + "/" + newUserName);
-        Assert.assertFalse(Utils.nameExists(userMgtClient.listAllUsers(domainId.toUpperCase() + "/" + newUserName, 10)
-                , domainId.toUpperCase() + "/" + newUserName), "User Deletion failed");
+        userMgtClient.deleteUser(newUserName);
+        Assert.assertFalse(Utils.nameExists(userMgtClient.listAllUsers(newUserName, 10)
+                , newUserName), "User Deletion failed");
 
-        userMgtClient.deleteRole(domainId.toUpperCase() + "/" + newUserRole);
+        userMgtClient.deleteRole(newUserRole);
         Assert.assertFalse(Utils.nameExists(userMgtClient.getAllRolesNames(newUserRole, 100), newUserRole), "User Role still exist");
-    }*/
-
-
-    @Override
-    protected void setUserName() {
-        newUserName = domainId + "/userStoreUser";
-
-    }
-
-    @Override
-    protected void setUserPassword() {
-        newUserPassword = "password";
-    }
-
-    @Override
-    protected void setUserRole() {
-        newUserRole = domainId + "/jdsbUserStoreRole";
     }
 }
