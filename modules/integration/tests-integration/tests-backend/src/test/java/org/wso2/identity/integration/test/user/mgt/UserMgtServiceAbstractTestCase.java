@@ -243,16 +243,17 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
     @Test(groups = "wso2.is", description = "Check change user password", dependsOnMethods = "testUpdateRolesOfUser")
     public void testChangePassword() throws Exception {
 
-    	loginManger.login("testuser11", "testuser11", backendURL);
+    	loginManger.login("user4", "passWord1@", isServer.getInstance().getHosts().get("default"));
     	loginManger.logOut();
 
-    	userMgtClient.changePassword("testuser11", "testUser11");
+    	userMgtClient.changePassword("user4", "passWord2@");
+		loginManger.logOut();
 
-    	String value = loginManger.login("testuser11", "testUser11", backendURL);
+    	String value = loginManger.login("user4", "passWord2@", isServer.getInstance().getHosts().get("default"));
 
     	Assert.assertTrue((value.indexOf("JSESSIONID") != -1), "User password change failed.");
 		//Before logout try to revert the password change
-		userMgtClient.changePassword("testuser11", "testuser11");
+		userMgtClient.changePassword("user4", "passWord1@");
     	loginManger.logOut();
 
     }
@@ -261,9 +262,9 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
     @Test(groups = "wso2.is", description = "Check get shared of current user", dependsOnMethods = "testChangePassword")
     public void testGetRolesOfCurrentUser() throws Exception {
 
-    	userMgtClient.addRole("umRole5", new String[]{"testuser11"}, new String[]{"admin"}, false);
+    	userMgtClient.addRole("umRole5", new String[]{"user4"}, new String[]{"admin"}, false);
 
-    	loginManger.login("testuser11", "testuser11", backendURL);
+    	loginManger.login("user4", "passWord1@", isServer.getInstance().getHosts().get("default"));
 
     	Assert.assertTrue(nameExists(userMgtClient.getRolesOfCurrentUser(), "umRole5"), "Getting current user roles has failed.");
 

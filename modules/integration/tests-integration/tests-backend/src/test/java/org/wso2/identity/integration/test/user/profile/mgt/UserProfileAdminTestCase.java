@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.user.profile.mgt;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -33,7 +31,6 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class UserProfileAdminTestCase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(UserProfileAdminTestCase.class);
     private UserProfileMgtServiceClient userProfileMgtClient;
     private UserManagementClient userMgtClient;
     private AuthenticatorClient logManger;
@@ -81,55 +78,54 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
 		}
         Assert.assertTrue("user1".equals(displayValue) || "user1".equals(displayValue), "Getting user profile has failed.");
     }
-    
-//    @Test(groups = "wso2.is", description = "Check get ProfileFields For InternalStore ")
-//    public void testGetProfileFieldsForInternalStore() throws Exception {
-//        UserProfileDTO profile = userProfileMgtClient.getProfileFieldsForInternalStore();
-//        UserFieldDTO[] fields = profile.getFieldValues(); 
-//        String displayValue = null;
-//        log.error("***************** Profile = "+profile.getProfileName());
-//        
-//        for (UserFieldDTO field : fields) {
-//        	log.error("++++++++++++++++++++=Name=" + field.getDisplayName() +" Value="+field.getFieldValue());
-//		}
-//        Assert.assertEquals(displayValue, "user1", "Getting user profile has failed.");
-//    }
-    
-//    TODO - setting user profile will be failed.Need debug.
+
+    /**
+     * Setting a user profile updates the user claim values of the existing user profile of the user.
+     * This test method tests the above behavior.
+     *
+     * @throws Exception
+     */
     @Test(groups = "wso2.is", description = "Check set user profiles")
-    public void testSetUserProfile() throws Exception {    	
-    	logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
-    	
+    public void testSetUserProfile() throws Exception {
+        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                        isServer.getSuperTenant().getTenantAdmin().getPassword(),
+                        isServer.getInstance().getHosts().get("default"));
         UserProfileDTO profile = new UserProfileDTO();
-        profile.setProfileName("testProfile");
-        
+        profile.setProfileName("default");
+
         UserFieldDTO lastName = new UserFieldDTO();
         lastName.setClaimUri("http://wso2.org/claims/lastname");
         lastName.setFieldValue("lastname");
-        
+
         UserFieldDTO givenname = new UserFieldDTO();
         givenname.setClaimUri("http://wso2.org/claims/givenname");
         givenname.setFieldValue("firstname");
-        
+
         UserFieldDTO email = new UserFieldDTO();
         email.setClaimUri("http://wso2.org/claims/emailaddress");
         email.setFieldValue("email@email.com");
-        
+
         UserFieldDTO[] fields = new UserFieldDTO[3];
         fields[0] = lastName;
         fields[1] = givenname;
         fields[2] = email;
-        
+
         profile.setFieldValues(fields);
-        
+
         userProfileMgtClient.setUserProfile("user1", profile);
-        
-        UserProfileDTO getProfile = userProfileMgtClient.getUserProfile("user1", "testProfile");
-//        Assert.assertNotNull(userProfileMgtClient.getUserProfile("user1", "testProfile"), "Cannot get user profile due to Null return");
-//        Assert.assertEquals(getProfile.getProfileName(), "testProfile", "Set user profiles has failed.");
-        
+
+        UserProfileDTO getProfile = userProfileMgtClient.getUserProfile("user1", "default");
+        UserFieldDTO[] updatedFields = getProfile.getFieldValues();
+        for (UserFieldDTO updatedField : updatedFields) {
+            if (updatedField.getClaimUri().equals("http://wso2.org/claims/lastname")) {
+                Assert.assertEquals(updatedField.getFieldValue(), "lastname");
+            } else if (updatedField.getClaimUri().equals("http://wso2.org/claims/givenname")) {
+                Assert.assertEquals(updatedField.getFieldValue(), "firstname");
+            } else if (updatedField.getClaimUri().equals("http://wso2.org/claims/emailaddress")) {
+                Assert.assertEquals(updatedField.getFieldValue(), "email@email.com");
+            }
+        }
+
         logManger.logOut();
     }
 }

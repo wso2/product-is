@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.openid;
 
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -29,6 +30,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -66,7 +68,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private HttpClient client;
     private File identityXML;
-    private ServerConfigurationManager scm;
+    private ServerConfigurationManager serverConfigurationManager;
     private Tomcat tomcatServer;
 
     @Factory(dataProvider = "openIdConfigBeanProvider")
@@ -76,29 +78,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         this.config = configBean;
-    }
-
-    @BeforeTest
-    public void initTest() throws Exception {
-        log.info("Starting Tomcat");
-
-        tomcatServer = getTomcat();
-
-        URL resourceURL;
-        for (OpenIDUtils.AppType appType: OpenIDUtils.AppType.values()){
-            resourceURL = getClass().getResource(File.separator + "samples" + File.separator + appType.getArtifact()
-                    + ".war");
-            tomcatServer.addWebapp(tomcatServer.getHost(), "/" + appType.getArtifact(), resourceURL.getPath());
-        }
-
-        tomcatServer.start();
-    }
-
-    @AfterTest
-    public void clearTest() throws Exception {
-        log.info("Stopping Tomcat");
-        tomcatServer.stop();
-        tomcatServer.destroy();
     }
 
     @BeforeClass(alwaysRun = true)
@@ -111,6 +90,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        startTomcat();
     }
 
     @AfterClass(alwaysRun = true)
@@ -120,6 +100,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = null;
+        stopTomcat();
     }
 
     @BeforeMethod
@@ -161,41 +142,57 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
     }
 
-//    @Test(alwaysRun = true, groups = "wso2.is", description = "Testing OpenId sample parameterized test")
-//    public void testOpenId() throws IOException {
-//        if (log.isDebugEnabled()){
-//            log.debug("Executing Test Case for " + config);
-//        }
-//
-//        HttpResponse response;
-//        String results;
-//
-//        client = new DefaultHttpClient();
-//
-//        response = executePhaseBeforeApproval();
-//
-//        if (config.getUserConsent() != OpenIDUtils.UserConsent.SKIP) {
-//            response = executePhaseAfterApproval(response);
-//        }
-//
-//        results = extractDataFromResponse(response);
-//
-//        assertLogin(results);
-//
-//        if (config.getAppType() == OpenIDUtils.AppType.SMART_WITH_CLAIMS ||
-//                config.getAppType() == OpenIDUtils.AppType.DUMB_WITH_CLAIMS){
-//            assertAttributes(results);
-//        }
-//
-//        if (config.getUserConsent() == OpenIDUtils.UserConsent.APPROVE_ALWAYS){
-//            client = new DefaultHttpClient();
-//
-//            response = executePhaseBeforeApproval();
-//            results = extractDataFromResponse(response);
-//
-//            assertLogin(results);
-//        }
-//    }
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Testing OpenId sample parameterized test")
+    public void testOpenId() throws IOException {
+        if (log.isDebugEnabled()){
+            log.debug("Executing Test Case for " + config);
+        }
+
+        HttpResponse response;
+        String results;
+
+        client = new DefaultHttpClient();
+
+        response = executePhaseBeforeApproval();
+
+        if (config.getUserConsent() != OpenIDUtils.UserConsent.SKIP) {
+            response = executePhaseAfterApproval(response);
+        }
+
+        results = extractDataFromResponse(response);
+
+        assertLogin(results);
+
+        if (config.getAppType() == OpenIDUtils.AppType.SMART_WITH_CLAIMS ||
+                config.getAppType() == OpenIDUtils.AppType.DUMB_WITH_CLAIMS){
+            assertAttributes(results);
+        }
+
+        if (config.getUserConsent() == OpenIDUtils.UserConsent.APPROVE_ALWAYS){
+            client = new DefaultHttpClient();
+
+            response = executePhaseBeforeApproval();
+            results = extractDataFromResponse(response);
+
+            assertLogin(results);
+        }
+    }
+
+    private void startTomcat() throws Exception {
+        log.info("Starting Tomcat");
+        tomcatServer = getTomcat();
+        URL resourceURL =
+                getClass().getResource(File.separator + "samples" + File.separator + config.getAppType().getArtifact()
+                                       + ".war");
+        tomcatServer.addWebapp(tomcatServer.getHost(), "/" + config.getAppType().getArtifact(), resourceURL.getPath());
+        tomcatServer.start();
+    }
+
+    private void stopTomcat() throws Exception {
+        log.info("Stopping Tomcat");
+        tomcatServer.stop();
+        tomcatServer.destroy();
+    }
 
     private HttpResponse executePhaseBeforeApproval() throws IOException {
         HttpResponse response;
@@ -424,34 +421,34 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
                 "OpenId sso login has failed for " + config);
     }
 
-//    private void assertAttributes(String results){
-//        String str = results.substring(results.lastIndexOf("<table>"));
-//
-//        String[] dataArray = StringUtils.substringsBetween(str,"<td>", "</td>");
-//        Map<String,String> attributeMap = new HashMap<String, String>();
-//        String key = null;
-//        String value;
-//        for (int i = 0; i< dataArray.length; i++){
-//            if((i%2) == 0){
-//                key = dataArray[i];
-//            }else{
-//                value = dataArray[i].trim();
-//                attributeMap.put(key,value);
-//            }
-//        }
-//
-//        OpenIDUtils.User user = config.getUser();
-//
-//        Assert.assertTrue(attributeMap.containsKey("email"), "Claim email is expected");
-//        Assert.assertEquals(attributeMap.get("email"), user.getEmail(),
-//                "Expected claim value for email is " + user.getEmail());
-//        Assert.assertTrue(attributeMap.containsKey("nickname"), "Claim nickname is expected");
-//        Assert.assertEquals(attributeMap.get("nickname"), user.getUsername(),
-//                "Expected claim value for nickname is " + user.getUsername());
-//        Assert.assertTrue(attributeMap.containsKey("lastname"), "Claim lastname is expected");
-//        Assert.assertEquals(attributeMap.get("lastname"), user.getUsername(),
-//                "Expected claim value for lastname is " + user.getUsername());
-//    }
+    private void assertAttributes(String results){
+        String str = results.substring(results.lastIndexOf("<table>"));
+
+        String[] dataArray = StringUtils.substringsBetween(str, "<td>", "</td>");
+        Map<String,String> attributeMap = new HashMap<String, String>();
+        String key = null;
+        String value;
+        for (int i = 0; i< dataArray.length; i++){
+            if((i%2) == 0){
+                key = dataArray[i];
+            }else{
+                value = dataArray[i].trim();
+                attributeMap.put(key,value);
+            }
+        }
+
+        OpenIDUtils.User user = config.getUser();
+
+        Assert.assertTrue(attributeMap.containsKey("email"), "Claim email is expected");
+        Assert.assertEquals(attributeMap.get("email"), user.getEmail(),
+                "Expected claim value for email is " + user.getEmail());
+        Assert.assertTrue(attributeMap.containsKey("nickname"), "Claim nickname is expected");
+        Assert.assertEquals(attributeMap.get("nickname"), user.getUsername(),
+                "Expected claim value for nickname is " + user.getUsername());
+        Assert.assertTrue(attributeMap.containsKey("lastname"), "Claim lastname is expected");
+        Assert.assertEquals(attributeMap.get("lastname"), user.getUsername(),
+                "Expected claim value for lastname is " + user.getUsername());
+    }
 
     private void changeISConfiguration() throws Exception {
         log.info("Replacing identity.xml with OpenIDSkipUserConsent property set to true");
@@ -463,9 +460,9 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
                 + File.separator + "openId" + File.separator
                 + "identity-skipuserconsent.xml");
 
-        scm = new ServerConfigurationManager(isServer);
-        scm.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        scm.restartGracefully();
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.restartGracefully();
     }
 
     private void resetISConfiguration() throws Exception{
@@ -475,8 +472,8 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
                 + File.separator + "openId" + File.separator
                 + "identity-default.xml");
 
-        scm.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
-        scm.restartGracefully();
+        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
+        serverConfigurationManager.restartGracefully();
     }
 
     static class KeyValue{

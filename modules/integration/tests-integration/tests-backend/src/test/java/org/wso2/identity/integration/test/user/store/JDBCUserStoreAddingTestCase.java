@@ -24,6 +24,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
@@ -64,7 +66,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
 
     }
 
-    //    @Test(groups = "wso2.is", description = "Check add user store via DTO")
+    @Test(groups = "wso2.is", description = "Check add user store via DTO", dependsOnMethods = "testAvailableUserStoreClasses")
     private void testAddJDBCUserStore() throws Exception {
 
 //        Property[] properties = (new JDBCUserStoreManager()).getDefaultUserStoreProperties().getMandatoryProperties();
@@ -109,12 +111,12 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId, propertyDTOs);
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
-        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(domainId), "Domain addition via DTO has " +
-                "failed.");
+        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)
+                , "Domain addition via DTO has failed.");
 
     }
 
-/*    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
+    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
     public void addUserIntoJDBCUserStore() throws Exception {
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
@@ -132,7 +134,7 @@ public class JDBCUserStoreAddingTestCase extends UserManagementServiceAbstractTe
                 .getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
-    }*/
+    }
 
 /*    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
     public void disableUserStore() throws Exception {

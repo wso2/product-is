@@ -16,18 +16,15 @@
 * under the License.
 */
 
-package test.java.org.wso2.carbon.identity.tests.user.store.config;
+package org.wso2.identity.integration.test.user.store.config;
 
 import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -40,25 +37,20 @@ import java.rmi.RemoteException;
 
 public class UserStoreDeployerTestCase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(UserStoreDeployerTestCase.class);
     public static final String USERSTORES = "userstores";
     private static final String deploymentDirectory = CarbonUtils.getCarbonRepository() + USERSTORES;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private String userStoreConfigFilePath;
-    private File srcFile = new File("test/resources/wso2_com.xml");
+    private File srcFile;
     private File destFile;
     private UserStoreConfigAdminServiceClient userStoreConfigurationClient;
     private UserManagementClient userMgtClient;
-    private String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-    private String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
-    private String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
-    private String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
 
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        srcFile = new File(getTestArtifactLocation() + File.separator + "wso2_com.xml");
         userStoreConfigFilePath = deploymentDirectory + File.separator;
         userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
@@ -70,7 +62,7 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
 
         FileUtils.copyFile(srcFile, destFile);
         Assert.assertTrue("After 30s user store is still not deployed.", userStoreConfigUtils
-                .waitForUserStoreDeployment("wso2.com"));
+                .waitForUserStoreDeployment(userStoreConfigurationClient, "wso2.com"));
     }
 
     @Test(groups = "wso2.is", description = "Test multiple user stores", dependsOnMethods = "testDroppingFile")
@@ -78,12 +70,12 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
         Assert.assertTrue("Multiple user stores not detected.",userMgtClient.hasMultipleUserStores());
     }
 
-//    @Test(groups = "wso2.is", description = "Test user store add user", priority = 3)
-//    public void testAddUser() throws Exception {
-//        userMgtClient.addUser("wso2.com/pushpalanka","pushpalanka",new String[]{},null);
-//        authenticatorClient.login("wso2.com/pushpalanka","pushpalanka","localhost");
-//        Assert.assertTrue("Couldn't add user to newly added user store", userMgtClient.hasMultipleUserStores());
-//    }
+    @Test(groups = "wso2.is", description = "Test user store add user", dependsOnMethods = "testMultipleUserStores")
+    public void testAddUser() throws Exception {
+        userMgtClient.addUser("wso2.com/pushpalanka", "pushpalanka", new String[] {}, null);
+        Assert.assertTrue("Couldn't add user to newly added user store",
+                          userMgtClient.getUserList().contains("WSO2.COM/pushpalanka"));
+    }
 
     @Test(groups = "wso2.is", description = "Test enable/disable user stores", dependsOnMethods = "testMultipleUserStores")
     public void testChangeUserStoreState() throws Exception {
@@ -107,7 +99,7 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
 
         FileUtils.forceDelete(destFile);
         Assert.assertTrue("After 30s user store is still not deleted.", userStoreConfigUtils
-                .waitForUserStoreUnDeployment("wso2.com"));
+                .waitForUserStoreUnDeployment(userStoreConfigurationClient, "wso2.com"));
     }
 
     @AfterClass(alwaysRun = true)

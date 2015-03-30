@@ -26,7 +26,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -47,16 +46,16 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 		File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
 				+ File.separator + "JdbcUserMgtConfig.xml");
 
-		scm = new ServerConfigurationManager(backendURL, TestUserMode.SUPER_TENANT_ADMIN);
+		scm = new ServerConfigurationManager(isServer);
 		scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
 		scm.restartGracefully();
-
 		super.testInit();
 
 		userMgtClient.addUser("user1", "passWord1@", null, "default");
 		userMgtClient.addUser("user2", "passWord1@", null, "default");
         userMgtClient.addUser("user3", "passWord1@", new String[]{"admin"}, "default");
-        
+        userMgtClient.addUser("user4", "passWord1@", new String[]{"admin"}, "default");
+
 		userMgtClient.addRole("umRole1", null, new String[] { "/permission/admin/login" }, false);
 		userMgtClient.addRole("umRole3", new String[]{"user1"}, new String[]{"login"}, false);
 	}
@@ -72,6 +71,9 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 		}
 		if (nameExists(userMgtClient.listAllUsers("user3", 100), "user3")) {
 			userMgtClient.deleteUser("user3");
+		}
+		if (nameExists(userMgtClient.listAllUsers("user4", 100), "user4")) {
+			userMgtClient.deleteUser("user4");
 		}
 		if (nameExists(userMgtClient.listRoles("umRole1", 100), "umRole1")) {
 			userMgtClient.deleteRole("umRole1");
