@@ -57,7 +57,6 @@ public class OpenIDRPManagementTestCase extends ISIntegrationTest {
      	openidServiceClient = null;
     }
 
-//    TODO - Error getting data in the db query.
     @Test(alwaysRun = true, description = "Authenticate with Password")
     public void testOpenidRPAddUpdate() {
         

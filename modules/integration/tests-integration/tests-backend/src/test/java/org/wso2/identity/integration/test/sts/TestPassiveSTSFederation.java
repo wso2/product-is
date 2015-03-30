@@ -79,7 +79,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         startCarbonServer(PORT_OFFSET_1, context, startupParameterMap);
 
         super.startTomcat(TOMCAT_8080);
-//        super.addWebAppToTomcat(TOMCAT_8080, "/travelocity.com", getClass().getResource(File.separator + "samples" + File.separator + "org.wso2.sample.is.sso.agent.war").getPath());
         super.addWebAppToTomcat(TOMCAT_8080, PASSIVE_STS_SAMPLE_APP_NAME,
                                 getClass().getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war").getPath());
         //servers getting ready...
@@ -125,7 +124,8 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME), "Failed to create Identity Provider 'trustedIdP' in primary IS");
     }
 
-    @Test(groups = "wso2.is", description = "Check create service provider in primary IS")
+    @Test(groups = "wso2.is", description = "Check create service provider in primary IS", dependsOnMethods = {
+            "testCreateIdentityProviderInPrimaryIS" })
     public void testCreateServiceProviderInPrimaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
@@ -220,7 +220,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
-          dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithClaimConfigs")
+          dependsOnMethods = "testCreateServiceProviderInSecondaryIS")
     public void testInvokePassiveSTSSampleApp() throws IOException {
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
         HttpResponse response = client.execute(request);
@@ -241,7 +241,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     @Test(alwaysRun = true, description = "Send login post request", dependsOnMethods =
             "testInvokePassiveSTSSampleApp")
     public void testSendLoginRequestPost() throws Exception {
-
+        //todo: This test does not invoke the federated idp url. Need fix
         HttpPost request = new HttpPost(COMMON_AUTH_URLL);
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", adminUsername));
@@ -264,8 +264,8 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
     }
 
-
-    @Test(groups = "wso2.is", description = "Check create service provider in secondary IS")
+    @Test(groups = "wso2.is", description = "Check create service provider in secondary IS", dependsOnMethods = {
+            "testUpdateServiceProviderInPrimaryISWithClaimConfigs" })
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);

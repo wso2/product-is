@@ -37,6 +37,8 @@ import java.rmi.RemoteException;
 public class AuthenticationAdminTestCase {
 
     private static Log logger = LogFactory.getLog(AuthenticationAdminTestCase.class);
+    private static final String AUTHENTICATION_ADMIN_SERVICE_URL =
+            "https://localhost:9443/services/AuthenticationAdmin";
 
     private AuthenticationAdminStub authenticationAdminStub;
 
@@ -81,8 +83,7 @@ public class AuthenticationAdminTestCase {
     private boolean login(String userName, String password) throws Exception {
 
         try {
-            this.authenticationAdminStub
-                    = new AuthenticationAdminStub(UserAdminConstants.AUTHENTICATION_ADMIN_SERVICE_URL);
+            this.authenticationAdminStub = new AuthenticationAdminStub(AUTHENTICATION_ADMIN_SERVICE_URL);
             return this.authenticationAdminStub.login(userName, password, "localhost");
         } catch (AxisFault axisFault) {
             logger.error("Error creating authentication admin stub.", axisFault);
