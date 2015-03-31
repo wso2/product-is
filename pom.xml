@@ -3443,10 +3443,14 @@
         <google.collect.wso2.version>1.0.0.wso2v1</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 =======
 		<carbon.kernel.version>4.4.0-SNAPSHOT</carbon.kernel.version>
 >>>>>>> 4bfbd46... use java8support branches as dependencies
+=======
+		<carbon.kernel.version>4.4.0</carbon.kernel.version>
+>>>>>>> eebf801... updating kernal version, adding axis2-transports-version
         <carbon.commons.version>4.3.6-SNAPSHOT</carbon.commons.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
@@ -3493,8 +3497,12 @@
 =======
         <carbon.deployment.version>4.3.2-SNAPSHOT</carbon.deployment.version>
         <carbon.registry.version>4.3.2-SNAPSHOT</carbon.registry.version>
+<<<<<<< HEAD
         <carbon.multitenancy.version>4.3.3</carbon.multitenancy.version>
 >>>>>>> 4bfbd46... use java8support branches as dependencies
+=======
+        <carbon.multitenancy.version>4.3.5-SNAPSHOT</carbon.multitenancy.version>
+>>>>>>> eebf801... updating kernal version, adding axis2-transports-version
         <jaggery.extensions.version>1.2.0</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
@@ -3508,8 +3516,13 @@
 		<slf4j.version>1.7.0</slf4j.version>
 		<apache.openejb.version>4.5.2</apache.openejb.version>
         <axis2.client.version>1.6.1.wso2v11</axis2.client.version>
+<<<<<<< HEAD
         <nimbusds.version>2.26.1</nimbusds.version>
 		<project.scm.id>my-scm-server</project.scm.id>
+=======
+        <axis2-transports.version>1.1.0-wso2v11-SNAPSHOT</axis2-transports.version>
+        <project.scm.id>my-scm-server</project.scm.id>
+>>>>>>> eebf801... updating kernal version, adding axis2-transports-version
     </properties>
 
     <repositories>
