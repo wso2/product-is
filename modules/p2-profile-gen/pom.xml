@@ -121,7 +121,7 @@
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.core.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.resource.properties.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.profiles.feature:${carbon.registry.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>-->
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.ui.menu.feature:${carbon.registry.version}</featureArtifactDef>
 								<!-- Directory server related features -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.directory.service.mgr.feature:${carbon.identity.version}</featureArtifactDef>
@@ -203,8 +203,12 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 =======
                                 <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
+<<<<<<< HEAD
 
 >>>>>>> 4bfbd46... use java8support branches as dependencies
+=======
+								<!--<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>-->
+>>>>>>> 42fda89... adding tenant.common feature, temporary removing registry.contentsearch feature until commons-io.wso2.version conflict fixed properly
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -436,6 +440,10 @@
 
 								<!-- Features required for Cloud Identity -->
 								<feature>
+									<id>org.wso2.carbon.tenant.common.feature.group</id>
+									<version>${carbon.multitenancy.version}</version>
+								</feature>
+								<feature>
 									<id>org.wso2.identity.ui.feature.group</id>
 									<version>${product.identity.version}</version>
 								</feature>
@@ -459,10 +467,10 @@
 									<!--<id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>-->
 									<!--<version>2.2.0</version>-->
 								<!--</feature>-->
-   								<feature>
-                   					 <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
-                                     <version>${carbon.registry.version}</version>
-                                </feature>
+   								<!--<feature>-->
+                   					 <!--<id>org.wso2.carbon.registry.contentsearch.feature.group</id>-->
+                                     <!--<version>${carbon.registry.version}</version>-->
+                                <!--</feature>-->
 								<!--<feature>-->
                    					 <!--<id>org.wso2.carbon.stratos.deployment.feature.group</id>-->
                                      <!--<version>2.2.1</version>-->
@@ -660,7 +668,7 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.core.server.feature</id>
                                     <version>4.2.2</version>
-                                </feature>                               
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.idp.mgt.server.feature</id>
                                     <version>4.2.2</version>
