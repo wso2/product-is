@@ -497,11 +497,11 @@
             <fileMode>644</fileMode>
         </file-->
 
-        <!--<file>-->
-            <!--<source>conf/saml1-assertion-config.xml</source>-->
-            <!--<outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>-->
-            <!--<fileMode>644</fileMode>-->
-        <!--</file>-->
+        <file>
+            <source>conf/saml1-assertion-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <file>
             <source>conf/registry.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
@@ -528,22 +528,22 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
-
-        <file>
+<!--    
+     <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/identity.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
-        <!--identity.xml is now copied from conf . -->
-            <!--<file>-->
-                <!--<source>conf/identity.xml</source>-->
-                <!--<outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>-->
-                <!--<fileMode>644</fileMode>-->
-            <!--</file>-->
-        <!--identity.xml is now copied from conf . -->
+-->
+    <!--identity.xml is now copied from conf . -->
+        <file>
+            <source>conf/identity.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+    <!--identity.xml is now copied from conf . -->
 
         <file>
             <source>
@@ -583,13 +583,6 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/saml1-assertion-config.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/sso_redirect.html
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/security</outputDirectory>
@@ -614,12 +607,12 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
-	    <file>
+	<!--file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/tenant-mgt.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/multitenancy/tenant-mgt.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
-        </file>
+        </file-->
         <!-- Stratos specific files -->
 
 	
