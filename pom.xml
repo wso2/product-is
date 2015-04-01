@@ -609,6 +609,11 @@
                 <groupId>org.opensaml</groupId>
                 <artifactId>opensaml</artifactId>
                 <version>${opensaml.version}</version>
+            </dependency>            
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${openws.version}</version>
             </dependency>
             <dependency>
                 <groupId>xalan</groupId>
@@ -720,6 +725,11 @@
                 <artifactId>org.wso2.carbon.core.ui.feature</artifactId>
                 <version>${carbon.kernel.version}</version>
                 <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core.ui.feature</artifactId>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity</groupId>
@@ -915,6 +925,11 @@
 				<version>${apache.ws.security.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${javax.servlet.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
@@ -940,11 +955,6 @@
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2-client</artifactId>
                 <version>${axis2.client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>${nimbusds.version}</version>
             </dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -1019,7 +1029,7 @@
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
-        <opensaml.version>2.4.1</opensaml.version>
+        <opensaml.version>2.2.3</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v10-SNAPSHOT</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
@@ -1035,7 +1045,7 @@
         <jstl.version>1.1.2</jstl.version>
         <google.collect.wso2.version>1.0.0.wso2v1</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
-		<carbon.kernel.version>4.3.0</carbon.kernel.version>
+		<carbon.kernel.version>4.4.0</carbon.kernel.version>
         <carbon.commons.version>4.3.6-SNAPSHOT</carbon.commons.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
@@ -1075,8 +1085,8 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <carbon.deployment.version>4.3.1</carbon.deployment.version>
-        <carbon.registry.version>4.3.0</carbon.registry.version>
+        <carbon.deployment.version>4.3.2-SNAPSHOT</carbon.deployment.version>
+        <carbon.registry.version>4.3.2-SNAPSHOT</carbon.registry.version>
         <carbon.multitenancy.version>4.3.5-SNAPSHOT</carbon.multitenancy.version>
         <jaggery.extensions.version>1.2.0</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
@@ -1091,8 +1101,8 @@
 		<slf4j.version>1.7.0</slf4j.version>
 		<apache.openejb.version>4.5.2</apache.openejb.version>
         <axis2.client.version>1.6.1.wso2v11</axis2.client.version>
-        <nimbusds.version>2.26.1</nimbusds.version>
-		<project.scm.id>my-scm-server</project.scm.id>
+        <axis2-transports.version>1.1.0-wso2v11-SNAPSHOT</axis2-transports.version>
+        <project.scm.id>my-scm-server</project.scm.id>
     </properties>
 
     <repositories>
