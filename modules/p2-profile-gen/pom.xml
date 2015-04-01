@@ -121,7 +121,7 @@
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.core.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.resource.properties.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.profiles.feature:${carbon.registry.version}</featureArtifactDef>
-								<!--<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>-->
+								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.ui.menu.feature:${carbon.registry.version}</featureArtifactDef>
 								<!-- Directory server related features -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.directory.service.mgr.feature:${carbon.identity.version}</featureArtifactDef>
@@ -457,10 +457,10 @@
 									<!--<id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>-->
 									<!--<version>2.2.0</version>-->
 								<!--</feature>-->
-   								<!--<feature>-->
-                   					 <!--<id>org.wso2.carbon.registry.contentsearch.feature.group</id>-->
-                                     <!--<version>${carbon.registry.version}</version>-->
-                                <!--</feature>-->
+   								<feature>
+                   					 <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
+                                     <version>${carbon.registry.version}</version>
+                                </feature>
 								<!--<feature>-->
                    					 <!--<id>org.wso2.carbon.stratos.deployment.feature.group</id>-->
                                      <!--<version>2.2.1</version>-->
