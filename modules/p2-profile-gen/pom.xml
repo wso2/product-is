@@ -121,7 +121,7 @@
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.core.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.resource.properties.feature:${carbon.registry.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.profiles.feature:${carbon.registry.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.contentsearch.feature:${carbon.registry.version}</featureArtifactDef>-->
 								<featureArtifactDef>org.wso2.carbon.registry:org.wso2.carbon.registry.ui.menu.feature:${carbon.registry.version}</featureArtifactDef>
 								<!-- Directory server related features -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.directory.service.mgr.feature:${carbon.identity.version}</featureArtifactDef>
@@ -131,7 +131,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provider.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.xacml.feature:${carbon.identity.version}</featureArtifactDef>
@@ -197,8 +197,8 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.scim.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- SAML Request/Response Validator Toolkit Feature -->						
 				                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
-
+                                <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
+								<!--<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>-->
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -358,10 +358,10 @@
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-								<feature>
-	                                <id>org.wso2.carbon.identity.mgt.feature.group</id>
-	                                <version>${carbon.identity.version}</version>
-		                        </feature>
+								<!--<feature>-->
+	                                <!--<id>org.wso2.carbon.identity.mgt.feature.group</id>-->
+	                                <!--<version>${carbon.identity.version}</version>-->
+		                        <!--</feature>-->
 								<feature>
 									<id>org.wso2.carbon.identity.relying.party.feature.group</id>
 									<version>${carbon.identity.version}</version>
@@ -457,10 +457,10 @@
 									<!--<id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>-->
 									<!--<version>2.2.0</version>-->
 								<!--</feature>-->
-   								<feature>
-                   					 <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
-                                     <version>${carbon.registry.version}</version>
-                                </feature>
+   								<!--<feature>-->
+                   					 <!--<id>org.wso2.carbon.registry.contentsearch.feature.group</id>-->
+                                     <!--<version>${carbon.registry.version}</version>-->
+                                <!--</feature>-->
 								<!--<feature>-->
                    					 <!--<id>org.wso2.carbon.stratos.deployment.feature.group</id>-->
                                      <!--<version>2.2.1</version>-->
@@ -551,10 +551,10 @@
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-                                 <feature>
-                                    <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
-                                    <version>${carbon.identity.version}</version>
-                                 </feature>
+                                 <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.notification.mgt.feature.group</id>-->
+                                    <!--<version>${carbon.identity.version}</version>-->
+                                 <!--</feature>-->
 							</features>
 						</configuration>
 					</execution>
@@ -647,7 +647,7 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.core.server.feature</id>
                                     <version>4.2.2</version>
-                                </feature>                               
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.idp.mgt.server.feature</id>
                                     <version>4.2.2</version>
