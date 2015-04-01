@@ -3521,6 +3521,7 @@
 		<project.scm.id>my-scm-server</project.scm.id>
 =======
         <axis2-transports.version>1.1.0-wso2v11-SNAPSHOT</axis2-transports.version>
+        <nimbusds.version>2.26.1</nimbusds.version>
         <project.scm.id>my-scm-server</project.scm.id>
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
     </properties>
