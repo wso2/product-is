@@ -55,7 +55,7 @@
                         </goals>
                         <configuration>
                             <id>org.wso2.identity.ui</id>
-                            <propertiesFile>../../feature.properties</propertiesFile>
+                            <propertiesFile>../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:console
