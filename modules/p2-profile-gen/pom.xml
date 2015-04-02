@@ -131,7 +131,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provider.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.feature:${carbon.identity.version}</featureArtifactDef>
-								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.xacml.feature:${carbon.identity.version}</featureArtifactDef>
@@ -205,12 +205,16 @@
 =======
 =======
                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
+<<<<<<< HEAD
 >>>>>>> df7fe2f... format pom.xml
                                 <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>-->
 <<<<<<< HEAD
 
 >>>>>>> 4bfbd46... use java8support branches as dependencies
 =======
+=======
+                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+>>>>>>> 356da66... Fixes for 5.1.0 M1
 								<!--<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>-->
 >>>>>>> 42fda89... adding tenant.common feature, temporary removing registry.contentsearch feature until commons-io.wso2.version conflict fixed properly
 							</featureArtifacts>
@@ -371,10 +375,10 @@
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                <!--<id>org.wso2.carbon.identity.mgt.feature.group</id>-->
-                                <!--<version>${carbon.identity.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.relying.party.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -566,6 +570,7 @@
                                 </feature>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                  <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -590,6 +595,15 @@
 >>>>>>> df7fe2f... format pom.xml
 						</configuration>
 					</execution>
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                            </features>
+                        </configuration>
+                    </execution>
+>>>>>>> 356da66... Fixes for 5.1.0 M1
 					<!--execution>
                         <id>p2-profile-generation-for-worker-profile</id>
                         <phase>package</phase>
