@@ -142,7 +142,6 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp"/>
-				                <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;generic_sts_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;manage_saml_sso&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;oauth_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;scim_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
 
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -187,11 +186,6 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
-
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;/Security&gt;"
-                                        value="${hideMenu}"/>
 
 				<!-- Comment all active UserStoreManagers -->
                                 <replace
