@@ -1,0 +1,68 @@
+<%
+
+var log = new Log();
+
+var util = require("../../util/utility.jag");
+var serverUrl = util.getServerUrl() + "/UserAccountConnectorService";
+var connectorStub = Packages.org.wso2.carbon.identity.user.account.connector.stub.UserAccountConnectorServiceStub;
+var HTTPConstants = Packages.org.apache.axis2.transport.http.HTTPConstants;
+
+
+function connectUserAccount(userName, password) {
+    try {
+        var serviceStub = new connectorStub(serverUrl);
+        var serviceClient = serviceStub._getServiceClient();
+        var option = serviceClient.getOptions();
+        option.setManageSession(true);
+        var cookie = session.get("auth-cookie");
+        option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
+        serviceStub.connectUserAccount(userName, password);
+    } catch (e) {
+        throw e;
+    }
+}
+
+function deleteUserAccountConnection(userName) {
+    try {
+        var serviceStub = new connectorStub(serverUrl);
+        var serviceClient = serviceStub._getServiceClient();
+        var option = serviceClient.getOptions();
+        option.setManageSession(true);
+        var cookie = session.get("auth-cookie");
+        option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
+        serviceStub.deleteUserAccountConnection(userName);
+    } catch (e) {
+        throw e;
+    }
+}
+
+function getConnectedAccountsOfUser() {
+    try {
+        var serviceStub = new connectorStub(serverUrl);
+        var serviceClient = serviceStub._getServiceClient();
+        var option = serviceClient.getOptions();
+        option.setManageSession(true);
+        var cookie = session.get("auth-cookie");
+        option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
+        return serviceStub.getConnectedAccountsOfUser();
+    } catch (e) {
+        throw e;
+    }
+}
+
+function switchLoggedInUser(userName) {
+    try {
+        var serviceStub = new connectorStub(serverUrl);
+        var serviceClient = serviceStub._getServiceClient();
+        var option = serviceClient.getOptions();
+        option.setManageSession(true);
+        var cookie = session.get("auth-cookie");
+        option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
+        return serviceStub.switchLoggedInUser(userName);
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+%>
