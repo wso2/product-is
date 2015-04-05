@@ -72,6 +72,7 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
         </dependency>
+<<<<<<< HEAD
     </dependencies>
 
 </project>
@@ -102,6 +103,8 @@
           <groupId>org.wso2.carbon</groupId>
           <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
       </dependency>
+=======
+>>>>>>> b1dd18c... Committing user account association feature
     </dependencies>
 
 </project>

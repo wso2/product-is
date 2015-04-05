@@ -403,10 +403,22 @@ label.error{
 
 .dropdown_separator {
     padding: 3px 20px;
+<<<<<<< HEAD
     background: #ffffff;
+=======
+    background: #E6E6E6;
+>>>>>>> b1dd18c... Committing user account association feature
     color: #2C3238;
 }
 
 .pdR2p {
     padding-right: 2px;
 }
+<<<<<<< HEAD
+=======
+
+.switch_to_div {
+    font-style: oblique;
+    font-weight: bolder;
+}
+>>>>>>> b1dd18c... Committing user account association feature

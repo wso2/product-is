@@ -90,12 +90,20 @@ function connect() {
                                    message({content: 'Error occurred while connecting user accounts.', type: 'error', cbk: function () {
                                    }});
                                }
+<<<<<<< HEAD
+=======
+                               reloadGrid();
+>>>>>>> b1dd18c... Committing user account association feature
                            }
                        }
                    },
                    error: function (e) {
                        message({content: 'Error occurred while connecting user accounts.', type: 'error', cbk: function () {
                        }});
+<<<<<<< HEAD
+=======
+                       reloadGrid();
+>>>>>>> b1dd18c... Committing user account association feature
                    }
                });
     }

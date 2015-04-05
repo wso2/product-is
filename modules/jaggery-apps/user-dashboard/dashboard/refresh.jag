@@ -17,6 +17,10 @@ if(userList != null && userList.length > 0){
 	session.remove(CONNECTED_ACCOUNTS);
 }
 
+<<<<<<< HEAD
 log.info(userList);
+=======
+log.debug(userList);
+>>>>>>> b1dd18c... Committing user account association feature
 
 %>
