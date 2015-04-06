@@ -30,6 +30,7 @@
             <package name="org.wso2.identity.integration.test.application.mgt"/>
         </packages>
         <classes>
+            <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />
             <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />

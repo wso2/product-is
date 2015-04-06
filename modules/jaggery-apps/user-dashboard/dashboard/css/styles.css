@@ -400,3 +400,18 @@ label.error{
 .grid_header h3{
     padding-left:20px;    
 }
+
+.dropdown_separator {
+    padding: 3px 20px;
+    background: #E6E6E6;
+    color: #2C3238;
+}
+
+.pdR2p {
+    padding-right: 2px;
+}
+
+.switch_to_div {
+    font-style: oblique;
+    font-weight: bolder;
+}
