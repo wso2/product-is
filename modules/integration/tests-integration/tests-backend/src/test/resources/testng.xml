@@ -14,7 +14,7 @@
     <test name="is-application-mgt" preserve-order="true" parallel="false">
         <packages>
             <!--package name="org.wso2.identity.integration.test.user.mgt"/>-->
-            <package name="org.wso2.identity.integration.test.application.mgt"/>
+            <!--package name="org.wso2.identity.integration.test.application.mgt"/-->
         </packages>
         <classes>
             <!--class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" /-->
@@ -59,11 +59,11 @@
         </classes>
 
     </test>
-    <test name="is-entitlement" preserve-order="true" parallel="false">
+    <!--test name="is-entitlement" preserve-order="true" parallel="false">
 
         <packages>
             <package name="org.wso2.identity.integration.test.entitlement"/>
         </packages>
-    </test>
+    </test-->
 
 </suite>
