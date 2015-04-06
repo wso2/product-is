@@ -1,0 +1,66 @@
+<%
+
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var action = request.getParameter("action");
+
+session.put('auth-cookie', cookie);
+
+var userAccountConnectorClient = require('controllers/connected-accounts/userAccountConnectorClient.jag');
+
+if (action != null) {
+    if (action == 'list') {
+
+        try {
+            var fieldValues = userAccountConnectorClient.getConnectedAccountsOfUser();
+            print('{"success":true, "data":' + stringify(fieldValues) + '}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'connect') {
+        var userName = request.getParameter('userName');
+        var password = request.getParameter('password');
+
+        try {
+            userAccountConnectorClient.connectUserAccount(userName, password);
+            print('{"success":true}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'delete') {
+
+        var userName = request.getParameter('userName');
+        try {
+            userAccountConnectorClient.deleteUserAccountConnection(userName);
+            print('{"success":true}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'switch') {
+
+        var userName = request.getParameter('userName');
+
+        try {
+            var fieldValues = userAccountConnectorClient.switchLoggedInUser(userName);
+            print('{"success":true, "data":' + stringify(fieldValues) + '}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    }
+}
+
+function getErrorMessage(message) {
+    if (message != null && message.length > 0) {
+        if (message == 'org.apache.axis2.AxisFault: Transport error: 401 Error: Unauthorized') {
+            return '{"success":false, "reLogin":true}';
+        } else {
+            var msg = message.split(':');
+            if (msg.length > 0) {
+                return '{"success":false, "message":"' + msg[1] + '"}';
+            }
+        }
+    }
+    return '{"success":false, "message":null}';
+}
+
+%>
