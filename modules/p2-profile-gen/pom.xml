@@ -198,7 +198,7 @@
 								<!-- SAML Request/Response Validator Toolkit Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
-								<!--<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>-->
+								<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>
 								<!-- User Account Connector Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 							</featureArtifacts>
@@ -555,6 +555,10 @@
 								<feature>
 									<id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
 									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.apache.axis2.transport.mail.feature.group</id>
+									<version>${axis2-transports.version}</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.identity.user.account.connector.feature.group</id>
