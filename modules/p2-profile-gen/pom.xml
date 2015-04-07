@@ -195,12 +195,19 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.google.server.feature:${carbon.identity.version}</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning.connector.scim.server.feature:${carbon.identity.version}</featureArtifactDef>
+<<<<<<< HEAD
 								<!-- SAML Request/Response Validator Toolkit Feature -->						
 <<<<<<< HEAD
 				                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
 <<<<<<< HEAD
                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 <<<<<<< HEAD
+=======
+								<!-- SAML Request/Response Validator Toolkit Feature -->
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>
+>>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8
 								<!-- User Account Connector Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 =======
@@ -545,6 +552,7 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.identity.provisioning.connector.google.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -593,6 +601,48 @@
 >>>>>>> 4bfbd46... use java8support branches as dependencies
 =======
 >>>>>>> b1dd18c... Committing user account association feature
+=======
+								<feature>
+									<id>org.wso2.carbon.identity.provisioning.connector.google.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.provisioning.connector.salesforce.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.provisioning.connector.scim.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.openid.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.iwa.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.apache.axis2.transport.mail.feature.group</id>
+									<version>${axis2-transports.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.user.account.connector.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+>>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8
 							</features>
 =======
                                 <!--<feature>-->
