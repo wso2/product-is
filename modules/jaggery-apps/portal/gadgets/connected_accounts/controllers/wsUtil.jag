@@ -1,0 +1,146 @@
+<%
+
+var payloadFac = require("payloadFactory.jag");
+
+var log = new Log();
+
+function call(webService, serverUrl, options, payload) {
+    var cookie = session.get("auth-cookie");
+    var userName = session.get("user");
+    var pwd = session.get("pwd");
+
+    log.debug(cookie);
+    if (cookie != null) {
+
+        options["HTTPHeaders"] = [
+            {name: "cookie", value: cookie}
+        ];
+
+        log.debug(options["HTTPHeaders"]);
+        webService.open(options, serverUrl, false);
+    } else if (userName != null && pwd != null) {
+        webService.open(options, serverUrl, false, userName, pwd);
+    } else {
+        webService.open(options, serverUrl, false);
+    }
+
+    log.debug(payload);
+
+    webService.send(payload);
+
+}
+
+function callWSInOnly(webService, serverUrl, action, params) {
+    var options = new Array();
+    options.useSOAP = 1.1;
+    options.action = action;
+
+
+    var payload = null;
+
+        if (params != null) {
+            payload = payloadFac.getPayload(options.action, params);
+        } else {
+            payload = payloadFac.getPayload(options.action);
+        }
+    try {
+        call(webService, serverUrl, options, payload);
+        log.info(webService.readyState);
+    }
+    catch (e) {
+        log.error(e);
+        throw e;
+    }
+
+}
+
+function callWSReturnXML(webService, serverUrl, action, params, req) {
+
+    var options = new Array();
+    options.useSOAP = 1.1;
+    options.action = action;
+
+    var payload = req;
+    if (req == null) {
+        if (params != null) {
+            payload = payloadFac.getPayload(options.action, params);
+        } else {
+            payload = payloadFac.getPayload(options.action);
+        }
+    }
+    var result;
+
+    try {
+
+        log.debug(payload);
+
+        call(webService, serverUrl, options, payload);
+        if (webService.readyState == 4) {
+            result = webService.responseE4X;
+            return result;
+        }
+
+    } catch (e) {
+        throw e;
+    }
+
+}
+
+function callWSReturnJSON(webService, serverUrl, action, params, req) {
+    var result = callWSReturnXML(webService, serverUrl, action, params, req);
+    return E4XtoJSON(result);
+}
+
+function E4XtoJSON(xml, ignored) {
+    var r, children = xml.*, attributes = xml.@*, length = children.length();
+    if (length == 0) {
+        r = xml.toString();
+    } else if (length == 1) {
+        var text = xml.text().toString();
+        if (text) {
+            r = text;
+        }
+    }
+    if (r == undefined) {
+        r = {};
+        for each(var child
+    in
+        children
+    )
+        {
+            var name = child.localName();
+            var json = E4XtoJSON(child, ignored);
+            var value = r[name];
+            if (value) {
+                if (value.length && value.push) {
+                    value.push(json);
+                } else {
+                    r[name] = [value, json]
+                }
+            } else {
+                r[name] = json;
+            }
+        }
+    }
+    if (attributes.length()) {
+        var a = {}, c = 0;
+        for each(var attribute
+    in
+        attributes
+    )
+        {
+            var name = attribute.localName();
+            if (ignored && ignored.indexOf(name) == -1) {
+                a["_" + name] = attribute.toString();
+                c++;
+            }
+        }
+        if (c) {
+            if (r) a._ = r;
+            return a;
+        }
+    }
+    return r;
+}
+
+%>

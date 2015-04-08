@@ -866,7 +866,11 @@
 				<version>${carbon.identity.version}</version>
 				<scope>compile</scope>
 			</dependency>
-
+        		<dependency>
+            			<groupId>org.wso2.carbon.identity</groupId>
+            			<artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
+				<version>${carbon.identity.version}</version>
+        		</dependency>
 			<dependency>
 				<groupId>org.wso2.carbon.automation</groupId>
 				<artifactId>org.wso2.carbon.automation.test.utils</artifactId>
