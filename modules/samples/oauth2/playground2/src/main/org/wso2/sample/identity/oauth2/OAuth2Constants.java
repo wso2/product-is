@@ -38,4 +38,9 @@ public final class OAuth2Constants {
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
 
+    //OP Response parameters
+    public static final String OP_ENDPOINT_URL="https://localhost:9443/oauth2/loginstatus";
+    public static final String TARGET_URL="http://localhost:9443";
+    public static final String OP_STATUS_LOGGED="true";
+
 }
