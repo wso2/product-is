@@ -68,6 +68,8 @@
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
             <!--SAML Test Cases-->
             <class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>
+            <!--Notification mgt UserOperation test case-->
+            <class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>
         </classes>
     </test>
 
