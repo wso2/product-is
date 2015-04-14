@@ -3440,7 +3440,7 @@
 	</profiles>
 
 	<properties>
-		<carbon.identity.version>4.3.3</carbon.identity.version>
+		<carbon.identity.version>4.3.4</carbon.identity.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
 		<bcprov.jdk13.version>140</bcprov.jdk13.version>
 		<bcprov.jdk15.version>132</bcprov.jdk15.version>
