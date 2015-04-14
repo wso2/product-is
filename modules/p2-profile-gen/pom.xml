@@ -235,6 +235,7 @@
                                                                 <!-- User Account Connector Feature -->
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 >>>>>>> b1dd18c... Committing user account association feature
 =======
@@ -243,6 +244,9 @@
 =======
                                                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 >>>>>>> 50c08a1... change carbon-identity to 4.3.4
+=======
+                                                                <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>-->
+>>>>>>> 8f38c5c... change carbon-identity version to 4.3.3, remove account connector feature since it is not supported in 4.3.3
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -679,10 +683,10 @@
 >>>>>>> 356da66... Fixes for 5.1.0 M1
 =======
                                  </feature>
-                                 <feature>
-                                    <id>org.wso2.carbon.identity.user.account.connector.feature.group</id>
-                                    <version>${carbon.identity.version}</version>
-                                 </feature>
+                                 <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.user.account.connector.feature.group</id>-->
+                                    <!--<version>${carbon.identity.version}</version>-->
+                                 <!--</feature>-->
 							</features>
 						</configuration>
 					</execution>
