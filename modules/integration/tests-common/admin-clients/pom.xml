@@ -68,6 +68,7 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
@@ -105,6 +106,12 @@
       </dependency>
 =======
 >>>>>>> b1dd18c... Committing user account association feature
+=======
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.identity</groupId>-->
+            <!--<artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>-->
+        <!--</dependency>-->
+>>>>>>> 250c8e7... remove user account connector test cases
     </dependencies>
 
 </project>
