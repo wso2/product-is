@@ -3452,12 +3452,12 @@
         <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
         <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
-        <wss4j.wso2.version>1.5.11.wso2v10-SNAPSHOT</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11.wso2v9</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
         <charon.version>2.0.0</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v15-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1.wso2v14</rampart.wso2.version>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.1.3.wso2v1</httpcore.wso2.version>
@@ -3488,7 +3488,7 @@
 >>>>>>> 8f38c5c... change carbon-identity version to 4.3.3, remove account connector feature since it is not supported in 4.3.3
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
-        <oauth2.client.version>0.22.1358727-wso2v8-SNAPSHOT</oauth2.client.version>
+        <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
 		<orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
 		<stratos.version.221>2.2.1</stratos.version.221>
 		<stratos.version.220>2.2.0</stratos.version.220>
