@@ -233,8 +233,12 @@
 >>>>>>> 42fda89... adding tenant.common feature, temporary removing registry.contentsearch feature until commons-io.wso2.version conflict fixed properly
 =======
                                                                 <!-- User Account Connector Feature -->
+<<<<<<< HEAD
                                                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 >>>>>>> b1dd18c... Committing user account association feature
+=======
+                                                                <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>-->
+>>>>>>> a72c307... remove user account connector feature from master
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -663,11 +667,22 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
+<<<<<<< HEAD
                                 </feature>
                             </features>
                         </configuration>
                     </execution>
 >>>>>>> 356da66... Fixes for 5.1.0 M1
+=======
+                                 </feature>
+                                 <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.user.account.connector.feature.group</id>-->
+                                    <!--<version>${carbon.identity.version}</version>-->
+                                 <!--</feature>-->
+							</features>
+						</configuration>
+					</execution>
+>>>>>>> a72c307... remove user account connector feature from master
 					<!--execution>
                         <id>p2-profile-generation-for-worker-profile</id>
                         <phase>package</phase>
