@@ -170,7 +170,7 @@
 //
 //	@Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
 //	public void testSendApprovalPost() throws Exception {
-//		HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+//		HttpResponse response = sendApprovalAlwaysPost(client, sessionDataKeyConsent);
 //		Assert.assertNotNull(response, "Approval response is invalid.");
 //
 //		Header locationHeader =
@@ -231,5 +231,56 @@
 //
 //		EntityUtils.consume(response.getEntity());
 //	}
+//
+//    @Test(groups = "wso2.is", description = "Test approval always", dependsOnMethods = "testValidateAccessToken")
+//    public void testApprovalAlways()throws Exception {
+//        List<NameValuePair>urlParameters=new ArrayList<NameValuePair>();
+//        urlParameters.add(new BasicNameValuePair("grantType",OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+//        urlParameters.add(new BasicNameValuePair("consumerKey",consumerKey));
+//        urlParameters.add(new BasicNameValuePair("callbackurl",OAuth2Constant.CALLBACK_URL));
+//        urlParameters.add(new BasicNameValuePair("authorizeEndpoint",OAuth2Constant.APPROVAL_URL));
+//        urlParameters.add(new BasicNameValuePair("authorize",OAuth2Constant.AUTHORIZE_PARAM));
+//        urlParameters.add(new BasicNameValuePair("scope",""));
+//
+//        HttpResponse response=
+//        sendPostRequestWithParameters(client,urlParameters,
+//        OAuth2Constant.AUTHORIZED_USER_URL);
+//        Assert.assertNotNull(response,"Authorized response is null");
+//
+//        Header locationHeader=
+//        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+//        Assert.assertNotNull(locationHeader,"Authorized response header is null");
+//        EntityUtils.consume(response.getEntity());
+//
+//        response=sendGetRequest(client,locationHeader.getValue());
+//        Assert.assertNotNull(response,"Authorized user response is null.");
+//
+//        Map<String, Integer>keyPositionMap=new HashMap<String, Integer>(1);
+//        keyPositionMap.put("name=\"sessionDataKey\"",1);
+//        List<KeyValue>keyValues=
+//        DataExtractUtil.extractDataFromResponse(response,keyPositionMap);
+//        Assert.assertNotNull(keyValues,"sessionDataKey key value is null");
+//
+//        sessionDataKey=keyValues.get(0).getValue();
+//        Assert.assertNotNull(sessionDataKey,"Session data key is null.");
+//        EntityUtils.consume(response.getEntity());
+//
+//
+//        HttpResponse response1=sendLoginPost(client,sessionDataKey);
+//        Assert.assertNotNull(response1,"Login request failed. Login response is null.");
+//
+//        Header locationHeader1=
+//        response1.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+//        Assert.assertNotNull(locationHeader,"Login response header is null");
+//        EntityUtils.consume(response1.getEntity());
+//
+//        response1=sendGetRequest(client,locationHeader1.getValue());
+//        Map<String, Integer>keyPositionMap1=new HashMap<String, Integer>(1);
+//        keyPositionMap1.put("name=\"sessionDataKeyConsent\"",1);
+//        List<KeyValue>keyValues1=
+//        DataExtractUtil.extractSessionConsentDataFromResponse(response1,
+//        keyPositionMap1);
+//        Assert.assertNull(keyValues1,"SessionDataKeyConsent key value is not null");
+//    }
 //
 //}
