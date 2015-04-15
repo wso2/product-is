@@ -1124,6 +1124,7 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
                 <version>${jstl.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -1139,6 +1140,11 @@
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.passivests.filter</artifactId>
                 <version>${product.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom</groupId>
+                <artifactId>axiom-api</artifactId>
+                <version>${axiom.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ws.commons.axiom</groupId>
@@ -3373,9 +3379,26 @@
                 <version>${axis2.client.version}</version>
             </dependency>
             <dependency>
+<<<<<<< HEAD
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbusds.version}</version>
+=======
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.user.registration.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>taglibs</groupId>
+                <artifactId>standard</artifactId>
+                <version>${taglibs.version}</version>
+                <scope>compile</scope>
+>>>>>>> 18e6f91... Adding missed commits from is-5.1.0 svn branch
             </dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -3446,6 +3469,7 @@
 		<bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
         <neethi.wso2.version>2.0.4.wso2v3</neethi.wso2.version>
+        <axiom.api.version>1.2.11</axiom.api.version>
         <axiom.impl.version>1.2.12</axiom.impl.version>
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
@@ -3464,6 +3488,7 @@
         <httpclient.version>4.0.1</httpclient.version>
         <xml.apis.version>1.4.01</xml.apis.version>
         <jstl.version>1.1.2</jstl.version>
+        <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v1</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
 <<<<<<< HEAD
