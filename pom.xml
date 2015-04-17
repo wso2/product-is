@@ -3463,7 +3463,11 @@
 	</profiles>
 
 	<properties>
+<<<<<<< HEAD
 		<carbon.identity.version>4.3.3</carbon.identity.version>
+=======
+		<carbon.identity.version>4.3.5-SNAPSHOT</carbon.identity.version>
+>>>>>>> e9de3e0... Version fix
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
 		<bcprov.jdk13.version>140</bcprov.jdk13.version>
 		<bcprov.jdk15.version>132</bcprov.jdk15.version>
