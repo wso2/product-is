@@ -144,6 +144,68 @@
 
             }
 
+            //fido client code
+    		var request;
+ 			var loggedInUser;
+
+ 			function talkToDevice(){
+var req = JSON.parse(request).return;
+var regRequest = JSON.parse(req).registerRequests;
+var authRequest = JSON.parse(req).authenticateRequests;
+setTimeout(function() {
+    u2f.register(regRequest, authRequest,
+    function(data) {
+        var form = document.getElementById('fidoForm');
+        var reg = document.getElementById('tokenResponse');
+        if(data.errorCode) {
+            alert("U2F failed with error " + data.errorCode);
+            return;
+        }
+        reg.value=JSON.stringify(data);
+var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-finish.jag";
+       $.ajax({
+                        url:str,
+                        type:"POST",
+                        data: $('#fidoForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                    })
+                    .done(function(data){
+                        message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+                    })
+                    .fail(function () {
+                            message({content:'Error while updating Profile',type:'error', cbk:function(){} });
+
+                    });
+    });
+}, 1000);
+
+ 			}
+
+
+
+            function startFIDO() {
+                var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-start.jag";
+                $.ajax({
+                    url:str,
+                    type:"POST",
+                    data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                })
+                  .done(function (data) {
+
+			            request = data; 
+			            talkToDevice();
+			            message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+
+                  })
+                  .fail(function () {
+                        message({content:'Error while updating Profile',type:'error', cbk:function(){} });
+
+                  })
+                  .always(function () {
+                            console.log('completed');
+                  });
+
+            }
+
         </script>
 
 
@@ -151,7 +213,9 @@
             <div id="gadgetBody"></div>
 	    <div id="message"></div>
         </form>
-
+        <form id="fidoForm">
+        	<input type="hidden" id="tokenResponse" name="tokenResponse" value="ishara" />
+        </form>
         ]]>
     </Content>
 </Module>
