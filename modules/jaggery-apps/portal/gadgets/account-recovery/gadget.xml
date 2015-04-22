@@ -133,7 +133,7 @@
                         })
                         .fail(function () {
 
-			message({content:'Error While updated the recovery questions',type:'error', cbk:function(){} });                            
+			message({content:'Error While updated the recovery questions',type:'error', cbk:function(){} });
 			console.log('error');
 
                         })
@@ -144,73 +144,52 @@
             }
 
             function drawPage() {
-                console.log(json);
- var isQ1Ans = false;
-       var q1ID = 0;
-       var isQ2Ans = false;
-       var q2ID = 0;
-       var body = "    <div class=\"col-lg-12 content-section\">\n" +
-               "            <fieldset>\n" +
-               "                <input type=\"hidden\" name=\"challangedId_1\" value=\"http://wso2.org/claims/challengeQuestion1\"/>\n" +
-               "                <legend>Challenge Question Set 1</legend>\n" +
+
+       console.log(json);
+       var qID = 0;
+       var isAns = false;
+       var sorted = [];
+       for(var key in json){
+          sorted.push(key);
+       }
+       sorted.sort();
+        var body = "    <div class=\"col-lg-12 content-section\">\n";
+       for(var i=0;i<sorted.length;i++){
+          var questionSet = json[sorted[i]];
+          var setId = sorted[i].slice(-1);
+          body = body + "<fieldset>\n" +
+               "                <input type=\"hidden\" name=\"challangedId_"+setId+"\" value=\"http://wso2.org/claims/challengeQuestion"+setId+"\"/>\n" +
+               "                <legend>Challenge Question Set "+setId+"</legend>\n" +
                "                <div class=\"control-group\">\n" +
-               "                    <label class=\"control-label\" for=\"q1\">Challenge Question <span class=\"required\">*</span></label>\n" +
+               "                    <label class=\"control-label\" for=\"q"+setId+"\">Challenge Question <span class=\"required\">*</span></label>\n" +
                "                    <div class=\"controls\">\n" +
-               "                        <select id=\"q1\" name=\"question_1\" class=\"input-xxlarge\">\n" ;
-               for (var i in json.challenge1){
-                      if (json.challenge1[i].selected == 'true')   { isQ1Ans = true; q1ID = i;
-       body = body +  "<option name=\"q\" selected=\"selected\" value=\""+json.challenge1[i].question+"\">"+json.challenge1[i].question+"</option>\n";
+               "                        <select id=\"q"+setId+"\" name=\"question_"+setId+"\" class=\"input-xxlarge\">\n" ;
+               for (var j=0;j<questionSet.length;j++){
+
+                      if (questionSet[j].selected == 'true')   { isAns = true; qID = j;
+       body = body +  "<option name=\"q\" selected=\"selected\" value=\""+questionSet[j].question+"\">"+questionSet[j].question+"</option>\n";
+
                   } else {
-       body = body +  "<option name=\"q\" value=\""+json.challenge1[i].question+"\">"+json.challenge1[i].question+"</option>\n";
+       body = body +  "<option name=\"q\" value=\""+questionSet[j].question+"\">"+questionSet[j].question+"</option>\n";
+
                      }
                  }
        body = body +  "                        </select>\n" +
                "                    </div>\n" +
                "                </div>\n" +
                "                <div class=\"control-group\">\n" +
-               "                    <label class=\"control-label\" for=\"q1answer\">Your Answer <span class=\"required\">*</span></label>\n" +
+               "                    <label class=\"control-label\" for=\"q"+setId+"answer\">Your Answer <span class=\"required\">*</span></label>\n" +
                "                    <div class=\"controls\">\n";
-                if(isQ1Ans){
-       body = body +  "                        <input type=\"password\" name=\"ans_1\" class=\"input-xxlarge\" value=\""+json.challenge1[q1ID].answer+"\" />\n" ;
+                if(isAns){
+       body = body +  "                        <input type=\"password\" name=\"ans_"+setId+"\" class=\"input-xxlarge\" value=\""+questionSet[qID].answer+"\" />\n" ;
                 } else {
-       body = body +  "                        <input type=\"password\" name=\"ans_1\" class=\"input-xxlarge\" value=\"\" />\n" ;
+       body = body +  "                        <input type=\"password\" name=\"ans_"+setId+"\" class=\"input-xxlarge\" value=\"\" />\n" ;
                }
        body = body +        "                    </div>\n" +
                "                </div>\n" +
-               "            </fieldset>\n" +
-               
-               "            <fieldset>\n" +
-               "                <input type=\"hidden\" name=\"challangedId_2\" value=\"http://wso2.org/claims/challengeQuestion2\"/>\n" +
-               "                <legend>Challenge Question Set 2</legend>\n" +
-               "                <div class=\"control-group\">\n" +
-               "                    <label class=\"control-label\" for=\"q1\">Challenge Question <span class=\"required\">*</span></label>\n" +
-               "                    <div class=\"controls\">\n" +
-               "                        <select id=\"q2\" name=\"question_2\" class=\"input-xxlarge\">\n" ;
-       for (var i in json.challenge2){
-           if (json.challenge2[i].selected == 'true')   { isQ2Ans = true; q2ID = i;
-               body = body +  "<option name=\"q\" selected=\"selected\" value=\""+json.challenge2[i].question+"\">"+json.challenge2[i].question+"</option>\n";
-           } else {
-               body = body +  "<option name=\"q\" value=\""+json.challenge2[i].question+"\">"+json.challenge2[i].question+"</option>\n";
-           }
+               "            </fieldset>\n";
        }
-       body = body +  "                        </select>\n" +
-               "                    </div>\n" +
-               "                </div>\n" +
-               "                <div class=\"control-group\">\n" +
-               "                    <label class=\"control-label\" for=\"q1answer\">Your Answer <span class=\"required\">*</span></label>\n" +
-               "                    <div class=\"controls\">\n";
-       if(isQ2Ans){
-           body = body +  "                        <input type=\"password\" name=\"ans_2\" class=\"input-xxlarge\" value=\""+json.challenge2[q2ID].answer+"\" />\n" ;
-       } else {
-           body = body +  "                        <input type=\"password\" name=\"ans_2\" class=\"input-xxlarge\" value=\"\" />\n" ;
-       }
-       body = body +        "                    </div>\n" +
-               "                </div>\n" +
-               "            </fieldset>\n" +
-               
-               
-               
-               "            <div class=\"control-group\">\n" +
+        body = body + "            <div class=\"control-group\">\n" +
                "                <div class=\"controls\">\n" +
                "                    <input type=\"button\" class=\"btn btn-primary\" value=\"Update\" onclick=\"validate();\"/>\n" +
                "                    <input type=\"button\" class=\"btn\" value=\"Cancel\" onclick=\"cancel();\"/>\n" +
@@ -283,7 +262,7 @@ function validateEmpty(fldname) {
         return error;
     }
     return error;
-} 
+}
         </script>
 
 
