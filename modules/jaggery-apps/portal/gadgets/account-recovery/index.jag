@@ -12,58 +12,56 @@ session.put('user', user);
 
 var client = require('controllers/account_recovery/identityMgtClient.jag');
 var fieldValues = client.getAllRecoveryQuestions();
-var userChallenges = client.getUserChallengeQuestions(user)
+var userChallenges = client.getUserChallengeQuestions(user);
 fieldValues.selectedChalanges = userChallenges.return;
 
 // Get User Challanges
-var selectedChallanges = null;
+var selectedChallanges = {};
 if(userChallenges.return != null){
-	selectedChallanges = {};
-	for (var i in userChallenges.return) {
-		if(userChallenges.return[i].id == 'http://wso2.org/claims/challengeQuestion1'){
-			selectedChallanges.challange1 = userChallenges.return[i];
-		}
-		else{
-			selectedChallanges.challange2 = userChallenges.return[i];
-		}
+	if(userChallenges.return.constructor === Array){
+			for (var i in userChallenges.return) {
+				selectedChallanges[userChallenges.return[i].id] = userChallenges.return[i];
+			}
+	}else if (userChallenges.return.constructor === Object){
+		electedChallanges[userChallenges.return.id] = userChallenges.return;
 	}
 
 }
 
 
 var orderedChallanges = {};
-orderedChallanges.challenge1 = [];
-orderedChallanges.challenge2 = [];
 
-var ch1 = 0;
-var ch2 = 0;
-for (var i in fieldValues.return) {
-	if(fieldValues.return[i].questionSetId == 'http://wso2.org/claims/challengeQuestion1'){
-		if(selectedChallanges != null && selectedChallanges.challange1.question == fieldValues.return[i].question ){
-			fieldValues.return[i].selected = "true";
-			fieldValues.return[i].answer = selectedChallanges.challange1.answer;
+if(fieldValues.return != null){
+	if(fieldValues.return.constructor === Array){
+		for (var i in fieldValues.return) {
+			if(orderedChallanges[fieldValues.return[i].questionSetId]==undefined){
+				orderedChallanges[fieldValues.return[i].questionSetId] = [];
+			}
+			if(selectedChallanges[fieldValues.return[i].questionSetId].question == fieldValues.return[i].question){
+				fieldValues.return[i].selected = "true";
+				fieldValues.return[i].answer = selectedChallanges[fieldValues.return[i].questionSetId].answer;
+			}
+			else{
+				fieldValues.return[i].selected = "false";
+				fieldValues.return[i].answer = "";
+			}
+			orderedChallanges[fieldValues.return[i].questionSetId].push(fieldValues.return[i]);
 		}
-		else{
-			fieldValues.return[i].selected = "false";
-			fieldValues.return[i].answer = "";
-		}
-		orderedChallanges.challenge1[ch1] = fieldValues.return[i];
-		ch1++;
+	}else if(fieldValues.return.constructor === Object){
 
-	}	
-	if(fieldValues.return[i].questionSetId == 'http://wso2.org/claims/challengeQuestion2'){
-		if(selectedChallanges != null && selectedChallanges.challange2.question == fieldValues.return[i].question ){
-			fieldValues.return[i].selected = "true";
-			fieldValues.return[i].answer = selectedChallanges.challange2.answer;
-		}
-		else{
-			fieldValues.return[i].selected = "false";
-			fieldValues.return[i].answer = "";
-		}
-		orderedChallanges.challenge2[ch2] = fieldValues.return[i];
-		ch2++;
-
-	}	
+			if(orderedChallanges[fieldValues.return.questionSetId]==undefined){
+				orderedChallanges[fieldValues.return.questionSetId] = [];
+			}
+			if(selectedChallanges[fieldValues.return.questionSetId].question == fieldValues.return.question){
+				fieldValues.return.selected = "true";
+				fieldValues.return.answer = selectedChallanges[fieldValues.return.questionSetId].answer;
+			}
+			else{
+				fieldValues.return.selected = "false";
+				fieldValues.return.answer = "";
+			}
+			orderedChallanges[fieldValues.return.questionSetId].push(fieldValues.return);
+	}
 }
 
 print( orderedChallanges );
