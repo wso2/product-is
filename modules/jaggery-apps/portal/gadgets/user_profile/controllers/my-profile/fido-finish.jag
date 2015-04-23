@@ -12,20 +12,15 @@ function init(){
 
     var cookie = session.get('auth-cookie');
         if(cookie == null){
-        log.info("cookie is null")
         var cookie = request.getParameter("cookie");
         session.put('auth-cookie', cookie);
         }
     var username = request.getParameter("user");
     var response = request.getParameter("tokenResponse");
-log.info('Sample ----------- test ------------- ishara');
-log.info(response);
 
         try{
-            log.info("Calling the web service .... url "+serverUrl);
-            var result = callWSReturnJSON(webService, serverUrl, "urn:finishRegistration",
+		callWSInOnlyWithParams(webService, serverUrl, "urn:finishRegistration",
                 new Array(response, username));
-            print(result);
         } catch(e){
             log.error(e);
             response.sendRedirect("../../index.jag?e=1&error=" + e);
