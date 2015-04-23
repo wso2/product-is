@@ -12,14 +12,12 @@ function init(){
 
     var cookie = session.get('auth-cookie');
         if(cookie == null){
-        log.info("cookie is null")
         var cookie = request.getParameter("cookie");
         session.put('auth-cookie', cookie);
         }
     var username = request.getParameter("user");
 
         try{
-            log.info("Calling the web service .... url "+serverUrl);
             var result = callWSReturnJSON(webService, serverUrl, "urn:startRegistration", new Array(username, "https://localhost:9443"));
             print(result);
         } catch(e){
