@@ -64,5 +64,4 @@ function switchLoggedInUser(userName) {
     }
 }
 
-
 %>

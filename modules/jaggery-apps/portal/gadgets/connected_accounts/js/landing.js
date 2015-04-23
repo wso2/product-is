@@ -7,6 +7,13 @@ $(function () {
     });
 });
 
+$(function () {
+    $('#connectFedBtn').click(function (e) {
+        e.preventDefault();
+        drawAddFedAccountPopup();
+    });
+});
+
 function drawAddAccountPopup() {
 
     var top =
@@ -35,7 +42,7 @@ function drawAddAccountPopup() {
     var end =
             "                    <div class=\"control-group\" style=\"margin-left: 116px;\">\n" +
             "                        <div class=\"controls\">\n" +
-            "                            <input type=\"button\" onclick=\"connect();\" class=\"btn btn-primary\"  style=\"margin-right: 5px;\" value=\"Connect\"/>\n" +
+            "                            <input type=\"button\" onclick=\"connect();\" class=\"btn btn-primary\"  style=\"margin-right: 5px;\" value=\"Associate\"/>\n" +
             "                            <input type=\"button\" onclick=\"cancelConnect();\" class=\"btn\" value=\"&nbsp;Cancel&nbsp;\"/>\n" +
             "                        </div>\n" +
             "                    </div></div>\n" +
@@ -87,7 +94,7 @@ function connect() {
                                    message({content: resp.message, type: 'error', cbk: function () {
                                    }});
                                } else {
-                                   message({content: 'Error occurred while connecting user accounts.', type: 'error', cbk: function () {
+                                   message({content: 'Error occurred while associating user accounts.', type: 'error', cbk: function () {
                                    }});
                                }
 <<<<<<< HEAD
@@ -98,7 +105,7 @@ function connect() {
                        }
                    },
                    error: function (e) {
-                       message({content: 'Error occurred while connecting user accounts.', type: 'error', cbk: function () {
+                       message({content: 'Error occurred while associating user accounts.', type: 'error', cbk: function () {
                        }});
 <<<<<<< HEAD
 =======
@@ -124,6 +131,129 @@ function hasValidInputs() {
     });
 
     return valid;
+}
+
+function drawAddFedAccountPopup() {
+
+    $.ajax({
+               url: "/portal/gadgets/connected_accounts/index.jag",
+               type: "GET",
+               data: "&cookie=" + cookie + "&action=idPList",
+               success: function (data) {
+                   debugger;
+                   var resp = $.parseJSON(data);
+                   if (resp.success == true) {
+                       if (resp.data != null && resp.data.length > 0) {
+                           $('#light').show();
+                           $('#fade').show();
+
+
+                           var top =
+                                   "    <div class=\"container content-section-wrapper\">\n" +
+                                   "        <div class=\"row\">\n" +
+                                   "            <div class=\"col-lg-12 content-section\">\n" +
+                                   "                <div class=\"headerDiv\">\n" +
+                                   "                   <span class=\"socialHeaderText\">Associate Federated User ID<span>\n" +
+                                   "                </div>" +
+                                   "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
+
+                           var middle =
+                                    "                  <div><div class=\"control-group\">\n" +
+                                    "                        <div class=\"controls\">\n" +
+                                    "                            <label class=\"control-label inputlabel pdR25\" for=\"domain\">Identity Provider Id" +
+                                    "                                <span class=\"required\">*</span>" +
+                                    "                            </label>\n" +
+                                    "                            <select class=\"col-lg-3 inputContent\" name=\"idPId\">\n" ;
+
+                           for (var i in resp.data) {
+                               middle = middle +"                                <option value=\""+resp.data[i]+"\">"+resp.data[i]+"</option>\n" ;
+                           }
+
+                           middle = middle +
+                                    "                            </select>\n" +
+                                    "                        </div>\n" +
+                                    "                    </div>\n" +
+                                    "                    <div class=\"control-group\">\n" +
+                                    "                        <div class=\"controls\">\n" +
+                                    "                            <label class=\"control-label inputlabel pdR25\" for=\"user_name\">User Name<span class=\"required\">*</span></label>\n" +
+                                    "                            <input class=\"col-lg-3 inputContent requiredField\" type=\"text\" value=\"\" id=\"user_name\" name=\"username\"  />\n" +
+                                    "                        </div></div>\n" ;
+
+                           var end =
+                                   "                    <div class=\"control-group mgnL135\">\n" +
+                                   "                        <div class=\"controls\">\n" +
+                                   "                            <input type=\"button\" onclick=\"fedConnect();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Associate\"/>\n" +
+                                   "                            <input type=\"button\" onclick=\"cancelConnect();\" class=\"btn\" value=\"Cancel\"/>\n" +
+                                   "                        </div>\n" +
+                                   "                    </div></div>\n" +
+                                   "                </form>\n" +
+                                   "            </div>\n" +
+                                   "        </div>\n" +
+                                   "    </div>   " ;
+
+                           var output = top + middle + end;
+                           $("#light").empty();
+                           $("#light").append(output);
+
+                       } else {
+                           message({content: 'No registered identity providers found !', type: 'info', cbk: function () {
+                           }});
+                       }
+                   } else {
+
+                       if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                           window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                       } else {
+                           message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
+                           }});
+                       }
+                   }
+               },
+               error: function (e) {
+                   debugger;
+                   message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
+                   }});
+               }
+           });
+}
+
+function fedConnect() {
+    if (hasValidInputs()) {
+        $('#light').hide();
+        $('#fade').hide();
+
+        $.ajax({
+                   url: "/portal/gadgets/connected_accounts/index.jag",
+                   type: "POST",
+                   data: $('#associateForm').serialize() + "&cookie=" + cookie + "&action=fedConnect",
+                   success: function (data) {
+                       debugger;
+                       var resp = $.parseJSON(data);
+                       if (resp.success == true) {
+                           reloadFedGrid();
+                       } else {
+                           debugger;
+                           if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                               window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                           } else {
+                               if (resp.message != null && resp.message.length > 0) {
+                                   message({content: resp.message, type: 'error', cbk: function () {
+                                   }});
+                               } else {
+                                   message({content: 'Error occurred while associating federated user accounts.', type: 'error', cbk: function () {
+                                   }});
+                               }
+                               reloadGrid();
+                           }
+                       }
+                   },
+                   error: function (e) {
+                       message({content: 'Error occurred while associating federated user accounts.', type: 'error', cbk: function () {
+                       }});
+                       reloadGrid();
+                   }
+               });
+    }
 }
 
 

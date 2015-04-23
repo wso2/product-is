@@ -6,7 +6,11 @@ var action = request.getParameter("action");
 
 session.put('auth-cookie', cookie);
 
-var userAccountConnectorClient = require('controllers/connected-accounts/userAccountConnectorClient.jag');
+var userAccountConnectorClient = require('controllers/service-clients/userAccountConnectorClient.jag');
+var identityProviderMgtClient = require('controllers/service-clients/identityProviderMgtClient.jag');
+var userProfileMgtClient = require('controllers/service-clients/userProfileMgtClient.jag');
+var identityProviderAdminClient = require('controllers/service-clients/identityProviderAdminClient.jag');
+
 
 if (action != null) {
     if (action == 'list') {
@@ -46,6 +50,44 @@ if (action != null) {
         } catch (e) {
             print(getErrorMessage(e.message));
         }
+    } else if (action == 'idPList') {
+
+        try {
+            var idPList = identityProviderMgtClient.getAllIdPs();
+            print('{"success":true, "data":' + stringify(getIdPNameList(idPList)) + '}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'fedConnect') {
+        var idPId = request.getParameter('idPId');
+        var username = request.getParameter('username');
+
+        try {
+            userProfileMgtClient.associateID(idPId, username);
+            print('{"success":true}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'associatedIdList') {
+
+        var username = request.getParameter('username');
+        try {
+            var primaryOpenId = identityProviderAdminClient.getPrimaryOpenID(username);
+            var fieldValues = userProfileMgtClient.getAssociatedIDs();
+            print('{"success":true, "data":{ "primaryOpenID": "' + primaryOpenId.return + '", "list":' + getAssociatedFedAccounts(fieldValues) + '}}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'fedDelete') {
+        var idPId = request.getParameter('idPId');
+        var username = request.getParameter('username');
+
+        try {
+            userProfileMgtClient.removeAssociateID(idPId, username);
+            print('{"success":true}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
     }
 }
 
@@ -61,6 +103,33 @@ function getErrorMessage(message) {
         }
     }
     return '{"success":false, "message":null}';
+}
+
+function getIdPNameList(idPList) {
+    if (idPList != null && idPList.length > 0) {
+        var idPNames = [];
+        for (var i in idPList) {
+            idPNames[i] = idPList[i].identityProviderName;
+        }
+        return idPNames;
+    }
+    return null;
+}
+
+function getAssociatedFedAccounts(accounts) {
+    if (accounts != null && accounts.length > 0) {
+        var accountsStr = "["
+        for (var i in accounts) {
+            accountsStr += "{\"idPName\":\"" + accounts[i].identityProviderName + "\"," +
+                           "\"username\":\"" + accounts[i].username + "\"}";
+            if ((parseInt(i) + 1) < accounts.length) {
+                accountsStr += ",";
+            }
+        }
+        accountsStr += ']';
+        return accountsStr;
+    }
+    return null;
 }
 
 %>
