@@ -65,7 +65,7 @@ var switchLoggedUser = "<con:switchLoggedUser xmlns:con=\"http://connector.accou
                        "</con:switchLoggedUser>";
 
 
-var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
+var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>";
 
 
 application.put("urn:getUserProfile", getUserProfile);
