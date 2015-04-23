@@ -86,7 +86,6 @@
             var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
 
             $(function WindowLoad(event) {
-            debugger;
                 url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
                 ws = new WebSocket(url);
 

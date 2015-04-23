@@ -86,7 +86,6 @@ function connect() {
                        if (resp.success == true) {
                            reloadGrid();
                        } else {
-                           debugger;
                            if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
                                window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
                            } else {
@@ -134,7 +133,6 @@ function drawAddFedAccountPopup() {
                type: "GET",
                data: "&cookie=" + cookie + "&action=idPList",
                success: function (data) {
-                   debugger;
                    var resp = $.parseJSON(data);
                    if (resp.success == true) {
                        if (resp.data != null && resp.data.length > 0) {
@@ -204,7 +202,6 @@ function drawAddFedAccountPopup() {
                    }
                },
                error: function (e) {
-                   debugger;
                    message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
                    }});
                }
@@ -221,12 +218,10 @@ function fedConnect() {
                    type: "POST",
                    data: $('#associateForm').serialize() + "&cookie=" + cookie + "&action=fedConnect",
                    success: function (data) {
-                       debugger;
                        var resp = $.parseJSON(data);
                        if (resp.success == true) {
                            reloadFedGrid();
                        } else {
-                           debugger;
                            if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
                                window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
                            } else {

@@ -148,7 +148,6 @@ function reloadFedGrid() {
                type: "GET",
                data: "&cookie=" + cookie + "&username=" + userName + "&action=associatedIdList",
                success: function (data) {
-                   debugger;
                    var resp = $.parseJSON(data);
                    if (resp.success == true) {
                        fedJson = resp.data;
