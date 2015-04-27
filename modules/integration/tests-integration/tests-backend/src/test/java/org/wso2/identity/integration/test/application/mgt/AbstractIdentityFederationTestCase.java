@@ -85,7 +85,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     public void stopCarbonServer(int portOffset) throws Exception {
-        manager.startServers();
+        manager.stopAllServers();
     }
 
     public HttpClient getHttpClient() {
