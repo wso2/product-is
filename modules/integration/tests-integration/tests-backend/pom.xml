@@ -461,12 +461,17 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
+<<<<<<< HEAD
             <artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>org.wso2.carbon.identity</groupId>-->
             <!--<artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>-->
         <!--</dependency>-->
+=======
+            <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
+        </dependency>
+>>>>>>> 1aa9e39... updating user association test cases
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.engine</artifactId>

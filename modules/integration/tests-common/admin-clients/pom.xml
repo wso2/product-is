@@ -71,7 +71,7 @@
 <<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
-            <artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
+            <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
         </dependency>
 <<<<<<< HEAD
     </dependencies>
@@ -115,7 +115,10 @@
     </dependencies>
 
 </project>
+<<<<<<< HEAD
 >>>>>>> 15c18f2... adding Integration tests modules and migrated tests
 =======
 </project>
 >>>>>>> c4dabc8... Fixing product-is POMs to pick dependency versions from root POM
+=======
+>>>>>>> 1aa9e39... updating user association test cases
