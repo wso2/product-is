@@ -51,12 +51,11 @@ public class SCIMServiceProviderGroupTestCase {
     public static final String EXTERNAL_ID = "eng";
     private static final String USERNAME = "SCIMUser2";
     String scimUserId = null;
-    private String scimUserId2 = null;
     String scimGroupId = null;
     String scim_url;
     private SCIMClient scimClient;
 
-    private org.wso2.carbon.automation.engine.context.beans.User userInfo;
+    private User userInfo;
     String serviceEndPoint = null;
     String backendUrl = null;
     String sessionCookie = null;
@@ -207,50 +206,7 @@ public class SCIMServiceProviderGroupTestCase {
         Assert.assertTrue(responseUpdated.contains("testeng2"));
     }
 
-    @Test(alwaysRun = true, description = "Add new SCIM user member to group testeng2 without removing existing users",
-          dependsOnMethods = { "updateGroup" })
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
-    public void patchGroup() throws Exception {
-
-        SCIMResponseHandler responseHandler = new SCIMResponseHandler();
-        responseHandler.setSCIMClient(scimClient);
-        //set the handler in wink client config
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.handlers(new ClientHandler[]{responseHandler});
-        //create a wink rest client with the above config
-        RestClient restClient = new RestClient(clientConfig);
-        BasicAuthInfo encodedBasicAuthInfo = getBasicAuthInfo(userInfo);
-        //create resource endpoint to access a known user resource.
-        Resource groupResource = restClient.resource(scim_url + "Groups/" + scimGroupId);
-        String response = groupResource.header(SCIMConstants.AUTHORIZATION_HEADER,
-                                               encodedBasicAuthInfo.getAuthorizationHeader())
-                                       .contentType(SCIMConstants.APPLICATION_JSON)
-                                       .accept(SCIMConstants.APPLICATION_JSON).get(String.class);
-
-        log.info("Retrieved group: " + response);
-
-        //decode retrieved group
-        Group decodedGroup =
-                (Group) scimClient.decodeSCIMResponse(response.replace("PRIMARY/", ""), SCIMConstants.JSON, 2);
-
-        decodedGroup.setUserMember(scimUserId2, "dharshana2");
-        String updatedGroupString = scimClient.encodeSCIMObject(decodedGroup, SCIMConstants.JSON);
-
-        Resource updateGroupResource = restClient.resource(scim_url + "Groups/" + scimGroupId);
-        String responseUpdated = updateGroupResource.header(SCIMConstants.AUTHORIZATION_HEADER,
-                                                            encodedBasicAuthInfo.getAuthorizationHeader()).
-                                                            contentType(SCIMConstants.APPLICATION_JSON)
-                                                    .header("X-HTTP-Method-Override", "PATCH")
-                                                    .accept(SCIMConstants.APPLICATION_JSON)
-                                                    .post(String.class, updatedGroupString);
-
-        log.info("Updated group: " + responseUpdated);
-
-        Assert.assertTrue(userMgtClient.userNameExists("testeng2", "dharshana")
-                          && userMgtClient.userNameExists("testeng2", "dharshana2"));
-    }
-
-    @Test(alwaysRun = true, description = "Add SCIM user", dependsOnMethods = { "patchGroup" })
+    @Test(alwaysRun = true, description = "Add SCIM user", dependsOnMethods = { "updateGroup" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void deleteGroup() throws Exception {
         SCIMResponseHandler responseHandler = new SCIMResponseHandler();
@@ -294,23 +250,6 @@ public class SCIMServiceProviderGroupTestCase {
                 post(String.class, encodedUser);
         log.info(response);
         scimUserId = response.split(",")[0].split(":")[1].replace('"', ' ').trim();
-
-        org.wso2.charon.core.objects.User user = scimClient.createUser();
-
-        String[] emails = {"dkasunw2@gmail.com", "dharshanaw2@wso2.com"};
-        user.setUserName("dharshana2");
-        user.setExternalId("test2");
-        user.setEmails(emails);
-        user.setDisplayName("dharshana2");
-        user.setPassword("testPW2");
-        user.setPreferredLanguage("Sinhala");
-        user.setPhoneNumber("0772202595", null, false);
-        encodedUser = scimClient.encodeSCIMObject(user, SCIMConstants.JSON);
-        response = userResource.
-                                       header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
-                                       contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
-                                       post(String.class, encodedUser);
-        scimUserId2 = response.split(",")[0].split(":")[1].replace('"', ' ').trim();
     }
 
 
