@@ -24,12 +24,13 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.user.account.connector.stub.UserAccountConnectorServiceStub;
+import org.wso2.carbon.identity.user.account.association.stub.UserAccountAssociationServiceStub;
+import org.wso2.carbon.identity.user.account.association.stub.types.UserAccountAssociationDTO;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 
 public class UserAccountConnectorServiceClient {
 
-    private UserAccountConnectorServiceStub serviceStub;
+    private UserAccountAssociationServiceStub serviceStub;
     private UserAdminStub userAdminStub;
 
     private Log log = LogFactory.getLog(UserAccountConnectorServiceClient.class);
@@ -37,8 +38,8 @@ public class UserAccountConnectorServiceClient {
     public UserAccountConnectorServiceClient(String cookie, String backendServerURL, ConfigurationContext configCtx)
             throws AxisFault {
 
-        String serviceURL = backendServerURL + "UserAccountConnectorService";
-        serviceStub = new UserAccountConnectorServiceStub(configCtx, serviceURL);
+        String serviceURL = backendServerURL + "UserAccountAssociationService";
+        serviceStub = new UserAccountAssociationServiceStub(configCtx, serviceURL);
         ServiceClient client = serviceStub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
@@ -53,8 +54,8 @@ public class UserAccountConnectorServiceClient {
      * @param password
      * @throws Exception
      */
-    public void connectUserAccount(String userName, String password) throws Exception {
-        serviceStub.connectUserAccount(userName, password);
+    public void createUserAccountAssociation(String userName, String[] password) throws Exception {
+        serviceStub.createUserAccountAssociation(userName, password);
     }
 
     /**
@@ -63,8 +64,8 @@ public class UserAccountConnectorServiceClient {
      * @param userName
      * @throws Exception
      */
-    public void deleteUserAccountConnection(String userName) throws Exception {
-        serviceStub.deleteUserAccountConnection(userName);
+    public void deleteUserAccountAssociation(String userName) throws Exception {
+        serviceStub.deleteUserAccountAssociation(userName);
     }
 
     /**
@@ -73,8 +74,8 @@ public class UserAccountConnectorServiceClient {
      * @return
      * @throws Exception
      */
-    public String[] getConnectedAccountsOfUser() throws Exception {
-        return serviceStub.getConnectedAccountsOfUser();
+    public UserAccountAssociationDTO[] getAccountAssociationsOfUser() throws Exception {
+        return serviceStub.getAccountAssociationsOfUser();
     }
 
     /**
