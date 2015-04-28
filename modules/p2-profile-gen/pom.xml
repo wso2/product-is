@@ -236,6 +236,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                                 <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
 >>>>>>> b1dd18c... Committing user account association feature
 =======
@@ -247,6 +248,9 @@
 =======
                                                                 <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>-->
 >>>>>>> 8f38c5c... change carbon-identity version to 4.3.3, remove account connector feature since it is not supported in 4.3.3
+=======
+                                                                <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>-->
+>>>>>>> d49df8f... Updating pom files of product-is
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -684,7 +688,7 @@
 =======
                                  </feature>
                                  <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.user.account.connector.feature.group</id>-->
+                                    <!--<id>org.wso2.carbon.identity.user.account.association.feature.group</id>-->
                                     <!--<version>${carbon.identity.version}</version>-->
                                  <!--</feature>-->
 							</features>
