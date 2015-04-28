@@ -44,6 +44,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
     <link rel="stylesheet" type="text/css" href="css/jquery.gridster.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/portal-dashboard-designer.css"/>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/dialog_bx.css"/>
     <script>
         var isServerURL = "<%=httpsCoreUrl%>";
         var isProxyContextPath = "<%=proxyContextPath%>";
@@ -57,6 +58,8 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
     <script src="<%=proxyContextPath%>/portal/themes/portal/js/shindig.js"></script>
     <script src="js/UESContainer.js"></script>
     <script src="js/portal-dashboard-designer.js"></script>
+    <script src="js/d_modal.js"></script>
+    <script src="js/d_main.js"></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -104,7 +107,8 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
                                 if (session.get("connected-accounts") != null) {
                                 var connectedAccounts = session.get("connected-accounts");
                                 if (connectedAccounts.length > 0) { %>
-                                        <div class="dropdown_separator"><span>Switch To</span></div>
+                                        <div class="dropdown_separator"><span class="switch_to_div">Switch To :
+                                        </span></div>
                                     <%
                                     for (var i in connectedAccounts) {
                                         %>
@@ -117,7 +121,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
                                     }
                                 }
                                 } else {
-                                    log.info("No connections");
+                                    log.debug("No connections");
                                 }
                                 %>
                         </ul>
@@ -431,7 +435,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="3"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/connected_accounts/gadget.xml" data-wid="45" data-prefs="{}"
-    data-title="Manage Connected Accounts">
+    data-title="Manage Associated User Accounts">
     <div class="grid_header">
         <h3></h3>
         <span class="grid_header_controls">
@@ -574,20 +578,14 @@ function switchAccount(user) {
                        if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
                            window.location = 'logout.jag';
                        } else {
-                           //if (resp.message != null && resp.message.length > 0) {
-                           //    message({content: resp.message, type: 'error', cbk: function () {
-                           //    }});
-                           //} else {
-                           //    message({content: 'Error occurred while switching user account.', type: 'error',
-                           //cbk: function () {
-                           //    }});
-                           //}
+                           message({content: 'Error occurred while switching user account.', type: 'error',
+                           cbk: function () {}});
                        }
                    }
                },
                error: function (e) {
-                   //message({content: 'Error occurred while switching user account.', type: 'error', cbk: function () {
-                   //}});
+                   message({content: 'Error occurred while switching user account.', type: 'error', cbk: function () {
+                   }});
                }
            });
 }
@@ -627,7 +625,7 @@ window.location=('index.jag');
 }
 </script>
 <input type="hidden" id="cookie" name="cookie" value="<%= session.get('auth-cookie') %>">
-
+ <div id="message"></div>
 </body>
 </html>
 

@@ -90,12 +90,14 @@ function connect() {
                                    message({content: 'Error occurred while connecting user accounts.', type: 'error', cbk: function () {
                                    }});
                                }
+                               reloadGrid();
                            }
                        }
                    },
                    error: function (e) {
                        message({content: 'Error occurred while connecting user accounts.', type: 'error', cbk: function () {
                        }});
+                       reloadGrid();
                    }
                });
     }

@@ -54,31 +54,39 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, description = "Testing create Service Provider")
     public void testCreateApplication() {
-        String applicationName = "TestServiceProvider";
-
+        String applicationName = "TestServiceProvider1";
         try {
-            Assert.assertEquals(applicationManagementServiceClient.getAllApplicationBasicInfo()
-                    .length, 1
-                    , "Failed to create a Service Provider");
+            createApplication(applicationName);
+            Assert.assertEquals(applicationManagementServiceClient.getApplication(applicationName).getApplicationName(),
+                                applicationName, "Failed to create a Service Provider");
         } catch (Exception e) {
             Assert.fail("Error while trying to create a Service Provider", e);
         }
 
     }
 
-    @Test(alwaysRun = true, description = "Testing delete Service Provider")
+    @Test(alwaysRun = true, description = "Testing delete Service Provider", dependsOnMethods = {
+            "testCreateApplication" })
     public void testDeleteApplication() {
         String applicationName = "TestServiceProvider1";
-        createApplication(applicationName);
         try {
-            Assert.assertEquals(applicationManagementServiceClient.getAllApplicationBasicInfo()
-                    .length, 2
-                    , "Failed to create a Service Provider");
             deleteApplication(applicationName);
-        } catch (Exception e) {
-            Assert.fail("Error while trying to create a Service Provider", e);
-        }
 
+            ApplicationBasicInfo[] applicationBasicInfos =
+                    applicationManagementServiceClient.getAllApplicationBasicInfo();
+
+            boolean applicationExists = false;
+
+            for (ApplicationBasicInfo applicationBasicInfo : applicationBasicInfos) {
+                if (applicationBasicInfo.getApplicationName().equals(applicationName)) {
+                    applicationExists = true;
+                }
+            }
+
+            Assert.assertFalse(applicationExists, applicationName + " has not been deleted.");
+        } catch (Exception e) {
+            Assert.fail("Error while trying to delete a Service Provider", e);
+        }
     }
 
     @Test(alwaysRun = true, description = "Testing retrieve all applications basic information")
@@ -87,12 +95,20 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
         try {
             ApplicationBasicInfo[] applicationBasicInfos
                     = applicationManagementServiceClient.getAllApplicationBasicInfo();
-            Assert.assertEquals(applicationBasicInfos[0].getApplicationName(),
-                    "TestServiceProvider"
-                    , "Reading application name failed");
-            Assert.assertEquals(applicationBasicInfos[0].getDescription(),
-                    "This is a test Service Provider"
-                    , "Reading description failed");
+
+            boolean applicationExists = false;
+
+            for (ApplicationBasicInfo applicationBasicInfo: applicationBasicInfos){
+                if (applicationBasicInfo.getApplicationName().equals(applicationName)){
+                    Assert.assertEquals(applicationBasicInfo.getDescription(), "This is a test Service Provider",
+                                        "Reading description failed");
+                    applicationExists = true;
+                }
+            }
+
+            if (!applicationExists){
+                Assert.fail("Could not find application " + applicationName);
+            }
         } catch (Exception e) {
             Assert.fail("Error while trying to all applications basic information", e);
         }

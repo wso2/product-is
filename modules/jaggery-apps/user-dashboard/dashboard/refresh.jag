@@ -17,6 +17,6 @@ if(userList != null && userList.length > 0){
 	session.remove(CONNECTED_ACCOUNTS);
 }
 
-log.info(userList);
+log.debug(userList);
 
 %>

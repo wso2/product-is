@@ -53,13 +53,13 @@ public class ISIntegrationTest {
 
     protected void init() throws Exception {
         init(TestUserMode.SUPER_TENANT_ADMIN);
-
     }
 
     protected void init(TestUserMode userMode) throws Exception {
         isServer = new AutomationContext("IDENTITY", userMode);
         backendURL = isServer.getContextUrls().getBackEndUrl();
-        sessionCookie = login();
+        loginLogoutClient = new LoginLogoutClient(isServer);
+        sessionCookie = loginLogoutClient.login();
         identityContextUrls = isServer.getContextUrls();
         tenantInfo = isServer.getContextTenant();
         userInfo = tenantInfo.getContextUser();

@@ -22,7 +22,9 @@
                 <version>2.12.4</version>
                 <configuration>
                     <!--argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine-->
-                    <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
+                    <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m
+                        -Dorg.apache.jasper.compiler.disablejsr199=true
+                    </argLine>
                     <suiteXmlFiles>
                         <!--<suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>-->
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
@@ -121,92 +123,105 @@
                         </configuration>
                     </execution>
 
-                    <!--<execution>-->
-                        <!--<id>copy-travelocity</id>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-dependencies</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>-->
-                            <!--<includeTypes>war</includeTypes>-->
-                            <!--<includeArtifactIds>org.wso2.sample.is.sso.agent</includeArtifactIds>-->
-                            <!--<stripVersion>true</stripVersion>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>copy-playground2</id>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-dependencies</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>-->
-                            <!--<includeTypes>war</includeTypes>-->
-                            <!--<includeArtifactIds>playground2</includeArtifactIds>-->
-                            <!--<stripVersion>true</stripVersion>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>copy-passivests</id>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-dependencies</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${basedir}/target/test-classes/samples-->
-                            <!--</outputDirectory>-->
-                            <!--<includeTypes>war</includeTypes>-->
-                            <!--<includeArtifactIds>PassiveSTSSampleApp</includeArtifactIds>-->
-                            <!--<stripVersion>true</stripVersion>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>unpack-travelocity-openid</id>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>unpack</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<artifactItems>-->
-                                <!--<artifactItem>-->
-                                    <!--<groupId>org.wso2.is</groupId>-->
-                                    <!--<artifactId>org.wso2.sample.is.sso.agent</artifactId>-->
-                                    <!--<version>1.3.0</version>-->
-                                    <!--<type>war</type>-->
-                                    <!--<overWrite>false</overWrite>-->
-                                    <!--<outputDirectory>-->
-                                        <!--${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent-openid-->
-                                    <!--</outputDirectory>-->
-                                <!--</artifactItem>-->
-                            <!--</artifactItems>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
+                    <execution>
+                        <id>copy-travelocity</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>org.wso2.sample.is.sso.agent</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-playground2</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>playground2</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-passivests</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples
+                            </outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>PassiveSTSSampleApp</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-travelocity-openid</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>org.wso2.sample.is.sso.agent</artifactId>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent-openid
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
                 <executions>
-                    <!--<execution>-->
-                        <!--<id>packaging-war-artifacts-openid</id>-->
-                        <!--<phase>process-test-resources</phase>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"-->
-                                     <!--target="openid-smartconsumerwithclaims"/>-->
-                                <!--<ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"-->
-                                     <!--target="openid-smartconsumerwithoutclaims"/>-->
-                                <!--<ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"-->
-                                     <!--target="openid-dumbconsumerwithclaims"/>-->
-                                <!--<ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"-->
-                                     <!--target="openid-dumbconsumerwithoutclaims"/>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
+                    <!--TODO: Remove this execution once tomcat dependency issue was resolved-->
+                    <execution>
+                        <id>packaging-travelocity-war-artifact</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent/travelocity-app-build.xml"
+                                     target="clear-slf4j-libs"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>packaging-war-artifacts-openid</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-smartconsumerwithclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-smartconsumerwithoutclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-dumbconsumerwithclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
+                                     target="openid-dumbconsumerwithoutclaims"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -321,6 +336,16 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>SecVerifier</artifactId>
             <type>aar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.wso2</groupId>
+                    <artifactId>jdbc-pool</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-catalina-ha</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.is</groupId>
@@ -339,29 +364,47 @@
             <artifactId>org.wso2.charon.core</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.wink</groupId>
             <artifactId>wink-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.security</groupId>
             <artifactId>wss4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>openejb-core</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jdk14</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
@@ -372,20 +415,12 @@
             <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.idp.mgt.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity</groupId>
-            <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
@@ -422,11 +457,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
-            <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+            <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
-            <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
+            <artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
@@ -436,5 +471,42 @@
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.engine</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.user.core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.wso2</groupId>
+                    <artifactId>jdbc-pool</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.sample.is.sso.agent</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>playground2</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>PassiveSTSSampleApp</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-   </project>
+</project>

@@ -140,6 +140,10 @@
             <includes>
                 <include>**/**</include>
             </includes>
+            <excludes>
+               <exclude>**/slf4j-api-1.6.1.jar</exclude>
+               <exclude>**/slf4j-jdk14-1.6.1.jar</exclude>
+           </excludes>
         </fileSet>
 	<fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
@@ -552,7 +556,6 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/email</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties

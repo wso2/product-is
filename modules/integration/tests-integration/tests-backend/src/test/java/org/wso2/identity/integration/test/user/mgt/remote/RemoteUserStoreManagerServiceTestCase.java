@@ -404,8 +404,8 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
 
         //TODO: user old credentials get authenticated even after updating the credentials for some time. Therefore comment out below assertion until get fixed
         //TODO: Uncomment after fixing above issue
-        /*Assert.assertFalse(remoteUserStoreManagerClient.authenticate(user2, user2Pwd),
-                           "Credential update failed : old password not unchanged");*/
+//        Assert.assertFalse(remoteUserStoreManagerClient.authenticate(user2, user2Pwd),
+//                           "Credential update failed : old password not unchanged");
         Assert.assertTrue(remoteUserStoreManagerClient.authenticate(user2, user2NewPwd), "Password update failed");
     }
 

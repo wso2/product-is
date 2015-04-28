@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-    <ModulePrefs title="Connected Accounts">
+    <ModulePrefs title="Associated User Accounts">
         <Require feature="pubsub-2"/>
     </ModulePrefs>
     <Content type="html" view="default">
@@ -30,7 +30,7 @@
             $(function () {
                 $('.max_view').click(function () {
                     gadgets.Hub.publish('org.wso2.is.dashboard', {
-                        msg:'A message from Manage connected accounts',
+                        msg:'A message from Manage associated user accounts',
                         id:"manage_accounts  .expand-widget"
                     });
                 });
@@ -38,7 +38,7 @@
         </script>
 
         <div class='icon-retweet icon-user-retweet icon-marketing-styles'></div>
-        Manage connected user accounts.
+        Manage associated user accounts.
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>

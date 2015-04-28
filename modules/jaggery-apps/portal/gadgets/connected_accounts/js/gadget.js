@@ -113,7 +113,7 @@ function reloadGrid() {
 function changeDropDownMenu(){
     if(json != null){
         if(isArray(json)){
-            var htmlContent =  '<div class="dropdown_separator"><span>Switch To</span></div>';
+            var htmlContent =  '<div class="dropdown_separator"><span class="switch_to_div">Switch To :</span></div>';
             for(var i in json){
                 htmlContent += '<li class="associated_accounts"><a href="javascript:void(0)" onclick="switchAccount(\'' +
                                (json[i].indexOf("@carbon.super") >= 0 ? json[i].split("@carbon.super")[0] : json[i]) +

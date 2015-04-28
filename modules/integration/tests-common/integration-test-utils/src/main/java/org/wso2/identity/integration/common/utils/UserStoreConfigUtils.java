@@ -20,19 +20,17 @@ package org.wso2.identity.integration.common.utils;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 
-
 /**
  * The Util class which carries common functionality required by the user store configuration scenarios
  */
-public class UserStoreConfigUtils extends ISIntegrationTest{
+public class UserStoreConfigUtils {
 
-        public boolean waitForUserStoreDeployment(String domain) throws Exception {
-        UserStoreConfigAdminServiceClient userStoreConfigurationClient =
-                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+    public boolean waitForUserStoreDeployment(UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient,
+                                              String domain) throws Exception {
 
         long waitTime = System.currentTimeMillis() + 30000; //wait for 45 seconds
         while (System.currentTimeMillis() < waitTime) {
-            UserStoreDTO[] userStoreDTOs = userStoreConfigurationClient.getActiveDomains();
+            UserStoreDTO[] userStoreDTOs = userStoreConfigAdminServiceClient.getActiveDomains();
             for (UserStoreDTO userStoreDTO : userStoreDTOs) {
                 if (userStoreDTO != null) {
                     if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
@@ -45,13 +43,13 @@ public class UserStoreConfigUtils extends ISIntegrationTest{
         return false;
     }
 
-    public boolean waitForUserStoreUnDeployment(String domain) throws Exception {
-        UserStoreConfigAdminServiceClient userStoreConfigurationClient =
-                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+    public boolean waitForUserStoreUnDeployment(UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient,
+                                                String domain) throws Exception {
 
         long waitTime = System.currentTimeMillis() + 20000; //wait for 15 seconds
         while (System.currentTimeMillis() < waitTime) {
-            UserStoreDTO[] userStoreDTOs = userStoreConfigurationClient.getActiveDomains();
+            UserStoreDTO[] userStoreDTOs = userStoreConfigAdminServiceClient.getActiveDomains();
+            userStoreConfigAdminServiceClient.getActiveDomains();
             for (UserStoreDTO userStoreDTO : userStoreDTOs) {
                 if (userStoreDTO != null) {
                     if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
