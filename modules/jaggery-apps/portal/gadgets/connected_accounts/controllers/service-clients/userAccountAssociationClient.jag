@@ -3,12 +3,12 @@
 var log = new Log();
 
 var util = require("../../util/utility.jag");
-var serverUrl = util.getServerUrl() + "/UserAccountConnectorService";
-var connectorStub = Packages.org.wso2.carbon.identity.user.account.connector.stub.UserAccountConnectorServiceStub;
+var serverUrl = util.getServerUrl() + "/UserAccountAssociationService";
+var connectorStub = Packages.org.wso2.carbon.identity.user.account.association.stub.UserAccountAssociationServiceStub;
 var HTTPConstants = Packages.org.apache.axis2.transport.http.HTTPConstants;
 
 
-function connectUserAccount(userName, password) {
+function createUserAccountAssociation(userName, password) {
     try {
         var serviceStub = new connectorStub(serverUrl);
         var serviceClient = serviceStub._getServiceClient();
@@ -16,13 +16,13 @@ function connectUserAccount(userName, password) {
         option.setManageSession(true);
         var cookie = session.get("auth-cookie");
         option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-        serviceStub.connectUserAccount(userName, password);
+        serviceStub.createUserAccountAssociation(userName, password.split(''));
     } catch (e) {
         throw e;
     }
 }
 
-function deleteUserAccountConnection(userName) {
+function deleteUserAccountAssociation(userName) {
     try {
         var serviceStub = new connectorStub(serverUrl);
         var serviceClient = serviceStub._getServiceClient();
@@ -30,13 +30,13 @@ function deleteUserAccountConnection(userName) {
         option.setManageSession(true);
         var cookie = session.get("auth-cookie");
         option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-        serviceStub.deleteUserAccountConnection(userName);
+        serviceStub.deleteUserAccountAssociation(userName);
     } catch (e) {
         throw e;
     }
 }
 
-function getConnectedAccountsOfUser() {
+function getAccountAssociationsOfUser() {
     try {
         var serviceStub = new connectorStub(serverUrl);
         var serviceClient = serviceStub._getServiceClient();
@@ -44,21 +44,7 @@ function getConnectedAccountsOfUser() {
         option.setManageSession(true);
         var cookie = session.get("auth-cookie");
         option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-        return serviceStub.getConnectedAccountsOfUser();
-    } catch (e) {
-        throw e;
-    }
-}
-
-function switchLoggedInUser(userName) {
-    try {
-        var serviceStub = new connectorStub(serverUrl);
-        var serviceClient = serviceStub._getServiceClient();
-        var option = serviceClient.getOptions();
-        option.setManageSession(true);
-        var cookie = session.get("auth-cookie");
-        option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-        return serviceStub.switchLoggedInUser(userName);
+        return serviceStub.getAccountAssociationsOfUser();
     } catch (e) {
         throw e;
     }

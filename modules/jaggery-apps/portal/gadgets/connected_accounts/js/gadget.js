@@ -8,7 +8,9 @@ function drawPage() {
                 "        <table class=\"table table-bordered\">\n" +
                 "            <thead>\n" +
                 "                <tr>\n" +
-                "                    <th class='txtAlnCen width80'>User Name</th>\n" +
+                "                    <th class='txtAlnCen width27p'>Domain</th>\n" +
+                "                    <th class='txtAlnCen width27p'>Tenant Domain</th>\n" +
+                "                    <th class='txtAlnCen width26p'>User Name</th>\n" +
                 "                    <th class='txtAlnCen'>Action</th>\n" +
                 "                </tr>\n" +
                 "            </thead>\n" +
@@ -19,9 +21,21 @@ function drawPage() {
             for (var i in json) {
                 middle = middle +
                          "                <tr>\n" +
-                         "                    <td>" + json[i] + "</td>\n" +
+                         "                    <td>" + json[i].domain + "</td>\n" +
+                         "                    <td>" + json[i].tenantDomain + "</td>\n" +
+                         "                    <td>" + json[i].username + "</td>\n";
+
+                var connectedAccount = json[i].username;
+                if ('PRIMARY' != json[i].domain) {
+                    connectedAccount = json[i].domain + "/" + connectedAccount;
+                }
+                if ('carbon.super' != json[i].tenantDomain) {
+                    connectedAccount = connectedAccount + '@' + json[i].tenantDomain;
+                }
+
+                middle = middle +
                          "                    <td class='txtAlnCen'>\n" +
-                         "                        <a title=\"\" onclick=\"deleteUserAccountConnection('" + json[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" + "Remove</a>\n" +
+                         "                        <a title=\"\" onclick=\"deleteUserAccountConnection('" + connectedAccount + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" + "Remove</a>\n" +
                          "                    </td>\n" +
                          "                </tr>\n";
             }
