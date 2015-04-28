@@ -245,7 +245,7 @@
     </context-param>
     <context-param>
         <param-name>trustStorePath</param-name>
-        <param-value>../keystores/wso2carbon.jks</param-value>
+        <param-value>/client-truststore.jks</param-value>
     </context-param>
     <context-param>
         <param-name>accessUsername</param-name>

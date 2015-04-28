@@ -226,6 +226,28 @@
 //		return response;
 //	}
 //
+//   /**
+//    * Send approval Always post request
+//    *
+//    * @param client
+//    *            - http client
+//    * @param sessionDataKeyConsent
+//    *            - session consent data
+//    * @return http response
+//    * @throws ClientProtocolException
+//    * @throws IOException
+//    */
+//   public HttpResponse sendApprovalAlwaysPost(HttpClient client, String sessionDataKeyConsent)
+//        throws ClientProtocolException, IOException {
+//
+//       List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+//       urlParameters.add(new BasicNameValuePair("consent", "approveAlways"));
+//       urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+//       HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+//       return response;
+//   }
+//
+//
 //	/**
 //	 * Send approval post request
 //	 *
