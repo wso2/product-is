@@ -465,6 +465,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 </li>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="3"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/connected_accounts/gadget.xml" data-wid="45" data-prefs="{}"
 <<<<<<< HEAD
@@ -487,6 +488,8 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 =======
 >>>>>>> 290523a... Merging social login gadget to account association
+=======
+>>>>>>> b2dd878... Merging user account association feature from master
 <li id ="sample4" class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="2"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/scim_providers/gadget.xml" data-wid="44" data-prefs="{}"
     data-title="SCIM Providers">

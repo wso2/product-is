@@ -218,6 +218,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>
+<<<<<<< HEAD
 >>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8
 								<!-- User Account Connector Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.connector.feature:${carbon.identity.version}</featureArtifactDef>
@@ -256,6 +257,10 @@
 =======
                                                                 <!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>-->
 >>>>>>> d49df8f... Updating pom files of product-is
+=======
+								<!-- User Account Association Feature -->
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
+>>>>>>> b2dd878... Merging user account association feature from master
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -666,7 +671,7 @@
 									<version>${axis2-transports.version}</version>
 								</feature>
 								<feature>
-									<id>org.wso2.carbon.identity.user.account.connector.feature.group</id>
+									<id>org.wso2.carbon.identity.user.account.association.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 >>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8

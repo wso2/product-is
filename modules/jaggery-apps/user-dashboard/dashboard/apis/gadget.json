@@ -69,6 +69,7 @@
         "authorized":"true",
 	"id" : "user_profile"
 <<<<<<< HEAD
+<<<<<<< HEAD
     },
     {
         "wid":"45",
@@ -89,5 +90,7 @@
         "id" : "manage_accounts"
 =======
 >>>>>>> 290523a... Merging social login gadget to account association
+=======
+>>>>>>> b2dd878... Merging user account association feature from master
     }
 ]}

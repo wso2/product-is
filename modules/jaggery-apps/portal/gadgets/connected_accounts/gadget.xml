@@ -46,6 +46,7 @@
         <div class='icon-retweet icon-user-retweet icon-marketing-styles'></div>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         Manage connected user accounts.
 =======
         Manage associated user accounts.
@@ -53,6 +54,9 @@
 =======
         <p>Manage Associated User Accounts & Federated IDs.</p>
 >>>>>>> a3e1076... Merging changes suggested in the code review
+=======
+        <p>Manage Associated User Accounts & Federated IDs.</p>
+>>>>>>> b2dd878... Merging user account association feature from master
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>
