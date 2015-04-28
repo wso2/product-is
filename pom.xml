@@ -1063,7 +1063,7 @@
         <google.collect.wso2.version>1.0.0.wso2v1</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
 		<carbon.kernel.version>4.4.0</carbon.kernel.version>
-        <carbon.commons.version>4.3.6-SNAPSHOT</carbon.commons.version>
+        <carbon.commons.version>4.4.0</carbon.commons.version>
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
