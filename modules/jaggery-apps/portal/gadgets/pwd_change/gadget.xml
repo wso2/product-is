@@ -36,7 +36,7 @@
         </script>
 
         <div class='icon-key icon-key-dashboard icon-marketing-styles'></div>
-        Change current account password.
+        <p>Change current account password.</p>
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>

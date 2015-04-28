@@ -38,7 +38,7 @@
     </script>
 
     <div class='icon-user icon-user-dashboard icon-marketing-styles'></div>
-    Update your profile or add multiple user profiles.
+    <p>Update your profile or add multiple user profiles.</p>
     <p><a class='btn btn-default max_view' href=''>View details</a></p>
     ]]>
 </Content>
