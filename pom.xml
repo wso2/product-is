@@ -3513,6 +3513,7 @@
 >>>>>>> 4bfbd46... use java8support branches as dependencies
 =======
 		<carbon.kernel.version>4.4.0</carbon.kernel.version>
+<<<<<<< HEAD
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
         <carbon.commons.version>4.3.6-SNAPSHOT</carbon.commons.version>
 =======
@@ -3527,6 +3528,9 @@
 =======
         <carbon.commons.version>4.3.3</carbon.commons.version>
 >>>>>>> 7bbaafd... correct commons version
+=======
+        <carbon.commons.version>4.4.0</carbon.commons.version>
+>>>>>>> 23884fe... fixed carbon commons version
 		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
