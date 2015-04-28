@@ -51,16 +51,16 @@ var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.ca
                      "<aut:remoteAddress>{2}</aut:remoteAddress>\n"+
                   "</aut:login>";
 
-var connectUserAccount = "<con:connectUserAccount xmlns:con=\"http://connector.account.user.identity.carbon.wso2.org\">\n" +
+var connectUserAccount = "<con:connectUserAccount xmlns:con=\"http://association.account.user.identity.carbon.wso2.org\">\n" +
                          "<con:userName>{0}</con:userName>\n"+
                          "<con:password>{1}</con:password>\n"+
                          "</con:connectUserAccount>";
 
-var deleteUserAccountConnection = "<con:deleteUserAccountConnection xmlns:con=\"http://connector.account.user.identity.carbon.wso2.org\">\n" +
+var deleteUserAccountConnection = "<con:deleteUserAccountConnection xmlns:con=\"http://association.account.user.identity.carbon.wso2.org\">\n" +
                                   "<con:userName>{0}</con:userName>\n" +
                                   "</con:deleteUserAccountConnection>";
 
-var switchLoggedUser = "<con:switchLoggedUser xmlns:con=\"http://connector.account.user.identity.carbon.wso2.org\">\n" +
+var switchLoggedUser = "<con:switchLoggedUser xmlns:con=\"http://association.account.user.identity.carbon.wso2.org\">\n" +
                        "<con:userName>{0}</con:userName>\n" +
                        "</con:switchLoggedUser>";
 

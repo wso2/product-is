@@ -11,14 +11,12 @@
         <![CDATA[
 
         <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
 
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="serverinfo.jag"></script>
@@ -47,10 +45,14 @@
 
         <div class='icon-retweet icon-user-retweet icon-marketing-styles'></div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         Manage connected user accounts.
 =======
         Manage associated user accounts.
 >>>>>>> b1dd18c... Committing user account association feature
+=======
+        <p>Manage Associated User Accounts & Federated IDs.</p>
+>>>>>>> a3e1076... Merging changes suggested in the code review
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>
