@@ -6,14 +6,18 @@ var action = request.getParameter("action");
 
 session.put('auth-cookie', cookie);
 
-var userAccountConnectorClient = require('controllers/connected-accounts/userAccountConnectorClient.jag');
+var userAccountAssociationClient = require('controllers/service-clients/userAccountAssociationClient.jag');
+var identityProviderMgtClient = require('controllers/service-clients/identityProviderMgtClient.jag');
+var userProfileMgtClient = require('controllers/service-clients/userProfileMgtClient.jag');
+var identityProviderAdminClient = require('controllers/service-clients/identityProviderAdminClient.jag');
+
 
 if (action != null) {
     if (action == 'list') {
 
         try {
-            var fieldValues = userAccountConnectorClient.getConnectedAccountsOfUser();
-            print('{"success":true, "data":' + stringify(fieldValues) + '}');
+            var fieldValues = userAccountAssociationClient.getAccountAssociationsOfUser();
+            print('{"success":true, "data":' + getAssociatedAccounts(fieldValues) + '}');
         } catch (e) {
             print(getErrorMessage(e.message));
         }
@@ -22,7 +26,7 @@ if (action != null) {
         var password = request.getParameter('password');
 
         try {
-            userAccountConnectorClient.connectUserAccount(userName, password);
+            userAccountAssociationClient.createUserAccountAssociation(userName, password);
             print('{"success":true}');
         } catch (e) {
             print(getErrorMessage(e.message));
@@ -31,18 +35,46 @@ if (action != null) {
 
         var userName = request.getParameter('userName');
         try {
-            userAccountConnectorClient.deleteUserAccountConnection(userName);
+            userAccountAssociationClient.deleteUserAccountAssociation(userName);
             print('{"success":true}');
         } catch (e) {
             print(getErrorMessage(e.message));
         }
-    } else if (action == 'switch') {
-
-        var userName = request.getParameter('userName');
+    } else if (action == 'idPList') {
 
         try {
-            var fieldValues = userAccountConnectorClient.switchLoggedInUser(userName);
-            print('{"success":true, "data":' + stringify(fieldValues) + '}');
+            var idPList = identityProviderMgtClient.getAllIdPs();
+            print('{"success":true, "data":' + stringify(getIdPNameList(idPList)) + '}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'fedConnect') {
+        var idPId = request.getParameter('idPId');
+        var username = request.getParameter('username');
+
+        try {
+            userProfileMgtClient.associateID(idPId, username);
+            print('{"success":true}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'associatedIdList') {
+
+        var username = request.getParameter('username');
+        try {
+            var primaryOpenId = identityProviderAdminClient.getPrimaryOpenID(username);
+            var fieldValues = userProfileMgtClient.getAssociatedIDs();
+            print('{"success":true, "data":{ "primaryOpenID": "' + primaryOpenId.return + '", "list":' + getAssociatedFedAccounts(fieldValues) + '}}');
+        } catch (e) {
+            print(getErrorMessage(e.message));
+        }
+    } else if (action == 'fedDelete') {
+        var idPId = request.getParameter('idPId');
+        var username = request.getParameter('username');
+
+        try {
+            userProfileMgtClient.removeAssociateID(idPId, username);
+            print('{"success":true}');
         } catch (e) {
             print(getErrorMessage(e.message));
         }
@@ -51,7 +83,7 @@ if (action != null) {
 
 function getErrorMessage(message) {
     if (message != null && message.length > 0) {
-        if (message == 'org.apache.axis2.AxisFault: Transport error: 401 Error: Unauthorized') {
+        if (message.indexOf('401 Error: Unauthorized') > -1) {
             return '{"success":false, "reLogin":true}';
         } else {
             var msg = message.split(':');
@@ -61,6 +93,50 @@ function getErrorMessage(message) {
         }
     }
     return '{"success":false, "message":null}';
+}
+
+function getIdPNameList(idPList) {
+    if (idPList != null && idPList.length > 0) {
+        var idPNames = [];
+        for (var i in idPList) {
+            idPNames[i] = idPList[i].identityProviderName;
+        }
+        return idPNames;
+    }
+    return null;
+}
+
+function getAssociatedFedAccounts(accounts) {
+    if (accounts != null && accounts.length > 0) {
+        var accountsStr = "["
+        for (var i in accounts) {
+            accountsStr += "{\"idPName\":\"" + accounts[i].identityProviderName + "\"," +
+                           "\"username\":\"" + accounts[i].username + "\"}";
+            if ((parseInt(i) + 1) < accounts.length) {
+                accountsStr += ",";
+            }
+        }
+        accountsStr += ']';
+        return accountsStr;
+    }
+    return null;
+}
+
+function getAssociatedAccounts(accounts) {
+    if (accounts != null && accounts.length > 0) {
+        var accountsStr = "["
+        for (var i in accounts) {
+            accountsStr += "{\"username\":\"" + accounts[i].username + "\"," +
+                           "\"domain\":\"" + accounts[i].domain + "\"," +
+                           "\"tenantDomain\":\"" + accounts[i].tenantDomain + "\"}";
+            if ((parseInt(i) + 1) < accounts.length) {
+                accountsStr += ",";
+            }
+        }
+        accountsStr += "]";
+        return accountsStr;
+    }
+    return null;
 }
 
 %>
