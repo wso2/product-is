@@ -282,5 +282,53 @@ text-align:right;
        }
 }
 
+.fedHeader{
+    font: 25px/1.531 'Lato', sans-serif;
+    color: #34495E;
+    padding-left: 12px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+.scrollEnabled {
+    float:left;
+    overflow-y: auto;
+}
+
+.connectedDiv {
+    height: 43%;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.gadgetBodyScrollbar {
+    overflow: auto;
+    max-height: 200px;
+}
+
+.socialHeaderText {
+    padding-left: 23%;
+    font-size: 180%;
+}
+
+.mgnL135 {
+    margin-left: 135px;
+}
+
+.pdR25 {
+    padding-right: 25px !important;
+}
+
+.width40p {
+    width: 40%;
+}
+
+.width27p {
+    width: 27%;
+}
+
+.width26p {
+    width: 26%;
+}
+
 /* Loading spinner end */
 

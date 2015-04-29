@@ -8,7 +8,9 @@ function drawPage() {
                 "        <table class=\"table table-bordered\">\n" +
                 "            <thead>\n" +
                 "                <tr>\n" +
-                "                    <th class='txtAlnCen width80'>User Name</th>\n" +
+                "                    <th class='txtAlnCen width27p'>Domain</th>\n" +
+                "                    <th class='txtAlnCen width27p'>Tenant Domain</th>\n" +
+                "                    <th class='txtAlnCen width26p'>User Name</th>\n" +
                 "                    <th class='txtAlnCen'>Action</th>\n" +
                 "                </tr>\n" +
                 "            </thead>\n" +
@@ -19,9 +21,21 @@ function drawPage() {
             for (var i in json) {
                 middle = middle +
                          "                <tr>\n" +
-                         "                    <td>" + json[i] + "</td>\n" +
+                         "                    <td>" + json[i].domain + "</td>\n" +
+                         "                    <td>" + json[i].tenantDomain + "</td>\n" +
+                         "                    <td>" + json[i].username + "</td>\n";
+
+                var connectedAccount = json[i].username;
+                if ('PRIMARY' != json[i].domain) {
+                    connectedAccount = json[i].domain + "/" + connectedAccount;
+                }
+                if ('carbon.super' != json[i].tenantDomain) {
+                    connectedAccount = connectedAccount + '@' + json[i].tenantDomain;
+                }
+
+                middle = middle +
                          "                    <td class='txtAlnCen'>\n" +
-                         "                        <a title=\"\" onclick=\"deleteUserAccountConnection('" + json[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" + "Remove</a>\n" +
+                         "                        <a title=\"\" onclick=\"deleteUserAccountConnection('" + connectedAccount + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> \n" + "Remove</a>\n" +
                          "                    </td>\n" +
                          "                </tr>\n";
             }
@@ -140,4 +154,119 @@ function changeDropDownMenu(){
                type: "POST",
                data: "&userList=" +JSON.stringify(json)
            });
+}
+
+function reloadFedGrid() {
+    $.ajax({
+               url: "/portal/gadgets/connected_accounts/index.jag",
+               type: "GET",
+               data: "&cookie=" + cookie + "&username=" + userName + "&action=associatedIdList",
+               success: function (data) {
+                   var resp = $.parseJSON(data);
+                   if (resp.success == true) {
+                       fedJson = resp.data;
+                       drawFedPage();
+                   } else {
+
+                       if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                           window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                       } else {
+                           if (resp.message != null && resp.message.length > 0) {
+                               message({content: resp.message, type: 'error', cbk: function () {
+                               }});
+                           } else {
+                               message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
+                               }});
+                           }
+                       }
+                   }
+               },
+               error: function (e) {
+                   message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
+                   }});
+               }
+           });
+}
+
+function drawFedPage() {
+
+    $("#fedGadgetBody").empty();
+
+    if (fedJson != null) {
+        var top =
+                "    <div class=\"col-lg-12 content-section\">\n" +
+                "        <table class=\"table table-bordered\">\n" +
+                "            <thead>\n" +
+                "                <tr>\n" +
+                "                    <th class='txtAlnCen width40p'>Identity Provider</th>\n" +
+                "                    <th class='txtAlnCen width40p'>Federated User ID</th>\n" +
+                "                    <th class='txtAlnCen'>Action</th>\n" +
+                "                </tr>\n" +
+                "            </thead>\n";
+
+        var middle =
+                "            <tbody>\n" +
+                "                <tr>\n" +
+                "                    <td> Primary OpenID </td>" +
+                "                    <td>" + fedJson.primaryOpenID + "</td>\n" +
+                "                    <td> </td>" +
+                "                </tr>\n";
+
+
+        if (isArray(fedJson.list)) {
+            for (var i in fedJson.list) {
+                middle = middle +
+                       "                <tr>\n" +
+                       "                    <td>" + fedJson.list[i].idPName + "</td>\n" +
+                       "                    <td>" + fedJson.list[i].username + "</td>\n" +
+                       "                    <td class='txtAlnCen'>\n" +
+                       "                        <a title=\"\" onclick=\"deleteFedUserAccountConnection('" + fedJson.list[i].idPName + "' ,'" + fedJson.list[i].username + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                       "                    </td>\n" +
+                       "                </tr>\n";
+            }
+        }
+
+        var end =  "            </tbody>\n" +
+               "        </table>\n" +
+               "    </div>";
+
+        var output = top + middle + end;
+
+        $("#fedGadgetBody").append(output);
+    }
+}
+
+function deleteFedUserAccountConnection(idPId, username) {
+
+    var msg = "You are about to remove Id '" + username + "' From IDP '" + idPId + "'. Do you want to proceed?";
+    message({content: msg, type: 'confirm', okCallback: function () {
+        $.ajax({
+                   url: "/portal/gadgets/connected_accounts/index.jag",
+                   type: "POST",
+                   data: "&cookie=" + cookie + "&username=" + username + "&idPId=" + idPId + "&action=fedDelete",
+                   success: function (data) {
+                       var resp = $.parseJSON(data);
+                       if (resp.success == true) {
+                           reloadFedGrid();
+                       } else {
+                           if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                               window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                           } else {
+                               if (resp.message != null && resp.message.length > 0) {
+                                   message({content: resp.message, type: 'error', cbk: function () {
+                                   }});
+                               } else {
+                                   message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                                   }});
+                               }
+                           }
+                       }
+                   },
+                   error: function (e) {
+                       message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                       }});
+                   }
+               });
+    }, cancelCallback: function () {
+    }});
 }

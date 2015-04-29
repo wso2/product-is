@@ -1,7 +1,7 @@
 <%
 
 var userInfoClient = require('/controllers/login-logout/loggedUserInfoAdminClient.jag');
-var userAccountConnectorClient = require('/controllers/account-connection/userAccountConnectorClient.jag');
+var userAccountConnectorClient = require('/controllers/account-connection/userAccountAssociationClient.jag');
 
 include("/util/constants.jag");
 var util = require("/util/utility.jag");
@@ -76,7 +76,7 @@ if (samlResponse != null) {
 
                         //Get connected Accounts
                         try {
-                            var connectedAccounts = userAccountConnectorClient.getConnectedAccountsOfUser();
+                            var connectedAccounts = userAccountConnectorClient.getAccountAssociationsOfUser();
                             if (connectedAccounts != null && connectedAccounts.length > 0) {
                                 session.put(CONNECTED_ACCOUNTS, connectedAccounts);
                             } else {
