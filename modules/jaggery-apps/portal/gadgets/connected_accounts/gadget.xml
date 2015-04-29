@@ -7,14 +7,12 @@
         <![CDATA[
 
         <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
 
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="serverinfo.jag"></script>
@@ -38,7 +36,7 @@
         </script>
 
         <div class='icon-retweet icon-user-retweet icon-marketing-styles'></div>
-        Manage associated user accounts.
+        <p>Manage Associated User Accounts & Federated IDs.</p>
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>
@@ -81,11 +79,11 @@
         <script type="text/javascript">
             var cookie = null;
             var json = null;
+            var fedJson = null;
             var userName = null;
             var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
 
             $(function WindowLoad(event) {
-            debugger;
                 url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
                 ws = new WebSocket(url);
 
@@ -98,6 +96,7 @@
                     cookie = obj.cookie;
                     userName = obj.user;
                     reloadGrid();
+                    reloadFedGrid();
                 };
                 ws.onclose = function () {
                     console.log("web Socket onclose. ");
@@ -106,10 +105,16 @@
 
         </script>
 
-
-        <form id="gadgetForm" class="form-horizontal">
+        <form id="gadgetForm" class="form-horizontal" >
+        	<div class="connectedDiv">
 	        <button id="connectBtn" class="btn btn-primary mgL14px" type="button" >Add Association</button>
-            <div id="gadgetBody"></div>
+            <div id="gadgetBody" class="gadgetBodyScrollbar"></div>
+            </div>
+            <div>
+            <div class="fedHeader"><span>Federated User IDs</span></div>
+	        <button id="connectFedBtn" class="btn btn-primary mgL14px" type="button" >Add Association</button>
+	        <div id="fedGadgetBody" class="gadgetBodyScrollbar"></div>
+	        </div>
 	        <div id="message"></div>
         </form>
         <div id="light" class="white_content associationWindow" style="width: 35%;height: 45%;">This is the lightbox content. <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a></div>

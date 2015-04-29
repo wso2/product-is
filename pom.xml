@@ -870,7 +870,7 @@
 			</dependency>
         		<dependency>
             			<groupId>org.wso2.carbon.identity</groupId>
-            			<artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>
+            			<artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
 				<version>${carbon.identity.version}</version>
         		</dependency>
 			<dependency>
