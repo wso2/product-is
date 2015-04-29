@@ -1064,7 +1064,7 @@
         <junit.version>3.8.1</junit.version>
 		<carbon.kernel.version>4.4.0</carbon.kernel.version>
         <carbon.commons.version>4.4.0</carbon.commons.version>
-		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
+		<carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
 		<orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
