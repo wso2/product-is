@@ -158,6 +158,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.samlsso.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.facebook.server.feature:${carbon.identity.version}</featureArtifactDef>
+<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.fido.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.openid.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.identity.version}</featureArtifactDef>
@@ -543,6 +544,7 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
 
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authentication.framework.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
@@ -583,6 +585,52 @@
                                     <id>org.wso2.carbon.identity.provisioning.connector.spml.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+=======
+								<feature>
+									<id>org.wso2.carbon.identity.application.authentication.framework.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.oidc.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.provisioning.connector.spml.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+>>>>>>> 13b35f4... Add fido authenticator support for dash board
 
 <<<<<<< HEAD
                                 <feature>
