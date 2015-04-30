@@ -83,10 +83,14 @@
 				<groupId>org.wso2.maven</groupId>
 				<artifactId>carbon-p2-plugin</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
 				<version>1.5.4</version>
 =======
 				<version>1.5.3</version>
 >>>>>>> 21d305f... version fixes to support kernel 4.4.0
+=======
+				<version>${carbon.p2.plugin.version}</version>
+>>>>>>> 54212e5... comment test until fix properly
 				<executions>
 					<execution>
 						<id>2-p2-repo-generation</id>

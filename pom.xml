@@ -1152,6 +1152,11 @@
                 <version>${axiom.impl.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.ws.commons.axiom</groupId>
+                <artifactId>axiom-api</artifactId>
+                <version>${axiom.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.opensaml</groupId>
                 <artifactId>opensaml</artifactId>
                 <version>${opensaml.version}</version>
@@ -3479,6 +3484,7 @@
         <neethi.wso2.version>2.0.4.wso2v3</neethi.wso2.version>
         <axiom.api.version>1.2.11</axiom.api.version>
         <axiom.impl.version>1.2.12</axiom.impl.version>
+        <axiom.version>1.2.11-wso2v6</axiom.version>
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
@@ -3599,7 +3605,7 @@
 >>>>>>> 318af30... fixed jaggery-extension version
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
-        <axiom.wso2.version>1.2.11.wso2v5</axiom.wso2.version>
+        <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
 		<carbon.automation.version>4.3.1</carbon.automation.version>
 		<carbon.automationutils.version>4.3.0</carbon.automationutils.version>
 <<<<<<< HEAD
