@@ -142,6 +142,8 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp"/>
+                                <property name="registryPolicyHandler"
+                                          value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator}       &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator}           &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator}       &lt;/filter&gt;${line.separator}   &lt;/handler&gt;${line.separator}${line.separator}   &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"/>
 
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -249,7 +251,20 @@
                                         value="&lt;/ServiceProvider&gt;"/>
 
 
-				<!-- Enable KDC for IS -->
+                                <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml"
+                                        token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"
+                                        value="${registryPolicyHandler}"/>
+
+                                <!-- set versionResourcesOnChange to true -->
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml"
+                                        token="&lt;versionResourcesOnChange&gt;false&lt;/versionResourcesOnChange&gt;"
+                                        value="&lt;versionResourcesOnChange&gt;true&lt;/versionResourcesOnChange&gt;"/>
+
+                                <!-- Enable KDC for IS -->
 
                                 <copy
                                         todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/"
