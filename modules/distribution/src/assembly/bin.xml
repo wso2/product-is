@@ -140,6 +140,10 @@
             <includes>
                 <include>**/**</include>
             </includes>
+            <excludes>
+               <exclude>**/slf4j-api-1.6.1.jar</exclude>
+               <exclude>**/slf4j-jdk14-1.6.1.jar</exclude>
+           </excludes>
         </fileSet>
 	<fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
@@ -179,7 +183,7 @@
             </includes>
         </fileSet>
 
-	<fileSet>
+        <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/ldif
             </directory>
@@ -497,16 +501,33 @@
             <fileMode>644</fileMode>
         </file-->
 
+        <!--<file>-->
+            <!--<source>conf/saml1-assertion-config.xml</source>-->
+            <!--<outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
+
         <file>
-            <source>conf/saml1-assertion-config.xml</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/saml1-assertion-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+
         <file>
-            <source>conf/registry.xml</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+
+        <!--<file>-->
+            <!--<source>conf/registry.xml</source>-->
+            <!--<outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
 
         <!--identity.xml is now copied from the feature installation.>
         <file>
@@ -528,22 +549,22 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
-<!--    
-     <file>
+
+        <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.platform.version}/repository/conf/identity.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
--->
-    <!--identity.xml is now copied from conf . -->
+
+     <!--identity.xml is now copied from conf .
         <file>
             <source>conf/identity.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-    <!--identity.xml is now copied from conf . -->
+     identity.xml is now copied from conf . -->
 
         <file>
             <source>
@@ -552,7 +573,6 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/email</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties
