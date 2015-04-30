@@ -163,7 +163,11 @@
     <test name="is-tests-all" preserve-order="true" parallel="false">
         <!--<packages>-->
             <!--Entitlement Test Cases-->
+<<<<<<< HEAD
             <!--<package name="org.wso2.identity.integration.test.entitlement"/>-->
+=======
+            <package name="org.wso2.identity.integration.test.entitlement"/>
+>>>>>>> 371423c... fixing test config files
             <!--Application Management Test Cases-->
             <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
         <!--</packages>-->
