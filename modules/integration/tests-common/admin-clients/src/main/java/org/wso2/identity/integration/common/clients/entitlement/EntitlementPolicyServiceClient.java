@@ -66,8 +66,8 @@ public class EntitlementPolicyServiceClient {
 
     public void addPolicies(File policyFile)
             throws IOException,
-                   ParserConfigurationException, TransformerException, SAXException,
-                   EntitlementPolicyAdminServiceEntitlementException {
+            ParserConfigurationException, TransformerException, SAXException,
+            EntitlementPolicyAdminServiceEntitlementException {
 
         DataHandler policydh =
                 new DataHandler(new FileDataSource(policyFile));
@@ -81,12 +81,16 @@ public class EntitlementPolicyServiceClient {
 
     public void removePolicy(String policyId)
             throws IOException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.removePolicy(policyId,false);
+        entitlementPolicyAdminServiceStub.removePolicy(policyId, false);
     }
 
-    public void removePolicy(String policyId,boolean dePromote)
+    public void removePolicy(String policyId, boolean dePromote)
             throws IOException, EntitlementPolicyAdminServiceEntitlementException {
-        entitlementPolicyAdminServiceStub.removePolicy(policyId,dePromote);
+        entitlementPolicyAdminServiceStub.removePolicy(policyId, dePromote);
+    }
+
+    public void updatePolicy(PolicyDTO policyDTO) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+        entitlementPolicyAdminServiceStub.updatePolicy(policyDTO);
     }
 
     public void removePolicies(String[] policies, boolean dePromote) throws RemoteException {
@@ -98,11 +102,11 @@ public class EntitlementPolicyServiceClient {
     }
 
     public String[] getAllPolicyIds(String searchString) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-    	return entitlementPolicyAdminServiceStub.getAllPolicyIds(searchString);
+        return entitlementPolicyAdminServiceStub.getAllPolicyIds(searchString);
     }
-    
+
     public void addPolicy(PolicyDTO policyDTO) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-    	entitlementPolicyAdminServiceStub.addPolicy(policyDTO);    	
+        entitlementPolicyAdminServiceStub.addPolicy(policyDTO);
     }
 
     public void addPolicies(PolicyDTO[] policies) throws RemoteException {
@@ -112,26 +116,26 @@ public class EntitlementPolicyServiceClient {
             log.error(e);
         }
     }
-    
+
     public PolicyDTO getPolicy(String policyId, boolean isPDPPolicy) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-    	return entitlementPolicyAdminServiceStub.getPolicy(policyId, isPDPPolicy);
+        return entitlementPolicyAdminServiceStub.getPolicy(policyId, isPDPPolicy);
     }
-    
+
     public String[] getPolicyVersions(String policyId) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-    	return entitlementPolicyAdminServiceStub.getPolicyVersions(policyId);
+        return entitlementPolicyAdminServiceStub.getPolicyVersions(policyId);
     }
-    
+
     public PaginatedPolicySetDTO getAllPolicies(String policyTypeFilter, String policySearchString,
-			int pageNumber, boolean isPDPPolicy) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-    	return entitlementPolicyAdminServiceStub.getAllPolicies(policyTypeFilter, policySearchString, pageNumber, isPDPPolicy);
+                                                int pageNumber, boolean isPDPPolicy) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+        return entitlementPolicyAdminServiceStub.getAllPolicies(policyTypeFilter, policySearchString, pageNumber, isPDPPolicy);
     }
-    
-    public PolicyDTO getPolicyByVersion(String policyId, String version) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException{
-    	return entitlementPolicyAdminServiceStub.getPolicyByVersion(policyId, version);
+
+    public PolicyDTO getPolicyByVersion(String policyId, String version) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+        return entitlementPolicyAdminServiceStub.getPolicyByVersion(policyId, version);
     }
-    
-    public void importPolicyFromRegistry(String policyRegistryPath) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException{
-    	entitlementPolicyAdminServiceStub.importPolicyFromRegistry(policyRegistryPath);
+
+    public void importPolicyFromRegistry(String policyRegistryPath) throws RemoteException, EntitlementPolicyAdminServiceEntitlementException {
+        entitlementPolicyAdminServiceStub.importPolicyFromRegistry(policyRegistryPath);
     }
 
     public PaginatedStatusHolder getStatusData(String about, String key, String type,
@@ -208,7 +212,7 @@ public class EntitlementPolicyServiceClient {
 
     public void publishToPDP(String[] policies, String action, boolean enabled, String version, int order) throws RemoteException {
         try {
-            entitlementPolicyAdminServiceStub.publishToPDP(policies, action, version,enabled, order);
+            entitlementPolicyAdminServiceStub.publishToPDP(policies, action, version, enabled, order);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
         }
@@ -216,7 +220,7 @@ public class EntitlementPolicyServiceClient {
 
     public void publishPolicies(String[] policies, String[] subscriberIds, String action, boolean enabled, String version, int order) throws RemoteException {
         try {
-            entitlementPolicyAdminServiceStub.publishPolicies(policies,subscriberIds, action, version,enabled, order);
+            entitlementPolicyAdminServiceStub.publishPolicies(policies, subscriberIds, action, version, enabled, order);
         } catch (EntitlementPolicyAdminServiceEntitlementException e) {
             log.error(e);
         }
@@ -229,6 +233,7 @@ public class EntitlementPolicyServiceClient {
             log.error(e);
         }
     }
+
     private String convertXMLFileToString(File fileName)
             throws IOException, ParserConfigurationException, SAXException, TransformerException {
 

@@ -24,14 +24,17 @@ import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
 import org.apache.wink.client.handlers.ClientHandler;
+import org.wso2.charon.core.objects.User;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.exceptions.CharonException;
 import org.wso2.charon.core.objects.Group;
-import org.wso2.charon.core.objects.User;
 import org.wso2.charon.core.schema.SCIMConstants;
+import org.wso2.identity.integration.test.utils.BasicAuthHandler;
+import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 
-public class MasterSCIMInitiator {
+public class MasterSCIMInitiator extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(MasterSCIMInitiator.class);
     protected static final String userName = "dharshana";
     private static final String externalID = "test";
@@ -42,14 +45,18 @@ public class MasterSCIMInitiator {
     private static final String phone_number = "0772202595";
     SCIMClient scimClient;
 
-//    protected BasicAuthInfo getBasicAuthInfo(UserInfo provider_userInfo) {
-//        BasicAuthInfo basicAuthInfo = new BasicAuthInfo();
-//        basicAuthInfo.setUserName(provider_userInfo.getUserName());
-//        basicAuthInfo.setPassword(provider_userInfo.getPassword());
-//
-//        BasicAuthHandler basicAuthHandler = new BasicAuthHandler();
-//        return (BasicAuthInfo) basicAuthHandler.getAuthenticationToken(basicAuthInfo);
-//    }
+    public void initTest() throws Exception {
+        super.init();
+    }
+
+    protected BasicAuthInfo getBasicAuthInfo(org.wso2.carbon.automation.engine.context.beans.User provider_userInfo) {
+        BasicAuthInfo basicAuthInfo = new BasicAuthInfo();
+        basicAuthInfo.setUserName(provider_userInfo.getUserName());
+        basicAuthInfo.setPassword(provider_userInfo.getPassword());
+
+        BasicAuthHandler basicAuthHandler = new BasicAuthHandler();
+        return (BasicAuthInfo) basicAuthHandler.getAuthenticationToken(basicAuthInfo);
+    }
 
     protected Resource getResource(SCIMClient scimClient, String skim_url) {
         SCIMResponseHandler responseHandler = new SCIMResponseHandler();

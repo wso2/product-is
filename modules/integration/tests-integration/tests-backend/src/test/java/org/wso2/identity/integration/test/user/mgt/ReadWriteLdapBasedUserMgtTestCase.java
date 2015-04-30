@@ -54,6 +54,7 @@ public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTes
 		userMgtClient.addUser("user1", "passWord1@", null, "default");
 		userMgtClient.addUser("user2", "passWord1@", null, "default");
         userMgtClient.addUser("user3", "passWord1@", new String[]{"admin"}, "default");
+		userMgtClient.addUser("user4", "passWord1@", new String[]{"admin"}, "default");
         
 		userMgtClient.addRole("umRole1", null, new String[] { "/permission/admin/login" }, false);
 		userMgtClient.addRole("umRole3", new String[]{"user1"}, new String[]{"login"}, false);
@@ -71,6 +72,9 @@ public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTes
 		}
 		if (nameExists(userMgtClient.listAllUsers("user3", 100), "user3")) {
 			userMgtClient.deleteUser("user3");
+		}
+		if (nameExists(userMgtClient.listAllUsers("user4", 100), "user4")) {
+			userMgtClient.deleteUser("user4");
 		}
 		if (nameExists(userMgtClient.listRoles("umRole1", 100), "umRole1")) {
 			userMgtClient.deleteRole("umRole1");

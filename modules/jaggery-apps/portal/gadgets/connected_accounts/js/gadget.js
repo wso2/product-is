@@ -129,9 +129,15 @@ function changeDropDownMenu(){
         if(isArray(json)){
             var htmlContent =  '<div class="dropdown_separator"><span class="switch_to_div">Switch To :</span></div>';
             for(var i in json){
+                var connectedAccount = json[i].username;
+                if ('PRIMARY' != json[i].domain) {
+                    connectedAccount = json[i].domain + "/" + connectedAccount;
+                }
+                if ('carbon.super' != json[i].tenantDomain) {
+                    connectedAccount = connectedAccount + '@' + json[i].tenantDomain;
+                }
                 htmlContent += '<li class="associated_accounts"><a href="javascript:void(0)" onclick="switchAccount(\'' +
-                               (json[i].indexOf("@carbon.super") >= 0 ? json[i].split("@carbon.super")[0] : json[i]) +
-                               '\');"><i class="icon-user pdR2p"></i>' + (json[i].indexOf("@carbon.super") >= 0 ? json[i].split("@carbon.super")[0] : json[i]) + '</a></li>';
+                               connectedAccount + '\');"><i class="icon-user pdR2p"></i>' + connectedAccount + '</a></li>';
 
             }
             if($('.dropdown-account', window.parent.document).find('.dropdown_separator') != null){
