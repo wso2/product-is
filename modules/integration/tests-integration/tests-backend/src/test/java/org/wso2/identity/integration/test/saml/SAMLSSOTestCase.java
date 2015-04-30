@@ -501,6 +501,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
         if (config.getClaimType() != ClaimType.NONE){
+            samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         }
 
