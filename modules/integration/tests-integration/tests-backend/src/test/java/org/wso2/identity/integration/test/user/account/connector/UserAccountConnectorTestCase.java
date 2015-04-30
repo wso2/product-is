@@ -32,7 +32,7 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
 
     private UserAccountConnectorServiceClient serviceClient;
     private final static String ADMIN_USER = "admin";
-    private final static String USER_1 = "testuser11@carbon.super";
+    private final static String USER_1 = "testuser11";
     private final static String USER_PASSWORD_1 = "testuser11";
     private final static String USER_2 = "testuser11@wso2.com";
     private final static String USER_PASSWORD_2 = "testuser11";
@@ -54,8 +54,8 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
     public void testConnectUserAccount() throws Exception {
 
         // Create associations
-        serviceClient.createUserAccountAssociation(USER_1, USER_PASSWORD_1.split(""));
-        serviceClient.createUserAccountAssociation(USER_2, USER_PASSWORD_2.split(""));
+        serviceClient.createUserAccountAssociation(USER_1, USER_PASSWORD_1.split("(?!^)"));
+        serviceClient.createUserAccountAssociation(USER_2, USER_PASSWORD_2.split("(?!^)"));
 
         // Retrieve associations
         UserAccountAssociationDTO[] associations = serviceClient.getAccountAssociationsOfUser();
