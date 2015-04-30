@@ -19,9 +19,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-    	<groupId>org.wso2.is</groupId>
-    	<artifactId>identity-server-parent</artifactId>
-    	<version>5.1.0-SNAPSHOT</version>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>identity-server-parent</artifactId>
+        <version>5.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -33,7 +33,7 @@
     <description>Identity Server: Distribution</description>
 
     <dependencies>
-       <dependency>
+        <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
         </dependency>
@@ -41,6 +41,7 @@
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -57,6 +58,13 @@
                 <groupId>org.apache.neethi</groupId>
                 <artifactId>neethi</artifactId>
             </exclusion>
+=======
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.neethi</groupId>
+                    <artifactId>neethi</artifactId>
+                </exclusion>
+>>>>>>> 7f965a4... refactor
                 <exclusion>
                     <groupId>org.apache.woden</groupId>
                     <artifactId>woden-api</artifactId>
@@ -65,7 +73,7 @@
                     <groupId>org.apache.woden</groupId>
                     <artifactId>woden-impl-dom</artifactId>
                 </exclusion>
-      		</exclusions> 
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.shindig</groupId>
@@ -189,7 +197,7 @@
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
 
-				<!-- Comment all active UserStoreManagers -->
+                                <!-- Comment all active UserStoreManagers -->
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
                                         token="&lt;UserStoreManager"
@@ -204,18 +212,18 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
                                         token="&lt;!--ISUserStoreManager"
                                         value="&lt;UserStoreManager"/>
-				
+
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
                                         token="&lt;/ISUserStoreManager--&gt;"
                                         value="&lt;/UserStoreManager&gt;"/>
 
-				<replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
                                         value="&lt;ServiceProvider&gt;"/>
 
-				 <replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;Issuer&gt;&lt;/Issuer&gt;"
                                         value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
@@ -225,27 +233,27 @@
                                         token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
                                         value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
 
-				<replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
                                         value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
 
-				<replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
                                         value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
 
-				<replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
                                         value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
 
-				<replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;Audience&gt;&lt;/Audience&gt;"
                                         value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
 
-				<replace
+                                <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
@@ -271,7 +279,7 @@
                                         overwrite="false">
                                     <fileset
                                             dir="${tempdir}/wso2is-${project.version}/repository/components/">
-                                    </fileset>            
+                                    </fileset>
                                 </copy>
                                 <copy
                                         todir="target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/client/modules"
@@ -287,15 +295,15 @@
                                 <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
                                     log4j.logger.net.sf.ehcache=ERROR
                                 </concat>
-	               <copy
-		        todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity"
-		        overwrite="false">
-		    <fileset
-		            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/">
-		    </fileset>
-		</copy>
+                                <copy
+                                        todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity"
+                                        overwrite="false">
+                                    <fileset
+                                            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/">
+                                    </fileset>
+                                </copy>
 
-                             <path id="h2.classpath">
+                                <path id="h2.classpath">
                                     <path refid="maven.compile.classpath"/>
                                 </path>
                                 <echo
@@ -342,7 +350,7 @@
                                         <exclude name="**/WEB-INF/**"/>
                                         <include name="**/*.html"/>
                                         <exclude name="**/editarea/**"/>
-                                        <exclude name="**/codepress/**"/>                                        
+                                        <exclude name="**/codepress/**"/>
                                     </fileset>
                                     <mapper type="glob" from="*.html" to="*.xml"/>
                                 </move>
@@ -372,7 +380,7 @@
                                         <exclude name="**/user-mgt-actdir.xml"/>
                                         <exclude name="**/user-mgt-jdbc.xml"/>
                                         <exclude name="**/user-mgt-ldap.xml"/>
-					<exclude name="**/user-mgt-ldap-read-write.xml"/>
+                                        <exclude name="**/user-mgt-ldap-read-write.xml"/>
                                     </fileset>
                                     <filterset>
                                         <filter token="buildNumber" value="${buildNumber}"/>
@@ -413,22 +421,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
-		<configuration>
-			<reportPlugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-		<version>2.4</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-			</reportPlugins>
-		</configuration>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>index</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
