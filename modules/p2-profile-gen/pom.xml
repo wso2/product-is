@@ -163,6 +163,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.openid.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.googleext.server.feature:${carbon.identity.version}</featureArtifactDef>
 
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.version}</featureArtifactDef>
@@ -617,6 +618,10 @@
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.authenticator.oidc.googleext.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
