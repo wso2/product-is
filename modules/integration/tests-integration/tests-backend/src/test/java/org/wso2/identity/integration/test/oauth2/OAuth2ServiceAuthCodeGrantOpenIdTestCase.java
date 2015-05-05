@@ -18,18 +18,27 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
+import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
+import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
@@ -45,7 +54,11 @@ import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private ServerConfigurationManager serverConfigurationManager;
+    private Oauth2TokenValidationClient oAuth2TokenValidationClient;
 	private AuthenticatorClient logManger;
+
+    private File identityXML;
 	private String adminUsername;
 	private String adminPassword;
 	private String accessToken;
@@ -61,13 +74,17 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init(TestUserMode.SUPER_TENANT_USER);
+        changeISConfiguration();
+        super.init(TestUserMode.SUPER_TENANT_USER);
+
 		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();
-		logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+        String sessionIndex = logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
 				isServer.getSuperTenant().getTenantAdmin().getPassword(),
 				isServer.getInstance().getHosts().get("default"));
+        oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
 		client = new DefaultHttpClient();
 		setSystemproperties();
 	}
@@ -81,6 +98,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 		logManger = null;
 		consumerKey = null;
 		accessToken = null;
+        resetISConfiguration();
 	}
 
 	@Test(alwaysRun = true, description = "Deploy playground application")
@@ -239,5 +257,56 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 		Assert.assertEquals(valid, "true", "Token Validation failed");
 		EntityUtils.consume(response.getEntity());
 	}
+
+    @Test(groups = "wso2.is", description = "Validate Token Expiration Time",
+          dependsOnMethods = "testValidateAccessToken")
+    public void testValidateTokenExpirationTime() throws Exception {
+        OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
+        OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
+                OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
+        accessTokenDTO.setIdentifier(accessToken);
+        accessTokenDTO.setTokenType("bearer");
+        requestDTO.setAccessToken(accessTokenDTO);
+
+        OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
+        Assert.assertNotNull(responseDTO != null && responseDTO.getAuthorizationContextToken() != null,
+                             "received authorization context token is null");
+
+        if(responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
+            String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
+            Assert.assertNotNull(tokenString, "received token string is null");
+
+            String[] tokenElements = tokenString.split("\\.");
+            Assert.assertTrue(tokenElements.length > 1, "Invalid JWT token received");
+
+            JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
+            Assert.assertNotNull(jwtJsonObject.get("exp"), "'exp' value is not included");
+
+            long expValue = Long.valueOf(jwtJsonObject.get("exp").toString());
+            // ratio between these vales is normally 999, used 975 just to be in the safe side
+            Assert.assertTrue(System.currentTimeMillis() / expValue > 975, "'exp time is not in milliseconds'");
+        }
+    }
+
+    private void changeISConfiguration() throws Exception {
+
+        log.info("Replacing identity.xml changing the entity id of SSOService");
+
+        String carbonHome = CarbonUtils.getCarbonHome();
+        identityXML = new File(carbonHome + File.separator
+                               + "repository" + File.separator + "conf" + File.separator + "identity.xml");
+        File configuredIdentityXML = new File(getISResourceLocation()
+                                              + File.separator + "oauth" + File.separator
+                                              + "jwt-token-gen-enabled-identity.xml");
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.restartGracefully();
+    }
+
+    private void resetISConfiguration() throws Exception {
+
+        log.info("Replacing identity.xml with default configurations");
+        serverConfigurationManager.restoreToLastConfiguration();
+    }
 
 }

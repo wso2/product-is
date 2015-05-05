@@ -3405,6 +3405,11 @@
                 <scope>compile</scope>
 >>>>>>> 18e6f91... Adding missed commits from is-5.1.0 svn branch
             </dependency>
+            <dependency>
+                <groupId>commons-codec.wso2</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -3633,6 +3638,7 @@
         <axis2-transports.version>1.1.0-wso2v13</axis2-transports.version>
 >>>>>>> 21d305f... version fixes to support kernel 4.4.0
         <nimbusds.version>2.26.1</nimbusds.version>
+        <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <project.scm.id>my-scm-server</project.scm.id>
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
     </properties>
