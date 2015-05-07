@@ -266,12 +266,6 @@
                                         token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"
                                         value="${registryPolicyHandler}"/>
 
-                                <!-- set versionResourcesOnChange to true -->
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml"
-                                        token="&lt;versionResourcesOnChange&gt;false&lt;/versionResourcesOnChange&gt;"
-                                        value="&lt;versionResourcesOnChange&gt;true&lt;/versionResourcesOnChange&gt;"/>
-
                                 <!-- Enable KDC for IS -->
 
                                 <copy
