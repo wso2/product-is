@@ -26,7 +26,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>identity-profile-gen</artifactId>
-	<version>${carbon.p2.plugin.version}</version>
 	<packaging>pom</packaging>
 	<name>WSO2 IS - IS Profile Generation</name>
 	<url>http://wso2.org</url>
