@@ -954,19 +954,9 @@
 				<version>${cglib.wso2.version}</version>
 			</dependency>
             <dependency>
-                <groupId>org.apache.axis2.wso2</groupId>
-                <artifactId>axis2</artifactId>
-                <version>${axis2.jibx.wso2.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.gdata.wso2</groupId>
                 <artifactId>gdata-core</artifactId>
                 <version>${gdata.core.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.common.wso2</groupId>
-                <artifactId>google-collect</artifactId>
-                <version>1.0.0.wso2v2</version>
             </dependency>
 			<dependency>
 				<groupId>org.apache.axis2.wso2</groupId>
@@ -1165,7 +1155,11 @@
                 <groupId>org.opensaml</groupId>
                 <artifactId>opensaml</artifactId>
                 <version>${opensaml.version}</version>
+<<<<<<< HEAD
             </dependency>
+=======
+            </dependency>            
+>>>>>>> 4a59e73... remove duplicate dependencies
             <dependency>
                 <groupId>xalan</groupId>
                 <artifactId>xalan</artifactId>
@@ -3192,17 +3186,10 @@
                 <version>${carbon.kernel.version}</version>
                 <type>aar</type>
             </dependency>
-
-
             <dependency>
                 <groupId>emma</groupId>
                 <artifactId>emma</artifactId>
                 <version>${emma.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wink</groupId>
-                <artifactId>wink-client</artifactId>
-                <version>1.1.3-incubating</version>
             </dependency>
             <dependency>
                 <groupId>com.h2database.wso2</groupId>
@@ -3221,7 +3208,6 @@
                 <version>${shindig.version}</version>
                 <type>war</type>
             </dependency>
-
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
@@ -3280,22 +3266,11 @@
 				<groupId>org.wso2.carbon.identity</groupId>
 				<artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
 				<version>${carbon.identity.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.identity</groupId>
-				<artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
-				<version>${carbon.identity.version}</version>
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.wso2.carbon.identity</groupId>
 				<artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-				<version>${carbon.identity.version}</version>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.identity</groupId>
-				<artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
 				<version>${carbon.identity.version}</version>
 				<scope>compile</scope>
 			</dependency>
@@ -3365,12 +3340,6 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.openejb</groupId>
-				<artifactId>openejb-core</artifactId>
-				<version>${apache.openejb.version}</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.openejb</groupId>
@@ -3526,8 +3495,12 @@
         <httpclient.version>4.0.1</httpclient.version>
         <xml.apis.version>1.4.01</xml.apis.version>
         <jstl.version>1.1.2</jstl.version>
+<<<<<<< HEAD
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v1</google.collect.wso2.version>
+=======
+        <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
+>>>>>>> 4a59e73... remove duplicate dependencies
         <junit.version>3.8.1</junit.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3638,6 +3611,7 @@
 		<javax.servlet.version>2.5</javax.servlet.version>
 		<slf4j.version>1.7.0</slf4j.version>
 		<apache.openejb.version>4.5.2</apache.openejb.version>
+<<<<<<< HEAD
         <axis2.client.version>1.6.1.wso2v11</axis2.client.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3650,6 +3624,10 @@
         <axis2-transports.version>1.1.0-wso2v12</axis2-transports.version>
 >>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8
 =======
+=======
+        <axis2.client.version>1.6.1.wso2v12</axis2.client.version>
+        <axis2.wso2.version>1.6.1.wso2v12</axis2.wso2.version>
+>>>>>>> 4a59e73... remove duplicate dependencies
         <axis2-transports.version>1.1.0-wso2v13</axis2-transports.version>
 >>>>>>> 21d305f... version fixes to support kernel 4.4.0
         <nimbusds.version>2.26.1</nimbusds.version>
