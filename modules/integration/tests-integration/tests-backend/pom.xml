@@ -328,6 +328,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>commons-codec.wso2</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>emma</groupId>
             <artifactId>emma</artifactId>
             <version>${emma.version}</version>

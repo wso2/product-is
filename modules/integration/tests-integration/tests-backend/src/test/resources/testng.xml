@@ -27,12 +27,12 @@
             <!--Entitlement Test Cases-->
             <package name="org.wso2.identity.integration.test.entitlement"/>
             <!--Application Management Test Cases-->
-            <package name="org.wso2.identity.integration.test.application.mgt"/>
+            <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
         </packages>
         <classes>
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
-            <class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
             <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
             <!--Identity Management Test Cases-->
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
@@ -59,7 +59,7 @@
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--User Profile Management Test Cases-->
-            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <!--SCIM Test Cases-->
             <class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />
