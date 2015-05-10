@@ -58,7 +58,8 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
     private static final String OPEN_ID_PROFILE_URL = "https://localhost:9443/authenticationendpoint/openid_profile.do";
     private static final String APPROVAL_URL = "https://localhost:9443/openidserver";
-    private static final String OPEN_ID_URL = "http://localhost:8080/%s/openid?OpenId.ClaimedId=https://localhost:9443/openid/";
+    private static final String OPEN_ID_URL = "http://localhost:8090/%s/openid?OpenId" +
+                                              ".ClaimedId=https://localhost:9443/openid/";
     //Claim Uris
     private static final String firstNameClaimURI = "http://axschema.org/namePerson/first";
     private static final String emailClaimURI = "http://axschema.org/contact/email";
@@ -274,7 +275,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private Tomcat getTomcat() {
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8080);
+        tomcat.setPort(8090);
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();

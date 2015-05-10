@@ -73,12 +73,12 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private static final String NICKNAME = "testUserNick";
 
     private static final String SAML_SSO_URL = "https://localhost:9443/samlsso";
-    private static final String ACS_URL = "http://localhost:8080/travelocity.com/home.jsp";
+    private static final String ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8080/travelocity.com/samlsso?SAML2.HTTPBinding=%s";
+            "http://localhost:8090/travelocity.com/samlsso?SAML2.HTTPBinding=%s";
     private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8080/travelocity.com/logout?SAML2.HTTPBinding=%s";
+            "http://localhost:8090/travelocity.com/logout?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
@@ -325,7 +325,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private Tomcat getTomcat() {
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8080);
+        tomcat.setPort(8090);
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();
