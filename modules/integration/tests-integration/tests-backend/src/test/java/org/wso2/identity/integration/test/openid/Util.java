@@ -101,7 +101,7 @@ public class Util {
 
         OpenIDParameterDTO realm = new OpenIDParameterDTO();
         realm.setName("openid.realm");
-        realm.setValue("http://localhost:8080/openid-client");
+        realm.setValue("http://localhost:8090/openid-client");
         openidParams[11] = realm;
 
         OpenIDParameterDTO country = new OpenIDParameterDTO();
@@ -111,7 +111,7 @@ public class Util {
 
         OpenIDParameterDTO returnto = new OpenIDParameterDTO();
         returnto.setName("openid.return_to");
-        returnto.setValue("http://localhost:8080/openid-client/");
+        returnto.setValue("http://localhost:8090/openid-client/");
         openidParams[13] = returnto;
 
         return openidParams;
