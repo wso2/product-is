@@ -116,5 +116,9 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
+        </dependency>
     </dependencies>
 </project>
