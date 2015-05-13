@@ -115,13 +115,19 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         LOCAL, CUSTOM, NONE
     }
 
+    private enum SubjectClaimUri {
+        EMAIL, NONE
+    }
+
     private static class SAMLConfig{
         private HttpBinding httpBinding;
         private ClaimType claimType;
+        private SubjectClaimUri subjectClaimUri;
 
-        private SAMLConfig(HttpBinding httpBinding, ClaimType claimType) {
+        private SAMLConfig(HttpBinding httpBinding, ClaimType claimType, SubjectClaimUri subjectClaimUri) {
             this.httpBinding = httpBinding;
             this.claimType = claimType;
+            this.subjectClaimUri = subjectClaimUri;
         }
 
         public ClaimType getClaimType() {
@@ -132,12 +138,16 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             return httpBinding;
         }
 
+        public SubjectClaimUri getSubjectClaimUri() {
+            return subjectClaimUri;
+        }
+
         @Override
         public String toString() {
             return "SAMLConfig[" +
                     "httpBinding=" + httpBinding +
                     ", claimType=" + claimType +
-                    ']';
+                    "subjectClaimUri=" + subjectClaimUri + "]";
         }
     }
 
@@ -239,8 +249,13 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             response = sendSAMLMessage(ACS_URL, "SAMLResponse", samlResponse);
             resultPage = extractDataFromResponse(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + USERNAME),
-                    "SAML SSO Login failed for " + config);
+            if(SubjectClaimUri.EMAIL.equals(config.getSubjectClaimUri())) {
+                Assert.assertTrue(resultPage.contains("You are logged in as " + EMAIL),
+                                  "SAML SSO Login failed for " + config);
+            } else {
+                Assert.assertTrue(resultPage.contains("You are logged in as " + USERNAME),
+                                  "SAML SSO Login failed for " + config);
+            }
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
@@ -291,10 +306,11 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider(){
         return  new SAMLConfig[][]{
-                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE)},
-                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL)},
-                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE)},
-                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL)},
+                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE, SubjectClaimUri.NONE)},
+                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, SubjectClaimUri.NONE)},
+                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE, SubjectClaimUri.NONE)},
+                {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL, SubjectClaimUri.NONE)},
+                {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE, SubjectClaimUri.EMAIL)}
         };
     }
 
@@ -446,6 +462,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         serviceProvider = applicationManagementServiceClient.getApplication(APPLICATION_NAME);
 
         serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
+        if(SubjectClaimUri.EMAIL.equals(config.getSubjectClaimUri())) {
+            serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri(emailClaimURI);
+        }
 
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
@@ -495,6 +514,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setIssuer(ISSUER_NAME);
         samlssoServiceProviderDTO.setAssertionConsumerUrl(ACS_URL);
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
+        samlssoServiceProviderDTO.setUseFullyQualifiedUsername(true);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(true);
         samlssoServiceProviderDTO.setDoSignResponse(true);
