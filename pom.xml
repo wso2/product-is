@@ -3477,8 +3477,12 @@
 >>>>>>> 21d305f... version fixes to support kernel 4.4.0
 =======
     <properties>
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
+=======
+        <carbon.identity.version>4.4.2-SNAPSHOT</carbon.identity.version>
+>>>>>>> c2572ac... change carbon-identity version to 4.4.2-SNAPSHOT
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
