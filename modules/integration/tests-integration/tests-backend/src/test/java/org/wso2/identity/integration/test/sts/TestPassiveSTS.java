@@ -39,7 +39,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
     private static final String PASSIVE_STS_SAMPLE_APP_URL =
-            "http://localhost:8080/PassiveSTSSampleApp";
+            "http://localhost:8090/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URL =
             "https://localhost:9443/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
@@ -78,13 +78,14 @@ public class TestPassiveSTS extends ISIntegrationTest {
         if(tomcat != null){
             tomcat.stop();
             tomcat.destroy();
+            Thread.sleep(10000);
         }
     }
 
     @Test(alwaysRun = true, description = "Deploy PassiveSTSSampleApp")
     public void testDeployPassiveSTSSampleApp() {
         try {
-            Tomcat tomcat = getTomcat();
+            tomcat = getTomcat();
             URL resourceUrl = getClass().getResource(File.separator + "samples"
                     + File.separator + "PassiveSTSSampleApp.war");
             startTomcat(tomcat, PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
@@ -212,9 +213,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     private Tomcat getTomcat() {
-        tomcat = new Tomcat();
+        Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8080);
+        tomcat.setPort(8090);
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();

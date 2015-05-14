@@ -44,11 +44,11 @@ public final class OAuth2Constant {
     public final static String OAUTH2_SCOPE_DEFAULT = "";
     public final static String OAUTH_APPLICATION_NAME = "oauthTestApplication";
     
-    public final static String CALLBACK_URL = "http://localhost:8080/playground2/oauth2client";
-    public final static String AUTHORIZED_USER_URL = "http://localhost:8080/playground2/oauth2-authorize-user.jsp";
-    public final static String AUTHORIZED_URL = "http://localhost:8080/playground2/oauth2.jsp";
-    public final static String GET_ACCESS_TOKEN_URL = "http://localhost:8080/playground2/oauth2-get-access-token.jsp";
-    public final static String ACCESS_RESOURCES_URL = "http://localhost:8080/playground2/oauth2-access-resource.jsp";
+    public final static String CALLBACK_URL = "http://localhost:8090/playground2/oauth2client";
+    public final static String AUTHORIZED_USER_URL = "http://localhost:8090/playground2/oauth2-authorize-user.jsp";
+    public final static String AUTHORIZED_URL = "http://localhost:8090/playground2/oauth2.jsp";
+    public final static String GET_ACCESS_TOKEN_URL = "http://localhost:8090/playground2/oauth2-get-access-token.jsp";
+    public final static String ACCESS_RESOURCES_URL = "http://localhost:8090/playground2/oauth2-access-resource.jsp";
     public final static String PLAYGROUND_APP_CONTEXT_ROOT = "/playground2";
 
     private OAuth2Constant() {

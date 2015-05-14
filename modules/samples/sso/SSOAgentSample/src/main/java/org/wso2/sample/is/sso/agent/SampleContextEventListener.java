@@ -35,9 +35,11 @@ public class SampleContextEventListener implements ServletContextListener {
 
     private static Logger LOGGER = Logger.getLogger("org.wso2.sample.is.sso.agent");
 
+    private static Properties properties;
+
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
-        Properties properties = new Properties();
+        properties = new Properties();
         try {
             if(servletContextEvent.getServletContext().getContextPath().contains("travelocity.com")) {
                 properties.load(servletContextEvent.getServletContext().
@@ -69,5 +71,13 @@ public class SampleContextEventListener implements ServletContextListener {
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
+    }
+
+    /**
+     * Get the properties of the sample
+     * @return Properties
+     */
+    public static Properties getProperties(){
+        return properties;
     }
 }

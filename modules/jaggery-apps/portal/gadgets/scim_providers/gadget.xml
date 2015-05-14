@@ -36,7 +36,7 @@
 	</script>
 
 	    <div class='icon-th icon-th-dashboard icon-marketing-styles'></div>
-        Use WSO2 Identity Server to provision users and roles across heterogeneous identity management systems in a standard way
+        <p>Use WSO2 Identity Server to provision users and roles across heterogeneous identity management systems in a standard way</p>
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>

@@ -65,6 +65,14 @@
         <hr />
         <a href="../avis.com"> Avis.COM </a>
         <div class="product-box">
+            <form method="post" action="samlsso?SAML2.HTTPBinding=HTTP-POST">
+                <h2>Login with <img src="images/saml2-logo.png" height="22" width="60"/> (Post Binding) from
+                <img src="images/identity_logo.gif" height="20" width="120"/> with user credentials</h2>
+                Username : <input type="text" name="username"/>
+                Password : <input type="password" name="password">
+                <input type="submit" value="Login"/>
+            </form>
+            <hr/>
             <h2>Click <a href="samlsso?SAML2.HTTPBinding=HTTP-Redirect">here</a> to login with <img src="images/saml2-logo.png" height="22" width="60"/>
                 (Redirect binding) from <img src="images/identity_logo.gif" height="20" width="120"/></h2>
             <hr/>

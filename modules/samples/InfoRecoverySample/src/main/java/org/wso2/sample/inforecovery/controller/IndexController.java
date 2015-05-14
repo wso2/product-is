@@ -48,7 +48,8 @@ public class IndexController extends HttpServlet {
         sAuthenticator.setAccessPassword(ctx.getInitParameter(ClientConstants.ACCESS_PASSWORD));
 
         String trustStorePath = ctx.getInitParameter(ClientConstants.TRUSTSTORE_PATH);
-        System.setProperty(ClientConstants.TRUSTSTORE_PROPERTY, trustStorePath);
+        System.setProperty(ClientConstants.TRUSTSTORE_PROPERTY,
+                Thread.currentThread().getContextClassLoader().getResource(trustStorePath).getPath());
 
     }
 

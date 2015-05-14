@@ -38,7 +38,7 @@
     <table style="width: 50%">
         <tbody>
         <tr class="spaceUnder">
-            <td>E-mail</td>
+            <td>Username</td>
             <td><input type="text" name="username" id="username" style="height: 25px"/></td>
         </tr>
         <tr class="spaceUnder">

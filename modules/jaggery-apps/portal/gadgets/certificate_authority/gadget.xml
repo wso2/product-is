@@ -6,7 +6,7 @@
     <Content type="html" view="default">
         <![CDATA[
         <div class='icon-file icon-lock-dashboard icon-marketing-styles'></div>
-       Manage your certificates and Certificate Signing Requests
+        <p>Manage your certificates and Certificate Signing Requests</p>
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
 
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/main.css">

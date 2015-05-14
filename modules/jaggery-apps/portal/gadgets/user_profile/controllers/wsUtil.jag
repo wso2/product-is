@@ -44,6 +44,26 @@ function callWSInOnly(webService, serverUrl, action, payload){
 
 }
 
+function callWSInOnlyWithParams(webService, serverUrl, action, params, req){
+    var payload = req;
+    if(req == null){
+        if(params != null){
+            payload = payloadFac.getPayload(action, params);
+        }else{
+            payload = payloadFac.getPayload(options.action);
+        }
+    }
+
+    try {
+        callWSInOnly(webService, serverUrl, action, payload);
+    }
+    catch (e) {
+        log.error(e);
+        throw e;
+    }
+
+}
+
 function callWSReturnXML(webService, serverUrl, action, params, req){
 
     var options = new Array();

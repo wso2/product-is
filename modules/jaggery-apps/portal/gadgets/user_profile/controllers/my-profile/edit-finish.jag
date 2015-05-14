@@ -3,6 +3,7 @@
 var log = new Log();
 //var userName = session.get("user");
 var profile = require('profileClient.jag');
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 var i18n = session.get("i18n");
 
@@ -14,6 +15,7 @@ session.put('auth-cookie', cookie);
 }
 
 var userName = request.getParameter("user");
+var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(userName);
 
       try{	
         var values = profile.getProfileFieldsForInternalStore();
@@ -31,7 +33,7 @@ var userName = request.getParameter("user");
 
 
 
-        req.*::['username'].setChildren(userName);
+        req.*::['username'].setChildren(tenantAwareUserName);
         var profileName = request.getParameter('profile');
         var profileConfiguration = request.getParameter('profileConfiguration');
 

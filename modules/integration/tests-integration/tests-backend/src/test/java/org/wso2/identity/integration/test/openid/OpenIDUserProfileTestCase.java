@@ -18,9 +18,7 @@
 package org.wso2.identity.integration.test.openid;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDClaimDTO;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDParameterDTO;
 import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDUserProfileDTO;
@@ -32,6 +30,7 @@ import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 public class OpenIDUserProfileTestCase extends ISIntegrationTest {
 
     String userName = "suresh";
+    String password = "Wso2@123";
     String[] roles = { "admin" };
     String profileName = "default";
 
@@ -47,29 +46,117 @@ public class OpenIDUserProfileTestCase extends ISIntegrationTest {
 
     ClaimValue[] claimValues = new ClaimValue[4];
 
-	private OpenIDProviderServiceClient openidServiceClient;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient = null;
-	
+    private OpenIDProviderServiceClient openidServiceClient;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        
+
         openidServiceClient = new OpenIDProviderServiceClient(backendURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        createUser();
     }
     
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-     	openidServiceClient = null;
-     	remoteUSMServiceClient = null;
+        super.init();
+        deleteUser();
+
+        openidServiceClient = null;
     }
 
-    /**
-     * Create a user with claims. Try to read user profile and claims
-     */
-    @Test(alwaysRun = true, description = "Create a user with claim. Try to read user profile and claims", priority = 1)
+    @Test(alwaysRun = true, description = "Test reading user profile and claims from the profile")
     public void testUserProfile() {
 
+        String openId = Util.getDefaultOpenIDIdentifier(userName);
+        OpenIDParameterDTO[] openidRequestParams = Util.getDummyOpenIDParameterDTOArray();
+
+        OpenIDUserProfileDTO[] userProfiles = null;
+        // reading back user profiles
+        try {
+            userProfiles = openidServiceClient.getUserProfiles(openId, openidRequestParams);
+        } catch (Exception e) {
+            Assert.fail("Error while reading user profiles", e);
+        }
+
+        Assert.assertEquals(userProfiles[0].getProfileName(), profileName);
+        Assert.assertNotNull(userProfiles[0].getClaimSet());
+
+        // we expect 4 claims : email, firstname, lastname and country
+        Assert.assertEquals(userProfiles[0].getClaimSet().length, 4);
+
+        for (OpenIDClaimDTO claimDTO: userProfiles[0].getClaimSet()){
+            if (emailClaimURI.equals(claimDTO.getClaimUri())) {
+                Assert.assertEquals(claimDTO.getClaimValue(), emailClaimValue);
+            } else if (firstNameClaimURI.equals(claimDTO.getClaimUri())) {
+                Assert.assertEquals(claimDTO.getClaimValue(), firstNameClaimValue);
+            } else if (lastNameClaimURI.equals(claimDTO.getClaimUri())) {
+                Assert.assertEquals(claimDTO.getClaimValue(), lastNameClaimValue);
+            } else if (countryClaimURI.equals(claimDTO.getClaimUri())) {
+                Assert.assertEquals(claimDTO.getClaimValue(), countryClaimValue);
+            } else {
+                Assert.fail("Invalid claim returned");
+            }
+        }
+
+        // To access claims for the OpenID user need to have an authenticated session.
+        // Login with created user
+        try {
+            openidServiceClient.authenticateWithOpenID(openId, password);
+        } catch (Exception e) {
+            Assert.fail("Error while authenticating", e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Test OpenID authentication")
+    public void testOpenIDAuthentication() {
+
+        String openId = Util.getDefaultOpenIDIdentifier(userName);
+
+        boolean isAuthenticated = false;
+
+        try {
+            isAuthenticated = openidServiceClient.authenticateWithOpenID(openId, password);
+        } catch (Exception e) {
+            Assert.fail("Error while authenticating", e);
+        }
+
+        Assert.assertTrue(isAuthenticated);
+    }
+
+    @Test(alwaysRun = true, description = "Test reading claims", dependsOnMethods = { "testOpenIDAuthentication" })
+    public void testClaims() {
+
+        String openId = Util.getDefaultOpenIDIdentifier(userName);
+        OpenIDParameterDTO[] openidRequestParams = Util.getDummyOpenIDParameterDTOArray();
+
+        OpenIDClaimDTO[] claims = null;
+        try {
+            // reading back user claims
+            claims = openidServiceClient.getClaimValues(openId, profileName, openidRequestParams);
+        } catch (Exception e) {
+            Assert.fail("Error while reading user claims", e);
+        }
+
+        // we expect 4 claims : email, firstname, lastname and country
+        Assert.assertEquals(claims.length, 4);
+
+        // now checking claim values
+        for (OpenIDClaimDTO dto : claims) {
+            if (emailClaimURI.equals(dto.getClaimUri())) {
+                Assert.assertEquals(dto.getClaimValue(), emailClaimValue);
+            } else if (firstNameClaimURI.equals(dto.getClaimUri())) {
+                Assert.assertEquals(dto.getClaimValue(), firstNameClaimValue);
+            } else if (lastNameClaimURI.equals(dto.getClaimUri())) {
+                Assert.assertEquals(dto.getClaimValue(), lastNameClaimValue);
+            } else if (countryClaimURI.equals(dto.getClaimUri())) {
+                Assert.assertEquals(dto.getClaimValue(), countryClaimValue);
+            } else {
+                Assert.fail("Invalid claim returned");
+            }
+        }
+    }
+
+    public void createUser() throws Exception {
         ClaimValue email = new ClaimValue();
         email.setClaimURI(emailClaimURI);
         email.setValue(emailClaimValue);
@@ -90,51 +177,15 @@ public class OpenIDUserProfileTestCase extends ISIntegrationTest {
         country.setValue(countryClaimValue);
         claimValues[3] = country;
 
-        try {
-            // creating the user
-            remoteUSMServiceClient.addUser(userName, "Wso2@123", roles, claimValues, profileName, true);
-        } catch (Exception e) {
-            Assert.fail("Error while creating the user", e);
-        }
+        // creating the user
+        RemoteUserStoreManagerServiceClient remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient
+                (backendURL, sessionCookie);
+        remoteUSMServiceClient.addUser(userName, password, roles, claimValues, profileName, true);
+    }
 
-        String openId = Util.getDefaultOpenIDIdentifier(userName);
-        OpenIDParameterDTO[] openidRequestParams = Util.getDummyOpenIDParameterDTOArray();
-
-        OpenIDUserProfileDTO[] userProfiles = null;
-        // reading back user profiles
-        try {
-            userProfiles = openidServiceClient.getUserProfiles(openId, openidRequestParams);
-        } catch (Exception e) {
-            Assert.fail("Error while reading user profiles", e);
-        }
-
-        Assert.assertEquals(userProfiles[0].getProfileName(), profileName);
-        
-        OpenIDClaimDTO[] claims = null;
-        try {
-            // reading back user claims 
-            claims = openidServiceClient.getClaimValues(openId, profileName, openidRequestParams);
-        } catch (Exception e) {
-            Assert.fail("Error while reading user claims", e);
-        }
-        
-        // we expect 4 claims : email, firstname, lastname and country
-        Assert.assertEquals(claims.length, 4);
-        
-        // now checking claim values
-        for (OpenIDClaimDTO dto : claims) {
-            if (emailClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), emailClaimValue);
-            } else if (firstNameClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), firstNameClaimValue);
-            } else if (lastNameClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), lastNameClaimValue);
-            } else if (countryClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), countryClaimValue);
-            } else {
-                Assert.fail("Invalid claim returned");
-            }
-        }
-
+    public void deleteUser() throws Exception {
+        RemoteUserStoreManagerServiceClient remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient
+                (backendURL, sessionCookie);
+        remoteUSMServiceClient.deleteUser(userName);
     }
 }

@@ -73,12 +73,12 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private static final String NICKNAME = "testUserNick";
 
     private static final String SAML_SSO_URL = "https://localhost:9443/samlsso";
-    private static final String ACS_URL = "http://localhost:8080/travelocity.com/home.jsp";
+    private static final String ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8080/travelocity.com/samlsso?SAML2.HTTPBinding=%s";
+            "http://localhost:8090/travelocity.com/samlsso?SAML2.HTTPBinding=%s";
     private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8080/travelocity.com/logout?SAML2.HTTPBinding=%s";
+            "http://localhost:8090/travelocity.com/logout?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
@@ -191,6 +191,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         //Stopping tomcat
         tomcatServer.stop();
         tomcatServer.destroy();
+        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
@@ -324,7 +325,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private Tomcat getTomcat() {
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8080);
+        tomcat.setPort(8090);
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();
@@ -500,6 +501,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
         if (config.getClaimType() != ClaimType.NONE){
+            samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         }
 

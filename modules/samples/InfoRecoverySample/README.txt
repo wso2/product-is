@@ -18,22 +18,53 @@ Configuration
 1. configure the web.xml with the following.
 
 Specify the "carbonServerUrl" with the URL of the Identity Server. eg. https://localhost:9443
+
 Specify the credentials to access Identity Server with admin privileges for "accessUsername" and "accessPassword".
+
 Specify the trustStore absolute resource path for "trustStorePath". eg. path to wso2carbon.jks of the Identity Server
 
+
 2. If you are deploying the sample in tomcat enable the SSL configuration in {tomcat_home}/conf/server.xml
+(please change <IS_HOME> from correct value)
 
     <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS"
-               keystoreFile="/home/chamath/apps/wso2is-4.5.0-7.18.2-SNAPSHOT/repository/resources/security/wso2carbon.jks" keystorePass="wso2carbon" />
+               keystoreFile="<IS_HOME>/repository/resources/security/wso2carbon.jks" keystorePass="wso2carbon" />
 
 3. Configure the email confirmation links.
 
-To configure for password reset call back in Identity Server (in repository/conf/email/email-admin-config.xml with email type as type="passwordReset") 
+To configure for password reset call back in Identity Server (in <IS_HOME>/repository/conf/email/email-admin-config.xml with email type as type="passwordReset")
 according to the sample as follows. This will be the confirmation handler path of the user's confirmation.
-<targetEpr>https://localhost:8443/InfoRecoverySample/infoRecover/verify</targetEpr>
-Please refer the Identity Server documentation for sample email template in http://docs.wso2.org/display/IS450/Recover+with+Notification
+
+Eg:
+
+-----------------------------------------------------------------------------------------------------------------------------------
+<configuration type="passwordReset">
+  <targetEpr>https://localhost:8443/InfoRecoverySample/infoRecover/verify</targetEpr>
+  <subject>WSO2 Carbon - Password Reset</subject>
+  <body>
+Hi {first-name}
+
+We received a request to change the password on the {user-name} account associated with this e-mail address. If you made this request, please click the link below to securely change your password:
+
+https://localhost:8443/InfoRecoverySample/infoRecover/verify?username={user-name}&amp;confirmation={confirmation-code}
+
+If clicking the link doesn't seem to work, you can copy and paste the link into your browser's address window.
+
+If you did not request to have your {user-name} password reset, simply disregard this email and no changes to your account will be made.
+  </body>
+  <footer>
+Best Regards,
+WSO2 Carbon Team
+http://www.wso2.com
+  </footer>
+  <redirectPath></redirectPath>
+</configuration>
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Please refer the Identity Server documentation for sample email template in https://docs.wso2.com/display/IS500/Recover+with+Notification
 
 To configure for account confirmation in Self sign up provide the configuration in email-admin-config.xml
 with email type as "accountConfirmation". Following is the call back handler for the sample.
