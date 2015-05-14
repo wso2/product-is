@@ -42,6 +42,7 @@ import java.io.File;
 
 public abstract class UserManagementServiceAbstractTest extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(UserManagementServiceAbstractTest.class);
+    protected static final String EVERYONE_ROLE = "Internal/everyone";
     protected UserManagementClient userMgtClient;
     protected AuthenticatorClient authenticatorClient;
     protected String newUserName;
@@ -243,7 +244,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @Test(groups = "wso2.is", description = "Check update roles of user", dependsOnMethods = "testUpdateRoleName")
     public void testUpdateRolesOfUser() throws Exception {
 
-        String[] roleList = new String[]{userRoleTmp};
+        String[] roleList = new String[]{userRoleTmp, newUserRole, EVERYONE_ROLE};
         Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 0), newUserName)
                 , "User Does not belongs to " + newUserRole);
 

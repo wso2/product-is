@@ -1,0 +1,22 @@
+<%
+
+include("/util/constants.jag");
+
+var log = new Log();
+
+var user = session.get('user');
+if (user == null) {
+    response.sendRedirect("login.jag");
+}
+
+var userList = parse(request.getParameter("userList"));
+
+if(userList != null && userList.length > 0){
+	session.put(CONNECTED_ACCOUNTS, userList);
+} else {
+	session.remove(CONNECTED_ACCOUNTS);
+}
+
+log.debug(userList);
+
+%>

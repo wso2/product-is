@@ -52,7 +52,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	private final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProver";
 	private final static String SERVICE_PROVIDER_DESC = "Playground Service Prover";
-	private final static int TOMCAT_PORT = 8080;
+	private final static int TOMCAT_PORT = 8090;
 
 	private ApplicationManagementServiceClient appMgtclient;
 	private OauthAdminClient adminClient;
