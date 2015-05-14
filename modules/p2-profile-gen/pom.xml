@@ -75,6 +75,7 @@
 			<plugin>
 				<groupId>org.wso2.maven</groupId>
 				<artifactId>carbon-p2-plugin</artifactId>
+				<version>${carbon.p2.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>2-p2-repo-generation</id>
@@ -139,7 +140,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.sso.saml.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- Authenticators -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature:${carbon.identity.version}</featureArtifactDef>
@@ -483,7 +484,7 @@
 								 </feature>
 						
 								 <feature>
-								     <id>org.wso2.carbon.identity.application.authentication.framework.server.feature.group</id>
+								     <id>org.wso2.carbon.identity.application.authentication.framework.feature.group</id>
 								     <version>${carbon.identity.version}</version>
 								 </feature>
 								 <feature>
