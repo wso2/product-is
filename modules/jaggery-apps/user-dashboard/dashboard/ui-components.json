@@ -16,7 +16,10 @@
         {"url" : "index.jag", "dashboard-styles" : "", "styles" : "icon-dashboard", "text" : "index_txt", "desc" : "", "displayorder" : "0", "name" : "dashboard", "login-required" : "true"},
         {"url" : "self_registration.jag", "dashboard-styles" : "", "styles" : "icon-signin", "text" : "Self_Signup_txt", "desc" : "Self_Signup_desc", "displayorder" : "1", "name" : "selfSignup", "login-required" : "false"},
         {"url" : "my_scim_providers.jag", "dashboard-styles" : "icon-th icon-th-dashboard icon-marketing-styles",
-        "styles" : "icon-th", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "4", "name" : "mySCIMProviders", "login-required" : "true"}
+        "styles" : "icon-th", "text" : "scim_txt", "desc" : "scim_desc", "permissions" : ["/permission/admin/configure/security/usermgt/provisioning"], "displayorder" : "4", "name" : "mySCIMProviders", "login-required" : "true"},
+        {"url" : "my_profiles.jag", "dashboard-styles" : "icon-group icon-group-dashboard icon-marketing-styles",
+            "styles" : "icon-group", "text" : "session-mgt-txt", "desc" : "session_mgt_desc", "displayorder" : "6", "name" : "sessionManagement", "login-required" : "true"}
+
     ],
     "controllers" : [
         {"urls" : ["scim-providers/edit_finish.jag", "scim-providers/delete_finish.jag"],
