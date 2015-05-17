@@ -47,14 +47,14 @@
                     if (agentSessionBean == null) {
                          %>
 <script type="text/javascript">
-    location.href = "index.jsp";
+    location.href = "../index.jsp";
 </script>
     <%
                     } else {
                         if (agentSessionBean.getSAMLSSOSessionBean() == null) {
                              %>
 <script type="text/javascript">
-    location.href = "index.jsp";
+    location.href = "../index.jsp";
 </script>
     <%
                         } else {
