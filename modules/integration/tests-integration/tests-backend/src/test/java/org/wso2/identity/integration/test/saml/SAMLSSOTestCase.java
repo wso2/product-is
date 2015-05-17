@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.identity.integration.test.saml;
 
 
@@ -36,6 +36,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -60,25 +61,19 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String ISSUER_NAME = "travelocity.com";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
-
-    // User Attributes
-    private static final String USERNAME = "testUser";
-    private static final String PASSWORD = "testUser";
-    private static final String EMAIL = "testUser@wso2.com";
-    private static final String NICKNAME = "testUserNick";
+    public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9443/samlsso";
-    private static final String ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
+    private static final String ACS_URL = "http://localhost:8090/%s/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8090/travelocity.com/samlsso?SAML2.HTTPBinding=%s";
+            "http://localhost:8090/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8090/travelocity.com/logout?SAML2.HTTPBinding=%s";
+            "http://localhost:8090/%s/logout?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
@@ -115,19 +110,112 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         LOCAL, CUSTOM, NONE
     }
 
+<<<<<<< HEAD
     private enum SubjectClaimUri {
         EMAIL, NONE
+=======
+    private enum User {
+        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1"),
+        TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2");
+
+        private String username;
+        private String password;
+        private String tenantDomain;
+        private String tenantAwareUsername;
+        private String email;
+        private String nickname;
+
+        User(String username, String password, String tenantDomain, String tenantAwareUsername, String email,
+             String nickname) {
+            this.username = username;
+            this.password = password;
+            this.tenantDomain = tenantDomain;
+            this.tenantAwareUsername = tenantAwareUsername;
+            this.email = email;
+            this.nickname = nickname;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getTenantDomain() {
+            return tenantDomain;
+        }
+
+        public String getTenantAwareUsername() {
+            return tenantAwareUsername;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+    };
+
+    private enum App{
+        SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
+        TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false);
+
+        private String artifact;
+        private boolean signingEnabled;
+
+        App(String artifact, boolean signingEnabled) {
+            this.artifact = artifact;
+            this.signingEnabled = signingEnabled;
+        }
+
+        public String getArtifact() {
+            return artifact;
+        }
+
+        public boolean isSigningEnabled() {
+            return signingEnabled;
+        }
+>>>>>>> b68ffb6... migrating SAML tests from support branch
     }
 
     private static class SAMLConfig{
+        private TestUserMode userMode;
+        private User user;
         private HttpBinding httpBinding;
         private ClaimType claimType;
+<<<<<<< HEAD
         private SubjectClaimUri subjectClaimUri;
 
         private SAMLConfig(HttpBinding httpBinding, ClaimType claimType, SubjectClaimUri subjectClaimUri) {
             this.httpBinding = httpBinding;
             this.claimType = claimType;
             this.subjectClaimUri = subjectClaimUri;
+=======
+        private App app;
+
+        private SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
+            this.userMode = userMode;
+            this.user = user;
+            this.httpBinding = httpBinding;
+            this.claimType = claimType;
+            this.app = app;
+        }
+
+        public TestUserMode getUserMode() {
+            return userMode;
+        }
+
+        public App getApp() {
+            return app;
+        }
+
+        public User getUser() {
+            return user;
+>>>>>>> b68ffb6... migrating SAML tests from support branch
         }
 
         public ClaimType getClaimType() {
@@ -145,9 +233,18 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         @Override
         public String toString() {
             return "SAMLConfig[" +
+<<<<<<< HEAD
                     "httpBinding=" + httpBinding +
                     ", claimType=" + claimType +
                     "subjectClaimUri=" + subjectClaimUri + "]";
+=======
+                   ", userMode=" + userMode.name() +
+                   ", user=" + user.getUsername() +
+                   ", httpBinding=" + httpBinding +
+                   ", claimType=" + claimType +
+                   ", app=" + app.getArtifact() +
+                   ']';
+>>>>>>> b68ffb6... migrating SAML tests from support branch
         }
     }
 
@@ -161,7 +258,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init();
+        super.init(config.getUserMode());
 
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null
@@ -181,11 +278,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         log.info("Starting Tomcat");
         tomcatServer = getTomcat();
 
-        //TODO: Uncomment below once the tomcat dependency issue is resolved
-//        URL resourceUrl = getClass()
-//                .getResource(File.separator + "samples" + File.separator + "org.wso2.sample.is .sso.agent.war");
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-        startTomcat(tomcatServer, "/travelocity.com", resourceUrl.getPath());
+        URL resourceUrl = getClass()
+                .getResource(File.separator + "samples" + File.separator + config.getApp().getArtifact() + ".war");
+        startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
 
     }
 
@@ -212,14 +307,14 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), ISSUER_NAME,
+        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
                 "Adding a service provider has failed for " + config);
     }
 
     @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLSSOLogout" })
     public void testRemoveSP()
             throws Exception {
-        Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(ISSUER_NAME);
+        Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
         Assert.assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
 
@@ -229,7 +324,8 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         try {
             HttpResponse response;
 
-            response = sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getHttpBinding().binding));
+            response = sendGetRequest(
+                    String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config.getHttpBinding().binding));
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST){
                 String samlRequest = extractDataFromResponse(response, "SAMLRequest", 5);
@@ -246,9 +342,11 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             response = sendRedirectRequest(response);
             String samlResponse = extractDataFromResponse(response, "SAMLResponse", 5);
 
-            response = sendSAMLMessage(ACS_URL, "SAMLResponse", samlResponse);
+            response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), "SAMLResponse",
+                                       samlResponse);
             resultPage = extractDataFromResponse(response);
 
+<<<<<<< HEAD
             if(SubjectClaimUri.EMAIL.equals(config.getSubjectClaimUri())) {
                 Assert.assertTrue(resultPage.contains("You are logged in as " + EMAIL),
                                   "SAML SSO Login failed for " + config);
@@ -256,6 +354,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                 Assert.assertTrue(resultPage.contains("You are logged in as " + USERNAME),
                                   "SAML SSO Login failed for " + config);
             }
+=======
+            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+                    "SAML SSO Login failed for " + config);
+>>>>>>> b68ffb6... migrating SAML tests from support branch
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
@@ -282,7 +384,8 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         try {
             HttpResponse response;
 
-            response = sendGetRequest(String.format(SAML_SSO_LOGOUT_URL, config.getHttpBinding().binding));
+            response = sendGetRequest(
+                    String.format(SAML_SSO_LOGOUT_URL, config.getApp().getArtifact(), config.getHttpBinding().binding));
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST){
                 String samlRequest = extractDataFromResponse(response, "SAMLRequest", 5);
@@ -293,7 +396,8 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             }
 
             String samlResponse = extractDataFromResponse(response, "SAMLResponse", 5);
-            response = sendSAMLMessage(ACS_URL, "SAMLResponse", samlResponse);
+            response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), "SAMLResponse",
+                                       samlResponse);
             String resultPage = extractDataFromResponse(response);
 
             Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
@@ -306,25 +410,44 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider(){
         return  new SAMLConfig[][]{
+<<<<<<< HEAD
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE, SubjectClaimUri.EMAIL)}
+=======
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                                ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
+                                ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
+                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                                ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                                ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+                                ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+                                ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+>>>>>>> b68ffb6... migrating SAML tests from support branch
         };
     }
 
     private void assertLocalClaims(String claims){
         Map<String, String> attributeMap = extractClaims(claims);
         Assert.assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
-        Assert.assertEquals(attributeMap.get(firstNameClaimURI), NICKNAME,
-                "Expected claim value for nickname is " + NICKNAME);
+        Assert.assertEquals(attributeMap.get(firstNameClaimURI), config.getUser().getNickname(),
+                "Expected claim value for nickname is " + config.getUser().getNickname());
         Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
-        Assert.assertEquals(attributeMap.get(lastNameClaimURI), USERNAME,
-                "Expected claim value for lastname is " + USERNAME);
+        Assert.assertEquals(attributeMap.get(lastNameClaimURI), config.getUser().getUsername(),
+                "Expected claim value for lastname is " + config.getUser().getUsername());
         Assert.assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
-        Assert.assertEquals(attributeMap.get(emailClaimURI), EMAIL,
-                "Expected claim value for email is " + EMAIL);
+        Assert.assertEquals(attributeMap.get(emailClaimURI), config.getUser().getEmail(),
+                "Expected claim value for email is " + config.getUser().getEmail());
     }
 
     private void assertNoneClaims(String claims){
@@ -385,10 +508,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private HttpResponse sendPOSTMessage(String sessionKey) throws Exception {
         HttpPost post = new HttpPost(COMMON_AUTH_URL);
         post.setHeader("User-Agent", USER_AGENT);
-        post.addHeader("Referer", ACS_URL);
+        post.addHeader("Referer", String.format(ACS_URL, config.getApp().getArtifact()));
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", USERNAME));
-        urlParameters.add(new BasicNameValuePair("password", PASSWORD));
+        urlParameters.add(new BasicNameValuePair("username", config.getUser().getUsername()));
+        urlParameters.add(new BasicNameValuePair("password", config.getUser().getPassword()));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
@@ -405,6 +528,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
+        if (config.getUserMode() == TestUserMode.TENANT_ADMIN || config.getUserMode() == TestUserMode.TENANT_USER){
+            urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain()));
+        }
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }
@@ -420,7 +546,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Referer", ACS_URL);
+        request.addHeader("Referer", String.format(ACS_URL, config.getApp().getArtifact()));
         return httpClient.execute(request);
     }
 
@@ -468,7 +594,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        requestConfig.setInboundAuthKey(ISSUER_NAME);
+        requestConfig.setInboundAuthKey(config.getApp().getArtifact());
 
         Property attributeConsumerServiceIndexProp = new Property();
         attributeConsumerServiceIndexProp.setName(ATTRIBUTE_CS_INDEX_NAME);
@@ -488,10 +614,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     private void createUser(){
-        log.info("Creating User " + USERNAME);
+        log.info("Creating User " + config.getUser().getUsername());
         try {
             // creating the user
-            remoteUSMServiceClient.addUser(USERNAME, PASSWORD,
+            remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
                     null, getUserClaims(),
                     profileName, true);
         } catch (Exception e) {
@@ -501,9 +627,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     private void deleteUser(){
-        log.info("Deleting User " + USERNAME);
+        log.info("Deleting User " + config.getUser().getUsername());
         try {
-            remoteUSMServiceClient.deleteUser(USERNAME);
+            remoteUSMServiceClient.deleteUser(config.getUser().getTenantAwareUsername());
         } catch (Exception e) {
             Assert.fail("Error while deleting the user", e);
         }
@@ -511,13 +637,13 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(ISSUER_NAME);
-        samlssoServiceProviderDTO.setAssertionConsumerUrl(ACS_URL);
+        samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
+        samlssoServiceProviderDTO.setAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
         samlssoServiceProviderDTO.setUseFullyQualifiedUsername(true);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
+        samlssoServiceProviderDTO.setDoSignAssertions(config.getApp().isSigningEnabled());
+        samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
         if (config.getClaimType() != ClaimType.NONE){
@@ -563,17 +689,17 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
         ClaimValue firstName = new ClaimValue();
         firstName.setClaimURI(firstNameClaimURI);
-        firstName.setValue(NICKNAME);
+        firstName.setValue(config.getUser().getNickname());
         claimValues[0] = firstName;
 
         ClaimValue lastName = new ClaimValue();
         lastName.setClaimURI(lastNameClaimURI);
-        lastName.setValue(USERNAME);
+        lastName.setValue(config.getUser().getUsername());
         claimValues[1] = lastName;
 
         ClaimValue email = new ClaimValue();
         email.setClaimURI(emailClaimURI);
-        email.setValue(EMAIL);
+        email.setValue(config.getUser().getEmail());
         claimValues[2] = email;
 
         return claimValues;

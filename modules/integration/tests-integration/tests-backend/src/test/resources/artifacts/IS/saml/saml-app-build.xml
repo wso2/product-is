@@ -17,9 +17,9 @@
   ~ under the License.
   -->
 
-<project name="travelocity-app-build" default="clear-slf4j-libs" basedir="../../../../../../">
+<project name="travelocity-app-seperation" default="saml-tenant-signingdisabled" basedir="../../../../../../">
     <description>
-        This script builds a war file for the travelocity app by removing all slf4j libs from the classpath.
+        This script builds a war file for the travelocity app for tenant sso with signature validation disabled
     </description>
     <!-- set global properties for this build -->
     <property name="build" location="${basedir}/target/test-classes/samples"/>
@@ -27,23 +27,27 @@
               location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
     <property name="travelocity.webapp.classes" location="${travelocity.webapp}/WEB-INF/classes"/>
     <property name="travelocity.webapp.lib" location="${travelocity.webapp}/WEB-INF/lib"/>
-    <property name="properties" location="${basedir}/src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent"/>
+    <property name="travelocity.properties" location="${basedir}/src/test/resources/artifacts/IS/saml/"/>
+    <property name="travelocity.properties.tenantwithoutsigning" location="${travelocity.properties}/tenantwithoutsigning"/>
 
-    <target name="clear-slf4j-libs">
-        <delete file="${travelocity.webapp.lib}/jul-to-slf4j-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.lib}/log4j-over-slf4j-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.lib}/jcl-over-slf4j-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.lib}/slf4j-api-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.classes}/travelocity.properties"/>
-        <copy file="${properties}/travelocity.properties"
+    <target name="saml-tenant-signingdisabled">
+        <delete
+                file="${travelocity.webapp.classes}/travelocity.properties"/>
+        <copy file="${travelocity.properties.tenantwithoutsigning}/travelocity.properties"
               tofile="${travelocity.webapp.classes}/travelocity.properties"/>
-        <war destfile="${build}/travelocity.com.war" webxml="${travelocity.webapp}/WEB-INF/web.xml">
-            <fileset dir="${travelocity.webapp}/">
+        <war destfile="${build}/travelocity.com-saml-tenantwithoutsigning.war"
+             webxml="${travelocity.webapp}/WEB-INF/web.xml">
+            <fileset
+                    dir="${travelocity.webapp}/">
                 <exclude name="**/WEB-INF/**"/>
             </fileset>
-            <lib dir="${travelocity.webapp.lib}/"/>
-            <classes dir="${travelocity.webapp.classes}/">
+            <lib
+                    dir="${travelocity.webapp.lib}/" />
+            <classes
+                    dir="${travelocity.webapp.classes}/">
             </classes>
         </war>
     </target>
+
+
 </project>

@@ -360,6 +360,7 @@
 >>>>>>> e0be3c9... fixing test cases
             <!--SAML Test Cases-->
             <class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <!--Notification mgt UserOperation test case-->
             <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
         </classes>

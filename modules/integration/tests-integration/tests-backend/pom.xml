@@ -192,7 +192,7 @@
                                     <type>war</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
-                                        ${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent-openid
+                                        ${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent
                                     </outputDirectory>
                                 </artifactItem>
                             </artifactItems>
@@ -231,6 +231,19 @@
                                      target="openid-dumbconsumerwithclaims"/>
                                 <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
                                      target="openid-dumbconsumerwithoutclaims"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>packaging-war-artifacts-saml</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="src/test/resources/artifacts/IS/saml/saml-app-build.xml"
+                                     target="saml-tenant-signingdisabled"/>
                             </tasks>
                         </configuration>
                         <goals>
