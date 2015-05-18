@@ -1,5 +1,5 @@
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
  ~ Version 2.0 (the "License"); you may not use this file except
@@ -20,27 +20,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-    	<groupId>org.wso2.is</groupId>
-    	<artifactId>identity-server-parent</artifactId>
-    	<version>5.1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>wso2is-identity-samples</artifactId>
+        <version>5.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2is-identity-samples</artifactId>
+    <artifactId>wso2is-identity-samples-info-recovery</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : Samples</name>
+    <name>Identity Server : InfoRecoverySample Maven Webapp</name>
 
     <modules>
-        <module>user-mgt</module>
-        <module>scim</module>
-        <module>oauth</module>
-        <module>oauth2</module>
-        <module>sso</module>
-        <module>xacml</module>
-        <module>sts</module>
-        <module>passive-sts</module>
-        <module>identity-mgt</module>
+        <module>InfoRecoverySample</module>
     </modules>
 
 </project>
