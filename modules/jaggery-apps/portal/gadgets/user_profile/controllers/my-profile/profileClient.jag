@@ -2,6 +2,7 @@
 
 include("../wsUtil.jag");
 var util = require("../../util/utility.jag");
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
@@ -22,7 +23,8 @@ function getProfileFieldsForInternalStore(){
 
 function getUserProfile(username, profileName){
 
-    var result = callWSReturnJSON(webService, serverUrl, "urn:getUserProfile", new Array(username, profileName));
+    var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(username);
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getUserProfile", new Array(tenantAwareUserName, profileName));
     result.return.fieldValues = util.sortNumber(result.return.fieldValues, 'displayOrder', true, true);
 
     for(var x = 0; x < result.return.fieldValues.length; x++){
@@ -40,8 +42,5 @@ function getUserProfile(username, profileName){
     return result;
 
 }
-
-
-
 
 %>
