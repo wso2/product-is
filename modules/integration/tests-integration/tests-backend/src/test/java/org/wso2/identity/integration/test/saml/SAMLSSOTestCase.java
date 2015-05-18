@@ -111,9 +111,12 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private enum SubjectClaimUri {
         EMAIL, NONE
 =======
+=======
+>>>>>>> ca7c238... Merge wso2 master
     private enum User {
         SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1"),
         TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2");
@@ -179,7 +182,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         public boolean isSigningEnabled() {
             return signingEnabled;
         }
+<<<<<<< HEAD
 >>>>>>> b68ffb6... migrating SAML tests from support branch
+=======
+>>>>>>> ca7c238... Merge wso2 master
     }
 
     private static class SAMLConfig{
@@ -188,11 +194,18 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         private HttpBinding httpBinding;
         private ClaimType claimType;
 <<<<<<< HEAD
+<<<<<<< HEAD
         private SubjectClaimUri subjectClaimUri;
+=======
+        private App app;
+>>>>>>> ca7c238... Merge wso2 master
 
-        private SAMLConfig(HttpBinding httpBinding, ClaimType claimType, SubjectClaimUri subjectClaimUri) {
+        private SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
+            this.userMode = userMode;
+            this.user = user;
             this.httpBinding = httpBinding;
             this.claimType = claimType;
+<<<<<<< HEAD
             this.subjectClaimUri = subjectClaimUri;
 =======
         private App app;
@@ -202,6 +215,8 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             this.user = user;
             this.httpBinding = httpBinding;
             this.claimType = claimType;
+=======
+>>>>>>> ca7c238... Merge wso2 master
             this.app = app;
         }
 
@@ -215,7 +230,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
         public User getUser() {
             return user;
+<<<<<<< HEAD
 >>>>>>> b68ffb6... migrating SAML tests from support branch
+=======
+>>>>>>> ca7c238... Merge wso2 master
         }
 
         public ClaimType getClaimType() {
@@ -226,25 +244,27 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             return httpBinding;
         }
 
-        public SubjectClaimUri getSubjectClaimUri() {
-            return subjectClaimUri;
-        }
-
         @Override
         public String toString() {
             return "SAMLConfig[" +
+<<<<<<< HEAD
 <<<<<<< HEAD
                     "httpBinding=" + httpBinding +
                     ", claimType=" + claimType +
                     "subjectClaimUri=" + subjectClaimUri + "]";
 =======
+=======
+>>>>>>> ca7c238... Merge wso2 master
                    ", userMode=" + userMode.name() +
                    ", user=" + user.getUsername() +
                    ", httpBinding=" + httpBinding +
                    ", claimType=" + claimType +
                    ", app=" + app.getArtifact() +
                    ']';
+<<<<<<< HEAD
 >>>>>>> b68ffb6... migrating SAML tests from support branch
+=======
+>>>>>>> ca7c238... Merge wso2 master
         }
     }
 
@@ -308,7 +328,11 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
         Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
+<<<<<<< HEAD
                 "Adding a service provider has failed for " + config);
+=======
+                            "Adding a service provider has failed for " + config);
+>>>>>>> ca7c238... Merge wso2 master
     }
 
     @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLSSOLogout" })
@@ -319,7 +343,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
-            dependsOnMethods = { "testAddSP" })
+          dependsOnMethods = { "testAddSP" })
     public void testSAMLSSOLogin() {
         try {
             HttpResponse response;
@@ -347,6 +371,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             resultPage = extractDataFromResponse(response);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             if(SubjectClaimUri.EMAIL.equals(config.getSubjectClaimUri())) {
                 Assert.assertTrue(resultPage.contains("You are logged in as " + EMAIL),
                                   "SAML SSO Login failed for " + config);
@@ -358,13 +383,17 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
 >>>>>>> b68ffb6... migrating SAML tests from support branch
+=======
+            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+                              "SAML SSO Login failed for " + config);
+>>>>>>> ca7c238... Merge wso2 master
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO Claims", groups = "wso2.is",
-            dependsOnMethods = { "testSAMLSSOLogin" })
+          dependsOnMethods = { "testSAMLSSOLogin" })
     public void testClaims(){
         String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
 
@@ -379,7 +408,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
-            dependsOnMethods = { "testSAMLSSOLogin" })
+          dependsOnMethods = { "testSAMLSSOLogin" })
     public void testSAMLSSOLogout() throws Exception {
         try {
             HttpResponse response;
@@ -401,7 +430,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             String resultPage = extractDataFromResponse(response);
 
             Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
-                    "SAML SSO Logout failed for " + config);
+                              "SAML SSO Logout failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
         }
@@ -411,12 +440,15 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     public static SAMLConfig[][] samlConfigProvider(){
         return  new SAMLConfig[][]{
 <<<<<<< HEAD
+<<<<<<< HEAD
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.NONE, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_POST, ClaimType.LOCAL, SubjectClaimUri.NONE)},
                 {new SAMLConfig(HttpBinding.HTTP_REDIRECT, ClaimType.NONE, SubjectClaimUri.EMAIL)}
 =======
+=======
+>>>>>>> ca7c238... Merge wso2 master
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                                 ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
@@ -433,7 +465,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                                 ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
                                 ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+<<<<<<< HEAD
 >>>>>>> b68ffb6... migrating SAML tests from support branch
+=======
+>>>>>>> ca7c238... Merge wso2 master
         };
     }
 
@@ -441,6 +476,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         Map<String, String> attributeMap = extractClaims(claims);
         Assert.assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
         Assert.assertEquals(attributeMap.get(firstNameClaimURI), config.getUser().getNickname(),
+<<<<<<< HEAD
                 "Expected claim value for nickname is " + config.getUser().getNickname());
         Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
         Assert.assertEquals(attributeMap.get(lastNameClaimURI), config.getUser().getUsername(),
@@ -448,6 +484,15 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         Assert.assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
         Assert.assertEquals(attributeMap.get(emailClaimURI), config.getUser().getEmail(),
                 "Expected claim value for email is " + config.getUser().getEmail());
+=======
+                            "Expected claim value for nickname is " + config.getUser().getNickname());
+        Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
+        Assert.assertEquals(attributeMap.get(lastNameClaimURI), config.getUser().getUsername(),
+                            "Expected claim value for lastname is " + config.getUser().getUsername());
+        Assert.assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
+        Assert.assertEquals(attributeMap.get(emailClaimURI), config.getUser().getEmail(),
+                            "Expected claim value for email is " + config.getUser().getEmail());
+>>>>>>> ca7c238... Merge wso2 master
     }
 
     private void assertNoneClaims(String claims){
@@ -481,10 +526,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
     private void setSystemProperties() {
         URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
+                                                 + "products" + File.separator + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
-                "wso2carbon");
+                           "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
@@ -588,9 +633,6 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         serviceProvider = applicationManagementServiceClient.getApplication(APPLICATION_NAME);
 
         serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
-        if(SubjectClaimUri.EMAIL.equals(config.getSubjectClaimUri())) {
-            serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri(emailClaimURI);
-        }
 
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
@@ -618,8 +660,13 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         try {
             // creating the user
             remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
+<<<<<<< HEAD
                     null, getUserClaims(),
                     profileName, true);
+=======
+                                           null, getUserClaims(),
+                                           profileName, true);
+>>>>>>> ca7c238... Merge wso2 master
         } catch (Exception e) {
             Assert.fail("Error while creating the user", e);
         }
@@ -640,7 +687,6 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
         samlssoServiceProviderDTO.setAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
-        samlssoServiceProviderDTO.setUseFullyQualifiedUsername(true);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(config.getApp().isSigningEnabled());
         samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
