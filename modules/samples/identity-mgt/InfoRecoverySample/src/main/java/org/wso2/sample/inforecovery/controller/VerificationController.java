@@ -62,9 +62,11 @@ public class VerificationController extends HttpServlet {
         HttpSession session = req.getSession(false);
         String confirmation = (String) session.getAttribute("confirmation");
         String viewPage = null;
-
+        String userstoredomain = req.getParameter("userstoredomain");
         String username = req.getParameter("username");
-
+        if (!("PRIMARY".equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
+            username = userstoredomain + "/" + username;
+        }
         String captchaPath = req.getParameter("captchaImagePath");
         String captchaKey = req.getParameter("captchaSecretKey");
         String captchaAnswer = req.getParameter("captchaAnswer");

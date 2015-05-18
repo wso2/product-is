@@ -573,6 +573,11 @@
                 <version>${jstl.version}</version>
             </dependency>
             <dependency>
+                <groupId>taglibs</groupId>
+                <artifactId>standard</artifactId>
+                <version>${taglibs.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang.version}</version>
@@ -730,9 +735,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity</groupId>
+                <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -926,8 +931,18 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
             </dependency>
-        </dependencies>
-    </dependencyManagement>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.user.registration.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+		</dependencies>
+	</dependencyManagement>
 
     <profiles>
         <profile>
@@ -989,7 +1004,7 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.version>4.4.2-SNAPSHOT</carbon.identity.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1015,6 +1030,7 @@
         <httpclient.version>4.0.1</httpclient.version>
         <xml.apis.version>1.4.01</xml.apis.version>
         <jstl.version>1.1.2</jstl.version>
+        <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
         <carbon.kernel.version>4.4.0</carbon.kernel.version>

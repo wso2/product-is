@@ -24,7 +24,7 @@
     <!-- set global properties for this build -->
     <property name="build" location="${basedir}/target/test-classes/samples"/>
     <property name="travelocity.webapp"
-              location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent-openid"/>
+              location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
     <property name="travelocity.webapp.classes" location="${travelocity.webapp}/WEB-INF/classes"/>
     <property name="travelocity.webapp.lib" location="${travelocity.webapp}/WEB-INF/lib"/>
     <property name="properties" location="${basedir}/src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent"/>
