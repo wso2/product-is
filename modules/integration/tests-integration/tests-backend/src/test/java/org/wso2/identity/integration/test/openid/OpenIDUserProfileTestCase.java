@@ -86,13 +86,13 @@ public class OpenIDUserProfileTestCase extends ISIntegrationTest {
 
         for (OpenIDClaimDTO claimDTO: userProfiles[0].getClaimSet()){
             if (emailClaimURI.equals(claimDTO.getClaimUri())) {
-                Assert.assertEquals(claimDTO.getClaimValue(), emailClaimValue);
+                Assert.assertTrue(claimDTO.getClaimValue().contains(emailClaimValue));
             } else if (firstNameClaimURI.equals(claimDTO.getClaimUri())) {
-                Assert.assertEquals(claimDTO.getClaimValue(), firstNameClaimValue);
+                Assert.assertTrue(claimDTO.getClaimValue().contains(firstNameClaimValue));
             } else if (lastNameClaimURI.equals(claimDTO.getClaimUri())) {
-                Assert.assertEquals(claimDTO.getClaimValue(), lastNameClaimValue);
+                Assert.assertTrue(claimDTO.getClaimValue().contains(lastNameClaimValue));
             } else if (countryClaimURI.equals(claimDTO.getClaimUri())) {
-                Assert.assertEquals(claimDTO.getClaimValue(), countryClaimValue);
+                Assert.assertTrue(claimDTO.getClaimValue().contains(countryClaimValue));
             } else {
                 Assert.fail("Invalid claim returned");
             }
@@ -143,13 +143,13 @@ public class OpenIDUserProfileTestCase extends ISIntegrationTest {
         // now checking claim values
         for (OpenIDClaimDTO dto : claims) {
             if (emailClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), emailClaimValue);
+                Assert.assertTrue(dto.getClaimValue().contains(emailClaimValue));
             } else if (firstNameClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), firstNameClaimValue);
+                Assert.assertTrue(dto.getClaimValue().contains(firstNameClaimValue));
             } else if (lastNameClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), lastNameClaimValue);
+                Assert.assertTrue(dto.getClaimValue().contains(lastNameClaimValue));
             } else if (countryClaimURI.equals(dto.getClaimUri())) {
-                Assert.assertEquals(dto.getClaimValue(), countryClaimValue);
+                Assert.assertTrue(dto.getClaimValue().contains(countryClaimValue));
             } else {
                 Assert.fail("Invalid claim returned");
             }
