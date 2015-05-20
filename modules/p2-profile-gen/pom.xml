@@ -130,12 +130,11 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.directory.service.mgr.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- identity related features -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.core.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provider.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provider.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.xacml.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.claim.mgt.feature:${carbon.identity.version}</featureArtifactDef>
@@ -170,7 +169,6 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.sts.passive.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.ldap.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.scim.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.authorization.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- Features related to Cloud Identity -->
 								<featureArtifactDef>org.wso2.carbon.commons:org.wso2.carbon.user.mgt.feature:${carbon.commons.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}</featureArtifactDef>
@@ -310,10 +308,6 @@
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
-									<id>org.wso2.carbon.identity.authorization.feature.group</id>
-									<version>${carbon.identity.version}</version>
-								</feature>
-								<feature>
 									<id>org.wso2.carbon.registry.core.feature.group</id>
 									<version>${carbon.registry.version}</version>
 								</feature>
@@ -346,11 +340,11 @@
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
-									<id>org.wso2.carbon.identity.relying.party.feature.group</id>
+									<id>org.wso2.carbon.identity.relying.party.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
-									<id>org.wso2.carbon.identity.self.registration.feature.group</id>
+									<id>org.wso2.carbon.identity.self.registration.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
