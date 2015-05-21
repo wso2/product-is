@@ -1004,7 +1004,7 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>4.4.2-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.version>4.5.0-SNAPSHOT</carbon.identity.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1034,7 +1034,7 @@
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
         <carbon.kernel.version>4.4.0</carbon.kernel.version>
-        <carbon.commons.version>4.4.0</carbon.commons.version>
+        <carbon.commons.version>4.4.2</carbon.commons.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
