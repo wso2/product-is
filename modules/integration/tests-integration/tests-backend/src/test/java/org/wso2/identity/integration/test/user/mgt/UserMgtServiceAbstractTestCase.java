@@ -335,7 +335,7 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.is", description = "Check importing bulk users", dependsOnMethods = "testGetRolePermissions")
+//    @Test(groups = "wso2.is", description = "Check importing bulk users", dependsOnMethods = "testGetRolePermissions")
     public void testBulkImportUsers() throws Exception{
 
 		File bulkUserFile = new File(getISResourceLocation() + File.separator + "userMgt"
