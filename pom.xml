@@ -3479,6 +3479,7 @@
     <properties>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3487,6 +3488,9 @@
 =======
         <carbon.identity.version>4.5.0-SNAPSHOT</carbon.identity.version>
 >>>>>>> f34c378... changing commons version and adding tenant.mgt.common feature
+=======
+        <carbon.identity.version>4.4.1</carbon.identity.version>
+>>>>>>> f41809f... fixing build faliure
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -3561,7 +3565,7 @@
 		<orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 =======
         <carbon.kernel.version>4.4.0</carbon.kernel.version>
-        <carbon.commons.version>4.4.2</carbon.commons.version>
+        <carbon.commons.version>4.4.0</carbon.commons.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 >>>>>>> 2d1bb2f... refactor parent pom
