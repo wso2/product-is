@@ -579,7 +579,7 @@
         <module>modules/styles</module>
         <module>modules/dashboard</module>
         <module>modules/samples</module>
-        <module>modules/integration</module>
+        <!--<module>modules/integration</module>-->
     </modules>
 
     <licenses>
@@ -3480,6 +3480,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3491,6 +3492,9 @@
 =======
         <carbon.identity.version>4.4.1</carbon.identity.version>
 >>>>>>> f41809f... fixing build faliure
+=======
+        <carbon.identity.version>4.4.0</carbon.identity.version>
+>>>>>>> fe8bdb5... fixing build faliure temporary until carbon-multitenancy is released
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
