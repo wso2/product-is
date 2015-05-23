@@ -149,11 +149,11 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.samlsso.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.facebook.server.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.fido.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.fido.server.feature:${carbon.identity.version}</featureArtifactDef>-->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.openid.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.googleext.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.googleext.server.feature:${carbon.identity.version}</featureArtifactDef>-->
 
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.version}</featureArtifactDef>
@@ -196,7 +196,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>
 								<!-- User Account Association Feature -->
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>-->
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -463,14 +463,14 @@
 									<id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
-								<feature>
-									<id>org.wso2.carbon.identity.application.authenticator.oidc.googleext.server.feature.group</id>
-									<version>${carbon.identity.version}</version>
-								</feature>
-								<feature>
-									<id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group</id>
-									<version>${carbon.identity.version}</version>
-								</feature>
+								<!--<feature>-->
+									<!--<id>org.wso2.carbon.identity.application.authenticator.oidc.googleext.server.feature.group</id>-->
+									<!--<version>${carbon.identity.version}</version>-->
+								<!--</feature>-->
+								<!--<feature>-->
+									<!--<id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group</id>-->
+									<!--<version>${carbon.identity.version}</version>-->
+								<!--</feature>-->
 								<feature>
 									<id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
@@ -516,10 +516,10 @@
 									<id>org.apache.axis2.transport.mail.feature.group</id>
 									<version>${axis2-transports.version}</version>
 								</feature>
-								<feature>
-									<id>org.wso2.carbon.identity.user.account.association.feature.group</id>
-									<version>${carbon.identity.version}</version>
-								</feature>
+								<!--<feature>-->
+									<!--<id>org.wso2.carbon.identity.user.account.association.feature.group</id>-->
+									<!--<version>${carbon.identity.version}</version>-->
+								<!--</feature>-->
 							</features>
 						</configuration>
 					</execution>
