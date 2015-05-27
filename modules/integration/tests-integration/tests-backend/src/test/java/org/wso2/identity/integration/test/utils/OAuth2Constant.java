@@ -27,7 +27,7 @@ public final class OAuth2Constant {
     public static final String OAUTH2_GRANT_TYPE_CODE = "code";
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
-    
+
     public final static String ACCESS_TOKEN = "access_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
     public final static String OAUTH_VERSION_2 = "oauth-2.0";
@@ -43,7 +43,8 @@ public final class OAuth2Constant {
     public final static String OAUTH2_SCOPE_OPENID = "openid";
     public final static String OAUTH2_SCOPE_DEFAULT = "";
     public final static String OAUTH_APPLICATION_NAME = "oauthTestApplication";
-    
+    public static final String UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
+
     public final static String CALLBACK_URL = "http://localhost:8090/playground2/oauth2client";
     public final static String AUTHORIZED_USER_URL = "http://localhost:8090/playground2/oauth2-authorize-user.jsp";
     public final static String AUTHORIZED_URL = "http://localhost:8090/playground2/oauth2.jsp";
