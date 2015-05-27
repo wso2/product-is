@@ -48,15 +48,15 @@ import java.util.List;
 * OAuth2 test integration abstraction
 */
 public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
-	private String consumerKey;
-	private String consumerSecret;
+	protected String consumerKey;
+	protected String consumerSecret;
 
 	private final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProver";
 	private final static String SERVICE_PROVIDER_DESC = "Playground Service Prover";
 	private final static int TOMCAT_PORT = 8090;
 
-	private ApplicationManagementServiceClient appMgtclient;
-	private OauthAdminClient adminClient;
+	protected ApplicationManagementServiceClient appMgtclient;
+	protected OauthAdminClient adminClient;
 
 	/**
 	 * Initialize
@@ -85,6 +85,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
 		appDTO.setGrantTypes(OAuth2Constant.OAUTH2_GRANT_TYPE_CODE);
 		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
+		                     "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 
 		adminClient.registerOAuthApplicationData(appDTO);
 		OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
