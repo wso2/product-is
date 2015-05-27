@@ -30,7 +30,7 @@ public final class OAuth2Constant {
 
     public final static String ACCESS_TOKEN = "access_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
-    public final static String OAUTH_VERSION_2 = "oauth-2.0";
+    public final static String OAUTH_VERSION_2 = "OAuth-2.0";
     public final static String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
     public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:9443/oauth2/token";
     public final static String AUTHTOKEN_VALIDATE_SERVICE = "https://localhost:9443/services/OAuth2TokenValidationService";

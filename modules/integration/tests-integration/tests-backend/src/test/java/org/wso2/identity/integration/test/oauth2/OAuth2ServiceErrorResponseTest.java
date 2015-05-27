@@ -35,16 +35,12 @@ import java.util.List;
 public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegrationTest {
 
     private AuthenticatorClient logManger;
-    private String adminUsername;
-    private String adminPassword;
     private DefaultHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                                               isServer.getSuperTenant().getTenantAdmin().getPassword(),
                                               isServer.getInstance().getHosts().get("default"));
