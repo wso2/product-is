@@ -59,7 +59,12 @@ public class SelfSignupConfirmationController extends HttpServlet {
 
         HttpSession session = req.getSession();
         session.setAttribute("confirmation", req.getParameter("confirmation"));
-        session.setAttribute("userName", req.getParameter("userName"));
+        String userstoredomain = req.getParameter("userstoredomain");
+        String username = req.getParameter("username");
+        if (!("PRIMARY".equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
+            username = userstoredomain + "/" + username;
+        }
+        session.setAttribute("userName", username);
         CaptchaInfoBean bean = client.generateCaptcha();
 
         session.setAttribute("captcha", bean);
