@@ -59,7 +59,7 @@
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />-->
             <!--PassiveSTS Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
+            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
             <!--User Profile Management Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
