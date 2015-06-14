@@ -3483,6 +3483,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3503,6 +3504,9 @@
 =======
         <carbon.identity.version>4.5.1</carbon.identity.version>
 >>>>>>> d81e49c... change carbon-identity version to 4.5.1 until stabilize the master branch with code_quality_improvement fixes.
+=======
+        <carbon.identity.version>4.5.6-SNAPSHOT</carbon.identity.version>
+>>>>>>> 81e7472... change carbon-identity version to 4.5.6-SNAPSHOT, comment intermittantly failing test case
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
