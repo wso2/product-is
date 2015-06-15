@@ -44,6 +44,11 @@ public class DataExtractUtil {
 	public static List<KeyValue> extractDataFromResponse(HttpResponse response,
 	                                                     Map<String, Integer> keyPositionMap)
 	                                                                                         throws IOException {
+
+        //todo extracting sessionDataKey using this method required key and value to be in the same line
+        //todo ex. <input type="hidden" name="sessionDataKey"  value='8a433378-6d1f-434b-b574-a143dbb1a508'/>
+        //todo if the jsp page formatted and value moved to the next line this will break. nice to have this fixed
+
 		List<KeyValue> keyValues = new ArrayList<KeyValue>();
 		BufferedReader rd =
 		                    new BufferedReader(new InputStreamReader(response.getEntity()
