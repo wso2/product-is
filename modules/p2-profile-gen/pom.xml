@@ -256,6 +256,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
+<<<<<<< HEAD
 >>>>>>> b2dd878... Merging user account association feature from master
 =======
 								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>-->
@@ -263,6 +264,11 @@
 =======
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
 >>>>>>> def8375... change canbon-multitenancy to 4.4.1
+=======
+
+								<!-- Workflow mgt Feature -->
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+>>>>>>> 723e10d... Updating p2 with workflow-mgt feature
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -847,6 +853,7 @@
 									<version>${carbon.identity.version}</version>
 								</feature>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8
 							</features>
 =======
@@ -883,6 +890,12 @@
 >>>>>>> fe8bdb5... fixing build faliure temporary until carbon-multitenancy is released
 =======
 >>>>>>> def8375... change canbon-multitenancy to 4.4.1
+=======
+								<feature>
+									<id>org.wso2.carbon.identity.workflow.mgt.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+>>>>>>> 723e10d... Updating p2 with workflow-mgt feature
 							</features>
 						</configuration>
 					</execution>
