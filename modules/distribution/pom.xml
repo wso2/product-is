@@ -283,17 +283,6 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/application-mgt/h2.sql"/>
-                                </sql>
-                                <sql
-                                        driver="org.h2.Driver"
-                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB"
-                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
-                                        onerror="continue">
-                                    <classpath>
-                                        <path refid="h2.classpath"/>
-                                    </classpath>
-                                    <fileset
                                             file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/h2.sql"/>
                                 </sql>
                                 <echo
