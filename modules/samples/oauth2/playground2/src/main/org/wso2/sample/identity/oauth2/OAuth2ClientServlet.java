@@ -43,6 +43,7 @@ public class OAuth2ClientServlet extends HttpServlet {
 	static String userName;
 	static String password;
 	static String serverUrl;
+	static String clientId;
 	
 
 	@Override
