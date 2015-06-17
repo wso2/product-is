@@ -54,9 +54,14 @@ function drawPage() {
         "    </div>";
 
     var fido = "                <div class=\"control-group\">\n" +
-        "                    <div class=\"controls\">\n" +
-        "                        <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" value=\"Attach FIDO Token\"/>\n" +
-        "                    </div>\n" +
+        "                    <div class=\"controls\">\n" ;
+if (json.return.fidoEnabled == "true"){
+ fido = fido +       "                        <input type=\"button\" onclick=\"removeFIDO();\" class=\"btn\" value=\"Remove FIDO Token\"/>\n" ;
+}
+else{
+ fido = fido +         "                        <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" value=\"Attach FIDO Token\"/>\n";
+}
+ fido = fido +         "                    </div>\n" +
         "                </div>\n" +
         "            <!--</form>-->\n" +
         "        </div>\n" +
@@ -148,4 +153,22 @@ function validateEmpty(fldname) {
     }
     return error;
 } 
+
+function reloadGrid() {
+    $.ajax({
+               url: "/portal/gadgets/user_profile/index.jag",
+               type: "GET",
+               data: "&cookie=" + cookie + "&user=" + userName,
+               success: function (data) {
+json = $.parseJSON(data);
+drawPage();
+
+
+               },
+               error: function (e) {
+                   message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
+                   }});
+               }
+           });
+}
 
