@@ -1,0 +1,17 @@
+<%
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/FIDOService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function isDeviceRegistered(){
+   	var result = callWSReturnJSON(webService, serverUrl, "urn:isDeviceRegistered", new Array("https://localhost:9443"));
+	return result;
+}
+
+
+%>

@@ -10,7 +10,10 @@ session.put('auth-cookie', cookie);
  try{
 
 var profileClient = require('controllers/my-profile/profileClient.jag');
+var fidoClient = require('controllers/my-profile/fido-check.jag'); 
 var fieldValues = profileClient.getUserProfile(user, 'default');
+var isEnabled = fidoClient.isDeviceRegistered();
+fieldValues.return.fidoEnabled = isEnabled.return;
 
 print( fieldValues );
     }catch(e){
