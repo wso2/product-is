@@ -170,7 +170,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.ldap.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.scim.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- Features related to Cloud Identity -->
-								<featureArtifactDef>org.wso2.carbon.commons:org.wso2.carbon.user.mgt.feature:${carbon.commons.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.user.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.commons:org.wso2.carbon.tenant.mgt.common.feature:${carbon.commons.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.is:org.wso2.identity.ui.feature:${product.identity.version}</featureArtifactDef>
@@ -425,7 +425,7 @@
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.user.mgt.feature.group</id>
-									<version>${carbon.commons.version}</version>
+									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.event.server.feature.group</id>
