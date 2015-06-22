@@ -25,7 +25,7 @@
     <test name="is-tests-all" preserve-order="true" parallel="false">
         <packages>
             <!--Entitlement Test Cases-->
-            <!--<package name="org.wso2.identity.integration.test.entitlement"/>-->
+            <package name="org.wso2.identity.integration.test.entitlement"/>
             <!--Application Management Test Cases-->
             <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
         </packages>
@@ -41,7 +41,7 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
             <!--Provisioning Test Cases-->
-            <!--<class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
             <!--OAuth Test Cases-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceClientCredentialTestCase"/>
@@ -61,7 +61,7 @@
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
             <!--User Profile Management Test Cases-->
-            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <!--SCIM Test Cases-->
             <class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />
@@ -70,16 +70,16 @@
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
-            <!--<class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <!--Notification mgt UserOperation test case-->
             <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
         </classes>
     </test>
 
-    <!--<test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>-->
-        <!--</classes>-->
-    <!--</test>-->
+    <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
+        </classes>
+    </test>
 
 </suite>
