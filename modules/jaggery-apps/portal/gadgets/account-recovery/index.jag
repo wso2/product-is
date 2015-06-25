@@ -19,9 +19,9 @@ fieldValues.selectedChalanges = userChallenges.return;
 var selectedChallanges = {};
 if(userChallenges.return != null){
 	if(userChallenges.return.constructor === Array){
-			for (var i in userChallenges.return) {
-				selectedChallanges[userChallenges.return[i].id] = userChallenges.return[i];
-			}
+        for (var i in userChallenges.return) {
+            selectedChallanges[userChallenges.return[i].id] = userChallenges.return[i];
+        }
 	}else if (userChallenges.return.constructor === Object){
 		electedChallanges[userChallenges.return.id] = userChallenges.return;
 	}
@@ -33,34 +33,34 @@ var orderedChallanges = {};
 
 if(fieldValues.return != null){
 	if(fieldValues.return.constructor === Array){
-		for (var i in fieldValues.return) {
-			if(orderedChallanges[fieldValues.return[i].questionSetId]==undefined){
-				orderedChallanges[fieldValues.return[i].questionSetId] = [];
-			}
-			if(selectedChallanges[fieldValues.return[i].questionSetId].question == fieldValues.return[i].question){
-				fieldValues.return[i].selected = "true";
-				fieldValues.return[i].answer = selectedChallanges[fieldValues.return[i].questionSetId].answer;
-			}
-			else{
-				fieldValues.return[i].selected = "false";
-				fieldValues.return[i].answer = "";
-			}
-			orderedChallanges[fieldValues.return[i].questionSetId].push(fieldValues.return[i]);
-		}
+    for (var i in fieldValues.return) {
+        if(orderedChallanges[fieldValues.return[i].questionSetId]==undefined){
+            orderedChallanges[fieldValues.return[i].questionSetId] = [];
+        }
+        if(selectedChallanges.length > 0 && selectedChallanges[fieldValues.return[i].questionSetId].question == fieldValues.return[i].question){
+            fieldValues.return[i].selected = "true";
+            fieldValues.return[i].answer = selectedChallanges[fieldValues.return[i].questionSetId].answer;
+        }
+        else{
+            fieldValues.return[i].selected = "false";
+            fieldValues.return[i].answer = "";
+        }
+        orderedChallanges[fieldValues.return[i].questionSetId].push(fieldValues.return[i]);
+    }
 	}else if(fieldValues.return.constructor === Object){
 
-			if(orderedChallanges[fieldValues.return.questionSetId]==undefined){
-				orderedChallanges[fieldValues.return.questionSetId] = [];
-			}
-			if(selectedChallanges[fieldValues.return.questionSetId].question == fieldValues.return.question){
-				fieldValues.return.selected = "true";
-				fieldValues.return.answer = selectedChallanges[fieldValues.return.questionSetId].answer;
-			}
-			else{
-				fieldValues.return.selected = "false";
-				fieldValues.return.answer = "";
-			}
-			orderedChallanges[fieldValues.return.questionSetId].push(fieldValues.return);
+        if(orderedChallanges[fieldValues.return.questionSetId]==undefined){
+            orderedChallanges[fieldValues.return.questionSetId] = [];
+        }
+        if(selectedChallanges.length > 0 && selectedChallanges[fieldValues.return.questionSetId].question == fieldValues.return.question){
+            fieldValues.return.selected = "true";
+            fieldValues.return.answer = selectedChallanges[fieldValues.return.questionSetId].answer;
+        }
+        else{
+            fieldValues.return.selected = "false";
+            fieldValues.return.answer = "";
+        }
+        orderedChallanges[fieldValues.return.questionSetId].push(fieldValues.return);
 	}
 }
 

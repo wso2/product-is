@@ -144,8 +144,6 @@
             }
 
             function drawPage() {
-
-       console.log(json);
        var qID = 0;
        var isAns = false;
        var sorted = [];
