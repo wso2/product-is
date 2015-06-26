@@ -70,20 +70,28 @@
 	"id" : "user_profile"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 86438d6... IDENTITY-3367 Create IS dashboard gadget for workflow feature
     },
     {
         "wid":"45",
         "x":"5",
         "y":"3",
 <<<<<<< HEAD
+<<<<<<< HEAD
         "title":"Connected Accounts",
 =======
         "title":"Associated User Accounts",
 >>>>>>> b1dd18c... Committing user account association feature
+=======
+        "title":"Pending Approvals",
+>>>>>>> 86438d6... IDENTITY-3367 Create IS dashboard gadget for workflow feature
         "width":"2",
         "height":"1",
         "prefs":"{}",
         "wclass":"",
+<<<<<<< HEAD
         "url":"/portal/gadgets/connected_accounts/gadget.xml",
         "permissions":["/permission/admin/login"],
         "authorized":"true",
@@ -92,5 +100,11 @@
 >>>>>>> 290523a... Merging social login gadget to account association
 =======
 >>>>>>> b2dd878... Merging user account association feature from master
+=======
+        "url":"/portal/gadgets/approvals/gadget.xml",
+        "permissions":["/permission/admin/login"],
+        "authorized":"true",
+        "id" : "approvals"
+>>>>>>> 86438d6... IDENTITY-3367 Create IS dashboard gadget for workflow feature
     }
 ]}
