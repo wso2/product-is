@@ -277,7 +277,7 @@
                                     .done(function (data) {
                                         message({content: 'Device registered successfully ', type: 'info', cbk: function () {
                                         } });
-							reloadGrid();
+							drawFIDORegistration();
                                     })
                                     .fail(function () {
                                         message({content: 'Error while updating Profile', type: 'error', cbk: function () {
@@ -340,7 +340,7 @@
         }
 
 
-        function removeFIDO() {
+        function removeFIDO(deviceRemarks) {
             var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
                     "  <div class=\"modal-dialog\">\n" +
                     "    <div class=\"modal-content\">\n" +
@@ -357,16 +357,18 @@
                     "  </div>\n" +
                     "</div>";
             $("#message").append(element);
+ var msg = "You are about to remove device registered on '" + deviceRemarks + "'. Do you want to proceed?";
+    message({content: msg, type: 'confirm', okCallback: function () {
 
             var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-remove.jag";
             $.ajax({
                 url: str,
                 type: "POST",
-                data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName + "&deviceRemarks=" + deviceRemarks
             })
                     .done(function (data) {
 
-reloadGrid();
+drawFIDORegistration();
 
                     })
                     .fail(function () {
@@ -377,6 +379,8 @@ reloadGrid();
                     .always(function () {
                         console.log('completed');
                     });
+    }, cancelCallback: function () {
+    }});
 
         }
 
@@ -433,6 +437,7 @@ reloadGrid();
         <div id="message"></div>
         <input type="hidden" id="tokenResponse" name="tokenResponse" value=""/>
     </form>
+
     ]]>
 </Content>
 </Module>

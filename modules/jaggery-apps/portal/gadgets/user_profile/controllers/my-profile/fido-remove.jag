@@ -16,9 +16,19 @@ function init(){
         session.put('auth-cookie', cookie);
         }
     var username = request.getParameter("user");
+    var deviceRemarks = request.getParameter("deviceRemarks");
 
         try{
-            var result = callWSInOnlyWithParams(webService, serverUrl, "urn:removeRegistration", new Array(username, "https://localhost:9443"));
+
+if(deviceRemarks == null){
+
+            var result = callWSInOnlyWithParams(webService, serverUrl, "urn:removeAllRegistrations", new Array(username, "https://localhost:9443"));
+}
+else{
+
+            var result = callWSInOnlyWithParams(webService, serverUrl, "urn:removeRegistration", new Array( deviceRemarks ));	
+}
+
         } catch(e){
             log.error(e);
             response.sendRedirect("../../index.jag?e=1&error=" + e);
