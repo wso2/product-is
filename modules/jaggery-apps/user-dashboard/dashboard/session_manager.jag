@@ -1,10 +1,12 @@
 <%
+//var x = require("controllers/login-logout/SAML2SSOAuthenticationClient.jag");
 var log = new Log();
 var cookie = session.get('auth-cookie');
+var bpsJson = session.get('listProfiles');
 var user = session.get('user');
-	var jsonString = '{"cookie":"' +cookie+'","user":"'+user+'"}';
+var jsonString = '{ ' + bpsJson + ',"cookie":"' +cookie+'","user":"'+user+'"}';
 //print(parse(jsonString));
-log.debug('Authentication Cookie ' +cookie);
+log.error(jsonString);
 webSocket.ontext = function (data) {
     var ws = this;
     setTimeout(function () {
