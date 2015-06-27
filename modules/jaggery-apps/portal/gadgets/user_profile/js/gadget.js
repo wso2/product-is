@@ -44,6 +44,9 @@ function drawPage() {
 
     var endString = "                <div class=\"control-group\">\n" +
         "                    <div class=\"controls\">\n" +
+	    "					 <button id=\"connectFedBtn\" class=\"btn btn-primary mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
+        "                    </div>\n <div class=\"controls\">\n  <br/> </div>" +
+        "                    <div class=\"controls\">\n" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
         "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
         "                    </div>\n" +
@@ -53,22 +56,8 @@ function drawPage() {
         "        </div>\n" +
         "    </div>";
 
-    var fido = "                <div class=\"control-group\">\n" +
-        "                    <div class=\"controls\">\n" ;
-if (json.return.fidoEnabled == "true"){
- fido = fido +       "                        <input type=\"button\" onclick=\"removeFIDO();\" class=\"btn\" value=\"Remove FIDO Token\"/>\n" ;
-}
-else{
- fido = fido +         "                        <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" value=\"Attach FIDO Token\"/>\n";
-}
- fido = fido +         "                    </div>\n" +
-        "                </div>\n" +
-        "            <!--</form>-->\n" +
-        "        </div>\n" +
-        "        </div>\n" +
-        "    </div>";
 
-    output =  u2fScript + start + body + fido + endString;
+    output =  u2fScript + start + body + endString;
     $("#gadgetBody").empty();
     $("#gadgetBody").append(output);
 }
@@ -172,3 +161,132 @@ drawPage();
            });
 }
 
+function deleteFIDOToken(deviceRemarks){
+
+ var msg = "You are about to remove Id '" + username + "' From IDP '" + idPId + "'. Do you want to proceed?";
+    message({content: msg, type: 'confirm', okCallback: function () {
+        $.ajax({
+                   url: "/portal/gadgets/connected_accounts/index.jag",
+                   type: "POST",
+                   data: "&cookie=" + cookie + "&username=" + username + "&idPId=" + idPId + "&action=fedDelete",
+                   success: function (data) {
+                       var resp = $.parseJSON(data);
+                       if (resp.success == true) {
+                           reloadFedGrid();
+                       } else {
+                           if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                               window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                           } else {
+                               if (resp.message != null && resp.message.length > 0) {
+                                   message({content: resp.message, type: 'error', cbk: function () {
+                                   }});
+                               } else {
+                                   message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                                   }});
+                               }
+                           }
+                       }
+                   },
+                   error: function (e) {
+                       message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                       }});
+                   }
+               });
+    }, cancelCallback: function () {
+    }});
+}
+
+function drawFIDORegistration() {
+
+$.ajax({
+           url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
+           type: "GET",
+           data: "&cookie=" + cookie + "&action=idPList",
+           success: function (data) {
+
+var deviceMetadata = null;
+if(data != null && "" != data){
+               var resp = $.parseJSON(data);
+	       deviceMetadata = resp.return;
+}
+
+                       var top =
+                               "    <div class=\"container content-section-wrapper\">\n" +
+                               "        <div class=\"row\">\n" +
+                               "            <div class=\"col-lg-12 content-section\">\n" +
+       			       "                <legend>Manage FIDO U2F Device </legend>\n" +
+                               "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
+                       var middle = "";
+                   if (deviceMetadata != null && deviceMetadata.length > 0) {
+                       var middle =
+                               "    <div class=\"control-group\">\n" +
+                               "        <table class=\"table table-bordered\">\n" +
+                               "            <thead>\n" +
+                               "                <tr>\n" +
+                               "                    <th class='txtAlnCen width80p'>Device Remarks</th>\n" +
+                               "                    <th class='txtAlnCen'>Action</th>\n" +
+                               "                </tr>\n" +
+                               "            </thead>\n";
+
+
+                       if (isArray(deviceMetadata)) {
+                           for (var i in deviceMetadata) {
+                               middle = middle +
+                                         "                <tr>\n" +
+                                         "                    <td > Registration Time : " + deviceMetadata[i] + "</td>\n" +
+                                         "                    <td class='txtAlnCen'>\n" +
+                                         "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                                         "                    </td>\n" +
+                                         "                </tr>\n";
+                           }
+                       }
+                       else {
+
+                           middle = middle +
+                                     "                <tr>\n" +
+                                     "                    <td > Registration Time : "  + deviceMetadata + "</td>\n" +
+                                     "                    <td class='txtAlnCen'>\n" +
+                                     "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                                     "                    </td>\n" +
+                                     "                </tr>\n";
+
+                       }
+
+                       var middle = middle + "            </tbody>\n" +
+                                  "        </table>\n" +
+                                  "    </div>";
+ } 
+else {
+middle = middle + "<label > Device not registered yet please register your device ! </label>";
+}
+
+
+                       var end =
+                               "                    <div class=\"control-group\">\n" +
+                               "                        <div class=\"controls\">\n" +
+                               "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
+                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn\" value=\"Done\"/>\n" +
+                               "                        </div>\n" +
+                               "                    </div></div>\n" +
+                               "                </form>\n" +
+                               "            </div>\n" +
+                               "        </div>\n" +
+                               "    </div>   ";
+
+                       var output = top + middle + end;
+
+                       $("#gadgetBody").empty();
+                       $("#gadgetBody").append(output);
+
+
+           },
+           error: function (e) {
+               message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
+               }});
+           }
+       });
+}
+
+function isArray(element) {
+    return Object.prototype.toString.call(element) === '[object Array]';
+}
