@@ -1,5 +1,6 @@
 <%
 var log = new Log();
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 var cookie = request.getParameter("cookie") ;
 var user = request.getParameter("user");
 getUser();
@@ -12,7 +13,7 @@ session.put('user', user);
 
         var client = require('controllers/account_recovery/identityMgtClient.jag');
         var fieldValues = client.getAllRecoveryQuestions();
-        var userChallenges = client.getUserChallengeQuestions(user);
+        var userChallenges = client.getUserChallengeQuestions(multitenantUtils.getTenantAwareUsername(user));
         fieldValues.selectedChalanges = userChallenges.return;
 
         // Get User Challanges
