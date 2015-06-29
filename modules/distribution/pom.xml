@@ -196,6 +196,28 @@
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
 
+                                <!-- Update log4j.properties file with Identity related log files -->
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
+                                        token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR"
+                                        value="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR${line.separator}
+#log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.security=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.core=DEBUG"/>
+
                                 <!-- Comment all active UserStoreManagers -->
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"

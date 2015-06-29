@@ -40,7 +40,6 @@
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
-                <exclude>**/log4j.properties</exclude>
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/email/email-admin-config.xml</exclude>
                 <exclude>**/dbscripts/**</exclude>
@@ -200,6 +199,7 @@
                 <include>**/multitenancy-packages.xml</include>
                 <include>**/usage-throttling-agent-config.xml</include>
                 <include>**/cloud-services-desc.xml</include>
+                <include>**/tenant-mgt.xml</include>
             </includes>
         </fileSet>
 
@@ -436,11 +436,6 @@
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
             </outputDirectory>
-        </file>
-        <file>
-            <source>conf/log4j.properties</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
         </file>
         <!--copy scim-consumer-config.xml-->
         <file>
