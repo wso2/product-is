@@ -238,6 +238,7 @@
 >>>>>>> 70bcf40... Commenting test cases temporary until properly fixed
 =======
             <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
+<<<<<<< HEAD
 >>>>>>> 5ac109d... Uncommenting test cases
 =======
             <!--<class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />-->
@@ -245,6 +246,9 @@
 =======
             <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
 >>>>>>> 29d9edc... Moving tomcat servers to port 8090 from 8080
+=======
+            <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>
+>>>>>>> ae3c83a... Adding test case for Account locking when scim enabled
             <!--Identity Management Test Cases-->
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityProviderMgtServiceTestCase" />
