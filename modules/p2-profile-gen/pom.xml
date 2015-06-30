@@ -257,6 +257,7 @@
 <<<<<<< HEAD
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b2dd878... Merging user account association feature from master
 =======
 								<!--<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>-->
@@ -269,6 +270,10 @@
 								<!-- Workflow mgt Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 >>>>>>> 723e10d... Updating p2 with workflow-mgt feature
+=======
+                                <!-- Cipher tool feature -->
+								<featureArtifactDef>org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}</featureArtifactDef>
+>>>>>>> 27c278a... adding cipher tool feature, removing saml-sso-demo sample
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -854,6 +859,7 @@
 								</feature>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 2bf61db... add axis2-transports feature, set encoding to utf-8
 							</features>
 =======
@@ -896,6 +902,12 @@
 									<version>${carbon.identity.version}</version>
 								</feature>
 >>>>>>> 723e10d... Updating p2 with workflow-mgt feature
+=======
+                                <feature>
+									<id>org.wso2.ciphertool.feature.group</id>
+									<version>${cipher-tool.version}</version>
+								</feature>
+>>>>>>> 27c278a... adding cipher tool feature, removing saml-sso-demo sample
 							</features>
 						</configuration>
 					</execution>
