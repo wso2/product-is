@@ -420,6 +420,41 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin/ciphertool.bat
+            </source>
+            <outputDirectory>wso2is-${pom.version}/bin</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin/ciphertool.sh
+            </source>
+            <outputDirectory>wso2is-${pom.version}/bin</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-text.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-tool.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-1.0.0-wso2v3.jar
+            </source>
+            <outputDirectory>wso2is-${pom.version}/lib</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/data/is-default-schema.zip
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/data</outputDirectory>

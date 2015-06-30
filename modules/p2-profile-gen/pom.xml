@@ -198,6 +198,8 @@
 								<featureArtifactDef>org.apache.axis2.transport:org.apache.axis2.transport.mail.feature:${axis2-transports.version}</featureArtifactDef>
 								<!-- User Account Association Feature -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
+                                <!-- Cipher tool feature -->
+								<featureArtifactDef>org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}</featureArtifactDef>
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -524,6 +526,10 @@
 								<feature>
 									<id>org.wso2.carbon.identity.user.account.association.feature.group</id>
 									<version>${carbon.identity.version}</version>
+								</feature>
+                                <feature>
+									<id>org.wso2.ciphertool.feature.group</id>
+									<version>${cipher-tool.version}</version>
 								</feature>
 							</features>
 						</configuration>

@@ -1100,6 +1100,7 @@
         <equinox.http.helper.version>1.0.0</equinox.http.helper.version>
         <equinox.jsp.jasper.version>1.0.1.R33x_v20070816</equinox.jsp.jasper.version>
         <javax.servlet.jsp.version>2.0.0.v200706191603</javax.servlet.jsp.version>
+        <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
         <project.scm.id>my-scm-server</project.scm.id>
     </properties>
 
