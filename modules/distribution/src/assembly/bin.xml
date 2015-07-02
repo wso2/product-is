@@ -40,7 +40,6 @@
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
-                <exclude>**/log4j.properties</exclude>
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/email/email-admin-config.xml</exclude>
                 <exclude>**/dbscripts/**</exclude>
@@ -83,19 +82,6 @@
             <includes>
                 <include>**/**</include>
             </includes>
-        </fileSet>
-
-        <fileSet>
-            <directory>target/shindig</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/shindig
-            </outputDirectory>
-            <includes>
-                <include>**/**</include>
-            </includes>
-            <excludes>
-                <exclude>**/slf4j-api-1.6.1.jar</exclude>
-                <exclude>**/slf4j-jdk14-1.6.1.jar</exclude>
-            </excludes>
         </fileSet>
 
         <fileSet>
@@ -177,6 +163,18 @@
             </includes>
         </fileSet>
 
+        <!--copy shindig war  -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps
+            </outputDirectory>
+            <includes>
+                <include>shindig.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy web app for certificate authority feature -->
         <fileSet>
             <directory>
@@ -200,6 +198,7 @@
                 <include>**/multitenancy-packages.xml</include>
                 <include>**/usage-throttling-agent-config.xml</include>
                 <include>**/cloud-services-desc.xml</include>
+                <include>**/tenant-mgt.xml</include>
             </includes>
         </fileSet>
 
@@ -420,6 +419,41 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin/ciphertool.bat
+            </source>
+            <outputDirectory>wso2is-${pom.version}/bin</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin/ciphertool.sh
+            </source>
+            <outputDirectory>wso2is-${pom.version}/bin</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-text.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-tool.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-1.0.0-wso2v3.jar
+            </source>
+            <outputDirectory>wso2is-${pom.version}/lib</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/data/is-default-schema.zip
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/data</outputDirectory>
@@ -436,11 +470,6 @@
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
             </outputDirectory>
-        </file>
-        <file>
-            <source>conf/log4j.properties</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
         </file>
         <!--copy scim-consumer-config.xml-->
         <file>
