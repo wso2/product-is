@@ -85,19 +85,6 @@
         </fileSet>
 
         <fileSet>
-            <directory>target/shindig</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/shindig
-            </outputDirectory>
-            <includes>
-                <include>**/**</include>
-            </includes>
-            <excludes>
-                <exclude>**/slf4j-api-1.6.1.jar</exclude>
-                <exclude>**/slf4j-jdk14-1.6.1.jar</exclude>
-            </excludes>
-        </fileSet>
-
-        <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
         </fileSet>
@@ -173,6 +160,18 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>authenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--copy shindig war  -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps
+            </outputDirectory>
+            <includes>
+                <include>shindig.war</include>
             </includes>
         </fileSet>
 

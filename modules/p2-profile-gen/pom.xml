@@ -200,6 +200,9 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association.feature:${carbon.identity.version}</featureArtifactDef>
                                 <!-- Cipher tool feature -->
 								<featureArtifactDef>org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}</featureArtifactDef>
+                                <feaureArtifactDef>
+                                    org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.shindig.feature:${carbon.dashboards.version}
+                                </feaureArtifactDef>
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -531,6 +534,10 @@
 									<id>org.wso2.ciphertool.feature.group</id>
 									<version>${cipher-tool.version}</version>
 								</feature>
+                                <feature>
+                                    <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
+                                    <version>${carbon.dashboards.version}</version>
+                                </feature>
 							</features>
 						</configuration>
 					</execution>

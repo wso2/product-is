@@ -55,11 +55,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.apache.shindig</groupId>
-            <artifactId>shindig-server</artifactId>
-            <type>war</type>
-        </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
@@ -94,14 +89,6 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.shindig</groupId>
-                                    <artifactId>shindig-server</artifactId>
-                                    <version>${shindig.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/shindig</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -276,13 +263,6 @@
                                             dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
-                                <copy file="src/repository/resources/shindig/index.jsp"
-                                      todir="target/shindig"/>
-                                <!--<zip destfile="target/ROOT.war"
-                                     basedir="target/shindig"  />-->
-                                <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
-                                    log4j.logger.net.sf.ehcache=ERROR
-                                </concat>
                                 <copy
                                         todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity"
                                         overwrite="false">
@@ -388,7 +368,6 @@
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>
-                                <delete dir="target/shindig"/>
                             </tasks>
                         </configuration>
                     </execution>
