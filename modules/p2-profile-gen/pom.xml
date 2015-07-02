@@ -273,7 +273,13 @@
 =======
                                 <!-- Cipher tool feature -->
 								<featureArtifactDef>org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}</featureArtifactDef>
+<<<<<<< HEAD
 >>>>>>> 27c278a... adding cipher tool feature, removing saml-sso-demo sample
+=======
+                                <feaureArtifactDef>
+                                    org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.shindig.feature:${carbon.dashboards.version}
+                                </feaureArtifactDef>
+>>>>>>> 8c8ef94... adding org.wso2.carbon.dashboards.shindig.feature_1.0.0
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -907,7 +913,14 @@
 									<id>org.wso2.ciphertool.feature.group</id>
 									<version>${cipher-tool.version}</version>
 								</feature>
+<<<<<<< HEAD
 >>>>>>> 27c278a... adding cipher tool feature, removing saml-sso-demo sample
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
+                                    <version>${carbon.dashboards.version}</version>
+                                </feature>
+>>>>>>> 8c8ef94... adding org.wso2.carbon.dashboards.shindig.feature_1.0.0
 							</features>
 						</configuration>
 					</execution>

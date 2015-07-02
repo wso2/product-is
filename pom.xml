@@ -3206,12 +3206,6 @@
                 <version>${rampart.wso2.version.1}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.shindig</groupId>
-                <artifactId>shindig-server</artifactId>
-                <version>${shindig.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
                 <version>${carbon.identity.version}</version>
@@ -3587,6 +3581,7 @@
 =======
         <carbon.kernel.version>4.4.0</carbon.kernel.version>
         <carbon.commons.version>4.4.3</carbon.commons.version>
+        <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 >>>>>>> 2d1bb2f... refactor parent pom
@@ -3608,7 +3603,6 @@
         <emma.version>2.1.5320</emma.version>
         <jaggeryjs.version>0.10.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
-        <shindig.version>2.5.0-beta5</shindig.version>
         <ws.module.version>1.1.0</ws.module.version>
         <oauth.module.version>1.0.0</oauth.module.version>
         <email.module.version>1.0.0</email.module.version>
