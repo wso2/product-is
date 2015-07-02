@@ -160,7 +160,7 @@
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
                                         token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR"
-                                        value="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR${line.separator}
+                                        value="log4j.logger.net.sf.ehcache=ERROR${line.separator}
 #log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator}
 #log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator}
 #log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator}
