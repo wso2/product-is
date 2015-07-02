@@ -3396,12 +3396,17 @@
                 <artifactId>org.jacoco.agent</artifactId>
                 <version>${jacoco.agent.version}</version>
             </dependency>
+<<<<<<< HEAD
 		</dependencies>
 	</dependencyManagement>
 =======
         </dependencies>
     </dependencyManagement>
 >>>>>>> 2d1bb2f... refactor parent pom
+=======
+        </dependencies>
+    </dependencyManagement>
+>>>>>>> 690e5e1... Resolving merge conflicts
 
     <profiles>
         <profile>
@@ -3652,6 +3657,7 @@
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.automation.version>4.3.1</carbon.automation.version>
 		<carbon.automationutils.version>4.3.0</carbon.automationutils.version>
 <<<<<<< HEAD
@@ -3685,6 +3691,10 @@
         <carbon.automation.version>4.4.1</carbon.automation.version>
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
 >>>>>>> 1bc44ea... updating test framework version
+=======
+        <carbon.automation.version>4.4.1</carbon.automation.version>
+        <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
+>>>>>>> 690e5e1... Resolving merge conflicts
         <charon.orbit.version>2.0.0-wso2v3</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
@@ -3710,7 +3720,11 @@
         <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
 =======
         <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
+<<<<<<< HEAD
 >>>>>>> 27c278a... adding cipher tool feature, removing saml-sso-demo sample
+=======
+        <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
+>>>>>>> 690e5e1... Resolving merge conflicts
         <project.scm.id>my-scm-server</project.scm.id>
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
     </properties>
