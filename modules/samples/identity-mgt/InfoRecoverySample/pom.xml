@@ -174,19 +174,6 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>tlc</id>
-            <name>TLC Repository</name>
-
-            <url>http://commons.ucalgary.ca/pub/m2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2-maven2-repository</id>
-            <url>http://dist.wso2.org/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <properties>
         <junit.version>4.11</junit.version>
         <jdk.version>1.6</jdk.version>
