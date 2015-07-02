@@ -934,8 +934,13 @@
                 <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
-		</dependencies>
-	</dependencyManagement>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.agent</artifactId>
+                <version>${jacoco.agent.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <profile>
@@ -1073,8 +1078,8 @@
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
-        <carbon.automation.version>4.3.1</carbon.automation.version>
-        <carbon.automationutils.version>4.3.0</carbon.automationutils.version>
+        <carbon.automation.version>4.4.1</carbon.automation.version>
+        <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
         <charon.orbit.version>2.0.0-wso2v3</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
@@ -1094,6 +1099,7 @@
         <equinox.jsp.jasper.version>1.0.1.R33x_v20070816</equinox.jsp.jasper.version>
         <javax.servlet.jsp.version>2.0.0.v200706191603</javax.servlet.jsp.version>
         <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
+        <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
     </properties>
 
