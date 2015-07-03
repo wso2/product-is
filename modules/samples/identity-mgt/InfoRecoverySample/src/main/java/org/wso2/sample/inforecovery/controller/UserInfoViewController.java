@@ -21,9 +21,11 @@ package org.wso2.sample.inforecovery.controller;
 import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
+import org.wso2.sample.inforecovery.client.ClientConstants;
 import org.wso2.sample.inforecovery.client.UserInformationRecoveryClient;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -97,13 +99,19 @@ public class UserInfoViewController extends HttpServlet {
             req.setAttribute("captchaImagePath", captchaImagePath);
             req.setAttribute("recoveryMethod", radio);
 
+            ServletContext ctx = this.getServletContext();
+            String captchaDisable = ctx.getInitParameter(ClientConstants.CAPTCHA_DISABLE);
 
             RequestDispatcher dispatcher;
             if (session.getAttribute("emailConfirmation") != null) {
                 req.setAttribute("validateAction", "verify");
                 session.setAttribute("confirmation", session.getAttribute("emailConfirmation"));
                 session.setAttribute("emailConfirmation", null);
-                dispatcher = req.getRequestDispatcher("/recover_confirmation_info.jsp");
+                if (!"true".equals(captchaDisable)) {
+                    dispatcher = req.getRequestDispatcher("/recover_confirmation_info.jsp");
+                } else {
+                    dispatcher = req.getRequestDispatcher("/verify");
+                }
             } else {
                 session.setAttribute("confirmation", captchaInfoBean.getSecretKey());
                 req.setAttribute("validateAction", "validate");

@@ -22,6 +22,8 @@ public class ClientConstants {
 
     public static final String ACCESS_USERNAME = "accessUsername";
 
+    public static final String CAPTCHA_DISABLE = "captchaDisable";
+
     public static final String ACCESS_PASSWORD = "accessPassword";
 
     public static final String TRUSTSTORE_PATH = "trustStorePath";
