@@ -61,7 +61,7 @@
                         <sec.verifier.dir>
                             ${basedir}/target/security-verifier/
                         </sec.verifier.dir>
-                        <emma.home>${basedir}/target/emma</emma.home>
+                        <!--<emma.home>${basedir}/target/emma</emma.home>-->
                         <samples.dir>${basedir}/../samples/product</samples.dir>
                         <extracted.dir>wso2is-${project.version}</extracted.dir>
                     </systemProperties>

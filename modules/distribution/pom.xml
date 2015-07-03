@@ -55,11 +55,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.apache.shindig</groupId>
-            <artifactId>shindig-server</artifactId>
-            <type>war</type>
-        </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
@@ -94,14 +89,6 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.shindig</groupId>
-                                    <artifactId>shindig-server</artifactId>
-                                    <version>${shindig.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/shindig</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -168,6 +155,28 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
+
+                                <!-- Update log4j.properties file with Identity related log files -->
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
+                                        token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR"
+                                        value="log4j.logger.net.sf.ehcache=ERROR${line.separator}
+#log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.security=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.core=DEBUG"/>
 
                                 <!-- Comment all active UserStoreManagers -->
                                 <replace
@@ -254,13 +263,6 @@
                                             dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
-                                <copy file="src/repository/resources/shindig/index.jsp"
-                                      todir="target/shindig"/>
-                                <!--<zip destfile="target/ROOT.war"
-                                     basedir="target/shindig"  />-->
-                                <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
-                                    log4j.logger.net.sf.ehcache=ERROR
-                                </concat>
                                 <copy
                                         todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity"
                                         overwrite="false">
@@ -366,7 +368,6 @@
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>
-                                <delete dir="target/shindig"/>
                             </tasks>
                         </configuration>
                     </execution>
