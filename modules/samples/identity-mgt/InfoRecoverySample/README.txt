@@ -21,6 +21,8 @@ Specify the "carbonServerUrl" with the URL of the Identity Server. eg. https://l
 
 Specify the credentials to access Identity Server with admin privileges for "accessUsername" and "accessPassword".
 
+Specify the captcha validation enable or disable in the webApp using captchaDisable propery.
+
 Specify the trustStore absolute resource path for "trustStorePath". eg. path to wso2carbon.jks of the Identity Server
 
 
