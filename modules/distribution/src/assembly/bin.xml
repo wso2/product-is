@@ -405,7 +405,7 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/sso_redirect.html
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/sso_response.html
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/security</outputDirectory>
             <fileMode>644</fileMode>
