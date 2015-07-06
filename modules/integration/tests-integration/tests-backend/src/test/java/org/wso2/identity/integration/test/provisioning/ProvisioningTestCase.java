@@ -174,8 +174,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Add SCIM provisioning user on second server",
-            expectedExceptions = org.apache.wink.client.ClientRuntimeException.class,
-            dependsOnMethods = "createUser")
+          dependsOnMethods = "createUser")
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void createUserForSecondServer() throws Exception {
 
@@ -193,6 +192,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
                 post(String.class, encodedUser);
+        Assert.assertTrue(userName2.contains(response));
     }
 
     private void buildSCIMProvisioningConnector(int portOffset) throws Exception {
