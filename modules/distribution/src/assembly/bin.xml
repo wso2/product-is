@@ -405,23 +405,23 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/sso_responses/samlsso_response.html
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/samlsso_response.html
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/sso_responses</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/sso_responses/samlsso_federate.html
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/samlsso_federate.html
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/sso_responses</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/sso_responses/sts_response.html
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/sts_response.html
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/sso_responses</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
