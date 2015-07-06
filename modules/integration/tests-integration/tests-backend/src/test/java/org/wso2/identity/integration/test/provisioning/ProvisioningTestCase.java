@@ -192,7 +192,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
                 post(String.class, encodedUser);
-        Assert.assertTrue(userName2.contains(response));
+        Assert.assertTrue(response.contains(userName2));
     }
 
     private void buildSCIMProvisioningConnector(int portOffset) throws Exception {
