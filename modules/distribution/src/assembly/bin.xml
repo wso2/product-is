@@ -419,6 +419,13 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/sts_redirect.html
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/application-authentication.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
