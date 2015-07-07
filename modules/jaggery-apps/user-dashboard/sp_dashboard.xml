@@ -22,9 +22,9 @@
 						<IsEnabled>true</IsEnabled>
 					</LocalAuthenticatorConfig>
 				</LocalAuthenticatorConfigs>
-				<!-- FederatedIdentityProviders>
+				<!--FederatedIdentityProviders>
 				 <IdentityProvider>
-				       <IdentityProviderName>facebook</IdentityProviderName>
+				       <IdentityProviderName>Facebook</IdentityProviderName>
 				       <IsEnabled>true</IsEnabled>
                                      <DefaultAuthenticatorConfig>
                                              <FederatedAuthenticatorConfig> 
@@ -33,7 +33,7 @@
                                              </FederatedAuthenticatorConfig>
                                      </DefaultAuthenticatorConfig>
 				 </IdentityProvider>
-				</FederatedIdentityProviders -->
+				</FederatedIdentityProviders!-->
 				<SubjectStep>true</SubjectStep>
 				<AttributeStep>true</AttributeStep>
 			</AuthenticationStep>
