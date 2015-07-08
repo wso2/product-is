@@ -88,7 +88,7 @@ if (samlResponse != null) {
 
 					    response.sendRedirect("index.jag");
 					}else{
-					    response.sendRedirect("landing.jag?e=1&error=login_fail" );
+					    response.sendRedirect("/dashboard/samlsso.jag?logout=true");
 					}
 
                 }
