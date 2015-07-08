@@ -62,7 +62,10 @@ public class VerificationController extends HttpServlet {
         HttpSession session = req.getSession(false);
         String confirmation = (String) session.getAttribute("confirmation");
         String viewPage = null;
-        String userstoredomain = req.getParameter("userstoredomain");
+        String userstoredomain = null;
+        if (req.getParameter("userstoredomain") != null && !"null".equals(req.getParameter("userstoredomain"))) {
+            userstoredomain = req.getParameter("userstoredomain");
+        }
         String username = req.getParameter("username");
         if (!("PRIMARY".equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
             username = userstoredomain + "/" + username;
