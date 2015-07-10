@@ -41,7 +41,7 @@
         	<UseUserstoreDomainInUsername>true</UseUserstoreDomainInUsername>
         	<UseTenantDomainInUsername>true</UseTenantDomainInUsername>
 	</LocalAndOutBoundAuthenticationConfig>
-	<RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
+        <RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
         <InboundProvisioningConfig></InboundProvisioningConfig>
 	<OutboundProvisioningConfig></OutboundProvisioningConfig>
 	<ClaimConfig>
