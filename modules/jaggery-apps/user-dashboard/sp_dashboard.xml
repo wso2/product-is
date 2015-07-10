@@ -38,8 +38,8 @@
 				<AttributeStep>true</AttributeStep>
 			</AuthenticationStep>
 		</AuthenticationSteps>
-        <useUserstoreDomainInUsername>true</useUserstoreDomainInUsername>
-        <useTenantDomainInUsername>true</useTenantDomainInUsername>
+        <UseUserstoreDomainInUsername>true</UseUserstoreDomainInUsername>
+        <UseTenantDomainInUsername>true</UseTenantDomainInUsername>
 	</LocalAndOutBoundAuthenticationConfig>
 	<RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
 	<InboundProvisioningConfig></InboundProvisioningConfig>
