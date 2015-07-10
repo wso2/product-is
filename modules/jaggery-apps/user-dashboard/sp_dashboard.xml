@@ -37,7 +37,9 @@
 				<SubjectStep>true</SubjectStep>
 				<AttributeStep>true</AttributeStep>
 			</AuthenticationStep>
-		</AuthenticationSteps>	
+		</AuthenticationSteps>
+        <useUserstoreDomainInUsername>true</useUserstoreDomainInUsername>
+        <useTenantDomainInUsername>true</useTenantDomainInUsername>
 	</LocalAndOutBoundAuthenticationConfig>
 	<RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
 	<InboundProvisioningConfig></InboundProvisioningConfig>
