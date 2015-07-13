@@ -295,7 +295,7 @@ public class UserMgtTestCase extends ISIntegrationTest {
 
 		UserManagementClient userMgtClient1 = new UserManagementClient(isServer.getContextUrls().getBackEndUrl(),
 		                                                               "user6", "passWord1@");
-		userAdminClient.changePasswordByUser("user6", "passWord1@", "passwordS1@");
+		userAdminClient.changePasswordByUser("user6@carbon.super", "passWord1@", "passwordS1@");
 		String value = this.logManger.login("user6", "passwordS1@", isServer.getInstance().getHosts().get("default"));
 		Assert.assertTrue((value.indexOf("JSESSIONID") != -1), "User password change failed.");
 
