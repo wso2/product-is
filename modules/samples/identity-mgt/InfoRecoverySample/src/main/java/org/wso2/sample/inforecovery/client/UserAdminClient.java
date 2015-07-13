@@ -239,9 +239,9 @@ public class UserAdminClient {
         }
     }
 
-    public void changePasswordByUser(String oldPassword, String newPassword) throws AxisFault {
+    public void changePasswordByUser(String userName, String oldPassword, String newPassword) throws AxisFault {
         try {
-            stub.changePasswordByUser(oldPassword, newPassword);
+            stub.changePasswordByUser(userName, oldPassword, newPassword);
         } catch (Exception e) {
             handleException(e);
         }

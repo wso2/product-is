@@ -3,7 +3,6 @@
 var log = new Log();
 var userName = session.get("userName");
 var userAdmin = require('userAdminClient.jag');
-
 var i18n = session.get("i18n");
 
 function edit(){
@@ -17,17 +16,17 @@ var userName = request.getParameter("user");
 session.put("user",userName);
 }
 
-		
-
 	    var currentPwd = request.getParameter('currentPwd');
 	    var newPwd = request.getParameter('newPwd');
 	    var confirmNewPwd = request.getParameter('confirmNewPwd');
-	
+	    var userName = request.getParameter("user");
 	    if(newPwd == confirmNewPwd){
 	        var req = <xsd:changePasswordByUser xmlns:xsd="http://org.apache.axis2/xsd">
+                               <xsd:userName></xsd:userName>
 	                           <xsd:oldPassword></xsd:oldPassword>
 	                           <xsd:newPassword></xsd:newPassword>
 	                        </xsd:changePasswordByUser>;
+	        req.*::userName.setChildren(userName);
 	        req.*::oldPassword.setChildren(currentPwd);
 	        req.*::newPassword.setChildren(newPwd);
 	
