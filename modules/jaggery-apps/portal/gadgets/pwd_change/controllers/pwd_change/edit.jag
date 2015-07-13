@@ -13,13 +13,13 @@ if(cookie == null){
 var cookie = request.getParameter("cookie");
 session.put('auth-cookie', cookie);
 var userName = request.getParameter("user");
-session.put("userName",userName);
+session.put("user",userName);
 }
 
 	    var currentPwd = request.getParameter('currentPwd');
 	    var newPwd = request.getParameter('newPwd');
 	    var confirmNewPwd = request.getParameter('confirmNewPwd');
-	    var userName = session.get("userName");
+	    var userName = request.getParameter("user");
 	    if(newPwd == confirmNewPwd){
 	        var req = <xsd:changePasswordByUser xmlns:xsd="http://org.apache.axis2/xsd">
                                <xsd:userName></xsd:userName>
