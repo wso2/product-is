@@ -3509,7 +3509,11 @@
 >>>>>>> d81e49c... change carbon-identity version to 4.5.1 until stabilize the master branch with code_quality_improvement fixes.
 =======
         <carbon.identity.version>4.5.6-SNAPSHOT</carbon.identity.version>
+<<<<<<< HEAD
 >>>>>>> 81e7472... change carbon-identity version to 4.5.6-SNAPSHOT, comment intermittantly failing test case
+=======
+        <carbon.identity.jar.version>4.5.6.SNAPSHOT</carbon.identity.jar.version>
+>>>>>>> 40e0d43... adding account-mgt menu ui feature to bring user-store-config, claim-mgt and user-mgt menus to Identity tab, component.xml files are deleted form those features using an ant task and use the component.xml ships with new feature
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>

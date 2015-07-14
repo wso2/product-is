@@ -326,6 +326,24 @@
                                         message="##################### END ########################"/>
 
 
+                                <echo message="Deleting META-INF/component.xml file of user.mgt.ui component"/>
+                                <zip destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}_temp.jar">
+                                    <zipfileset src="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}.jar" excludes="META-INF/component.xml" />
+                                </zip>
+                                <move file="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}_temp.jar" toFile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}.jar"/>
+
+                                <echo message="Deleting META-INF/component.xml file of user.store.configuration.ui component"/>
+                                <zip destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}_temp.jar">
+                                    <zipfileset src="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}.jar" excludes="META-INF/component.xml" />
+                                </zip>
+                                <move file="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}_temp.jar" toFile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}.jar"/>
+
+                                <echo message="Deleting META-INF/component.xml file of claim.mgt.ui component"/>
+                                <zip destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}_temp.jar">
+                                    <zipfileset src="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}.jar" excludes="META-INF/component.xml" />
+                                </zip>
+                                <move file="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}_temp.jar" toFile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}.jar"/>
+
                                 <delete file="target/wso2is-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>
