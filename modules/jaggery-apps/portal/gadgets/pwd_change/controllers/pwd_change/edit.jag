@@ -2,7 +2,7 @@
 
 var log = new Log();
 var userName = session.get("userName");
-var userAdmin = require('userAdminClient.jag');
+var userAdmin = require('../service-clients/UserAdminClient.jag');
 var i18n = session.get("i18n");
 
 function edit(){
@@ -21,17 +21,8 @@ session.put("user",userName);
 	    var confirmNewPwd = request.getParameter('confirmNewPwd');
 	    var userName = request.getParameter("user");
 	    if(newPwd == confirmNewPwd){
-	        var req = <xsd:changePasswordByUser xmlns:xsd="http://org.apache.axis2/xsd">
-                               <xsd:userName></xsd:userName>
-	                           <xsd:oldPassword></xsd:oldPassword>
-	                           <xsd:newPassword></xsd:newPassword>
-	                        </xsd:changePasswordByUser>;
-	        req.*::userName.setChildren(userName);
-	        req.*::oldPassword.setChildren(currentPwd);
-	        req.*::newPassword.setChildren(newPwd);
-	
-	        userAdmin.changeCredential(req);
-	        
+	        userAdmin.changePasswordByUser(userName,currentPwd,newPwd);
+	        print('{"success":true}');
 	        //For now once the pwd is changed, we need to replace it in the session. This should be removed once authentication is done via framework.
 	     //   session.put("pwd", newPwd);
 	       // response.sendRedirect("../../index.jag?s=1&sMsg=success_change_pwd");
@@ -42,10 +33,24 @@ session.put("user",userName);
 	    }
 	}catch(e){
 		log.error(e);
-        response.sendRedirect("../../index.jag?e=1&error=" + e);
+        print(getErrorMessage(e.message));
 		
 	}
 }
 
 edit();
+
+function getErrorMessage(message) {
+    if (message != null && message.length > 0) {
+        if (message.indexOf('401 Error: Unauthorized') > -1) {
+            return '{"success":false, "reLogin":true}';
+        } else {
+            var msg = message.split(':');
+            if (msg.length > 0) {
+                return '{"success":false, "message":"' + msg[1] + '"}';
+            }
+        }
+    }
+    return '{"success":false, "message":null}';
+}
 %>

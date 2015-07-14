@@ -105,7 +105,22 @@
                     data:$('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
                 })
                         .done(function (data) {
-			cancel();
+                         var resp = $.parseJSON(data);
+                          if (resp.success == true) {
+                           			cancel();
+                       } else {
+                           if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                               window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                           } else {
+                               if (resp.message != null && resp.message.length > 0) {
+                                   message({content: resp.message, type: 'error', cbk: function () {
+                                   }});
+                               } else {
+                                   message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                                   }});
+                               }
+                           }
+                       }
 			//message({content:'Successfully changed the password',type:'info', cbk:function(){} });
 
                         })
