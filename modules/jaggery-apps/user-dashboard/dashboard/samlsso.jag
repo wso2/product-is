@@ -12,7 +12,7 @@ if(samlConfig!=null){
     postUrl = samlConfig['SAML.IdPUrl'];
     issuer = samlConfig['SAML.IssuerID'];
 }
-if(postUrl==null){
+else{
     response.sendRedirect("login.jag");
 }
 
