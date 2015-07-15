@@ -2,28 +2,22 @@
 
 var log = new Log();
 var selfReg = require('/controllers/user-registration/userRegistrationClient.jag');
+var userRegClient = require('/controllers/user-registration/userRegistrationServiceClient.jag');
+var userDTO = Packages.org.wso2.carbon.identity.user.registration.stub.dto.UserDTO;
+var userFieldDTO = Packages.org.wso2.carbon.identity.user.registration.stub.dto.UserFieldDTO;
 
 var constants = require("../../util/constants.jag");
 var util = require("../../util/utility.jag");
 var i18n = util.initI18N();
 
 function edit(){
+    var user = new userDTO();
 	var messages = i18n.localize("messages");
     try{
         var claim = constants.DEFAULT_CLAIM_URL;
         if(session.get('openid') != null){
             claim = constants.OPENID_REG_CLAIM_URL;
         }
-
-
-        var req =  <xsd:addUser xmlns:xsd="http://org.apache.axis2/xsd" xmlns:xsd1="http://dto.registration.user.identity.carbon.wso2.org/xsd">
-                           <xsd:user>
-                              <xsd1:openID></xsd1:openID>
-                              <xsd1:password></xsd1:password>
-                           </xsd:user>
-                        </xsd:addUser>;
-
-        var userName =  <xsd1:userName xmlns:xsd1="http://dto.registration.user.identity.carbon.wso2.org/xsd"></xsd1:userName>;
 
         var domain = request.getParameter("domain");
         var userNameVal = request.getParameter("userName");
@@ -54,14 +48,16 @@ function edit(){
 			return;
         }
 
-        req.*::user.*::openID.setChildren(session.get("openIdURL"));
-        req.*::user.*::password.setChildren(pwd);
-        userName.setChildren(domain + "/" + userNameVal);
-
+        user.setUserName(domain + "/" + userNameVal);
+        user.setPassword(pwd);
+        user.setOpenID(session.get("openIdURL")) ;
 
 
         var fieldValues = selfReg.readUserFieldsForUserRegistration(claim, true);
         fieldValues = fieldValues.*::['return'];
+
+        var userFields = [];
+        var i =0;
 
         log.debug(fieldValues);
         for each (var f in fieldValues){
@@ -77,43 +73,45 @@ function edit(){
                	return;
            }
 
-           var fieldValue = <xsd1:userFields xmlns:xsd1="http://dto.registration.user.identity.carbon.wso2.org/xsd">
-               <xsd1:claimUri></xsd1:claimUri>
-               <xsd1:defaultValue></xsd1:defaultValue>
-               <xsd1:displayOrder></xsd1:displayOrder>
-               <xsd1:fieldName></xsd1:fieldName>
-               <xsd1:fieldValue></xsd1:fieldValue>
-               <xsd1:inputValues></xsd1:inputValues>
-               <xsd1:maxLength></xsd1:maxLength>
-               <xsd1:minLength></xsd1:minLength>
-               <xsd1:regEx></xsd1:regEx>
-               <xsd1:required></xsd1:required>
-            </xsd1:userFields>;
+           var fieldDTO = new userFieldDTO();
+           var inputValues = f.*::['inputValues'];
+           var inputValArray = [];
+           var j = 0;
 
-           fieldValue.*::claimUri.setChildren(f.*::['claimUri'].text());
-           fieldValue.*::defaultValue.setChildren(f.*::['defaultValue'].text());
-           fieldValue.*::displayOrder.setChildren(f.*::['displayOrder'].text());
-           fieldValue.*::fieldName.setChildren(f.*::['fieldName'].text());
+            for each (var inVal in inputValues){
+                 inputValArray[j]= inVal.text();
+            }
 
-           fieldValue.*::inputValues.setChildren(f.*::['inputValues'].text());
-           fieldValue.*::maxLength.setChildren(f.*::['maxLength'].text());
-           fieldValue.*::minLength.setChildren(f.*::['minLength'].text());
-           fieldValue.*::regEx.setChildren(f.*::['regEx'].text());
-           fieldValue.*::required.setChildren(f.*::['required'].text());
+
+
+           fieldDTO.setClaimUri(f.*::['claimUri'].text());
+           fieldDTO.setDefaultValue(f.*::['defaultValue'].text());
+           fieldDTO.setDisplayOrder(f.*::['displayOrder'].text());
+           fieldDTO.setFieldName(f.*::['fieldName'].text());
+
+           fieldDTO.setInputValues(inputValArray);
+           fieldDTO.setMaxLength(f.*::['maxLength'].text());
+           fieldDTO.setMinLength(f.*::['minLength'].text());
+           fieldDTO.setRegEx(f.*::['regEx'].text());
+           fieldDTO.setRequired(Boolean(f.*::['required'].text()));
 
            if(value != null && value.length > 0){
-               fieldValue.*::fieldValue.setChildren(value);
-           }
+               fieldDTO.setFieldValue(value);
+           } else{
+               fieldDTO.setFieldValue("");
+               }
 
-           req.*::['user'].appendChild(fieldValue);
+
+          userFields[i] =  fieldDTO;
+          i++;
        }
-       req.*::['user'].appendChild(userName);
-       selfReg.addUser(req);
+       user.setUserFields(userFields);
+       userRegClient.addUser(user);
        response.sendRedirect("../../login.jag?");
 
     }catch(e){
         log.error(e);
-        response.sendRedirect("index.jag?e=1&error=service_invok_error");
+         response.sendRedirect("../../landing.jag?e=1&error=" + getErrorMessage(e.message));
 
     }
 }
@@ -137,5 +135,14 @@ function validate(value, f){
 }
 
 edit();
+
+function getErrorMessage(message) {
+    var msg = message.split(':');
+    if (msg.length > 0) {
+        return msg[2].toString().replaceAll('\'',' ');
+    }
+    return 'Error while adding user';
+}
+
 
 %>

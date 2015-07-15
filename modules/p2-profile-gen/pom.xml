@@ -142,7 +142,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.xacml.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.claim.mgt.feature:${carbon.identity.version}</featureArtifactDef>
@@ -529,13 +529,14 @@
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
-									<id>org.wso2.carbon.identity.self.registration.server.feature.group</id>
+									<id>org.wso2.carbon.identity.self.registration.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.identity.user.profile.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
+<<<<<<< HEAD
 >>>>>>> dd74c39... install user.mgt feature form carbon.identity, refactor poms
 
                                 <feature>
@@ -590,6 +591,60 @@
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+=======
+								<feature>
+									<id>org.wso2.carbon.identity.xacml.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.sso.saml.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.application.mgt.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.claim.mgt.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.authenticator.saml2.sso.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.um.ws.service.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.directory.service.mgr.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.identity.styles.feature.group</id>
+									<version>${product.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.sts.passive.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.identity.utils.feature.group</id>
+									<version>${product.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.oauth.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.authenticator.iwa.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.scim.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+>>>>>>> 01d60e0... fixes to show error message on user registration failure. adding new user registration feature to the product
 
 <<<<<<< HEAD
                                 <!-- Features required for Cloud Identity -->
