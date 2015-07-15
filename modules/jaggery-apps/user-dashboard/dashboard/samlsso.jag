@@ -7,8 +7,14 @@ var sso = require("sso");
 var sessionId = session.getId();
 var encodedSAMLRequest;
 var postUrl;
-var postUrl = samlConfig['SAML.IdPUrl'];
-var issuer = samlConfig['SAML.IssuerID'];
+var issuer;
+if(samlConfig!=null){
+    postUrl = samlConfig['SAML.IdPUrl'];
+    issuer = samlConfig['SAML.IssuerID'];
+}
+else{
+    response.sendRedirect("login.jag");
+}
 
 
 if(request.getParameter("login") === 'true'){
