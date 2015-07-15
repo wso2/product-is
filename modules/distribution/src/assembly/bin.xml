@@ -198,6 +198,15 @@
                 <include>**/multitenancy-packages.xml</include>
                 <include>**/usage-throttling-agent-config.xml</include>
                 <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
                 <include>**/tenant-mgt.xml</include>
             </includes>
         </fileSet>
