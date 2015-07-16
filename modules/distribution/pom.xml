@@ -200,42 +200,42 @@
                                         value="&lt;/UserStoreManager&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
                                         value="&lt;ServiceProvider&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;Issuer&gt;&lt;/Issuer&gt;"
                                         value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
                                         value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
                                         value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
                                         value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
                                         value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;Audience&gt;&lt;/Audience&gt;"
                                         value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
 
@@ -289,25 +289,6 @@
                                 </sql>
                                 <echo
                                         message="##################### END ########################"/>
-
-
-                                <echo message="Deleting META-INF/component.xml file of user.mgt.ui component"/>
-                                <zip destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}_temp.jar">
-                                    <zipfileset src="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}.jar" excludes="META-INF/component.xml" />
-                                </zip>
-                                <move file="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}_temp.jar" toFile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.user.mgt.ui_${carbon.identity.jar.version}.jar"/>
-
-                                <echo message="Deleting META-INF/component.xml file of user.store.configuration.ui component"/>
-                                <zip destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}_temp.jar">
-                                    <zipfileset src="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}.jar" excludes="META-INF/component.xml" />
-                                </zip>
-                                <move file="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}_temp.jar" toFile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.identity.user.store.configuration.ui_${carbon.identity.jar.version}.jar"/>
-
-                                <echo message="Deleting META-INF/component.xml file of claim.mgt.ui component"/>
-                                <zip destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}_temp.jar">
-                                    <zipfileset src="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}.jar" excludes="META-INF/component.xml" />
-                                </zip>
-                                <move file="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}_temp.jar" toFile="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/org.wso2.carbon.claim.mgt.ui_${carbon.identity.jar.version}.jar"/>
 
                                 <delete file="target/wso2is-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
