@@ -284,7 +284,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
         Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
-                "Adding a service provider has failed for " + config);
+                            "Adding a service provider has failed for " + config);
     }
 
     @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLSSOLogout" })
@@ -295,7 +295,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
-            dependsOnMethods = { "testAddSP" })
+          dependsOnMethods = { "testAddSP" })
     public void testSAMLSSOLogin() {
         try {
             HttpResponse response;
@@ -323,14 +323,14 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             resultPage = extractDataFromResponse(response);
 
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
-                    "SAML SSO Login failed for " + config);
+                              "SAML SSO Login failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO Claims", groups = "wso2.is",
-            dependsOnMethods = { "testSAMLSSOLogin" })
+          dependsOnMethods = { "testSAMLSSOLogin" })
     public void testClaims(){
         String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
 
@@ -345,7 +345,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
-            dependsOnMethods = { "testSAMLSSOLogin" })
+          dependsOnMethods = { "testSAMLSSOLogin" })
     public void testSAMLSSOLogout() throws Exception {
         try {
             HttpResponse response;
@@ -367,7 +367,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             String resultPage = extractDataFromResponse(response);
 
             Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
-                    "SAML SSO Logout failed for " + config);
+                              "SAML SSO Logout failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
         }
@@ -399,13 +399,13 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         Map<String, String> attributeMap = extractClaims(claims);
         Assert.assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
         Assert.assertEquals(attributeMap.get(firstNameClaimURI), config.getUser().getNickname(),
-                "Expected claim value for nickname is " + config.getUser().getNickname());
+                            "Expected claim value for nickname is " + config.getUser().getNickname());
         Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
         Assert.assertEquals(attributeMap.get(lastNameClaimURI), config.getUser().getUsername(),
-                "Expected claim value for lastname is " + config.getUser().getUsername());
+                            "Expected claim value for lastname is " + config.getUser().getUsername());
         Assert.assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
         Assert.assertEquals(attributeMap.get(emailClaimURI), config.getUser().getEmail(),
-                "Expected claim value for email is " + config.getUser().getEmail());
+                            "Expected claim value for email is " + config.getUser().getEmail());
     }
 
     private void assertNoneClaims(String claims){
@@ -439,10 +439,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
     private void setSystemProperties() {
         URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
+                                                 + "products" + File.separator + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
-                "wso2carbon");
+                           "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
@@ -573,8 +573,8 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         try {
             // creating the user
             remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
-                    null, getUserClaims(),
-                    profileName, true);
+                                           null, getUserClaims(),
+                                           profileName, true);
         } catch (Exception e) {
             Assert.fail("Error while creating the user", e);
         }
