@@ -93,7 +93,7 @@
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/
             </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <includes>
                 <include>**/krb5.conf</include>
                 <include>**/jaas.conf</include>
@@ -198,6 +198,15 @@
                 <include>**/multitenancy-packages.xml</include>
                 <include>**/usage-throttling-agent-config.xml</include>
                 <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
                 <include>**/tenant-mgt.xml</include>
             </includes>
         </fileSet>
@@ -377,30 +386,23 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity-mgt.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-mgt.properties
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/entitlement.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/entitlement.properties
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/saml2.federation.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/saml2.federation.properties
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
@@ -422,13 +424,6 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/sts_response.html
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/application-authentication.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
