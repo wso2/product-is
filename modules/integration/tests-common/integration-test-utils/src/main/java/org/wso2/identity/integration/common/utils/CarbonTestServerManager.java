@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.common.utils;
 
 import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
 
 import java.io.IOException;
@@ -43,13 +44,13 @@ public class CarbonTestServerManager extends TestServerManager {
         super(context, carbonZip);
     }
 
-    public String startServer() throws Exception {
+    public String startServer() throws IOException, AutomationFrameworkException {
         String carbonHome = super.startServer();
         System.setProperty("carbon.home", carbonHome);
         return carbonHome;
     }
 
-    public void stopServer() throws Exception {
+    public void stopServer() throws AutomationFrameworkException {
         super.stopServer();
     }
 

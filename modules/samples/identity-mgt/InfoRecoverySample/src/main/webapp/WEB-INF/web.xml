@@ -256,6 +256,11 @@
         <param-value>admin</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>captchaDisable</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
     <!--<login-config>-->
     <!--&lt;!&ndash;<auth-method>FORM</auth-method>&ndash;&gt;-->
     <!--<realm-name>Example Form-Based Authentication Area</realm-name>-->

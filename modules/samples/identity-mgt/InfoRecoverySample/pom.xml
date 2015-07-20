@@ -67,7 +67,7 @@
             <artifactId>org.wso2.carbon.identity.user.registration.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
         </dependency>
         <dependency>
@@ -173,19 +173,6 @@
             </releases>
         </repository>
     </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>tlc</id>
-            <name>TLC Repository</name>
-
-            <url>http://commons.ucalgary.ca/pub/m2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2-maven2-repository</id>
-            <url>http://dist.wso2.org/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <properties>
         <junit.version>4.11</junit.version>

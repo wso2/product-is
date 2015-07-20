@@ -38,7 +38,6 @@
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
-        <module>modules/dashboard</module>
         <module>modules/samples</module>
         <module>modules/integration</module>
     </modules>
@@ -735,9 +734,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
-                <version>${carbon.commons.version}</version>
+                <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -765,12 +764,6 @@
                 <artifactId>rampart</artifactId>
                 <type>mar</type>
                 <version>${rampart.wso2.version.1}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.shindig</groupId>
-                <artifactId>shindig-server</artifactId>
-                <version>${shindig.version}</version>
-                <type>war</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -941,8 +934,13 @@
                 <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
-		</dependencies>
-	</dependencyManagement>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.agent</artifactId>
+                <version>${jacoco.agent.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <profile>
@@ -1005,6 +1003,7 @@
 
     <properties>
         <carbon.identity.version>4.5.6-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.jar.version>4.5.6.SNAPSHOT</carbon.identity.jar.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1035,6 +1034,7 @@
         <junit.version>3.8.1</junit.version>
         <carbon.kernel.version>4.4.0</carbon.kernel.version>
         <carbon.commons.version>4.4.3</carbon.commons.version>
+        <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
@@ -1055,7 +1055,6 @@
         <emma.version>2.1.5320</emma.version>
         <jaggeryjs.version>0.10.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
-        <shindig.version>2.5.0-beta5</shindig.version>
         <ws.module.version>1.1.0</ws.module.version>
         <oauth.module.version>1.0.0</oauth.module.version>
         <email.module.version>1.0.0</email.module.version>
@@ -1080,8 +1079,8 @@
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
-        <carbon.automation.version>4.3.1</carbon.automation.version>
-        <carbon.automationutils.version>4.3.0</carbon.automationutils.version>
+        <carbon.automation.version>4.4.1</carbon.automation.version>
+        <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
         <charon.orbit.version>2.0.0-wso2v3</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
@@ -1100,6 +1099,8 @@
         <equinox.http.helper.version>1.0.0</equinox.http.helper.version>
         <equinox.jsp.jasper.version>1.0.1.R33x_v20070816</equinox.jsp.jasper.version>
         <javax.servlet.jsp.version>2.0.0.v200706191603</javax.servlet.jsp.version>
+        <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
+        <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
     </properties>
 

@@ -55,11 +55,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.apache.shindig</groupId>
-            <artifactId>shindig-server</artifactId>
-            <type>war</type>
-        </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
@@ -94,14 +89,6 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.shindig</groupId>
-                                    <artifactId>shindig-server</artifactId>
-                                    <version>${shindig.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/shindig</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -169,6 +156,28 @@
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
 
+                                <!-- Update log4j.properties file with Identity related log files -->
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
+                                        token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR"
+                                        value="log4j.logger.net.sf.ehcache=ERROR${line.separator}
+#log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.security=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator}
+#log4j.logger.org.wso2.carbon.identity.core=DEBUG"/>
+
                                 <!-- Comment all active UserStoreManagers -->
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
@@ -191,42 +200,42 @@
                                         value="&lt;/UserStoreManager&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
                                         value="&lt;ServiceProvider&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;Issuer&gt;&lt;/Issuer&gt;"
                                         value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
                                         value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
                                         value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
                                         value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
                                         value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;Audience&gt;&lt;/Audience&gt;"
                                         value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/sso-idp-config.xml"
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
 
@@ -254,13 +263,6 @@
                                             dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
-                                <copy file="src/repository/resources/shindig/index.jsp"
-                                      todir="target/shindig"/>
-                                <!--<zip destfile="target/ROOT.war"
-                                     basedir="target/shindig"  />-->
-                                <concat destfile="target/wso2carbon-core-${carbon.kernel.version}/repository/log4j.properties">
-                                    log4j.logger.net.sf.ehcache=ERROR
-                                </concat>
                                 <copy
                                         todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity"
                                         overwrite="false">
@@ -287,7 +289,6 @@
                                 </sql>
                                 <echo
                                         message="##################### END ########################"/>
-
 
                                 <delete file="target/wso2is-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
@@ -366,7 +367,6 @@
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>
-                                <delete dir="target/shindig"/>
                             </tasks>
                         </configuration>
                     </execution>

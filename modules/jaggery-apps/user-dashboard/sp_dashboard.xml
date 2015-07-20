@@ -37,10 +37,12 @@
 				<SubjectStep>true</SubjectStep>
 				<AttributeStep>true</AttributeStep>
 			</AuthenticationStep>
-		</AuthenticationSteps>	
+		</AuthenticationSteps>
+        	<UseUserstoreDomainInUsername>true</UseUserstoreDomainInUsername>
+        	<UseTenantDomainInUsername>true</UseTenantDomainInUsername>
 	</LocalAndOutBoundAuthenticationConfig>
-	<RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
-	<InboundProvisioningConfig></InboundProvisioningConfig>
+       <RequestPathAuthenticatorConfigs></RequestPathAuthenticatorConfigs>
+       <InboundProvisioningConfig></InboundProvisioningConfig>
 	<OutboundProvisioningConfig></OutboundProvisioningConfig>
 	<ClaimConfig>
           <AlwaysSendMappedLocalSubjectId>true</AlwaysSendMappedLocalSubjectId>

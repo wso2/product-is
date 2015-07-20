@@ -1,3 +1,13 @@
+-*.stub*
+-*.stub_
+-*.stub_4.0.0
+-*.stub-
+-org.eclipse.*
+-*.equinox.*
+-samples.*
+-*.log4j*
+-*.axis2*
+-*startup*
 -org.wso2.carbon.caching.core.identity.*
 -org.wso2.carbon.caching.core.permissiontree.*
 -org.wso2.carbon.caching.infinispan.*

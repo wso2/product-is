@@ -1,3 +1,4 @@
+<%@ page import="org.wso2.sample.inforecovery.client.ClientConstants" %>
 <%@ page contentType="text/html; charset=iso-8859-1" language="java" %>
 
 <%--
@@ -26,6 +27,9 @@
     String captchaImagePath = (String) request.getAttribute("captchaImagePath");
     String recoveryMethod = (String) request.getAttribute("recoveryMethod");
     String validateAction = (String) request.getAttribute("validateAction");
+    ServletContext ctx = config.getServletContext();
+    String captchaDisable = ctx.getInitParameter(ClientConstants.CAPTCHA_DISABLE);
+
 %>
 <jsp:include page="includes/header_signup.jsp"></jsp:include>
 
@@ -41,6 +45,7 @@
             <td>Username</td>
             <td><input type="text" name="username" id="username" style="height: 25px"/></td>
         </tr>
+        <% if (!"true".equals(captchaDisable)) {%>
         <tr class="spaceUnder">
             <td>Captcha</td>
             <td><img src="<%=captchaImageUrl%>"
@@ -52,6 +57,7 @@
             <td><input type="text" name="captchaAnswer" id="captchaAnswer" style="height: 25px"/>
             </td>
         </tr>
+        <% }%>
         <tr class="spaceUnder">
             <td><input type="hidden" name="captchaSecretKey"
                        value="<%=captchaSecretKey%>"/></td>
