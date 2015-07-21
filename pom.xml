@@ -3487,6 +3487,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3514,6 +3515,10 @@
 =======
         <carbon.identity.jar.version>4.5.6.SNAPSHOT</carbon.identity.jar.version>
 >>>>>>> 40e0d43... adding account-mgt menu ui feature to bring user-store-config, claim-mgt and user-mgt menus to Identity tab, component.xml files are deleted form those features using an ant task and use the component.xml ships with new feature
+=======
+        <carbon.identity.version>4.5.4-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.jar.version>4.5.4-SNAPSHOT</carbon.identity.jar.version>
+>>>>>>> 70fc449... change carbon.identity version to 4.5.4-SNAPSHOT
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
