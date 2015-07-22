@@ -132,7 +132,6 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.core.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.provider.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.idp.mgt.feature:${carbon.identity.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.relying.party.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.self.registration.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.version}</featureArtifactDef>
@@ -342,10 +341,6 @@
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.identity.mgt.feature.group</id>
-									<version>${carbon.identity.version}</version>
-								</feature>
-								<feature>
-									<id>org.wso2.carbon.identity.relying.party.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
