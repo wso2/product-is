@@ -180,7 +180,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 		Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
 		EntityUtils.consume(response.getEntity());
 	}
-	
+
 	@Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
 	public void testSendApprovalPost() throws Exception {
 		HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
@@ -306,7 +306,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 			String[] tokenElements = tokenString.split("\\.");
 			JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
 			String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
-			log.info("String value" + jwtClaimMappingRoleValues);
 			Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
 
 			String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.split(",");
