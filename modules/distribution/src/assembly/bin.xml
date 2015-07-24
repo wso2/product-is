@@ -112,9 +112,9 @@
 
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/ldif
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/ldif
             </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/security/ldif</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/ldif</outputDirectory>
             <includes>
                 <include>identityPerson.ldif</include>
                 <include>scimPerson.ldif</include>
@@ -230,7 +230,7 @@
 
         <fileSet>
             <directory>conf/policies</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/security/policies/xacml/default
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
             </outputDirectory>
         </fileSet>
 
