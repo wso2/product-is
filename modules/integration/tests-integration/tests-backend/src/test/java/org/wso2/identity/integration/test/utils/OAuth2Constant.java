@@ -52,6 +52,9 @@ public final class OAuth2Constant {
     public final static String ACCESS_RESOURCES_URL = "http://localhost:8090/playground2/oauth2-access-resource.jsp";
     public final static String PLAYGROUND_APP_CONTEXT_ROOT = "/playground2";
 
+
+    public final static String WSO2_CLAIM_DIALECT_ROLE="http://wso2.org/claims/role";
+
     private OAuth2Constant() {
 	}
 }

@@ -37,7 +37,6 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -182,7 +181,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 		Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
 		EntityUtils.consume(response.getEntity());
 	}
-
+//
 	@Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
 	public void testSendApprovalPost() throws Exception {
 		HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
@@ -287,6 +286,36 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
             Assert.assertTrue(System.currentTimeMillis() / expValue > 975, "'exp time is not in milliseconds'");
         }
     }
+
+
+	@Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
+			"testGetAccessToken")
+	public void AuthorizationContextValidateJwtToken() throws Exception {
+		String claimURI[] = {OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE};
+		OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
+		OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
+				OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
+		accessTokenDTO.setIdentifier(accessToken);
+		accessTokenDTO.setTokenType("bearer");
+		requestDTO.setAccessToken(accessTokenDTO);
+		requestDTO.setRequiredClaimURIs(claimURI);
+
+		OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
+		if (responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
+			String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
+
+			String[] tokenElements = tokenString.split("\\.");
+			JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
+			String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
+			log.info("String value" + jwtClaimMappingRoleValues);
+			Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
+
+			String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.split(",");
+			Assert.assertEquals("Internal/PlaygroundServiceProver", jwtClaimMappingRoleElements[1].
+					replaceAll("^\"|\"$", ""), "Invalid JWT Token Role Values");
+
+		}
+	}
 
     private void changeISConfiguration() throws Exception {
 
