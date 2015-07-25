@@ -33,7 +33,7 @@
     <name>Identity Server : InfoRecoverySample Maven Webapp</name>
 
     <modules>
-        <module>InfoRecoverySample</module>
+        <module>info-recovery-sample</module>
     </modules>
 
 </project>
