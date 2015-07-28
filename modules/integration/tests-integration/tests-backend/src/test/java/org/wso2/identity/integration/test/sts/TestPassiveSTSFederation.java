@@ -372,7 +372,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = new DefaultHttpClient().execute(request);
 
-        return super.validateSAMLResponse(response);
+        return super.validateSAMLResponse(response, "admin");
     }
 
     private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName,

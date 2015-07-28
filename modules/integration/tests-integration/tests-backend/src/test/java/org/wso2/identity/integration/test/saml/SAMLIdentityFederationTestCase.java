@@ -34,16 +34,20 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
+import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.File;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +72,10 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final int PORT_OFFSET_1 = 1;
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
 
+    private String usrName = "testFederatedUser";
+    private String usrPwd = "testFederatePassword";
+    private String usrRole = "admin";
+
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
@@ -91,6 +99,9 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
                 .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
         super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+        //add new test user to secondary IS
+        boolean userCreated = addUserToSecondaryIS();
+        Assert.assertTrue(userCreated, "User creation failed");
     }
 
     @AfterClass(alwaysRun = true)
@@ -103,13 +114,16 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
+        //delete added users to secondary IS
+        deleteAddedUsers();
+
         super.stopCarbonServer(PORT_OFFSET_1);
         super.stopTomcat(TOMCAT_8090);
 
         super.stopHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Check create identity provider in primary IS")
+    @Test(priority = 1, groups = "wso2.is", description = "Check create identity provider in primary IS")
     public void testCreateIdentityProviderInPrimaryIS() throws Exception {
 
         IdentityProvider identityProvider = new IdentityProvider();
@@ -123,11 +137,16 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
         identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
 
+        JustInTimeProvisioningConfig jitConfig = new JustInTimeProvisioningConfig();
+        jitConfig.setProvisioningEnabled(true);
+        jitConfig.setProvisioningUserStore("PRIMARY");
+        identityProvider.setJustInTimeProvisioningConfig(jitConfig);
+
         super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
         Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME), "Failed to create Identity Provider 'trustedIdP' in primary IS");
     }
 
-    @Test(groups = "wso2.is", description = "Check create service provider in primary IS")
+    @Test(priority = 2, groups = "wso2.is", description = "Check create service provider in primary IS")
     public void testCreateServiceProviderInPrimaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
@@ -162,7 +181,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         Assert.assertTrue(AUTHENTICATION_TYPE.equals(serviceProvider.getLocalAndOutBoundAuthenticationConfig().getAuthenticationType()), "Failed to update local and out bound configs in primary IS");
     }
 
-    @Test(groups = "wso2.is", description = "Check create service provider in secondary IS")
+    @Test(priority = 3, groups = "wso2.is", description = "Check create service provider in secondary IS")
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
@@ -189,7 +208,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
     }
 
-    @Test(groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
+    @Test(priority = 4, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
         HttpClient client = getHttpClient();
@@ -231,8 +250,8 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
+        urlParameters.add(new BasicNameValuePair("username", usrName));
+        urlParameters.add(new BasicNameValuePair("password", usrPwd));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionId));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -292,7 +311,45 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = new DefaultHttpClient().execute(request);
 
-        return super.validateSAMLResponse(response);
+        return super.validateSAMLResponse(response, usrName);
+    }
+
+
+    /**
+     * Function to retrieve service URI of secondary IS
+     * @return service uri
+     */
+    protected String getSecondaryISURI() {
+        return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
+    }
+
+    /**
+     * Function to retrieve test user added to secondary IS, to test federated authentication
+     *
+     * @return user name
+     */
+    protected String getFederatedTestUser() {
+        return usrName;
+    }
+
+    private boolean addUserToSecondaryIS() throws Exception {
+        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
+        if (usrMgtClient == null) {
+            return false;
+        } else {
+            String[] roles = {usrRole};
+            usrMgtClient.addUser(usrName, usrPwd, roles, null);
+            if (usrMgtClient.userNameExists(usrRole, usrName)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private void deleteAddedUsers() throws RemoteException, UserAdminUserAdminException {
+        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
+        usrMgtClient.deleteUser(usrName);
     }
 
     private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName,

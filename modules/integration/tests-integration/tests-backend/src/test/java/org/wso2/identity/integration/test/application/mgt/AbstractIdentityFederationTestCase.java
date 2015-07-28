@@ -273,7 +273,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         return headerValue;
     }
 
-    public boolean validateSAMLResponse(HttpResponse response) throws IOException {
+    public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer buffer = new StringBuffer();
         String line = "";
@@ -281,7 +281,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
             buffer.append(line);
         }
         bufferedReader.close();
-        return buffer.toString().contains("You are logged in as admin");
+        return buffer.toString().contains("You are logged in as " + userName);
     }
 
     public void closeHttpConnection(HttpResponse response) throws IOException {
