@@ -32,7 +32,7 @@
     <name>Identity Server : SSO Samples</name>
 
     <modules>
-        <module>SSOAgentSample</module>
+        <module>sso-agent-sample</module>
     </modules>
 
 </project>
