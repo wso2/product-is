@@ -201,6 +201,9 @@
                                 <feaureArtifactDef>
                                     org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.shindig.feature:${carbon.dashboards.version}
                                 </feaureArtifactDef>
+
+								<!-- Workflow mgt Feature -->
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -517,6 +520,10 @@
 								</feature>
 								<feature>
 									<id>org.wso2.carbon.identity.user.account.association.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.identity.workflow.mgt.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
                                 <feature>
