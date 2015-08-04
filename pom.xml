@@ -3535,6 +3535,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <wss4j.wso2.version>1.5.11.wso2v9</wss4j.wso2.version>
 =======
         <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
@@ -3545,12 +3546,15 @@
 =======
         <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
 >>>>>>> 4b5a46c... Revert "update dependency versions"
+=======
+        <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
+>>>>>>> 400acef... Revert "Revert "update dependency versions""
         <openws.version>1.4.2</openws.version>
-        <charon.version>2.0.0</charon.version>
+        <charon.version>2.0.1</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v14</rampart.wso2.version>
-        <rampart.wso2.version.1>1.6.1-wso2v14</rampart.wso2.version.1>
+        <rampart.wso2.version>1.6.1.wso2v15</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v15</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.1.3.wso2v1</httpcore.wso2.version>
@@ -3607,6 +3611,7 @@
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 2d1bb2f... refactor parent pom
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
 =======
@@ -3615,6 +3620,9 @@
 =======
         <oauth2.client.version>0.22.1358727-wso2v7</oauth2.client.version>
 >>>>>>> 4b5a46c... Revert "update dependency versions"
+=======
+        <oauth2.client.version>0.22.1358727-wso2v8</oauth2.client.version>
+>>>>>>> 400acef... Revert "Revert "update dependency versions""
         <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
         <stratos.version.221>2.2.1</stratos.version.221>
         <stratos.version.220>2.2.0</stratos.version.220>
@@ -3721,6 +3729,7 @@
 =======
         <carbon.automation.version>4.4.1</carbon.automation.version>
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
+<<<<<<< HEAD
 >>>>>>> 690e5e1... Resolving merge conflicts
         <charon.orbit.version>2.0.0-wso2v3</charon.orbit.version>
 =======
@@ -3729,6 +3738,9 @@
 =======
         <charon.orbit.version>2.0.0-wso2v3</charon.orbit.version>
 >>>>>>> 4b5a46c... Revert "update dependency versions"
+=======
+        <charon.orbit.version>2.0.1</charon.orbit.version>
+>>>>>>> 400acef... Revert "Revert "update dependency versions""
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
         <javax.servlet.version>2.5</javax.servlet.version>
