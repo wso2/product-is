@@ -3536,6 +3536,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <wss4j.wso2.version>1.5.11.wso2v9</wss4j.wso2.version>
 =======
         <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
@@ -3549,6 +3550,9 @@
 =======
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
 >>>>>>> 400acef... Revert "Revert "update dependency versions""
+=======
+        <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
+>>>>>>> 37b24c2... change wss4j to version 10
         <openws.version>1.4.2</openws.version>
         <charon.version>2.0.1</charon.version>
         <xalan.version>2.7.1</xalan.version>
