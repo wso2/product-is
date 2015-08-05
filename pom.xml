@@ -3577,6 +3577,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 =======
 		<carbon.kernel.version>4.4.0-SNAPSHOT</carbon.kernel.version>
@@ -3610,6 +3611,10 @@
 =======
         <carbon.kernel.version>4.4.0</carbon.kernel.version>
         <carbon.commons.version>4.4.3</carbon.commons.version>
+=======
+        <carbon.kernel.version>4.4.1</carbon.kernel.version>
+        <carbon.commons.version>4.4.4</carbon.commons.version>
+>>>>>>> a59695a... changing carbon commons and kernel version
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
