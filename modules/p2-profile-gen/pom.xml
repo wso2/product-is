@@ -277,7 +277,14 @@
                                 <feaureArtifactDef>
                                     org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.shindig.feature:${carbon.dashboards.version}
                                 </feaureArtifactDef>
+<<<<<<< HEAD
 >>>>>>> 8c8ef94... adding org.wso2.carbon.dashboards.shindig.feature_1.0.0
+=======
+
+								<!-- Workflow mgt Feature -->
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.user.mgt.workflow.server.feature:${carbon.identity.version}</featureArtifactDef>
+>>>>>>> 68b3463... Moving workflow userstore component to user-mgt
 							</featureArtifacts>
 						</configuration>
 					</execution>
@@ -973,7 +980,14 @@
                                     <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
                                     <version>${carbon.dashboards.version}</version>
                                 </feature>
+<<<<<<< HEAD
 >>>>>>> 8c8ef94... adding org.wso2.carbon.dashboards.shindig.feature_1.0.0
+=======
+								<feature>
+									<id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
+									<version>${carbon.identity.version}</version>
+								</feature>
+>>>>>>> 68b3463... Moving workflow userstore component to user-mgt
 							</features>
 						</configuration>
 					</execution>
