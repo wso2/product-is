@@ -160,7 +160,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveRolesOfUser(newUserName, newRoles, deletedRoles);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("NULL not allowed for column \"UM_ROLE_ID\";")
+            Assert.assertTrue(e.getMessage().contains("Error occurred while getting database type from DB connection")
                     , "Error Message mismatched");
         }
     }
