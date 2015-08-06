@@ -100,7 +100,23 @@
             </includes>
         </fileSet>
 
+
         <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-providers</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity/identity-providers</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/service-providers</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity/service-providers</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
+
+        <!--<fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity
             </directory>
@@ -108,7 +124,7 @@
             <includes>
                 <include>**/*.xml</include>
             </includes>
-        </fileSet>
+        </fileSet>-->
 
         <fileSet>
             <directory>
@@ -353,7 +369,7 @@
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/saml1-assertion-config.xml
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
@@ -374,7 +390,7 @@
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
@@ -464,7 +480,7 @@
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/embedded-ldap.xml
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
         <file>
             <source>
@@ -478,7 +494,7 @@
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/provisioning-config.xml
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
         <file>
             <source>
@@ -497,7 +513,7 @@
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/thrift-authentication.xml
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
         <file>
             <source>
@@ -507,10 +523,23 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/msg-mgt.properties
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/msg-mgt.properties
             </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/application-authentication.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+
     </files>
 </assembly>
