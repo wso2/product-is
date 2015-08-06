@@ -53,7 +53,7 @@ public class IdentityXmlParserTestCase {
 				+ "backupIdentity.xml";
 		String actualFile = (System.getProperty("carbon.home"))
 				+ File.separator + "repository" + File.separator + "conf"
-				+ File.separator + "identity.xml";
+				+ File.separator + "identity" + File.separator + "identity.xml";
 		
 		try {
 			copyFiles(actualFile, backupFile);
@@ -102,7 +102,7 @@ public class IdentityXmlParserTestCase {
 				+ "backupIdentity.xml";
 		String actualFile = (System.getProperty("carbon.home"))
 				+ File.separator + "repository" + File.separator + "conf"
-				+ File.separator + "identity.xml";
+				+ File.separator +  "identity"+ File.separator + "identity.xml";
 
 		try {
 			copyFiles(backupFile, actualFile);

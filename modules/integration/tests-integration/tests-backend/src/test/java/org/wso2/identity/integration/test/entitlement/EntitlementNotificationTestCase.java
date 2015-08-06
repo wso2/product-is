@@ -137,7 +137,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
         entitlementProperties = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "security" + File.separator +
+                + "repository" + File.separator + "conf" + File.separator + "identitiy" + File.separator +
                 "entitlement.properties");
         File configuredEntitlementProperties = new File(getISResourceLocation()
                 + File.separator + "entitlement" + File.separator + "config" + File.separator
