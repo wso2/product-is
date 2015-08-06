@@ -457,7 +457,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
         identityXML = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity.xml");
+                + "repository" + File.separator + "conf" + File.separator + "identity" +File.separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation()
                 + File.separator + "openId" + File.separator
                 + "identity-skipuserconsent.xml");
