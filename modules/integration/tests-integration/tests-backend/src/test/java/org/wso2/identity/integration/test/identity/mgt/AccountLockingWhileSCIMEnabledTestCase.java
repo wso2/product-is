@@ -68,7 +68,7 @@ public class AccountLockingWhileSCIMEnabledTestCase extends ISIntegrationTest {
         String carbonHome = CarbonUtils.getCarbonHome();
         identityMgtServerFile = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator
-                + "security" + File.separator + "identity-mgt.properties");
+                + "identity" + File.separator + "identity-mgt.properties");
         File identityMgtConfigFile = new File(getISResourceLocation()
                 + File.separator + "identityMgt" + File.separator
                 + "identity-mgt-account-lock-enabled.properties");

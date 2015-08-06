@@ -111,7 +111,8 @@ public class RetrieveResidentIdPEntityIdTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
         identityXML = new File(carbonHome + File.separator
-                               + "repository" + File.separator + "conf" + File.separator + "identity.xml");
+                               + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
+                + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation()
                                               + File.separator + "identityMgt" + File.separator
                                               + "identity-ssoservice-entityid-changed.xml");

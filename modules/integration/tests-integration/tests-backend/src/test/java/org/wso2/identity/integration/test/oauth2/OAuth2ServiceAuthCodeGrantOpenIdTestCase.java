@@ -294,7 +294,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         String carbonHome = CarbonUtils.getCarbonHome();
         identityXML = new File(carbonHome + File.separator
-                               + "repository" + File.separator + "conf" + File.separator + "identity.xml");
+                               + "repository" + File.separator + "conf" + File.separator + "identity" + File
+                .separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation()
                                               + File.separator + "oauth" + File.separator
                                               + "jwt-token-gen-enabled-identity.xml");
