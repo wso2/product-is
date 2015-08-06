@@ -199,6 +199,11 @@
                                         token="&lt;/ISUserStoreManager--&gt;"
                                         value="&lt;/UserStoreManager&gt;"/>
 
+                               <replace
+                                       file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
+                                       token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;"
+                                       value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;"/>
+
                                 <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="&lt;!--ServiceProvider&gt;"
