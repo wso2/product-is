@@ -52,14 +52,14 @@ public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
         super.init();
     }
 
-    @Test(groups = "wso2.is", description = "Get SSO session timeout")
-    public void testSSOSessionTimeout()
-            throws Exception {
-        SAMLSSOServiceClient ssoServiceClient =
-                new SAMLSSOServiceClient(backendURL, sessionCookie);
-        int ssoTimeoutVal = ssoServiceClient.getSSOSessionTimeout();
-        Assert.assertEquals(ssoTimeoutVal,"120");
-    }
+//    @Test(groups = "wso2.is", description = "Get SSO session timeout")
+//    public void testSSOSessionTimeout()
+//            throws Exception {
+//        SAMLSSOServiceClient ssoServiceClient =
+//                new SAMLSSOServiceClient(backendURL, sessionCookie);
+//        int ssoTimeoutVal = ssoServiceClient.getSSOSessionTimeout();
+//        Assert.assertEquals(ssoTimeoutVal,"120");
+//    }
 
     /**
      * Replace identity.xml file with the original one in the IS pack.
