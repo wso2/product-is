@@ -685,7 +685,9 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
-        samlssoServiceProviderDTO.setAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()));
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[] {String.format(ACS_URL,
+                                                                                config.getApp().getArtifact())});
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(config.getApp().isSigningEnabled());
