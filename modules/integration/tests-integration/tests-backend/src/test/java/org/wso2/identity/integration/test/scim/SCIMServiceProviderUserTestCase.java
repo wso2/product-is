@@ -25,6 +25,9 @@ import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
 import org.apache.wink.client.handlers.ClientHandler;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -86,7 +89,8 @@ public class SCIMServiceProviderUserTestCase {
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
                 post(String.class, encodedUser);
         log.info(response);
-        scimUserId = response.split(",")[0].split(":")[1].replace('"', ' ').trim();
+        Object obj= JSONValue.parse(response);
+        scimUserId = ((JSONObject)obj).get("id").toString();
         userMgtClient.listUsers(USERNAME, 100);
         Assert.assertTrue(isUserExists());
         Assert.assertNotNull(scimUserId);
