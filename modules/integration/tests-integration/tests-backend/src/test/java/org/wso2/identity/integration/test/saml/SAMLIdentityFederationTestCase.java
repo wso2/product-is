@@ -376,7 +376,8 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(issuerName);
-        samlssoServiceProviderDTO.setAssertionConsumerUrl(acsUrl);
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{acsUrl});
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(acsUrl);
         samlssoServiceProviderDTO.setNameIDFormat(SAML_NAME_ID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(true);
         samlssoServiceProviderDTO.setDoSignResponse(true);

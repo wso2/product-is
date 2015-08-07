@@ -59,12 +59,12 @@ public class SAMLSSOServiceClient {
 
     }
 
-    public int getSSOSessionTimeout()
-            throws Exception {
-        try {
-            return identitySAMLSSOServiceStub.getSSOSessionTimeout();
-        } catch (RemoteException e) {
-            throw new RemoteException("Error while getting SSO Session timeout ", e);
-        }
-    }
+//    public int getSSOSessionTimeout()
+//            throws Exception {
+//        try {
+//            return identitySAMLSSOServiceStub.getSSOSessionTimeout();
+//        } catch (RemoteException e) {
+//            throw new RemoteException("Error while getting SSO Session timeout ", e);
+//        }
+//    }
 }
