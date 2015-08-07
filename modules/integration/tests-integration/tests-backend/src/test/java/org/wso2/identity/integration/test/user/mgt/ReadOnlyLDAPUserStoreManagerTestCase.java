@@ -123,8 +123,9 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.updateRoleName(newUserRole, newUserRole + "updated");
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "Read-only UserStoreManager. Roles cannot be added or modified."
-                    , "Error message mismatched");
+            Assert.assertTrue(e.getMessage().contains("Read-only UserStoreManager. Roles cannot be added or modified.")
+                    , "Error message mismatched, expected 'Read-only UserStoreManager. Roles cannot be added or " +
+                    "modified.', but was '" + e.getMessage() + " '");
         }
 
     }
@@ -174,8 +175,9 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveUsersOfRole(newUserRole, newUsers, deletedUsers);
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "Read-only user store.Roles cannot be added or modfified"
-                    ,"Error message mismatched");
+            Assert.assertTrue(e.getMessage().contains("Read-only user store.Roles cannot be added or modfified"),
+                    "Error message mismatched, expected 'Read-only user store.Roles cannot be added or modfified', " +
+                            "but was '" + e.getMessage() + " '");
         }
 
     }
