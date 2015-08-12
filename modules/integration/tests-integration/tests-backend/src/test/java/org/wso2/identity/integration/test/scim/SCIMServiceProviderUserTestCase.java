@@ -84,7 +84,7 @@ public class SCIMServiceProviderUserTestCase {
         Resource userResource = SCIMUtils.getUserResource(scimClient, scim_url);
         BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         String response = userResource.
-                    header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
+                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
                 post(String.class, encodedUser);
         log.info(response);
