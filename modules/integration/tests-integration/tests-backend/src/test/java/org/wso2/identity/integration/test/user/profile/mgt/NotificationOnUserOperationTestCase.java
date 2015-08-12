@@ -95,7 +95,8 @@ public class NotificationOnUserOperationTestCase extends ISIntegrationTest {
         newProperties.put("json.subscription.userOperation.jsonContentTemplate", templateLocation);
         replaceProperties(newProperties, msgMgtPropertiesFileLocation);
         notificationMgtProperties = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "msg-mgt.properties");
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator +
+                "msg-mgt.properties");
 
         File configuredNotificationProperties = new File(msgMgtPropertiesFileLocation);
 
