@@ -372,12 +372,16 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />-->
 >>>>>>> 70bcf40... Commenting test cases temporary until properly fixed
 =======
             <class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />
+=======
+            <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
+>>>>>>> 7017474... Rmove unused test cases
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
 >>>>>>> 5ac109d... Uncommenting test cases
