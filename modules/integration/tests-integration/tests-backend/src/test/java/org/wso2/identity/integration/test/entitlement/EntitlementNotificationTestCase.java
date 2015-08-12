@@ -137,7 +137,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
         entitlementProperties = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identitiy" + File.separator +
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator +
                 "entitlement.properties");
         File configuredEntitlementProperties = new File(getISResourceLocation()
                 + File.separator + "entitlement" + File.separator + "config" + File.separator
@@ -163,7 +163,8 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
         newProperties.put("json.subscription.policyUpdate.jsonContentTemplate", templateLocation);
         replaceProperties(newProperties, msgMgtPropertiesFileLocation);
         notificationMgtProperties = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "msg-mgt.properties");
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator +
+                "msg-mgt.properties");
 
         File configuredNotificationProperties = new File(msgMgtPropertiesFileLocation);
 
