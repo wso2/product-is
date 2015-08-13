@@ -16,6 +16,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     <test name="is-application-mgt" preserve-order="true" parallel="false">
         <packages>
@@ -138,6 +139,14 @@
 =======
 =======
 >>>>>>> 5ac109d... Uncommenting test cases
+=======
+    <test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>
+        </classes>
+    </test>
+
+>>>>>>> 0dd84a5... uncommenting notification mgt test case
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase" />
@@ -418,8 +427,6 @@
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
-            <!--Notification mgt UserOperation test case-->
-            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
         </classes>
