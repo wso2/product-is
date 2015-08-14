@@ -22,7 +22,7 @@ var opIFrame = document.getElementById('opIFrame').contentWindow;
  * periodically invoking the Endpoint at OP for every six seconds
  */
 setInterval(function () {
-    console.log('Sending polling Request From RP Client ... ' + mes + ',' + sessionState);
+    console.log('Sending polling Request From RP Client:' + mes + ',' + sessionState);
     document.all.opIFrame.src = endPoint;
     opIFrame.postMessage(mes, endPoint);
 }, 6000);
@@ -34,7 +34,7 @@ window.addEventListener("message", OnMessage, false);
  * Fires when a message arrives to the RP
  */
 function OnMessage(event) {
-    console.log('Receiving the Session Status From OP=========' + event.data);
+    console.log('Receiving the Session Status From OP: ' + event.data);
     if (event.origin == targetOrigin) {
         if (event.data == "changed") {
             var prompt = "none";

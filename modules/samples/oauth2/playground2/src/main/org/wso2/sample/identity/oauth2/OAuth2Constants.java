@@ -39,11 +39,11 @@ public final class OAuth2Constants {
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
 
     //OP Response parameters
-    public static final String OP_ENDPOINT_URL="https://localhost:9443/oauth2/check_session_iframe";
-    public static final String TARGET_URL="http://localhost:9443";
-    public static final String OP_STATUS_LOGGED="true";
-    public static final String LOGOUT_IFRAME_SRC="https://localhost:9443/oauth2/end_session_endpoint?logoutNotification=null";
-    public static final String LOGOUT_URL="https://localhost:9443/oauth2/end_session_endpoint?logoutNotification=True&id_token_hint=";
-    public static final String RP_IFRAME_SRC="http://localhost:8080/playground/rpIFrame.jsp?session=";
+    public static final String OP_ENDPOINT_URL = "https://localhost:9443/oauth2/check_session_iframe";
+    public static final String TARGET_URL = "http://localhost:9443";
+    public static final String OP_STATUS_LOGGED = "true";
+    public static final String LOGOUT_IFRAME_SRC = "https://localhost:9443/oauth2/end_session_endpoint?logoutNotification=null";
+    public static final String LOGOUT_URL = "https://localhost:9443/oauth2/end_session_endpoint?logoutNotification=True&id_token_hint=";
+    public static final String RP_IFRAME_SRC = "http://localhost:8080/playground/rpIFrame.jsp?session=";
 
 }
