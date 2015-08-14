@@ -216,8 +216,13 @@
 
                                 <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;AssertionConsumerService&gt;&lt;/AssertionConsumerService&gt;"
-                                        value="&lt;AssertionConsumerService&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerService&gt;"/>
+                                        token="&lt;AssertionConsumerServiceURL&gt;&lt;/AssertionConsumerServiceURL&gt;"
+                                        value="&lt;AssertionConsumerServiceURL&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
+                                        token="&lt;DefaultAssertionConsumerServiceURL&gt;&lt;/DefaultAssertionConsumerServiceURL&gt;"
+                                        value="&lt;DefaultAssertionConsumerServiceURL&gt;https://localhost:9443/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;"/>
 
                                 <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
