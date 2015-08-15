@@ -1,0 +1,44 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/SessionManagementService";
+
+var i18n = session.get("i18n");
+var ws = require('ws');
+
+function getAllSessions(){
+    var webService = new ws.WSRequest();
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getAllSessionInfo", null);
+    if (result.return instanceof Array) {
+         return convertJSONObjectToArray(result);
+    } else {
+        var array = [];
+        array[0] = result.return;
+         var json = {"return":array};
+         return convertJSONObjectToArray(json);
+    }
+}
+
+function convertJSONObjectToArray(jsonInput) {
+     for (var i in jsonInput.return) {
+            if (jsonInput.return[i].sessionsList instanceof Array) {
+              return jsonInput;
+            } else {
+                var arraySessionList = [];
+                arraySessionList[0] = jsonInput.return[i].sessionsList;
+                jsonInput.return[i].sessionsList = arraySessionList;
+                return jsonInput;
+            }
+     }
+     return jsonInput;
+}
+
+function killSessionObject(payload) {
+    var webService = new ws.WSRequest();
+    var result = callWSReturnJSON(webService, serverUrl, "urn:removeSession",null,  payload);
+}
+%>

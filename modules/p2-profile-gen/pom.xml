@@ -140,7 +140,7 @@
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.sso.saml.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.mgt.feature:${carbon.identity.version}</featureArtifactDef>
 
-								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.feature:${carbon.identity.version}</featureArtifactDef>
 								<!-- Authenticators -->
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature:${carbon.identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature:${carbon.identity.version}</featureArtifactDef>
@@ -437,9 +437,8 @@
 									<id>org.wso2.carbon.deployment.synchronizer.feature.group</id>
 									<version>${carbon.commons.version}</version>
 								</feature>
-
 								<feature>
-									<id>org.wso2.carbon.identity.application.authentication.framework.server.feature.group</id>
+									<id>org.wso2.carbon.identity.application.authentication.framework.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
 								<feature>
@@ -482,7 +481,6 @@
 									<id>org.wso2.carbon.identity.provisioning.connector.spml.server.feature.group</id>
 									<version>${carbon.identity.version}</version>
 								</feature>
-
 								<feature>
 									<id>org.wso2.carbon.identity.provisioning.connector.google.server.feature.group</id>
 									<version>${carbon.identity.version}</version>

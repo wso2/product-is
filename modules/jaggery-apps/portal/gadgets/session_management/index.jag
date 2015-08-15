@@ -1,0 +1,17 @@
+<%
+    var log = new Log();
+    var cookie = request.getParameter("cookie") ;
+    var user = request.getParameter("user");
+    getSessions();
+
+    function getSessions(){
+        session.put('auth-cookie', cookie);
+        try{
+            var profileClient = require('controllers/session-management-client/sessionMgtClient.jag');
+            var fieldValues = profileClient.getAllSessions();
+            print(fieldValues);
+        }catch(e){
+            log.error("Error occurred while getting sessions", e);
+         }
+    }
+%>
