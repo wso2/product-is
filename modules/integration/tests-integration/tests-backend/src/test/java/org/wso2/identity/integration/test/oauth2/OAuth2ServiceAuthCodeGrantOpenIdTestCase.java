@@ -1,20 +1,19 @@
 /*
-* Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.catalina.startup.Tomcat;
@@ -37,7 +36,6 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -287,6 +285,35 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
             Assert.assertTrue(System.currentTimeMillis() / expValue > 975, "'exp time is not in milliseconds'");
         }
     }
+
+
+	@Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
+			"testGetAccessToken")
+	public void AuthorizationContextValidateJwtToken() throws Exception {
+		String claimURI[] = {OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE};
+		OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
+		OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
+				OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
+		accessTokenDTO.setIdentifier(accessToken);
+		accessTokenDTO.setTokenType("bearer");
+		requestDTO.setAccessToken(accessTokenDTO);
+		requestDTO.setRequiredClaimURIs(claimURI);
+
+		OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
+		if (responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
+			String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
+
+			String[] tokenElements = tokenString.split("\\.");
+			JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
+			String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
+			Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
+
+			String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.split(",");
+			Assert.assertEquals("Internal/PlaygroundServiceProver", jwtClaimMappingRoleElements[1].
+					replaceAll("^\"|\"$", ""), "Invalid JWT Token Role Values");
+
+		}
+	}
 
     private void changeISConfiguration() throws Exception {
 
