@@ -4,24 +4,110 @@ var util = require("../../util/utility.jag");
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
-serverUrl = serverUrl + "/SAML2SSOAuthenticationService";
-
+var serverUrl2 = serverUrl + "/SAML2SSOAuthenticationService";
+var bpsJson = "ppppp";
 var ws = require('ws');
 var webService = new ws.WSRequest();
 
+
 function login(request){
-    var result = callWSReturnJSON(webService, serverUrl, "urn:login", new Array(request));
+    var result = callWSReturnJSON(webService, serverUrl2, "urn:login", new Array(request));
     var isAuthenticated = result.return;
     log.debug("Is Authenticated : " + isAuthenticated);
     if(isAuthenticated){
         //Adding the session id
         var adminSession = webService.getResponseHeader("Set-Cookie");
+        adminSessionCopy = adminSession;
         log.debug("admin session id " + adminSession);
         session.put("auth-cookie", adminSession);
     }
+    getBPSSessions(request);
 
     return isAuthenticated;
 
+}
+
+function getBPSSessions(request){
+    var profiles = new XML(getProfileList());
+    var ns = "http://mgt.workflow.identity.carbon.wso2.org/xsd";
+    var hostArray = profiles.*::["return"];
+    var profileOutputJson = "\"list\" : [";
+    for(var i=0;i<hostArray.length();i++){
+        var webService2 = new ws.WSRequest();
+        var host = hostArray[i].*::host[0].text();
+        var profileName = hostArray[i].*::profileName[0].text();
+
+        try {
+            var result = callWSReturnJSON(webService2, host + "/services/SAML2SSOAuthenticationService", "urn:login", new Array(request));
+            var isAuthenticated = result.return;
+            if (isAuthenticated) {
+                if(profileOutputJson != "\"list\" : ["){
+                    profileOutputJson = profileOutputJson + ",";
+                }
+
+                profileOutputJson = profileOutputJson + "{\"host\" : \"" + host + "\", \"profile\" : \"" + profileName + "\", \"cookie\" : \"" + webService2.getResponseHeader("Set-Cookie") + "\"}";
+                //session.put("auth-cookie", adminSession);
+            }
+        }catch (e){
+            log.error(e);
+        }
+    }
+    profileOutputJson = profileOutputJson + "]";
+    log.error(profileOutputJson);
+    session.put("listProfiles", profileOutputJson);
+    //bpsJson = profileOutputJson
+
+
+
+
+
+
+
+
+
+
+
+    /*var servers = profiles.getElementsByTagNameNS("http://mgt.workflow.identity.carbon.wso2.org/xsd", "return");
+    for(var i=0;i<servers.length;i++){
+        var host = servers[i].getElementsByTagNameNS("http://bean.mgt.workflow.identity.carbon.wso2.org/xsd","host")[0].textContent;
+        var result = callWSReturnJSON(webService, host + "/services/SAML2SSOAuthenticationService", "urn:login", new Array(request));
+        if(result.return){
+            //Adding the session id
+            var adminSession = webService.getResponseHeader("Set-Cookie");
+            log.error("sesssss" + adminSession);
+
+        }
+    }*/
+
+}
+
+function getProfileList(){
+
+    try{
+
+        var ws = require("ws");
+        var version = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "urn:listBPSProfiles";
+        var payload = "<xsd:listBPSProfiles xmlns:xsd=\"http://mgt.workflow.identity.carbon.wso2.org/xsd\" />";
+        options["HTTPHeaders"] = [{name: "cookie", value: adminSessionCopy}];
+
+        var result;
+        try {
+            version.open(options,serverUrl + "/WorkflowAdminService.WorkflowAdminServiceHttpsSoap11Endpoint/", false);
+            version.send(payload);
+            result =version.responseE4X;
+        } catch (e) {
+            log.error(e.toString());
+            return e.toString();
+
+        }
+        return result;
+    }catch(e){
+        return e;
+        log.error(e);
+    }
 }
 
 

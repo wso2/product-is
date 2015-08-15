@@ -68,5 +68,19 @@
         "permissions":["/permission/admin/login"],
         "authorized":"true",
 	"id" : "user_profile"
+    },
+    {
+        "wid":"45",
+        "x":"5",
+        "y":"3",
+        "title":"Pending Approvals",
+        "width":"2",
+        "height":"1",
+        "prefs":"{}",
+        "wclass":"",
+        "url":"/portal/gadgets/approvals/gadget.xml",
+        "permissions":["/permission/admin/login"],
+        "authorized":"true",
+        "id" : "approvals"
     }
 ]}
