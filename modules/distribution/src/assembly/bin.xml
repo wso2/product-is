@@ -259,6 +259,12 @@
             </includes>
         </fileSet>
 
+	<fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/bps</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/bps</outputDirectory>
+        </fileSet>
+
+
     </fileSets>
 
     <files>
@@ -539,6 +545,44 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+	<!--file>
+		    <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/bps.xml
+		    </source>
+		    <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+        	<fileMode>644</fileMode>
+        </file-->
+	    <file>
+		    <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/jpadb.h2.db
+		    </source>
+		    <outputDirectory>wso2is-${pom.version}/repository/database/</outputDirectory>
+        	<fileMode>644</fileMode>
+        </file>
+	    <file>
+		    <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/bps-datasources.xml
+		    </source>
+		    <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
+        	<fileMode>644</fileMode>
+        </file>
+		<file>
+		    <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/b4p-coordination-config.xml
+		    </source>
+		    <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+        	<fileMode>644</fileMode>
+        </file>
+
+		<file>
+		    <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/humantask.xml
+		    </source>
+		    <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+        	<fileMode>644</fileMode>
+        </file>
+
+       <file>
+            <source>
+            	src/repository/resources/bps/bps.xml
+	    </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
         </file>
 
     </files>

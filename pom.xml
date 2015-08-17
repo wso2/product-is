@@ -3676,6 +3676,7 @@
         <testng.version>6.1.1</testng.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.deployment.version>4.3.1</carbon.deployment.version>
         <carbon.registry.version>4.3.0</carbon.registry.version>
         <carbon.multitenancy.version>4.3.5-SNAPSHOT</carbon.multitenancy.version>
@@ -3690,6 +3691,9 @@
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
 =======
         <carbon.deployment.version>4.4.0</carbon.deployment.version>
+=======
+        <carbon.deployment.version>4.4.1</carbon.deployment.version>
+>>>>>>> 16df5d4... Config IS to start with different p2 profile. ex: workflow
         <carbon.registry.version>4.4.1</carbon.registry.version>
 <<<<<<< HEAD
         <carbon.multitenancy.version>4.4.0</carbon.multitenancy.version>
@@ -3788,7 +3792,12 @@
         <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
 >>>>>>> 690e5e1... Resolving merge conflicts
         <project.scm.id>my-scm-server</project.scm.id>
+<<<<<<< HEAD
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
+=======
+        <carbon.business-process.version>4.4.2</carbon.business-process.version>
+	<carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+>>>>>>> 16df5d4... Config IS to start with different p2 profile. ex: workflow
     </properties>
 
     <repositories>
