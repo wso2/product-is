@@ -27,13 +27,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.common.clients.UserAdminClient;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -42,7 +41,7 @@ public class UserMgtTestCase extends ISIntegrationTest {
 
 	private UserManagementClient userMgtClient;
 	private AuthenticatorClient logManger;
-    private UserAdminClient userAdminClient;
+
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
@@ -51,7 +50,6 @@ public class UserMgtTestCase extends ISIntegrationTest {
 
 		logManger = new AuthenticatorClient(backendURL);
 		userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        userAdminClient = new UserAdminClient(backendURL, sessionCookie);
 
 		if (!nameExists(userMgtClient.listAllUsers("testAdminUser", 100), "testAdminUser")) {
 			userMgtClient.addUser("testAdminUser", "testAdminUser@123", new String[] { "admin" },
@@ -295,7 +293,7 @@ public class UserMgtTestCase extends ISIntegrationTest {
 
 		UserManagementClient userMgtClient1 = new UserManagementClient(isServer.getContextUrls().getBackEndUrl(),
 		                                                               "user6", "passWord1@");
-		userAdminClient.changePasswordByUser("user6@carbon.super", "passWord1@", "passwordS1@");
+		userMgtClient.changePasswordByUser("user6@carbon.super", "passWord1@", "passwordS1@");
 		String value = this.logManger.login("user6", "passwordS1@", isServer.getInstance().getHosts().get("default"));
 		Assert.assertTrue((value.indexOf("JSESSIONID") != -1), "User password change failed.");
 
