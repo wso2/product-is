@@ -577,10 +577,10 @@
 		    <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
         	<fileMode>644</fileMode>
         </file>
-
+        <!-- This is temporary replace bps.xml file (that is copied by feature) by local copy of the file until BPS team fix and release one of issue with bps.xml -->
        <file>
             <source>
-            	src/repository/resources/bps/bps.xml
+            	conf/bps/bps.xml
 	    </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
         </file>
