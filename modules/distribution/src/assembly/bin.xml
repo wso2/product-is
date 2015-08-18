@@ -102,14 +102,18 @@
 
 
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-providers</directory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity-providers
+            </directory>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity/identity-providers</outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/service-providers</directory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/service-providers
+            </directory>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity/service-providers</outputDirectory>
             <includes>
                 <include>**/**</include>
@@ -258,6 +262,12 @@
                 <include>*/**</include>
             </includes>
         </fileSet>
+
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/bps</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/bps</outputDirectory>
+        </fileSet>
+
 
     </fileSets>
 
@@ -539,6 +549,40 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/jpadb.h2.db
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/database/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/bps-datasources.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/b4p-coordination-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/humantask.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <!-- This is temporary replace bps.xml file (that is copied by feature) by local copy of the file until BPS team fix and release one of issue with bps.xml -->
+        <file>
+            <source>
+                conf/bps/bps.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
         </file>
 
     </files>
