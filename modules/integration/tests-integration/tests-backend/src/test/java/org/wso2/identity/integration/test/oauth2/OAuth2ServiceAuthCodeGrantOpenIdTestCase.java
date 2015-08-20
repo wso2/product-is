@@ -290,26 +290,26 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
 	@Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
 			"testGetAccessToken")
-	public void AuthorizationContextValidateJwtToken() throws Exception {
-		String claimURI[] = {OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE};
-		OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
-		OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
-				OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-		accessTokenDTO.setIdentifier(accessToken);
-		accessTokenDTO.setTokenType("bearer");
-		requestDTO.setAccessToken(accessTokenDTO);
-		requestDTO.setRequiredClaimURIs(claimURI);
+    public void AuthorizationContextValidateJwtToken() throws Exception {
+        String claimURI[] = {OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE};
+        OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
+        OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
+                OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
+        accessTokenDTO.setIdentifier(accessToken);
+        accessTokenDTO.setTokenType("bearer");
+        requestDTO.setAccessToken(accessTokenDTO);
+        requestDTO.setRequiredClaimURIs(claimURI);
 
-		OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
-		if (responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
-			String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
+        OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
+        if (responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
+            String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
 
-			String[] tokenElements = tokenString.split("\\.");
-			JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
-			String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
-			Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
+            String[] tokenElements = tokenString.split("\\.");
+            JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
+            String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
+            Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
 
-			String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.replaceAll("[\\[\\]\"]", "").split(",");
+            String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.replaceAll("[\\[\\]\"]", "").split(",");
             List<String> jwtClaimMappingRoleElementsList = Arrays.asList(jwtClaimMappingRoleElements);
             Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/PlaygroundServiceProver"), "Invalid " +
                     "JWT Token Role Values");
