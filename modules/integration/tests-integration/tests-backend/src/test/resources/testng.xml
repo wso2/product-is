@@ -351,6 +351,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeAfterCacheTimeOutTestCase"/>
 >>>>>>> 97b6fe4... Fixing SAML SSO test case
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceErrorResponseTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuthAdminServiceTestCase"/>
 
 >>>>>>> 875df57... adding OAuth2ServiceErrorResponseTest
             <!--OpenId Test Cases-->
