@@ -44,6 +44,7 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -308,12 +309,12 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 			String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
 			Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
 
-			String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.split(",");
-			Assert.assertEquals("Internal/PlaygroundServiceProver", jwtClaimMappingRoleElements[1].
-					replaceAll("^\"|\"$", ""), "Invalid JWT Token Role Values");
-
-		}
-	}
+			String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.replaceAll("[\\[\\]\"]", "").split(",");
+            List<String> jwtClaimMappingRoleElementsList = Arrays.asList(jwtClaimMappingRoleElements);
+            Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/PlaygroundServiceProver"), "Invalid " +
+                    "JWT Token Role Values");
+        }
+    }
 
     private void changeISConfiguration() throws Exception {
 
