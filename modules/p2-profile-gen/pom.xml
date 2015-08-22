@@ -347,7 +347,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.workflow.server.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.workflow.feature:${carbon.identity.version}
                                 </featureArtifactDef>
 
                                 <!-- BPS features -->
@@ -744,7 +744,7 @@
                                     <version>${carbon.dashboards.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
+                                    <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                             </features>
@@ -1129,7 +1129,7 @@
                                     <version>${carbon.dashboards.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
+                                    <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
