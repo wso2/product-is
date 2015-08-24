@@ -351,24 +351,24 @@
                                 </featureArtifactDef>
 
                                 <!-- BPS features -->
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.bpel.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.bpel.server.feature:${carbon.business-process.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.bpel.ui.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
+                                </featureArtifactDef-->
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.humantask.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.humantask.server.feature:${carbon.business-process.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.humantask.ui.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.business-process:org.wso2.carbon.attachment.mgt.feature:${carbon.business-process.version}
                                 </featureArtifactDef>
