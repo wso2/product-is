@@ -6,6 +6,9 @@ var profile = require('profileClient.jag');
 
 var i18n = session.get("i18n");
 
+var ENCODING_CLAIM_URL = "http://wso2.org/claims/identity/encoding";
+var QR_CODE_URL = "http://wso2.org/claims/identity/qrcodeurl";
+
 function edit(){
 var cookie = session.get('auth-cookie');
 if(cookie == null){
@@ -52,7 +55,7 @@ var userName = request.getParameter("user");
 
         for each (var f in fieldValues){
             var paramName = f.*::['claimUri'].text().toString();
-	    if(paramName=="http://wso2.org/claims/identity/encoding"||paramName=="http://wso2.org/claims/identity/qrcodeurl"){
+	    if(paramName==ENCODING_CLAIM_URL||paramName==QR_CODE_URL){
                 continue;
             }
             var value = request.getParameter(paramName);
