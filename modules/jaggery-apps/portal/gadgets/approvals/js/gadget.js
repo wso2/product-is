@@ -113,6 +113,20 @@ function drawTablepage(json, engineValue) {
 
 
     }
+    if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined){
+        var entry = obj.taskSimpleQueryResultSet.row;
+        if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
+
+            middle = middle +
+                "                <tr>\n" +
+                "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
+                "                    <td>" + entry.presentationSubject + "</td>" +
+                "                    <td>" + entry.status + "</td>" +
+                "                    <td>" + entry.priority + "</td>" +
+                "                    <td>" + entry.createdTime + "</td>" +
+                "                </tr>\n";
+        }
+    }
 
     var end = "            </tbody>\n" +
         "        </table>\n" +
