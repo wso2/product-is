@@ -93,6 +93,13 @@
             <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
         </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
+        </dependency>
+>>>>>>> bc19506... IDENTITY-3472 Workflow support for IS - Integration tests
     </dependencies>
 
 </project>
