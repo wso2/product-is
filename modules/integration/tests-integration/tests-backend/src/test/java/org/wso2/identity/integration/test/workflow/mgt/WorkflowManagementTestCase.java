@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
+import org.wso2.carbon.identity.workflow.mgt.stub.WorkflowAdminServiceWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.AssociationDTO;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.BPSProfileDTO;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.ParameterDTO;
@@ -41,6 +42,7 @@ import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.WorkflowConstants;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,7 +56,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     public MultipleServersManager manager = new MultipleServersManager();
 
 
-    private String workflowName = "TestWorkflow";
+    private String addUserWorkflowName = "TestWorkflowAddUser1";
     private String workflowId = null;
     private String associationId = null;
     private String[] rolesToAdd = {"wfRole1", "wfRole2", "wfRole3"};
@@ -164,27 +166,10 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
         String workflowDescription = "TestWorkflowDescription";
         try {
-            WorkflowDTO workflowDTO = new WorkflowDTO();
-            workflowDTO.setWorkflowName(workflowName);
-            workflowDTO.setWorkflowDescription(workflowDescription);
-            workflowDTO.setTemplateName("SimpleApproval");
-            workflowDTO.setImplementationName("BPEL");
+            WorkflowDTO workflowDTO = getWorkflowDTO(addUserWorkflowName, workflowDescription);
 
-            List<ParameterDTO> templateImplParams = new ArrayList<>();
-            ParameterDTO bpelProfile = new ParameterDTO();
-            bpelProfile.setParamName("BPELEngineProfile");
-            bpelProfile.setParamValue("TestBPSProfile");
-            templateImplParams.add(bpelProfile);
-            ParameterDTO HTSubject = new ParameterDTO();
-            HTSubject.setParamName("HTSubject");
-            HTSubject.setParamValue("");
-            templateImplParams.add(HTSubject);
-            ParameterDTO HTDescription = new ParameterDTO();
-            HTDescription.setParamName("HTDescription");
-            HTDescription.setParamValue("");
-            templateImplParams.add(HTDescription);
 
-            client.addWorkflow(workflowDTO, Collections.EMPTY_LIST, templateImplParams);
+            client.addWorkflow(workflowDTO, Collections.EMPTY_LIST, getTemplateImplParams());
 
             WorkflowDTO[] workflows = client.listWorkflows();
             if (workflows == null || workflows.length == 0) {
@@ -192,7 +177,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             }
             boolean added = false;
             for (WorkflowDTO workflow : workflows) {
-                if (workflowName.equals(workflow.getWorkflowName()) && workflowDescription.equals(workflow
+                if (addUserWorkflowName.equals(workflow.getWorkflowName()) && workflowDescription.equals(workflow
                         .getWorkflowDescription())) {
                     added = true;
                     workflowId = workflow.getWorkflowId();  //setting for future tests
@@ -309,8 +294,82 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
     }
 
+    @Test(alwaysRun = true, description = "Testing add user operation when workflows associated with it.",
+            dependsOnMethods = "testAddAssociation")
+    public void testAddUserOperation() {
+        String userName6 = "TestUser6ForAddUserWorkflow";
+        String userName7 = "TestUser7ForAddUserWorkflow";
+        String roleName1 = "TestRole1ForAddUserWorkflow";
+        try {
+
+            usmClient.addUser(userName6, "test12345", new String[]{"wfRole1"}, new ClaimValue[0], null,
+                    false);
+        } catch (Exception e) {
+            log.error("Error occurred when adding test user, therefore ignoring testAssociation.", e);
+        }
+        try {
+
+            usmClient.addUser(userName6, "test12345", new String[]{"wfRole1"}, new ClaimValue[0], null,
+                    false);
+            Assert.fail("Since user with same name already in a workflow, operation should have failed.");
+        } catch (Exception e) {
+            //test passed
+        }
+        try {
+
+            usmClient.addUser(userName6, "test12345", new String[]{}, new ClaimValue[0], null,
+                    false);
+            Assert.fail("Since user with same name already in a workflow, operation should have failed.");
+        } catch (Exception e) {
+            //test passed
+        }
+        try {
+            client.addAssociation(workflowId, "TestDeleteRoleAssociation", WorkflowConstants.DELETE_ROLE_EVENT,
+                    "boolean(1)");
+        } catch (Exception e) {
+            Assert.fail("failed to add deleteRole workflow.");
+        }
+        try {
+            usmClient.addRole(roleName1, new String[0], new PermissionDTO[0]);
+            usmClient.deleteRole(roleName1);
+            Assert.assertTrue(usmClient.isExistingRole(roleName1), "Role should still exist in user store since " +
+                    "workflow has not approved yet.");
+        } catch (Exception e) {
+            Assert.fail("Failed at triggering delete role workflow");
+        }
+        try {
+            usmClient.addUser(userName7, "test12345", new String[]{roleName1}, new ClaimValue[0], null,
+                    false);
+            Assert.fail("Since role is in a delete workflow, operation should have failed.");
+        } catch (Exception e) {
+            // test passed
+        }
+        try {
+            AssociationDTO[] associations = client.listAssociationsForWorkflow(workflowId);
+            for (AssociationDTO association : associations) {
+                if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
+                    associationId = association.getAssociationId();
+                    client.deleteAssociation(associationId);
+                    break;
+                }
+            }
+        }catch (Exception e) {
+            log.error("Error while deleting deleteRole association at testAddUserOperation.");
+        }
+        try {
+            usmClient.deleteRole(roleName1);
+            Assert.assertFalse(usmClient.isExistingRole(roleName1), "Role should have deleted since association is " +
+                    "removed");
+        } catch (Exception e) {
+            Assert.fail ("Error while deleting role where no associations of DELETE_ROLE exist.");
+        }
+
+    }
+
+
+
     @Test(alwaysRun = true, description = "Testing removing an association", dependsOnMethods =
-            {"testAssociationForMatch", "testAssociationForNonMatch"})
+            {"testAssociationForMatch", "testAssociationForNonMatch", "testAddUserOperation"})
     public void testRemoveAssociation() {
 
         if (associationId == null) {
@@ -373,6 +432,34 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Error while deleting the BPS profile", e);
         }
+    }
+
+    private WorkflowDTO getWorkflowDTO(String workflowName, String workflowDescription) {
+
+        WorkflowDTO workflowDTO = new WorkflowDTO();
+        workflowDTO.setWorkflowName(addUserWorkflowName);
+        workflowDTO.setWorkflowDescription(workflowDescription);
+        workflowDTO.setTemplateName("SimpleApproval");
+        workflowDTO.setImplementationName("BPEL");
+        return workflowDTO;
+    }
+
+    private List<ParameterDTO> getTemplateImplParams() {
+
+        List<ParameterDTO> templateImplParams = new ArrayList<>();
+        ParameterDTO bpelProfile = new ParameterDTO();
+        bpelProfile.setParamName("BPELEngineProfile");
+        bpelProfile.setParamValue("TestBPSProfile");
+        templateImplParams.add(bpelProfile);
+        ParameterDTO HTSubject = new ParameterDTO();
+        HTSubject.setParamName("HTSubject");
+        HTSubject.setParamValue("");
+        templateImplParams.add(HTSubject);
+        ParameterDTO HTDescription = new ParameterDTO();
+        HTDescription.setParamName("HTDescription");
+        HTDescription.setParamValue("");
+        templateImplParams.add(HTDescription);
+        return templateImplParams;
     }
 
 }
