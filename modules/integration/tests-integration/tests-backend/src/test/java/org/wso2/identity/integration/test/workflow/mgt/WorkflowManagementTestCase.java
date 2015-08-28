@@ -58,7 +58,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private String workflowId = null;
     private String associationId = null;
     private String[] rolesToAdd = {"wfRole1", "wfRole2", "wfRole3"};
-    String sessionCookie2;
+    private String sessionCookie2;
+    private String servicesUrl = "https://localhost:9444/services/";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -68,8 +69,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
                 .createConfigurationContextFromFileSystem(null
                         , null);
         startOtherCarbonServers();
-        client = new WorkflowAdminClient(sessionCookie2, "https://localhost:9444/services/", configContext);
-        usmClient = new RemoteUserStoreManagerServiceClient("https://localhost:9444/services/", sessionCookie2);
+        client = new WorkflowAdminClient(sessionCookie2, servicesUrl, configContext);
+        usmClient = new RemoteUserStoreManagerServiceClient(servicesUrl, sessionCookie2);
         for (String role : rolesToAdd) {
             usmClient.addRole(role, new String[0], new PermissionDTO[0]);
         }
@@ -85,14 +86,13 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
         Map<String, String> startupParameterMap1 = new HashMap<String, String>();
         startupParameterMap1.put("-DportOffset", "1");
-        startupParameterMap1.put("-Dprofile", "workflow");
+        startupParameterMap1.put("-Dprofile", WorkflowConstants.WORKFLOW_PROFILE);
 
         AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
         CarbonTestServerManager server1 = new CarbonTestServerManager(context1, System.getProperty("carbon.zip"),
                 startupParameterMap1);
         manager.startServers(server1);
-        String serviceUrl = "https://localhost:9444/services/";
-        AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
+        AuthenticatorClient authenticatorClient = new AuthenticatorClient(servicesUrl);
         Thread.sleep(2500);
 
         sessionCookie2 = authenticatorClient.login("admin", "admin", "localhost");
