@@ -27,11 +27,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.AssociationDTO;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.BPSProfileDTO;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.ParameterDTO;
-import org.wso2.carbon.identity.workflow.mgt.stub.bean.TemplateImplDTO;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.WorkflowDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.PermissionDTO;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
@@ -50,11 +51,14 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
     private WorkflowAdminClient client;
     private RemoteUserStoreManagerServiceClient usmClient;
+    public MultipleServersManager manager = new MultipleServersManager();
+
 
     private String workflowName = "TestWorkflow";
     private String workflowId = null;
     private String associationId = null;
     private String[] rolesToAdd = {"wfRole1", "wfRole2", "wfRole3"};
+    String sessionCookie2;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -63,8 +67,9 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null
                         , null);
-        client = new WorkflowAdminClient(sessionCookie, backendURL, configContext);
-        usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        startOtherCarbonServers();
+        client = new WorkflowAdminClient(sessionCookie2, "https://localhost:9444/services/", configContext);
+        usmClient = new RemoteUserStoreManagerServiceClient("https://localhost:9444/services/", sessionCookie2);
         for (String role : rolesToAdd) {
             usmClient.addRole(role, new String[0], new PermissionDTO[0]);
         }
@@ -79,24 +84,18 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private void startOtherCarbonServers() throws Exception {
 
         Map<String, String> startupParameterMap1 = new HashMap<String, String>();
-        startupParameterMap1.put("", "");
+        startupParameterMap1.put("-DportOffset", "1");
+        startupParameterMap1.put("-Dprofile", "workflow");
 
         AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-        automationContextMap.put(PORT_OFFSET_1, context1);
-
         CarbonTestServerManager server1 = new CarbonTestServerManager(context1, System.getProperty("carbon.zip"),
                 startupParameterMap1);
+        manager.startServers(server1);
+        String serviceUrl = "https://localhost:9444/services/";
+        AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
+        Thread.sleep(2500);
 
-        Map<String, String> startupParameterMap2 = new HashMap<String, String>();
-        startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(PORT_OFFSET_2));
-
-        AutomationContext context2 = new AutomationContext("IDENTITY", "identity003", TestUserMode.SUPER_TENANT_ADMIN);
-        automationContextMap.put(PORT_OFFSET_2, context2);
-
-        CarbonTestServerManager server2 = new CarbonTestServerManager(context2, System.getProperty("carbon.zip"),
-                startupParameterMap2);
-
-        manager.startServers(server1, server2);
+        sessionCookie2 = authenticatorClient.login("admin", "admin", "localhost");
     }
 
     @AfterClass(alwaysRun = true)
@@ -107,6 +106,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
         client = null;
         usmClient = null;
+        manager.stopAllServers();
     }
 
     @Test(alwaysRun = true, description = "Testing adding a BPS Profile")
@@ -238,7 +238,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing a added association where request matches condition",
             dependsOnMethods = "testAddAssociation")
     public void testAssociationForMatch() {
-        //by this time workflow to reject every user addition is enabled,
         String userName1 = "TestUser1ForSuccessAddUserWorkflow";
         String userName2 = "TestUser2ForSuccessAddUserWorkflow";
         try {
@@ -270,7 +269,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing a added association where the request doesn't match the condition",
             dependsOnMethods = "testAddAssociation")
     public void testAssociationForNonMatch() {
-        //by this time workflow to reject every user addition is enabled,
         String userName3 = "TestUser3ForAddUserWorkflow";
         String userName4 = "TestUser4ForAddUserWorkflow";
         String userName5 = "TestUser5ForAddUserWorkflow";
@@ -357,7 +355,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing deleting a BPS Profile", dependsOnMethods =
-            {"testAddDuplicateBPSProfile","testAddWorkflow"})
+            {"testAddDuplicateBPSProfile","testRemoveWorkflow"})
     public void testRemoveBPSProfile() {
 
         String profileName = "TestBPSProfile";
