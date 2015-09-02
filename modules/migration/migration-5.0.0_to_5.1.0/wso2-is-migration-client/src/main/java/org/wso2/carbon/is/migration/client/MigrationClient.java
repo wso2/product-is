@@ -35,6 +35,6 @@ public interface MigrationClient {
      * @throws ISMigrationException
      * @throws SQLException
      */
-    public void databaseMigration(String migrateVersion) throws ISMigrationException, SQLException;
+    public void databaseMigration(String migrateVersion) throws Exception;
 
 }
