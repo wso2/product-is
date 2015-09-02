@@ -197,6 +197,26 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>unpack-playground2</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>playground2</artifactId>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/playground2
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -230,6 +250,8 @@
                                      target="openid-dumbconsumerwithclaims"/>
                                 <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml"
                                      target="openid-dumbconsumerwithoutclaims"/>
+                                <ant antfile="src/test/resources/artifacts/IS/oauth/oauth-app-build.xml"
+                                     target="default"/>
                             </tasks>
                         </configuration>
                         <goals>

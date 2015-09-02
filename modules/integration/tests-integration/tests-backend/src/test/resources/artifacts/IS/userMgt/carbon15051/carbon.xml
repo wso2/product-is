@@ -91,7 +91,7 @@
     <WebContextRoot>/</WebContextRoot>
 
     <!-- In-order to  get the registry http Port from the back-end when the default http transport is not the same-->
-    <!--RegistryHttpPort>9763</RegistryHttpPort-->
+    <!--RegistryHttpPort>10163</RegistryHttpPort-->
 
     <!--
     Number of items to be displayed on a management console page. This is used at the
@@ -109,7 +109,7 @@
 
         <!-- Ports offset. This entry will set the value of the ports defined below to
          the define value + Offset.
-         e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445
+         e.g. Offset=2 and HTTPS port=9843 will set the effective HTTPS port to 9445
          -->
         <Offset>0</Offset>
 
@@ -124,7 +124,7 @@
         <!-- Embedded LDAP server specific ports -->
         <EmbeddedLDAP>
             <!-- Port which embedded LDAP server runs -->
-            <LDAPServerPort>10389</LDAPServerPort>
+            <LDAPServerPort>10789</LDAPServerPort>
             <!-- Port which KDC (Kerberos Key Distribution Center) server runs -->
             <KDCServerPort>8000</KDCServerPort>
         </EmbeddedLDAP>

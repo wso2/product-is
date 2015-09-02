@@ -56,7 +56,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String PASSIVE_STS_SAMPLE_APP_URL =
             "http://localhost:8090/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URLL =
-            "https://localhost:9443/commonauth";
+            "https://localhost:9843/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     private static final String PASSIVE_STS_SAMPLE_APP_NAME = "/PassiveSTSSampleApp";
     private String sessionDataKey;

@@ -3680,7 +3680,7 @@
         <gadget.module.version>1.0.0</gadget.module.version>
         <i18n.module.version>1.0.0</i18n.module.version>
         <wso2.store.version>2.0.0</wso2.store.version>
-        <test.framework.version>4.3.1</test.framework.version>
+        <test.framework.version>4.4.2</test.framework.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
