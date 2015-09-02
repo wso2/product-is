@@ -38,9 +38,23 @@ function setEngines() {
 }
 
 function drawNoServerErrorpage(errorMessage) {
-    var error = "<div align=\"center\" ><h1 style=\"color: #8b0000;\"><br><br><br><br><br><br>" + errorMessage + "<br><br><br><br><br><br></h1></div>";
+    var page = "<div class=\"col-lg-12 sectionSub\">" +
+        "<table class=\"carbonFormTable\" style=\"width:100%; padding-left: 10px;\">" +
+        "<tr>" +
+        "<td style=\"width:20%\" class=\"leftCol-med labelField\">BPEL Profile Engine :     </td>" +
+        "<td>" +
+        "<select id=\"engine\" onchange='getList2()'>";
+    for (var i = 0; i < serverList.length; i++) {
+        page = page + "<option value=\"" + serverList[i].host + "/services/HumanTaskClientAPIAdmin" + "\">" + serverList[i].profile + "</option>";
+    }
+
+    page = page + "</select>" +
+        "</td>" +
+        "</tr>" +
+        "</table></div>";
+    var error = "<div align=\"center\" ><h1 style=\"color: #8b0000;\"><br><br><br><br><br>" + errorMessage + "<br><br><br><br></h1></div>";
     $("#gadgetBody").empty();
-    $("#gadgetBody").append(error);
+    $("#gadgetBody").append(page + error);
 }
 
 function drawTablepage(json, engineValue) {
