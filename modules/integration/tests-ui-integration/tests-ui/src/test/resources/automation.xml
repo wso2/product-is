@@ -192,8 +192,8 @@
                     <host type="manager">mgt.identity.wso2con.com</host>
                 </hosts>
                 <ports>
-                    <port type="nhttps">8243</port>
-                    <port type="nhttp">8280</port>
+                    <port type="nhttps">8643</port>
+                    <port type="nhttp">8680</port>
                 </ports>
                 <properties>
 
@@ -204,8 +204,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">9764</port>
-                    <port type="https">9444</port>
+                    <port type="http">10164</port>
+                    <port type="https">9844</port>
                 </ports>
                 <properties>
                 </properties>
@@ -227,8 +227,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">9765</port>
-                    <port type="https">9445</port>
+                    <port type="http">10165</port>
+                    <port type="https">9845</port>
                 </ports>
                 <properties>
                 </properties>
