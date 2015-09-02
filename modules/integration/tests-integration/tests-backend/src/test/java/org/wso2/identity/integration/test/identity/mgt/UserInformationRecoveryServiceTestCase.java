@@ -101,33 +101,23 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
         claimMgtClient = new ClaimManagementServiceClient(backendURL, sessionCookie);
 		ClaimDTO claim1 = new ClaimDTO();
 		claim1.setDialectURI("http://wso2.org/claims");
-		claim1.setClaimUri("http://wso2.org/claims/identity/passwordTimestamp");
-		claim1.setDescription("Password timestamp");
+		claim1.setClaimUri("http://wso2.org/claims/identity/unlockTime");
+		claim1.setDescription("Account Unlock time");
 
 		ClaimDTO claim2 = new ClaimDTO();
 		claim2.setDialectURI("http://wso2.org/claims");
-		claim2.setClaimUri("http://wso2.org/claims/identity/unlockTime");
-		claim2.setDescription("Account Unlock time");
-		
-		ClaimDTO claim3 = new ClaimDTO();
-		claim3.setDialectURI("http://wso2.org/claims");
-		claim3.setClaimUri("http://wso2.org/claims/identity/failedLoginAttempts");
-		claim3.setDescription("Failed login attempts");
-		
+		claim2.setClaimUri("http://wso2.org/claims/identity/failedLoginAttempts");
+		claim2.setDescription("Failed login attempts");
+
 		ClaimMappingDTO claimMapping1 = new ClaimMappingDTO();
 		claimMapping1.setClaim(claim1);
-		claimMapping1.setMappedAttribute("facsimileTelephoneNumber");
+		claimMapping1.setMappedAttribute("description");
 		claimMgtClient.addNewClaimMapping(claimMapping1);
 		
 		ClaimMappingDTO claimMapping2 = new ClaimMappingDTO();
 		claimMapping2.setClaim(claim2);
-		claimMapping2.setMappedAttribute("description");
+		claimMapping2.setMappedAttribute("employeeType");
 		claimMgtClient.addNewClaimMapping(claimMapping2);
-		
-		ClaimMappingDTO claimMapping3 = new ClaimMappingDTO();
-		claimMapping3.setClaim(claim3);
-		claimMapping3.setMappedAttribute("employeeType");
-		claimMgtClient.addNewClaimMapping(claimMapping3);
 		
         userMgtClient.addUser("user11", "passWord1@", null, "default");        
         userMgtClient.addRole("umRole11", new String[]{"user11"}, new String[]{"/permission/admin/login"}, false);
