@@ -46,8 +46,8 @@
         </node>
         <node id="as002" name="asCluster">
             <host>localhost</host>
-            <httpport>9764</httpport>
-            <httpsport>9444</httpsport>
+            <httpport>10164</httpport>
+            <httpsport>9844</httpsport>
         </node>
     </platform>
 

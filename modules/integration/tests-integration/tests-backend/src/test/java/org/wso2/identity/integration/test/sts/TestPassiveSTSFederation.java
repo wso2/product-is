@@ -22,6 +22,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -74,7 +75,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         adminPassword = userInfo.getPassword();
 
         Map<String, String> startupParameterMap = new HashMap<String, String>();
-        startupParameterMap.put("-DportOffset", String.valueOf(PORT_OFFSET_1));
+        startupParameterMap.put("-DportOffset", String.valueOf(PORT_OFFSET_1  + CommonConstants.IS_DEFAULT_OFFSET));
         AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
 
         startCarbonServer(PORT_OFFSET_1, context, startupParameterMap);
