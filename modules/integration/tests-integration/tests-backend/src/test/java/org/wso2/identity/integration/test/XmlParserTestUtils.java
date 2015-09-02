@@ -35,8 +35,8 @@ public class XmlParserTestUtils {
 
 	private AuthenticationAdminStub authenticationAdminStub;
 	private ServerAdminStub serverAdminStub;
-	private final String SERVER_ADMIN_URL = "https://localhost:9443/services/ServerAdmin";
-	private final String AUTHENTICATION_ADMIN_URL = "https://localhost:9443/services/AuthenticationAdmin";
+	private final String SERVER_ADMIN_URL = "https://localhost:9843/services/ServerAdmin";
+	private final String AUTHENTICATION_ADMIN_URL = "https://localhost:9843/services/AuthenticationAdmin";
 
 	public void initAuthenticatorClient() throws AxisFault {
 		if (log.isDebugEnabled()) {

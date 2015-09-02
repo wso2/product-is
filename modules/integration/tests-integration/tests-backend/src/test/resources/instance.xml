@@ -5,15 +5,15 @@
             <nodes>
                 <instance id="isn001">
                     <host>localhost</host>
-                    <httpport>9763</httpport>
-                    <httpsport>9443</httpsport>
+                    <httpport>10163</httpport>
+                    <httpsport>9843</httpsport>
                 </instance>
             </nodes>
             <workers>
                 <instance id="isw001">
                     <host>localhost</host>
-                    <httpport>9763</httpport>
-                    <httpsport>9443</httpsport>
+                    <httpport>10163</httpport>
+                    <httpsport>9843</httpsport>
                 </instance>
                 <instance id="isw002">
                     <host>localhost</host>
@@ -29,8 +29,8 @@
             <lb>
                 <instance id="worker">
                     <host>localhost</host>
-                    <httpport>9763</httpport>
-                    <httpsport>9443</httpsport>
+                    <httpport>10163</httpport>
+                    <httpsport>9843</httpsport>
                 </instance>
                 <instance id="manager">
                     <host>localhost</host>
@@ -41,8 +41,8 @@
             <managers>
                 <instance id="isw003">
                     <host>localhost</host>
-                    <httpport>9763</httpport>
-                    <httpsport>9443</httpsport>
+                    <httpport>10163</httpport>
+                    <httpsport>9843</httpsport>
                 </instance>
             </managers>
         </group>

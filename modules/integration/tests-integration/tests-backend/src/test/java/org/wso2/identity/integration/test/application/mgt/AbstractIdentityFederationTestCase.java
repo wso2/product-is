@@ -59,7 +59,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, Tomcat> tomcatServers;
     private HttpClient httpClient;
     private MultipleServersManager manager;
-    protected static final int DEFAULT_PORT = 9443;
+    protected static final int DEFAULT_PORT = 9843;
 
     public void initTest() throws Exception {
         super.init();
@@ -297,7 +297,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {
-        return baseUrl.replace("9443", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+        return baseUrl.replace("9843", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
     }
 
 }

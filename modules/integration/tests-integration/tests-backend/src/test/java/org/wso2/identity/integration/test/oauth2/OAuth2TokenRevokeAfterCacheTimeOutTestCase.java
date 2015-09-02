@@ -47,8 +47,8 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
     private String consumerSecret;
     private static final String SCOPE_PRODUCTION = "PRODUCTION";
     private static final String GRANT_TYPE_PASSWORD = "password";
-    private static final String TOKEN_API_ENDPOINT = "https://localhost:9443/oauth2/token";
-    private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:9443/oauth2/revoke";
+    private static final String TOKEN_API_ENDPOINT = "https://localhost:9843/oauth2/token";
+    private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:9843/oauth2/revoke";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {

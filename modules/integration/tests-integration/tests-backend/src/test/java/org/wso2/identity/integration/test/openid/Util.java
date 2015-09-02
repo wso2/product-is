@@ -22,7 +22,7 @@ import org.wso2.carbon.identity.provider.openid.stub.dto.OpenIDParameterDTO;
 
 public class Util {
 
-    public static String openidUserIDBase = "https://localhost:9443/openid/";
+    public static String openidUserIDBase = "https://localhost:9843/openid/";
 
     /**
      * Return the OpenID Identifier of the username
@@ -51,7 +51,7 @@ public class Util {
 
         OpenIDParameterDTO claimedID = new OpenIDParameterDTO();
         claimedID.setName("openid.claimed_id");
-        claimedID.setValue("https://localhost:9443/openid/suresh");
+        claimedID.setValue("https://localhost:9843/openid/suresh");
         openidParams[1] = claimedID;
 
         OpenIDParameterDTO required = new OpenIDParameterDTO();
@@ -81,7 +81,7 @@ public class Util {
 
         OpenIDParameterDTO identity = new OpenIDParameterDTO();
         identity.setName("openid.identity");
-        identity.setValue("https://localhost:9443/openid/suresh");
+        identity.setValue("https://localhost:9843/openid/suresh");
         openidParams[7] = identity;
 
         OpenIDParameterDTO email = new OpenIDParameterDTO();

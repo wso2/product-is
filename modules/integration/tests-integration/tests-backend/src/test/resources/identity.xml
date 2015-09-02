@@ -19,9 +19,9 @@
 
 <Server xmlns="http://wso2.org/projects/carbon/carbon.xml">
 
-	<OpenIDServerUrl>https://test-org.wso2.com:9443/openidserver</OpenIDServerUrl>
+	<OpenIDServerUrl>https://test-org.wso2.com:9843/openidserver</OpenIDServerUrl>
 
-	<OpenIDUserPattern>https://test-org.wso2.com:9443/openid/</OpenIDUserPattern>
+	<OpenIDUserPattern>https://test-org.wso2.com:9843/openid/</OpenIDUserPattern>
 	<!-- If the users must be prompted for approval -->
 	<OpenIDSkipUserConsent>false</OpenIDSkipUserConsent>
 	<!-- Expiry time of the OpenID RememberMe token in minutes -->
@@ -69,9 +69,9 @@
 	</Identity>
 
 	<OAuth>
-		<RequestTokenUrl>https://localhost:9443/oauth/request-token</RequestTokenUrl>
-		<AccessTokenUrl>https://localhost:9443/oauth/access-token</AccessTokenUrl>
-		<AuthorizeUrl>https://localhost:9443/oauth/authorize-url</AuthorizeUrl>
+		<RequestTokenUrl>https://localhost:9843/oauth/request-token</RequestTokenUrl>
+		<AccessTokenUrl>https://localhost:9843/oauth/access-token</AccessTokenUrl>
+		<AuthorizeUrl>https://localhost:9843/oauth/authorize-url</AuthorizeUrl>
 		<!-- Default validity period for Authorization Code in seconds -->
 		<AuthorizationCodeDefaultValidityPeriod>300</AuthorizationCodeDefaultValidityPeriod>
 		<!-- Default validity period for Access Token in seconds -->
@@ -106,7 +106,7 @@
 	</MultifactorAuthentication>
 
     	<SSOService>
-    	    <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
+    	    <IdentityProviderURL>https://localhost:9843/samlsso</IdentityProviderURL>
     	</SSOService>
     	
     	<EntitlementSettings>

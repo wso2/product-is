@@ -70,7 +70,7 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     private static final String NICKNAME = "testUserNick";
 
     private static final String ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
+    private static final String COMMON_AUTH_URL = "https://localhost:9843/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
             "http://localhost:8090/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String SAML_ERROR_NOTIFICATION_PATH = "/authenticationendpoint/samlsso_notification.do";

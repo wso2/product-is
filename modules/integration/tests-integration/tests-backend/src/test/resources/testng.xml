@@ -82,6 +82,9 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
+            <!--Workflow Management test case-->
+            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
+
         </classes>
     </test>
 

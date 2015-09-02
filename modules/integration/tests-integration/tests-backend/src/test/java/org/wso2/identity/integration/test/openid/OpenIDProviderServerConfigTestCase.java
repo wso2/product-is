@@ -58,9 +58,9 @@ public class OpenIDProviderServerConfigTestCase extends ISIntegrationTest {
             Assert.fail("Error while getting OpenID Provider Info", e);
         }
 
-        Assert.assertEquals(providerInfo.getOpenID(), "https://localhost:9443/openid/admin");
+        Assert.assertEquals(providerInfo.getOpenID(), "https://localhost:9843/openid/admin");
 
-        Assert.assertEquals(providerInfo.getOpenIDProviderServerUrl(), "https://localhost:9443/openidserver");
+        Assert.assertEquals(providerInfo.getOpenIDProviderServerUrl(), "https://localhost:9843/openidserver");
 
         Assert.assertEquals(providerInfo.isUserExistSpecified(), true);
     }

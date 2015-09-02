@@ -55,11 +55,11 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(OpenIDSSOTestCase.class);
 
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
-    private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
-    private static final String OPEN_ID_PROFILE_URL = "https://localhost:9443/authenticationendpoint/openid_profile.do";
-    private static final String APPROVAL_URL = "https://localhost:9443/openidserver";
+    private static final String COMMON_AUTH_URL = "https://localhost:9843/commonauth";
+    private static final String OPEN_ID_PROFILE_URL = "https://localhost:9843/authenticationendpoint/openid_profile.do";
+    private static final String APPROVAL_URL = "https://localhost:9843/openidserver";
     private static final String OPEN_ID_URL = "http://localhost:8090/%s/openid?OpenId" +
-                                              ".ClaimedId=https://localhost:9443/openid/";
+                                              ".ClaimedId=https://localhost:9843/openid/";
     //Claim Uris
     private static final String firstNameClaimURI = "http://axschema.org/namePerson/first";
     private static final String emailClaimURI = "http://axschema.org/contact/email";
@@ -419,7 +419,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
     private void assertLogin(String results){
         Assert.assertTrue(results.contains("You are logged in as " +
-                        "https://localhost:9443/openid/" + config.getUser().getUsername()),
+                        "https://localhost:9843/openid/" + config.getUser().getUsername()),
                 "OpenId sso login has failed for " + config);
     }
 

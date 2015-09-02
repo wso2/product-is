@@ -328,8 +328,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 *            - Application war file path
 	 * @throws LifecycleException
 	 */
-	public void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-	                                                                           throws LifecycleException {
+	public void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
 		tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
 		tomcat.start();
 	}

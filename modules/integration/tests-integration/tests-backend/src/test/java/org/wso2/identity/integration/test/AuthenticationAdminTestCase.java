@@ -38,13 +38,13 @@ public class AuthenticationAdminTestCase {
 
     private static Log logger = LogFactory.getLog(AuthenticationAdminTestCase.class);
     private static final String AUTHENTICATION_ADMIN_SERVICE_URL =
-            "https://localhost:9443/services/AuthenticationAdmin";
+            "https://localhost:9843/services/AuthenticationAdmin";
 
     private AuthenticationAdminStub authenticationAdminStub;
 
     @BeforeClass(groups = {"wso2.is"})
     public void setUp() {
-        ClientConnectionUtil.waitForPort(9443,"localhost");
+        ClientConnectionUtil.waitForPort(9843,"localhost");
     }
 
     @Test (groups = "wso2.is")

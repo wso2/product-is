@@ -19,6 +19,8 @@ package org.wso2.identity.integration.test.utils;
 
 public class CommonConstants {
 
+    public static final int IS_DEFAULT_OFFSET = 400;
+
     public enum AdminClients {
         IDENTITY_PROVIDER_MGT_SERVICE_CLIENT,
         APPLICATION_MANAGEMENT_SERVICE_CLIENT,
