@@ -90,7 +90,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     public static final String SAMPLE_IDENTITY_PROVIDER_NAME = "sample";
     public static final String PORT_OFFSET_PARAM = "-DportOffset";
 
-    public static final int DEFAULT_PORT = 9443;
+    public static final int DEFAULT_PORT = 9853;
     public static final int adminUserId = 0;
     public static final int PORT_OFFSET_0 = 0;
     public static final int PORT_OFFSET_1 = 1;
@@ -315,12 +315,10 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
             AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
-            sessionCookie = authenticatorClient.login(automationContextMap.get(portOffset).getSuperTenant().getTenantAdmin()
-                                                              .getUserName(),
-                                                      automationContextMap.get(portOffset).getSuperTenant()
-                                                              .getTenantAdmin().getPassword(),
-                                                      automationContextMap.get(portOffset).getDefaultInstance()
-                                                              .getHosts().get("default"));
+            sessionCookie = authenticatorClient.login(automationContextMap.get(portOffset).getSuperTenant()
+                    .getTenantAdmin().getUserName(), automationContextMap.get(portOffset).getSuperTenant()
+                    .getTenantAdmin().getPassword(), automationContextMap.get(portOffset).getDefaultInstance()
+                    .getHosts().get("default"));
 
             if (sessionCookie == null) {
                 throw new Exception("Unable to login to the server instance : " + automationContextMap.get
@@ -409,7 +407,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     private void startOtherCarbonServers() throws Exception {
 
         Map<String, String> startupParameterMap1 = new HashMap<String, String>();
-        startupParameterMap1.put(PORT_OFFSET_PARAM, String.valueOf(PORT_OFFSET_1));
+        startupParameterMap1.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_1));
 
         AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
         automationContextMap.put(PORT_OFFSET_1, context1);
@@ -418,7 +416,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                                                                       startupParameterMap1);
 
         Map<String, String> startupParameterMap2 = new HashMap<String, String>();
-        startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(PORT_OFFSET_2));
+        startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_2));
 
         AutomationContext context2 = new AutomationContext("IDENTITY", "identity003", TestUserMode.SUPER_TENANT_ADMIN);
         automationContextMap.put(PORT_OFFSET_2, context2);
@@ -432,10 +430,10 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     //TODO: Need to remove
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {
-        return baseUrl.replace("9443", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+        return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
     }
 
     private String getSCIMUrl(int portOffset, String baseUrl) {
-        return baseUrl.replace("9443/services", String.valueOf(DEFAULT_PORT + portOffset)) + "/wso2/scim/";
+        return baseUrl.replace("9853/services", String.valueOf(DEFAULT_PORT + portOffset)) + "/wso2/scim/";
     }
 }

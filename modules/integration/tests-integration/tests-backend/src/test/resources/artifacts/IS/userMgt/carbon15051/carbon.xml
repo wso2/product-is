@@ -91,7 +91,7 @@
     <WebContextRoot>/</WebContextRoot>
 
     <!-- In-order to  get the registry http Port from the back-end when the default http transport is not the same-->
-    <!--RegistryHttpPort>9763</RegistryHttpPort-->
+    <!--RegistryHttpPort>10173</RegistryHttpPort-->
 
     <!--
     Number of items to be displayed on a management console page. This is used at the
@@ -111,7 +111,7 @@
          the define value + Offset.
          e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445
          -->
-        <Offset>0</Offset>
+        <Offset>410</Offset>
 
         <!-- The JMX Ports -->
         <JMX>
