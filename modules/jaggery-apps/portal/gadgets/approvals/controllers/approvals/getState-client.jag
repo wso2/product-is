@@ -45,13 +45,7 @@ function accessService() {
         try {
 
             version.open(options, endPoint, false);
-            <!--log.error(payload);-->
             version.send(payload);
-
-            log.error(version.responseE4X);
-            <!--result = E4XtoJSON(version.responseE4X);-->
-            <!--result = parse(result);-->
-
             result = new XML(version.responseE4X);
 
         } catch (e) {
@@ -60,9 +54,6 @@ function accessService() {
             return e.toString();
 
         }
-        <!--log.error(result);-->
-
-
         print(result);
     } catch (e) {
         print(e);

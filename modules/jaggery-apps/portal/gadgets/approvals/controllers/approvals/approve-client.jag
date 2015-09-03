@@ -29,7 +29,6 @@ var user = request.getParameter("user");
 callService();
 function callService() {
     session.put('auth-cookie', cookie);
-    log.error(command);
     try {
 
         var ws = require("ws");

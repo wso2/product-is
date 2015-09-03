@@ -28,7 +28,6 @@ var user = request.getParameter("user");
 callService();
 function callService() {
     session.put('auth-cookie', cookie);
-    log.error(requestType + "start jag call");
     try {
 
         var ws = require("ws");
@@ -54,9 +53,6 @@ function callService() {
             return e.toString();
 
         }
-        log.error(result);
-
-
         print(result);
     } catch (e) {
         print(e);
