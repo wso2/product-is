@@ -25,7 +25,6 @@ var id = request.getParameter("id");
 var user = request.getParameter("user");
 var endPoint = request.getParameter("endPoint");
 accessService();
-log.error("End pont from jag" + endPoint);
 function accessService() {
     session.put('auth-cookie', cookie);
 
