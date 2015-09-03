@@ -48,7 +48,8 @@ public class ISMigrationServiceComponent {
             if (value != null && "true".equals(value)) {
                 MigrateFrom5to510 migrateFrom5to510 = new MigrateFrom5to510();
                 migrateFrom5to510.databaseMigration(Constants.VERSION_5_1_0);
-            }} catch (Throwable e) {
+            }
+        } catch (Throwable e) {
             log.error("Error while initiating Migration component", e);
         }
 

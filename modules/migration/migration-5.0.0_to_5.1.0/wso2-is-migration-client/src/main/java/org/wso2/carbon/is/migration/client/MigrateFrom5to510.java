@@ -16,12 +16,17 @@
 
 package org.wso2.carbon.is.migration.client;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
+import org.wso2.carbon.identity.core.util.IdentityConfigParser;
+import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
+import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ServiceHolder;
 import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.user.api.Tenant;
@@ -30,6 +35,11 @@ import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import javax.xml.namespace.QName;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,11 +54,62 @@ public class MigrateFrom5to510 implements MigrationClient {
 
     private static final Log log = LogFactory.getLog(MigrateFrom5to510.class);
     private List<Tenant> tenantsArray;
+    private DataSource dataSource;
+
 
     public MigrateFrom5to510() throws UserStoreException {
-
+        try {
+            initDataSource();
+        } catch (IdentityException e) {
+            String errorMsg = "Error when reading the JDBC Configuration from the file.";
+            log.error(errorMsg, e);
+            throw new UserStoreException(errorMsg, e);
+        }
     }
 
+
+    private void initDataSource() throws IdentityException {
+        try {
+            OMElement persistenceManagerConfigElem = IdentityConfigParser.getInstance()
+                    .getConfigElement("JDBCPersistenceManager");
+
+            if (persistenceManagerConfigElem == null) {
+                String errorMsg = "Identity Persistence Manager configuration is not available in " +
+                        "identity.xml file. Terminating the JDBC Persistence Manager " +
+                        "initialization. This may affect certain functionality.";
+                log.error(errorMsg);
+                throw new IdentityException(errorMsg);
+            }
+
+            OMElement dataSourceElem = persistenceManagerConfigElem.getFirstChildWithName(
+                    new QName(IdentityCoreConstants.IDENTITY_DEFAULT_NAMESPACE, "DataSource"));
+
+            if (dataSourceElem == null) {
+                String errorMsg = "DataSource Element is not available for JDBC Persistence " +
+                        "Manager in identity.xml file. Terminating the JDBC Persistence Manager " +
+                        "initialization. This might affect certain features.";
+                log.error(errorMsg);
+                throw new IdentityException(errorMsg);
+            }
+
+            OMElement dataSourceNameElem = dataSourceElem.getFirstChildWithName(
+                    new QName(IdentityCoreConstants.IDENTITY_DEFAULT_NAMESPACE, "Name"));
+
+            if (dataSourceNameElem != null) {
+                String dataSourceName = dataSourceNameElem.getText();
+                Context ctx = new InitialContext();
+                dataSource = (DataSource) ctx.lookup(dataSourceName);
+            }
+        } catch (ServerConfigurationException e) {
+            String errorMsg = "Error when reading the JDBC Configuration from the file.";
+            log.error(errorMsg, e);
+            throw new IdentityException(errorMsg, e);
+        } catch (NamingException e) {
+            String errorMsg = "Error when looking up the Identity Data Source.";
+            log.error(errorMsg, e);
+            throw new IdentityException(errorMsg, e);
+        }
+    }
     /**
      * This method is used to migrate database tables
      * This executes the database queries according to the user's db type and alters the tables
@@ -57,60 +118,12 @@ public class MigrateFrom5to510 implements MigrationClient {
      * @throws ISMigrationException
      * @throws SQLException
      */
-    public void databaseMigration(String migrateVersion) throws ISMigrationException, SQLException {
-        log.info("Database migration for API Manager 1.8.0 started");
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = JDBCPersistenceManager.getInstance().getDBConnection();
-            String dbType = DatabaseCreator.getDatabaseType(connection);
-            String dbScript = ResourceUtil.pickQueryFromResources(migrateVersion);
-            BufferedReader bufferedReader;
+    public void databaseMigration(String migrateVersion) throws Exception {
 
-            InputStream is = new FileInputStream(dbScript);
-            bufferedReader = new BufferedReader(new InputStreamReader(is));
-            String sqlQuery;
-            while ((sqlQuery = bufferedReader.readLine()) != null) {
-                if ("oracle".equals(dbType)) {
-                    sqlQuery = sqlQuery.replace(";", "");
-                }
-                sqlQuery = sqlQuery.trim();
-                if (sqlQuery.startsWith("//") || sqlQuery.startsWith("--")) {
-                    continue;
-                }
-                StringTokenizer stringTokenizer = new StringTokenizer(sqlQuery);
-                if (stringTokenizer.hasMoreTokens()) {
-                    String token = stringTokenizer.nextToken();
-                    if ("REM".equalsIgnoreCase(token)) {
-                        continue;
-                    }
-                }
 
-                if (sqlQuery.contains("\\n")) {
-                    sqlQuery = sqlQuery.replace("\\n", "");
-                }
+        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource);
+        migrationDatabaseCreator.executeMigrationScript();
 
-                if (sqlQuery.length() > 0) {
-                    preparedStatement = connection.prepareStatement(sqlQuery.trim());
-                    preparedStatement.execute();
-                    connection.commit();
-                    preparedStatement.close();
-                }
-            }
-        oauthMigration();
-
-        } catch (IOException e) {
-            //ResourceUtil.handleException("Error occurred while finding the query. Please check the file path.", e);
-            log.error("Error occurred while migrating databases", e);
-        } catch (Exception e) {
-            //ResourceUtil.handleException("Error occurred while finding the query. Please check the file path.", e);
-            log.error("Error occurred while migrating databases", e);
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
-        }
-        log.info("DB resource migration done for all the tenants");
     }
 
     public void oauthMigration(){
