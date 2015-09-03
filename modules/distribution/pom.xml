@@ -112,6 +112,18 @@
                                 <property name="registryPolicyHandler"
                                           value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator}       &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator}           &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator}       &lt;/filter&gt;${line.separator}   &lt;/handler&gt;${line.separator}${line.separator}   &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"/>
 
+                                <property name="xss-kernel-token"
+                                          value="&lt;XSSPreventionConfig&gt;${line.separator}            &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}        &lt;/XSSPreventionConfig&gt;"/>
+
+                                <property name="xss-is-token"
+                                          value="&lt;XSSPreventionConfig&gt;${line.separator}            &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;Pattern&gt;commonauth&lt;/Pattern&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}        &lt;/XSSPreventionConfig&gt;"/>
+
+                                <property name="csrf-kernel-token"
+                                          value="&lt;CSRFPreventionConfig&gt;${line.separator}            &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}            &lt;WhiteList&gt;${line.separator}                &lt;Url&gt;https://localhost:9443&lt;/Url&gt;${line.separator}            &lt;/WhiteList&gt;${line.separator}        &lt;/CSRFPreventionConfig&gt;"/>
+
+                                <property name="csrf-is-token"
+                                          value="&lt;CSRFPreventionConfig&gt;${line.separator}            &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;Pattern&gt;commonauth&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;samlsso&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;authenticationendpoint&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;wso2&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;oauth2&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;openid&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;openidserver&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;passivests&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;services&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;iwa&lt;/Pattern&gt;${line.separator}                &lt;Pattern&gt;registry/resource&lt;/Pattern&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}            &lt;WhiteList&gt;${line.separator}                &lt;Url&gt;https://localhost:9443&lt;/Url&gt;${line.separator}            &lt;/WhiteList&gt;${line.separator}        &lt;/CSRFPreventionConfig&gt;"/>
+
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
@@ -155,6 +167,16 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
+                                        token="${xss-kernel-token}"
+                                        value="${xss-is-token}"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
+                                        token="${csrf-kernel-token}"
+                                        value="${csrf-is-token}"/>
 
                                 <!-- Update log4j.properties file with Identity related log files -->
                                 <replace
