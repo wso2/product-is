@@ -60,15 +60,15 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     private static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String SAML_SSO_URL = "http://localhost:8090/travelocity.com/samlsso?SAML2" +
+    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
                                                ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8090 = 8090;
+    private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
@@ -89,12 +89,12 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         startCarbonServer(PORT_OFFSET_1, context, startupParameters);
 
 //TODO: Need to fix tomcat issue
-        super.startTomcat(TOMCAT_8090);
-//        super.addWebAppToTomcat(TOMCAT_8090, "/travelocity.com", getClass().getResource(File.separator + "samples" +
+        super.startTomcat(TOMCAT_8490);
+//        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", getClass().getResource(File.separator + "samples" +
 //                                                                                        File.separator + "org.wso2.sample.is.sso.agent.war").getPath());
 
         URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-        super.addWebAppToTomcat(TOMCAT_8090, "/travelocity.com", resourceUrl.getPath());
+        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
 
 
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
@@ -119,7 +119,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         deleteAddedUsers();
 
         super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8090);
+        super.stopTomcat(TOMCAT_8490);
 
         super.stopHttpClient();
     }
@@ -403,7 +403,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9844/samlsso");
+        property.setValue("https://localhost:9854/samlsso");
         properties[2] = property;
 
         property = new Property();

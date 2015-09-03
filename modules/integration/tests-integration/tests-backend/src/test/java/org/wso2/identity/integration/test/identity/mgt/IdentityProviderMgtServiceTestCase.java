@@ -149,7 +149,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         String testFedAuthDispName = "openid";
 
         String testFedAuthPropName = "OpenIdUrl";
-        String testFedAuthPropValue = "https://testDomain:9843/openid";
+        String testFedAuthPropValue = "https://testDomain:9853/openid";
         String testFedAuthPropName2 = "IsUserIdInClaims";
         String testFedAuthPropValue2 = "false";
         String testFedAuthPropName3 = "RealmId";
@@ -159,7 +159,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
 
         String testProvisionPropName = "scim-user-ep";
         String testProvisionPropDisplayName = "userEndPoint";
-        String testProvisionPropValue = "https://localhost:9843/testProvisionLink";
+        String testProvisionPropValue = "https://localhost:9853/testProvisionLink";
 
         String testProvisionPropName2 = "scim-username";
         String testProvisionPropDisplayName2 = "userName";

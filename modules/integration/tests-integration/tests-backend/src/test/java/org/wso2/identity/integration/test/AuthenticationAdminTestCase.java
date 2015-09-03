@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.rmi.RemoteException;
 
@@ -37,14 +38,14 @@ import java.rmi.RemoteException;
 public class AuthenticationAdminTestCase {
 
     private static Log logger = LogFactory.getLog(AuthenticationAdminTestCase.class);
-    private static final String AUTHENTICATION_ADMIN_SERVICE_URL =
-            "https://localhost:9843/services/AuthenticationAdmin";
+    private static final String AUTHENTICATION_ADMIN_SERVICE_URL = CommonConstants.DEFAULT_SERVICE_URL +
+            "AuthenticationAdmin";
 
     private AuthenticationAdminStub authenticationAdminStub;
 
     @BeforeClass(groups = {"wso2.is"})
     public void setUp() {
-        ClientConnectionUtil.waitForPort(9843,"localhost");
+        ClientConnectionUtil.waitForPort(CommonConstants.IS_DEFAULT_HTTPS_PORT,"localhost");
     }
 
     @Test (groups = "wso2.is")

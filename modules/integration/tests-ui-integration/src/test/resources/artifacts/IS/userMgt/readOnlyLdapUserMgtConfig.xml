@@ -26,7 +26,7 @@
 			<Property name="ReadOnly">true</Property>
 			<Property name="Disabled">false</Property>
 			<Property name="MaxUserNameListLength">100</Property>
-			<Property name="ConnectionURL">ldap://localhost:10789</Property>
+			<Property name="ConnectionURL">ldap://localhost:10799</Property>
 			<Property name="ConnectionName">uid=admin,ou=system</Property>
 			<Property name="ConnectionPassword">admin</Property>
 			<Property name="passwordHashMethod">PLAIN_TEXT</Property>
