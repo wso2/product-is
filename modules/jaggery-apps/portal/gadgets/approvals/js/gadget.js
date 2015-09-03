@@ -110,36 +110,49 @@ function drawTablepage(json, engineValue) {
     var middle = "";
 
     var obj = JSON.parse(json);
-    //
-    for (var i = 0; i < obj.taskSimpleQueryResultSet.row.length; i++) {
-        var entry = obj.taskSimpleQueryResultSet.row[i];
-        if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
+    var hasRows = 0;
+    if (obj.taskSimpleQueryResultSet.row != undefined) {
+        for (var i = 0; i < obj.taskSimpleQueryResultSet.row.length; i++) {
+            var entry = obj.taskSimpleQueryResultSet.row[i];
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
 
-            middle = middle +
-                "                <tr>\n" +
-                "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
-                "                    <td>" + entry.presentationSubject + "</td>" +
-                "                    <td>" + entry.status + "</td>" +
-                "                    <td>" + entry.priority + "</td>" +
-                "                    <td>" + entry.createdTime + "</td>" +
-                "                </tr>\n";
+                middle = middle +
+                    "                <tr>\n" +
+                    "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
+                    "                    <td>" + entry.presentationSubject + "</td>" +
+                    "                    <td>" + entry.status + "</td>" +
+                    "                    <td>" + entry.priority + "</td>" +
+                    "                    <td>" + entry.createdTime + "</td>" +
+                    "                </tr>\n";
+                hasRows = 1;
+            }
+
+
         }
+        if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined) {
+            var entry = obj.taskSimpleQueryResultSet.row;
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
 
-
-    }
-    if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined){
-        var entry = obj.taskSimpleQueryResultSet.row;
-        if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
-
-            middle = middle +
-                "                <tr>\n" +
-                "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
-                "                    <td>" + entry.presentationSubject + "</td>" +
-                "                    <td>" + entry.status + "</td>" +
-                "                    <td>" + entry.priority + "</td>" +
-                "                    <td>" + entry.createdTime + "</td>" +
-                "                </tr>\n";
+                middle = middle +
+                    "                <tr>\n" +
+                    "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
+                    "                    <td>" + entry.presentationSubject + "</td>" +
+                    "                    <td>" + entry.status + "</td>" +
+                    "                    <td>" + entry.priority + "</td>" +
+                    "                    <td>" + entry.createdTime + "</td>" +
+                    "                </tr>\n";
+                hasRows = 1;
+            }
         }
+        if (hasRows == 0) {
+            middle = middle + "<tr>" +
+                "<td colspan=\"6\"><i>No requests found.</i></td>" +
+                "</tr>";
+        }
+    } else {
+        middle = middle + "<tr>" +
+            "<td colspan=\"6\"><i>No requests found.</i></td>" +
+            "</tr>";
     }
 
     var end = "            </tbody>\n" +
