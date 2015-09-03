@@ -5,44 +5,44 @@
             <nodes>
                 <instance id="isn001">
                     <host>localhost</host>
-                    <httpport>10163</httpport>
-                    <httpsport>9843</httpsport>
+                    <httpport>10173</httpport>
+                    <httpsport>9853</httpsport>
                 </instance>
             </nodes>
             <workers>
                 <instance id="isw001">
                     <host>localhost</host>
-                    <httpport>10163</httpport>
-                    <httpsport>9843</httpsport>
+                    <httpport>10173</httpport>
+                    <httpsport>9853</httpsport>
                 </instance>
                 <instance id="isw002">
                     <host>localhost</host>
-                    <httpport>10164</httpport>
-                    <httpsport>9844</httpsport>
+                    <httpport>10174</httpport>
+                    <httpsport>9854</httpsport>
                 </instance>
                 <instance id="isw003">
                     <host>localhost</host>
-                    <httpport>10165</httpport>
-                    <httpsport>9845</httpsport>
+                    <httpport>10175</httpport>
+                    <httpsport>9855</httpsport>
                 </instance>
             </workers>
             <lb>
                 <instance id="worker">
                     <host>localhost</host>
-                    <httpport>10163</httpport>
-                    <httpsport>9843</httpsport>
+                    <httpport>10173</httpport>
+                    <httpsport>9853</httpsport>
                 </instance>
                 <instance id="manager">
                     <host>localhost</host>
-                    <httpport>10165</httpport>
-                    <httpsport>9845</httpsport>
+                    <httpport>10175</httpport>
+                    <httpsport>9855</httpsport>
                 </instance>
             </lb>
             <managers>
                 <instance id="isw003">
                     <host>localhost</host>
-                    <httpport>10163</httpport>
-                    <httpsport>9843</httpsport>
+                    <httpport>10173</httpport>
+                    <httpsport>9853</httpsport>
                 </instance>
             </managers>
         </group>
@@ -50,8 +50,8 @@
             <nodes>
                 <instance id="isn002">
                     <host>localhost</host>
-                    <httpport>10165</httpport>
-                    <httpsport>9845</httpsport>
+                    <httpport>10175</httpport>
+                    <httpsport>9855</httpsport>
                 </instance>
             </nodes>
         </group>

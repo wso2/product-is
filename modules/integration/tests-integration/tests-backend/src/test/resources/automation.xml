@@ -182,8 +182,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10163</port>
-                    <port type="https">9843</port>
+                    <port type="http">10173</port>
+                    <port type="https">9853</port>
                 </ports>
                 <properties>
                 </properties>
@@ -194,8 +194,8 @@
                 </hosts>
                 <ports>
                     <!-- TODO: keeping ports without a offset due to a bug in TAF 4.3.1, Need to be changed to 9764 and 9444-->
-                    <port type="http">10163</port>
-                    <port type="https">9843</port>
+                    <port type="http">10173</port>
+                    <port type="https">9853</port>
                 </ports>
                 <properties>
                 </properties>
@@ -206,8 +206,8 @@
                 </hosts>
                 <ports>
                     <!-- TODO: keeping ports without a offset due to a bug in TAF 4.3.1, Need to be changed to 9765 and 9445 -->
-                    <port type="http">10163</port>
-                    <port type="https">9843</port>
+                    <port type="http">10173</port>
+                    <port type="https">9853</port>
                 </ports>
                 <properties>
                 </properties>
@@ -220,7 +220,7 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
-                    <parameter name="-DportOffset" value="400" />
+                    <parameter name="-DportOffset" value="410" />
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>

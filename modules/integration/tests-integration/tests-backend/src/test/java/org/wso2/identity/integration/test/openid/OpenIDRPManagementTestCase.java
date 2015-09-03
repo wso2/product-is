@@ -35,12 +35,12 @@ public class OpenIDRPManagementTestCase extends ISIntegrationTest {
     private String userName = "admin";
     private String profileName = "default";
     
-    private String rp1Url = "http://localhost:8090/openidclient";
+    private String rp1Url = "http://localhost:8490/openidclient";
     private boolean rp1TrustedAlways = false;
     private int rp1VisitCount = 0;
     private Date rp1lastVisit = Calendar.getInstance().getTime();
     
-    private String rp2Url = "http://localhost:8090/openidclient2";
+    private String rp2Url = "http://localhost:8490/openidclient2";
     private boolean rp2TrustedAlways = true;
     private int rp2VisitCount = 1;
     private Date rp2lastVisit = Calendar.getInstance().getTime();

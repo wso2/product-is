@@ -21,7 +21,7 @@
 
 	<JDBCPersistenceManager>
 		<DataSource>
-			<!-- Include a data source name (jndiConfigName) from the set of data 
+			<!-- Include a data source name (jndiConfigName) from the set of data
 				sources defined in master-datasources.xml -->
 			<Name>jdbc/WSO2CarbonDB</Name>
 		</DataSource>
@@ -60,8 +60,8 @@
 	</Identity>
 
 	<OpenID>
-		<OpenIDServerUrl>https://localhost:9843/openidserver</OpenIDServerUrl>
-		<OpenIDUserPattern>https://localhost:9843/openid/</OpenIDUserPattern>
+		<OpenIDServerUrl>https://localhost:9853/openidserver</OpenIDServerUrl>
+		<OpenIDUserPattern>https://localhost:9853/openid/</OpenIDUserPattern>
 		<!-- If the users must be prompted for approval -->
 		<OpenIDSkipUserConsent>true</OpenIDSkipUserConsent>
 		<!-- Expiry time of the OpenID RememberMe token in minutes -->
@@ -78,9 +78,9 @@
 	</OpenID>
 
 	<OAuth>
-		<RequestTokenUrl>https://localhost:9843/oauth/request-token</RequestTokenUrl>
-		<AccessTokenUrl>https://localhost:9843/oauth/access-token</AccessTokenUrl>
-		<AuthorizeUrl>https://localhost:9843/oauth/authorize-url</AuthorizeUrl>
+		<RequestTokenUrl>https://localhost:9853/oauth/request-token</RequestTokenUrl>
+		<AccessTokenUrl>https://localhost:9853/oauth/access-token</AccessTokenUrl>
+		<AuthorizeUrl>https://localhost:9853/oauth/authorize-url</AuthorizeUrl>
 		<!-- Default validity period for Authorization Code in seconds -->
 		<AuthorizationCodeDefaultValidityPeriod>300</AuthorizationCodeDefaultValidityPeriod>
 		<!-- Default validity period for user access tokens in seconds -->
@@ -174,7 +174,7 @@
 		</SAML2Grant>
                 <OpenIDConnect>
                          <IDTokenBuilder>org.wso2.carbon.identity.openidconnect.DefaultIDTokenBuilder</IDTokenBuilder>
-                         <IDTokenIssuerID>https://localhost:9843/oauth2endpoints/token</IDTokenIssuerID>
+                         <IDTokenIssuerID>https://localhost:9853/oauth2endpoints/token</IDTokenIssuerID>
                          <IDTokenSubjectClaim>http://wso2.org/claims/givenname</IDTokenSubjectClaim>
                          <IDTokenCustomClaimsCallBackHandler>org.wso2.carbon.identity.openidconnect.SAMLAssertionClaimsCallback</IDTokenCustomClaimsCallBackHandler>
                          <IDTokenExpiration>3600</IDTokenExpiration>
@@ -202,7 +202,7 @@
 
 	<SSOService>
 		<EntityId>localhost</EntityId>
-		<IdentityProviderURL>https://localhost:9843/samlsso</IdentityProviderURL>
+		<IdentityProviderURL>https://localhost:9853/samlsso</IdentityProviderURL>
 		<SingleLogoutRetryCount>5</SingleLogoutRetryCount>
 		<SingleLogoutRetryInterval>60000</SingleLogoutRetryInterval> <!-- in milli seconds -->
 		<TenantPartitioningEnabled>false</TenantPartitioningEnabled>
@@ -252,7 +252,7 @@
 		<Authenticator class="org.wso2.carbon.identity.scim.provider.auth.OAuthHandler">
 			<Property name="Priority">10</Property>
 			<Property name="AuthorizationServer">local://services</Property>
-			<!--Property name="AuthorizationServer">https://localhost:9843/services</Property>
+			<!--Property name="AuthorizationServer">https://localhost:9853/services</Property>
 			<Property name="UserName">admin</Property>
 			<Property name="Password">admin</Property-->
 		</Authenticator>

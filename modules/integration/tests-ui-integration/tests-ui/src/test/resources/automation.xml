@@ -192,8 +192,8 @@
                     <host type="manager">mgt.identity.wso2con.com</host>
                 </hosts>
                 <ports>
-                    <port type="nhttps">8643</port>
-                    <port type="nhttp">8680</port>
+                    <port type="nhttps">8653</port>
+                    <port type="nhttp">8690</port>
                 </ports>
                 <properties>
 
@@ -204,8 +204,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10164</port>
-                    <port type="https">9844</port>
+                    <port type="http">10174</port>
+                    <port type="https">9854</port>
                 </ports>
                 <properties>
                 </properties>
@@ -216,8 +216,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10163</port>
-                    <port type="https">9843</port>
+                    <port type="http">10173</port>
+                    <port type="https">9853</port>
                 </ports>
                 <properties>
                 </properties>
@@ -227,8 +227,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10165</port>
-                    <port type="https">9845</port>
+                    <port type="http">10175</port>
+                    <port type="https">9855</port>
                 </ports>
                 <properties>
                 </properties>
@@ -243,7 +243,7 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
-                    <!--<parameter name="-DportOffset" value="400" />-->
+                    <!--<parameter name="-DportOffset" value="410" />-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <!--<class>-->
