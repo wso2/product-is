@@ -462,7 +462,7 @@ slf4j.api_1.6.1.jar                                                             
 slf4j.log4j12_1.6.1.jar                                                         bundle         mit       
 slf4j_1.5.10.wso2v1.jar                                                         bundle         mit       
 smack_3.0.4.wso2v1.jar                                                          bundle         apache2   
-solr_1.4.1.wso2v1.jar                                                           bundle         apache2
+solr_1.4.1.wso2v1.jar                                                           bundle         apache2   
 spring-aop-3.0.7.RELEASE.jar                                                    bundle         apache2   
 spring-asm-3.0.7.RELEASE.jar                                                    bundle         apache2   
 spring-beans-3.0.7.RELEASE.jar                                                  bundle         apache2   
