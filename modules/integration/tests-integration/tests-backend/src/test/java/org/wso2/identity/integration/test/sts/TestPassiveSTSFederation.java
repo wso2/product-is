@@ -22,6 +22,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -37,15 +38,15 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     private static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String SAML_SSO_URL = "http://localhost:8090/travelocity.com/samlsso?SAML2" +
+    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
                                                ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8090 = 8090;
+    private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
@@ -54,9 +55,9 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String givenNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String PASSIVE_STS_SAMPLE_APP_URL =
-            "http://localhost:8090/PassiveSTSSampleApp";
+            "http://localhost:8490/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URLL =
-            "https://localhost:9443/commonauth";
+            "https://localhost:9853/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     private static final String PASSIVE_STS_SAMPLE_APP_NAME = "/PassiveSTSSampleApp";
     private String sessionDataKey;
@@ -74,13 +75,13 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         adminPassword = userInfo.getPassword();
 
         Map<String, String> startupParameterMap = new HashMap<String, String>();
-        startupParameterMap.put("-DportOffset", String.valueOf(PORT_OFFSET_1));
+        startupParameterMap.put("-DportOffset", String.valueOf(PORT_OFFSET_1  + CommonConstants.IS_DEFAULT_OFFSET));
         AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
 
         startCarbonServer(PORT_OFFSET_1, context, startupParameterMap);
 
-        super.startTomcat(TOMCAT_8090);
-        super.addWebAppToTomcat(TOMCAT_8090, PASSIVE_STS_SAMPLE_APP_NAME,
+        super.startTomcat(TOMCAT_8490);
+        super.addWebAppToTomcat(TOMCAT_8490, PASSIVE_STS_SAMPLE_APP_NAME,
                                 getClass().getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war").getPath());
         //servers getting ready...
         Thread.sleep(10000);
@@ -102,7 +103,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
         super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8090);
+        super.stopTomcat(TOMCAT_8490);
 
         super.stopHttpClient();
     }

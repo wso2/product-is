@@ -38,9 +38,23 @@ function setEngines() {
 }
 
 function drawNoServerErrorpage(errorMessage) {
-    var error = "<div align=\"center\" ><h1 style=\"color: #8b0000;\"><br><br><br><br><br><br>" + errorMessage + "<br><br><br><br><br><br></h1></div>";
+    var page = "<div class=\"col-lg-12 sectionSub\">" +
+        "<table class=\"carbonFormTable\" style=\"width:100%; padding-left: 10px;\">" +
+        "<tr>" +
+        "<td style=\"width:20%\" class=\"leftCol-med labelField\">BPEL Profile Engine :     </td>" +
+        "<td>" +
+        "<select id=\"engine\" onchange='getList2()'>";
+    for (var i = 0; i < serverList.length; i++) {
+        page = page + "<option value=\"" + serverList[i].host + "/services/HumanTaskClientAPIAdmin" + "\">" + serverList[i].profile + "</option>";
+    }
+
+    page = page + "</select>" +
+        "</td>" +
+        "</tr>" +
+        "</table></div>";
+    var error = "<div align=\"center\" ><h1 style=\"color: #8b0000;\"><br><br><br><br><br>" + errorMessage + "<br><br><br><br></h1></div>";
     $("#gadgetBody").empty();
-    $("#gadgetBody").append(error);
+    $("#gadgetBody").append(page + error);
 }
 
 function drawTablepage(json, engineValue) {
@@ -96,36 +110,49 @@ function drawTablepage(json, engineValue) {
     var middle = "";
 
     var obj = JSON.parse(json);
-    //
-    for (var i = 0; i < obj.taskSimpleQueryResultSet.row.length; i++) {
-        var entry = obj.taskSimpleQueryResultSet.row[i];
-        if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
+    var hasRows = 0;
+    if (obj.taskSimpleQueryResultSet.row != undefined) {
+        for (var i = 0; i < obj.taskSimpleQueryResultSet.row.length; i++) {
+            var entry = obj.taskSimpleQueryResultSet.row[i];
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
 
-            middle = middle +
-                "                <tr>\n" +
-                "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
-                "                    <td>" + entry.presentationSubject + "</td>" +
-                "                    <td>" + entry.status + "</td>" +
-                "                    <td>" + entry.priority + "</td>" +
-                "                    <td>" + entry.createdTime + "</td>" +
-                "                </tr>\n";
+                middle = middle +
+                    "                <tr>\n" +
+                    "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
+                    "                    <td>" + entry.presentationSubject + "</td>" +
+                    "                    <td>" + entry.status + "</td>" +
+                    "                    <td>" + entry.priority + "</td>" +
+                    "                    <td>" + entry.createdTime + "</td>" +
+                    "                </tr>\n";
+                hasRows = 1;
+            }
+
+
         }
+        if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined) {
+            var entry = obj.taskSimpleQueryResultSet.row;
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
 
-
-    }
-    if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined){
-        var entry = obj.taskSimpleQueryResultSet.row;
-        if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
-
-            middle = middle +
-                "                <tr>\n" +
-                "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
-                "                    <td>" + entry.presentationSubject + "</td>" +
-                "                    <td>" + entry.status + "</td>" +
-                "                    <td>" + entry.priority + "</td>" +
-                "                    <td>" + entry.createdTime + "</td>" +
-                "                </tr>\n";
+                middle = middle +
+                    "                <tr>\n" +
+                    "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
+                    "                    <td>" + entry.presentationSubject + "</td>" +
+                    "                    <td>" + entry.status + "</td>" +
+                    "                    <td>" + entry.priority + "</td>" +
+                    "                    <td>" + entry.createdTime + "</td>" +
+                    "                </tr>\n";
+                hasRows = 1;
+            }
         }
+        if (hasRows == 0) {
+            middle = middle + "<tr>" +
+                "<td colspan=\"6\"><i>No requests found.</i></td>" +
+                "</tr>";
+        }
+    } else {
+        middle = middle + "<tr>" +
+            "<td colspan=\"6\"><i>No requests found.</i></td>" +
+            "</tr>";
     }
 
     var end = "            </tbody>\n" +

@@ -28,6 +28,7 @@ import org.apache.axis2.AxisFault;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 
 public class XmlParserTestUtils {
 
@@ -35,8 +36,8 @@ public class XmlParserTestUtils {
 
 	private AuthenticationAdminStub authenticationAdminStub;
 	private ServerAdminStub serverAdminStub;
-	private final String SERVER_ADMIN_URL = "https://localhost:9443/services/ServerAdmin";
-	private final String AUTHENTICATION_ADMIN_URL = "https://localhost:9443/services/AuthenticationAdmin";
+	private final String SERVER_ADMIN_URL = CommonConstants.DEFAULT_SERVICE_URL +  "ServerAdmin";
+	private final String AUTHENTICATION_ADMIN_URL = CommonConstants.DEFAULT_SERVICE_URL +  "AuthenticationAdmin";
 
 	public void initAuthenticatorClient() throws AxisFault {
 		if (log.isDebugEnabled()) {

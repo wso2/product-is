@@ -1007,8 +1007,8 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>4.5.6-SNAPSHOT</carbon.identity.version>
-        <carbon.identity.jar.version>4.5.6-SNAPSHOT</carbon.identity.jar.version>
+        <carbon.identity.version>4.5.10-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.jar.version>4.5.10-SNAPSHOT</carbon.identity.jar.version>
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1021,13 +1021,13 @@
         <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
         <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
-        <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
         <openws.version>1.4.2</openws.version>
         <charon.version>2.0.1</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v15</rampart.wso2.version>
-        <rampart.wso2.version.1>1.6.1-wso2v15</rampart.wso2.version.1>
+        <rampart.wso2.version>1.6.1.wso2v16</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v16</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.1.3.wso2v1</httpcore.wso2.version>
@@ -1058,7 +1058,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.10.0</jaggeryjs.version>
+        <jaggeryjs.version>0.11.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>1.1.0</ws.module.version>
         <oauth.module.version>1.0.0</oauth.module.version>
@@ -1073,7 +1073,7 @@
         <gadget.module.version>1.0.0</gadget.module.version>
         <i18n.module.version>1.0.0</i18n.module.version>
         <wso2.store.version>2.0.0</wso2.store.version>
-        <test.framework.version>4.3.1</test.framework.version>
+        <test.framework.version>4.4.2</test.framework.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>

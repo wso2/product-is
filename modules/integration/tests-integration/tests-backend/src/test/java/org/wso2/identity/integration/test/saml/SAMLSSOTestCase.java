@@ -67,13 +67,13 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
     public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
-    private static final String SAML_SSO_URL = "https://localhost:9443/samlsso";
-    private static final String ACS_URL = "http://localhost:8090/%s/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
+    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8090/%s/samlsso?SAML2.HTTPBinding=%s";
+            "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8090/%s/logout?SAML2.HTTPBinding=%s";
+            "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
@@ -422,7 +422,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private Tomcat getTomcat() {
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8090);
+        tomcat.setPort(8490);
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();

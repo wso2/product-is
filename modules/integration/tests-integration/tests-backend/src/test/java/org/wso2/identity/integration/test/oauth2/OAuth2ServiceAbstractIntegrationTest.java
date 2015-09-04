@@ -52,7 +52,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	private final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProver";
 	private final static String SERVICE_PROVIDER_DESC = "Playground Service Prover";
-	private final static int TOMCAT_PORT = 8090;
+	private final static int TOMCAT_PORT = 8490;
 
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
@@ -328,8 +328,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 *            - Application war file path
 	 * @throws LifecycleException
 	 */
-	public void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-	                                                                           throws LifecycleException {
+	public void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
 		tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
 		tomcat.start();
 	}

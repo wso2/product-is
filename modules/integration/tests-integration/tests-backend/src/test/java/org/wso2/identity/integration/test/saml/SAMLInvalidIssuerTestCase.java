@@ -69,10 +69,10 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     private static final String EMAIL = "testUser@wso2.com";
     private static final String NICKNAME = "testUserNick";
 
-    private static final String ACS_URL = "http://localhost:8090/travelocity.com/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9443/commonauth";
+    private static final String ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8090/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
+            "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String SAML_ERROR_NOTIFICATION_PATH = "/authenticationendpoint/samlsso_notification.do";
 
     //Claim Uris
@@ -194,7 +194,7 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     private Tomcat getTomcat() {
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8090);
+        tomcat.setPort(8490);
         tomcat.setBaseDir(".");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();

@@ -39,6 +39,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
@@ -59,7 +60,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, Tomcat> tomcatServers;
     private HttpClient httpClient;
     private MultipleServersManager manager;
-    protected static final int DEFAULT_PORT = 9443;
+    protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
 
     public void initTest() throws Exception {
         super.init();
@@ -297,7 +298,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {
-        return baseUrl.replace("9443", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+        return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
     }
 
 }

@@ -4,50 +4,50 @@
         <worker>
             <instance id="is001" type="worker" name="isCluster">
                 <host>localhost</host>
-                <httpport>9763</httpport>
-                <httpsport>9443</httpsport>
+                <httpport>10173</httpport>
+                <httpsport>9853</httpsport>
             </instance>
             <instance id="is002" type="worker" name="isCluster">
                 <host>localhost</host>
-                <httpport>9763</httpport>
-                <httpsport>9443</httpsport>
+                <httpport>10173</httpport>
+                <httpsport>9853</httpsport>
             </instance>
             <instance id="is003" type="worker" name="isCluster">
                 <host>localhost</host>
-                <httpport>9763</httpport>
-                <httpsport>9443</httpsport>
+                <httpport>10173</httpport>
+                <httpsport>9853</httpsport>
             </instance>
         </worker>
 
         <nodes>
             <instance id="is001" type="worker" name="isCluster">
                 <host>localhost</host>
-                <httpport>9763</httpport>
-                <httpsport>9443</httpsport>
+                <httpport>10173</httpport>
+                <httpsport>9853</httpsport>
             </instance>
             <instance id="is002" type="worker" name="isCluster">
                 <host>localhost</host>
-                <httpport>9763</httpport>
-                <httpsport>9443</httpsport>
+                <httpport>10173</httpport>
+                <httpsport>9853</httpsport>
             </instance>
         </nodes>
         <manager>
             <instance id="ism001" type="worker" name="isCluster">
                 <host>localhost</host>
-                <httpport>9763</httpport>
-                <httpsport>9443</httpsport>
+                <httpport>10173</httpport>
+                <httpsport>9853</httpsport>
             </instance>
 
         </manager>
         <node id="is001" type="worker" name="isCluster">
             <host>localhost</host>
-            <httpport>9763</httpport>
-            <httpsport>9443</httpsport>
+            <httpport>10173</httpport>
+            <httpsport>9853</httpsport>
         </node>
         <node id="as002" name="asCluster">
             <host>localhost</host>
-            <httpport>9764</httpport>
-            <httpsport>9444</httpsport>
+            <httpport>10174</httpport>
+            <httpsport>9854</httpsport>
         </node>
     </platform>
 
