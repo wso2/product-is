@@ -17,18 +17,18 @@
 package org.wso2.carbon.is.migration.client;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.base.IdentityException;
-import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ServiceHolder;
-import org.wso2.carbon.is.migration.util.ResourceUtil;
+import org.wso2.carbon.is.migration.util.SQLQueries;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
@@ -40,13 +40,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.xml.namespace.QName;
-import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.UUID;
 
 @SuppressWarnings("unchecked")
@@ -123,39 +121,48 @@ public class MigrateFrom5to510 implements MigrationClient {
 
         MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource);
         migrationDatabaseCreator.executeMigrationScript();
+        oauthMigration();
 
     }
 
     public void oauthMigration(){
         Connection connection = null;
-        PreparedStatement selectPS = null;
-        PreparedStatement insertScopesPS = null;
-        PreparedStatement updateTokenIdPS = null;
-        PreparedStatement updateUserPS = null;
-        ResultSet rs = null;
+        PreparedStatement selectFromAccessTokenPS = null;
+        PreparedStatement insertScopeAssociationPS = null;
+        PreparedStatement insertTokenScopeHashPS = null;
+        PreparedStatement insertTokenIdPS = null;
+        PreparedStatement updateUserNamePS = null;
+
+        PreparedStatement selectFromAuthorizationCodePS = null;
+        PreparedStatement updateUserNameAuthorizationCodePS = null;
+        ResultSet accessTokenRS = null;
+        ResultSet authzCodeRS = null;
         try {
-            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
 
-            String query = "SELECT ACCESS_TOKEN, TOKEN_SCOPE, AUTHZ_USER FROM IDN_OAUTH2_ACCESS_TOKEN";
-            selectPS = connection.prepareStatement(query);
+            String selectFromAccessToken = SQLQueries.SELECT_FROM_ACCESS_TOKEN;
+            selectFromAccessTokenPS = connection.prepareStatement(selectFromAccessToken);
 
-            String insertQuery = "INSERT INTO IDN_OAUTH2_SCOPE_ASSOCIATION (TOKEN_ID, TOKEN_SCOPE) VALUES (?, ?)";
-            insertScopesPS = connection.prepareStatement(insertQuery);
+            String insertScopeAssociation = SQLQueries.INSERT_SCOPE_ASSOCIATION;
+            insertScopeAssociationPS = connection.prepareStatement(insertScopeAssociation);
 
-            String updateTokenIdQuery = "UPDATE IDN_OAUTH2_ACCESS_TOKEN SET TOKEN_ID=? WHERE ACCESS_TOKEN=?";
-            updateTokenIdPS = connection.prepareStatement(updateTokenIdQuery);
+            String insertTokenScopeHash = SQLQueries.INSERT_TOKEN_SCOPE_HASH;
+            insertTokenScopeHashPS = connection.prepareStatement(insertTokenScopeHash);
 
-            String updateUserQuery = "UPDATE IDN_OAUTH2_ACCESS_TOKEN SET AUTHZ_USER=?, TENANT_ID=?, USER_DOMAIN=? WHERE ACCESS_TOKEN=?";
-            updateUserPS = connection.prepareStatement(updateUserQuery);
+            String insertTokenId = SQLQueries.INSERT_TOKEN_ID;
+            insertTokenIdPS = connection.prepareStatement(insertTokenId);
 
-            rs = selectPS.executeQuery();
-            while (rs.next()){
+            String updateUserName = SQLQueries.UPDATE_USER_NAME;
+            updateUserNamePS = connection.prepareStatement(updateUserName);
+
+            accessTokenRS = selectFromAccessTokenPS.executeQuery();
+            while (accessTokenRS.next()){
                 String accessToken = null;
                 try {
-                    accessToken = rs.getString(1);
-                    String scopeString = rs.getString(2);
-                    String authzUser = rs.getString(3);
+                    accessToken = accessTokenRS.getString(1);
+                    String scopeString = accessTokenRS.getString(2);
+                    String authzUser = accessTokenRS.getString(3);
 
                     String tokenId = UUID.randomUUID().toString();
 
@@ -165,45 +172,110 @@ public class MigrateFrom5to510 implements MigrationClient {
                     int tenantId = ServiceHolder.getRealmService().getTenantManager().getTenantId(MultitenantUtils
                             .getTenantDomain(authzUser));
 
-                    updateTokenIdPS.setString(1, tokenId);
-                    updateTokenIdPS.setString(2, accessToken);
-                    updateTokenIdPS.addBatch();
+                    insertTokenIdPS.setString(1, tokenId);
+                    insertTokenIdPS.setString(2, accessToken);
+                    insertTokenIdPS.addBatch();
 
-                    updateUserPS.setString(1, username);
-                    updateUserPS.setInt(2, tenantId);
-                    updateUserPS.setString(3, userDomain);
-                    updateUserPS.setString(4, accessToken);
-                    updateUserPS.executeBatch();
+                    updateUserNamePS.setString(1, username);
+                    updateUserNamePS.setInt(2, tenantId);
+                    updateUserNamePS.setString(3, userDomain);
+                    updateUserNamePS.setString(4, accessToken);
+                    updateUserNamePS.addBatch();
+
+                    insertTokenScopeHashPS.setString(1, DigestUtils.md5Hex(scopeString));
+                    insertTokenScopeHashPS.setString(2, accessToken);
+                    insertTokenScopeHashPS.addBatch();
 
                     if (scopeString != null) {
                         String scopes[] = scopeString.split(" ");
                         for (String scope : scopes) {
-                            insertScopesPS.setString(1, tokenId);
-                            insertScopesPS.setString(2, scope);
-                            insertScopesPS.addBatch();
+                            insertScopeAssociationPS.setString(1, tokenId);
+                            insertScopeAssociationPS.setString(2, scope);
+                            insertScopeAssociationPS.addBatch();
                         }
                     }
                 } catch (UserStoreException e) {
                     log.warn("Error while migrating access token : " + accessToken);
                 }
             }
-            updateTokenIdPS.executeBatch();
-            insertScopesPS.executeBatch();
+
+            String selectFromAuthorizationCode = SQLQueries.SELECT_FROM_AUTHORIZATION_CODE;
+            selectFromAuthorizationCodePS = connection.prepareStatement(selectFromAuthorizationCode);
+
+            String updateUserNameAuthorizationCode = SQLQueries.UPDATE_USER_NAME_AUTHORIZATION_CODE;
+            updateUserNameAuthorizationCodePS = connection.prepareStatement(updateUserNameAuthorizationCode);
+
+            authzCodeRS = selectFromAuthorizationCodePS.executeQuery();
+            while (authzCodeRS.next()){
+                String authorizationCode = null;
+                try {
+                    authorizationCode = authzCodeRS.getString(1);
+                    String authzUser = authzCodeRS.getString(2);
+
+                    String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
+                            (authzUser));
+                    String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
+                    int tenantId = ServiceHolder.getRealmService().getTenantManager().getTenantId(MultitenantUtils
+                            .getTenantDomain(authzUser));
+
+
+                    updateUserNameAuthorizationCodePS.setString(1, username);
+                    updateUserNameAuthorizationCodePS.setInt(2, tenantId);
+                    updateUserNameAuthorizationCodePS.setString(3, userDomain);
+                    updateUserNameAuthorizationCodePS.setString(4, authorizationCode);
+                    updateUserNameAuthorizationCodePS.addBatch();
+                } catch (UserStoreException e) {
+                    log.warn("Error while migrating authorization code : " + authorizationCode);
+                }
+            }
+            insertTokenIdPS.executeBatch();
+            insertScopeAssociationPS.executeBatch();
+            updateUserNamePS.executeBatch();
+            insertTokenScopeHashPS.executeBatch();
+            updateUserNameAuthorizationCodePS.executeBatch();
+
+            String databaseType = DatabaseCreator.getDatabaseType(connection);
+
+            String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
+            String alterTokenIdNotNull;
+            if ("oracle".equals(databaseType)){
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
+            } else {
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
+            }
+            String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
+            String setScopeAssociationPrimaryKey = SQLQueries.SET_SCOPE_ASSOCIATION_PRIMARY_KEY;
+
+            PreparedStatement dropColumnPS = connection.prepareStatement(dropTokenScopeColumn);
+            dropColumnPS.execute();
+
+            PreparedStatement notNullPS = connection.prepareStatement(alterTokenIdNotNull);
+            notNullPS.execute();
+
+            PreparedStatement primaryKeyPS = connection.prepareStatement(setAccessTokenPrimaryKey);
+            primaryKeyPS.execute();
+
+            PreparedStatement foreignKeyPS = connection.prepareStatement(setScopeAssociationPrimaryKey);
+            foreignKeyPS.execute();
+
             connection.commit();
 
-        } catch (IdentityException e) {
-            IdentityDatabaseUtil.rollBack(connection);
-            log.error("Error while retrieving the database connection" , e);
         } catch (SQLException e) {
             IdentityDatabaseUtil.rollBack(connection);
             log.error(e);
-        }finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IdentityDatabaseUtil.closeStatement(selectFromAccessTokenPS);
+            IdentityDatabaseUtil.closeStatement(insertScopeAssociationPS);
+            IdentityDatabaseUtil.closeStatement(insertTokenIdPS);
+            IdentityDatabaseUtil.closeStatement(updateUserNamePS);
+            IdentityDatabaseUtil.closeStatement(insertTokenScopeHashPS);
+            IdentityDatabaseUtil.closeStatement(updateUserNameAuthorizationCodePS);
+            IdentityDatabaseUtil.closeStatement(selectFromAuthorizationCodePS);
+            IdentityDatabaseUtil.closeResultSet(accessTokenRS);
+            IdentityDatabaseUtil.closeResultSet(authzCodeRS);
             IdentityDatabaseUtil.closeConnection(connection);
-            IdentityDatabaseUtil.closeResultSet(rs);
-            IdentityDatabaseUtil.closeStatement(selectPS);
-            IdentityDatabaseUtil.closeStatement(insertScopesPS);
-            IdentityDatabaseUtil.closeStatement(updateTokenIdPS);
-            IdentityDatabaseUtil.closeStatement(updateUserPS);
         }
     }
 
