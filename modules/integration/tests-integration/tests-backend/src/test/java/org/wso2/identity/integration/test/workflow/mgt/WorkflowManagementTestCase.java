@@ -1206,6 +1206,10 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             }
             usmClient.deleteRole(roleName1);
             usmClient.deleteRole(roleName3);
+            usmClient.deleteRole(roleName4);
+            usmClient.deleteRole(roleName5);
+            usmClient.deleteRole(roleName6);
+            usmClient.deleteUser(userName2);
         } catch (Exception e) {
             log.error("Error while clean up testUpdateRoleName");
         }
