@@ -76,7 +76,7 @@ public class MigrationDatabaseCreator extends DatabaseCreator {
         String scriptName = databaseType + ".sql";
         String carbonHome = System.getProperty("carbon.home");
         return carbonHome +
-                "/dbscripts/migrate5to510/" + scriptName;
+                "/dbscripts/migration-5.0.0_to_5.1.0/" + scriptName;
     }
 
 

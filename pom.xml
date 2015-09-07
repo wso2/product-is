@@ -579,6 +579,7 @@
         <module>modules/styles</module>
         <module>modules/samples</module>
         <module>modules/integration</module>
+        <module>modules/migration/migration-5.0.0_to_5.1.0/wso2-is-migration-client</module>
     </modules>
 
     <licenses>
@@ -996,6 +997,11 @@
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
                 <artifactId>axiom</artifactId>
                 <version>${axiom.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.core</artifactId>
+                <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -3357,6 +3363,7 @@
                 <version>${jacoco.agent.version}</version>
             </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 		</dependencies>
 	</dependencyManagement>
 =======
@@ -3364,6 +3371,18 @@
     </dependencyManagement>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
+=======
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.logging</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core.services</artifactId>
+                <version>${org.wso2.carbon.core.services.version}</version>
+            </dependency>
+>>>>>>> ebd4658... migration client and scripts for oracle, mysql and h2
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
@@ -3787,7 +3806,13 @@
 =======
         <carbon.business-process.version>4.4.2</carbon.business-process.version>
 	<carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+<<<<<<< HEAD
 >>>>>>> 16df5d4... Config IS to start with different p2 profile. ex: workflow
+=======
+        <osgi.framework.imp.pkg.version.range>[1.7.0, 1.8.0)</osgi.framework.imp.pkg.version.range>
+        <osgi.service.component.imp.pkg.version.range>[1.2.0, 1.3.0)</osgi.service.component.imp.pkg.version.range>
+        <org.wso2.carbon.core.services.version>4.2.0</org.wso2.carbon.core.services.version>
+>>>>>>> ebd4658... migration client and scripts for oracle, mysql and h2
     </properties>
 
     <repositories>
