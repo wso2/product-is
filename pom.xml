@@ -40,6 +40,7 @@
         <module>modules/styles</module>
         <module>modules/samples</module>
         <module>modules/integration</module>
+        <module>modules/migration/migration-5.0.0_to_5.1.0/wso2-is-migration-client</module>
     </modules>
 
     <licenses>
@@ -457,6 +458,11 @@
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
                 <artifactId>axiom</artifactId>
                 <version>${axiom.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.core</artifactId>
+                <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -899,6 +905,16 @@
                 <artifactId>org.jacoco.agent</artifactId>
                 <version>${jacoco.agent.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.logging</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core.services</artifactId>
+                <version>${org.wso2.carbon.core.services.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1064,6 +1080,9 @@
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.2</carbon.business-process.version>
 	<carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+        <osgi.framework.imp.pkg.version.range>[1.7.0, 1.8.0)</osgi.framework.imp.pkg.version.range>
+        <osgi.service.component.imp.pkg.version.range>[1.2.0, 1.3.0)</osgi.service.component.imp.pkg.version.range>
+        <org.wso2.carbon.core.services.version>4.2.0</org.wso2.carbon.core.services.version>
     </properties>
 
     <repositories>
