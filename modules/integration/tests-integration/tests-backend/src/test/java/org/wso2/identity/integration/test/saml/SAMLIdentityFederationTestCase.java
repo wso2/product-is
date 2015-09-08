@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.saml;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -37,6 +39,8 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
@@ -46,7 +50,10 @@ import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFedera
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -76,6 +83,13 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private String usrName = "testFederatedUser";
     private String usrPwd = "testFederatePassword";
     private String usrRole = "admin";
+
+
+    //Claim Uris
+    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
+
+    private static final String ATTRIBUTE_CS_INDEX_NAME_SP = "attrConsumServiceIndex";
+    private static final String ATTRIBUTE_CS_INDEX_NAME_IDP = "AttributeConsumingServiceIndex";
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -122,6 +136,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.stopTomcat(TOMCAT_8490);
 
         super.stopHttpClient();
+
     }
 
     @Test(priority = 1, groups = "wso2.is", description = "Check create identity provider in primary IS")
@@ -144,6 +159,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         identityProvider.setJustInTimeProvisioningConfig(jitConfig);
 
         super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
+
         Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME), "Failed to create Identity Provider 'trustedIdP' in primary IS");
     }
 
@@ -209,7 +225,56 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
     }
 
-    @Test(priority = 4, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
+    @Test(priority = 4, groups = "wso2.is", description = "Check functionality of attribute consumer index")
+    public void testAttributeConsumerIndex() throws Exception {
+
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
+        updateServiceProvider(PORT_OFFSET_1,serviceProvider);
+
+        InboundAuthenticationRequestConfig requestConfigs[] = serviceProvider.getInboundAuthenticationConfig()
+                .getInboundAuthenticationRequestConfigs();
+
+        String attributeConsumerServiceIndex = null;
+
+        if(!ArrayUtils.isEmpty(requestConfigs)) {
+            org.wso2.carbon.identity.application.common.model.xsd.Property[] properties = requestConfigs[0]
+                    .getProperties();
+            for (int i = 0; i < properties.length ; i++) {
+                if(ATTRIBUTE_CS_INDEX_NAME_SP.equals(properties[0].getName())){
+                    attributeConsumerServiceIndex = properties[0].getValue();
+                    break;
+                }
+                if (i == properties.length -1 ) {
+                    Assert.fail();
+                }
+            }
+        } else {
+            Assert.fail();
+        }
+
+        IdentityProvider identityProvider = getIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+        FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs = identityProvider
+                .getFederatedAuthenticatorConfigs();
+        FederatedAuthenticatorConfig SAMLAuthenticatorConfig = null;
+        for (int i = 0; i < federatedAuthenticatorConfigs.length; i++) {
+            if (federatedAuthenticatorConfigs[i].getName().equals("SAMLSSOAuthenticator")) {
+                SAMLAuthenticatorConfig = federatedAuthenticatorConfigs[i];
+                break;
+            }
+        }
+
+        Property[] properties = SAMLAuthenticatorConfig.getProperties();
+        for (int i = 0; i < properties.length; i++) {
+            if (ATTRIBUTE_CS_INDEX_NAME_IDP.equals(properties[i].getName())){
+                properties[i].setValue(attributeConsumerServiceIndex);
+            }
+        }
+
+        updateIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME, identityProvider);
+    }
+
+    @Test(priority = 5, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
         HttpClient client = getHttpClient();
@@ -232,6 +297,21 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
         Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+    }
+
+
+    private ClaimMapping[] getClaimMappings(){
+        List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
+
+        Claim lastNameClaim = new Claim();
+        lastNameClaim.setClaimUri(lastNameClaimURI);
+        ClaimMapping lastNameClaimMapping = new ClaimMapping();
+        lastNameClaimMapping.setRequested(true);
+        lastNameClaimMapping.setLocalClaim(lastNameClaim);
+        lastNameClaimMapping.setRemoteClaim(lastNameClaim);
+        claimMappingList.add(lastNameClaimMapping);
+
+        return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
@@ -261,9 +341,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         return getHeaderValue(response, "Location");
     }
 
-    private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client,
-                                                               String redirectURL)
-            throws Exception {
+    private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client, String redirectURL) throws Exception {
 
         HttpPost request = new HttpPost(redirectURL);
         request.addHeader("User-Agent", USER_AGENT);
@@ -276,8 +354,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         return extractValuesFromResponse(response, searchParams);
     }
 
-    private String sendSAMLResponseToPrimaryIS(HttpClient client, Map<String, String> searchResults)
-            throws Exception {
+    private String sendSAMLResponseToPrimaryIS(HttpClient client, Map<String, String> searchResults) throws Exception {
 
         HttpPost request = new HttpPost(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0));
         request.setHeader("User-Agent", USER_AGENT);
@@ -312,7 +389,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = new DefaultHttpClient().execute(request);
 
-        return super.validateSAMLResponse(response, usrName);
+        return validateSAMLResponse(response, usrName);
     }
 
 
@@ -390,7 +467,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private Property[] getSAML2SSOAuthnConfigProperties() {
 
-        Property[] properties = new Property[12];
+        Property[] properties = new Property[13];
         Property property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
         property.setValue("samlFedIdP");
@@ -449,6 +526,48 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         property.setName("commonAuthQueryParams");
         properties[11] = property;
 
+        property = new Property();
+        property.setName("AttributeConsumingServiceIndex");
+        properties[12] = property;
+
         return properties;
     }
+
+    private void assertLocalClaims(String resultPage){
+        String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
+        Map<String, String> attributeMap = extractClaims(claimString);
+        Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
+        Assert.assertEquals(attributeMap.get(lastNameClaimURI),usrName,
+                "Expected claim value for lastname is " + usrName);
+    }
+
+    private Map<String,String> extractClaims(String claimString){
+        String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
+        Map<String,String> attributeMap = new HashMap<String, String>();
+        String key = null;
+        String value;
+        for (int i = 0; i< dataArray.length; i++){
+            if((i%2) == 0){
+                key = dataArray[i];
+            }else{
+                value = dataArray[i].trim();
+                attributeMap.put(key,value);
+            }
+        }
+
+        return attributeMap;
+    }
+
+    public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuffer buffer = new StringBuffer();
+        String line = "";
+        while ((line = bufferedReader.readLine()) != null) {
+            buffer.append(line);
+        }
+        bufferedReader.close();
+        assertLocalClaims(buffer.toString());
+        return buffer.toString().contains("You are logged in as " + userName);
+    }
+
 }
