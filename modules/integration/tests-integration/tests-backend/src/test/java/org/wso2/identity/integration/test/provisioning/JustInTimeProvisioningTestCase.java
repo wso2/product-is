@@ -64,6 +64,12 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     }
 
     @Override
+    @Test(priority = 4, groups = "wso2.is", description = "Check functionality of attribute consumer index")
+    public void testAttributeConsumerIndex() throws Exception {
+        super.testAttributeConsumerIndex();
+    }
+
+    @Override
     @Test(priority = 5, groups = "wso2.is", description = "test testSAMLToSAMLFederation")
     public void testSAMLToSAMLFederation() throws Exception {
         super.testSAMLToSAMLFederation();
