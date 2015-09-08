@@ -597,7 +597,7 @@
         </file>
         <file>
             <source>
-                ../migration/migration-5.0.0_to_5.1.0/wso2-is-migration-client/target/org.wso2.carbon.is.migrate.client-5.1.0.jar
+                ../migration/migration-5.0.0_to_5.1.0/wso2-is-migration-client/target/org.wso2.carbon.is.migrate.client-${pom.version}.jar
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/components/dropins/</outputDirectory>
         </file>

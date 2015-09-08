@@ -26,10 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.wso2.carbon</groupId>
     <artifactId>org.wso2.carbon.is.migrate.client</artifactId>
-    <version>5.1.0</version>
     <packaging>bundle</packaging>
 
 
