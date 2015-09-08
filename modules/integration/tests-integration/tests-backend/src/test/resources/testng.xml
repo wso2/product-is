@@ -385,10 +385,10 @@
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDUserProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>
-            <!--<class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />-->
+            <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />
             <!--PassiveSTS Test Cases-->
-            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
-            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
+            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
+            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--User Profile Management Test Cases-->
 <<<<<<< HEAD
 <<<<<<< HEAD
