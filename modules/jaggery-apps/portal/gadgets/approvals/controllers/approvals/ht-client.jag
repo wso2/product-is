@@ -96,7 +96,6 @@ function accessService() {
             log.error(e.toString());
             return e.toString();
         }
-        log.error (finalResult);
         print(finalResult);
     } catch (e) {
         print(e);
