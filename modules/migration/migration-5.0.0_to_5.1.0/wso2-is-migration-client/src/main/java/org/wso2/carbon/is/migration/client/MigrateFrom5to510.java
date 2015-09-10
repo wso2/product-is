@@ -240,6 +240,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             String alterTokenIdNotNull;
             if ("oracle".equals(databaseType)){
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
+            } else if ("mssql".equals(databaseType)){
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
             } else {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
             }
