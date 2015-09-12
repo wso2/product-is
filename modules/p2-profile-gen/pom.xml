@@ -756,7 +756,7 @@
 
                     <!-- All Profile (IS Front-End + IS Back-End + BPS Back-End) -->
                     <execution>
-                        <id>creating-all-profile</id>
+                        <id>creating-full-profile</id>
                         <phase>package</phase>
                         <goals>
                             <goal>materialize-product</goal>
@@ -768,17 +768,17 @@
                             <targetPath>
                                 file:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/components
                             </targetPath>
-                            <profile>all</profile>
+                            <profile>full</profile>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>p2-profile-generation-for-all</id>
+                        <id>p2-profile-generation-for-full</id>
                         <phase>package</phase>
                         <goals>
                             <goal>p2-profile-gen</goal>
                         </goals>
                         <configuration>
-                            <profile>all</profile>
+                            <profile>full</profile>
                             <p2AgentLocation>${basedir}/target/p2-agent</p2AgentLocation>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
