@@ -278,6 +278,7 @@
                 <include>mysql.sql</include>
                 <include>oracle.sql</include>
                 <include>mssql.sql</include>
+                <include>postgresql.sql</include>
             </includes>
         </fileSet>
 
