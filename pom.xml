@@ -29,7 +29,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>${product.identity.version}</version>
+    <version>5.1.0-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -980,7 +980,7 @@
     <properties>
         <carbon.identity.version>4.6.0-M2</carbon.identity.version>
         <carbon.identity.jar.version>4.6.0-M2</carbon.identity.jar.version>
-        <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
+        <product.identity.version>5.1.0-alpha</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
