@@ -72,8 +72,14 @@ To configure for account confirmation in Self sign up provide the configuration 
 with email type as "accountConfirmation". Following is the call back handler for the sample.
 <targetEpr>https://localhost:8443/InfoRecoverySample/confirmReg</targetEpr>
 
-4. Configure the identity-mgt.properties file attributes as follows in the Identity Server(in repository/conf/security/).
-Identity.Listener.Enable=true
+4. Configure the identity.xml file attributes as follows in the Identity Server(in repository/conf/identity/).
+
+<EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
+                       name="org.wso2.carbon.identity.workflow.mgt.impl.userstore.UserStoreActionListener"
+                       orderId="10" enable="true"/>
+
+5. Configure the identity-mgt.properties file attributes as follows in the Identity Server(in repository/conf/identity/).
+
 Notification.Sending.Enable=true
 Notification.Expire.Time=7200
 Notification.Sending.Internally.Managed=true
