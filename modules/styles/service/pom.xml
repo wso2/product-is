@@ -20,15 +20,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.identity</groupId>
+        <groupId>org.wso2.is</groupId>
     	<artifactId>identity-server-styles-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.1.0-alpha</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.stratos.identity.styles</artifactId>
-    <version>2.2.1</version>
     <packaging>bundle</packaging>
     <name>WSO2 Cloud Identity: UI styles</name>
     <url>http://wso2.org</url>

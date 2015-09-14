@@ -28,10 +28,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.sample.inforecovery</groupId>
     <artifactId>info-recovery-sample</artifactId>
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
     <name>InfoRecoverySample Maven Webapp</name>
     <url>http://maven.apache.org</url>
 

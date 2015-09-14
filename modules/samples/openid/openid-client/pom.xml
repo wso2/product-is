@@ -4,7 +4,7 @@
 	<groupId>org.wso2.samples</groupId>
 	<artifactId>openidclient</artifactId>
 	<packaging>war</packaging>
-	<version>5.0.0</version>
+	<version>5.1.0-alpha</version>
 	<name>OpenID Client App for the WSO2 Identity Server</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
