@@ -11,8 +11,8 @@ supported through SCIM and SPML.
 
 This is based on the revolutionary WSO2 Carbon framework. All the major features have been developed as pluggable Carbon components.
 
-New Features
-============
+Features
+===========
 
 * Identity Bridge -
   WSO2 Identity Server 5.1.0 is capable of translating between heterogeneous authentication protocols and transforming 
@@ -93,6 +93,10 @@ New Features
   the service provider will have to have the Identity Server tenant's public certificate
 
 * NTLM grant type for OAuth 2.0
+
+* Introducing the workflow feature to the WSO2 IS is required in order to add more control to the tasks that are
+  executed in it. For example, with the workflow feature you can add another constraint to the ‘User Add’ operation in
+  the identity server. These are workflows where the operations go through a predefined path. These types of tasks can be done through the WSO2 Business Process Server (WSO2 BPS) but this new feature adds that capability to the identity server as well.
 
 Other Key Features
 =============
