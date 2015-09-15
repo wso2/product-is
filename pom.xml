@@ -272,11 +272,21 @@
 
     <build>
         <plugins>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <source>1.7</source>
@@ -915,6 +925,11 @@
                 <artifactId>org.wso2.carbon.core.services</artifactId>
                 <version>${org.wso2.carbon.core.services.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.wso2</groupId>
+                <artifactId>tomcat</artifactId>
+                <version>7.0.52.wso2v5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1009,6 +1024,7 @@
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
         <carbon.kernel.version>4.4.1</carbon.kernel.version>
+        <carbon.kernel.version>4.4.1</carbon.kernel.version>
         <carbon.commons.version>4.4.7</carbon.commons.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
@@ -1079,10 +1095,11 @@
         <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.2</carbon.business-process.version>
-	<carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+	    <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 1.8.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 1.3.0)</osgi.service.component.imp.pkg.version.range>
         <org.wso2.carbon.core.services.version>4.2.0</org.wso2.carbon.core.services.version>
+        <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
     </properties>
 
     <repositories>
