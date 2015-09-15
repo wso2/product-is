@@ -354,7 +354,7 @@ System Requirements
 
 2. Processor - Pentium 800MHz or equivalent at minimum
 
-3. Java SE Development Kit 1.6_24 or higher
+3. Java SE Development Kit 1.7 or higher
 
 4. The Management Console requires full Javascript enablement of the Web browser.
 
@@ -384,15 +384,6 @@ Installation and Running
 4. User dashboard is available at https://localhost:9443/dashboard
 5. For more information, see the Installation Guide
 
-Known Issues
-============
-
-All known issues have been recorded at https://wso2.org/jira/issues/?filter=11786
-
-Issues Fixed In This Release
-============================
-
-https://wso2.org/jira/issues/?filter=11808
 
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
@@ -532,37 +523,6 @@ For more details and to take advantage of this unique opportunity, visit http://
 
 
 For more information on WSO2 Carbon, visit the WSO2 Oxygen Tank (http://wso2.org)
-
-
-Crypto Notice
-=============
-
-This distribution includes cryptographic software.  The country in
-which you currently reside may have restrictions on the import,
-possession, use, and/or re-export to another country, of
-encryption software.  Before using any encryption software, please
-check your country's laws, regulations and policies concerning the
-import, possession, or use, and re-export of encryption software, to
-see if this is permitted.  See <http://www.wassenaar.org/> for more
-information.
-
-The U.S. Government Department of Commerce, Bureau of Industry and
-Security (BIS), has classified this software as Export Commodity
-Control Number (ECCN) 5D002.C.1, which includes information security
-software using or performing cryptographic functions with asymmetric
-algorithms.  The form and manner of this Apache Software Foundation
-distribution makes it eligible for export under the License Exception
-ENC Technology Software Unrestricted (TSU) exception (see the BIS
-Export Administration Regulations, Section 740.13) for both object
-code and source code.
-
-The following provides more details on the included cryptographic
-software:
-
-Apacge Rampart   : http://ws.apache.org/rampart/
-Apache WSS4J     : http://ws.apache.org/wss4j/
-Apache Santuario : http://santuario.apache.org/
-Bouncycastle     : http://www.bouncycastle.org/
 
 For more information about WSO2 Identity Server please see http://wso2.org/projects/identity or visit the
 WSO2 Oxygen Tank developer portal for addition resources.
