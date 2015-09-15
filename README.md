@@ -535,5 +535,9 @@ For further details, see the WSO2 Carbon documentation at
 http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
+<<<<<<< HEAD
 (c) Copyright 2014 WSO2 Inc.
 >>>>>>> cee4465... adding readme content
+=======
+(c) Copyright 2015 WSO2 Inc.
+>>>>>>> 2f44c55... Update README.md
