@@ -241,7 +241,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
                 <executions>
                     <!--TODO: Remove this execution once tomcat dependency issue was resolved-->
                     <execution>

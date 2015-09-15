@@ -28,10 +28,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+<<<<<<< HEAD:modules/samples/identity-mgt/InfoRecoverySample/pom.xml
     <groupId>org.wso2.sample.inforecovery</groupId>
     <artifactId>InfoRecoverySample</artifactId>
+=======
+    <artifactId>info-recovery-sample</artifactId>
+>>>>>>> 1bd40a4... release-fixes:modules/samples/identity-mgt/info-recovery-sample/pom.xml
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
     <name>InfoRecoverySample Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
@@ -139,7 +142,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -177,10 +179,4 @@
             </releases>
         </repository>
     </repositories>
-
-    <properties>
-        <junit.version>4.11</junit.version>
-        <jdk.version>1.6</jdk.version>
-    </properties>
-
 </project>
