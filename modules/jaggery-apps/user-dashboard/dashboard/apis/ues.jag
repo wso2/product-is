@@ -3,7 +3,7 @@ response.addHeader("Access-Control-Allow-Origin", "*");
 response.addHeader("Content-Type", "application/json");
 
 var util = require("/util/utility.jag");
-util.setServerURL();
+util.setServerURL("false");
 var serverHttpsUrl = application.get(SERVER_CORE_URL);
 
 (function () {

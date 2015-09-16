@@ -2,7 +2,7 @@
     include("util/constants.jag");
     var util = require("util/utility.jag");
     var i18n = util.initI18N();
-    util.setServerURL();
+    util.setServerURL("true");
     var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
     if(proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.length <= 0){
         //No proxy context set
