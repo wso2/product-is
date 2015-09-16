@@ -5,7 +5,7 @@ var user = session.get('user');
 var log = new Log();
 var util = require("util/utility.jag");
 
-util.setServerURL();
+util.setServerURL("true");
 
 if (user == null) {
     response.sendRedirect("login.jag");

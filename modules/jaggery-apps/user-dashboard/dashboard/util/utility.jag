@@ -256,16 +256,21 @@ String.prototype.replaceAll = function(stringToFind,stringToReplace){
 /*
  * Function to update server url information
  */
-function setServerURL() {
+function setServerURL(isWebContextRootAvailable) {
     var serverUrl = stringify(application.get(SERVER_URL));
-    if(serverUrl === 'null' || serverUrl == null || serverUrl.length <= 0){
+    var httpsPort;
+    var hostName = '';
+    var mgtTransport = "https";
+    var proxyContextPath = '';
+    var webContextRoot = '';
+    if (serverUrl === 'null' || serverUrl == null || serverUrl.length <= 0) {
         //Server URL is not specified in the jaggery.conf, therefore using the service url mentioned in the carbon.conf
         var carbon = require('carbon');
         var serverConfigService = carbon.server.osgiService('org.wso2.carbon.base.api.ServerConfigurationService');
         var configContextService = carbon.server.osgiService('org.wso2.carbon.utils.ConfigurationContextService');
         var configContext = configContextService.getServerConfigContext();
 
-        mgtTransport = "https";
+
 
         var path = "/conf/site.json";
         var file = new File(path);
@@ -276,12 +281,12 @@ function setServerURL() {
         file.close();
         var jsonConf = parse(json);
 
-        var hostName = '';
+
 
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
 
-        if ( proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0 ){
+        if (proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0) {
             //overriding carbon proxy settings configuration not available for ui urls
             hostName = serverConfigService.getFirstProperty("HostName");
         } else {
@@ -296,9 +301,9 @@ function setServerURL() {
 
         var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
 
-        var httpsPort;
+
         var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
-        if ( proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <= 0 ){
+        if (proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <= 0) {
             //overriding carbon proxy settings configuration not available for ui urls
             //retrieve https proxy port
             var httpsProxyPort = CarbonUtils.getTransportProxyPort(configContext, "https");
@@ -320,9 +325,9 @@ function setServerURL() {
             httpsPort = proxyConfPort;
         }
 
-        var proxyContextPath = '';
+
         var proxyConfContextPath = jsonConf.proxy.proxyContextPath;
-        if ( proxyConfContextPath == null || proxyConfContextPath === '' || proxyConfContextPath === 'null' || proxyConfContextPath.length <= 0 ){
+        if (proxyConfContextPath == null || proxyConfContextPath === '' || proxyConfContextPath === 'null' || proxyConfContextPath.length <= 0) {
             //overriding carbon proxy settings configuration not available for ui urls
             proxyContextPath = serverConfigService.getFirstProperty(PROXY_CONTEXT_PATH);
         } else {
@@ -333,19 +338,32 @@ function setServerURL() {
             proxyContextPath = proxyConfContextPath;
         }
 
-        if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath === '' || proxyContextPath.length <= 0 ){
+        if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath === '' || proxyContextPath.length <= 0) {
             proxyContextPath = "";
         } else {
             if (proxyContextPath.indexOf('/') != 0) {
                 proxyContextPath = '/' + proxyContextPath;
             }
         }
+         webContextRoot = serverConfigService.getFirstProperty(WEB_CONTEXT_ROOT);
+        if (webContextRoot === 'null' || webContextRoot == null || webContextRoot === '' || webContextRoot.length <= 0) {
+            webContextRoot = "";
+        } else {
+            if (webContextRoot.indexOf('/') != 0) {
+                webContextRoot = '/' + webContextRoot;
+            }
+        }
 
-        //create server service url
-        serverUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath + "/services";
-
+        //create server service ur
+        serverUrl = mgtTransport + "://" + hostName + ":" + httpsPort + proxyContextPath + webContextRoot + "/services";
+        var serverCoreUrl
         //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
-        var serverCoreUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath;
+        if (isWebContextRootAvailable === 'false') {
+            serverCoreUrl = mgtTransport + "://" + hostName + ":" + httpsPort + proxyContextPath;
+        }
+        else {
+            serverCoreUrl = mgtTransport + "://" + hostName + ":" + httpsPort + proxyContextPath + webContextRoot;
+        }
 
         //set server url infomation
         application.put(MGT_HOST_NAME, mgtHostName);
@@ -354,6 +372,8 @@ function setServerURL() {
         application.put(SERVER_URL, serverUrl);
         application.put(SERVER_CORE_URL, serverCoreUrl);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
+        application.put(WEB_CONTEXT_ROOT, webContextRoot);
+        application.put(HOST, hostName);
 
         if (log.isDebugEnabled()) {
             log.debug("Host Name       :" + hostName);
@@ -361,8 +381,22 @@ function setServerURL() {
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);
+            log.debug("Web Context Root :" + webContextRoot);
+        }
+    }
+    else{
+        httpsPort = application.get(HTTPS_PORT);
+        hostName = application.get(HOST);
+        proxyContextPath = application.get(PROXY_CONTEXT_PATH);
+        var webContextRoot = application.get(WEB_CONTEXT_ROOT);
+        if(isWebContextRootAvailable==='false'){
+            serverCoreUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath;
+            application.put(SERVER_CORE_URL, serverCoreUrl);
+        }
+        else{
+            serverCoreUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath + webContextRoot;
+            application.put(SERVER_CORE_URL, serverCoreUrl);
         }
     }
 }
-
 %>
