@@ -76,7 +76,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         		break;
         	}
 		}
-        Assert.assertTrue("user1".equals(displayValue) || "user1".equals(displayValue), "Getting user profile has failed.");
+        Assert.assertTrue("user1".equals(displayValue), "Getting user profile has failed.");
     }
 
     /**
@@ -85,7 +85,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.is", description = "Check set user profiles")
+    @Test(groups = "wso2.is", description = "Check set user profiles", dependsOnMethods = {"testGetUserProfile"})
     public void testSetUserProfile() throws Exception {
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                         isServer.getSuperTenant().getTenantAdmin().getPassword(),
