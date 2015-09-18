@@ -228,6 +228,15 @@ WSO2 Identity Server 5.1.0
 ==========================
 >>>>>>> cee4465... adding readme content
 
+---
+
+|  Branch | Build Status |
+| :------------ |:-------------
+| master      | [![Build Status](https://wso2.org/jenkins/job/product-is/badge/icon)](https://wso2.org/jenkins/job/product-is) |
+
+
+---
+
 Welcome to the WSO2 Identity Server 5.1.0 release.
 
 <<<<<<< HEAD
