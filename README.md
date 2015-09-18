@@ -2,6 +2,15 @@
 WSO2 Identity Server 5.1.0
 ==========================
 
+---
+
+|  Branch | Build Status |
+| :------------ |:-------------
+| master      | [![Build Status](https://wso2.org/jenkins/job/product-is/badge/icon)](https://wso2.org/jenkins/job/product-is) |
+
+
+---
+
 Welcome to the WSO2 Identity Server 5.1.0 release.
 
 WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
