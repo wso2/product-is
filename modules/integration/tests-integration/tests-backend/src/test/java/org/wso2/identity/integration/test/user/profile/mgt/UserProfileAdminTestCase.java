@@ -65,7 +65,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     }
     
     @Test(priority = 2, groups = "wso2.is", description = "Check get user profile")
-    public void testGetUserProfileXX() throws Exception {
+    public void testGetUserProfile() throws Exception {
         UserProfileDTO profile = userProfileMgtClient.getUserProfile("user1", "default");
         UserFieldDTO[] fields = profile.getFieldValues(); 
         String displayValue = null;
