@@ -518,8 +518,8 @@
                 <version>${google.collect.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.amber</groupId>
-                <artifactId>oauth2-client</artifactId>
+                <groupId>org.apache.oltu.oauth2</groupId>
+                <artifactId>org.apache.oltu.oauth2.client</artifactId>
                 <version>${oauth2.client.version}</version>
             </dependency>
             <dependency>
@@ -1028,7 +1028,7 @@
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
-        <oauth2.client.version>0.22.1358727-wso2v8</oauth2.client.version>
+        <oauth2.client.version>1.0.0</oauth2.client.version>
         <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
         <stratos.version.221>2.2.1</stratos.version.221>
         <stratos.version.220>2.2.0</stratos.version.220>
