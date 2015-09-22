@@ -1,5 +1,5 @@
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants"%>
-<%@page import="org.apache.amber.oauth2.client.response.OAuthAuthzResponse"%>
+<%@page import="org.apache.oltu.oauth2.client.response.OAuthAuthzResponse"%>
 <%@page import="org.json.simple.parser.JSONParser"%>
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
