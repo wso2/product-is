@@ -1004,7 +1004,7 @@
         <axiom.version>1.2.11-wso2v6</axiom.version>
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
-        <openid4java.consumer.version>0.9.6</openid4java.consumer.version>
+        <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
