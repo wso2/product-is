@@ -1,10 +1,10 @@
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants"%>
-<%@page import="org.apache.amber.oauth2.client.URLConnectionClient"%>
-<%@page import="org.apache.amber.oauth2.client.response.OAuthClientResponse"%>
-<%@page import="org.apache.amber.oauth2.client.OAuthClient"%>
-<%@page import="org.apache.amber.oauth2.common.message.types.GrantType"%>
-<%@ page import="org.apache.amber.oauth2.client.request.OAuthClientRequest" %>
-<%@ page import="org.apache.amber.oauth2.common.message.types.ResponseType" %>
+<%@page import="org.apache.oltu.oauth2.client.URLConnectionClient"%>
+<%@page import="org.apache.oltu.oauth2.client.response.OAuthClientResponse"%>
+<%@page import="org.apache.oltu.oauth2.client.OAuthClient"%>
+<%@page import="org.apache.oltu.oauth2.common.message.types.GrantType"%>
+<%@ page import="org.apache.oltu.oauth2.client.request.OAuthClientRequest" %>
+<%@ page import="org.apache.oltu.oauth2.common.message.types.ResponseType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
