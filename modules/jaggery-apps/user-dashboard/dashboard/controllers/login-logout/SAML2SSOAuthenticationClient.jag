@@ -49,13 +49,12 @@ function getBPSSessions(request){
         try {
             var result = callWSReturnJSON(webService2, host + "/services/SAML2SSOAuthenticationService", "urn:login", new Array(request));
             var isAuthenticated = result.return;
-            if (isAuthenticated) {
+            if (isAuthenticated.equals("true")) {
                 if(profileOutputJson != "\"list\" : ["){
                     profileOutputJson = profileOutputJson + ",";
                 }
 
                 profileOutputJson = profileOutputJson + "{\"host\" : \"" + host + "\", \"profile\" : \"" + profileName + "\", \"cookie\" : \"" + webService2.getResponseHeader("Set-Cookie") + "\"}";
-                //session.put("auth-cookie", adminSession);
             }
         }catch (e){
             log.error(e);
