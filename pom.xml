@@ -910,6 +910,11 @@
                 <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
+	    <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jacoco</groupId>
                 <artifactId>org.jacoco.agent</artifactId>

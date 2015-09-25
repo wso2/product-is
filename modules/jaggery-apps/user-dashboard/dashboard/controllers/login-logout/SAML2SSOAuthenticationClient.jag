@@ -74,12 +74,12 @@ function getProfileList(){
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "urn:listBPSProfiles";
-        var payload = "<xsd:listBPSProfiles xmlns:xsd=\"http://mgt.workflow.identity.carbon.wso2.org/xsd\" />";
+        var payload = "<xsd:listBPSProfiles xmlns:xsd=\"http://impl.workflow.identity.carbon.wso2.org/xsd\" />";
         options["HTTPHeaders"] = [{name: "cookie", value: adminSessionCopy}];
 
         var result;
         try {
-            version.open(options,serverUrl + "/WorkflowAdminService.WorkflowAdminServiceHttpsSoap11Endpoint/", false);
+            version.open(options,serverUrl + "/WorkflowImplAdminService.WorkflowImplAdminServiceHttpsSoap11Endpoint/", false);
             version.send(payload);
             result =version.responseE4X;
         } catch (e) {
