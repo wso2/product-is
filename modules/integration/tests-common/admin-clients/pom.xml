@@ -99,7 +99,14 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
         </dependency>
+<<<<<<< HEAD
 >>>>>>> bc19506... IDENTITY-3472 Workflow support for IS - Integration tests
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
+        </dependency>
+>>>>>>> 3d9fcd3... change profile
     </dependencies>
 
 </project>

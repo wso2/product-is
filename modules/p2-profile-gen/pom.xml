@@ -711,7 +711,7 @@
 >>>>>>> 49b8672... Correct some code formatting issues in https://github.com/wso2/product-is/pull/180
                             <features>
 
-                                <feature>
+                                    <feature>
                                     <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggeryjs.version}</version>
                                 </feature>
@@ -1889,11 +1889,15 @@
                                     <id>org.wso2.carbon.identity.workflow.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.ciphertool.feature.group</id>
                                     <version>${cipher-tool.version}</version>
                                 </feature>
 >>>>>>> 49b8672... Correct some code formatting issues in https://github.com/wso2/product-is/pull/180
+=======
+
+>>>>>>> 3d9fcd3... change profile
                                 <feature>
                                     <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
                                     <version>${carbon.dashboards.version}</version>
@@ -1965,6 +1969,37 @@
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+
+                                <!--BPEL and HumanTask features -->
+                                <feature>
+                                    <id>org.wso2.carbon.bpel.server.feature.group</id>
+                                    <version>${carbon.business-process.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.humantask.server.feature.group</id>
+                                    <version>${carbon.business-process.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.attachment.mgt.feature.group</id>
+                                    <version>${carbon.business-process.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.service.mgt.server.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.unifiedendpoint.server.feature.group</id>
+                                    <version>${carbon.business-process.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.output.adapter.server.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.module.mgt.server.feature.group</id>
+                                    <version>${carbon.deployment.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
@@ -1990,9 +2025,9 @@
 
 
 
-                    <!-- All Profile (IS Front-End + IS Back-End + BPS Back-End) -->
+                    <!-- Only IS Profile (IS Front-End + IS Back-End) -->
                     <execution>
-                        <id>creating-full-profile</id>
+                        <id>creating-is-profile</id>
                         <phase>package</phase>
                         <goals>
                             <goal>materialize-product</goal>
@@ -2004,10 +2039,11 @@
                             <targetPath>
                                 file:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/components
                             </targetPath>
-                            <profile>full</profile>
+                            <profile>is</profile>
                         </configuration>
                     </execution>
                     <execution>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                         <id>p2-profile-generation-for-workflow</id>
@@ -2018,11 +2054,15 @@
 =======
                         <id>p2-profile-generation-for-full</id>
 >>>>>>> 72f96f4... rename profile all to full
+=======
+                        <id>p2-profile-generation-for-is</id>
+>>>>>>> 3d9fcd3... change profile
                         <phase>package</phase>
                         <goals>
                             <goal>p2-profile-gen</goal>
                         </goals>
                         <configuration>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2270,6 +2310,9 @@
 =======
                             <profile>full</profile>
 >>>>>>> 72f96f4... rename profile all to full
+=======
+                            <profile>is</profile>
+>>>>>>> 3d9fcd3... change profile
                             <p2AgentLocation>${basedir}/target/p2-agent</p2AgentLocation>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
@@ -2278,8 +2321,7 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-
-                                <feature>
+				<feature>
                                     <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggeryjs.version}</version>
                                 </feature>
@@ -2600,7 +2642,10 @@
                                     <id>org.wso2.carbon.identity.workflow.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.ciphertool.feature.group</id>
+                                    <version>${cipher-tool.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
                                     <version>${carbon.dashboards.version}</version>
@@ -2609,36 +2654,7 @@
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
-
-                                <!--BPEL and HumanTask features -->
-                                <feature>
-                                    <id>org.wso2.carbon.bpel.server.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.humantask.server.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.attachment.mgt.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.service.mgt.server.feature.group</id>
-                                    <version>${carbon.deployment.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.unifiedendpoint.server.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.event.output.adapter.server.feature.group</id>
-                                    <version>${carbon.analytics-common.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.module.mgt.server.feature.group</id>
-                                    <version>${carbon.deployment.version}</version>
-                                </feature>
+                            
                             </features>
                         </configuration>
                     </execution>
