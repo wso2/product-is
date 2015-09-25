@@ -42,8 +42,8 @@
             <artifactId>axiom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.amber</groupId>
-            <artifactId>oauth2-client</artifactId>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
         </dependency>
 		<dependency>
             <groupId>org.wso2.carbon.identity</groupId>

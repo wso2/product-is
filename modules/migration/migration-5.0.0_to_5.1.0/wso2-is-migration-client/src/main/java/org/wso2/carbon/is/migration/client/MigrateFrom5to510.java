@@ -20,7 +20,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
@@ -98,10 +97,6 @@ public class MigrateFrom5to510 implements MigrationClient {
                 Context ctx = new InitialContext();
                 dataSource = (DataSource) ctx.lookup(dataSourceName);
             }
-        } catch (ServerConfigurationException e) {
-            String errorMsg = "Error when reading the JDBC Configuration from the file.";
-            log.error(errorMsg, e);
-            throw new IdentityException(errorMsg, e);
         } catch (NamingException e) {
             String errorMsg = "Error when looking up the Identity Data Source.";
             log.error(errorMsg, e);

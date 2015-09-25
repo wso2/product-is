@@ -53,7 +53,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
 
     }
     
-    @Test(groups = "wso2.is", description = "Check get user profiles")
+    @Test(priority = 1, groups = "wso2.is", description = "Check get user profiles")
     public void testGetUserProfiles() throws Exception {
         UserProfileDTO[] profiles = userProfileMgtClient.getUserProfiles("user1");
         String profile = null;
@@ -64,7 +64,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         Assert.assertEquals(profile, "default", "Getting user profiles has failed.");
     }
     
-    @Test(groups = "wso2.is", description = "Check get user profile")
+    @Test(priority = 2, groups = "wso2.is", description = "Check get user profile")
     public void testGetUserProfile() throws Exception {
         UserProfileDTO profile = userProfileMgtClient.getUserProfile("user1", "default");
         UserFieldDTO[] fields = profile.getFieldValues(); 
@@ -76,7 +76,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         		break;
         	}
 		}
-        Assert.assertTrue("user1".equals(displayValue) || "user1".equals(displayValue), "Getting user profile has failed.");
+        Assert.assertTrue("user1".equals(displayValue), "Getting user profile has failed.");
     }
 
     /**
@@ -85,7 +85,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.is", description = "Check set user profiles")
+    @Test(priority = 3, groups = "wso2.is", description = "Check set user profiles")
     public void testSetUserProfile() throws Exception {
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                         isServer.getSuperTenant().getTenantAdmin().getPassword(),
