@@ -291,17 +291,97 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
     	
 		VerificationBean bean = infoRecoveryClient.registerUser("user2", "passWord1@", claims, "default", null);
     	Assert.assertNotNull(bean, "Registering user account has failed with null return");
+
     	confKey = bean.getKey();
 	}
-    
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
-    @Test(groups = "wso2.is", description = "Check user registration confirmation", dependsOnMethods = "testRegisterUser")
-	public void testConfirmUserSelfRegistration() throws Exception { 
-    	VerificationBean bean = infoRecoveryClient.confirmUserSelfRegistration("user2", confKey, null, null);
-    	Assert.assertNotNull(bean, "Confirmation of user registration has failed with null return");
+
+	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+	@Test(groups = "wso2.is", description = "Check user registration confirmation", dependsOnMethods = "testRegisterUser")
+	public void testConfirmUserSelfRegistration() throws Exception {
+		VerificationBean bean = infoRecoveryClient.confirmUserSelfRegistration("user2", confKey, null, null);
+		Assert.assertNotNull(bean, "Confirmation of user registration has failed with null return");
 	}
-    
-    /**
+
+	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+	@Test(groups = "wso2.is", description = "Check existing user registration validation", dependsOnMethods = "testRegisterUser")
+	public void testRegisterExistingUser() throws Exception {
+		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
+		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
+		claimEmail.setClaimUri("http://wso2.org/claims/emailaddress");
+		claimEmail.setClaimValue("user2@wso2.com");
+
+		UserIdentityClaimDTO claimLastName = new UserIdentityClaimDTO();
+		claimLastName.setClaimUri("http://wso2.org/claims/givenname");
+		claimLastName.setClaimValue("user2");
+
+		claims[0] = claimEmail;
+		claims[1] = claimLastName;
+		VerificationBean bean = infoRecoveryClient.registerUser("user2", "passWord1@", claims, "default", null);
+		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+	}
+
+	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+	@Test(groups = "wso2.is", description = "Check user registration validation with empty password", dependsOnMethods = "testRegisterUser")
+	public void testRegisterUserWithEmptyPassword() throws Exception {
+		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
+		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
+		claimEmail.setClaimUri("http://wso2.org/claims/emailaddress");
+		claimEmail.setClaimValue("user2@wso2.com");
+
+		UserIdentityClaimDTO claimLastName = new UserIdentityClaimDTO();
+		claimLastName.setClaimUri("http://wso2.org/claims/givenname");
+		claimLastName.setClaimValue("user2");
+
+		claims[0] = claimEmail;
+		claims[1] = claimLastName;
+		VerificationBean bean = infoRecoveryClient.registerUser("user3", null, claims, "default", null);
+		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+	}
+
+	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+	@Test(groups = "wso2.is", description = "Check user registration validation with empty password", dependsOnMethods = "testRegisterUser")
+	public void testRegisterUserWithEmptyUserName() throws Exception {
+		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
+		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
+		claimEmail.setClaimUri("http://wso2.org/claims/emailaddress");
+		claimEmail.setClaimValue("user2@wso2.com");
+
+		UserIdentityClaimDTO claimLastName = new UserIdentityClaimDTO();
+		claimLastName.setClaimUri("http://wso2.org/claims/givenname");
+		claimLastName.setClaimValue("user2");
+
+		claims[0] = claimEmail;
+		claims[1] = claimLastName;
+		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", claims, "default", null);
+		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+	}
+
+	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+	@Test(groups = "wso2.is", description = "Check user registration validation with Invalid Claims", dependsOnMethods = "testRegisterUser")
+	public void testRegisterUserWithInvalidClaims() throws Exception {
+		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", null, "default", null);
+		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+	}
+
+	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+	@Test(groups = "wso2.is", description = "Check user registration validation with Invalid Tenant", dependsOnMethods = "testRegisterUser")
+	public void testRegisterUserWithInvalidTenant() throws Exception {
+		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
+		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
+		claimEmail.setClaimUri("http://wso2.org/claims/emailaddress");
+		claimEmail.setClaimValue("user2@wso2.com");
+
+		UserIdentityClaimDTO claimLastName = new UserIdentityClaimDTO();
+		claimLastName.setClaimUri("http://wso2.org/claims/givenname");
+		claimLastName.setClaimValue("user2");
+
+		claims[0] = claimEmail;
+		claims[1] = claimLastName;
+		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", claims, "default", "tenant");
+		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+	}
+
+	/**
      * Checks whether the passed Name exists in the FlaggedName array.
      * 
      * @param allNames
