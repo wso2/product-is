@@ -1156,8 +1156,8 @@
                 <version>${neethi.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>opensaml.wso2</groupId>
-                <artifactId>opensaml2</artifactId>
+                <groupId>org.wso2.orbit.org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
                 <version>${opensaml2.wso2.version}</version>
             </dependency>
             <dependency>
@@ -3555,6 +3555,7 @@
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
+<<<<<<< HEAD
         <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
 <<<<<<< HEAD
@@ -3568,6 +3569,10 @@
         <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
 >>>>>>> 21d305f... version fixes to support kernel 4.4.0
 =======
+=======
+        <opensaml.version>2.6.4</opensaml.version>
+        <opensaml2.wso2.version>2.6.4.wso2v1</opensaml2.wso2.version>
+>>>>>>> 4ad2f4f... opensaml dependency changed to 2.6.4.wso2v1
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
 >>>>>>> b1dfec0... update dependency versions
 =======
