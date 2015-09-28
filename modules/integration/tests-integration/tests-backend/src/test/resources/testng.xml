@@ -512,7 +512,7 @@
 >>>>>>> bc19506... IDENTITY-3472 Workflow support for IS - Integration tests
 
             <!--Workflow Management test case-->
-            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
+            <!--class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/-->
 
         </classes>
     </test>
@@ -559,8 +559,12 @@
 >>>>>>> 72dc60d... Fixing SAML SSO test case
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 38d1bda... Fixing SCIM tests for TAF 4.3.1
 </suite>
 =======
 </suite>
 >>>>>>> 5ac109d... Uncommenting test cases
+=======
+</suite>
+>>>>>>> 17f8365... refactor test cases and added bps specific files
