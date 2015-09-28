@@ -34,7 +34,7 @@ function getBPSSessions(request){
     var profileOutputJson = "\"list\" : [";
     for(var i=0;i<hostArray.length();i++){
         var webService2 = new ws.WSRequest();
-        var host = hostArray[i].*::host[0].text();
+        var host = hostArray[i].*::workerHostURL[0].text();
         var profileName = hostArray[i].*::profileName[0].text();
         if(serverUrl2.equals ( host + "/services/SAML2SSOAuthenticationService")){
             if(profileOutputJson != "\"list\" : ["){

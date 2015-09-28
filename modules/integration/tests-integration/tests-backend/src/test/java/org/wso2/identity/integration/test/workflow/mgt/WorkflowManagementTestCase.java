@@ -61,6 +61,9 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private String sessionCookie2;
     private String servicesUrl = "https://localhost:9844/services/";
 
+    private String templateId = "MultiStepApprovalTemplate";
+    private String workflowImplId = "MultiStepApprovalTemplate";
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -118,7 +121,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         try {
             BPSProfile bpsProfileDTO = new BPSProfile();
             bpsProfileDTO.setProfileName(profileName);
-            bpsProfileDTO.setHost(host);
+            bpsProfileDTO.setManagerHostURL(host);
+            bpsProfileDTO.setWorkerHostURL(host);
             bpsProfileDTO.setUsername(user);
             bpsProfileDTO.setPassword(userPassword);
             bpsProfileDTO.setCallbackUser(user);
@@ -150,7 +154,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         String user = "testUser";
         String userPassword = "testPassword";BPSProfile bpsProfileDTO = new BPSProfile();
         bpsProfileDTO.setProfileName(profileName);
-        bpsProfileDTO.setHost(host);
+        bpsProfileDTO.setManagerHostURL(host);
+        bpsProfileDTO.setWorkerHostURL(host);
         bpsProfileDTO.setUsername(user);
         bpsProfileDTO.setPassword(userPassword);
         bpsProfileDTO.setCallbackUser(user);
@@ -1342,6 +1347,40 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         WorkflowWizard workflowDTO = new WorkflowWizard();
         workflowDTO.setWorkflowName(addUserWorkflowName);
         workflowDTO.setWorkflowDescription(workflowDescription);
+
+        workflowDTO.setTemplateId(templateId);
+        workflowDTO.setWorkflowImplId(workflowImplId);
+
+        Parameter[] parametersImpl =new Parameter[2];
+
+        Parameter parameter = new Parameter();
+        parameter.setParamName("BPSProfile");
+        parameter.setParamValue("embeded_bps");
+        parameter.setHolder("WorkflowImpl");
+        parameter.setQName("BPSProfile");
+
+        parametersImpl[0] = parameter ;
+
+        parameter = new Parameter();
+        parameter.setParamName("HTSubject");
+        parameter.setParamValue("sample ht");
+        parameter.setHolder("WorkflowImpl");
+        parameter.setQName("HTSubject");
+
+        parametersImpl[1] = parameter ;
+
+        Parameter[] parametersTmp =new Parameter[1];
+
+        parameter = new Parameter();
+        parameter.setParamName("UserAndRole");
+        parameter.setParamValue("admin");
+        parameter.setHolder("Template");
+        parameter.setQName("UserAndRole-step-1-roles");
+
+        parametersTmp[0] = parameter ;
+
+        workflowDTO.setTemplateParameters(parametersTmp);
+        workflowDTO.setWorkflowImplParameters(parametersImpl);
 
         return workflowDTO;
     }

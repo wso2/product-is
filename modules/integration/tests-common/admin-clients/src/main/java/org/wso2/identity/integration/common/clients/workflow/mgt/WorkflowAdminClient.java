@@ -58,12 +58,18 @@ public class WorkflowAdminClient {
 
         String serviceURL = backendServerURL + "WorkflowAdminService";
         stub = new WorkflowAdminServiceStub(configCtx, serviceURL);
+        serviceURL = backendServerURL + "WorkflowImplAdminService";
         stubImpl = new WorkflowImplAdminServiceStub(configCtx, serviceURL);
 
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+
+        ServiceClient clientImpl = stubImpl._getServiceClient();
+        Options optionImpl = clientImpl.getOptions();
+        optionImpl.setManageSession(true);
+        optionImpl.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
     }
 
     public WorkflowEvent[] listWorkflowEvents() throws RemoteException {
