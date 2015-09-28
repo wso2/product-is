@@ -9,7 +9,7 @@ var lg = new Log();
 
 
 function login(){
-    util.setServerURL();
+    util.setServerURL("true");
 	initAuthenticationProtocol();
 	
 	var user = session.get(LOGGED_IN_USER);	

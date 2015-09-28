@@ -50,7 +50,7 @@ Hi {first-name}
 
 We received a request to change the password on the {user-name} account associated with this e-mail address. If you made this request, please click the link below to securely change your password:
 
-https://localhost:8443/InfoRecoverySample/infoRecover/verify?username={user-name}&amp;confirmation={confirmation-code}
+https://localhost:8443/InfoRecoverySample/infoRecover/verify?confirmation={confirmation-code}&amp;userstoredomain={userstore-domain}&amp;username={url:user-name}&amp;tenantdomain={tenant-domain}
 
 If clicking the link doesn't seem to work, you can copy and paste the link into your browser's address window.
 

@@ -5,7 +5,7 @@ var util = require("../../util/utility.jag");
 var log = new Log();
 
 
-util.setServerURL();
+util.setServerURL("true");
 log.debug(application.get('serverUrl'));
 
 var serverUrl = application.get('serverUrl');
