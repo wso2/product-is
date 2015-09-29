@@ -56,6 +56,9 @@ function getBPSSessions(request){
                 profileOutputJson = profileOutputJson + "{\"host\" : \"" + host + "\", \"profile\" : \"" + profileName + "\", \"cookie\" : \"" + webService2.getResponseHeader("Set-Cookie") + "\"}";
             }
         }catch (e){
+            if (log.isDebugEnabeld()) {
+                log.debug(e);
+            }
             log.error("Error while authenticating from external workflow engine.");
         }
     }
@@ -87,7 +90,9 @@ function getProfileList(){
         }
         return result;
     }catch(e){
-        return e;
+        if (log.isDebugEnabeld()) {
+            log.debug(e);
+        }
         log.error("Error while retrieving workflow engine list.");
     }
 }
