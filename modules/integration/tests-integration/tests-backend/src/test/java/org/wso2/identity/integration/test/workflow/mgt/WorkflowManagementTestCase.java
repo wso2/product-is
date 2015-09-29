@@ -45,10 +45,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.WorkflowConstants;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WorkflowManagementTestCase extends ISIntegrationTest {
@@ -1352,19 +1349,12 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         WorkflowWizard workflowDTO = new WorkflowWizard();
         workflowDTO.setWorkflowName(workflowName);
         workflowDTO.setWorkflowDescription(workflowDescription);
-
         workflowDTO.setTemplateId(templateId);
         workflowDTO.setWorkflowImplId(workflowImplId);
-
         Template template = client.getTemplate(templateId);
-
         workflowDTO.setTemplate(template);
-
-
         WorkflowImpl workflowImpl = client.getWorkflowImpl(templateId, workflowImplId);
-
         workflowDTO.setWorkflowImpl(workflowImpl);
-
 
         Parameter[] parametersImpl =new Parameter[2];
 
