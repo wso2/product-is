@@ -532,7 +532,7 @@
 >>>>>>> bc19506... IDENTITY-3472 Workflow support for IS - Integration tests
 
             <!--Workflow Management test case-->
-            <!--class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/-->
+            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
 
         </classes>
     </test>
