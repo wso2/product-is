@@ -71,7 +71,7 @@ public class RecoverByQnAController extends HttpServlet {
 
                 String[] qids = ids.getIds();
                 session.setAttribute("qids", qids);
-                session.setAttribute("step", Integer.valueOf("2"));
+                session.setAttribute("step", Integer.valueOf(qids.length));
                 viewPage = "qnaProcessor";
 
                 session.setAttribute("currentqid", null);
