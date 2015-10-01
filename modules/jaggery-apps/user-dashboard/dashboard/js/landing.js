@@ -98,6 +98,7 @@ body = body + "</label>\n" +
        var end = "";
 
 	   end = end +  "                    <div class=\"control-group\">\n" +
+               "                        <label class=\"control-label\" />" +
                "                        <div class=\"controls\">\n" +
                "                            <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Register\"/>\n" +
                "                            <input type=\"button\" onclick=\"cancelProcessToLogin();\" class=\"btn\" value=\"Cancel\"/>\n" +
