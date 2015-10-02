@@ -70,6 +70,7 @@ function drawTablepage(json, engineValue) {
         "<option value=\"READY\">READY</option>" +
         "<option value=\"RESERVED\">RESERVED</option>" +
         "<option value=\"IN_PROGRESS\">IN_PROGRESS</option>" +
+        "<option value=\"SUSPENDED\">SUSPENDED</option>" +
         "<option value=\"COMPLETED\">COMPLETED</option>" +
         "<option value=\"ALL_TASKS\">ALL_TASKS</option>" +
         "</select>" +
