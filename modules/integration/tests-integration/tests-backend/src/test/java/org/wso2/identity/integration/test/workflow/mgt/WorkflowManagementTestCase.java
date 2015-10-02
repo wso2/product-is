@@ -29,8 +29,11 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.workflow.impl.stub.bean.BPSProfile;
+import org.wso2.carbon.identity.workflow.mgt.stub.WorkflowAdminServiceWorkflowException;
 import org.wso2.carbon.identity.workflow.mgt.stub.bean.Parameter;
 import org.wso2.carbon.identity.workflow.mgt.stub.metadata.Association;
+import org.wso2.carbon.identity.workflow.mgt.stub.metadata.Template;
+import org.wso2.carbon.identity.workflow.mgt.stub.metadata.WorkflowImpl;
 import org.wso2.carbon.identity.workflow.mgt.stub.metadata.WorkflowWizard;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
@@ -41,10 +44,8 @@ import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.WorkflowConstants;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WorkflowManagementTestCase extends ISIntegrationTest {
@@ -62,7 +63,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private String servicesUrl = "https://localhost:9844/services/";
 
     private String templateId = "MultiStepApprovalTemplate";
-    private String workflowImplId = "MultiStepApprovalTemplate";
+    private String workflowImplId = "ApprovalWorkflow";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -1342,14 +1343,18 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
     }
 
-    private WorkflowWizard getWorkflowDTO(String workflowName, String workflowDescription) {
+    private WorkflowWizard getWorkflowDTO(String workflowName, String workflowDescription)
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         WorkflowWizard workflowDTO = new WorkflowWizard();
-        workflowDTO.setWorkflowName(addUserWorkflowName);
+        workflowDTO.setWorkflowName(workflowName);
         workflowDTO.setWorkflowDescription(workflowDescription);
-
         workflowDTO.setTemplateId(templateId);
         workflowDTO.setWorkflowImplId(workflowImplId);
+        Template template = client.getTemplate(templateId);
+        workflowDTO.setTemplate(template);
+        WorkflowImpl workflowImpl = client.getWorkflowImpl(templateId, workflowImplId);
+        workflowDTO.setWorkflowImpl(workflowImpl);
 
         Parameter[] parametersImpl =new Parameter[2];
 
@@ -1385,22 +1390,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         return workflowDTO;
     }
 
-    private List<Parameter> getTemplateImplParams() {
 
-        List<Parameter> templateImplParams = new ArrayList<>();
-        Parameter bpelProfile = new Parameter();
-        bpelProfile.setParamName("BPELEngineProfile");
-        bpelProfile.setParamValue("TestBPSProfile");
-        templateImplParams.add(bpelProfile);
-        Parameter HTSubject = new Parameter();
-        HTSubject.setParamName("HTSubject");
-        HTSubject.setParamValue("");
-        templateImplParams.add(HTSubject);
-        Parameter HTDescription = new Parameter();
-        HTDescription.setParamName("HTDescription");
-        HTDescription.setParamValue("");
-        templateImplParams.add(HTDescription);
-        return templateImplParams;
-    }
 
 }

@@ -229,8 +229,12 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         groupEpProp.setName("scim-group-ep");
         groupEpProp.setValue(url + "Groups");
 
+        Property generatePassword = new Property();
+        generatePassword.setName("scim-enable-pwd-provisioning");
+        generatePassword.setValue("true");
+
         Property[] proProperties = new Property[]{userNameProp, passwordProp, userEpProp,
-                groupEpProp, null};
+                groupEpProp, generatePassword, null};
         proConnector.setProvisioningProperties(proProperties);
         fedIdp.setProvisioningConnectorConfigs(new ProvisioningConnectorConfig[]{proConnector});
 
