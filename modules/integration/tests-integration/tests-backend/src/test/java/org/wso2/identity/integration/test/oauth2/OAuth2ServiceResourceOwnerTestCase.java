@@ -19,11 +19,16 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -34,7 +39,9 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,5 +161,32 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		EntityUtils.consume(response.getEntity());
 		Assert.assertEquals(valid, "true", "Token Validation failed");
 	}
+
+    @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
+    public void testSendInvalidAuthorozedPost() throws Exception {
+
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("grant_type",
+                OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        urlParameters.add(new BasicNameValuePair("username", "admin"));
+        urlParameters.add(new BasicNameValuePair("password", "admin"));
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + consumerSecret)
+                .getBytes()).trim());
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(request);
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Object obj = JSONValue.parse(rd);
+        String errormsg = ((JSONObject) obj).get("error").toString();
+
+        EntityUtils.consume(response.getEntity());
+        Assert.assertEquals("invalid_client", errormsg, "Invalid error message");
+    }
 
 }
