@@ -226,8 +226,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing a added association where request matches condition",
             dependsOnMethods = "testAddAssociation")
     public void testAssociationForMatch() {
-        String userName1 = "TestUser1ForSuccessAddUserWorkflow";
-        String userName2 = "TestUser2ForSuccessAddUserWorkflow";
+        String userName1 = "TestUser1ForSuccess";
+        String userName2 = "TestUser2ForSuccess";
         try {
 
             usmClient.addUser(userName1, "test12345", new String[]{"wfRole1"}, new ClaimValue[0], null, false);
@@ -372,13 +372,13 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing delete user operation when workflows associated with it.",
             dependsOnMethods = "testAddUserOperation")
     public void testDeleteUserOperation() {
-        String userName1 = "TestUser1ForDeleteUserWorkflow";
-        String userName2 = "TestUser2ForDeleteUserWorkflow";
-        String userName3 = "TestUser3ForDeleteUserWorkflow";
-        String userName4 = "TestUser4ForDeleteUserWorkflow";
-        String userName5 = "TestUser5ForDeleteUserWorkflow";
-        String roleName1 = "TestRole1ForDeleteUserWorkflow";
-        String roleName2 = "TestRole2ForDeleteUserWorkflow";
+        String userName1 = "TestUser1DeleteUserWorkflow";
+        String userName2 = "TestUser2DeleteUserWorkflow";
+        String userName3 = "TestUser3DeleteUserWorkflow";
+        String userName4 = "TestUser4DeleteUserWorkflow";
+        String userName5 = "TestUser5DeleteUserWorkflow";
+        String roleName1 = "TestRole1DeleteUserWorkflow";
+        String roleName2 = "TestRole2DeleteUserWorkflow";
 
         try {
             client.addAssociation(workflowId, "TestDeleteUserAssociation", WorkflowConstants.DELETE_USER_EVENT,
@@ -667,13 +667,13 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             dependsOnMethods = "testAddRoleOperation")
     public void testDeleteRoleOperation() {
 
-        String userName1 = "TestUser1ForDeleteRoleWorkflow";
-        String userName2 = "TestUser2ForDeleteRoleWorkflow";
-        String roleName1 = "TestRole1ForDeleteRoleWorkflow";
-        String roleName2 = "TestRole2ForDeleteRoleWorkflow";
-        String roleName3 = "TestRole3ForDeleteRoleWorkflow";
-        String roleName4 = "TestRole4ForDeleteRoleWorkflow";
-        String roleName5 = "TestRole5ForDeleteRoleWorkflow";
+        String userName1 = "TestUser1DeleteRoleWorkflow";
+        String userName2 = "TestUser2DeleteRoleWorkflow";
+        String roleName1 = "TestRole1DeleteRoleWorkflow";
+        String roleName2 = "TestRole2DeleteRoleWorkflow";
+        String roleName3 = "TestRole3DeleteRoleWorkflow";
+        String roleName4 = "TestRole4DeleteRoleWorkflow";
+        String roleName5 = "TestRole5DeleteRoleWorkflow";
         try {
 
             usmClient.addUser(userName1, "test12345", new String[0], new ClaimValue[0], null, false);
@@ -1224,7 +1224,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             dependsOnMethods = "testUpdateRoleNameOperation")
     public void testUpdateUserClaimOperation() {
 
-        String userName1 = "TestUser1ForDeleteClaimWorkflow";
+        String userName1 = "TestUser1DeleteClaimWorkflow";
         try {
             usmClient.addUser(userName1, "passwd123", new String[0], new ClaimValue[0], null,
                     false);
