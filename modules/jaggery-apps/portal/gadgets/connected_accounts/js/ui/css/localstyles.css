@@ -302,7 +302,6 @@ text-align:right;
 
 .gadgetBodyScrollbar {
     overflow: auto;
-    max-height: 200px;
 }
 
 .socialHeaderText {
