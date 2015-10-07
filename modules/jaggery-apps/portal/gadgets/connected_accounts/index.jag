@@ -10,6 +10,7 @@ var userAccountAssociationClient = require('controllers/service-clients/userAcco
 var identityProviderMgtClient = require('controllers/service-clients/identityProviderMgtClient.jag');
 var userProfileMgtClient = require('controllers/service-clients/userProfileMgtClient.jag');
 var identityProviderAdminClient = require('controllers/service-clients/identityProviderAdminClient.jag');
+var userCoreUtils = Packages.org.wso2.carbon.user.core.util.UserCoreUtil;
 
 
 if (action != null) {
@@ -126,8 +127,11 @@ function getAssociatedAccounts(accounts) {
     if (accounts != null && accounts.length > 0) {
         var accountsStr = "["
         for (var i in accounts) {
+            var username = userCoreUtils.addDomainToName(accounts[i].username, accounts[i].domain);
+            username = userCoreUtils.addTenantDomainToEntry(username,accounts[i].tenantDomain)
             accountsStr += "{\"username\":\"" + accounts[i].username + "\"," +
                            "\"domain\":\"" + accounts[i].domain + "\"," +
+                            "\"fullUsername\":\"" + username + "\"," +
                            "\"tenantDomain\":\"" + accounts[i].tenantDomain + "\"}";
             if ((parseInt(i) + 1) < accounts.length) {
                 accountsStr += ",";
