@@ -234,6 +234,21 @@
 #log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator}
 #log4j.logger.org.wso2.carbon.identity.core=DEBUG"/>
 
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
+                                        token="log4j.appender.CARBON_MEMORY=org.wso2.carbon.utils.logging.appenders.MemoryAppender"
+                                        value="log4j.appender.CARBON_MEMORY=org.wso2.carbon.logging.service.appender.CarbonMemoryAppender"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
+                                        token="log4j.appender.CARBON_MEMORY.layout=org.apache.log4j.PatternLayout"
+                                        value="log4j.appender.CARBON_MEMORY.layout=org.wso2.carbon.utils.logging.TenantAwarePatternLayout"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
+                                        token="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=[%d] %5p {%c} - %x %m %n"
+                                        value="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=TID: [%T] [%S] [%d] %P%5p {%c} - %x %m {%c}%n${line.separator}log4j.appender.CARBON_MEMORY.layout.TenantPattern=%U%@%D [%T] [%S]${line.separator}log4j.appender.CARBON_MEMORY.columnList=%T,%S,%A,%d,%c,%p,%m,%H,%I,%Stacktrace"/>
+
                                 <!-- Comment all active UserStoreManagers -->
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
