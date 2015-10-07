@@ -292,3 +292,15 @@ ul.dropdown-menu li a:hover{
     background: #222;
 
 }
+.fedarate{
+    background: transparent url(../img/trust.png) no-repeat;
+    display: inline-block;
+    width: 16px;
+    height:13px;
+}
+.resident-idp{
+    background: transparent url(../img/resident-idp.png) no-repeat;
+    display: inline-block;
+    width: 16px;
+    height:16px;
+}
