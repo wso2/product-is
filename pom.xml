@@ -1156,8 +1156,8 @@
                 <version>${neethi.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.org.opensaml</groupId>
-                <artifactId>opensaml</artifactId>
+                <groupId>opensaml.wso2</groupId>
+                <artifactId>opensaml2</artifactId>
                 <version>${opensaml2.wso2.version}</version>
             </dependency>
             <dependency>
@@ -3556,6 +3556,7 @@
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
 <<<<<<< HEAD
@@ -3579,6 +3580,10 @@
         <wss4j.wso2.version>1.5.11.wso2v10</wss4j.wso2.version>
 >>>>>>> 4b5a46c... Revert "update dependency versions"
 =======
+=======
+        <opensaml.version>2.4.1</opensaml.version>
+        <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
+>>>>>>> c774e03... downgrading opensaml version due to sts issue and wso2.war deployment issue
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
 >>>>>>> 400acef... Revert "Revert "update dependency versions""
 =======
