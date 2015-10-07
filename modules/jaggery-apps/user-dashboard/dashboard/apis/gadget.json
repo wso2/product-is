@@ -102,7 +102,7 @@
 >>>>>>> b2dd878... Merging user account association feature from master
 =======
         "url":"/portal/gadgets/approvals/gadget.xml",
-        "permissions":["/permission/admin/login"],
+        "permissions":["/permission/admin/configure"],
         "authorized":"true",
         "id" : "approvals"
 >>>>>>> 86438d6... IDENTITY-3367 Create IS dashboard gadget for workflow feature
