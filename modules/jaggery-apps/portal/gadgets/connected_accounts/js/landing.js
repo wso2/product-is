@@ -1,3 +1,5 @@
+var addType;
+
 $(function () {
     $('#connectBtn').click(function (e) {
         e.preventDefault();
@@ -23,18 +25,31 @@ function drawAddAccountPopup() {
             "                <div class=\"headerDiv\">\n" +
             "                   <span class=\"headerText\">Associate User Account<span>\n" +
             "                </div>" +
-            "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\" >\n";
+            "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"" +
+            " >\n" +
+            "<div><div class=\"control-group\">\n" +
+    "                        <div class=\"controls\">\n" +
+    "                            <label class=\"control-label inputlabel pdR25\" for=\"domain\">Account Type" +
+    "                                <span class=\"required\">*</span>" +
+    "                            </label>\n" +
+    "                            <select class=\"col-lg-3 inputContent\" id=\"accountType\"" +
+            " onchange='loadForm()'>>\n" +
+    "                                <option value=\"Associated\">Associated User Accounts</option>\n"  +
+    "                                <option value=\"Federated\">Federated User Accounts</option>\n"  +
+        "                            </select>\n" +
+        "                        </div>\n" +
+        "                    </div>\n";
 
     var middle =
             "                    <div class=\"control-group\">\n" +
             "                        <div class=\"controls\">\n" +
-            "                            <label class=\"control-label inputlabel\" for=\"userName\">User Name<span class=\"required\">*</span></label>\n" +
+            "                            <label class=\"control-label inputlabel pdR25\" for=\"userName\">User Name<span                             class=\"required\">*</span></label>\n" +
             "                            <input class=\"col-lg-3 inputContent requiredField userInputs\" type=\"text\" value=\"\" id=\"userName\" name=\"userName\"  />\n" +
             "                        </div>\n" +
             "                    </div>\n" +
             "                    <div class=\"control-group\">\n" +
             "                        <div class=\"controls\">\n" +
-            "                            <label class=\"control-label inputlabel\" for=\"password\">Password<span class=\"required\">*</span></label>\n" +
+            "                            <label class=\"control-label inputlabel pdR25\" for=\"password\">Password<span                             class=\"required\">*</span></label>\n" +
             "                            <input class=\"col-lg-3 inputContent requiredField userInputs\" type=\"password\" value=\"\" id=\"password\" name=\"password\"  />\n" +
             "                        </div>\n" +
             "                    </div>\n";
@@ -62,6 +77,17 @@ function drawAddAccountPopup() {
             connect();
         }
     });
+}
+
+function loadForm() {
+    var e = document.getElementById("accountType");
+    addType = e.options[e.selectedIndex].value;
+    if (addType == "Federated") {
+        drawAddFedAccountPopup();
+    } else {
+        drawAddAccountPopup();
+    }
+
 }
 
 function cancelConnect() {
@@ -153,7 +179,19 @@ function drawAddFedAccountPopup() {
                                    "                <div class=\"headerDiv\">\n" +
                                    "                   <span class=\"socialHeaderText\">Associate Federated User ID<span>\n" +
                                    "                </div>" +
-                                   "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
+                                   "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n"+
+                                   "<div><div class=\"control-group\">\n" +
+                                   "                        <div class=\"controls\">\n" +
+                                   "                            <label class=\"control-label inputlabel pdR25\" for=\"domain\">Account Type" +
+                                   "                                <span class=\"required\">*</span>" +
+                                   "                            </label>\n" +
+                                   "                            <select class=\"col-lg-3 inputContent\" id=\"accountType\"" +
+                                   " onchange='loadForm()'>>\n" +
+                                   "                                <option value=\"Federated\">Federated User Accounts</option>\n"  +
+                                   "                                <option value=\"Associated\">Associated User Accounts</option>\n"  +
+                                   "                            </select>\n" +
+                                   "                        </div>\n" +
+                                   "                    </div>\n";
 
                            var middle =
                                     "                  <div><div class=\"control-group\">\n" +
