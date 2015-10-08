@@ -3,6 +3,7 @@
 include("constants.jag");
 
 var log = new Log();
+var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 function initI18N(){
 	var i18n = session.get(I18N)
@@ -19,11 +20,11 @@ function readFile(path){
 	var file = new File(path);
 	file.open("r");
 	var json = "";
-	
+
 	json = file.readAll();
 	file.close();
 	json = parse(json);
-	
+
 	return json;
 }
 
@@ -70,7 +71,7 @@ function getSuccessErrorJson(request, i18n){
             errorJson.eMsg = i18n.localize("common_error");
         }
     }
-    
+
     if(success != null && success === "1"){
         if(successMsg != null && successMsg.length > 0){
             var temp = i18n.localize(successMsg);
@@ -79,9 +80,9 @@ function getSuccessErrorJson(request, i18n){
             errorJson.successMsg = i18n.localize("common_success");
         }
     }
-    
+
     return errorJson;
-	
+
 }
 
 function doAuthenticate(obj){
@@ -135,18 +136,18 @@ function generateHeader2(loggedin, i18n){
 	var pages = uiComponents.pages;
 	var context = uiComponents.context;
 	var accessiblePages = {};
-		
+
 	var logReqLinks = [];
 	var logReqDash = [];
 	var logNotReqLinks = [];
 	var logNotReqDash = [];
-			
+
 	if(loggedin){
 		for each(var obj in pages){
  	        try{
  	        	var pageLoginReq = obj['login-required'] === 'true';
  	        	if(pageLoginReq){
- 	        		
+
 		        	doAuthenticate(obj);
 		        	if(obj.displayorder != '-1' && obj['login-required']){
 			        	var ob = createLinkObject(obj, context, i18n);
@@ -159,7 +160,7 @@ function generateHeader2(loggedin, i18n){
 	        }
 	    }
 	}else{
-		
+
 		// only the pages that does not need a user login are displayed here
 	    for each(var obj in pages){
 	        if(obj['login-required'] && obj['login-required'] === 'false'){
@@ -171,13 +172,13 @@ function generateHeader2(loggedin, i18n){
 	        }
 	    }
 	}
-	
+
 	var logReqLinkStr = "";
 	for each(var obj in logReqLinks){
 		logReqLinkStr += obj;
 	}
 	logReqLinks = logReqLinkStr;
-	
+
 	var logReqDashStr = "<div class='row'>";
 	var count = 0;
 	for each(var obj in logReqDash){
@@ -191,27 +192,27 @@ function generateHeader2(loggedin, i18n){
 	if(count < 3){
 		logReqDashStr  += "</div>";
 	}
-	
+
 	logReqDash = logReqDashStr;
-	
+
 	var logNotReqLinksStr = "";
 	for each(var obj in logNotReqLinks){
 		logNotReqLinksStr += obj;
 	}
 	logNotReqLinks = logNotReqLinksStr;
-	
-	
+
+
 	var logNotReqDashStr = "";
 	for each(var obj in logNotReqDash){
 		logNotReqDashStr += obj;
 	}
 	logNotReqDash = logNotReqDashStr;
-	
+
 	accessiblePages['logReqLinks'] = logReqLinks;
 	accessiblePages['logReqDash'] = logReqDash;
 	accessiblePages['logNotReqLinks'] = logNotReqLinks;
 	accessiblePages['logNotReqDash'] = logNotReqDash;
-		
+
 	return accessiblePages;
 }
 
@@ -219,7 +220,7 @@ function generateHeader2(loggedin, i18n){
  * accessiblePages - object containing page arrays
  */
 function generateHeaderLink(page, context, i18n){
-	
+
 	var link = "<li class='"+ page.name +"' ><a title='"+ i18n.localize('pages')[page.text] +"' href='" + context + "/" + page.url +"'><i class='"+ page.styles +"'></i> <span><br>"+ i18n.localize('pages')[page.text] +"</span></a></li>";
 	return link;
 
@@ -227,7 +228,7 @@ function generateHeaderLink(page, context, i18n){
 
 function generateDashboard(page, context, i18n){
 	if(page['dashboard-styles']){
-		
+
 		var dashboard =     "<div class='col-md-4'>" +
 							    "<div class='box-title'><h3>"+ i18n.localize('pages')[page.text] +"</h3></div>" +
 							    "<div class='box-content'>" +
@@ -236,7 +237,7 @@ function generateDashboard(page, context, i18n){
 							        "<p><a class='btn btn-default' href='"+ context + "/" + page.url +"'>View details &raquo;</a></p>" +
 							    "</div>" +
 						    "</div>";
-	
+
 		return dashboard;
 	}
 	return "";
@@ -262,7 +263,6 @@ function setServerURL(isWebContextRootAvailable) {
     var hostName = '';
     var mgtTransport = "https";
     var proxyContextPath = '';
-    var webContextRoot = '';
     if (serverUrl === 'null' || serverUrl == null || serverUrl.length <= 0) {
         //Server URL is not specified in the jaggery.conf, therefore using the service url mentioned in the carbon.conf
         var carbon = require('carbon');
@@ -345,24 +345,16 @@ function setServerURL(isWebContextRootAvailable) {
                 proxyContextPath = '/' + proxyContextPath;
             }
         }
-         webContextRoot = serverConfigService.getFirstProperty(WEB_CONTEXT_ROOT);
-        if (webContextRoot === 'null' || webContextRoot == null || webContextRoot === '' || webContextRoot.length <= 0) {
-            webContextRoot = "";
-        } else {
-            if (webContextRoot.indexOf('/') != 0) {
-                webContextRoot = '/' + webContextRoot;
-            }
-        }
 
         //create server service ur
-        serverUrl = mgtTransport + "://" + hostName + ":" + httpsPort + proxyContextPath + webContextRoot + "/services";
+        serverUrl = identityServerURL.getServerURL("", true) + "/services";
         var serverCoreUrl
         //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
         if (isWebContextRootAvailable === 'false') {
-            serverCoreUrl = mgtTransport + "://" + hostName + ":" + httpsPort + proxyContextPath;
+            serverCoreUrl = identityServerURL.getServerURL("", false);
         }
         else {
-            serverCoreUrl = mgtTransport + "://" + hostName + ":" + httpsPort + proxyContextPath + webContextRoot;
+            serverCoreUrl = identityServerURL.getServerURL("", true);
         }
 
         //set server url infomation
@@ -390,11 +382,11 @@ function setServerURL(isWebContextRootAvailable) {
         proxyContextPath = application.get(PROXY_CONTEXT_PATH);
         var webContextRoot = application.get(WEB_CONTEXT_ROOT);
         if(isWebContextRootAvailable==='false'){
-            serverCoreUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath;
+            serverCoreUrl = identityServerURL.getServerURL("", false);
             application.put(SERVER_CORE_URL, serverCoreUrl);
         }
         else{
-            serverCoreUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath + webContextRoot;
+            serverCoreUrl = identityServerURL.getServerURL("", true);
             application.put(SERVER_CORE_URL, serverCoreUrl);
         }
     }
