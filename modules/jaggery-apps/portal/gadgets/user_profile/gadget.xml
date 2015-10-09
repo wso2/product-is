@@ -281,6 +281,48 @@ drawFIDORegistration();
 
         }
 
+        function resetTOTP(){
+
+                var str = "/portal/gadgets/user_profile/controllers/my-profile/totp-reset.jag";
+                $.ajax({
+                    url:str,
+                    type:"POST",
+                    data:"&cookie=" + cookie + "&user=" + userName
+                })
+                        .done(function (data) {
+                            alert("successfuly removed");
+
+                        })
+                        .fail(function () {
+                        message({content:'error while resetting totp',type:'error', cbk:function(){} });
+
+                        })
+                        .always(function () {
+                            console.log('totp reseted');
+                        });
+            }
+
+            function initiateTOTP(){
+
+                var str = "/portal/gadgets/user_profile/controllers/my-profile/totp-init.jag";
+                $.ajax({
+                    url:str,
+                    type:"POST",
+                    data:"&cookie=" + cookie + "&user=" + userName
+                })
+                        .done(function (data) {
+                            console.log(data);
+
+                        })
+                        .fail(function () {
+                        message({content:'error while resetting totp',type:'error', cbk:function(){} });
+
+                        })
+                        .always(function () {
+                            console.log('totp reseted');
+                        });
+            }
+
     </script>
 
 
