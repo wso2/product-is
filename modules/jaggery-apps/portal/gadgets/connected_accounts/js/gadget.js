@@ -1,7 +1,7 @@
 function drawPage() {
 
     $("#gadgetBody").empty();
-    if (json != null) {
+    if (json != null || fedJson != null) {
 
         var top =
             "    <div class=\"col-lg-12 content-section\">\n" +
