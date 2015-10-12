@@ -34,7 +34,7 @@ public class WorkflowConstants {
     public static final String UPDATE_ROLE_NAME_EVENT = "UPDATE_ROLE_NAME";
     public static final String CHANGE_USER_CREDENTIAL_EVENT = "CHANGE_CREDENTIAL";
     public static final String SET_USER_CLAIM_EVENT = "SET_USER_CLAIM";
-    public static final String DELETE_USER_CLAIM_EVENT = "DELETE_USER_CLAIM";
+    public static final String DELETE_USER_CLAIM_EVENT = "DELETE_MULTIPLE_USER_CLAIMS";
     public static final String SET_MULTIPLE_USER_CLAIMS_EVENT = "SET_MULTIPLE_USER_CLAIMS";
     public static final String DELETE_MULTIPLE_USER_CLAIMS_EVENT = "DELETE_MULTIPLE_USER_CLAIMS";
     public static final String UPDATE_USER_ROLES_EVENT = "UPDATE_USER_ROLES";
