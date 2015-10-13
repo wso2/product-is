@@ -332,5 +332,12 @@ function validateCheckBox(){
 function loadQRCode(url){
     var loc = jQuery.parseJSON(url).return;
     $('#totpQRCode').attr("src",loc);
+    $('#totpQRCode').css("visibility","visible");
+    $('#totpQRCode').show();
+}
+
+function removeQRCode(){
+    $('#totpQRCode').attr("src","");
+    $('#totpQRCode').css("visibility","hidden");
     $('#totpQRCode').show();
 }

@@ -290,7 +290,7 @@ drawFIDORegistration();
                     data:"&cookie=" + cookie + "&user=" + userName
                 })
                         .done(function (data) {
-                            alert("successfuly removed");
+                            removeQRCode();
 
                         })
                         .fail(function () {
@@ -311,7 +311,7 @@ drawFIDORegistration();
                     data:"&cookie=" + cookie + "&user=" + userName
                 })
                         .done(function (data) {
-                            console.log(data);
+                            loadQRCode(data)
 
                         })
                         .fail(function () {
