@@ -42,6 +42,7 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.identity.integration.common.clients.workflow.mgt.WorkflowAdminClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.utils.ServiceDeploymentUtil;
 import org.wso2.identity.integration.test.utils.WorkflowConstants;
 
 import java.rmi.RemoteException;
@@ -53,7 +54,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private WorkflowAdminClient client;
     private RemoteUserStoreManagerServiceClient usmClient;
     public MultipleServersManager manager = new MultipleServersManager();
-
 
     private String addUserWorkflowName = "TestWorkflowAddUser1";
     private String workflowId = null;
@@ -1306,16 +1306,23 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         if (workflowId == null) {
             Assert.fail("Workflow has not been added in the previous test");
         }
+        String workflowServiceName = addUserWorkflowName + "TaskService";
         try {
-            client.deleteWorkflow(workflowId);
-            WorkflowWizard[] workflows = client.listWorkflows();
-            if (workflows != null) {
-                for (WorkflowWizard workflow : workflows) {
-                    if (workflowId.equals(workflow.getWorkflowId())) {
-                        Assert.fail("Workflow " + workflowId + " is not deleted, It still exists");
-                        break;
+            boolean workflowServiceDeployed = ServiceDeploymentUtil.
+                    isServiceDeployed(servicesUrl, sessionCookie2, workflowServiceName);
+            if (workflowServiceDeployed) {
+                client.deleteWorkflow(workflowId);
+                WorkflowWizard[] workflows = client.listWorkflows();
+                if (workflows != null) {
+                    for (WorkflowWizard workflow : workflows) {
+                        if (workflowId.equals(workflow.getWorkflowId())) {
+                            Assert.fail("Workflow " + workflowId + " is not deleted, It still exists");
+                            break;
+                        }
                     }
                 }
+            } else {
+                Assert.fail("Error while deploying the Workflow Artifacts");
             }
         } catch (Exception e) {
             Assert.fail("Error while deleting the workflow", e);

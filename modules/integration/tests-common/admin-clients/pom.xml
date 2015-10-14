@@ -106,6 +106,7 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
         </dependency>
+<<<<<<< HEAD
 >>>>>>> 3d9fcd3... change profile
     </dependencies>
 
@@ -145,6 +146,13 @@
             <!--<artifactId>org.wso2.carbon.identity.user.account.connector.stub</artifactId>-->
         <!--</dependency>-->
 >>>>>>> 250c8e7... remove user account connector test cases
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+>>>>>>> 4037f55... Adding Fixes for product-is test-suite to resolve IDENTITY-3629
     </dependencies>
 
 </project>
