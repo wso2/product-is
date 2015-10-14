@@ -48,7 +48,7 @@ if (samlResponse != null) {
         if (samlConfig['SAML.EnableResponseSigning']) {
 
                 var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
-
+                session.put("loggedInUser", sessionObj.loggedInUser);
                 if (sessionObj.sessionIndex != null || sessionObj.sessionIndex != 'undefined') {
                     //session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
                     //session.put("Loged", "true");

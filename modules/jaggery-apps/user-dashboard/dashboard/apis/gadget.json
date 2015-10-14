@@ -79,7 +79,7 @@
         "prefs":"{}",
         "wclass":"",
         "url":"/portal/gadgets/approvals/gadget.xml",
-        "permissions":["/permission/admin/login"],
+        "permissions":["/permission/admin/configure"],
         "authorized":"true",
         "id" : "approvals"
     }
