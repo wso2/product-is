@@ -33,6 +33,7 @@
 
     <modules>
         <module>playground2</module>
+        <module>custom-grant</module>
     </modules>
 
 </project>
