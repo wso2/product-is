@@ -17,9 +17,10 @@ body {
 	padding-left:10px;
 	padding-top:7px;
 	position:absolute;
-	right:82px;
+	right:0px;
 	text-overflow:ellipsis;
 	white-space:nowrap;
+	background-color: #DDDDDD;
 }
 .grid_header_controls {
 	position:absolute;
