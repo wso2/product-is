@@ -28,7 +28,7 @@ import java.util.Calendar;
 
 public class ServiceDeploymentUtil {
 
-    private static int SERVICE_DEPLOYMENT_DELAY = 90 * 1000;
+    public static int SERVICE_DEPLOYMENT_DELAY = 240 * 1000;
     private static Log log = LogFactory.getLog(ServiceDeploymentUtil.class);
 
 
