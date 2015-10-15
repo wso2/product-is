@@ -1322,7 +1322,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
                     }
                 }
             } else {
-                Assert.fail("Error while deploying the Workflow Artifacts");
+                Assert.fail(" Workflow Artifacts failed to deploy within : "
+                        + ServiceDeploymentUtil.SERVICE_DEPLOYMENT_DELAY + " mills ");
             }
         } catch (Exception e) {
             Assert.fail("Error while deleting the workflow", e);
