@@ -2,7 +2,7 @@ function drawPage() {
 
     $("#gadgetBody").empty();
     if (json != null || fedJson != null) {
-
+        var noRaws = true;
         var top =
             "    <div class=\"col-lg-12 content-section\">\n" +
             "        <table class=\"table table-bordered\">\n" +
@@ -18,6 +18,7 @@ function drawPage() {
         var middle = "";
         if (isArray(json)) {
             for (var i in json) {
+                noRaws = false;
                 middle = middle +
                     "                <tr>\n" +
                     "                    <td>" + json[i].fullUsername + "</td>\n" +
@@ -40,6 +41,7 @@ function drawPage() {
         }
         if (isArray(fedJson.list)) {
             for (var i in fedJson.list) {
+                noRaws = false;
                 middle = middle +
                     "                <tr>\n" +
                     "                    <td>" + fedJson.list[i].username + "</td>\n" +
@@ -49,6 +51,12 @@ function drawPage() {
                     "                    </td>\n" +
                     "                </tr>\n";
             }
+        }
+        if (noRaws) {
+            middle = middle +
+                "<tr>" +
+                "<td colspan=\"3\"><i>No Accounts Found.</i></td>" +
+                "</tr>";
         }
 
         var end =
