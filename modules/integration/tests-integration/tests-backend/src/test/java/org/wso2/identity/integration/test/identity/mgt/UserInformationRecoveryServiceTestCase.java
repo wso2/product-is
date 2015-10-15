@@ -317,7 +317,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		claims[0] = claimEmail;
 		claims[1] = claimLastName;
 		VerificationBean bean = infoRecoveryClient.registerUser("user2", "passWord1@", claims, "default", null);
-		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+		Assert.assertNotNull(bean.getError(), "The expected error message is null with null return");
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
@@ -335,7 +335,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		claims[0] = claimEmail;
 		claims[1] = claimLastName;
 		VerificationBean bean = infoRecoveryClient.registerUser("user3", null, claims, "default", null);
-		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+		Assert.assertNotNull(bean.getError(), "The expected error message is null with null return");
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
@@ -353,14 +353,14 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		claims[0] = claimEmail;
 		claims[1] = claimLastName;
 		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", claims, "default", null);
-		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+		Assert.assertNotNull(bean.getError(), "The expected error message is null with null return");
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
 	@Test(groups = "wso2.is", description = "Check user registration validation with Invalid Claims", dependsOnMethods = "testRegisterUser")
 	public void testRegisterUserWithInvalidClaims() throws Exception {
 		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", null, "default", null);
-		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+		Assert.assertNotNull(bean.getError(), "The expected error message is null with null return");
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
@@ -378,7 +378,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		claims[0] = claimEmail;
 		claims[1] = claimLastName;
 		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", claims, "default", "tenant");
-		Assert.assertNull(bean.getError(), "Registering user account has failed with :" + bean.getError());
+		Assert.assertNotNull(bean.getError(), "The expected error message is null with null return");
 	}
 
 	/**
