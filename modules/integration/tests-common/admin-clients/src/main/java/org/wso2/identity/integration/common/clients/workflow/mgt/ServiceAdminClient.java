@@ -78,10 +78,10 @@ public class ServiceAdminClient {
         return serviceMetaDataWrapper;
     }
 
-    public ServiceMetaDataWrapper listServices(String serviceName, String filerType)
+    public ServiceMetaDataWrapper listServices(String serviceName, String filterType)
             throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
-        serviceMetaDataWrapper = serviceAdminStub.listServices(filerType, serviceName, 0);
+        serviceMetaDataWrapper = serviceAdminStub.listServices(filterType, serviceName, 0);
         serviceAdminStub.getFaultyServiceArchives(0);
         return serviceMetaDataWrapper;
     }
