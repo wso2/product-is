@@ -86,6 +86,8 @@
             <!--Workflow Management test case-->
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
 
+            <!--Identity Provider Management Test Cases-->
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
         </classes>
     </test>
 
