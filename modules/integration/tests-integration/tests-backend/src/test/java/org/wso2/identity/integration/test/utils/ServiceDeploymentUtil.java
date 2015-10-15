@@ -32,6 +32,17 @@ public class ServiceDeploymentUtil {
     private static Log log = LogFactory.getLog(ServiceDeploymentUtil.class);
 
 
+    /**
+     * This method checks the deployment state of the Axis2 service.
+     *
+     *
+     * @param backEndUrl Service backend URL of the service.
+     * @param sessionCookie Session cookie to authorize the stub.
+     * @param serviceName Corresponding service name.
+     * @return
+     * @throws RemoteException
+     */
+
     public static boolean isServiceDeployed(String backEndUrl, String sessionCookie,
                                             String serviceName)
             throws RemoteException {
