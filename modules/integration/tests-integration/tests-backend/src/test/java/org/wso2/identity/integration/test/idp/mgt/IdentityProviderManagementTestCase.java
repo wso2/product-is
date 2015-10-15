@@ -43,7 +43,7 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
                         , null);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
 
-        /*userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         Property[] properties = (new JDBCUserStoreManager()).getDefaultUserStoreProperties().getMandatoryProperties();
         PropertyDTO[] propertyDTOs = new PropertyDTO[properties.length];
         for (int i = 0; i < properties.length; i++) {
@@ -59,35 +59,48 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         logManger = new AuthenticatorClient(backendURL);
 
-        userMgtClient.addRole("indu.com/umRole1", null, new String[] { "login" }, false);
-        Assert.assertTrue(userMgtClient.roleNameExists("indu.com/umRole1"), "Role name doesn't exists");
-        userMgtClient.addUser("indu.com/user1", "passWord1@", new String[]{"indu.com/umRole1"}, "default");
-        Assert.assertTrue(userMgtClient.userNameExists("indu.com/umRole1", "indu.com/user1"), "User name doesn't exists");*/
+        userMgtClient.addRole("umRole1", null, new String[]{"login"}, false);
+        Assert.assertTrue(userMgtClient.roleNameExists("umRole1"), "Role name doesn't exists");
+        userMgtClient.addUser("user1", "passWord1@", new String[]{"umRole1"}, "default");
+        Assert.assertTrue(userMgtClient.userNameExists("umRole1", "user1"), "User name doesn't exists");
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         identityProviderMgtServiceClient = null;
-        /*userMgtClient.deleteUser("indu.com/user1");
-        userMgtClient.deleteRole("indu.com/umRole1");*/
+        userMgtClient.deleteUser("user1");
+        userMgtClient.deleteRole("umRole1");
         logManger = null;
     }
 
     @Test(alwaysRun = true, description = "Testing create Identity Provider")
-    public void testCreateIdp() {
+    public void createIdpTest() {
         String idpName = "TestIdentityProvider1";
         try {
             createIdp(idpName);
             Assert.assertEquals(identityProviderMgtServiceClient.getIdPByName(idpName).getIdentityProviderName(),
                     idpName, "Failed to create an Identity Provider");
         } catch (Exception e) {
-            Assert.fail("Error while trying to create a identity Provider", e);
+            Assert.fail("Error while trying to create an identity Provider", e);
         }
     }
 
-/*    @Test(alwaysRun = true, description = "Testing create Identity Provider with role mappings")
+    @Test(alwaysRun = true, description = "Testing update Identity Provider", dependsOnMethods = {"createIdpTest"})
+    public void updateIdpTest() {
+        String oldIdpName = "TestIdentityProvider1";
+        String newIdpName = "TestIdentityProvider1_new";
+        try {
+            updateIdp(oldIdpName, newIdpName);
+            Assert.assertEquals(identityProviderMgtServiceClient.getIdPByName(newIdpName).getIdentityProviderName(),
+                    newIdpName, "Failed to update an Identity Provider");
+        } catch (Exception e) {
+            Assert.fail("Error while trying to update an identity Provider", e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing create Identity Provider with role mappings")
     public void testCreateIdpWithRoleMappings() {
-        String idpName = "TestIdentityProvider1";
+        String idpName = "TestIdentityProvider2";
         try {
             createIdpWithRoleMappings(idpName);
             Assert.assertEquals(identityProviderMgtServiceClient.getIdPByName(idpName).getIdentityProviderName(),
@@ -95,9 +108,29 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Error while trying to create a identity Provider", e);
         }
-    }*/
+    }
 
-/*    private void createIdpWithRoleMappings(String idpName) {
+    private void createIdp(String idpName) {
+        try {
+            IdentityProvider identityProvider = new IdentityProvider();
+            identityProvider.setIdentityProviderName(idpName);
+            identityProviderMgtServiceClient.addIdP(identityProvider);
+        } catch (Exception e) {
+            Assert.fail("Error while trying to create Service Provider", e);
+        }
+    }
+
+    private void updateIdp(String oldIdpName, String newIdpName) {
+        try {
+            IdentityProvider identityProvider = new IdentityProvider();
+            identityProvider.setIdentityProviderName(newIdpName);
+            identityProviderMgtServiceClient.updateIdP(oldIdpName, identityProvider);
+        } catch (Exception e) {
+            Assert.fail("Error while trying to update Service Provider", e);
+        }
+    }
+
+    private void createIdpWithRoleMappings(String idpName) {
         try {
             IdentityProvider identityProvider = new IdentityProvider();
             identityProvider.setIdentityProviderName(idpName);
@@ -105,21 +138,11 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
             RoleMapping roleMapping = new RoleMapping();
             LocalRole localRole = new LocalRole();
             localRole.setLocalRoleName("umRole1");
-            localRole.setUserStoreId("indu.com");
+            localRole.setUserStoreId("primary");
             roleMapping.setLocalRole(localRole);
             roleMapping.setRemoteRole("role1");
             permissionsAndRoleConfig.addRoleMappings(roleMapping);
             identityProvider.setPermissionAndRoleConfig(permissionsAndRoleConfig);
-            identityProviderMgtServiceClient.addIdP(identityProvider);
-        } catch (Exception e) {
-            Assert.fail("Error while trying to create Service Provider", e);
-        }
-    }*/
-
-    private void createIdp(String idpName) {
-        try {
-            IdentityProvider identityProvider = new IdentityProvider();
-            identityProvider.setIdentityProviderName(idpName);
             identityProviderMgtServiceClient.addIdP(identityProvider);
         } catch (Exception e) {
             Assert.fail("Error while trying to create Service Provider", e);
