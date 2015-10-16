@@ -30,6 +30,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class UserProfileMgtTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(UserProfileMgtTestCase.class);
+    private String userId1 = "UserProfileMgtTestUser1";
     private UserProfileMgtServiceClient userProfileMgtClient;
     private UserManagementClient userMgtClient;
 
@@ -37,13 +38,13 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        userMgtClient.addUser("user1", "passWord1@", new String[]{"admin"}, "default");
+        userMgtClient.addUser(userId1, "passWord1@", new String[]{"admin"}, "default");
         userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
     }
 
     @Test(groups = "wso2.is", description = "Check get user profiles")
     public void testGetUserProfiles() throws Exception {
-        UserProfileDTO[] profiles = userProfileMgtClient.getUserProfiles("user1");
+        UserProfileDTO[] profiles = userProfileMgtClient.getUserProfiles(userId1);
         String profile = null;
 
         for (UserProfileDTO userProfileDTO : profiles) {
@@ -54,7 +55,7 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Check get user profile")
     public void testGetUserProfile() throws Exception {
-        UserProfileDTO profile = userProfileMgtClient.getUserProfile("user1", "default");
+        UserProfileDTO profile = userProfileMgtClient.getUserProfile(userId1, "default");
         UserFieldDTO[] fields = profile.getFieldValues();
         String displayValue = null;
 
@@ -64,7 +65,7 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
                 break;
             }
         }
-        Assert.assertTrue("user1".equals(displayValue), "Getting user profile has failed.");
+        Assert.assertTrue(userId1.equals(displayValue), "Getting user profile has failed.");
     }
 
     @Test(groups = "wso2.is", description = "Check is add profile enabled")
@@ -87,6 +88,6 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        userMgtClient.deleteUser("user1");
+        userMgtClient.deleteUser(userId1);
     }
 }
