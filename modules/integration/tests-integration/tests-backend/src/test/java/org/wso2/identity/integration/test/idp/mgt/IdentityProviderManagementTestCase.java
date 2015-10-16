@@ -60,15 +60,11 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
         logManger = new AuthenticatorClient(backendURL);
 
         userMgtClient.addRole("umRole1", null, new String[]{"login"}, false);
-        Assert.assertTrue(userMgtClient.roleNameExists("umRole1"), "Role name doesn't exists");
-        userMgtClient.addUser("user1", "passWord1@", new String[]{"umRole1"}, "default");
-        Assert.assertTrue(userMgtClient.userNameExists("umRole1", "user1"), "User name doesn't exists");
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         identityProviderMgtServiceClient = null;
-        userMgtClient.deleteUser("user1");
         userMgtClient.deleteRole("umRole1");
         logManger = null;
     }
