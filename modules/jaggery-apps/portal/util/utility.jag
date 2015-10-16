@@ -2,6 +2,7 @@
 include("constants.jag");
 
 var log = new Log();
+var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 /*
  * Function to update server url information
@@ -94,10 +95,10 @@ function setServerURL() {
         }
 
         //create server service url
-        serverUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath + "/services";
+        serverUrl = identityServerURL.getServerURL("", true) + "/services";
 
         //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
-        var serverCoreUrl = mgtTransport  + "://"+ hostName + ":" + httpsPort + proxyContextPath;
+        var serverCoreUrl = identityServerURL.getServerURL("", false);
 
         //set server url infomation
         application.put(MGT_HOST_NAME, mgtHostName);
