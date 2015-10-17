@@ -430,7 +430,7 @@ drawFIDORegistration();
 
 >>>>>>> 13b35f4... Add fido authenticator support for dash board
     <form id="gadgetForm" class="form-horizontal">
-        <div id="gadgetBody"></div>
+        <div id="gadgetBody" style="text-align: center;width: 40%;margin: auto;"></div>
         <div id="message"></div>
     </form>
     <form id="fidoForm">
