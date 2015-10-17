@@ -8,22 +8,10 @@ function drawPage() {
         "              <table class=\"table\">\n" +
         "                  <thead>\n" +
         "                      <tr>\n" +
-        "                          <th colspan=\"2\">Update Your Profile</th>\n" +
+        "                          <th colspan=\"2\">Manage Profile</th>\n" +
         "                      </tr>\n" +
         "                  </thead>\n" +
-        "                  <tbody>\n" +
-        "                       <tr>\n" +
-        "                           <input type=\"hidden\" name=\"profile\" value=\"default\" />\n" +
-        "                           <td><label class=\"control-label\" for=\"profileName\">Profile Name<span class=\"required\">*</span></label></td>" +
-        "                           <td>" +
-        "                               <div class=\"controls\">" +
-        "                                       <input type=\"text\" id=\"profileName\" disabled=\"\"" +
-        " name=\"profileName\" placeholder=\"Profile Name\" value=\"" + json.return.profileName + "\"" +
-        " class=\"required\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right:" +
-        " 25px;\"/>" +
-        "                               </div>" +
-        "                           </td>" +
-        "                     </tr>\n" ;
+        "                  <tbody>\n";
 
     var body = "";
 
@@ -153,7 +141,7 @@ function validateEmpty(fldname) {
         return error;
     }
     return error;
-} 
+}
 
 function reloadGrid() {
     $.ajax({
@@ -267,7 +255,7 @@ if(data != null && "" != data){
                        var middle = middle + "            </tbody>\n" +
                                   "        </table>\n" +
                                   "    </div>";
- } 
+ }
 else {
 middle = middle + "<label > Device not registered yet please register your device ! </label>";
 }
