@@ -964,13 +964,12 @@ legend + .control-group {
   float: left;
   width: 195px;
   padding-top: 5px;
-  text-align: right;
+  text-align: left;
 }
 
 .form-horizontal .controls {
   *display: inline-block;
   *padding-left: 20px;
-  margin-left: 215px;
   *margin-left: 0;
 }
 

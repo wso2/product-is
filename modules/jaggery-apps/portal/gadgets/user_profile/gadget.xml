@@ -285,7 +285,7 @@ drawFIDORegistration();
 
 
     <form id="gadgetForm" class="form-horizontal">
-        <div id="gadgetBody"></div>
+        <div id="gadgetBody" style="text-align: center;width: 40%;margin: auto;"></div>
         <div id="message"></div>
     </form>
     <form id="fidoForm">
