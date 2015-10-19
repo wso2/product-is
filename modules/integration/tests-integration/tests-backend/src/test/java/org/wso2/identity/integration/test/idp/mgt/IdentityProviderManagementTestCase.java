@@ -81,7 +81,7 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(alwaysRun = true, description = "Testing update Identity Provider", dependsOnMethods = {"createIdpTest"})
+    @Test(alwaysRun = true, description = "Testing update Identity Provider", dependsOnMethods = {"createIdpTest", "testCreateIdpWithRoleMappings"})
     public void updateIdpTest() {
         String oldIdpName = "TestIdentityProvider1";
         String newIdpName = "TestIdentityProvider1_new";
