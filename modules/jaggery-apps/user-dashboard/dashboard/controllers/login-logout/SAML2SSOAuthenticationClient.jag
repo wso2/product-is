@@ -126,7 +126,9 @@ var checkAuthorizationForUser = function (userName, permission, tenantDomain) {
 
     if (!isUserAuthorized) {
         var errorMessage = "Un-authorized!!!. User:" + userName + " does not have permission:" + permission;
-        log.debug(errorMessage);
+        if (log.isDebugEnabled()) {
+            log.debug(errorMessage);
+        }
     }
     return isUserAuthorized;
 
