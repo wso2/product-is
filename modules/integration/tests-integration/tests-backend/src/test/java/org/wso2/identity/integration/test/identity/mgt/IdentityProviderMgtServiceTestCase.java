@@ -451,8 +451,8 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "Default federated authenticator YahooOAuth2Authenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("SAMLSSOAuthenticator"), true,
                             "Default federated authenticator SAMLSSOAuthenticator not found");
-        Assert.assertEquals(allFedAuthenticators.containsKey("GoogleOAUth2OpenIDAuthenticator"), true,
-                            "Default federated authenticator GoogleOAUth2OpenIDAuthenticator not found");
+        Assert.assertEquals(allFedAuthenticators.containsKey("GoogleOIDCAuthenticator"), true,
+                            "Default federated authenticator GoogleOIDCAuthenticator     not found");
     }
 
     @Test(priority = 7, groups = "wso2.is", description = "test getAllLocalClaimUris operation")
