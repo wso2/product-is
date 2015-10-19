@@ -447,8 +447,8 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "Default federated authenticator MicrosoftWindowsLive not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("OpenIDAuthenticator"), true,
                             "Default federated authenticator OpenIDAuthenticator not found");
-        Assert.assertEquals(allFedAuthenticators.containsKey("YahooOpenIDAuthenticator"), true,
-                            "Default federated authenticator YahooOpenIDAuthenticator not found");
+        Assert.assertEquals(allFedAuthenticators.containsKey("YahooOAuth2Authenticator"), true,
+                            "Default federated authenticator YahooOAuth2Authenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("SAMLSSOAuthenticator"), true,
                             "Default federated authenticator SAMLSSOAuthenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("GoogleOAUth2OpenIDAuthenticator"), true,
