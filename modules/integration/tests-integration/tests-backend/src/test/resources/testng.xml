@@ -278,6 +278,7 @@
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
 >>>>>>> 27398d2... IDENTITY-3472 Workflow support for IS - Integration tests
             <!--Identity Management Test Cases-->
+            <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityProviderMgtServiceTestCase" />
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
