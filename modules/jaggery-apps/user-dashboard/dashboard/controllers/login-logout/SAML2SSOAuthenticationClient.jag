@@ -1,15 +1,17 @@
 <%
 include("../wsUtil.jag");
 var util = require("../../util/utility.jag");
+var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
 var serverUrl2 = serverUrl + "/SAML2SSOAuthenticationService";
+var identityServerUrl = identityUtil.getServerURL("services/SAML2SSOAuthenticationService", false);
 var bpsJson = "ppppp";
 var ws = require('ws');
 var webService = new ws.WSRequest();
 var carbon = require('carbon');
-var PERMISSION_EXECUTE ="ui.execute";
+var PERMISSION_EXECUTE = "ui.execute";
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 
@@ -47,8 +49,8 @@ function getBPSSessions(request){
         var webService2 = new ws.WSRequest();
         var host = hostArray[i].*::workerHostURL[0].text();
         var profileName = hostArray[i].*::profileName[0].text();
-        if(serverUrl2.equals( host + "/services/SAML2SSOAuthenticationService") || serverUrl2.equals(host + "//services/SAML2SSOAuthenticationService")){
-            if(profileOutputJson != "\"list\" : ["){
+        if (identityServerUrl.equals(host + "/services/SAML2SSOAuthenticationService")) {
+            if (profileOutputJson != "\"list\" : [") {
                 profileOutputJson = profileOutputJson + ",";
             }
 
