@@ -3623,6 +3623,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 =======
 		<carbon.kernel.version>4.4.0-SNAPSHOT</carbon.kernel.version>
@@ -3669,6 +3670,9 @@
 >>>>>>> 1bd40a4... release-fixes
 =======
 >>>>>>> ade7d92... removing redundant property
+=======
+        <carbon.kernel.version>4.4.2</carbon.kernel.version>
+>>>>>>> 0265706... upgdrading kernel version
         <carbon.commons.version>4.4.7</carbon.commons.version>
 >>>>>>> 434b99c... update carbon-commons version
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
