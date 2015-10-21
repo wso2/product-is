@@ -157,8 +157,12 @@
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
+<<<<<<< HEAD
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
+=======
+            <class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />
+>>>>>>> 426d2d2... uncommenting RemoteUserStoreManagerServiceTestCase
         </classes>
     </test>
 <<<<<<< HEAD
