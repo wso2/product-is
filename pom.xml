@@ -3500,6 +3500,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3550,6 +3551,10 @@
         <carbon.identity.version>4.6.0-SNAPSHOT</carbon.identity.version>
         <carbon.identity.jar.version>4.6.0-SNAPSHOT</carbon.identity.jar.version>
 >>>>>>> 3d311ff... updating multitenancy,  jaggery, jaggery-extensions, and carbon-identity version
+=======
+        <carbon.identity.version>5.0.1-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.jar.version>5.0.1-SNAPSHOT</carbon.identity.jar.version>
+>>>>>>> c52f04c... updating versions
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -3711,7 +3716,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.0-M1</jaggeryjs.version>
+        <jaggeryjs.version>0.12.0</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -3775,6 +3780,7 @@
 >>>>>>> 681dbb0... Revering the change.Revert "Updated registry version to 4.4.8 and updated registry.resource version to the same version instead of carbon.platform.version."
 =======
         <carbon.registry.version>4.4.8</carbon.registry.version>
+<<<<<<< HEAD
 >>>>>>> 6f68a6b... Updated registry version to 4.4.8 and updated registry.resource version to the same version instead of carbon.platform.version.
         <carbon.multitenancy.version>4.4.1</carbon.multitenancy.version>
 >>>>>>> def8375... change canbon-multitenancy to 4.4.1
@@ -3788,6 +3794,10 @@
         <carbon.multitenancy.version>4.5.0-m1</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.0-M1</jaggery.extensions.version>
 >>>>>>> 3d311ff... updating multitenancy,  jaggery, jaggery-extensions, and carbon-identity version
+=======
+        <carbon.multitenancy.version>4.5.0</carbon.multitenancy.version>
+        <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
+>>>>>>> c52f04c... updating versions
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
