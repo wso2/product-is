@@ -57,8 +57,7 @@ redirection fails, please click on the button below.</p>
    <input type="hidden" name="SSOAuthSessionID" value="<%= sessionId %>"/>
     <% if (authzFailure === 'true') { %>
    <input type="hidden" name="authz_failure" value="<%=authzFailure%>"/>
-    <%
-       }%>
+    <%}%>
    <button type="submit">Redirect manually</button>
 </p>
 </form>
