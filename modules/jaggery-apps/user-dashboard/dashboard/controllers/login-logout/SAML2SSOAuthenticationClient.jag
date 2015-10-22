@@ -6,7 +6,7 @@ var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 var log = new Log();
 var serverUrl = util.getServerUrl();
 var serverUrl2 = serverUrl + "/SAML2SSOAuthenticationService";
-var identityServerUrl = identityUtil.getServerURL("services/SAML2SSOAuthenticationService", false);
+var identityServerUrl = identityUtil.getServerURL("services/SAML2SSOAuthenticationService", true);
 var bpsJson = "ppppp";
 var ws = require('ws');
 var webService = new ws.WSRequest();
@@ -49,7 +49,7 @@ function getBPSSessions(request){
         var webService2 = new ws.WSRequest();
         var host = hostArray[i].*::workerHostURL[0].text();
         var profileName = hostArray[i].*::profileName[0].text();
-        if (identityServerUrl.equals(host + "/services/SAML2SSOAuthenticationService")) {
+        if (identityServerUrl.equals(host + "/services/SAML2SSOAuthenticationService") || identityServerUrl.equals(host + "services/SAML2SSOAuthenticationService")) {
             if (profileOutputJson != "\"list\" : [") {
                 profileOutputJson = profileOutputJson + ",";
             }
