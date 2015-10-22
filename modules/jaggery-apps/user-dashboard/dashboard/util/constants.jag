@@ -27,4 +27,7 @@ var WEB_CONTEXT_ROOT = "WebContextRoot";
 var HOST = "HostName";
 
 var CONNECTED_ACCOUNTS="connected-accounts";
+
+var AUTHZ_FAILURE="authzFailure";
+
 %>
