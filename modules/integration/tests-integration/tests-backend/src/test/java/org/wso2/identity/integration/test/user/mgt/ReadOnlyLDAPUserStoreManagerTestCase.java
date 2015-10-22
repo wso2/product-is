@@ -161,8 +161,9 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveRolesOfUser(newUserName, newRoles, deletedRoles);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Error occurred while getting database type from DB connection")
-                    , "Error Message mismatched");
+            Assert.assertTrue(e.getMessage().contains("Error occurred while updating hybrid role list of user")
+                    , "Error Message mismatched, expected 'Error occurred while updating hybrid role list of user', " +
+                    "but was '" + e.getMessage() + " ,");
         }
     }
 
@@ -175,8 +176,8 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveUsersOfRole(newUserRole, newUsers, deletedUsers);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Read-only user store.Roles cannot be added or modfified"),
-                    "Error message mismatched, expected 'Read-only user store.Roles cannot be added or modfified', " +
+            Assert.assertTrue(e.getMessage().contains("Read-only user store.Roles cannot be added or modified"),
+                    "Error message mismatched, expected 'Read-only user store.Roles cannot be added or modified', " +
                             "but was '" + e.getMessage() + " '");
         }
 
