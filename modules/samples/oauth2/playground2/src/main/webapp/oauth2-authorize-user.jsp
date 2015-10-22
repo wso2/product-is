@@ -5,12 +5,14 @@
 <%@page import="org.apache.oltu.oauth2.common.message.types.GrantType"%>
 <%@ page import="org.apache.oltu.oauth2.client.request.OAuthClientRequest" %>
 <%@ page import="org.apache.oltu.oauth2.common.message.types.ResponseType" %>
+<%@ page import="org.wso2.carbon.base.MultitenantConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
 
     try {
 
+        String tenantDomain = request.getParameter(MultitenantConstants.TENANT_DOMAIN);
         String consumerKey = request.getParameter(OAuth2Constants.CONSUMER_KEY);
         String authzEndpoint = request.getParameter(OAuth2Constants.OAUTH2_AUTHZ_ENDPOINT);
         String accessEndpoint = request.getParameter(OAuth2Constants.OAUTH2_ACCESS_ENDPOINT);
@@ -56,6 +58,7 @@
             .setRedirectURI((String)session.getAttribute("callbackurl"))
             .setResponseType(authzGrantType)
             .setScope(scope)
+            .setParameter(MultitenantConstants.TENANT_DOMAIN, tenantDomain)
             .buildQueryMessage();
     response.sendRedirect(authzRequest.getLocationUri());
     return;

@@ -169,7 +169,13 @@ try {
         			               </select>                                
                                 </td>
                             </tr>
-                          
+
+                            <tr>
+                                <td><label>Tenant Domain : </label></td>
+                                <td><input type="text" id="tenantDomain" name="tenantDomain" value="carbon.super"
+                                           style= "width:350px"></td>
+                            </tr>
+
                             <tr>
                                 <td><label>Client Id : </label></td>
                                 <td><input type="text" id="consumerKey" name="consumerKey" style= "width:350px"></td>
