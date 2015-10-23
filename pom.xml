@@ -3501,6 +3501,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3555,6 +3556,10 @@
         <carbon.identity.version>5.0.1-SNAPSHOT</carbon.identity.version>
         <carbon.identity.jar.version>5.0.1-SNAPSHOT</carbon.identity.jar.version>
 >>>>>>> c52f04c... updating versions
+=======
+        <carbon.identity.version>5.0.2-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.jar.version>5.0.2-SNAPSHOT</carbon.identity.jar.version>
+>>>>>>> 962bd1c... Update pom.xml
         <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
