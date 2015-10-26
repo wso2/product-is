@@ -11,7 +11,8 @@ function drawPage() {
         "                          <th colspan=\"2\">Manage Profile</th>\n" +
         "                      </tr>\n" +
         "                  </thead>\n" +
-        "                  <tbody>\n";
+        "                  <tbody>\n" +
+        "                <input type=\"hidden\" name=\"profile\" value=\"default\" />\n";
 
     var body = "";
 
