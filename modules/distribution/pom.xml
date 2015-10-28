@@ -324,6 +324,22 @@
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
 
+                                <unzip dest="${tempdir}/shindig">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps">
+                                        <include name="shindig.war"/>
+                                    </fileset>
+                                </unzip>
+
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps/shindig.war"/>
+                                <delete file="${tempdir}/shindig/WEB-INF/web.xml"/>
+
+                                <copy todir="${tempdir}/shindig/WEB-INF" overwrite="false">
+                                    <fileset dir="conf/shindig">
+                                        <include name="web.xml" />
+                                    </fileset>
+                                </copy>
+
+                                <zip destfile="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps/shindig.war" basedir="${tempdir}/shindig" />
 
                                 <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
 
