@@ -124,6 +124,10 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="${product.name}" value="WSO2 Identity Server"/>
                                 <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml"
+                                        token="&lt;Context crossContext=&quot;true&quot;&gt;"
+                                        value="&lt;Context crossContext=&quot;true&quot;&gt; useHttpOnly=&quot;true&quot;"/>
+                                <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;ServerURL&gt;https://${carbon.local.ip}"
                                         value="&lt;ServerURL&gt;https://localhost"/>
