@@ -60,7 +60,6 @@ function initAuthenticationProtocol(){
 		if(server.indexOf("[") > -1 || server.indexOf("]") > -1){
 			serverUrl = serverUrl[0];
 		}
-		lg.debug(samlConfig);
 
         var serverCoreUrl = application.get(SERVER_CORE_URL);
 
