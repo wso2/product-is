@@ -98,8 +98,12 @@ public class SelfSignupController extends HttpServlet {
         HttpSession session = req.getSession(false);
         String userName = req.getParameter("username");
         String password = req.getParameter("password");
-        //String tenantDomain = req.getParameter("tenant");
         String tenantDomain = "carbon.super";
+        if( userName != null && userName.contains("@")) {
+            tenantDomain = userName.substring(userName.lastIndexOf("@") + 1);
+            userName = userName.substring(0, userName.lastIndexOf("@"));
+        }
+
         String viewPage;
 
         UserIdentityClaimDTO[] claims = (UserIdentityClaimDTO[]) session.getAttribute("claims");

@@ -31,6 +31,7 @@
 <%
     String username = request.getParameter("username");
     String userstoredomain = request.getParameter("userstoredomain");
+    String tenantdomain = request.getParameter("tenantdomain");
 %>
 <p>
     Enter below details to recover your password <br>
@@ -43,6 +44,7 @@
         <tr class="spaceUnder">
             <td><input type="hidden" name="username" id="username" value="<%=username%>"/></td>
             <td><input type="hidden" name="userstoredomain" id="userstoredomain" value="<%=userstoredomain%>"/></td>
+            <td><input type="hidden" name="tenantdomain" id="tenantdomain" value="<%=tenantdomain%>"/><</td>
         </tr>
         <tr class="spaceUnder">
             <td>Captcha</td>
