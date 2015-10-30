@@ -1021,7 +1021,7 @@
     <properties>
         <carbon.identity.version>5.0.2-beta</carbon.identity.version>
         <carbon.identity.jar.version>5.0.2-beta</carbon.identity.jar.version>
-        <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
+        <product.identity.version>5.1.0-beta</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
