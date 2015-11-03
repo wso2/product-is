@@ -69,7 +69,6 @@ function drawTablepage(json, engineValue) {
         "<option value=\"DEFAULT\">DEFAULT</option>" +
         "<option value=\"READY\">READY</option>" +
         "<option value=\"RESERVED\">RESERVED</option>" +
-        "<option value=\"SUSPENDED\">SUSPENDED</option>" +
         "<option value=\"COMPLETED\">COMPLETED</option>" +
         "<option value=\"ALL_TASKS\">ALL_TASKS</option>" +
         "</select>" +
@@ -256,19 +255,13 @@ function drawForm(xml, id, state) {
 
         end = end + "<td><input type='button' id='approveTaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"1\", \"" + id + "\")' ' value='Approve' style=\"float: left; margin-right:10px;\"/></td>" +
             "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"2\", \"" + id + "\")' ' value='Disapprove' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='releaseTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"2\", \"" + id + "\")' ' value='Release' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='suspendaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"4\", \"" + id + "\")' ' value='Suspend' style=\"float: left; margin-right:10px;\"/></td>";
+            "<td><input type='button' id='releaseTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"2\", \"" + id + "\")' ' value='Release' style=\"float: left; margin-right:10px;\"/></td>";
 
     } else if (state == "READY") {
 
         end = end + "<td><input type='button' id='claimTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"5\", \"" + id + "\")' ' value='Claim' style=\"float: left; margin-right:10px;\"/></td>" +
             "<td><input type='button' id='approveTaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"1\", \"" + id + "\")' ' value='Approve' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"2\", \"" + id + "\")' ' value='Disapprove' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"4\", \"" + id + "\")' ' value='Suspend' style=\"float: left; margin-right:10px;\"/></td>";
-
-    } else if (state == "SUSPENDED") {
-
-        end = end + "<td><input type='button' id='resumeTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"6\", \"" + id + "\")' ' value='Resume' style=\"float: left; margin-right:10px;\"/></td>";
+            "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"2\", \"" + id + "\")' ' value='Disapprove' style=\"float: left; margin-right:10px;\"/></td>";
 
     } else if (state == "APPROVED" || state == "REJECTED") {
         end = end + "<table class=\"carbonFormTable\" style=\"width:100%\">" +
@@ -357,12 +350,8 @@ function startReleaseButtonClick(requestType, id) {
 
     if (requestType == "2") {
         start("release", id);
-    } else if (requestType == "4") {
-        start("suspend", id);
     } else if (requestType == "5") {
         start("claim", id);
-    } else if (requestType == "6") {
-        start("resume", id);
     } else {
         getList(accessingEngine, serverList[serverIndex].cookie);
     }

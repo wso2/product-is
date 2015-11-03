@@ -43,7 +43,6 @@ function accessService() {
         var payload2 = "<ns:simpleQuery xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"" +
                 " xmlns:ns1=\"http://docs.oasis-open" +
                 ".org/ns/bpel4people/ws-humantask/types/200803\"><ns:simpleQueryInput> " +
-                "<ns1:status>SUSPENDED</ns1:status><ns1:status>READY</ns1:status>" +
                 "<ns1:pageSize>100000</ns1:pageSize> <ns1:pageNumber>0</ns1:pageNumber> " +
                 "<ns1:simpleQueryCategory>CLAIMABLE</ns1:simpleQueryCategory></ns:simpleQueryInput></ns:simpleQuery>";
         options["HTTPHeaders"] = [{name: "cookie", value: cookie}];
