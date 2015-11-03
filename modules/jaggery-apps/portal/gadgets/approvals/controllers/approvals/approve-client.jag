@@ -30,15 +30,34 @@ callService();
 function callService() {
     session.put('auth-cookie', cookie);
     try {
-
         var ws = require("ws");
+
+        var version1 = new ws.WSRequest();
+        var options1 = new Array();
+        options1.useSOAP = 1.1;
+        options1.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/start";
+
+        var payload1 = "<ns:start xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"><ns:identifier>" + id +
+                "</ns:identifier></ns:start>";
+
+        options1["HTTPHeaders"] = [{name: "cookie", value: cookie}];
+        var result1;
+        try {
+
+            version1.open(options1, endPoint, false);
+            version1.send(payload1);
+
+        } catch (e) {
+
+            log.error(e.toString());
+            return e.toString();
+
+        }
+
         var version = new ws.WSRequest();
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/complete";
-        var usrName = "admin";
-        var pass = "admin";
-
         var payload = "<ns:complete xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\">" +
                 "<ns:identifier>" + id + "</ns:identifier><ns:taskData>" +
                 "<![CDATA[<sch:ApprovalCBData xmlns:sch=\"http://ht.bpel.mgt.workflow.identity.carbon.wso2.org/wsdl/schema\"><approvalStatus>" + command + "</approvalStatus></sch:ApprovalCBData>]]>" +

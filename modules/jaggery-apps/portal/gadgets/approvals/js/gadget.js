@@ -69,8 +69,6 @@ function drawTablepage(json, engineValue) {
         "<option value=\"DEFAULT\">DEFAULT</option>" +
         "<option value=\"READY\">READY</option>" +
         "<option value=\"RESERVED\">RESERVED</option>" +
-        "<option value=\"IN_PROGRESS\">IN_PROGRESS</option>" +
-        "<option value=\"SUSPENDED\">SUSPENDED</option>" +
         "<option value=\"COMPLETED\">COMPLETED</option>" +
         "<option value=\"ALL_TASKS\">ALL_TASKS</option>" +
         "</select>" +
@@ -115,7 +113,7 @@ function drawTablepage(json, engineValue) {
     if (obj.taskSimpleQueryResultSet.row != undefined) {
         for (var i = 0; i < obj.taskSimpleQueryResultSet.row.length; i++) {
             var entry = obj.taskSimpleQueryResultSet.row[i];
-            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "RESERVED"))) {
 
                 middle = middle +
                     "                <tr>\n" +
@@ -132,7 +130,7 @@ function drawTablepage(json, engineValue) {
         }
         if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined) {
             var entry = obj.taskSimpleQueryResultSet.row;
-            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "IN_PROGRESS" || entry.status == "RESERVED"))) {
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "RESERVED"))) {
 
                 middle = middle +
                     "                <tr>\n" +
@@ -253,29 +251,17 @@ function drawForm(xml, id, state) {
         "        </table>\n" +
         "<div id=\"completeButtonDiv\">";
 
-    if (state == "IN_PROGRESS") {
+    if (state == "RESERVED") {
 
         end = end + "<td><input type='button' id='approveTaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"1\", \"" + id + "\")' ' value='Approve' style=\"float: left; margin-right:10px;\"/></td>" +
             "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"2\", \"" + id + "\")' ' value='Disapprove' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='stopTaskButton' class=\"btn btn-info\" onclick='startReleaseButtonClick(\"7\", \"" + id + "\")' ' value='Stop' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='releaseTaskButton' class=\"btn btn-info\" onclick='startReleaseButtonClick(\"2\", \"" + id + "\")' ' value='Release' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='suspendaskButton' class=\"btn btn-info\" onclick='startReleaseButtonClick(\"4\", \"" + id + "\")' ' value='Suspend' style=\"float: left; margin-right:10px;\"/></td>";
-
-    } else if (state == "RESERVED") {
-
-        end = end + "<td><input type='button' id='startTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"1\", \"" + id + "\")' ' value='Start' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='releaseTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"2\", \"" + id + "\")' ' value='Release' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='suspendaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"4\", \"" + id + "\")' ' value='Suspend' style=\"float: left; margin-right:10px;\"/></td>";
+            "<td><input type='button' id='releaseTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"2\", \"" + id + "\")' ' value='Release' style=\"float: left; margin-right:10px;\"/></td>";
 
     } else if (state == "READY") {
 
         end = end + "<td><input type='button' id='claimTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"5\", \"" + id + "\")' ' value='Claim' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='approveTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"1\", \"" + id + "\")' ' value='Start' style=\"float: left; margin-right:10px;\"/></td>" +
-            "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"4\", \"" + id + "\")' ' value='Suspend' style=\"float: left; margin-right:10px;\"/></td>";
-
-    } else if (state == "SUSPENDED") {
-
-        end = end + "<td><input type='button' id='resumeTaskButton' class=\"btn btn-primary\" onclick='startReleaseButtonClick(\"6\", \"" + id + "\")' ' value='Resume' style=\"float: left; margin-right:10px;\"/></td>";
+            "<td><input type='button' id='approveTaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"1\", \"" + id + "\")' ' value='Approve' style=\"float: left; margin-right:10px;\"/></td>" +
+            "<td><input type='button' id='disapprovetaskButton' class=\"btn btn-primary\" onclick='approve_button_click(\"2\", \"" + id + "\")' ' value='Disapprove' style=\"float: left; margin-right:10px;\"/></td>";
 
     } else if (state == "APPROVED" || state == "REJECTED") {
         end = end + "<table class=\"carbonFormTable\" style=\"width:100%\">" +
@@ -362,18 +348,10 @@ function approve_button_click(state, id) {
 
 function startReleaseButtonClick(requestType, id) {
 
-    if (requestType == "1") {
-        start("start", id);
-    } else if (requestType == "2") {
+    if (requestType == "2") {
         start("release", id);
-    } else if (requestType == "4") {
-        start("suspend", id);
     } else if (requestType == "5") {
         start("claim", id);
-    } else if (requestType == "6") {
-        start("resume", id);
-    } else if (requestType == "7") {
-        start("stop", id);
     } else {
         getList(accessingEngine, serverList[serverIndex].cookie);
     }
@@ -427,7 +405,7 @@ function getFormDetails(id, state) {
         data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&endPoint=" + accessingEngine + "&user=" + userName,
         success: function (data) {
 
-            if (state == "IN_PROGRESS" || state == "RESERVED" || state == "READY" || state == "SUSPENDED") {
+            if (state == "RESERVED" || state == "READY") {
                 drawForm(data, id, state);
             } else if (state == "COMPLETED") {
                 getCompletedState(data, id);
@@ -495,9 +473,7 @@ function start(requestType, id) {
         type: "POST",
         data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&requestType=" + requestType + "&endPoint=" + accessingEngine + "&user=" + userName,
         success: function (data) {
-            if (requestType == "start") {
-                getFormDetails(id, "IN_PROGRESS");
-            } else if (requestType == "claim") {
+            if (requestType == "claim") {
                 getFormDetails(id, "RESERVED");
             } else {
                 getList(accessingEngine, serverList[serverIndex].cookie);
