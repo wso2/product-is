@@ -26,7 +26,9 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -35,15 +37,24 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -287,7 +298,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                             "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLSSOLogout" })
+    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLRelayStateDecode" })
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
@@ -368,6 +379,47 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
             Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
                               "SAML SSO Logout failed for " + config);
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Logout test failed for " + config, e);
+        }
+    }
+
+
+    @Test(alwaysRun = true, description = "Testing SAML RelayState decode", groups = "wso2.is", dependsOnMethods =
+            {"testSAMLSSOLogout"})
+    public void testSAMLRelayStateDecode() throws Exception {
+        try {
+            String relayState = "https%3A%2F%2Fwww.google.com%2Fa%2Fcoolguseconcepts" +
+                    ".com%2FServiceLogin%3Fservice%3Dmail%26passive%3Dtrue%26rm%3Dfalse%26continue%3Dhttps%253A%252F" +
+                    "%252Fmail.google.com%252Fa%252Fcoolguseconcepts" +
+                    ".com%252F%26ss%3D1%26ltmpl%3Ddefault%26ltmplcache%3D2%26emr%3D1%26osid%3D1%26scope%3Dhttp%3A%2F" +
+                    "%2Fmeyerweb.com%2Feric%2Ftools%2Fdencoder%2F%2bhttp%3A%2F%2Fmeyerweb" +
+                    ".com%2Feric%2Ftools%2Fdencoder%2F&";
+            HttpResponse response;
+            response = sendGetRequest(
+                    String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config.getHttpBinding().binding));
+
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+                String samlRequest = extractDataFromResponse(response, "SAMLRequest", 5);
+                Map<String, String> paramters = new HashMap<String, String>();
+                paramters.put("SAMLRequest", samlRequest);
+                paramters.put("RelayState", relayState);
+                response = sendSAMLMessage(SAML_SSO_URL, paramters);
+                EntityUtils.consume(response.getEntity());
+                response = sendRedirectRequest(response);
+
+                String sessionKey = extractDataFromResponse(response, "name=\"sessionDataKey\"", 1);
+                response = sendPOSTMessage(sessionKey);
+                EntityUtils.consume(response.getEntity());
+
+                response = sendRedirectRequest(response);
+                String receivedRelayState = extractDataFromResponse(response, "RelayState", 5);
+                relayState = relayState.replaceAll("&", "&amp;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").
+                        replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace("\n", "");
+                Assert.assertEquals(relayState, receivedRelayState, "Sent parameter : " + relayState + "\nRecieved : " +
+                        "" + receivedRelayState + "\n");
+            }
+
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
         }
@@ -479,6 +531,20 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
         return httpClient.execute(request);
+    }
+
+    private HttpResponse sendSAMLMessage(String url, Map<String, String> parameters) throws IOException {
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        HttpPost post = new HttpPost(url);
+        post.setHeader("User-Agent", USER_AGENT);
+        for (Map.Entry<String,String> entry : parameters.entrySet()) {
+            urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+        if (config.getUserMode() == TestUserMode.TENANT_ADMIN || config.getUserMode() == TestUserMode.TENANT_USER){
+            urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain()));
+        }
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
     }
 
     private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
