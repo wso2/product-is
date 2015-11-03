@@ -405,7 +405,7 @@ function getFormDetails(id, state) {
         data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&endPoint=" + accessingEngine + "&user=" + userName,
         success: function (data) {
 
-            if (state == "RESERVED" || state == "READY" || state == "SUSPENDED") {
+            if (state == "RESERVED" || state == "READY") {
                 drawForm(data, id, state);
             } else if (state == "COMPLETED") {
                 getCompletedState(data, id);
