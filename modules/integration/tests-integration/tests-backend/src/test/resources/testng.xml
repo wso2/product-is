@@ -18,6 +18,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     <test name="is-application-mgt" preserve-order="true" parallel="false">
         <packages>
@@ -141,12 +142,15 @@
 =======
 >>>>>>> 5ac109d... Uncommenting test cases
 =======
+=======
+>>>>>>> 855f6d2... Merge with upstream
     <test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>
         </classes>
     </test>
+<<<<<<< HEAD
 
 >>>>>>> 0dd84a5... uncommenting notification mgt test case
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
@@ -552,15 +556,70 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceErrorResponseTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAdminServiceTestCase"/>
 
+=======
+
+    <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
+        </classes>
+    </test>
+
+    <test name="is-tests-all" preserve-order="true" parallel="false">
+        <packages>
+            <!--Entitlement Test Cases-->
+            <!--<package name="org.wso2.identity.integration.test.entitlement"/>-->
+            <!--Application Management Test Cases-->
+            <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
+        </packages>
+        <classes>
+            <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
+            <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
+            <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
+            <!--Identity Management Test Cases-->
+            <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.identity.mgt.IdentityProviderMgtServiceTestCase" />
+            <!--User Store Test Cases-->
+            <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>
+            <!--Provisioning Test Cases-->
+            <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
+            <!--OAuth Test Cases-->
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceClientCredentialTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceImplicitGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeAfterCacheTimeOutTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceErrorResponseTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuthAdminServiceTestCase"/>
+
+>>>>>>> 855f6d2... Merge with upstream
             <!--OpenId Test Cases-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDUserProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>
+<<<<<<< HEAD
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />-->
             <!--PassiveSTS Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
+=======
+            <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />
+            <!--PassiveSTS Test Cases-->
+            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
+            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
+>>>>>>> 855f6d2... Merge with upstream
             <!--User Profile Management Test Cases-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
@@ -569,11 +628,15 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
+<<<<<<< HEAD
 >>>>>>> 27398d2... IDENTITY-3472 Workflow support for IS - Integration tests
+=======
+>>>>>>> 855f6d2... Merge with upstream
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -595,14 +658,16 @@
 >>>>>>> bc19506... IDENTITY-3472 Workflow support for IS - Integration tests
 =======
 >>>>>>> 1a8d34f... Fix for patch 1607 testcase
+=======
+>>>>>>> 855f6d2... Merge with upstream
 
-            <!--&lt;!&ndash;Workflow Management test case&ndash;&gt;-->
-            <!--<class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>-->
+            <!--Workflow Management test case-->
+            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
 
-            <!--&lt;!&ndash;Identity Provider Management Test Cases&ndash;&gt;-->
-            <!--<class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>-->
-        <!--</classes>-->
-    <!--</test>-->
+            <!--Identity Provider Management Test Cases-->
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
+        </classes>
+    </test>
 
 <<<<<<< HEAD
 <<<<<<< HEAD
