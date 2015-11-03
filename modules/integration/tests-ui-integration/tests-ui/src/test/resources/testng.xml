@@ -13,9 +13,9 @@
 
 
     <test name="Identity-UI-tests" parallel="false" verbose="2">
-        <packages>
-            <package name="org.wso2.identity.ui.integration.test.*"/>
-        </packages>
+        <!--<packages>-->
+            <!--<package name="org.wso2.identity.ui.integration.test.*"/>-->
+        <!--</packages>-->
     </test>
 
 
