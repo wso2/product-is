@@ -12,11 +12,11 @@
     </listeners>
 
     <test name="TestUI - Identity">
-        <classes>
-            <class name="org.wso2.identity.ui.integration.test.LoginTestCase"/>
-            <class name="org.wso2.identity.ui.integration.test.login.ISLoginTestCase"/>
-            <class name="org.wso2.identity.ui.integration.test.user.mgt.RoleCreationTestCase"/>
-            <class name="org.wso2.identity.ui.integration.test.policy.ui.SimplePolicyEditorTestCase"/>
-        </classes>
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.ui.integration.test.LoginTestCase"/>-->
+            <!--<class name="org.wso2.identity.ui.integration.test.login.ISLoginTestCase"/>-->
+            <!--<class name="org.wso2.identity.ui.integration.test.user.mgt.RoleCreationTestCase"/>-->
+            <!--<class name="org.wso2.identity.ui.integration.test.policy.ui.SimplePolicyEditorTestCase"/>-->
+        <!--</classes>-->
     </test>
 </suite>
