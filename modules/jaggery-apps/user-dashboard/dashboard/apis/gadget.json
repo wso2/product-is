@@ -79,7 +79,7 @@
         "prefs":"{}",
         "wclass":"",
         "url":"/portal/gadgets/approvals/gadget.xml",
-        "permissions":["/permission/admin/configure"],
+        "permissions":["/permission/admin/manage/humantask/viewtasks"],
         "authorized":"true",
         "id" : "approvals"
     }
