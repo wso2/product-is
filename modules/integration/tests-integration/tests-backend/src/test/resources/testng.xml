@@ -46,6 +46,7 @@
             <!--Identity Management Test Cases-->
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityProviderMgtServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
