@@ -379,7 +379,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     public void testBulkImportUsers() throws Exception {
 
         //ToDo:get userStoreDomain properly
-        String userStoreDomain = "";
+        String userStoreDomain = "PRIMARY";
         File bulkUserFile = new File(getISResourceLocation() + File.separator + "userMgt"
                                      + File.separator + "bulkUserImport.csv");
 
