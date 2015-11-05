@@ -299,9 +299,9 @@ public class UserManagementClient {
         return userAdminStub.isSharedRolesEnabled();
     }
 
-    public void bulkImportUsers(String filename, DataHandler handler, String defaultPassword)
+    public void bulkImportUsers(String userStoreDomain, String filename, DataHandler handler, String defaultPassword)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.bulkImportUsers(filename, handler, defaultPassword);
+        userAdminStub.bulkImportUsers(userStoreDomain, filename, handler, defaultPassword);
     }
 
     public HashSet<String> getUserList() throws RemoteException, UserAdminUserAdminException {
