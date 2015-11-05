@@ -4,7 +4,7 @@ import java.io.File;
 
 public abstract class ClientConstants {
     
-    public static final String RESOURCE_PATH = System.getProperty("user.dir") + File.separator;
+    public static final String RESOURCE_PATH = System.getProperty("user.dir") + File.separator + "/src/main/resources/";
     public static final String PROPERTIES_FILE_PATH =  RESOURCE_PATH + "client.properties";
     
     //property file keys
