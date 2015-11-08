@@ -45,9 +45,14 @@ public class ISMigrationServiceComponent {
     protected void activate(ComponentContext context) {
         try {
             String value = System.getProperty("migrate");
-            if (value != null && "true".equals(value)) {
+            if (Boolean.parseBoolean(value)) {
                 MigrateFrom5to510 migrateFrom5to510 = new MigrateFrom5to510();
                 migrateFrom5to510.databaseMigration(Constants.VERSION_5_1_0);
+            }
+            if(log.isDebugEnabled()) {
+                log.debug("WSO2 IS migration bundle is activated");
+            } else if(Boolean.parseBoolean(value)){
+                log.info("WSO2 IS migration bundle is activated");
             }
         } catch (Throwable e) {
             log.error("Error while initiating Migration component", e);
@@ -61,7 +66,9 @@ public class ISMigrationServiceComponent {
      * @param context OSGi component context.
      */
     protected void deactivate(ComponentContext context) {
-        log.info("WSO2 IS migration bundle is deactivated");
+        if(log.isDebugEnabled()) {
+            log.debug("WSO2 IS migration bundle is deactivated");
+        }
     }
 
 
@@ -71,7 +78,9 @@ public class ISMigrationServiceComponent {
      * @param realmService service to get tenant data.
      */
     protected void setRealmService(RealmService realmService) {
-        log.debug("Setting RealmService for WSO2 IS migration");
+        if(log.isDebugEnabled()) {
+            log.debug("Setting RealmService to WSO2 IS Migration component");
+        }
         ServiceHolder.setRealmService(realmService);
     }
 
@@ -82,7 +91,7 @@ public class ISMigrationServiceComponent {
      */
     protected void unsetRealmService(RealmService realmService) {
         if (log.isDebugEnabled()) {
-            log.debug("Unset Realm service");
+            log.debug("Unsetting RealmService from WSO2 IS Migration component");
         }
         ServiceHolder.setRealmService(null);
     }
