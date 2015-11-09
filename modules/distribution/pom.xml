@@ -124,6 +124,10 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="${product.name}" value="WSO2 Identity Server"/>
                                 <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml"
+                                        token="&lt;Context crossContext=&quot;true&quot;&gt;"
+                                        value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;"/>
+                                <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;ServerURL&gt;https://${carbon.local.ip}"
                                         value="&lt;ServerURL&gt;https://localhost"/>
@@ -263,6 +267,22 @@
                                         token="&lt;/ServiceProvider--&gt;"
                                         value="&lt;/ServiceProvider&gt;"/>
 
+                                <unzip dest="${tempdir}/shindig">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps">
+                                        <include name="shindig.war"/>
+                                    </fileset>
+                                </unzip>
+
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps/shindig.war"/>
+                                <delete file="${tempdir}/shindig/WEB-INF/web.xml"/>
+
+                                <copy todir="${tempdir}/shindig/WEB-INF" overwrite="false">
+                                    <fileset dir="conf/shindig">
+                                        <include name="web.xml" />
+                                    </fileset>
+                                </copy>
+
+                                <zip destfile="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps/shindig.war" basedir="${tempdir}/shindig" />
 
                                 <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
 

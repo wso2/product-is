@@ -364,7 +364,6 @@ function setServerURL(isWebContextRootAvailable) {
         application.put(SERVER_URL, serverUrl);
         application.put(SERVER_CORE_URL, serverCoreUrl);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
-        application.put(WEB_CONTEXT_ROOT, webContextRoot);
         application.put(HOST, hostName);
 
         if (log.isDebugEnabled()) {
@@ -373,14 +372,12 @@ function setServerURL(isWebContextRootAvailable) {
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);
-            log.debug("Web Context Root :" + webContextRoot);
         }
     }
     else{
         httpsPort = application.get(HTTPS_PORT);
         hostName = application.get(HOST);
         proxyContextPath = application.get(PROXY_CONTEXT_PATH);
-        var webContextRoot = application.get(WEB_CONTEXT_ROOT);
         if(isWebContextRootAvailable==='false'){
             serverCoreUrl = identityServerURL.getServerURL("", false);
             application.put(SERVER_CORE_URL, serverCoreUrl);

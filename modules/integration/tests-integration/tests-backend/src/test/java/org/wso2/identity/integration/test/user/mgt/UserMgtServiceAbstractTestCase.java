@@ -339,11 +339,13 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
 //    @Test(groups = "wso2.is", description = "Check importing bulk users", dependsOnMethods = "testGetRolePermissions")
     public void testBulkImportUsers() throws Exception{
 
+		//ToDo:get userStoreDomain properly
+		String userStoreDomain = "PRIMARY";
 		File bulkUserFile = new File(getISResourceLocation() + File.separator + "userMgt"
 				+ File.separator + "bulkUserImport.csv");
 
 		DataHandler handler = new DataHandler(new FileDataSource(bulkUserFile));
-		userMgtClient.bulkImportUsers("bulkUserImport.csv", handler, "PassWord1@");
+		userMgtClient.bulkImportUsers(userStoreDomain, "bulkUserImport.csv", handler, "PassWord1@");
 
 		String[] userList = userMgtClient.listUsers("*", 100);
 

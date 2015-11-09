@@ -230,10 +230,10 @@ public class UserAdminClient {
         }
     }
 
-    public void bulkImportUsers(String fileName, DataHandler handler, String defaultPassword)
+    public void bulkImportUsers(String userStoreDomain, String fileName, DataHandler handler, String defaultPassword)
             throws AxisFault {
         try {
-            stub.bulkImportUsers(fileName, handler, defaultPassword);
+            stub.bulkImportUsers(userStoreDomain, fileName, handler, defaultPassword);
         } catch (Exception e) {
             handleException(e);
         }
