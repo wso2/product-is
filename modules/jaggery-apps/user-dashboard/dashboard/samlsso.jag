@@ -8,6 +8,7 @@ var sessionId = session.getId();
 var encodedSAMLRequest;
 var postUrl;
 var issuer;
+var authzFailure;
 if(samlConfig!=null){
     postUrl = samlConfig['SAML.IdPUrl'];
     issuer = samlConfig['SAML.IssuerID'];
@@ -18,10 +19,13 @@ else{
 
 
 if(request.getParameter("login") === 'true'){
+    authzFailure = request.getParameter("authz_failure");
 	encodedSAMLRequest = sso.client.getEncodedSAMLAuthRequest(issuer);
-	
+
 }else if(request.getParameter("logout") === 'true'){
 	var user = session.get(LOGGED_IN_USER);
+    authzFailure = request.getParameter("authz_failure");
+    session.put(AUTHZ_FAILURE,authzFailure);
     sso_sessions = application.get('sso_sessions'),
     encodedSAMLRequest = sso.client.getEncodedSAMLLogoutRequest(user, sso_sessions[sessionId], issuer);
 }
@@ -51,6 +55,9 @@ redirection fails, please click on the button below.</p>
 <p>
    <input type="hidden" name="SAMLRequest" value="<%= encodedSAMLRequest %>"/>
    <input type="hidden" name="SSOAuthSessionID" value="<%= sessionId %>"/>
+    <% if (authzFailure === 'true') { %>
+   <input type="hidden" name="authz_failure" value="<%=authzFailure%>"/>
+    <%}%>
    <button type="submit">Redirect manually</button>
 </p>
 </form>

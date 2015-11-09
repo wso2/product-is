@@ -88,7 +88,7 @@ if (samlResponse != null) {
 
 					    response.sendRedirect("index.jag");
 					}else{
-					    response.sendRedirect("/dashboard/samlsso.jag?logout=true");
+					    response.sendRedirect("/dashboard/samlsso.jag?logout=true&authz_failure=true");
 					}
 
                 }
