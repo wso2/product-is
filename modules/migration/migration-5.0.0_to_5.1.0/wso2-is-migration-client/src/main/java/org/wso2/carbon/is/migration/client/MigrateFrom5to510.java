@@ -127,11 +127,14 @@ public class MigrateFrom5to510 implements MigrationClient {
         PreparedStatement insertTokenScopeHashPS = null;
         PreparedStatement insertTokenIdPS = null;
         PreparedStatement updateUserNamePS = null;
-
         PreparedStatement selectFromAuthorizationCodePS = null;
         PreparedStatement updateUserNameAuthorizationCodePS = null;
+        PreparedStatement selectIdnAssociatedIdPS = null;
+        PreparedStatement updateIdnAssociatedIdPS = null;
+
         ResultSet accessTokenRS = null;
         ResultSet authzCodeRS = null;
+        ResultSet selectIdnAssociatedIdRS = null;
         try {
             connection = dataSource.getConnection();
             connection.setAutoCommit(false);
@@ -239,6 +242,8 @@ public class MigrateFrom5to510 implements MigrationClient {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
             } else if ("postgresql".equals(databaseType)){
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
+            } else if ("h2".equals(databaseType)) {
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
             } else {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
             }
@@ -257,6 +262,23 @@ public class MigrateFrom5to510 implements MigrationClient {
             PreparedStatement foreignKeyPS = connection.prepareStatement(setScopeAssociationPrimaryKey);
             foreignKeyPS.execute();
 
+            String selectIdnAssociatedId = SQLQueries.SELECT_IDN_ASSOCIATED_ID;
+            selectIdnAssociatedIdPS = connection.prepareStatement(selectIdnAssociatedId);
+            selectIdnAssociatedIdRS = selectIdnAssociatedIdPS.executeQuery();
+
+            updateIdnAssociatedIdPS = connection.prepareStatement(SQLQueries.UPDATE_IDN_ASSOCIATED_ID);
+
+            while (selectIdnAssociatedIdRS.next()) {
+                int id = selectIdnAssociatedIdRS.getInt("ID");
+                String username = selectIdnAssociatedIdRS.getString("USER_NAME");
+
+                updateIdnAssociatedIdPS.setString(1, UserCoreUtil.extractDomainFromName(username));
+                updateIdnAssociatedIdPS.setString(2, UserCoreUtil.removeDomainFromName(username));
+                updateIdnAssociatedIdPS.setInt(3, id);
+                updateIdnAssociatedIdPS.addBatch();
+            }
+            updateIdnAssociatedIdPS.executeBatch();
+
             connection.commit();
 
         } catch (SQLException e) {
@@ -265,6 +287,10 @@ public class MigrateFrom5to510 implements MigrationClient {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            IdentityDatabaseUtil.closeResultSet(accessTokenRS);
+            IdentityDatabaseUtil.closeResultSet(authzCodeRS);
+            IdentityDatabaseUtil.closeResultSet(selectIdnAssociatedIdRS);
+
             IdentityDatabaseUtil.closeStatement(selectFromAccessTokenPS);
             IdentityDatabaseUtil.closeStatement(insertScopeAssociationPS);
             IdentityDatabaseUtil.closeStatement(insertTokenIdPS);
@@ -272,8 +298,9 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(insertTokenScopeHashPS);
             IdentityDatabaseUtil.closeStatement(updateUserNameAuthorizationCodePS);
             IdentityDatabaseUtil.closeStatement(selectFromAuthorizationCodePS);
-            IdentityDatabaseUtil.closeResultSet(accessTokenRS);
-            IdentityDatabaseUtil.closeResultSet(authzCodeRS);
+            IdentityDatabaseUtil.closeStatement(selectIdnAssociatedIdPS);
+            IdentityDatabaseUtil.closeStatement(updateIdnAssociatedIdPS);
+
             IdentityDatabaseUtil.closeConnection(connection);
         }
     }
