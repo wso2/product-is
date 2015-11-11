@@ -59,6 +59,10 @@ function getServerUrl(){
 
 }
 
+function getFidoAppId(){
+    return commonUtil.getFidoAppId();
+}
+
 function getSuccessErrorJson(request, i18n){
     var error = request.getParameter("e");
     var errorMsg = request.getParameter("error");

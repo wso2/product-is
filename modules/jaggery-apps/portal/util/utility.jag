@@ -31,6 +31,7 @@ function setServerURL() {
 
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
+        var fidoAppId = jsonConf.fido.appId;
 
 
 
@@ -107,6 +108,7 @@ function setServerURL() {
         application.put(SERVER_URL, serverUrl);
         application.put(SERVER_CORE_URL, serverCoreUrl);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
+        application.put(FIDO_APP_ID, fidoAppId);
 
         if (log.isDebugEnabled()) {
             log.debug("Host Name       :" + hostName);
@@ -116,6 +118,11 @@ function setServerURL() {
             log.debug("Proxy Context Path :" + proxyContextPath);
         }
     }
+}
+
+function getFidoAppId(){
+    setServerURL();
+    return application.get(FIDO_APP_ID);
 }
 
 %>
