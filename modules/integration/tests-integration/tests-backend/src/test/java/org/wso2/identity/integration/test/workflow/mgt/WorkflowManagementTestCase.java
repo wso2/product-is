@@ -147,7 +147,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing adding a BPS Profile with existing name", dependsOnMethods =
-            "testAddBPSProfile", expectedExceptions = AxisFault.class)
+            "testAddBPSProfile", expectedExceptions = Exception.class)
     public void testAddDuplicateBPSProfile() throws Exception {
 
         String profileName = "TestBPSProfile";
