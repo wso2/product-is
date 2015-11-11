@@ -3,5 +3,8 @@
         "proxyHost" : "",
         "proxyHTTPSPort" : "",
         "proxyContextPath" : ""
+    },
+    "fido" : {
+        "appId" : ""
     }
 }
