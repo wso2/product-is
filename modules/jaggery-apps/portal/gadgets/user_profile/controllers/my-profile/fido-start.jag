@@ -1,6 +1,8 @@
 <%
 include("../wsUtil.jag");
 var util = require("../../util/utility.jag");
+var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
+
 var log = new Log();
 var serverUrl = util.getServerUrl();
 serverUrl = serverUrl + "/FIDOService";
@@ -8,7 +10,13 @@ serverUrl = serverUrl + "/FIDOService";
 var ws = require('ws');
 var webService = new ws.WSRequest();
 
+
 function init(){
+
+    var fidoServerUrl = util.getFidoAppId();
+    if (fidoServerUrl == null || fidoServerUrl === '' || fidoServerUrl === 'null' || fidoServerUrl.length <= 0) {
+        fidoServerUrl = identityServerURL.getServerURL("", false);
+    }
 
     var cookie = session.get('auth-cookie');
         if(cookie == null){
@@ -18,7 +26,7 @@ function init(){
     var username = request.getParameter("user");
 
         try{
-            var result = callWSReturnJSON(webService, serverUrl, "urn:startRegistration", new Array(username, "https://localhost:9443"));
+            var result = callWSReturnJSON(webService, serverUrl, "urn:startRegistration", new Array(username, fidoServerUrl));
             print(result);
         } catch(e){
             log.error(e);
