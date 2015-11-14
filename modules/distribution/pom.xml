@@ -116,12 +116,6 @@
 
                                 <property name="xss-is-token" value=""/>
 
-                                <property name="csrf-kernel-token"
-                                          value="&lt;!-- Set below to true to enable the CSRFPreventionFilter --&gt;${line.separator}                &lt;Enabled&gt;false&lt;/Enabled&gt;${line.separator}"/>
-
-                                <property name="csrf-is-token"
-                                          value="&lt;!-- Set below to true to enable the CSRFPreventionFilter --&gt;${line.separator}                &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}"/>
-
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
@@ -174,11 +168,6 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="${xss-kernel-token}"
                                         value="${xss-is-token}"/>
-
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="${csrf-kernel-token}"
-                                        value="${csrf-is-token}"/>
 
                                 <!-- Update log4j.properties file with Identity related log files -->
                                 <replace
