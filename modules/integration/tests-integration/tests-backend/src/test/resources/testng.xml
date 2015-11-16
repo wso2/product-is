@@ -641,6 +641,7 @@
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -669,6 +670,9 @@
 =======
             <!--class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/-->
 >>>>>>> d756238... Commenting failing test temporarily
+=======
+            <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
+>>>>>>> ac6288c... fixing test failures and uncommenting jit test case
 
             <!--Workflow Management test case-->
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
