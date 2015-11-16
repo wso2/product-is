@@ -32,10 +32,12 @@
     the @product.name@ (IS).
 </p>
 
-<p>@product.name@ is an open source Identity and Entitlement management server. It supports a wide array of authentication
-protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
-It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
-supported through SCIM and SPML</p>
+<p>@product.name@ is an open source Identity and Entitlement management server. It supports a wide array of
+    authentication
+    protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive.
+    It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound
+    provisioning is
+    supported through SCIM and SPML</p>
 
 <p>
     @product.name@ is developed on top of the revolutionary
@@ -61,33 +63,34 @@ supported through SCIM and SPML</p>
     <li>If you need to start the OSGi console with the server use the property
         -DosgiConsole when starting the server. The INSTALL.txt file found on the
         installation directory will give you a comprehensive set of options and
-        properties that can be passed into the startup script</li>
+        properties that can be passed into the startup script
+    </li>
 </ol>
 <h2>New Features In This Release</h2>
 <ul>
     <li>Merge multiple user profiles</li>
 
     <p>In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
-    logins to an application to obtain a fully privileged view for a single user's details, we now support merging
-    of multiple user profiles.</p>
+        logins to an application to obtain a fully privileged view for a single user's details, we now support merging
+        of multiple user profiles.</p>
 
     <li>Workflow Support for Identity Server</li>
 
     <p>In cases where operations will need to trigger events, (for example, the creation of a user must trigger a
-    role assignment to that user) the administrators of IS now can define workflows for operations. </p>
+        role assignment to that user) the administrators of IS now can define workflows for operations. </p>
 
     <li>XACML cache invalidation notification when changes are made to Identities</li>
 
     <p>XACML engine is now able to send invalidation notifications to external endpoints when there is a change in user
-    roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
-    been updated</p>
+        roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
+        been updated</p>
 
     <li>PATCH operation support for SCIM 1.1</li>
 
     <p>Previous implementation only supported PUT operation for updates. PUT supports the replace operation but not the
-    update operation. Since group is a heavy resource, the operation that alters without replacement (PATCH) needs
-    to be implemented. If not each time a new user is added to the group, all the users should be sent in the PUT
-    request.</p>
+        update operation. Since group is a heavy resource, the operation that alters without replacement (PATCH) needs
+        to be implemented. If not each time a new user is added to the group, all the users should be sent in the PUT
+        request.</p>
 
     <li>Renewed support for bearer type SAML 2.0 token</li>
 
@@ -95,24 +98,27 @@ supported through SCIM and SPML</p>
 
 <h2>Key Features of @product.name@</h2>
 <ul>
-	<li>Dynamically discovered federation</li>
-	<li>Identity Bridge - translation between heterogeneous Identity authentication protocols</li>
-	<li>SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider</li>
-	<li>SAML2 Single Logout profile support</li>
-	<li>OpenID 2.0 Provider</li>
-	<li>OpenID Connect Authorization Server</li>
-	<li>Social login with Facebook, Google, Yahoo and Windows Live</li>
-	<li>XACML 3.0/2.0 based Entitlement Engine with WS-XACML support</li>
-	<li>OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support</li>
-	<li>Inbound and Outbound Identity Provisioning with SCIM 1.1</li>
-	<li>Outbound Identiy Provisioning with SPML 2.0, Salesforce and GoogleApps</li>
-	<li>Integrated Windows Authentication and webSEAL authentication</li>
-	<li>Multi-option and multi-step (multi-factor) authentication</li>
-	<li>Claim based Security Token Service(STS) with SAML 2.0/1.1 support.</li>
-	<li>Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.</li>
-	<li>Claim Management</li>
-	<li>User Profiles and Profile Management</li>
-	<li>Separable front-end and back-end - a single front-end server can be used to administer several back-end servers</li>
+    <li>Dynamically discovered federation</li>
+    <li>Identity Bridge - translation between heterogeneous Identity authentication protocols</li>
+    <li>SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider</li>
+    <li>SAML2 Single Logout profile support</li>
+    <li>OpenID 2.0 Provider</li>
+    <li>OpenID Connect Authorization Server</li>
+    <li>Social login with Facebook, Google, Yahoo and Windows Live</li>
+    <li>XACML 3.0/2.0 based Entitlement Engine with WS-XACML support</li>
+    <li>OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support</li>
+    <li>Inbound and Outbound Identity Provisioning with SCIM 1.1</li>
+    <li>Outbound Identiy Provisioning with SPML 2.0, Salesforce and GoogleApps</li>
+    <li>Integrated Windows Authentication and webSEAL authentication</li>
+    <li>Multi-option and multi-step (multi-factor) authentication</li>
+    <li>Claim based Security Token Service(STS) with SAML 2.0/1.1 support.</li>
+    <li>Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.
+    </li>
+    <li>Claim Management</li>
+    <li>User Profiles and Profile Management</li>
+    <li>Separable front-end and back-end - a single front-end server can be used to administer several back-end
+        servers
+    </li>
     <li>Identity Bridge</li>
     <li>Multi-option and multi-step authentication</li>
     <li> Request Path Authenticators.</li>
@@ -129,25 +135,29 @@ supported through SCIM and SPML</p>
     <li>NTLM grant type for OAuth 2.0</li>
 </ul>
 <h2>Issues Fixed in This Release</h2>
+
 <p>
     This release of WSO2 Identity Server comes with a number of bug fixes, both in the base Carbon
     framework and in the Identity Server specific components. All the issues which have been
     fixed in this release can be found at:
 </p>
 <ul>
-        <li><a href="https://wso2.org/jira/issues/?filter=11808">Fixed Issues for WSO2 Identity Server 5.1.0</a></li>
+    <li><a href="https://wso2.org/jira/issues/?filter=11808">Fixed Issues for WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>Known Issues</h2>
+
 <p>
     All the known issues in WSO2 Identity Server 5.1.0 are reported at:
 </p>
 <ul>
-        <li><a href="https://wso2.org/jira/issues/?filter=11786">Known issues in WSO2 Identity Server 5.1.0</a></li>
+    <li><a href="https://wso2.org/jira/issues/?filter=11786">Known issues in WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>How You Can Contribute</h2>
+
 <h3>
     Mailing Lists
 </h3>
+
 <p>
     Join our mailing list and correspond with the developers directly.
 </p>
@@ -158,17 +168,20 @@ supported through SCIM and SPML</p>
         | <a href="http://wso2.org/mailarchive/dev/">Mail Archive</a>
     </li>
     <li>
-        User forum   : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
+        User forum : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
     </li>
 </ul>
 <h3>
     Reporting Issues
 </h3>
+
 <p>
     We encourage you to report issues, documentation faults and feature requests regarding
     WSO2 Identity Server or in the Carbon base framework through the public
-    <a href="https://wso2.org/jira/browse/IDENTITY">@product.name@ JIRA</a> or <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
+    <a href="https://wso2.org/jira/browse/IDENTITY">@product.name@ JIRA</a> or <a
+        href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
 </p>
+
 <h2>Support</h2>
 
 <p>
