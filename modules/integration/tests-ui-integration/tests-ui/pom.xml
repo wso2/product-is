@@ -2,8 +2,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <parent>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>identity-integration-tests</artifactId>
+        <version>5.1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.identity.ui.integration.test</artifactId>
+    <artifactId>org.wso2.identity.ui.integration.test.ui</artifactId>
     <packaging>jar</packaging>
     <name>org.wso2.identity.ui.integration.test</name>
 
@@ -55,6 +62,19 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+
+                    <execution>
+                        <id>copy­jacoco­dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
+                        </configuration>
+                    </execution>
 
                     <execution>
                         <id>copy-emma-dependencies</id>
@@ -222,15 +242,15 @@
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.identity.integration.common.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.identity</groupId>
+            <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.identity.integration.common.clients</artifactId>
             <!--<version>${project.version}</version>-->
             <exclusions>
@@ -253,8 +273,8 @@
             <!--</exclusions>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>org.wso2.identity</groupId>
-            <artifactId>ui-pages</artifactId>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -276,6 +296,10 @@
                     <artifactId>selenium-remote-driver</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
         </dependency>
     </dependencies>
 
