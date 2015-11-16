@@ -186,49 +186,13 @@
         -->
         <productGroup name="IDENTITY" clusteringEnabled="false" default="true">
 
-            <instance name="lbw001" type="lb_worker_manager" nonBlockingTransportEnabled="true">
-                <hosts>
-                    <host type="worker">identity.wso2con.com</host>
-                    <host type="manager">mgt.identity.wso2con.com</host>
-                </hosts>
-                <ports>
-                    <port type="nhttps">8653</port>
-                    <port type="nhttp">8690</port>
-                </ports>
-                <properties>
-
-                </properties>
-            </instance>
-            <instance name="is001" type="manager" nonBlockingTransportEnabled="false">
-                <hosts>
-                    <host type="default">localhost</host>
-                </hosts>
-                <ports>
-                    <port type="http">10174</port>
-                    <port type="https">9854</port>
-                </ports>
-                <properties>
-                </properties>
-            </instance>
-
-            <instance name="is002" type="standalone" nonBlockingTransportEnabled="false">
+            <instance name="identitySever0001" type="standalone" nonBlockingTransportEnabled="false">
                 <hosts>
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
                     <port type="http">10173</port>
                     <port type="https">9853</port>
-                </ports>
-                <properties>
-                </properties>
-            </instance>
-            <instance name="is003" type="worker" nonBlockingTransportEnabled="false">
-                <hosts>
-                    <host type="default">localhost</host>
-                </hosts>
-                <ports>
-                    <port type="http">10175</port>
-                    <port type="https">9855</port>
                 </ports>
                 <properties>
                 </properties>
@@ -243,7 +207,7 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
-                    <!--<parameter name="-DportOffset" value="410" />-->
+                    <parameter name="-DportOffset" value="410" />
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <!--<class>-->
