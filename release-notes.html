@@ -68,25 +68,25 @@ supported through SCIM and SPML</p>
     <li>Merge multiple user profiles</li>
 
     <p>In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
-        logins to an application to obtain a fully privileged view for a single user's details, we now support merging
-        of multiple user profiles.</p>
+    logins to an application to obtain a fully privileged view for a single user's details, we now support merging
+    of multiple user profiles.</p>
 
     <li>Workflow Support for Identity Server</li>
 
     <p>In cases where operations will need to trigger events, (for example, the creation of a user must trigger a
-        role assignment to that user) the administrators of IS now can define workflows for operations. </p>
+    role assignment to that user) the administrators of IS now can define workflows for operations. </p>
 
     <li>XACML cache invalidation notification when changes are made to Identities</li>
 
     <p>XACML engine is now able to send invalidation notifications to external endpoints when there is a change in user
-        roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
-        been updated</p>
+    roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
+    been updated</p>
     <li>PATCH operation support for SCIM 1.1</li>
 
     <p>Previous implementation only supported PUT operation for updates. PUT supports the replace operation but not the
-        update operation. Since group is a heavy resource, the operation that alters without replacement (PATCH) needs
-        to be implemented. If not each time a new user is added to the group, all the users should be sent in the PUT
-        request.</p>
+    update operation. Since group is a heavy resource, the operation that alters without replacement (PATCH) needs
+    to be implemented. If not each time a new user is added to the group, all the users should be sent in the PUT
+    request.</p>
 
     <li>Renewed support for bearer type SAML 2.0 token</li>
 </ul>
