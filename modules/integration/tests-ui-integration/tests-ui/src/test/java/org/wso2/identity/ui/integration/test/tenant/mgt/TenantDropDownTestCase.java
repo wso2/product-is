@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.ui.integration.test.login;
+package org.wso2.identity.ui.integration.test.tenant.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
@@ -27,10 +27,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
@@ -43,13 +40,12 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
-import org.wso2.identity.integration.common.ui.page.LoginPage;
-import org.wso2.identity.integration.common.ui.page.main.HomePage;
+import org.wso2.identity.ui.integration.test.login.ISLoginTestCase;
 
 import java.io.File;
 import java.util.List;
 
-public class TenantDropDownTestCase extends ISLoginTestCase{
+public class TenantDropDownTestCase extends ISLoginTestCase {
     private WebDriver driver;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
@@ -140,8 +136,8 @@ public class TenantDropDownTestCase extends ISLoginTestCase{
         List<WebElement> allOptions = select.getOptions();
 
         boolean tenantFound = false;
-        for (WebElement option : allOptions){
-            if (TENANT_DOMAIN.equals(option.getText())){
+        for (WebElement option : allOptions) {
+            if (TENANT_DOMAIN.equals(option.getText())) {
                 tenantFound = true;
                 break;
             }
