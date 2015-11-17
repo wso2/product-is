@@ -33,7 +33,7 @@
     <test name="Identity-UI-tests" parallel="false">
         <classes>
             <!--<class name="org.wso2.identity.ui.integration.test.login.ISLoginTestCase"/>-->
-            <class name="org.wso2.identity.ui.integration.test.login.TenantDropDownTestCase"/>
+            <class name="org.wso2.identity.ui.integration.test.tenant.mgt.TenantDropDownTestCase"/>
         </classes>
     </test>
 </suite>
