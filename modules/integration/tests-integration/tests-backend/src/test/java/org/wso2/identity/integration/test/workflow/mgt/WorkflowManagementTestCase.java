@@ -126,8 +126,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             bpsProfileDTO.setWorkerHostURL(host);
             bpsProfileDTO.setUsername(user);
             bpsProfileDTO.setPassword(userPassword);
-            bpsProfileDTO.setCallbackUser(user);
-            bpsProfileDTO.setCallbackPassword(userPassword);
             client.addBPSProfile(bpsProfileDTO);
             BPSProfile[] bpsProfiles = client.listBPSProfiles();
             if (bpsProfiles == null || bpsProfiles.length == 0) {
@@ -159,8 +157,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         bpsProfileDTO.setWorkerHostURL(host);
         bpsProfileDTO.setUsername(user);
         bpsProfileDTO.setPassword(userPassword);
-        bpsProfileDTO.setCallbackUser(user);
-        bpsProfileDTO.setCallbackPassword(userPassword);
         client.addBPSProfile(bpsProfileDTO);
     }
 
