@@ -73,10 +73,10 @@
     <parameter name="ModulesDirectory">axis2modules</parameter>
 
     <parameter name="userAgent" locked="true">
-        WSO2 Identity Server-5.0.0
+        WSO2 Identity Server-5.1.0
     </parameter>
     <parameter name="server" locked="true">
-        WSO2 Identity Server-5.0.0
+        WSO2 Identity Server-5.1.0
     </parameter>
 
     <!-- ========================================================================-->
