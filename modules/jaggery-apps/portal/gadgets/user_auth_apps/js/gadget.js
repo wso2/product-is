@@ -15,10 +15,18 @@ function drawPage() {
     if (json != null) {
 
         if (isArray(json.return)) {
+
             for (var i in json.return) {
+
+                var username = json.return[i].username;
+
+                if (username.indexOf("carbon.super") > -1) {
+                    username = username.substring(0, username.indexOf("carbon.super") - 1);
+                }
+
                 body = body + "                <tr>\n" +
                     "                    <td>" + json.return[i].applicationName + "</td>\n" +
-                    "                    <td>" + json.return[i].username + "</td>\n" +
+                    "                    <td>" + username + "</td>\n" +
                     "                    <td><a title=\"Remove Application\" onclick=\"validate('" + json.return[i].
                     applicationName + "');\"\n" +
                     " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove Application</a></td>\n" +
@@ -26,9 +34,16 @@ function drawPage() {
             }
         }
         else {
+
+            var username = json.return.username;
+
+            if (username.indexOf("carbon.super") > -1) {
+                username = username.substring(0, username.indexOf("carbon.super") - 1);
+            }
+
             body = body + "                <tr>\n" +
                 "                    <td>" + json.return.applicationName + "</td>\n" +
-                "                    <td>" + json.return.username + "</td>\n" +
+                "                    <td>" + username + "</td>\n" +
                 "                    <td><a title=\"Remove Application\" onclick=\"validate('" + json.return.
                 applicationName + "');\"\n" +
                 " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove Application</a></td>\n" +
