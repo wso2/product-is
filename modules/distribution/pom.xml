@@ -139,6 +139,10 @@
                                         token="&lt;Context crossContext=&quot;true&quot;&gt;"
                                         value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;"/>
                                 <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml"
+                                        token="clientAuth=&quot;false&quot;"
+                                        value="clientAuth=&quot;want&quot;"/>
+                                <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;ServerURL&gt;https://${carbon.local.ip}"
                                         value="&lt;ServerURL&gt;https://localhost"/>
@@ -242,6 +246,16 @@
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
                                         token="${sso-idp-config-default}"
                                         value="${sso-idp-config-replace}"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml"
+                                        token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;"
+                                        value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;"/>
+
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml"
+                                        token="&lt;/Authenticator--&gt;"
+                                        value="&lt;/Authenticator&gt;"/>
 
                                 <unzip dest="${tempdir}/shindig">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps">
