@@ -48,12 +48,12 @@ servlet container.
 
 Hardware Requirements
 -------------------
-1. Minimum memory - 1GB
+1. Minimum memory - 2 GB
 2. Processor      - Pentium 800MHz or equivalent at minimum
 
 Software Requirements
 -------------------
-1. Java SE Development Kit - 1.6 (1.6.0_24 onwards)
+1. Java SE Development Kit - 1.7
 3. The Management Console requires full Javascript enablement of the Web browser.
    
 
