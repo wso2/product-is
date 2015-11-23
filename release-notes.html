@@ -32,10 +32,12 @@
     the @product.name@ (IS).
 </p>
 
-<p>@product.name@ is an open source Identity and Entitlement management server. It supports a wide array of authentication
-protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
-It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
-supported through SCIM and SPML</p>
+<p>@product.name@ is an open source Identity and Entitlement management server. It supports a wide array of
+    authentication
+    protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive.
+    It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound
+    provisioning is
+    supported through SCIM and SPML</p>
 
 <p>
     @product.name@ is developed on top of the revolutionary
@@ -61,132 +63,98 @@ supported through SCIM and SPML</p>
     <li>If you need to start the OSGi console with the server use the property
         -DosgiConsole when starting the server. The INSTALL.txt file found on the
         installation directory will give you a comprehensive set of options and
-        properties that can be passed into the startup script</li>
+        properties that can be passed into the startup script
+    </li>
 </ol>
 <h2>New Features In This Release</h2>
 <ul>
+    <li>Merge multiple user profiles</li>
 
- <li>Identity Bridge</li>
-  
-  <p>WSO2 Identity Server 5.1.0 is capable of translating between heterogeneous authentication protocols and transforming 
-  and mediating any identity assertion, between SAML2.0, OAuth 1.0a/2.0, OpenID, OpenID Connect, WS-Federation Passive. 
-  This leads to seamless integration between internal applications and cloud applications such as Salesforce, Google Apps 
-  and Office 365.</p>
+    <p>In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
+        logins to an application to obtain a fully privileged view for a single user's details, we now support merging
+        of multiple user profiles.</p>
 
-<li>Multi-option and multi-step authentication</li>
+    <li>Workflow Support for Identity Server</li>
 
-<p>With WSO2 Identity Server 5.1.0, a given service provider (irrespective of the protocol it supports) can select the 
-  login options it wants to present to it users. Authentication can be a mix of two types: Multi-option login and 
-  multi-step login. With multi-option authentication - the user will be presented with a login screen to pick whatever 
-  the authentication mechanism he/she wants (e.g.: Username/password, Social login with Facebook, Login with a 
-  federated Home Identity Provider). A service provider can also choose to have multi-step authentication. 
-  Multi step authentication can naturally be extended to be multi-factor depending on the kind of authentication.</p> 
+    <p>WSO2 IS 5.1.0 now supports user store operations to engage with workflows. Administrators will be able select
+        at which levels each operation should be approved before they get executed. This will be available as a
+        optional feature where administrator will be able to select if to use them on their user store operations or not. </p>
 
-<li> Request Path Authenticators.</li>
+    <li>XACML cache invalidation notification when changes are made to Identities</li>
 
-<p>The responsibly of getting the user's credentials is left to the service provider, and the credentials will be 
-  attached to the request to the Identity Server. 
+    <p>@product.name@ is now able to send invalidation notifications to external endpoints when there is a change in user
+        roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
+        been updated</p>
 
-<li>Social Login with Facebook / Google / Microsoft Windows Live.</li>
+    <li>PATCH operation support for SCIM 1.1</li>
 
-<p>Facebook / Google / Microsoft Windows Live authenticators are the very first authenticators we are shipping with 
-  Identity Server 5.1.0 for social login.</p> 
+    <p>PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
+       operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
+       added to the group, all the users should be sent in the PUT request.</p>
 
-<li>Ability to plug-in custom developed authenticators.</li>
-
-<p>Owing to the power of OSGi, custom authenticators can be easily written and put into the Identity Server which 
-  will pick them dynamically and execute. The UI will also be extended with property fields for administrators to 
-  configure the authenticators if they are federated authenticators</p>
-
-<li>Provisioning Bridge.</li>
-
-<p>WSO2 Identity Server 5.1.0 is capable of accepting inbound provisioning requests based on SOAP or SCIM, 
-  provisioning to the Resident Identity Provider using LDAP, Active Directory, JDBC or Carbon Remote UserStoreManagement 
-  user management APIs, and transform them to outbound provisioning requests based on SCIM, SPML 2.0, Salesforce, 
-  Google Apps provisioning APIs.</p>
-
-<li>Just-in-time provisioning.</li>
-
-<p>In the process of federated login WSO2 Identity Server is capable of provisioning the corresponding subject to a 
-  preferred user store domain as well as other configured Identity Providers.</p>
-
-<li>Ability to plug-in custom developed provisioning connectors.</li>
-
-<p>Like with authenticators provisioning connectors also can be added to the system by implementing the relevant 
-  APIs and dropping them to the system as OSGi bundles.</p>
-  
-<li>User Dashboard.</li>
-
-<p>WSO2 Identity Server 5.1.0 ships with a jaggery based user dashboard to expose end user functionality. 
-  This dashboard is completely decoupled from the management console, and is completely extensible due to the fact that 
-  it is able to render gadgets. The application can run from within IS or as a separate jaggery app on AS.</p>
-
-<li>SAML2 Web SSO profile Request / Response validator.</li>
-
-<p>A UI based tool in the Identity Server 5.1.0 management console for debugging the SAML2 Web SSO requests and responses.</p>
-
-<li>Remote User Store Management.</li>
-
-<p>WSO2 Carbon's User/Group Administration SOAP API is also now supported as part of the UserStoreManager 
-  implementations shipped by default. This means heterogeneous user stores distributed across different data centers 
-  can be managed from a single Identity Server node.</p>
-
-<li>Custom permissions.</li>
-
-<p>Application specific permissions can be added by service providers and assigned to roles, and by using the 
-  remote authorization API do permission based access control for users.</p>
-
-<li>Encrypted SAML2 Assertions.</li>
-
-<p>The SAML2 assertion issued for SAML2 based SSO login can now have encrypted assertions. To decrypt the assertion 
-  the service provider will have to have the Identity Server tenant's public certificate.</p>
-
-<li>NTLM grant type for OAuth 2.0</li>
-
-
+    <li>Renewed support for bearer type SAML 2.0 token</li>
 </ul>
 
 <h2>Key Features of @product.name@</h2>
 <ul>
-	<li>Dynamically discovered federation</li>
-	<li>Identity Bridge - translation between heterogeneous Identity authentication protocols</li>
-	<li>SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider</li>
-	<li>SAML2 Single Logout profile support</li>
-	<li>OpenID 2.0 Provider</li>
-	<li>OpenID Connect Authorization Server</li>
-	<li>Social login with Facebook, Google, Yahoo and Windows Live</li>
-	<li>XACML 3.0/2.0 based Entitlement Engine with WS-XACML support</li>
-	<li>OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support</li>
-	<li>Inbound and Outbound Identity Provisioning with SCIM 1.1</li>
-	<li>Outbound Identiy Provisioning with SPML 2.0, Salesforce and GoogleApps</li>
-	<li>Integrated Windows Authentication and webSEAL authentication</li>
-	<li>Multi-option and multi-step (multi-factor) authentication</li>
-	<li>Claim based Security Token Service(STS) with SAML 2.0/1.1 support.</li>
-	<li>Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.</li>
-	<li>Claim Management</li>
-	<li>User Profiles and Profile Management</li>
-	<li>Separable front-end and back-end - a single front-end server can be used to administer several back-end servers</li>
+    <li>Dynamically discovered federation</li>
+    <li>Identity Bridge - translation between heterogeneous Identity authentication protocols</li>
+    <li>SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider</li>
+    <li>SAML2 Single Logout profile support</li>
+    <li>OpenID 2.0 Provider</li>
+    <li>OpenID Connect Authorization Server</li>
+    <li>Social login with Facebook, Google, Yahoo and Windows Live</li>
+    <li>XACML 3.0/2.0 based Entitlement Engine with WS-XACML support</li>
+    <li>OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support</li>
+    <li>Inbound and Outbound Identity Provisioning with SCIM 1.1</li>
+    <li>Outbound Identiy Provisioning with SPML 2.0, Salesforce and GoogleApps</li>
+    <li>Integrated Windows Authentication and webSEAL authentication</li>
+    <li>Multi-option and multi-step (multi-factor) authentication</li>
+    <li>Claim based Security Token Service(STS) with SAML 2.0/1.1 support.</li>
+    <li>Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.
+    </li>
+    <li>Claim Management</li>
+    <li>User Profiles and Profile Management</li>
+    <li>Separable front-end and back-end - a single front-end server can be used to administer several back-endservers</li>
+    <li>Identity Bridge</li>
+    <li>Multi-option and multi-step authentication</li>
+    <li> Request Path Authenticators.</li>
+    <li>Social Login with Facebook / Google / Microsoft Windows Live.</li>
+    <li>Ability to plug-in custom developed authenticators.</li>
+    <li>Provisioning Bridge.</li>
+    <li>Just-in-time provisioning.</li>
+    <li>Ability to plug-in custom developed provisioning connectors.</li>
+    <li>User Dashboard.</li>
+    <li>SAML2 Web SSO profile Request / Response validator.</li>
+    <li>Remote User Store Management.</li>
+    <li>Custom permissions.</li>
+    <li>Encrypted SAML2 Assertions.</li>
+    <li>NTLM grant type for OAuth 2.0</li>
 </ul>
 <h2>Issues Fixed in This Release</h2>
+
 <p>
     This release of WSO2 Identity Server comes with a number of bug fixes, both in the base Carbon
     framework and in the Identity Server specific components. All the issues which have been
     fixed in this release can be found at:
 </p>
 <ul>
-        <li><a href="https://wso2.org/jira/issues/?filter=11808">Fixed Issues for WSO2 Identity Server 5.1.0</a></li>
+    <li><a href="https://wso2.org/jira/issues/?filter=11808">Fixed Issues for WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>Known Issues</h2>
+
 <p>
     All the known issues in WSO2 Identity Server 5.1.0 are reported at:
 </p>
 <ul>
-        <li><a href="https://wso2.org/jira/issues/?filter=11786">Known issues in WSO2 Identity Server 5.1.0</a></li>
+    <li><a href="https://wso2.org/jira/issues/?filter=11786">Known issues in WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>How You Can Contribute</h2>
+
 <h3>
     Mailing Lists
 </h3>
+
 <p>
     Join our mailing list and correspond with the developers directly.
 </p>
@@ -197,17 +165,20 @@ supported through SCIM and SPML</p>
         | <a href="http://wso2.org/mailarchive/dev/">Mail Archive</a>
     </li>
     <li>
-        User forum   : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
+        User forum : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
     </li>
 </ul>
 <h3>
     Reporting Issues
 </h3>
+
 <p>
     We encourage you to report issues, documentation faults and feature requests regarding
     WSO2 Identity Server or in the Carbon base framework through the public
-    <a href="https://wso2.org/jira/browse/IDENTITY">@product.name@ JIRA</a> or <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
+    <a href="https://wso2.org/jira/browse/IDENTITY">@product.name@ JIRA</a> or <a
+        href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
 </p>
+
 <h2>Support</h2>
 
 <p>

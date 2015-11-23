@@ -43,6 +43,8 @@
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/email/email-admin-config.xml</exclude>
                 <exclude>**/dbscripts/**</exclude>
+                <exclude>**/tomcat/catalina-server.xml</exclude>
+                <exclude>**/security/authenticators.xml</exclude>
             </excludes>
         </fileSet>
 
@@ -372,6 +374,22 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/README</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
@@ -554,6 +572,12 @@
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/application-authentication.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/EndpointConfig.properties
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>

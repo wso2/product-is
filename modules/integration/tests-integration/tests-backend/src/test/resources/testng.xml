@@ -10,6 +10,12 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
+    <test name="is-tests-initialize" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>
@@ -96,6 +102,11 @@
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
         </classes>
     </test>
 

@@ -111,6 +111,17 @@
                                 <property name="registryPolicyHandler"
                                           value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator}       &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator}           &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator}       &lt;/filter&gt;${line.separator}   &lt;/handler&gt;${line.separator}${line.separator}   &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"/>
 
+                                <property name="xss-kernel-token"
+                                          value="&lt;XSSPreventionConfig&gt;${line.separator}            &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}        &lt;/XSSPreventionConfig&gt;"/>
+
+                                <property name="xss-is-token" value=""/>
+
+                                <property name="sso-idp-config-default"
+                                          value="&lt;!--ServiceProvider&gt;&lt;/ServiceProvider--&gt;"/>
+
+                                <property name="sso-idp-config-replace"
+                                          value="&lt;ServiceProvider&gt;${line.separator}      &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator}      &lt;AssertionConsumerServiceURLs&gt;${line.separator}        &lt;AssertionConsumerServiceURL&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator}      &lt;/AssertionConsumerServiceURLs&gt;${line.separator}      &lt;DefaultAssertionConsumerServiceURL&gt;https://localhost:9443/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator}      &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator}      &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator}      &lt;AudiencesList&gt;${line.separator}        &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator}      &lt;/AudiencesList&gt;${line.separator}    &lt;/ServiceProvider&gt;"/>
+
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
@@ -127,6 +138,10 @@
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml"
                                         token="&lt;Context crossContext=&quot;true&quot;&gt;"
                                         value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;"/>
+                                <replace
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml"
+                                        token="clientAuth=&quot;false&quot;"
+                                        value="clientAuth=&quot;want&quot;"/>
                                 <replace
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;ServerURL&gt;https://${carbon.local.ip}"
@@ -158,6 +173,11 @@
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
                                         token="&lt;/TokenStoreClassName--&gt;"
                                         value="&lt;/TokenStoreClassName&gt;"/>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
+                                        token="${xss-kernel-token}"
+                                        value="${xss-is-token}"/>
 
                                 <!-- Update log4j.properties file with Identity related log files -->
                                 <replace
@@ -224,48 +244,18 @@
 
                                 <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;!--ServiceProvider&gt;"
-                                        value="&lt;ServiceProvider&gt;"/>
+                                        token="${sso-idp-config-default}"
+                                        value="${sso-idp-config-replace}"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;Issuer&gt;&lt;/Issuer&gt;"
-                                        value="&lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;"/>
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml"
+                                        token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;"
+                                        value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;"/>
 
                                 <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;AssertionConsumerServiceURL&gt;&lt;/AssertionConsumerServiceURL&gt;"
-                                        value="&lt;AssertionConsumerServiceURL&gt;https://localhost:9443/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;DefaultAssertionConsumerServiceURL&gt;&lt;/DefaultAssertionConsumerServiceURL&gt;"
-                                        value="&lt;DefaultAssertionConsumerServiceURL&gt;https://localhost:9443/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;SignAssertion&gt;false&lt;/SignAssertion&gt;"
-                                        value="&lt;SignAssertion&gt;true&lt;/SignAssertion&gt;"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;SignResponse&gt;false&lt;/SignResponse&gt;"
-                                        value="&lt;SignResponse&gt;true&lt;/SignResponse&gt;"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;EnableAudienceRestriction&gt;false&lt;/EnableAudienceRestriction&gt;"
-                                        value="&lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;Audience&gt;&lt;/Audience&gt;"
-                                        value="&lt;Audience&gt;carbonServer&lt;/Audience&gt;"/>
-
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="&lt;/ServiceProvider--&gt;"
-                                        value="&lt;/ServiceProvider&gt;"/>
+                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml"
+                                        token="&lt;/Authenticator--&gt;"
+                                        value="&lt;/Authenticator&gt;"/>
 
                                 <unzip dest="${tempdir}/shindig">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-4.4.2/repository/deployment/server/webapps">

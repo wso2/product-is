@@ -956,6 +956,28 @@
                 <artifactId>openws</artifactId>
                 <version>${openws.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-android-driver</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.opera</groupId>
+                <artifactId>operadriver</artifactId>
+                <version>${operadriver.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-remote-driver</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1050,7 +1072,7 @@
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
         <carbon.kernel.version>4.4.2</carbon.kernel.version>
-        <carbon.commons.version>4.4.7</carbon.commons.version>
+        <carbon.commons.version>4.4.8</carbon.commons.version>
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
@@ -1090,7 +1112,7 @@
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
         <carbon.deployment.version>4.5.2</carbon.deployment.version>
-        <carbon.registry.version>4.4.8</carbon.registry.version>
+        <carbon.registry.version>4.4.9</carbon.registry.version>
         <carbon.multitenancy.version>4.5.0</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
@@ -1119,7 +1141,7 @@
         <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
         <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
-        <carbon.business-process.version>4.4.3</carbon.business-process.version>
+        <carbon.business-process.version>4.4.4</carbon.business-process.version>
 	    <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
