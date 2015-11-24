@@ -3401,7 +3401,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core.services</artifactId>
-                <version>${org.wso2.carbon.core.services.version}</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
 <<<<<<< HEAD
 >>>>>>> ebd4658... migration client and scripts for oracle, mysql and h2
@@ -3744,8 +3744,12 @@
 >>>>>>> 434b99c... update carbon-commons version
 =======
         <carbon.commons.version>4.4.8</carbon.commons.version>
+<<<<<<< HEAD
 >>>>>>> 9afb09b... updating commons,  registry versions
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
+=======
+        <carbon.dashboards.version>1.0.8</carbon.dashboards.version>
+>>>>>>> c0137e2... updating versions
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 <<<<<<< HEAD
@@ -3789,17 +3793,18 @@
         <uuid.module.version>${jaggery.extensions.version}</uuid.module.version>
         <securevault.wso2.version>1.0.0</securevault.wso2.version>
         <process.module.version>${jaggery.extensions.version}</process.module.version>
-        <caramel.module.version>1.0.1</caramel.module.version>
-        <carbon.module.version>1.1.0</carbon.module.version>
-        <handlebars.module.version>1.0.0</handlebars.module.version>
-        <markdown.module.verion>1.0.0</markdown.module.verion>
-        <gadget.module.version>1.0.0</gadget.module.version>
-        <i18n.module.version>1.0.0</i18n.module.version>
+        <caramel.module.version>${jaggery.extensions.version}</caramel.module.version>
+        <carbon.module.version>${jaggery.extensions.version}</carbon.module.version>
+        <handlebars.module.version>${jaggery.extensions.version}</handlebars.module.version>
+        <markdown.module.verion>${jaggery.extensions.version}</markdown.module.verion>
+        <gadget.module.version>${jaggery.extensions.version}</gadget.module.version>
+        <i18n.module.version>${jaggery.extensions.version}</i18n.module.version>
         <wso2.store.version>2.0.0</wso2.store.version>
         <test.framework.version>4.4.2</test.framework.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3846,6 +3851,9 @@
         <carbon.registry.version>4.4.1</carbon.registry.version>
 >>>>>>> 681dbb0... Revering the change.Revert "Updated registry version to 4.4.8 and updated registry.resource version to the same version instead of carbon.platform.version."
 =======
+=======
+        <carbon.deployment.version>4.5.3</carbon.deployment.version>
+>>>>>>> c0137e2... updating versions
         <carbon.registry.version>4.4.8</carbon.registry.version>
 <<<<<<< HEAD
 >>>>>>> 6f68a6b... Updated registry version to 4.4.8 and updated registry.resource version to the same version instead of carbon.platform.version.
@@ -3986,7 +3994,6 @@
 	    <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
-        <org.wso2.carbon.core.services.version>4.2.0</org.wso2.carbon.core.services.version>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
 <<<<<<< HEAD
 >>>>>>> 1bd40a4... release-fixes
