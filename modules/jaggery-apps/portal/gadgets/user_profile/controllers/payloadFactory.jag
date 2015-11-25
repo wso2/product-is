@@ -52,7 +52,14 @@ var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.ca
                   "</aut:login>";
 
 
-var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
+var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>";
+
+var initTOTP = "<ns:initTOTP xmlns:ns=\"http://services.totp.identity.carbon.wso2.org\">\n" +
+                "<ns:username>{0}</ns:username>\n" +
+                "</ns:initTOTP>";
+var resetTOTP = "<ns:resetTOTP xmlns:ns=\"http://services.totp.identity.carbon.wso2.org\">\n" +
+                "<ns:username>{0}</ns:username>\n" +
+                "</ns:resetTOTP>";
 
 var startRegistration = "<xsd:startRegistration xmlns:xsd=\"http://service.fido.authenticator.application.identity.carbon.wso2.org\">\n"+  
                     "<xsd:appID>{1}</xsd:appID>\n"+
@@ -89,6 +96,8 @@ if(!application.get(SAML_ENABLED)){
 	application.put("urn:login", login);
 }
 application.put("urn:getUserInfo", getUserInfo);
+application.put("urn:initTOTP", initTOTP);
+application.put("urn:resetTOTP",resetTOTP);
 application.put("urn:startRegistration", startRegistration);
 application.put("urn:finishRegistration", finishRegistration);
 application.put("urn:removeAllRegistrations", removeRegistration);

@@ -17,6 +17,9 @@ function drawPage() {
     var body = "";
 
     for (var i in json.return.fieldValues) {
+        if(json.return.fieldValues[i].displayName =="Encoding"){
+            continue;
+        }
         body = body + "          <tr>\n" +
         "                           <td>" +
         "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
@@ -27,11 +30,37 @@ function drawPage() {
         body = body + " </label>\n</td>" +
             "                    <td><div class=\"controls\">";
 
-        if (json.return.fieldValues[i].readOnly == "true") {
+        if(json.return.fieldValues[i].displayName !="Enable TOTP"){
+            if (json.return.fieldValues[i].readOnly == "true") {
+                body = body + "                        <input type=\"text\" disabled=\"\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\"  />\n" +
             body = body + "                        <input type=\"text\" disabled=\"\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />\n" +
                 " <input type=\"hidden\" name=\"" + json.return.fieldValues[i].claimUri + "\" value=\"" + json.return.fieldValues[i].fieldValue + "\" />";
-        }
-        else {
+            }
+            else {
+                body = body + "<input type=\"text\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\"  />";
+            }
+        }else{
+            var encoding = "";
+            for(var j in json.return.fieldValues){
+                if(json.return.fieldValues[j].displayName=="Encoding"){
+                    encoding = json.return.fieldValues[j].fieldValue;
+                    break;
+                }
+            }
+            if(encoding !="Invalid"){
+
+                if(json.return.fieldValues[i].fieldValue!=""){
+                    body +="        <input type=\"checkbox\" checked name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+
+                    "        <img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\">";
+                }else{
+                    body +="        <input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+
+                    "        <img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\" style=\"Display:none\">";
+                }
+            }else{
+
+                body +="        <input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+ "<label id=\"tokenInvalid\" style=\"margin-left:20px\">Invalid Token Please Reconfigure</label>"+
+                "        <img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\" style=\"Display:none\">";
+            }
             body = body + "<input type=\"text\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri +
                 "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />";
 
@@ -290,4 +319,29 @@ middle = middle + "<label > Device not registered yet please register your devic
 
 function isArray(element) {
     return Object.prototype.toString.call(element) === '[object Array]';
+}
+
+function validateCheckBox(){
+    var fld = document.getElementsByName("totpenable")[0];
+    if(fld.checked){
+        initiateTOTP();
+        $("#tokenInvalid").empty();
+    }else{
+        $('#totpQRCode').attr("src","");
+        resetTOTP();
+    }
+
+}
+
+function loadQRCode(url){
+    var loc = jQuery.parseJSON(url).return;
+    $('#totpQRCode').attr("src",loc);
+    $('#totpQRCode').css("visibility","visible");
+    $('#totpQRCode').show();
+}
+
+function removeQRCode(){
+    $('#totpQRCode').attr("src","");
+    $('#totpQRCode').css("visibility","hidden");
+    $('#totpQRCode').show();
 }
