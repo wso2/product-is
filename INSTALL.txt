@@ -1,8 +1,6 @@
 Installing  WSO2 Identity Server 5.1.0
 ======================================
 
-WSO2 Identity Server 5.1.0 can be run either in standalone mode or as a web application within a
-servlet container.
 
 1. The directory containing this INSTALL file will the root and it will be
    treated as Carbon home directory and let it be CARBON_HOME.
