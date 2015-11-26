@@ -3454,7 +3454,15 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+<<<<<<< HEAD
 >>>>>>> 3e44b1c... adding tenantDropdown test
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+>>>>>>> 886b691... refactored migration client
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts

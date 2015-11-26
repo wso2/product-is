@@ -67,6 +67,10 @@
             <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -20,7 +20,7 @@ import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.user.core.service.RealmService;
 
 @SuppressWarnings("unused")
-public class ServiceHolder {
+public class ISMigrationServiceDataHolder {
     //Registry Service which is used to get registry data.
     private static RegistryService registryService;
 
@@ -29,6 +29,8 @@ public class ServiceHolder {
 
     //Tenant registry loader which is used to load tenant registry
     private static TenantRegistryLoader tenantRegLoader;
+
+    private static String oracleUser;
 
     /**
      * Method to get RegistryService.
@@ -82,5 +84,13 @@ public class ServiceHolder {
      */
     public static void setTenantRegLoader(TenantRegistryLoader service) {
         tenantRegLoader = service;
+    }
+
+    public static String getOracleUser() {
+        return oracleUser;
+    }
+
+    public static void setOracleUser(String oracleUser) {
+        ISMigrationServiceDataHolder.oracleUser = oracleUser;
     }
 }

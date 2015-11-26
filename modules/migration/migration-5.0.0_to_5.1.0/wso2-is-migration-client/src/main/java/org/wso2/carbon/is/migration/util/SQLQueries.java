@@ -49,4 +49,8 @@ public class SQLQueries {
     public static final String UPDATE_IDN_ASSOCIATED_ID = "UPDATE IDN_ASSOCIATED_ID SET DOMAIN_NAME=?, USER_NAME=? " +
             "WHERE ID=?";
 
+    public static final String LOAD_APP_NAMES = "SELECT APP_NAME, TENANT_ID FROM SP_APP";
+    public static final String UPDATE_ROLES = "UPDATE UM_HYBRID_ROLE SET UM_ROLE_NAME=? WHERE UM_ROLE_NAME=? AND " +
+            "UM_TENANT_ID=?";
+
 }
