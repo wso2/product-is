@@ -148,17 +148,16 @@ public class Client {
 				} else if (tokenType.equals(ClientConstants.SAML_TOKEN_TYPE_20)) {
 					TokenProfile = RahasConstants.TOK_TYPE_SAML_20;
 				}
-                // Commented out due to compilation failure. (Missing fix in rampart)
-                //TODO: add the changes to rampart-trust
-//				stsClient.setRstTemplate(getRSTTemplate());
-//				boolean tokenRenewed = stsClient.renewToken(responseTokenID,
-//						TokenProfile, stsEPR, stsPolicy, store);
-//				System.out.println("tokenRenewed : " + tokenRenewed);
-//
-//				Token renewedToken = store.getRenewedTokens()[0];
-//				renewedTokenID = renewedToken.getId();
-//				System.out.println("Renewed Token : \n"
-//						+ renewedToken.getToken().toString());
+
+				stsClient.setRstTemplate(getRSTTemplate());
+				boolean tokenRenewed = stsClient.renewToken(responseTokenID,
+						TokenProfile, stsEPR, stsPolicy, store);
+				System.out.println("tokenRenewed : " + tokenRenewed);
+
+				Token renewedToken = store.getRenewedTokens()[0];
+				renewedTokenID = renewedToken.getId();
+				System.out.println("Renewed Token : \n"
+						+ renewedToken.getToken().toString());
 			}
 			// Validate the token
 			if (enableValidateBinding) {
