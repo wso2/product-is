@@ -107,7 +107,7 @@ public class SymmetricEncryptionTestCase {
                 properties = new Properties();
                 properties.load(fileInputStream);
 
-                SecretResolver secretResolver = SecretResolverFactory.create((NamedNodeMap) properties);
+                SecretResolver secretResolver = SecretResolverFactory.create(properties);
                 if (symmetricKeySecureVaultAlias == null) {
                     secretAlias = symmetricKeySecureVaultAliasDefault;
                 } else {
