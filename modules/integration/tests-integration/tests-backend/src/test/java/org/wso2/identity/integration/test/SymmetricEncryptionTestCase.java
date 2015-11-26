@@ -24,15 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import org.compass.core.util.Assert;
 import org.w3c.dom.NamedNodeMap;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.core.internal.CarbonCoreServiceComponent;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.core.util.CryptoUtil;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
@@ -45,8 +39,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -70,7 +62,7 @@ public class SymmetricEncryptionTestCase {
     private String passwordString = "admin";
 
     @BeforeClass(alwaysRun = true)
-    public void copyFileContents() throws CryptoException {
+    public void read() throws CryptoException {
         try {
             readSymmetricKey();
         } catch (CryptoException e) {
