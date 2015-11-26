@@ -272,9 +272,22 @@
 
         <fileSet>
             <directory>
-                ../migration/migration-5.0.0_to_5.1.0
+                ../migration/migration-5.0.0_to_5.1.0/scripts/identity
             </directory>
-            <outputDirectory>wso2is-${pom.version}/dbscripts/migration-5.0.0_to_5.1.0</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/identity/migration-5.0.0SP1_to_5.1.0</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../migration/migration-5.0.0_to_5.1.0/scripts/identity/tosp1
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/identity/migration-5.0.0_to_5.0.0SP1</outputDirectory>
             <includes>
                 <include>h2.sql</include>
                 <include>mysql.sql</include>
