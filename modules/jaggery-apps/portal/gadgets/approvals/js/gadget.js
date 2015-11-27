@@ -31,7 +31,7 @@ function setEngines() {
     if (servers.length < 1) {
         drawNoServerErrorpage("No connected BPEL profiles found.<br>Please try again.");
     } else {
-        accessingEngine = servers[0].host + "/services/HumanTaskClientAPIAdmin";
+        accessingEngine = servers[0].host + "/HumanTaskClientAPIAdmin";
         serverList = servers;
         getList(accessingEngine, servers[0].cookie);
     }
@@ -45,7 +45,7 @@ function drawNoServerErrorpage(errorMessage) {
         "<td>" +
         "<select id=\"engine\" onchange='getList2()'>";
     for (var i = 0; i < serverList.length; i++) {
-        page = page + "<option value=\"" + serverList[i].host + "/services/HumanTaskClientAPIAdmin" + "\">" + serverList[i].profile + "</option>";
+        page = page + "<option value=\"" + serverList[i].host + "/HumanTaskClientAPIAdmin" + "\">" + serverList[i].profile + "</option>";
     }
 
     page = page + "</select>" +
@@ -82,7 +82,7 @@ function drawTablepage(json, engineValue) {
 
 
     for (var i = 0; i < serverList.length; i++) {
-        dropDown = dropDown + "<option value=\"" + serverList[i].host + "/services/HumanTaskClientAPIAdmin" + "\">" + serverList[i].profile + "</option>";
+        dropDown = dropDown + "<option value=\"" + serverList[i].host + "/HumanTaskClientAPIAdmin" + "\">" + serverList[i].profile + "</option>";
     }
 
     dropDown = dropDown + "</select>" +
