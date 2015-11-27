@@ -22,6 +22,8 @@ import org.apache.axiom.om.util.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.compass.core.util.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.w3c.dom.NamedNodeMap;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.util.CryptoException;
