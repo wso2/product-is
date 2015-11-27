@@ -110,4 +110,10 @@
         </classes>
     </test>
 
+    <test name="is-tests-encryption" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.SymmetricEncryptionTestCase"/>
+        </classes>
+    </test>
+
 </suite>
