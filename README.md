@@ -191,7 +191,6 @@ WSO2 Identity Server Distribution Directory Structure
 	|-- webapp-mode <directory>
         |-- LICENSE.txt <file>
         |-- README.txt <file>
-        |-- INSTALL.txt <file>
         |-- release-notes.html <file>
 
     - bin
@@ -252,9 +251,6 @@ WSO2 Identity Server Distribution Directory Structure
 
     - README.txt
       This document.
-
-    - INSTALL.txt
-      This document contains information on installing WSO2 Carbon.
 
     - release-notes.html
       Release information for WSO2 Carbon ${carbon.product.version}.
