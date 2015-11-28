@@ -30,7 +30,7 @@
 
 <h3>WSO2 Identity Server v5.1.0 Release Note</h3>
 
-<h3>20 December 2013</h3>
+<h3>10 December 2015</h3>
 
 <p>
     The WSO2 Identity Server team is pleased to announce the release of version 5.1.0 of
@@ -62,9 +62,7 @@
     <li>Go to the bin directory in the extracted folder</li>
     <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
     <li>If you need to start the OSGi console with the server use the property
-        -DosgiConsole when starting the server. The INSTALL.txt file found on the
-        installation directory will give you a comprehensive set of options and
-        properties that can be passed into the startup script</li>
+        -DosgiConsole when starting the server.</li>
 </ol>
 <h2>New Features In This Release</h2>
 <ul>
