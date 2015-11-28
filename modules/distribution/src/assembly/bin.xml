@@ -37,7 +37,6 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/*</exclude>
                 <exclude>**/LICENSE.txt</exclude>
-                <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
                 <exclude>**/registry.xml</exclude>
@@ -302,12 +301,6 @@
     <files>
         <file>
             <source>../../README.txt</source>
-            <outputDirectory>wso2is-${pom.version}</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../../INSTALL.txt</source>
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
