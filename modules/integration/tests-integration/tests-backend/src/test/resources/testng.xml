@@ -152,6 +152,7 @@
         </classes>
     </test>
 
+<<<<<<< HEAD
 >>>>>>> dd7af57... adding test case for IDENTITY-3943
     <test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
@@ -583,15 +584,13 @@
             <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
         </classes>
     </test>
+=======
+
+>>>>>>> 4268b2c... Removing outdated INSTALL.txt
 
     <test name="is-tests-all" preserve-order="true" parallel="false">
-        <packages>
-            <!--Entitlement Test Cases-->
-            <!--<package name="org.wso2.identity.integration.test.entitlement"/>-->
-            <!--Application Management Test Cases-->
-            <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
-        </packages>
         <classes>
+<<<<<<< HEAD
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
@@ -682,15 +681,15 @@
 =======
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 >>>>>>> ac6288c... fixing test failures and uncommenting jit test case
+=======
+>>>>>>> 4268b2c... Removing outdated INSTALL.txt
 
             <!--Workflow Management test case-->
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
-
-            <!--Identity Provider Management Test Cases-->
-            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
         </classes>
     </test>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -739,6 +738,8 @@
         </classes>
     </test>
 >>>>>>> dd7af57... adding test case for IDENTITY-3943
+=======
+>>>>>>> 4268b2c... Removing outdated INSTALL.txt
 
 <<<<<<< HEAD
 <<<<<<< HEAD
