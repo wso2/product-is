@@ -367,9 +367,6 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             if (config.getHttpBinding() == HttpBinding.HTTP_POST){
                 String samlRequest = extractDataFromResponse(response, "SAMLRequest", 5);
                 response = sendSAMLMessage(SAML_SSO_URL, "SAMLRequest", samlRequest);
-                EntityUtils.consume(response.getEntity());
-
-                response = sendRedirectRequest(response);
             }
 
             String samlResponse = extractDataFromResponse(response, "SAMLResponse", 5);
