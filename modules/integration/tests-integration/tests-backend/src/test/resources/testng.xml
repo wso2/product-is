@@ -153,13 +153,17 @@
     </test>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> dd7af57... adding test case for IDENTITY-3943
+=======
+>>>>>>> 1f04960... Adding test cases
     <test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>
         </classes>
     </test>
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 >>>>>>> 0dd84a5... uncommenting notification mgt test case
@@ -571,6 +575,9 @@
 
 =======
 
+=======
+
+>>>>>>> 1f04960... Adding test cases
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase" />
@@ -580,6 +587,7 @@
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
+<<<<<<< HEAD
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
         </classes>
@@ -587,10 +595,24 @@
 =======
 
 >>>>>>> 4268b2c... Removing outdated INSTALL.txt
+=======
+            <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
+        </classes>
+    </test>
+>>>>>>> 1f04960... Adding test cases
 
     <test name="is-tests-all" preserve-order="true" parallel="false">
+        <packages>
+            <!--Entitlement Test Cases-->
+            <!--<package name="org.wso2.identity.integration.test.entitlement"/>-->
+            <!--Application Management Test Cases-->
+            <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
+        </packages>
         <classes>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1f04960... Adding test cases
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
@@ -616,23 +638,32 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceErrorResponseTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAdminServiceTestCase"/>
 
+<<<<<<< HEAD
 >>>>>>> 855f6d2... Merge with upstream
+=======
+>>>>>>> 1f04960... Adding test cases
             <!--OpenId Test Cases-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDUserProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />-->
             <!--PassiveSTS Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
             <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
 =======
+=======
+>>>>>>> 1f04960... Adding test cases
             <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase" />
             <!--PassiveSTS Test Cases-->
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
+<<<<<<< HEAD
 >>>>>>> 855f6d2... Merge with upstream
+=======
+>>>>>>> 1f04960... Adding test cases
             <!--User Profile Management Test Cases-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
@@ -641,6 +672,7 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 27398d2... IDENTITY-3472 Workflow support for IS - Integration tests
 =======
@@ -683,12 +715,22 @@
 >>>>>>> ac6288c... fixing test failures and uncommenting jit test case
 =======
 >>>>>>> 4268b2c... Removing outdated INSTALL.txt
+=======
+            <!--SAML Test Cases-->
+            <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
+            <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
+>>>>>>> 1f04960... Adding test cases
 
             <!--Workflow Management test case-->
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
+
+            <!--Identity Provider Management Test Cases-->
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
         </classes>
     </test>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -699,11 +741,14 @@
 >>>>>>> 11bbafb... adding fixed test cases
 =======
 >>>>>>> 72dc60d... Fixing SAML SSO test case
+=======
+>>>>>>> 1f04960... Adding test cases
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
         </classes>
     </test>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -732,14 +777,19 @@
 =======
 >>>>>>> 72dc60d... Fixing SAML SSO test case
 =======
+=======
+>>>>>>> 1f04960... Adding test cases
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
         </classes>
     </test>
+<<<<<<< HEAD
 >>>>>>> dd7af57... adding test case for IDENTITY-3943
 =======
 >>>>>>> 4268b2c... Removing outdated INSTALL.txt
+=======
+>>>>>>> 1f04960... Adding test cases
 
 <<<<<<< HEAD
 <<<<<<< HEAD
