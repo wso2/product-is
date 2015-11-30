@@ -17,20 +17,12 @@ package org.wso2.carbon.is.migration.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
-import org.wso2.carbon.is.migration.ISMigrationException;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ResourceUtil {
-
-    private static final Log log = LogFactory.getLog(ResourceUtil.class);
 
     public static String setMySQLDBName(Connection conn) throws SQLException {
         PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");

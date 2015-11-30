@@ -49,7 +49,8 @@ public class ISMigrationServiceComponent {
     protected void activate(ComponentContext context) {
         try {
             String value = System.getProperty("migrate");
-            ISMigrationServiceDataHolder.setOracleUser(System.getProperty("oracleUser"));
+            ISMigrationServiceDataHolder.setIdentityOracleUser(System.getProperty("identityOracleUser"));
+            ISMigrationServiceDataHolder.setUmOracleUser(System.getProperty("umOracleUser"));
             if (Boolean.parseBoolean(value)) {
                 MigrateFrom5to510 migrateFrom5To510 = new MigrateFrom5to510();
                 migrateFrom5To510.databaseMigration(Constants.VERSION_5_1_0);

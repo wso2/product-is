@@ -295,6 +295,19 @@
                 <include>postgresql.sql</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../migration/migration-5.0.0_to_5.1.0/scripts/um
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/migration-5.0.0_to_5.1.0</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
 
     </fileSets>
 
