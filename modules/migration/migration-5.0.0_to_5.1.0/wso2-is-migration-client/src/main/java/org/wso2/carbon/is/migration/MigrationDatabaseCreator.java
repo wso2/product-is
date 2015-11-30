@@ -26,22 +26,33 @@ import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
 import javax.sql.DataSource;
-import java.io.*;
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
 import java.util.StringTokenizer;
 
-public class MigrationDatabaseCreator extends DatabaseCreator {
+public class MigrationDatabaseCreator {
 
     private static Log log = LogFactory.getLog(MigrationDatabaseCreator.class);
     private DataSource dataSource;
+    private DataSource umDataSource;
     private Connection conn = null;
     private Statement statement;
     private String delimiter = ";";
 
-    public MigrationDatabaseCreator(DataSource dataSource) {
+    public MigrationDatabaseCreator(DataSource dataSource, DataSource umDataSource) {
 
-        super(dataSource);
+//        super(dataSource);
         this.dataSource = dataSource;
+        this.umDataSource = umDataSource;
     }
 
     /**
@@ -62,10 +73,12 @@ public class MigrationDatabaseCreator extends DatabaseCreator {
             DatabaseMetaData meta = conn.getMetaData();
             ResultSet res = meta.getTables(null, null, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
             if (!res.next()) {
-                String dbscriptName = getDbScriptLocation(databaseType, Constants.VERSION_5_0_0, Constants.VERSION_5_0_0_SP1);
+                String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_0_0, Constants
+                        .VERSION_5_0_0_SP1);
                 executeSQLScript(dbscriptName);
             }
-            String dbscriptName = getDbScriptLocation(databaseType, Constants.VERSION_5_0_0_SP1, Constants.VERSION_5_1_0);
+            String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_0_0_SP1, Constants
+                    .VERSION_5_1_0);
             executeSQLScript(dbscriptName);
             conn.commit();
             if (log.isTraceEnabled()) {
@@ -86,17 +99,59 @@ public class MigrationDatabaseCreator extends DatabaseCreator {
         }
     }
 
-    protected String getDbScriptLocation(String databaseType, String from, String to) {
+    public void executeUmMigrationScript() throws Exception {
+
+        try {
+            conn = umDataSource.getConnection();
+            conn.setAutoCommit(false);
+            String databaseType = DatabaseCreator.getDatabaseType(this.conn);
+            if ("mysql".equals(databaseType)){
+                ResourceUtil.setMySQLDBName(conn);
+            }
+            statement = conn.createStatement();
+
+            String dbscriptName = getUmDbScriptLocation(databaseType, Constants.VERSION_5_0_0, Constants.VERSION_5_1_0);
+            executeSQLScript(dbscriptName);
+            conn.commit();
+            if (log.isTraceEnabled()) {
+                log.trace("Migration script executed successfully.");
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to execute the migration script. " + e.getMessage();
+            log.fatal(msg, e);
+            throw new Exception(msg, e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Failed to close database connection.", e);
+            }
+        }
+    }
+
+    protected String getIdentityDbScriptLocation(String databaseType, String from, String to) {
 
         String scriptName = databaseType + ".sql";
         String carbonHome = System.getProperty("carbon.home");
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_0_0_SP1.equals(to)) {
-            return carbonHome +
-                    "/dbscripts/migration-5.0.0_to_5.0.0SP1/" + scriptName;
+            return carbonHome + "/dbscripts/identity/migration-5.0.0_to_5.0.0SP1/" + scriptName;
         } else if (Constants.VERSION_5_0_0_SP1.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
-            return carbonHome +
-                    "/dbscripts/migration-5.0.0SP1_to_5.1.0/" + scriptName;
+            return carbonHome + "/dbscripts/identity/migration-5.0.0SP1_to_5.1.0/" + scriptName;
+        } else {
+            throw new IllegalArgumentException("Invalid migration versions provided");
+        }
+    }
+
+    protected String getUmDbScriptLocation(String databaseType, String from, String to) {
+
+        String scriptName = databaseType + ".sql";
+        String carbonHome = System.getProperty("carbon.home");
+
+        if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
+            return carbonHome + "/dbscripts/migration-5.0.0_to_5.1.0/" + scriptName;
         } else {
             throw new IllegalArgumentException("Invalid migration versions provided");
         }
@@ -155,10 +210,10 @@ public class MigrationDatabaseCreator extends DatabaseCreator {
                 if (!keepFormat && line.indexOf("--") >= 0) {
                     sql.append("\n");
                 }
-                if ((checkStringBufferEndsWith(sql, delimiter))) {
+                if ((DatabaseCreator.checkStringBufferEndsWith(sql, delimiter))) {
                     //add the oracle database owner
                     if (!oracleUserChanged && "oracle".equals(databaseType) && sql.toString().contains("databasename :=")){
-                        sql = new StringBuffer("databasename := '").append(ISMigrationServiceDataHolder.getOracleUser()).append("';");
+                        sql = new StringBuffer("databasename := '").append(ISMigrationServiceDataHolder.getIdentityOracleUser()).append("';");
                         oracleUserChanged = true;
                     }
                     executeSQL(sql.substring(0, sql.length() - delimiter.length()));

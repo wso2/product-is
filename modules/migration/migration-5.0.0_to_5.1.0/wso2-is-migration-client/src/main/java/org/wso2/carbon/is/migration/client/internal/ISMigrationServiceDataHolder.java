@@ -30,7 +30,8 @@ public class ISMigrationServiceDataHolder {
     //Tenant registry loader which is used to load tenant registry
     private static TenantRegistryLoader tenantRegLoader;
 
-    private static String oracleUser;
+    private static String identityOracleUser;
+    private static String umOracleUser;
 
     /**
      * Method to get RegistryService.
@@ -86,11 +87,29 @@ public class ISMigrationServiceDataHolder {
         tenantRegLoader = service;
     }
 
-    public static String getOracleUser() {
-        return oracleUser;
+    /**
+     * This method is used to get the user when the database is oracle
+     *
+     * @return oracleUser user of the oracle database
+     */
+    public static String getIdentityOracleUser() {
+        return identityOracleUser;
     }
 
-    public static void setOracleUser(String oracleUser) {
-        ISMigrationServiceDataHolder.oracleUser = oracleUser;
+    /**
+     * This method is used to set the user when the user when the database is oracle
+     *
+     * @param identityOracleUser
+     */
+    public static void setIdentityOracleUser(String identityOracleUser) {
+        ISMigrationServiceDataHolder.identityOracleUser = identityOracleUser;
+    }
+
+    public static String getUmOracleUser() {
+        return umOracleUser;
+    }
+
+    public static void setUmOracleUser(String umOracleUser) {
+        ISMigrationServiceDataHolder.umOracleUser = umOracleUser;
     }
 }

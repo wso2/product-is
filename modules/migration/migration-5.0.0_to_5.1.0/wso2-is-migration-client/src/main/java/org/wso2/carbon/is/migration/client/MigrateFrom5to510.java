@@ -62,16 +62,33 @@ public class MigrateFrom5to510 implements MigrationClient {
             try {
                 conn = dataSource.getConnection();
                 if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
-                        .getOracleUser() == null) {
-                    ISMigrationServiceDataHolder.setOracleUser(dataSource.getConnection().getMetaData().getUserName());
+                        .getIdentityOracleUser() == null) {
+                    ISMigrationServiceDataHolder.setIdentityOracleUser(dataSource.getConnection().getMetaData()
+                            .getUserName());
                 }
             } catch (Exception e) {
-                log.error("Error while reading the oracle username", e);
+                log.error("Error while reading the identity oracle username", e);
             } finally {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    log.warn("Error while closing the database connection", e);
+                    log.warn("Error while closing the identity database connection", e);
+                }
+            }
+            try {
+                conn = umDataSource.getConnection();
+                if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
+                        .getIdentityOracleUser() == null) {
+                    ISMigrationServiceDataHolder.setIdentityOracleUser(umDataSource.getConnection().getMetaData()
+                            .getUserName());
+                }
+            } catch (Exception e) {
+                log.error("Error while reading the user manager database oracle username", e);
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.warn("Error while closing the user manager database connection", e);
                 }
             }
         } catch (IdentityException e) {
@@ -140,8 +157,9 @@ public class MigrateFrom5to510 implements MigrationClient {
      */
     public void databaseMigration(String migrateVersion) throws Exception {
 
-        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource);
+        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
         migrationDatabaseCreator.executeIdentityMigrationScript();
+        migrationDatabaseCreator.executeUmMigrationScript();
         migrateIdentityData();
         migrateUmData();
     }
