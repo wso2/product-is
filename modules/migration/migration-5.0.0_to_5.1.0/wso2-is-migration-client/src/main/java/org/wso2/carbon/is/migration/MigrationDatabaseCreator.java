@@ -71,7 +71,11 @@ public class MigrationDatabaseCreator {
             }
             statement = conn.createStatement();
             DatabaseMetaData meta = conn.getMetaData();
-            ResultSet res = meta.getTables(null, null, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
+            String schema = null;
+            if ("oracle".equals(databaseType)){
+                schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
+            }
+            ResultSet res = meta.getTables(null, schema, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
             if (!res.next()) {
                 String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_0_0, Constants
                         .VERSION_5_0_0_SP1);
@@ -202,6 +206,11 @@ public class MigrationDatabaseCreator {
                         }
                     }
                 }
+                //add the oracle database owner
+                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")){
+                    line = "databasename := '"+ISMigrationServiceDataHolder.getIdentityOracleUser()+"';";
+                    oracleUserChanged = true;
+                }
                 sql.append(keepFormat ? "\n" : " ").append(line);
 
                 // SQL defines "--" as a comment to EOL
@@ -211,11 +220,6 @@ public class MigrationDatabaseCreator {
                     sql.append("\n");
                 }
                 if ((DatabaseCreator.checkStringBufferEndsWith(sql, delimiter))) {
-                    //add the oracle database owner
-                    if (!oracleUserChanged && "oracle".equals(databaseType) && sql.toString().contains("databasename :=")){
-                        sql = new StringBuffer("databasename := '").append(ISMigrationServiceDataHolder.getIdentityOracleUser()).append("';");
-                        oracleUserChanged = true;
-                    }
                     executeSQL(sql.substring(0, sql.length() - delimiter.length()));
                     sql.replace(0, sql.length(), "");
                 }
