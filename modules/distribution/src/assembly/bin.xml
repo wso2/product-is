@@ -37,7 +37,6 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/*</exclude>
                 <exclude>**/LICENSE.txt</exclude>
-                <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
                 <exclude>**/registry.xml</exclude>
@@ -272,7 +271,33 @@
 
         <fileSet>
             <directory>
-                ../migration/migration-5.0.0_to_5.1.0
+                ../migration/migration-5.0.0_to_5.1.0/scripts/identity
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/identity/migration-5.0.0SP1_to_5.1.0</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../migration/migration-5.0.0_to_5.1.0/scripts/identity/tosp1
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/identity/migration-5.0.0_to_5.0.0SP1</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../migration/migration-5.0.0_to_5.1.0/scripts/um
             </directory>
             <outputDirectory>wso2is-${pom.version}/dbscripts/migration-5.0.0_to_5.1.0</outputDirectory>
             <includes>
@@ -289,12 +314,6 @@
     <files>
         <file>
             <source>../../README.txt</source>
-            <outputDirectory>wso2is-${pom.version}</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../../INSTALL.txt</source>
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -432,6 +451,13 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity_log_tokens.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>

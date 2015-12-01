@@ -20,16 +20,18 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
-import org.wso2.carbon.is.migration.client.internal.ServiceHolder;
+import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.util.SQLQueries;
-import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.util.DatabaseUtil;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
@@ -43,29 +45,65 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 public class MigrateFrom5to510 implements MigrationClient {
 
     private static final Log log = LogFactory.getLog(MigrateFrom5to510.class);
-    private List<Tenant> tenantsArray;
     private DataSource dataSource;
+    private DataSource umDataSource;
 
-
-    public MigrateFrom5to510() throws UserStoreException {
+    public MigrateFrom5to510() throws IdentityException {
         try {
-            initDataSource();
+            initIdentityDataSource();
+            initUMDataSource();
+            Connection conn = null;
+            try {
+                conn = dataSource.getConnection();
+                if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
+                        .getIdentityOracleUser() == null) {
+                    ISMigrationServiceDataHolder.setIdentityOracleUser(dataSource.getConnection().getMetaData()
+                            .getUserName());
+                }
+            } catch (Exception e) {
+                log.error("Error while reading the identity oracle username", e);
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.warn("Error while closing the identity database connection", e);
+                }
+            }
+            try {
+                conn = umDataSource.getConnection();
+                if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
+                        .getIdentityOracleUser() == null) {
+                    ISMigrationServiceDataHolder.setIdentityOracleUser(umDataSource.getConnection().getMetaData()
+                            .getUserName());
+                }
+            } catch (Exception e) {
+                log.error("Error while reading the user manager database oracle username", e);
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.warn("Error while closing the user manager database connection", e);
+                }
+            }
         } catch (IdentityException e) {
             String errorMsg = "Error when reading the JDBC Configuration from the file.";
             log.error(errorMsg, e);
-            throw new UserStoreException(errorMsg, e);
+            throw new IdentityException(errorMsg, e);
         }
     }
 
-
-    private void initDataSource() throws IdentityException {
+    /**
+     * Initialize the identity datasource
+     *
+     * @throws IdentityException
+     */
+    private void initIdentityDataSource() throws IdentityException {
         try {
             OMElement persistenceManagerConfigElem = IdentityConfigParser.getInstance()
                     .getConfigElement("JDBCPersistenceManager");
@@ -103,6 +141,12 @@ public class MigrateFrom5to510 implements MigrationClient {
             throw new IdentityException(errorMsg, e);
         }
     }
+
+    private void initUMDataSource(){
+        umDataSource = DatabaseUtil.getRealmDataSource(ISMigrationServiceDataHolder.getRealmService()
+                .getBootstrapRealmConfiguration());
+    }
+
     /**
      * This method is used to migrate database tables
      * This executes the database queries according to the user's db type and alters the tables
@@ -113,43 +157,50 @@ public class MigrateFrom5to510 implements MigrationClient {
      */
     public void databaseMigration(String migrateVersion) throws Exception {
 
-
-        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource);
-        migrationDatabaseCreator.executeMigrationScript();
-        oauthMigration();
-
+        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
+        migrationDatabaseCreator.executeIdentityMigrationScript();
+        migrationDatabaseCreator.executeUmMigrationScript();
+        migrateIdentityData();
+        migrateUmData();
     }
 
-    public void oauthMigration(){
-        Connection connection = null;
+    /**
+     * migrate data in the identity database and finalize the database table restructuring
+     */
+    public void migrateIdentityData(){
+
+        Connection identityConnection = null;
         PreparedStatement selectFromAccessTokenPS = null;
         PreparedStatement insertScopeAssociationPS = null;
         PreparedStatement insertTokenScopeHashPS = null;
         PreparedStatement insertTokenIdPS = null;
         PreparedStatement updateUserNamePS = null;
-
         PreparedStatement selectFromAuthorizationCodePS = null;
         PreparedStatement updateUserNameAuthorizationCodePS = null;
+        PreparedStatement selectIdnAssociatedIdPS = null;
+        PreparedStatement updateIdnAssociatedIdPS = null;
+
         ResultSet accessTokenRS = null;
         ResultSet authzCodeRS = null;
+        ResultSet selectIdnAssociatedIdRS = null;
         try {
-            connection = dataSource.getConnection();
-            connection.setAutoCommit(false);
+            identityConnection = dataSource.getConnection();
+            identityConnection.setAutoCommit(false);
 
             String selectFromAccessToken = SQLQueries.SELECT_FROM_ACCESS_TOKEN;
-            selectFromAccessTokenPS = connection.prepareStatement(selectFromAccessToken);
+            selectFromAccessTokenPS = identityConnection.prepareStatement(selectFromAccessToken);
 
             String insertScopeAssociation = SQLQueries.INSERT_SCOPE_ASSOCIATION;
-            insertScopeAssociationPS = connection.prepareStatement(insertScopeAssociation);
+            insertScopeAssociationPS = identityConnection.prepareStatement(insertScopeAssociation);
 
             String insertTokenScopeHash = SQLQueries.INSERT_TOKEN_SCOPE_HASH;
-            insertTokenScopeHashPS = connection.prepareStatement(insertTokenScopeHash);
+            insertTokenScopeHashPS = identityConnection.prepareStatement(insertTokenScopeHash);
 
             String insertTokenId = SQLQueries.INSERT_TOKEN_ID;
-            insertTokenIdPS = connection.prepareStatement(insertTokenId);
+            insertTokenIdPS = identityConnection.prepareStatement(insertTokenId);
 
             String updateUserName = SQLQueries.UPDATE_USER_NAME;
-            updateUserNamePS = connection.prepareStatement(updateUserName);
+            updateUserNamePS = identityConnection.prepareStatement(updateUserName);
 
             accessTokenRS = selectFromAccessTokenPS.executeQuery();
             while (accessTokenRS.next()){
@@ -164,8 +215,8 @@ public class MigrateFrom5to510 implements MigrationClient {
                     String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
                             (authzUser));
                     String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
-                    int tenantId = ServiceHolder.getRealmService().getTenantManager().getTenantId(MultitenantUtils
-                            .getTenantDomain(authzUser));
+                    int tenantId = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getTenantId
+                            (MultitenantUtils.getTenantDomain(authzUser));
 
                     insertTokenIdPS.setString(1, tokenId);
                     insertTokenIdPS.setString(2, accessToken);
@@ -195,10 +246,10 @@ public class MigrateFrom5to510 implements MigrationClient {
             }
 
             String selectFromAuthorizationCode = SQLQueries.SELECT_FROM_AUTHORIZATION_CODE;
-            selectFromAuthorizationCodePS = connection.prepareStatement(selectFromAuthorizationCode);
+            selectFromAuthorizationCodePS = identityConnection.prepareStatement(selectFromAuthorizationCode);
 
             String updateUserNameAuthorizationCode = SQLQueries.UPDATE_USER_NAME_AUTHORIZATION_CODE;
-            updateUserNameAuthorizationCodePS = connection.prepareStatement(updateUserNameAuthorizationCode);
+            updateUserNameAuthorizationCodePS = identityConnection.prepareStatement(updateUserNameAuthorizationCode);
 
             authzCodeRS = selectFromAuthorizationCodePS.executeQuery();
             while (authzCodeRS.next()){
@@ -210,9 +261,8 @@ public class MigrateFrom5to510 implements MigrationClient {
                     String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
                             (authzUser));
                     String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
-                    int tenantId = ServiceHolder.getRealmService().getTenantManager().getTenantId(MultitenantUtils
-                            .getTenantDomain(authzUser));
-
+                    int tenantId = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getTenantId
+                            (MultitenantUtils.getTenantDomain(authzUser));
 
                     updateUserNameAuthorizationCodePS.setString(1, username);
                     updateUserNameAuthorizationCodePS.setInt(2, tenantId);
@@ -229,7 +279,7 @@ public class MigrateFrom5to510 implements MigrationClient {
             insertTokenScopeHashPS.executeBatch();
             updateUserNameAuthorizationCodePS.executeBatch();
 
-            String databaseType = DatabaseCreator.getDatabaseType(connection);
+            String databaseType = DatabaseCreator.getDatabaseType(identityConnection);
 
             String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
             String alterTokenIdNotNull;
@@ -239,32 +289,55 @@ public class MigrateFrom5to510 implements MigrationClient {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
             } else if ("postgresql".equals(databaseType)){
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
+            } else if ("h2".equals(databaseType)) {
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
             } else {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
             }
             String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
             String setScopeAssociationPrimaryKey = SQLQueries.SET_SCOPE_ASSOCIATION_PRIMARY_KEY;
 
-            PreparedStatement dropColumnPS = connection.prepareStatement(dropTokenScopeColumn);
+            PreparedStatement dropColumnPS = identityConnection.prepareStatement(dropTokenScopeColumn);
             dropColumnPS.execute();
 
-            PreparedStatement notNullPS = connection.prepareStatement(alterTokenIdNotNull);
+            PreparedStatement notNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
             notNullPS.execute();
 
-            PreparedStatement primaryKeyPS = connection.prepareStatement(setAccessTokenPrimaryKey);
+            PreparedStatement primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
             primaryKeyPS.execute();
 
-            PreparedStatement foreignKeyPS = connection.prepareStatement(setScopeAssociationPrimaryKey);
+            PreparedStatement foreignKeyPS = identityConnection.prepareStatement(setScopeAssociationPrimaryKey);
             foreignKeyPS.execute();
 
-            connection.commit();
+            String selectIdnAssociatedId = SQLQueries.SELECT_IDN_ASSOCIATED_ID;
+            selectIdnAssociatedIdPS = identityConnection.prepareStatement(selectIdnAssociatedId);
+            selectIdnAssociatedIdRS = selectIdnAssociatedIdPS.executeQuery();
+
+            updateIdnAssociatedIdPS = identityConnection.prepareStatement(SQLQueries.UPDATE_IDN_ASSOCIATED_ID);
+
+            while (selectIdnAssociatedIdRS.next()) {
+                int id = selectIdnAssociatedIdRS.getInt("ID");
+                String username = selectIdnAssociatedIdRS.getString("USER_NAME");
+
+                updateIdnAssociatedIdPS.setString(1, UserCoreUtil.extractDomainFromName(username));
+                updateIdnAssociatedIdPS.setString(2, UserCoreUtil.removeDomainFromName(username));
+                updateIdnAssociatedIdPS.setInt(3, id);
+                updateIdnAssociatedIdPS.addBatch();
+            }
+            updateIdnAssociatedIdPS.executeBatch();
+
+            identityConnection.commit();
 
         } catch (SQLException e) {
-            IdentityDatabaseUtil.rollBack(connection);
+            IdentityDatabaseUtil.rollBack(identityConnection);
             log.error(e);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e);
         } finally {
+            IdentityDatabaseUtil.closeResultSet(accessTokenRS);
+            IdentityDatabaseUtil.closeResultSet(authzCodeRS);
+            IdentityDatabaseUtil.closeResultSet(selectIdnAssociatedIdRS);
+
             IdentityDatabaseUtil.closeStatement(selectFromAccessTokenPS);
             IdentityDatabaseUtil.closeStatement(insertScopeAssociationPS);
             IdentityDatabaseUtil.closeStatement(insertTokenIdPS);
@@ -272,14 +345,54 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(insertTokenScopeHashPS);
             IdentityDatabaseUtil.closeStatement(updateUserNameAuthorizationCodePS);
             IdentityDatabaseUtil.closeStatement(selectFromAuthorizationCodePS);
-            IdentityDatabaseUtil.closeResultSet(accessTokenRS);
-            IdentityDatabaseUtil.closeResultSet(authzCodeRS);
-            IdentityDatabaseUtil.closeConnection(connection);
+            IdentityDatabaseUtil.closeStatement(selectIdnAssociatedIdPS);
+            IdentityDatabaseUtil.closeStatement(updateIdnAssociatedIdPS);
+
+            IdentityDatabaseUtil.closeConnection(identityConnection);
         }
     }
 
+    private void migrateUmData() {
+        Connection identityConnection = null;
+        Connection umConnection = null;
 
+        PreparedStatement selectServiceProviders = null;
+        PreparedStatement updateRole = null;
 
+        ResultSet selectServiceProvidersRS = null;
 
+        try {
+            identityConnection = dataSource.getConnection();
+            umConnection = umDataSource.getConnection();
 
+            identityConnection.setAutoCommit(false);
+            umConnection.setAutoCommit(false);
+
+            selectServiceProviders = identityConnection.prepareStatement(SQLQueries.LOAD_APP_NAMES);
+            selectServiceProvidersRS = selectServiceProviders.executeQuery();
+
+            updateRole = umConnection.prepareStatement(SQLQueries.UPDATE_ROLES);
+            while (selectServiceProvidersRS.next()) {
+                String appName = selectServiceProvidersRS.getString("APP_NAME");
+                int tenantId = selectServiceProvidersRS.getInt("TENANT_ID");
+                updateRole.setString(1, ApplicationConstants.APPLICATION_DOMAIN + UserCoreConstants.DOMAIN_SEPARATOR
+                        + appName);
+                updateRole.setString(2, appName);
+                updateRole.setInt(3, tenantId);
+                updateRole.addBatch();
+            }
+            updateRole.executeBatch();
+
+            identityConnection.commit();
+            umConnection.commit();
+        } catch (SQLException e) {
+            log.error(e);
+        } finally {
+            IdentityDatabaseUtil.closeResultSet(selectServiceProvidersRS);
+            IdentityDatabaseUtil.closeStatement(selectServiceProviders);
+            IdentityDatabaseUtil.closeStatement(updateRole);
+            IdentityDatabaseUtil.closeConnection(identityConnection);
+            IdentityDatabaseUtil.closeConnection(umConnection);
+        }
+    }
 }

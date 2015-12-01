@@ -19,6 +19,7 @@ package org.wso2.carbon.is.migration.client.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent;
 import org.wso2.carbon.is.migration.client.MigrateFrom5to510;
 import org.wso2.carbon.is.migration.util.Constants;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -30,6 +31,9 @@ import org.wso2.carbon.user.core.service.RealmService;
  * @scr.reference name="realm.service"
  * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
  * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ * @scr.reference name="identityCoreInitializedEventService"
+ * interface="org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent" cardinality="1..1"
+ * policy="dynamic" bind="setIdentityCoreInitializedEventService" unbind="unsetIdentityCoreInitializedEventService"
  */
 
 @SuppressWarnings("unused")
@@ -45,9 +49,11 @@ public class ISMigrationServiceComponent {
     protected void activate(ComponentContext context) {
         try {
             String value = System.getProperty("migrate");
+            ISMigrationServiceDataHolder.setIdentityOracleUser(System.getProperty("identityOracleUser"));
+            ISMigrationServiceDataHolder.setUmOracleUser(System.getProperty("umOracleUser"));
             if (Boolean.parseBoolean(value)) {
-                MigrateFrom5to510 migrateFrom5to510 = new MigrateFrom5to510();
-                migrateFrom5to510.databaseMigration(Constants.VERSION_5_1_0);
+                MigrateFrom5to510 migrateFrom5To510 = new MigrateFrom5to510();
+                migrateFrom5To510.databaseMigration(Constants.VERSION_5_1_0);
             }
             if(log.isDebugEnabled()) {
                 log.debug("WSO2 IS migration bundle is activated");
@@ -81,7 +87,7 @@ public class ISMigrationServiceComponent {
         if(log.isDebugEnabled()) {
             log.debug("Setting RealmService to WSO2 IS Migration component");
         }
-        ServiceHolder.setRealmService(realmService);
+        ISMigrationServiceDataHolder.setRealmService(realmService);
     }
 
     /**
@@ -93,7 +99,17 @@ public class ISMigrationServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("Unsetting RealmService from WSO2 IS Migration component");
         }
-        ServiceHolder.setRealmService(null);
+        ISMigrationServiceDataHolder.setRealmService(null);
+    }
+
+    protected void unsetIdentityCoreInitializedEventService(IdentityCoreInitializedEvent identityCoreInitializedEvent) {
+        /* reference IdentityCoreInitializedEvent service to guarantee that this component will wait until identity core
+         is started */
+    }
+
+    protected void setIdentityCoreInitializedEventService(IdentityCoreInitializedEvent identityCoreInitializedEvent) {
+        /* reference IdentityCoreInitializedEvent service to guarantee that this component will wait until identity core
+         is started */
     }
 
 }
