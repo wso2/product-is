@@ -308,6 +308,17 @@
                 <include>postgresql.sql</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/metrics/
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/metrics</outputDirectory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+            <fileMode>644</fileMode>
+            <directoryMode>775</directoryMode>
+        </fileSet>
 
     </fileSets>
 
@@ -664,6 +675,29 @@
                 ../migration/migration-5.0.0_to_5.1.0/wso2-is-migration-client/target/org.wso2.carbon.is.migrate.client-${pom.version}.jar
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/components/dropins/</outputDirectory>
+        </file>
+
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/datasources/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/database/</outputDirectory>
+            <fileMode>644</fileMode>
         </file>
 
     </files>

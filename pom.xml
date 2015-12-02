@@ -4016,7 +4016,11 @@
 =======
         <xmlsec.version>1.4.4</xmlsec.version>
         <xmltooling.version>1.3.1</xmltooling.version>
+<<<<<<< HEAD
 >>>>>>> 646e5fc... adding required dependencies for travelocity sample
+=======
+        <carbon.metrics.version>1.1.1</carbon.metrics.version>
+>>>>>>> 0ebee64... add carbon metrics to product
     </properties>
 
     <repositories>
