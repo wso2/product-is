@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.workflow.mgt;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.testng.Assert;
@@ -116,16 +115,20 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     public void testAddBPSProfile() {
 
         String profileName = "TestBPSProfile";
-        String host = "https://localhost:9844";
+        String host = "https://localhost:9844/services";
         String user = "admin";
         String userPassword = "admin";
+        String[] passwordAsArray = new String[userPassword.length()];
+        for (int i=0;i<userPassword.length();i++) {
+            passwordAsArray[i] = userPassword.charAt(i) + "";
+        }
         try {
             BPSProfile bpsProfileDTO = new BPSProfile();
             bpsProfileDTO.setProfileName(profileName);
             bpsProfileDTO.setManagerHostURL(host);
             bpsProfileDTO.setWorkerHostURL(host);
             bpsProfileDTO.setUsername(user);
-            bpsProfileDTO.setPassword(userPassword);
+            bpsProfileDTO.setPassword(passwordAsArray);
             client.addBPSProfile(bpsProfileDTO);
             BPSProfile[] bpsProfiles = client.listBPSProfiles();
             if (bpsProfiles == null || bpsProfiles.length == 0) {
@@ -149,14 +152,19 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     public void testAddDuplicateBPSProfile() throws Exception {
 
         String profileName = "TestBPSProfile";
-        String host = "https://localhost:9845";
+        String host = "https://localhost:9845/services";
         String user = "testUser";
-        String userPassword = "testPassword";BPSProfile bpsProfileDTO = new BPSProfile();
+        String userPassword = "testPassword";
+        String[] passwordAsArray = new String[userPassword.length()];
+        for (int i=0;i<userPassword.length();i++) {
+            passwordAsArray[i] = userPassword.charAt(i) + "";
+        }
+        BPSProfile bpsProfileDTO = new BPSProfile();
         bpsProfileDTO.setProfileName(profileName);
         bpsProfileDTO.setManagerHostURL(host);
         bpsProfileDTO.setWorkerHostURL(host);
         bpsProfileDTO.setUsername(user);
-        bpsProfileDTO.setPassword(userPassword);
+        bpsProfileDTO.setPassword(passwordAsArray);
         client.addBPSProfile(bpsProfileDTO);
     }
 
