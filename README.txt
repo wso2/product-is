@@ -302,4 +302,4 @@ For further details, see the WSO2 Carbon documentation at
 http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2014 WSO2 Inc.
+(c) Copyright 2015 WSO2 Inc.
