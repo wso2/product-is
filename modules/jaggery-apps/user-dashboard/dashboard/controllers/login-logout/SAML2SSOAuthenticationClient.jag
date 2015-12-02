@@ -48,8 +48,8 @@ function getBPSSessions(request){
         var webService2 = new ws.WSRequest();
         var host = hostArray[i].*::workerHostURL[0].text();
         var profileName = hostArray[i].*::profileName[0].text();
-        if (identityServerUrl.equals(host + "/services/SAML2SSOAuthenticationService") || identityServerUrl.equals
-                (host + "services/SAML2SSOAuthenticationService")) {
+        if (identityServerUrl.equals(host + "/SAML2SSOAuthenticationService") || identityServerUrl.equals
+                (host + "SAML2SSOAuthenticationService")) {
             if (profileOutputJson != "\"list\" : [") {
                 profileOutputJson = profileOutputJson + ",";
             }
@@ -60,7 +60,7 @@ function getBPSSessions(request){
 
         }
         try {
-            var result = callWSReturnJSON(webService2, host + "/services/SAML2SSOAuthenticationService", "urn:login", new Array(request));
+            var result = callWSReturnJSON(webService2, host + "/SAML2SSOAuthenticationService", "urn:login", new Array(request));
             var isAuthenticated = result.return;
             if (isAuthenticated.equals("true")) {
                 if(profileOutputJson != "\"list\" : ["){
