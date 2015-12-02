@@ -1153,6 +1153,7 @@
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
         <xmlsec.version>1.4.4</xmlsec.version>
         <xmltooling.version>1.3.1</xmltooling.version>
+        <carbon.metrics.version>1.1.1</carbon.metrics.version>
     </properties>
 
     <repositories>
