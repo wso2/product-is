@@ -159,7 +159,7 @@ public class SCIMServiceProviderUserTestCase {
 
         BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
         //create resource endpoint to access a known user resource.
-        Resource userResource = restClient.resource(scim_url + "Users?filter=userNameEq" + USERNAME);
+        Resource userResource = restClient.resource(scim_url + "Users?filter=userName%20Eq%20" + USERNAME);
         String response = userResource.
                 header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
                 contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON)

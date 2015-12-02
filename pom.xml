@@ -1062,7 +1062,7 @@
         <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
-        <charon.version>2.0.2</charon.version>
+        <charon.version>2.0.3</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1.wso2v16</rampart.wso2.version>
@@ -1097,7 +1097,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.0</jaggeryjs.version>
+        <jaggeryjs.version>0.12.1</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -1125,7 +1125,7 @@
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
         <carbon.automation.version>4.4.1</carbon.automation.version>
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
-        <charon.orbit.version>2.0.2</charon.orbit.version>
+        <charon.orbit.version>2.0.3</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
         <javax.servlet.version>2.5</javax.servlet.version>
