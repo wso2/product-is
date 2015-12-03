@@ -16,7 +16,7 @@ function login(){
     if(user == null){
     	
     	if(application.get(SAML_ENABLED) === true){
-			if (session.get(AUTHZ_FAILURE) === 'true') {
+			if (session.get(AUTHZ_FAILURE) === 'true' || request.getParameter("authz_failure") === 'true') {
 				//redirect to the saml idp
 				response.sendRedirect("samlsso.jag?login=true&authz_failure=true");
 				session.put(AUTHZ_FAILURE,'false');
