@@ -871,6 +871,11 @@
                 <version>${apache.ws.security.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j.version}</version>
@@ -1128,6 +1133,7 @@
         <charon.orbit.version>2.0.3</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <javax.servlet.version>2.5</javax.servlet.version>
         <slf4j.version>1.7.0</slf4j.version>
         <apache.openejb.version>4.5.2</apache.openejb.version>
