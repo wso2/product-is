@@ -346,15 +346,15 @@ function setServerURL(isWebContextRootAvailable) {
             }
         }
 
-        //create server service ur
-        serverUrl = identityServerURL.getServerURL("", true) + "/services";
+        //create server service url
+        serverUrl = identityServerURL.getServerURL("/services", true, true);
         var serverCoreUrl
         //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
         if (isWebContextRootAvailable === 'false') {
-            serverCoreUrl = identityServerURL.getServerURL("", false);
+            serverCoreUrl = identityServerURL.getServerURL("", true, false);
         }
         else {
-            serverCoreUrl = identityServerURL.getServerURL("", true);
+            serverCoreUrl = identityServerURL.getServerURL("", true, true);
         }
 
         //set server url infomation
@@ -379,11 +379,11 @@ function setServerURL(isWebContextRootAvailable) {
         hostName = application.get(HOST);
         proxyContextPath = application.get(PROXY_CONTEXT_PATH);
         if(isWebContextRootAvailable==='false'){
-            serverCoreUrl = identityServerURL.getServerURL("", false);
+            serverCoreUrl = identityServerURL.getServerURL("", true, false);
             application.put(SERVER_CORE_URL, serverCoreUrl);
         }
         else{
-            serverCoreUrl = identityServerURL.getServerURL("", true);
+            serverCoreUrl = identityServerURL.getServerURL("", true, true);
             application.put(SERVER_CORE_URL, serverCoreUrl);
         }
     }
