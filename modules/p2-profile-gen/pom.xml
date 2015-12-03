@@ -378,6 +378,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.feature:${carbon.deployment.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.metrics:org.wso2.carbon.metrics.feature:${carbon.metrics.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -770,7 +773,10 @@
                                     <id>org.wso2.carbon.module.mgt.server.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1170,6 +1176,10 @@
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
                             
                             </features>
                         </configuration>
@@ -1536,6 +1546,10 @@
                                     <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.server.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
 
 
                             </features>
@@ -1729,7 +1743,10 @@
                                     <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
                                     <version>${carbon.registry.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
