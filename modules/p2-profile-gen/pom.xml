@@ -3053,7 +3053,7 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.metrics.feature.group</id>
+                                    <id>org.wso2.carbon.metrics.server.feature.group</id>
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
 
@@ -3249,7 +3249,10 @@
                                     <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
                                     <version>${carbon.registry.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
