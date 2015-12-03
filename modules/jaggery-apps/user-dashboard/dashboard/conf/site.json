@@ -2,6 +2,7 @@
     "proxy" : {
         "proxyHost" : "",
         "proxyHTTPSPort" : "",
-        "proxyContextPath" : ""
+        "proxyContextPath" : "",
+        "servicePath" : "/services"
     }
 }
