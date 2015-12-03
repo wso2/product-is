@@ -96,10 +96,10 @@ function setServerURL() {
         }
 
         //create server service url
-        serverUrl = identityServerURL.getServerURL("", true) + "/services";
+        serverUrl = identityServerURL.getServerURL("", true, true) + "/services";
 
         //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
-        var serverCoreUrl = identityServerURL.getServerURL("", false);
+        var serverCoreUrl = identityServerURL.getServerURL("", true, false);
 
         //set server url infomation
         application.put(MGT_HOST_NAME, mgtHostName);
