@@ -4,11 +4,12 @@ include("util/constants.jag");
 var user = session.get('user');
 var log = new Log();
 var util = require("util/utility.jag");
+var AuthzFailure=request.getParameter("authz_failure");
 
 util.setServerURL("true");
 
 if (user == null) {
-    response.sendRedirect("login.jag");
+    response.sendRedirect("login.jag?authz_failure=" + AuthzFailure);
 }
 
 var httpsCoreUrl = application.get(SERVER_CORE_URL);
