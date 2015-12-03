@@ -15,7 +15,7 @@ function init(){
 
     var fidoServerUrl = util.getFidoAppId();
     if (fidoServerUrl == null || fidoServerUrl === '' || fidoServerUrl === 'null' || fidoServerUrl.length <= 0) {
-        fidoServerUrl = identityServerURL.getServerURL("", false);
+        fidoServerUrl = identityServerURL.getServerURL("", true, false);
     }
 
     var cookie = session.get('auth-cookie');
