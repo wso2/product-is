@@ -31,9 +31,6 @@ import org.wso2.carbon.user.core.service.RealmService;
  * @scr.reference name="realm.service"
  * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
  * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
- * @scr.reference name="identityCoreInitializedEventService"
- * interface="org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent" cardinality="1..1"
- * policy="dynamic" bind="setIdentityCoreInitializedEventService" unbind="unsetIdentityCoreInitializedEventService"
  */
 
 @SuppressWarnings("unused")
@@ -48,17 +45,10 @@ public class ISMigrationServiceComponent {
      */
     protected void activate(ComponentContext context) {
         try {
-            String value = System.getProperty("migrate");
             ISMigrationServiceDataHolder.setIdentityOracleUser(System.getProperty("identityOracleUser"));
             ISMigrationServiceDataHolder.setUmOracleUser(System.getProperty("umOracleUser"));
-            if (Boolean.parseBoolean(value)) {
-                MigrateFrom5to510 migrateFrom5To510 = new MigrateFrom5to510();
-                migrateFrom5To510.databaseMigration(Constants.VERSION_5_1_0);
-            }
             if(log.isDebugEnabled()) {
                 log.debug("WSO2 IS migration bundle is activated");
-            } else if(Boolean.parseBoolean(value)){
-                log.info("WSO2 IS migration bundle is activated");
             }
         } catch (Throwable e) {
             log.error("Error while initiating Migration component", e);
