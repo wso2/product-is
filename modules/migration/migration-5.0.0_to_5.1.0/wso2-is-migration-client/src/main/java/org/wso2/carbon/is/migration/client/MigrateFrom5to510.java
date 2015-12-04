@@ -151,11 +151,10 @@ public class MigrateFrom5to510 implements MigrationClient {
      * This method is used to migrate database tables
      * This executes the database queries according to the user's db type and alters the tables
      *
-     * @param migrateVersion version to be migrated
      * @throws ISMigrationException
      * @throws SQLException
      */
-    public void databaseMigration(String migrateVersion) throws Exception {
+    public void databaseMigration() throws Exception {
 
         MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
         migrationDatabaseCreator.executeIdentityMigrationScript();
@@ -179,13 +178,36 @@ public class MigrateFrom5to510 implements MigrationClient {
         PreparedStatement updateUserNameAuthorizationCodePS = null;
         PreparedStatement selectIdnAssociatedIdPS = null;
         PreparedStatement updateIdnAssociatedIdPS = null;
+        PreparedStatement primaryKeyPS = null;
+        PreparedStatement foreignKeyPS = null;
+        PreparedStatement authorizationCodePrimaryKeyPS = null;
+        PreparedStatement selectConsumerAppsPS = null;
+        PreparedStatement updateConsumerAppsPS = null;
 
         ResultSet accessTokenRS = null;
         ResultSet authzCodeRS = null;
         ResultSet selectIdnAssociatedIdRS = null;
+        ResultSet selectConsumerAppsRS = null;
         try {
             identityConnection = dataSource.getConnection();
             identityConnection.setAutoCommit(false);
+
+            selectConsumerAppsPS = identityConnection.prepareStatement(SQLQueries.SELECT_FROM_CONSUMER_APPS);
+            updateConsumerAppsPS = identityConnection.prepareStatement(SQLQueries.UPDATE_CONSUMER_APPS);
+
+            selectConsumerAppsRS = selectConsumerAppsPS.executeQuery();
+            while (selectConsumerAppsRS.next()){
+                int id = selectConsumerAppsRS.getInt(1);
+                String username = selectConsumerAppsRS.getString(2);
+                String userDomain = UserCoreUtil.extractDomainFromName(username);
+                username = UserCoreUtil.removeDomainFromName(username);
+
+                updateConsumerAppsPS.setString(1, username);
+                updateConsumerAppsPS.setString(2, userDomain);
+                updateConsumerAppsPS.setInt(3, id);
+                updateConsumerAppsPS.addBatch();
+            }
+            updateConsumerAppsPS.executeBatch();
 
             String selectFromAccessToken = SQLQueries.SELECT_FROM_ACCESS_TOKEN;
             selectFromAccessTokenPS = identityConnection.prepareStatement(selectFromAccessToken);
@@ -268,6 +290,7 @@ public class MigrateFrom5to510 implements MigrationClient {
                     updateUserNameAuthorizationCodePS.setInt(2, tenantId);
                     updateUserNameAuthorizationCodePS.setString(3, userDomain);
                     updateUserNameAuthorizationCodePS.setString(4, authorizationCode);
+                    updateUserNameAuthorizationCodePS.setString(5, UUID.randomUUID().toString());
                     updateUserNameAuthorizationCodePS.addBatch();
                 } catch (UserStoreException e) {
                     log.warn("Error while migrating authorization code : " + authorizationCode);
@@ -295,6 +318,7 @@ public class MigrateFrom5to510 implements MigrationClient {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
             }
             String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
+            String setAuthorizationCodePrimaryKey = SQLQueries.SET_AUTHORIZATION_CODE_PRIMARY_KEY;
             String setScopeAssociationPrimaryKey = SQLQueries.SET_SCOPE_ASSOCIATION_PRIMARY_KEY;
 
             PreparedStatement dropColumnPS = identityConnection.prepareStatement(dropTokenScopeColumn);
@@ -303,10 +327,13 @@ public class MigrateFrom5to510 implements MigrationClient {
             PreparedStatement notNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
             notNullPS.execute();
 
-            PreparedStatement primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
+            primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
             primaryKeyPS.execute();
 
-            PreparedStatement foreignKeyPS = identityConnection.prepareStatement(setScopeAssociationPrimaryKey);
+            authorizationCodePrimaryKeyPS = identityConnection.prepareStatement(setAuthorizationCodePrimaryKey);
+            authorizationCodePrimaryKeyPS.execute();
+
+            foreignKeyPS = identityConnection.prepareStatement(setScopeAssociationPrimaryKey);
             foreignKeyPS.execute();
 
             String selectIdnAssociatedId = SQLQueries.SELECT_IDN_ASSOCIATED_ID;
@@ -337,6 +364,7 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeResultSet(accessTokenRS);
             IdentityDatabaseUtil.closeResultSet(authzCodeRS);
             IdentityDatabaseUtil.closeResultSet(selectIdnAssociatedIdRS);
+            IdentityDatabaseUtil.closeResultSet(selectConsumerAppsRS);
 
             IdentityDatabaseUtil.closeStatement(selectFromAccessTokenPS);
             IdentityDatabaseUtil.closeStatement(insertScopeAssociationPS);
@@ -347,6 +375,11 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(selectFromAuthorizationCodePS);
             IdentityDatabaseUtil.closeStatement(selectIdnAssociatedIdPS);
             IdentityDatabaseUtil.closeStatement(updateIdnAssociatedIdPS);
+            IdentityDatabaseUtil.closeStatement(primaryKeyPS);
+            IdentityDatabaseUtil.closeStatement(foreignKeyPS);
+            IdentityDatabaseUtil.closeStatement(authorizationCodePrimaryKeyPS);
+            IdentityDatabaseUtil.closeStatement(selectConsumerAppsPS);
+            IdentityDatabaseUtil.closeStatement(updateConsumerAppsPS);
 
             IdentityDatabaseUtil.closeConnection(identityConnection);
         }

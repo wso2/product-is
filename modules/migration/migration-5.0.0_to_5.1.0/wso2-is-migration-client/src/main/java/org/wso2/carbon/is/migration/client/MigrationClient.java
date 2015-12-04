@@ -31,10 +31,9 @@ public interface MigrationClient {
      * This method is used to migrate databases. This method adds the newly added columns, tables and alters the tables
      * according to the new database
      *
-     * @param migrateVersion version to be migrated
      * @throws ISMigrationException
      * @throws SQLException
      */
-    public void databaseMigration(String migrateVersion) throws Exception;
+    public void databaseMigration() throws Exception;
 
 }
