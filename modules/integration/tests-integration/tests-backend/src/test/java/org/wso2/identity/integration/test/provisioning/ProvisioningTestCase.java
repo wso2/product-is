@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.ProvisioningConnectorConfig;
@@ -40,14 +41,13 @@ import org.wso2.carbon.identity.application.common.model.xsd.JustInTimeProvision
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.exceptions.CharonException;
 import org.wso2.charon.core.objects.User;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -240,8 +240,10 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
         try {
             identityProviderMgtServiceClients.get(portOffset).addIdP(fedIdp);
-            Assert.assertNotNull(identityProviderMgtServiceClients.get(portOffset).getIdPByName(
-                    SAMPLE_IDENTITY_PROVIDER_NAME), "Failed to create Identity Provider ");
+            IdentityProvider addedIdp = identityProviderMgtServiceClients.get(portOffset).getIdPByName(SAMPLE_IDENTITY_PROVIDER_NAME);
+            Assert.assertNotNull(addedIdp, "Failed to create Identity Provider ");
+            identityProviderMgtServiceClients.get(portOffset).updateIdP(SAMPLE_IDENTITY_PROVIDER_NAME,addedIdp);
+
         } catch (Exception ex) {
             //  log.error("Error occurred during handling identityProviderMgtServiceClient", ex);
             throw new Exception("Error occurred during handling identityProviderMgtServiceClient", ex);
