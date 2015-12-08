@@ -2,6 +2,7 @@
 
 var userInfoClient = require('/controllers/login-logout/loggedUserInfoAdminClient.jag');
 var userAccountConnectorClient = require('/controllers/account-connection/userAccountAssociationClient.jag');
+var authzFailure ;
 
 include("/util/constants.jag");
 var util = require("/util/utility.jag");
@@ -95,8 +96,13 @@ if (samlResponse != null) {
         }
 
     } else {
+        authzFailure = session.get(AUTHZ_FAILURE);
         session.invalidate();
-        response.sendRedirect('index.jag');
+        if (authzFailure != null) {
+            response.sendRedirect("index.jag?authz_failure=" + authzFailure);
+        } else {
+            response.sendRedirect("index.jag");
+        }
     }
 }else if (samlRequest != null) {
 	// if saml request is a log out request, then invalidate session.
