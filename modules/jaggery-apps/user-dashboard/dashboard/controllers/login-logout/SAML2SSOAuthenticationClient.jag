@@ -28,7 +28,7 @@ function login(request){
     var userName = multitenantUtils.getTenantAwareUsername(session.get("loggedInUser"));
     var tenantDomain = multitenantUtils.getTenantDomain(session.get("loggedInUser"));
     session.remove("loggedInUser");
-    var perm = "/permission/admin/configure";
+    var perm = "/permission/admin/manage/humantask/viewtasks";
 
     if (checkAuthorizationForUser(userName, perm, tenantDomain)) {
         getBPSSessions(request);
