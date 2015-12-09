@@ -25,7 +25,7 @@
     <fileSets>
         <fileSet>
             <directory>
-                ../migration/migration-5.0.0_to_5.1.0/scripts/identity
+                ../scripts/identity
             </directory>
             <outputDirectory>wso2is-${pom.version}-migration/dbscripts/identity/migration-5.0.0SP1_to_5.1.0</outputDirectory>
             <includes>
@@ -38,7 +38,7 @@
         </fileSet>
         <fileSet>
             <directory>
-                ../migration/migration-5.0.0_to_5.1.0/scripts/identity/tosp1
+                ../scripts/identity/tosp1
             </directory>
             <outputDirectory>wso2is-${pom.version}-migration/dbscripts/identity/migration-5.0.0_to_5.0.0SP1</outputDirectory>
             <includes>
@@ -51,7 +51,7 @@
         </fileSet>
         <fileSet>
             <directory>
-                ../migration/migration-5.0.0_to_5.1.0/scripts/um
+                ../scripts/um
             </directory>
             <outputDirectory>wso2is-${pom.version}-migration/dbscripts/migration-5.0.0_to_5.1.0</outputDirectory>
             <includes>
@@ -66,7 +66,7 @@
     <files>
         <file>
             <source>
-                ../migration/migration-5.0.0_to_5.1.0/wso2-is-migration-client/target/org.wso2.carbon.is.migrate.client-${pom.version}.jar
+                target/org.wso2.carbon.is.migrate.client-${pom.version}.jar
             </source>
             <outputDirectory>wso2is-${pom.version}-migration/dropins/</outputDirectory>
         </file>
