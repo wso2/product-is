@@ -28,7 +28,8 @@ import org.apache.axiom.om.util.AXIOMUtil;
 public class AuthFilter implements Filter {
     
     private String idpUrl;
-    private String action; //wa
+    private String loginAction; //wa
+    private String logoutAction; //wa
     private String replyUrl; //wreply
     private String realm; //wtrealm
     private String displayFullResponse;
@@ -44,7 +45,7 @@ public class AuthFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		    
         if(request.getParameter("wresult") == null || request.getParameter("wresult").isEmpty()){
-          String redirectUrl =  idpUrl + "?wa=" + action + "&wreply=" + replyUrl + "&wtrealm=" + realm;
+          String redirectUrl =  idpUrl + "?wa=" + loginAction + "&wreply=" + replyUrl + "&wtrealm=" + realm;
           response.sendRedirect(redirectUrl + "&" + additionalRequestParams);
           return;
         }
@@ -98,12 +99,16 @@ public class AuthFilter implements Filter {
             request.getSession().setAttribute("message", "No claims received! Verify RP is registered at Passive STS");
             request.getSession().setAttribute("claimMap", null);
         }
+
+        String logoutUrl =  idpUrl + "?wa=" + logoutAction + "&wreply=" + replyUrl + "&wtrealm=" + realm;
+        request.getSession().setAttribute("logouturl", logoutUrl + "&" + additionalRequestParams);
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		//Initialize the configurations
 	    idpUrl = fConfig.getInitParameter("idpUrl");
-	    action = fConfig.getInitParameter("action");
+	    loginAction = fConfig.getInitParameter("loginaction");
+        logoutAction = fConfig.getInitParameter("logoutaction");
 	    replyUrl = fConfig.getInitParameter("replyUrl");
 	    realm = fConfig.getInitParameter("realm");
 	    displayFullResponse = fConfig.getInitParameter("displayFullResponse");
