@@ -160,7 +160,18 @@ public class MigrateFrom5to510 implements MigrationClient {
         migrationDatabaseCreator.executeIdentityMigrationScript();
         migrationDatabaseCreator.executeUmMigrationScript();
         migrateIdentityData();
-        migrateUmData();
+        migrateIdentityDBFinalize();
+        migrateUMData();
+    }
+
+    public void migrateIdentityDB() throws Exception{
+        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
+        migrationDatabaseCreator.executeIdentityMigrationScript();
+    }
+
+    public void migrateUMDB() throws Exception {
+        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
+        migrationDatabaseCreator.executeUmMigrationScript();
     }
 
     /**
@@ -178,9 +189,6 @@ public class MigrateFrom5to510 implements MigrationClient {
         PreparedStatement updateUserNameAuthorizationCodePS = null;
         PreparedStatement selectIdnAssociatedIdPS = null;
         PreparedStatement updateIdnAssociatedIdPS = null;
-        PreparedStatement primaryKeyPS = null;
-        PreparedStatement foreignKeyPS = null;
-        PreparedStatement authorizationCodePrimaryKeyPS = null;
         PreparedStatement selectConsumerAppsPS = null;
         PreparedStatement updateConsumerAppsPS = null;
 
@@ -197,15 +205,19 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             selectConsumerAppsRS = selectConsumerAppsPS.executeQuery();
             while (selectConsumerAppsRS.next()){
-                int id = selectConsumerAppsRS.getInt(1);
-                String username = selectConsumerAppsRS.getString(2);
-                String userDomain = UserCoreUtil.extractDomainFromName(username);
-                username = UserCoreUtil.removeDomainFromName(username);
+                int id = selectConsumerAppsRS.getInt("ID");
+                String username = selectConsumerAppsRS.getString("USERNAME");
+                String userDomainFromDB = selectConsumerAppsRS.getString("USER_DOMAIN");
 
-                updateConsumerAppsPS.setString(1, username);
-                updateConsumerAppsPS.setString(2, userDomain);
-                updateConsumerAppsPS.setInt(3, id);
-                updateConsumerAppsPS.addBatch();
+                if (userDomainFromDB == null) {
+                    String userDomain = UserCoreUtil.extractDomainFromName(username);
+                    username = UserCoreUtil.removeDomainFromName(username);
+
+                    updateConsumerAppsPS.setString(1, username);
+                    updateConsumerAppsPS.setString(2, userDomain);
+                    updateConsumerAppsPS.setInt(3, id);
+                    updateConsumerAppsPS.addBatch();
+                }
             }
             updateConsumerAppsPS.executeBatch();
 
@@ -228,38 +240,41 @@ public class MigrateFrom5to510 implements MigrationClient {
             while (accessTokenRS.next()){
                 String accessToken = null;
                 try {
-                    accessToken = accessTokenRS.getString(1);
-                    String scopeString = accessTokenRS.getString(2);
-                    String authzUser = accessTokenRS.getString(3);
+                    accessToken = accessTokenRS.getString("ACCESS_TOKEN");
+                    String scopeString = accessTokenRS.getString("TOKEN_SCOPE");
+                    String authzUser = accessTokenRS.getString("AUTHZ_USER");
+                    String tokenIdFromDB = accessTokenRS.getString("TOKEN_ID");
 
-                    String tokenId = UUID.randomUUID().toString();
+                    if (tokenIdFromDB == null) {
+                        String tokenId = UUID.randomUUID().toString();
 
-                    String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
-                            (authzUser));
-                    String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
-                    int tenantId = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getTenantId
-                            (MultitenantUtils.getTenantDomain(authzUser));
+                        String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
+                                (authzUser));
+                        String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
+                        int tenantId = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getTenantId
+                                (MultitenantUtils.getTenantDomain(authzUser));
 
-                    insertTokenIdPS.setString(1, tokenId);
-                    insertTokenIdPS.setString(2, accessToken);
-                    insertTokenIdPS.addBatch();
+                        insertTokenIdPS.setString(1, tokenId);
+                        insertTokenIdPS.setString(2, accessToken);
+                        insertTokenIdPS.addBatch();
 
-                    updateUserNamePS.setString(1, username);
-                    updateUserNamePS.setInt(2, tenantId);
-                    updateUserNamePS.setString(3, userDomain);
-                    updateUserNamePS.setString(4, accessToken);
-                    updateUserNamePS.addBatch();
+                        updateUserNamePS.setString(1, username);
+                        updateUserNamePS.setInt(2, tenantId);
+                        updateUserNamePS.setString(3, userDomain);
+                        updateUserNamePS.setString(4, accessToken);
+                        updateUserNamePS.addBatch();
 
-                    insertTokenScopeHashPS.setString(1, DigestUtils.md5Hex(scopeString));
-                    insertTokenScopeHashPS.setString(2, accessToken);
-                    insertTokenScopeHashPS.addBatch();
+                        insertTokenScopeHashPS.setString(1, DigestUtils.md5Hex(scopeString));
+                        insertTokenScopeHashPS.setString(2, accessToken);
+                        insertTokenScopeHashPS.addBatch();
 
-                    if (scopeString != null) {
-                        String scopes[] = scopeString.split(" ");
-                        for (String scope : scopes) {
-                            insertScopeAssociationPS.setString(1, tokenId);
-                            insertScopeAssociationPS.setString(2, scope);
-                            insertScopeAssociationPS.addBatch();
+                        if (scopeString != null) {
+                            String scopes[] = scopeString.split(" ");
+                            for (String scope : scopes) {
+                                insertScopeAssociationPS.setString(1, tokenId);
+                                insertScopeAssociationPS.setString(2, scope);
+                                insertScopeAssociationPS.addBatch();
+                            }
                         }
                     }
                 } catch (UserStoreException e) {
@@ -277,21 +292,24 @@ public class MigrateFrom5to510 implements MigrationClient {
             while (authzCodeRS.next()){
                 String authorizationCode = null;
                 try {
-                    authorizationCode = authzCodeRS.getString(1);
-                    String authzUser = authzCodeRS.getString(2);
+                    authorizationCode = authzCodeRS.getString("AUTHORIZATION_CODE");
+                    String authzUser = authzCodeRS.getString("AUTHZ_USER");
+                    String userDomainFromDB = authzCodeRS.getString("USER_DOMAIN");
 
-                    String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
-                            (authzUser));
-                    String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
-                    int tenantId = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getTenantId
-                            (MultitenantUtils.getTenantDomain(authzUser));
+                    if (userDomainFromDB == null) {
+                        String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
+                                (authzUser));
+                        String userDomain = UserCoreUtil.extractDomainFromName(authzUser);
+                        int tenantId = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getTenantId
+                                (MultitenantUtils.getTenantDomain(authzUser));
 
-                    updateUserNameAuthorizationCodePS.setString(1, username);
-                    updateUserNameAuthorizationCodePS.setInt(2, tenantId);
-                    updateUserNameAuthorizationCodePS.setString(3, userDomain);
-                    updateUserNameAuthorizationCodePS.setString(4, authorizationCode);
-                    updateUserNameAuthorizationCodePS.setString(5, UUID.randomUUID().toString());
-                    updateUserNameAuthorizationCodePS.addBatch();
+                        updateUserNameAuthorizationCodePS.setString(1, username);
+                        updateUserNameAuthorizationCodePS.setInt(2, tenantId);
+                        updateUserNameAuthorizationCodePS.setString(3, userDomain);
+                        updateUserNameAuthorizationCodePS.setString(4, authorizationCode);
+                        updateUserNameAuthorizationCodePS.setString(5, UUID.randomUUID().toString());
+                        updateUserNameAuthorizationCodePS.addBatch();
+                    }
                 } catch (UserStoreException e) {
                     log.warn("Error while migrating authorization code : " + authorizationCode);
                 }
@@ -302,40 +320,6 @@ public class MigrateFrom5to510 implements MigrationClient {
             insertTokenScopeHashPS.executeBatch();
             updateUserNameAuthorizationCodePS.executeBatch();
 
-            String databaseType = DatabaseCreator.getDatabaseType(identityConnection);
-
-            String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
-            String alterTokenIdNotNull;
-            if ("oracle".equals(databaseType)){
-                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
-            } else if ("mssql".equals(databaseType)){
-                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
-            } else if ("postgresql".equals(databaseType)){
-                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
-            } else if ("h2".equals(databaseType)) {
-                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
-            } else {
-                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
-            }
-            String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
-            String setAuthorizationCodePrimaryKey = SQLQueries.SET_AUTHORIZATION_CODE_PRIMARY_KEY;
-            String setScopeAssociationPrimaryKey = SQLQueries.SET_SCOPE_ASSOCIATION_PRIMARY_KEY;
-
-            PreparedStatement dropColumnPS = identityConnection.prepareStatement(dropTokenScopeColumn);
-            dropColumnPS.execute();
-
-            PreparedStatement notNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
-            notNullPS.execute();
-
-            primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
-            primaryKeyPS.execute();
-
-            authorizationCodePrimaryKeyPS = identityConnection.prepareStatement(setAuthorizationCodePrimaryKey);
-            authorizationCodePrimaryKeyPS.execute();
-
-            foreignKeyPS = identityConnection.prepareStatement(setScopeAssociationPrimaryKey);
-            foreignKeyPS.execute();
-
             String selectIdnAssociatedId = SQLQueries.SELECT_IDN_ASSOCIATED_ID;
             selectIdnAssociatedIdPS = identityConnection.prepareStatement(selectIdnAssociatedId);
             selectIdnAssociatedIdRS = selectIdnAssociatedIdPS.executeQuery();
@@ -345,11 +329,14 @@ public class MigrateFrom5to510 implements MigrationClient {
             while (selectIdnAssociatedIdRS.next()) {
                 int id = selectIdnAssociatedIdRS.getInt("ID");
                 String username = selectIdnAssociatedIdRS.getString("USER_NAME");
+                String userDomainFromDB = selectIdnAssociatedIdRS.getString("DOMAIN_NAME");
 
-                updateIdnAssociatedIdPS.setString(1, UserCoreUtil.extractDomainFromName(username));
-                updateIdnAssociatedIdPS.setString(2, UserCoreUtil.removeDomainFromName(username));
-                updateIdnAssociatedIdPS.setInt(3, id);
-                updateIdnAssociatedIdPS.addBatch();
+                if (userDomainFromDB == null) {
+                    updateIdnAssociatedIdPS.setString(1, UserCoreUtil.extractDomainFromName(username));
+                    updateIdnAssociatedIdPS.setString(2, UserCoreUtil.removeDomainFromName(username));
+                    updateIdnAssociatedIdPS.setInt(3, id);
+                    updateIdnAssociatedIdPS.addBatch();
+                }
             }
             updateIdnAssociatedIdPS.executeBatch();
 
@@ -375,9 +362,6 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(selectFromAuthorizationCodePS);
             IdentityDatabaseUtil.closeStatement(selectIdnAssociatedIdPS);
             IdentityDatabaseUtil.closeStatement(updateIdnAssociatedIdPS);
-            IdentityDatabaseUtil.closeStatement(primaryKeyPS);
-            IdentityDatabaseUtil.closeStatement(foreignKeyPS);
-            IdentityDatabaseUtil.closeStatement(authorizationCodePrimaryKeyPS);
             IdentityDatabaseUtil.closeStatement(selectConsumerAppsPS);
             IdentityDatabaseUtil.closeStatement(updateConsumerAppsPS);
 
@@ -385,7 +369,67 @@ public class MigrateFrom5to510 implements MigrationClient {
         }
     }
 
-    private void migrateUmData() {
+    public void migrateIdentityDBFinalize(){
+        Connection identityConnection = null;
+        PreparedStatement primaryKeyPS = null;
+        PreparedStatement authorizationCodePrimaryKeyPS = null;
+        PreparedStatement foreignKeyPS = null;
+        PreparedStatement dropColumnPS = null;
+        PreparedStatement notNullPS = null;
+
+        try {
+            identityConnection = dataSource.getConnection();
+            identityConnection.setAutoCommit(false);
+
+            String databaseType = DatabaseCreator.getDatabaseType(identityConnection);
+
+            String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
+            String alterTokenIdNotNull;
+            if ("oracle".equals(databaseType)){
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
+            } else if ("mssql".equals(databaseType)){
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
+            } else if ("postgresql".equals(databaseType)){
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
+            } else if ("h2".equals(databaseType)) {
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
+            } else {
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
+            }
+            String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
+            String setAuthorizationCodePrimaryKey = SQLQueries.SET_AUTHORIZATION_CODE_PRIMARY_KEY;
+            String setScopeAssociationPrimaryKey = SQLQueries.SET_SCOPE_ASSOCIATION_PRIMARY_KEY;
+
+            dropColumnPS = identityConnection.prepareStatement(dropTokenScopeColumn);
+            dropColumnPS.execute();
+
+            notNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
+            notNullPS.execute();
+
+            primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
+            primaryKeyPS.execute();
+
+            authorizationCodePrimaryKeyPS = identityConnection.prepareStatement(setAuthorizationCodePrimaryKey);
+            authorizationCodePrimaryKeyPS.execute();
+
+            foreignKeyPS = identityConnection.prepareStatement(setScopeAssociationPrimaryKey);
+            foreignKeyPS.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            IdentityDatabaseUtil.closeStatement(primaryKeyPS);
+            IdentityDatabaseUtil.closeStatement(authorizationCodePrimaryKeyPS);
+            IdentityDatabaseUtil.closeStatement(foreignKeyPS);
+            IdentityDatabaseUtil.closeStatement(dropColumnPS);
+            IdentityDatabaseUtil.closeStatement(notNullPS);
+            IdentityDatabaseUtil.closeConnection(identityConnection);
+
+        }
+    }
+
+    public void migrateUMData() {
         Connection identityConnection = null;
         Connection umConnection = null;
 
