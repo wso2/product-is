@@ -33,6 +33,8 @@
         Map<String, String> claimMap = (HashMap<String, String>) request.getSession().getAttribute("claimMap");
         String message = (String) request.getSession().getAttribute("message");
         String displayFullResponse = (String)request.getSession().getAttribute("displayFullResponse");
+        String logouturl = (String) request.getSession().getAttribute("logouturl");
+
     %>
     <div id="container">
         <div id="header-area">
@@ -76,6 +78,9 @@
             <hr />
             <div class="product-box">
                 <h2><%=message%></h2>
+                <% if(logouturl != null){ %>
+                <a href='<%=logouturl%>'>Logout</a>
+                <%}%>
             </div>
             
             <% if(claimMap != null && !claimMap.isEmpty()){ %>
