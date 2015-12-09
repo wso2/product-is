@@ -101,7 +101,7 @@ public class AuthFilter implements Filter {
         }
 
         String logoutUrl =  idpUrl + "?wa=" + logoutAction + "&wreply=" + replyUrl + "&wtrealm=" + realm;
-        request.getSession().setAttribute("logouturl", logoutUrl);
+        request.getSession().setAttribute("logouturl", logoutUrl + "&" + additionalRequestParams);
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
