@@ -28,6 +28,7 @@ import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.is.migration.util.SQLQueries;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserCoreConstants;
@@ -155,18 +156,26 @@ public class MigrateFrom5to510 implements MigrationClient {
      * @throws SQLException
      */
     public void databaseMigration() throws Exception {
-
-        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
-        migrationDatabaseCreator.executeIdentityMigrationScript();
-        migrationDatabaseCreator.executeUmMigrationScript();
-        migrateIdentityData();
-        migrateIdentityDBFinalize();
-        migrateUMData();
+        if (!ResourceUtil.isSchemaMigrated(dataSource)) {
+            MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
+            migrationDatabaseCreator.executeIdentityMigrationScript();
+            migrationDatabaseCreator.executeUmMigrationScript();
+            migrateIdentityData();
+            migrateIdentityDBFinalize();
+            migrateUMData();
+        } else {
+            log.info("Identity schema is already migrated");
+        }
     }
 
     public void migrateIdentityDB() throws Exception{
-        MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
-        migrationDatabaseCreator.executeIdentityMigrationScript();
+
+        if (!ResourceUtil.isSchemaMigrated(dataSource)) {
+            MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
+            migrationDatabaseCreator.executeIdentityMigrationScript();
+        } else {
+            log.info("Identity schema is already migrated");
+        }
     }
 
     public void migrateUMDB() throws Exception {
