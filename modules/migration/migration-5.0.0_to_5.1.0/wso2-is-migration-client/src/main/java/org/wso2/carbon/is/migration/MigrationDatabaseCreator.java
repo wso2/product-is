@@ -27,8 +27,8 @@ import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
 import javax.sql.DataSource;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -141,9 +141,11 @@ public class MigrationDatabaseCreator {
         String carbonHome = System.getProperty("carbon.home");
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_0_0_SP1.equals(to)) {
-            return carbonHome + "/dbscripts/identity/migration-5.0.0_to_5.0.0SP1/" + scriptName;
+            return carbonHome + File.separator + "dbscripts" + File.separator + "identity" + File.separator +
+                    "migration-5.0.0_to_5.0.0SP1" + File.separator + scriptName;
         } else if (Constants.VERSION_5_0_0_SP1.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
-            return carbonHome + "/dbscripts/identity/migration-5.0.0SP1_to_5.1.0/" + scriptName;
+            return carbonHome + File.separator + "dbscripts" + File.separator + "identity" + File.separator +
+                    "migration-5.0.0SP1_to_5.1.0" + File.separator + scriptName;
         } else {
             throw new IllegalArgumentException("Invalid migration versions provided");
         }
@@ -155,7 +157,8 @@ public class MigrationDatabaseCreator {
         String carbonHome = System.getProperty("carbon.home");
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
-            return carbonHome + "/dbscripts/migration-5.0.0_to_5.1.0/" + scriptName;
+            return carbonHome + File.separator + "dbscripts" + File.separator + "migration-5.0.0_to_5.1.0" + File
+                    .separator + scriptName;
         } else {
             throw new IllegalArgumentException("Invalid migration versions provided");
         }
@@ -228,7 +231,7 @@ public class MigrationDatabaseCreator {
             if (sql.length() > 0) {
                 executeSQL(sql.toString());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error occurred while executing SQL script for migrating database", e);
             throw new Exception("Error occurred while executing SQL script for migrating database", e);
 
