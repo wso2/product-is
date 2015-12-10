@@ -13,10 +13,12 @@ In sample web app's web.xml...
 
 Configuring Identity Server (IS)
 -------------------------------
-1. In IS Management Console, add a new Service Provider
-2. Go to Inbound Authentication Configuration -> WS-Federation (Passive) Configuration
-3. For 'Service Realm Name' give the same identifier we gave as realm in Web app. e.g. PassiveSTSSampleApp
+1. In IS Management Console, add a new Service Provider.
+2. Go to Inbound Authentication Configuration -> WS-Federation (Passive) Configuration.
+3. For 'Service Realm Name' give the same identifier we gave as realm in Web app. 
+		e.g. PassiveSTSSampleApp
 4. Go to Claim Configuration and select the required claims. These will be returned to the RP by the IS.
+5. Once the changes are done, update the Service Provider.
 
 Execution Flow
 --------------
