@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
+    private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils =  new UserStoreConfigUtils();
     private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
@@ -138,7 +139,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
         authenticatorClient = new AuthenticatorClient(backendURL);
 
 
-        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
+        userMgtClient.addRole(newUserRole, null, new String[]{PERMISSION_LOGIN});
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole)
                 , "Role name doesn't exists");
 
@@ -166,22 +167,26 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
 
     @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
     public void testUserRoleCacheWithSecondary() throws Exception {
+
+        String loginRole = "login";
+        String secondaryUsername = "WSO2TEST.COM/user4219";
+        String secondaryUserPassword = "password2";
+        String primaryUsername = "user4219";
+        String primaryUserPassword = "password1";
+
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
-        userMgtClient.addRole("login", null, new String[]{"/permission/admin/login"});
-        userMgtClient.addUser("WSO2TEST.COM/user4219", "password2", new String[]{}, null);
-
-        authenticatorClient.unsuccessfulLogin("WSO2TEST.COM/user4219", "password2", isServer
+        userMgtClient.addRole(loginRole, null, new String[]{PERMISSION_LOGIN});
+        userMgtClient.addUser(secondaryUsername, secondaryUserPassword, new String[]{}, null);
+        userMgtClient.addUser(primaryUsername, primaryUserPassword, new String[]{loginRole}, null);
+        authenticatorClient.unsuccessfulLogin(primaryUsername, primaryUserPassword, isServer
                 .getInstance().getHosts().get("default"));
-        userMgtClient.addUser("user4219", "password1", new String[]{"login"}, null);
-        authenticatorClient.unsuccessfulLogin("user4219", "password1", isServer
-                .getInstance().getHosts().get("default"));
-        Assert.assertFalse(authenticatorClient.unsuccessfulLogin("WSO2TEST.COM/user4219", "password2", isServer
+        Assert.assertFalse(authenticatorClient.unsuccessfulLogin(secondaryUsername, secondaryUserPassword, isServer
                 .getInstance().getHosts().get("default")), "User from secondary user store logged in without login " +
                 "permissions.");
-        userMgtClient.deleteUser("user4219");
-        userMgtClient.deleteUser("WSO2TEST.COM/user4219");
-        userMgtClient.deleteRole("login");
+        userMgtClient.deleteUser(primaryUsername);
+        userMgtClient.deleteUser(secondaryUsername);
+        userMgtClient.deleteRole(loginRole);
         authenticatorClient.logOut();
     }
 
