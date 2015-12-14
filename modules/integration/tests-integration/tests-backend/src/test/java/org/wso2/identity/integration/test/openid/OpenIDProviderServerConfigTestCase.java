@@ -61,8 +61,6 @@ public class OpenIDProviderServerConfigTestCase extends ISIntegrationTest {
         Assert.assertEquals(providerInfo.getOpenID(), "https://localhost:9853/openid/admin");
 
         Assert.assertEquals(providerInfo.getOpenIDProviderServerUrl(), "https://localhost:9853/openidserver");
-
-        Assert.assertEquals(providerInfo.isUserExistSpecified(), true);
     }
 
     @Test(alwaysRun = true, description = "Test Session Timeout", dependsOnMethods = "testProviderInfo")
