@@ -20,7 +20,7 @@ package org.wso2.sample.identity.oauth2.grant.mobile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.application.common.model.User;
+import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.model.RequestParameter;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
@@ -63,7 +63,7 @@ public class MobileGrant extends AbstractAuthorizationGrantHandler  {
 
             if(authStatus) {
                 // if valid set authorized mobile number as grant user
-                User mobileUser = new User();
+                AuthenticatedUser mobileUser = new AuthenticatedUser();
                 mobileUser.setUserName(mobileNumber);
                 oAuthTokenReqMessageContext.setAuthorizedUser(mobileUser);
                 oAuthTokenReqMessageContext.setScope(oAuthTokenReqMessageContext.getOauth2AccessTokenReqDTO().getScope());
