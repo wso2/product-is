@@ -170,28 +170,25 @@ Installation and Running
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
 
-     CARBON_HOME
-        |-- bin <directory>
-        |-- dbscripts <directory>
-        |-- lib <directory>
-        |-- repository <directory>
-        |   |-- components <directory>
-        |   |-- conf <directory>
-	|   |	|-- identity <directory>
-	|   |	|   |-- identity-providers
-	|   |	|   |-- service-providers
-        |   |-- data <directory>
-        |   |-- database <directory>
-        |   |-- deployment <directory>
-        |   |-- logs <directory>
-        |   |-- resources <directory>
-        |   |   |-- security <directory>
-        |   |-- tenants <directory>
-        |-- tmp <directory>
-	|-- webapp-mode <directory>
-        |-- LICENSE.txt <file>
-        |-- README.txt <file>
-        |-- release-notes.html <file>
+            CARBON_HOME
+            ├── bin
+            ├── dbscripts
+            ├── lib
+            ├── repository
+            │   ├── components
+            │   ├── conf
+            │   │   └── identity
+            │   │       ├── identity-providers
+            │   │       └── service-providers
+            │   ├── database
+            │   ├── deployment
+            │   ├── logs
+            │   ├── resources
+            │   │   ├── identity
+            │   │   └── security
+            │   └── tenants
+            └── tmp
+
 
     - bin
       Contains various scripts .sh & .bat scripts.
@@ -215,18 +212,21 @@ WSO2 Identity Server Distribution Directory Structure
         - conf
           Contains server configuration files. Ex: axis2.xml, carbon.xml
 
-	- identity
-	  Contains identity providers and service providers configured using files.
+	        - identity
+	          Contains all configurations related to identity.
 
-        - data
-          Contains internal LDAP related data.
+	            - identity-providers
+	              Identity providers configured using file
+
+	            - service-providers
+	              Service providers configured using file
 
         - database
           Contains the WSO2 Registry & User Manager database.
 
         - deployment
           Contains server side and client side Axis2 repositories. 
-	  All deployment artifacts should go into this directory.
+	      All deployment artifacts should go into this directory.
 
         - logs
           Contains all log files created during execution.
@@ -242,9 +242,6 @@ WSO2 Identity Server Distribution Directory Structure
       Used for storing temporary files, and is pointed to by the
       java.io.tmpdir System property.
 
-    - webapp-mode
-      The user has the option of running WSO2 Carbon in webapp mode (hosted as a web-app in an application server).
-      This directory contains files required to run Carbon in webapp mode. 
 
     - LICENSE.txt
       Apache License 2.0 under which WSO2 Carbon is distributed.
@@ -277,7 +274,7 @@ This script would do following configurations that you need to do by manually
 cipher-tool.properties, cipher-text.properties and secret-conf.properties files 
 			can be found at repository/conf/security directory. 
 
-2. Start server by running wso2server sciprt from bin directory
+2. Start server by running wso2server script from bin directory
 
 > wso2server.sh   (in UNIX)
 
