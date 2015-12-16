@@ -1,8 +1,8 @@
 ==========================
-WSO2 Identity Server 5.1.0
+WSO2 Identity Server ${product.version}
 ==========================
 
-Welcome to the WSO2 Identity Server 5.1.0 release.
+Welcome to the WSO2 Identity Server ${product.version} release.
 
 WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
 protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
@@ -21,20 +21,20 @@ New Features
 
 *  Workflow Support for Identity Server
 
-     WSO2 IS 5.1.0 now supports user store operations to engage with workflows. Administrators will be able select
+     WSO2 IS ${product.version} now supports user store operations to engage with workflows. Administrators will be able select
      at which levels each operation should be approved before they get executed. This will be available as a
      optional feature where administrator will be able to select if to use them on their user store operations or not.
 
 * FIDO Authentication
 
      FIDO(Fast IDentity Online) will provide an extra layer of security to your account.  FIDO protocols use standard
-     public key cryptography techniques to provide stronger authentication. WSO2 IS 5.1.0 now supports FIDO
+     public key cryptography techniques to provide stronger authentication. WSO2 IS ${product.version} now supports FIDO
      authentication.
 
 
 *  XACML cache invalidation notification when changes are made to Identities
 
-     WSO2 IS 5.1.0 is now able to send invalidation notifications to external endpoints when there is a change in user
+     WSO2 IS ${product.version} is now able to send invalidation notifications to external endpoints when there is a change in user
      roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
      been updated
 
@@ -213,7 +213,7 @@ WSO2 Identity Server Distribution Directory Structure
       This document.
 
     - release-notes.html
-      Release information for WSO2 Carbon ${carbon.product.version}.
+      Release information for WSO2 Carbon ${product.version}.
 
 Secure sensitive information in carbon configuration files
 ----------------------------------------------------------
@@ -249,7 +249,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Secure+Vault
+https://docs.wso2.com/display/Carbon443/WSO2+Carbon+Secure+Vault
 
 Support
 =======
@@ -296,8 +296,8 @@ Bouncycastle     : http://www.bouncycastle.org/
 For more information about WSO2 Identity Server please see http://wso2.org/projects/identity or visit the
 WSO2 Oxygen Tank developer portal for addition resources.
 
-For further details, see the WSO2 Carbon documentation at
-http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Documentation
+For further details, see the WSO2 Identity Server documentation at
+https://docs.wso2.com/display/IS510/WSO2+Identity+Server+Documentation
 
 ---------------------------------------------------------------------------
 (c) Copyright 2015 WSO2 Inc.
