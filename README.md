@@ -20,119 +20,82 @@ supported through SCIM and SPML.
 
 This is based on the revolutionary WSO2 Carbon framework. All the major features have been developed as pluggable Carbon components.
 
-Features
-===========
+New Features
+============
 
-* Identity Bridge -
-  WSO2 Identity Server 5.1.0 is capable of translating between heterogeneous authentication protocols and transforming 
-  and mediating any identity assertion, between SAML2.0, OAuth 1.0a/2.0, OpenID, OpenID Connect, WS-Federation Passive. 
-  This leads to seamless integration between internal applications and cloud applications such as Salesforce, Google Apps 
-  and Office 365.
+*  In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
 
-  Few example use cases.
+     logins to an application to obtain a fully privileged view for a single user's details, we now support merging
+     of multiple user profiles.
 
-  - Login to your corporate Salesforce or Google Apps accounts from your Facebook credentials.
-  - Login to your laptop connected to your corporate Windows domain - you will be automatically logged into your corporate Salesforce and Google Apps accounts.
-  - Login to corporate Office 365 account - you will be automatically logged into you Google Apps and Salesforce accounts.
-  - Login to Identity Server user portal - you will be automatically logged into your internal Liferay portals.
+*  Workflow Support for Identity Server
 
-* Multi-option and multi-step authentication -
+     WSO2 IS 5.1.0 now supports user store operations to engage with workflows. Administrators will be able select
+     at which levels each operation should be approved before they get executed. This will be available as a
+     optional feature where administrator will be able to select if to use them on their user store operations or not.
 
-  With WSO2 Identity Server 5.1.0, a given service provider (irrespective of the protocol it supports) can select the 
-  login options it wants to present to it users. Authentication can be a mix of two types: Multi-option login and 
-  multi-step login. With multi-option authentication - the user will be presented with a login screen to pick whatever the authentication mechanism he/she wants (e.g.: Username/password, Social login with Facebook, Login with a federated Home Identity Provider). A service provider can also choose to have multi-step authentication. Multi step authentication can naturally be extended to be multi-factor depending on the kind of authentication. 
+* FIDO Authentication
 
-* Request Path Authenticators.
+     FIDO(Fast IDentity Online) will provide an extra layer of security to your account.  FIDO protocols use standard
+     public key cryptography techniques to provide stronger authentication. WSO2 IS 5.1.0 now supports FIDO
+     authentication.
 
-  The responsibly of getting the user's credentials is left to the service provider, and the credentials will be 
-  attached to the request to the Identity Server. 
 
-* Social Login with Facebook / Google / Microsoft Windows Live.
+*  XACML cache invalidation notification when changes are made to Identities
 
-  Facebook / Google / Microsoft Windows Live authenticators are the very first authenticators we are shipping with 
-  Identity Server 5.1.0 for social login. 
+     WSO2 IS 5.1.0 is now able to send invalidation notifications to external endpoints when there is a change in user
+     roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
+     been updated
 
-* Ability to plug-in custom developed authenticators.
+*  PATCH operation support for SCIM 1.1
 
-  Owing to the power of OSGi, custom authenticators can be easily written and put into the Identity Server which 
-  will pick them dynamically and execute. The UI will also be extended with property fields for administrators to 
-  configure the authenticators if they are federated authenticators.
+     PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
+     operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
+     added to the group, all the users should be sent in the PUT request.
 
-* Provisioning Bridge.
+*  Renewed support for bearer type SAML 2.0 token
 
-  WSO2 Identity Server 5.1.0 is capable of accepting inbound provisioning requests based on SOAP or SCIM, 
-  provisioning to the Resident Identity Provider using LDAP, Active Directory, JDBC or Carbon Remote UserStoreManagement 
-  user management APIs, and transform them to outbound provisioning requests based on SCIM, SPML 2.0, Salesforce, 
-  Google Apps provisioning APIs.
-
-* Just-in-time provisioning.
-
-  In the process of federated login WSO2 Identity Server is capable of provisioning the corresponding subject to a 
-  preferred user store domain as well as other configured Identity Providers.
-
-* Ability to plug-in custom developed provisioning connectors.
-
-  Like with authenticators provisioning connectors also can be added to the system by implementing the relevant 
-  APIs and dropping them to the system as OSGi bundles
-  
-* User Dashboard.
-
-  WSO2 Identity Server 5.1.0 ships with a jaggery based user dashboard to expose end user functionality. 
-  This dashboard is completely decoupled from the management console, and is completely extensible due to the fact that 
-  it is able to render gadgets. The application can run from within IS or as a separate jaggery app on AS.
-
-* SAML2 Web SSO profile Request / Response validator.
-
-  A UI based tool in the Identity Server 5.1.0 management console for debugging the SAML2 Web SSO requests and responses.
-
-* Remote User Store Management.
-
-  WSO2 Carbon's User/Group Administration SOAP API is also now supported as part of the UserStoreManager 
-  implementations shipped by default. This means heterogeneous user stores distributed across different data centers 
-  can be managed from a single Identity Server node.
-
-* Custom permissions.
-
-  Application specific permissions can be added by service providers and assigned to roles, and by using the 
-  remote authorization API do permission based access control for users.
-
-* Encrypted SAML2 Assertions.
-
-  The SAML2 assertion issued for SAML2 based SSO login can now have encrypted assertions. To decrypt the assertion 
-  the service provider will have to have the Identity Server tenant's public certificate
-
-* NTLM grant type for OAuth 2.0
-
-* Introducing the workflow feature to the WSO2 IS is required in order to add more control to the tasks that are
-  executed in it. For example, with the workflow feature you can add another constraint to the ‘User Add’ operation in
-  the identity server. These are workflows where the operations go through a predefined path. These types of tasks can be done through the WSO2 Business Process Server (WSO2 BPS) but this new feature adds that capability to the identity server as well.
 
 Other Key Features
 =============
 
-* Dynamically discovered federation
-* Identity Bridge - translation between heterogeneous Identity authentication protocols
-* SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider
-* SAML2 Single Logout profile support
-* OpenID 2.0 Provider
-* OpenID Connect Authorization Server
-* Social login with Facebook, Google, Yahoo and Windows Live
-* XACML 3.0/2.0 based Entitlement Engine with WS-XACML support
-* OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support
-* Inbound authentication with SCIM 1.1
-* Outbound provisioning with SCIM 1.1, SPML 2.0, Salesforce and GoogleApps
-* Integrated Windows Authentication and webSEAL authentication
-* Multi-option and multi-step (multi-factor) authentication
-* Claim based Security Token Service(STS) with SAML 2.0/1.1 support
-* Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode
-* Claim Management
-* User Profiles and Profile Management
-* Separable front-end and back-end - a single front-end server can be used to administer several back-end servers
+*  Dynamically discovered federation
+*  Identity Bridge - translation between heterogeneous Identity authentication protocols
+*  SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider</li>
+*  SAML2 Single Logout profile support
+*  OpenID 2.0 Provider
+*  OpenID Connect Authorization Server
+*  Social login with Facebook, Google, Yahoo and Windows Live
+*  XACML 3.0/2.0 based Entitlement Engine with WS-XACML support
+*  OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support
+*  Inbound and Outbound Identity Provisioning with SCIM 1.1</li>
+*  Outbound Identiy Provisioning with SPML 2.0, Salesforce and GoogleApps
+*  Integrated Windows Authentication and webSEAL authentication
+*  Multi-option and multi-step (multi-factor) authentication
+*  Claim based Security Token Service(STS) with SAML 2.0/1.1 support.
+*  Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.
+*  Claim Management
+*  User Profiles and Profile Management
+*  Separable front-end and back-end - a single front-end server can be used to administer several back-endservers
+*  Identity Bridge
+*  Multi-option and multi-step authentication
+*  Request Path Authenticators.
+*  Social Login with Facebook / Google / Microsoft Windows Live.
+*  Ability to plug-in custom developed authenticators.
+*  Provisioning Bridge.
+*  Just-in-time provisioning.</li>
+*  Ability to plug-in custom developed provisioning connectors.
+*  User Dashboard.
+*  SAML2 Web SSO profile Request / Response validator.
+*  Remote User Store Management.
+*  Custom permissions.
+*  Encrypted SAML2 Assertions.
+*  NTLM grant type for OAuth 2.0
 
 System Requirements
 ===================
 
-1. Minimum memory - 1 GB
+1. Minimum memory - 2 GB
 
 2. Processor - Pentium 800MHz or equivalent at minimum
 
@@ -170,28 +133,25 @@ Installation and Running
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
 
-     CARBON_HOME
-        |-- bin <directory>
-        |-- dbscripts <directory>
-        |-- lib <directory>
-        |-- repository <directory>
-        |   |-- components <directory>
-        |   |-- conf <directory>
-	|   |	|-- identity <directory>
-	|   |	|   |-- identity-providers
-	|   |	|   |-- service-providers
-        |   |-- data <directory>
-        |   |-- database <directory>
-        |   |-- deployment <directory>
-        |   |-- logs <directory>
-        |   |-- resources <directory>
-        |   |   |-- security <directory>
-        |   |-- tenants <directory>
-        |-- tmp <directory>
-	|-- webapp-mode <directory>
-        |-- LICENSE.txt <file>
-        |-- README.txt <file>
-        |-- release-notes.html <file>
+            CARBON_HOME
+            ├── bin
+            ├── dbscripts
+            ├── lib
+            ├── repository
+            │   ├── components
+            │   ├── conf
+            │   │   └── identity
+            │   │       ├── identity-providers
+            │   │       └── service-providers
+            │   ├── database
+            │   ├── deployment
+            │   ├── logs
+            │   ├── resources
+            │   │   ├── identity
+            │   │   └── security
+            │   └── tenants
+            └── tmp
+
 
     - bin
       Contains various scripts .sh & .bat scripts.
@@ -215,18 +175,21 @@ WSO2 Identity Server Distribution Directory Structure
         - conf
           Contains server configuration files. Ex: axis2.xml, carbon.xml
 
-	- identity
-	  Contains identity providers and service providers configured using files.
+	        - identity
+	          Contains all configurations related to identity.
 
-        - data
-          Contains internal LDAP related data.
+	            - identity-providers
+	              Identity providers configured using file
+
+	            - service-providers
+	              Service providers configured using file
 
         - database
           Contains the WSO2 Registry & User Manager database.
 
         - deployment
           Contains server side and client side Axis2 repositories. 
-	  All deployment artifacts should go into this directory.
+	      All deployment artifacts should go into this directory.
 
         - logs
           Contains all log files created during execution.
@@ -242,9 +205,6 @@ WSO2 Identity Server Distribution Directory Structure
       Used for storing temporary files, and is pointed to by the
       java.io.tmpdir System property.
 
-    - webapp-mode
-      The user has the option of running WSO2 Carbon in webapp mode (hosted as a web-app in an application server).
-      This directory contains files required to run Carbon in webapp mode. 
 
     - LICENSE.txt
       Apache License 2.0 under which WSO2 Carbon is distributed.
@@ -277,7 +237,7 @@ This script would do following configurations that you need to do by manually
 cipher-tool.properties, cipher-text.properties and secret-conf.properties files 
 			can be found at repository/conf/security directory. 
 
-2. Start server by running wso2server sciprt from bin directory
+2. Start server by running wso2server script from bin directory
 
 > wso2server.sh   (in UNIX)
 

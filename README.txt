@@ -132,28 +132,26 @@ https://wso2.org/jira/issues/?filter=11808
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
 
-     CARBON_HOME
-        |-- bin <directory>
-        |-- dbscripts <directory>
-        |-- lib <directory>
-        |-- repository <directory>
-        |   |-- components <directory>
-        |   |-- conf <directory>
-	|   |	|-- identity <directory>
-	|   |	|   |-- identity-providers
-	|   |	|   |-- service-providers
-        |   |-- data <directory>
-        |   |-- database <directory>
-        |   |-- deployment <directory>
-        |   |-- logs <directory>
-        |   |-- resources <directory>
-        |   |   |-- security <directory>
-        |   |-- tenants <directory>
-        |-- tmp <directory>
-	|-- webapp-mode <directory>
-        |-- LICENSE.txt <file>
-        |-- README.txt <file>
-        |-- release-notes.html <file>
+
+            CARBON_HOME
+            ├── bin
+            ├── dbscripts
+            ├── lib
+            ├── repository
+            │   ├── components
+            │   ├── conf
+            │   │   └── identity
+            │   │       ├── identity-providers
+            │   │       └── service-providers
+            │   ├── database
+            │   ├── deployment
+            │   ├── logs
+            │   ├── resources
+            │   │   ├── identity
+            │   │   └── security
+            │   └── tenants
+            └── tmp
+
 
     - bin
       Contains various scripts .sh & .bat scripts.
@@ -166,8 +164,8 @@ WSO2 Identity Server Distribution Directory Structure
       Contains the basic set of libraries required to startup Carbon.
 
     - repository
-      The repository where Carbon artifacts & Axis2 services and 
-      modules deployed in WSO2 Carbon are stored. 
+      The repository where Carbon artifacts & Axis2 services and
+      modules deployed in WSO2 Carbon are stored.
       In addition to this other custom deployers such as
       dataservices and axis1services are also stored.
 
@@ -177,18 +175,21 @@ WSO2 Identity Server Distribution Directory Structure
         - conf
           Contains server configuration files. Ex: axis2.xml, carbon.xml
 
-	- identity
-	  Contains identity providers and service providers configured using files.
+	        - identity
+	          Contains all configurations related to identity.
 
-        - data
-          Contains internal LDAP related data.
+	            - identity-providers
+	              Identity providers configured using file
+
+	            - service-providers
+	              Service providers configured using file
 
         - database
           Contains the WSO2 Registry & User Manager database.
 
         - deployment
-          Contains server side and client side Axis2 repositories. 
-	  All deployment artifacts should go into this directory.
+          Contains server side and client side Axis2 repositories.
+	      All deployment artifacts should go into this directory.
 
         - logs
           Contains all log files created during execution.
@@ -197,16 +198,13 @@ WSO2 Identity Server Distribution Directory Structure
           Contains additional resources that may be required.
 
 	- tenants
-	  Directory will contain relevant tenant artifacts 
+	  Directory will contain relevant tenant artifacts
 	  in the case of a multitenant deployment.
 
     - tmp
       Used for storing temporary files, and is pointed to by the
       java.io.tmpdir System property.
 
-    - webapp-mode
-      The user has the option of running WSO2 Carbon in webapp mode (hosted as a web-app in an application server).
-      This directory contains files required to run Carbon in webapp mode. 
 
     - LICENSE.txt
       Apache License 2.0 under which WSO2 Carbon is distributed.
