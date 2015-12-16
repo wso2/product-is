@@ -95,7 +95,7 @@ public class MigrateFrom5to510 implements MigrationClient {
         } catch (IdentityException e) {
             String errorMsg = "Error when reading the JDBC Configuration from the file.";
             log.error(errorMsg, e);
-            throw new IdentityException(errorMsg, e);
+            throw new ISMigrationException(errorMsg, e);
         }
     }
 
@@ -114,7 +114,7 @@ public class MigrateFrom5to510 implements MigrationClient {
                         "identity.xml file. Terminating the JDBC Persistence Manager " +
                         "initialization. This may affect certain functionality.";
                 log.error(errorMsg);
-                throw new IdentityException(errorMsg);
+                throw new ISMigrationException(errorMsg);
             }
 
             OMElement dataSourceElem = persistenceManagerConfigElem.getFirstChildWithName(
@@ -125,7 +125,7 @@ public class MigrateFrom5to510 implements MigrationClient {
                         "Manager in identity.xml file. Terminating the JDBC Persistence Manager " +
                         "initialization. This might affect certain features.";
                 log.error(errorMsg);
-                throw new IdentityException(errorMsg);
+                throw new ISMigrationException(errorMsg);
             }
 
             OMElement dataSourceNameElem = dataSourceElem.getFirstChildWithName(
@@ -139,7 +139,7 @@ public class MigrateFrom5to510 implements MigrationClient {
         } catch (NamingException e) {
             String errorMsg = "Error when looking up the Identity Data Source.";
             log.error(errorMsg, e);
-            throw new IdentityException(errorMsg, e);
+            throw new ISMigrationException(errorMsg, e);
         }
     }
 

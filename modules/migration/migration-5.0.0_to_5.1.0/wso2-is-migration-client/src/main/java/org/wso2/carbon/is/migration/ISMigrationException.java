@@ -16,10 +16,12 @@
 
 package org.wso2.carbon.is.migration;
 
+import org.wso2.carbon.identity.base.IdentityException;
+
 /**
  * A custom exception handler class to handle all the migration exceptions
  */
-public class ISMigrationException extends Exception {
+public class ISMigrationException extends IdentityException {
 
     public ISMigrationException(String msg) {
         super(msg);
