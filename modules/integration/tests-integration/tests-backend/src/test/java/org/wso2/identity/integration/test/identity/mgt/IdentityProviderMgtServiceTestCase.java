@@ -56,6 +56,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     private final String SAML2SSO_NAME = "samlsso";
     private final String SAML2SSO_IDP_ENTITY_ID = "IdPEntityId";
 
+    private static final String RANDOM_PASSWORD_GENERATED = "random-password-generated";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -308,7 +309,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         Property[] provisioningProps = provisioningConfigs[0].getProvisioningProperties();
 
         Assert.assertNotNull(provisioningProps, "addIdP : provisioning property not found");
-        Assert.assertEquals(provisioningProps.length, 3, "addIdP :Provisioning configuration property setting failed");
+        Assert.assertEquals(provisioningProps.length, 4, "addIdP :Provisioning configuration property setting failed");
 
         for (Property provisioningProp : provisioningProps) {
             propertyMap.put(provisioningProp.getName(), provisioningProp);
@@ -324,7 +325,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "addIdP : Provisioning configuration property value failed : " + testProvisionPropName2);
         Assert.assertEquals(propertyMap.containsKey(testProvisionPropName3), true,
                             "addIdP : Provisioning configuration property not found : " + testProvisionPropName3);
-        Assert.assertEquals(propertyMap.get(testProvisionPropName3).getValue(), testProvisionPropValue3,
+        Assert.assertTrue(propertyMap.get(testProvisionPropName3).getValue().contains(RANDOM_PASSWORD_GENERATED),
                             "addIdP : Provisioning configuration property value failed : " + testProvisionPropName3);
 
         //check jit
