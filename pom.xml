@@ -201,7 +201,7 @@
         <developer>
             <name>Pulasthi Mahawithana</name>
             <id>pulasthi</id>
-            <email>pulasthi AT wso2.com</email>
+            <email>pulasthim AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
         <developer>
@@ -223,9 +223,69 @@
             <organization>WSO2</organization>
         </developer>
         <developer>
+            <name>Malithi Edirisinghe</name>
+            <id>malithim</id>
+            <email>malithim AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Godwin Shrimal</name>
+            <id>godwin</id>
+            <email>godwin AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Omindu Rathnaweera</name>
+            <id>omindu</id>
+            <email>omindu AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Nuwandi Wickramasinghe</name>
+            <id>nuwandiw</id>
+            <email>nuwandiw AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Kasun Bandara</name>
+            <id>kasunb</id>
+            <email>kasunb AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Indunil Upeksha</name>
+            <id>indunil</id>
+            <email>indunil AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Maduranga Siriwardena</name>
+            <id>maduranga</id>
+            <email>maduranga AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Chamila Wijayarathna</name>
+            <id>chamila</id>
+            <email>chamila AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
             <name>Chanaka Jayasena</name>
             <id>chanaka</id>
             <email>chanaka AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Chamara Philips</name>
+            <id>chamarap</id>
+            <email>chamarap AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Damith Senanayake</name>
+            <id>damiths</id>
+            <email>damiths AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
     </developers>
@@ -1057,9 +1117,9 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>5.0.4-SNAPSHOT</carbon.identity.version>
-        <carbon.identity.jar.version>5.0.4-SNAPSHOT</carbon.identity.jar.version>
-        <product.identity.version>5.1.0-SNAPSHOT</product.identity.version>
+        <carbon.identity.version>5.0.4</carbon.identity.version>
+        <carbon.identity.jar.version>5.0.4</carbon.identity.jar.version>
+        <product.identity.version>5.1.0</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
