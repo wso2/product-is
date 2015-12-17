@@ -1,8 +1,8 @@
 ==========================
-WSO2 Identity Server 5.1.0
+WSO2 Identity Server ${product.version}
 ==========================
 
-Welcome to the WSO2 Identity Server 5.1.0 release.
+Welcome to the WSO2 Identity Server ${product.version} release.
 
 WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
 protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
@@ -21,20 +21,20 @@ New Features
 
 *  Workflow Support for Identity Server
 
-     WSO2 IS 5.1.0 now supports user store operations to engage with workflows. Administrators will be able select
+     WSO2 IS ${product.version} now supports user store operations to engage with workflows. Administrators will be able select
      at which levels each operation should be approved before they get executed. This will be available as a
      optional feature where administrator will be able to select if to use them on their user store operations or not.
 
 * FIDO Authentication
 
      FIDO(Fast IDentity Online) will provide an extra layer of security to your account.  FIDO protocols use standard
-     public key cryptography techniques to provide stronger authentication. WSO2 IS 5.1.0 now supports FIDO
+     public key cryptography techniques to provide stronger authentication. WSO2 IS ${product.version} now supports FIDO
      authentication.
 
 
 *  XACML cache invalidation notification when changes are made to Identities
 
-     WSO2 IS 5.1.0 is now able to send invalidation notifications to external endpoints when there is a change in user
+     WSO2 IS ${product.version} is now able to send invalidation notifications to external endpoints when there is a change in user
      roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
      been updated
 
@@ -132,28 +132,26 @@ https://wso2.org/jira/issues/?filter=11808
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
 
-     CARBON_HOME
-        |-- bin <directory>
-        |-- dbscripts <directory>
-        |-- lib <directory>
-        |-- repository <directory>
-        |   |-- components <directory>
-        |   |-- conf <directory>
-	|   |	|-- identity <directory>
-	|   |	|   |-- identity-providers
-	|   |	|   |-- service-providers
-        |   |-- data <directory>
-        |   |-- database <directory>
-        |   |-- deployment <directory>
-        |   |-- logs <directory>
-        |   |-- resources <directory>
-        |   |   |-- security <directory>
-        |   |-- tenants <directory>
-        |-- tmp <directory>
-	|-- webapp-mode <directory>
-        |-- LICENSE.txt <file>
-        |-- README.txt <file>
-        |-- release-notes.html <file>
+
+            CARBON_HOME
+            ├── bin
+            ├── dbscripts
+            ├── lib
+            ├── repository
+            │   ├── components
+            │   ├── conf
+            │   │   └── identity
+            │   │       ├── identity-providers
+            │   │       └── service-providers
+            │   ├── database
+            │   ├── deployment
+            │   ├── logs
+            │   ├── resources
+            │   │   ├── identity
+            │   │   └── security
+            │   └── tenants
+            └── tmp
+
 
     - bin
       Contains various scripts .sh & .bat scripts.
@@ -166,8 +164,8 @@ WSO2 Identity Server Distribution Directory Structure
       Contains the basic set of libraries required to startup Carbon.
 
     - repository
-      The repository where Carbon artifacts & Axis2 services and 
-      modules deployed in WSO2 Carbon are stored. 
+      The repository where Carbon artifacts & Axis2 services and
+      modules deployed in WSO2 Carbon are stored.
       In addition to this other custom deployers such as
       dataservices and axis1services are also stored.
 
@@ -177,18 +175,21 @@ WSO2 Identity Server Distribution Directory Structure
         - conf
           Contains server configuration files. Ex: axis2.xml, carbon.xml
 
-	- identity
-	  Contains identity providers and service providers configured using files.
+	        - identity
+	          Contains all configurations related to identity.
 
-        - data
-          Contains internal LDAP related data.
+	            - identity-providers
+	              Identity providers configured using file
+
+	            - service-providers
+	              Service providers configured using file
 
         - database
           Contains the WSO2 Registry & User Manager database.
 
         - deployment
-          Contains server side and client side Axis2 repositories. 
-	  All deployment artifacts should go into this directory.
+          Contains server side and client side Axis2 repositories.
+	      All deployment artifacts should go into this directory.
 
         - logs
           Contains all log files created during execution.
@@ -197,16 +198,13 @@ WSO2 Identity Server Distribution Directory Structure
           Contains additional resources that may be required.
 
 	- tenants
-	  Directory will contain relevant tenant artifacts 
+	  Directory will contain relevant tenant artifacts
 	  in the case of a multitenant deployment.
 
     - tmp
       Used for storing temporary files, and is pointed to by the
       java.io.tmpdir System property.
 
-    - webapp-mode
-      The user has the option of running WSO2 Carbon in webapp mode (hosted as a web-app in an application server).
-      This directory contains files required to run Carbon in webapp mode. 
 
     - LICENSE.txt
       Apache License 2.0 under which WSO2 Carbon is distributed.
@@ -215,7 +213,7 @@ WSO2 Identity Server Distribution Directory Structure
       This document.
 
     - release-notes.html
-      Release information for WSO2 Carbon ${carbon.product.version}.
+      Release information for WSO2 Carbon ${product.version}.
 
 Secure sensitive information in carbon configuration files
 ----------------------------------------------------------
@@ -251,7 +249,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Secure+Vault
+https://docs.wso2.com/display/Carbon443/WSO2+Carbon+Secure+Vault
 
 Support
 =======
@@ -298,8 +296,8 @@ Bouncycastle     : http://www.bouncycastle.org/
 For more information about WSO2 Identity Server please see http://wso2.org/projects/identity or visit the
 WSO2 Oxygen Tank developer portal for addition resources.
 
-For further details, see the WSO2 Carbon documentation at
-http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Documentation
+For further details, see the WSO2 Identity Server documentation at
+https://docs.wso2.com/display/IS510/WSO2+Identity+Server+Documentation
 
 ---------------------------------------------------------------------------
 (c) Copyright 2015 WSO2 Inc.

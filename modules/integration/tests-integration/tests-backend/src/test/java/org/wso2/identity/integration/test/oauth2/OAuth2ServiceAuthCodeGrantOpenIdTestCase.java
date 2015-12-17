@@ -311,7 +311,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
             String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.replaceAll("[\\[\\]\"]", "").split(",");
             List<String> jwtClaimMappingRoleElementsList = Arrays.asList(jwtClaimMappingRoleElements);
-            Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/PlaygroundServiceProver"), "Invalid " +
+            Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Application/PlaygroundServiceProver"), "Invalid " +
                     "JWT Token Role Values");
         }
     }

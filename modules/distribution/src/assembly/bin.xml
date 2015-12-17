@@ -284,6 +284,12 @@
 
     <files>
         <file>
+            <source>INSTALL.txt</source>
+            <outputDirectory>wso2is-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>../../README.txt</source>
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <filtered>true</filtered>
@@ -507,6 +513,12 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/lib</outputDirectory>
             <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/secret-conf.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <destName>secret-conf.properties</destName>
+            <filtered>true</filtered>
         </file>
         <file>
             <source>

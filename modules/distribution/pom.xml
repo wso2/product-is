@@ -120,7 +120,7 @@
                                           value="&lt;!--ServiceProvider&gt;&lt;/ServiceProvider--&gt;"/>
 
                                 <property name="sso-idp-config-replace"
-                                          value="&lt;ServiceProvider&gt;${line.separator}      &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator}      &lt;AssertionConsumerServiceURLs&gt;${line.separator}        &lt;AssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${mgt.transport.https.port}/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator}      &lt;/AssertionConsumerServiceURLs&gt;${line.separator}      &lt;DefaultAssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${mgt.transport.https.port}/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator}      &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator}      &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator}      &lt;AudiencesList&gt;${line.separator}        &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator}      &lt;/AudiencesList&gt;${line.separator}    &lt;/ServiceProvider&gt;"/>
+                                          value="&lt;ServiceProvider&gt;${line.separator}      &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator}      &lt;AssertionConsumerServiceURLs&gt;${line.separator}        &lt;AssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator}      &lt;/AssertionConsumerServiceURLs&gt;${line.separator}      &lt;DefaultAssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator}      &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator}      &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator}      &lt;AudiencesList&gt;${line.separator}        &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator}      &lt;/AudiencesList&gt;${line.separator}    &lt;/ServiceProvider&gt;"/>
 
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -241,6 +241,12 @@
                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
                                        token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;"
                                        value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;"/>
+
+                                <!-- turn off IsBulkImportSupported -->
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
+                                        token="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;true&lt;/Property&gt;"
+                                        value="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;false&lt;/Property&gt;"/>
 
                                 <replace
                                         file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
