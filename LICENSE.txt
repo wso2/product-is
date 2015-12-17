@@ -1063,7 +1063,7 @@ org.wso2.carbon.webapp.deployer_4.5.3.jar                                       
 org.wso2.carbon.webapp.mgt_4.5.3.jar                                            bundle         apache2   5269      
 org.wso2.charon.core_2.0.4.jar                                                  bundle         apache2   6705      
 org.wso2.ciphertool-1.0.0-wso2v3.jar                                            bundle         apache2   4038      
-org.wso2.identity.styles_5.1.0.SNAPSHOT.jar                                     bundle         apache2   6062      
+org.wso2.identity.styles_5.1.0.jar                                     			bundle         apache2   6062
 org.wso2.orbit.asm4.asm4-all_4.0.0.wso2v1.jar                                   bundle         apache2   4710      
 org.wso2.securevault_1.0.0.wso2v2.jar                                           bundle         apache2   768       
 org.wso2.stratos.identity.dashboard.ui_2.2.1.jar                                bundle         apache2   2913      
