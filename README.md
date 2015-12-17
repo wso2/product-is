@@ -23,38 +23,48 @@ This is based on the revolutionary WSO2 Carbon framework. All the major features
 New Features
 ============
 
-*  In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
+*   Workflow support for Identity Server
 
-     logins to an application to obtain a fully privileged view for a single user's details, we now support merging
-     of multiple user profiles.
+        Engage workflows for any user/role operations carried out using WSO2 IS Management Console.
+        For example, when a new user gets registered with WSO2 IS, a workflow will automatically be triggered and
+        s/he will be assigned to a particular user role.
 
-*  Workflow Support for Identity Server
+*   FIDO compliance
 
-     WSO2 IS 5.1.0 now supports user store operations to engage with workflows. Administrators will be able select
-     at which levels each operation should be approved before they get executed. This will be available as a
-     optional feature where administrator will be able to select if to use them on their user store operations or not.
+    Fast Identity Online (FIDO) is a specification developed to reduce the reliance on password for user
+    authentication. The standard will enable any Web/cloud application to interface with a variety of FIDO-enabled
+    security devices.
 
-* FIDO Authentication
+*   Link multiple user accounts
 
-     FIDO(Fast IDentity Online) will provide an extra layer of security to your account.  FIDO protocols use standard
-     public key cryptography techniques to provide stronger authentication. WSO2 IS 5.1.0 now supports FIDO
-     authentication.
+    In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
+    logins to an application to obtain a fully privileged view for a single user's details, we now support merging
+    of multiple user profiles.
 
+*   PATCH operation support for SCIM 1.1
 
-*  XACML cache invalidation notification when changes are made to Identities
+    PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
+    operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
+    added to the group, all the users should be sent in the PUT request.</p>
 
-     WSO2 IS 5.1.0 is now able to send invalidation notifications to external endpoints when there is a change in user
-     roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
-     been updated
+*   SAML 2.0 Bearer Token Renewal
 
-*  PATCH operation support for SCIM 1.1
+    In IS 5.0.0, STS feature supports renewing Bearer type SAML 1.1 tokens only;
+    attempts to renew Bearer type SAML 2.0 Tokens get failed. With IS 5.1.0 product will
+    facilitate renewing expired Bearer type SAML 2.0 Tokens.
 
-     PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
-     operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
-     added to the group, all the users should be sent in the PUT request.
+*   OpenID Connect Core 1.0 Compliance
 
-*  Renewed support for bearer type SAML 2.0 token
+    The IS 5.0.0 had OpenID Support, however there were many points in the spec that were being violated.
+    Now that the specification is finalized we have made IS 5.1.0 OpenID Connect support specification
+    compliant. A major improvement this area is support for IDToken response type from the
+    OpenID Connect authorization endpoint.
 
+*   Ability to notify external endpoints when changes are made to Identities</li>
+
+    @product.name@ is now able to send invalidation notifications to external endpoints when there is a change in user
+    roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
+    been updated
 
 Other Key Features
 =============
@@ -91,6 +101,9 @@ Other Key Features
 *  Custom permissions.
 *  Encrypted SAML2 Assertions.
 *  NTLM grant type for OAuth 2.0
+*  Workflows for user management operations
+*  2 factor authentication with FIDO
+*  Linking 2 or more local/federated user accounts
 
 System Requirements
 ===================

@@ -1,5 +1,5 @@
 <!--
-~ Copyright 2005-2011 WSO2, Inc. (http://wso2.com)
+~ Copyright 2011 WSO2, Inc. (http://wso2.com)
 ~
 ~ Licensed under the Apache License, Version 2.0 (the "License");
 ~ you may not use this file except in compliance with the License.
@@ -61,38 +61,54 @@
     <li>Go to the bin directory in the extracted folder</li>
     <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
     <li>If you need to start the OSGi console with the server use the property
-        -DosgiConsole when starting the server. The INSTALL.txt file found on the
-        installation directory will give you a comprehensive set of options and
-        properties that can be passed into the startup script
+        -DosgiConsole when starting the server.
     </li>
 </ol>
 <h2>New Features In This Release</h2>
 <ul>
-    <li>Merge multiple user profiles</li>
+    <li>Workflow support for Identity Server</li>
+
+    <p>Engage workflows for any user/role operations carried out using WSO2 IS Management Console.
+        For example, when a new user gets registered with WSO2 IS, a workflow will automatically be triggered and
+        s/he will be assigned to a particular user role.</p>
+
+    <li>FIDO compliance</li>
+
+    <p>Fast Identity Online (FIDO) is a specification developed to reduce the reliance on password
+        for user authentication. The standard will enable any Web/cloud application to interface with a
+        variety of FIDO-enabled security devices.</p>
+
+    <li>Link multiple user accounts</li>
 
     <p>In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
         logins to an application to obtain a fully privileged view for a single user's details, we now support merging
         of multiple user profiles.</p>
 
-    <li>Workflow Support for Identity Server</li>
+    <li>PATCH operation support for SCIM 1.1</li>
 
-    <p>WSO2 IS 5.1.0 now supports user store operations to engage with workflows. Administrators will be able select
-        at which levels each operation should be approved before they get executed. This will be available as a
-        optional feature where administrator will be able to select if to use them on their user store operations or not. </p>
+    <p>PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
+        operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
+        added to the group, all the users should be sent in the PUT request.</p>
 
-    <li>XACML cache invalidation notification when changes are made to Identities</li>
+    <li>SAML 2.0 Bearer Token Renewal</li>
+
+    <p>In IS 5.0.0, STS feature supports renewing Bearer type SAML 1.1 tokens only;
+        attempts to renew Bearer type SAML 2.0 Tokens get failed. With IS 5.1.0 product will
+        facilitate renewing expired Bearer type SAML 2.0 Tokens.</p>
+
+    <li>OpenID Connect Core 1.0 Compliance</li>
+
+    <p>The IS 5.0.0 had OpenID Support, however there were many points in the spec that were being violated.
+        Now that the specification is finalized we have made IS 5.1.0 OpenID Connect support specification
+        compliant. A major improvement this area is support for IDToken response type from the
+        OpenID Connect authorization endpoint.</p>
+
+    <li>Ability to notify external endpoints when changes are made to Identities</li>
 
     <p>@product.name@ is now able to send invalidation notifications to external endpoints when there is a change in user
         roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
         been updated</p>
 
-    <li>PATCH operation support for SCIM 1.1</li>
-
-    <p>PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
-       operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
-       added to the group, all the users should be sent in the PUT request.</p>
-
-    <li>Renewed support for bearer type SAML 2.0 token</li>
 </ul>
 
 <h2>Key Features of @product.name@</h2>
@@ -130,6 +146,9 @@
     <li>Custom permissions.</li>
     <li>Encrypted SAML2 Assertions.</li>
     <li>NTLM grant type for OAuth 2.0</li>
+    <li>Workflows for user management operations</li>
+    <li>2 factor authentication with FIDO</li>
+    <li>Linking 2 or more local/federated user accounts</li>
 </ul>
 <h2>Issues Fixed in This Release</h2>
 
@@ -139,7 +158,7 @@
     fixed in this release can be found at:
 </p>
 <ul>
-    <li><a href="https://wso2.org/jira/issues/?filter=11808">Fixed Issues for WSO2 Identity Server 5.1.0</a></li>
+    <li><a href="https://wso2.org/jira/issues/?filter=12586">Fixed Issues for WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>Known Issues</h2>
 
@@ -147,7 +166,7 @@
     All the known issues in WSO2 Identity Server 5.1.0 are reported at:
 </p>
 <ul>
-    <li><a href="https://wso2.org/jira/issues/?filter=11786">Known issues in WSO2 Identity Server 5.1.0</a></li>
+    <li><a href="https://wso2.org/jira/issues/?filter=12587">Known issues in WSO2 Identity Server 5.1.0</a></li>
 </ul>
 <h2>How You Can Contribute</h2>
 
