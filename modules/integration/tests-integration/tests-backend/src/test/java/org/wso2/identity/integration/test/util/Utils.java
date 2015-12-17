@@ -18,9 +18,13 @@
 
 package org.wso2.identity.integration.test.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 
 public class Utils {
+
+    private static String RESIDENT_CARBON_HOME;
+
     public static  boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
 
@@ -36,6 +40,13 @@ public class Utils {
         }
 
         return exists;
+    }
+
+    public static String getResidentCarbonHome() {
+        if(StringUtils.isEmpty(RESIDENT_CARBON_HOME)){
+            RESIDENT_CARBON_HOME = System.getProperty("carbon.home");;
+        }
+        return RESIDENT_CARBON_HOME;
     }
 
 }

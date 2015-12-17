@@ -15,65 +15,52 @@
 */
 package org.wso2.carbon.is.migration.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
-import org.wso2.carbon.is.migration.ISMigrationException;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
+import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
-import java.io.IOException;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ResourceUtil {
 
-    private static final Log log = LogFactory.getLog(ResourceUtil.class);
-
-    /**
-     * This method picks the query according to the users database
-     *
-     * @param migrateVersion migrate version
-     * @return exact query to execute
-     * @throws SQLException
-     * @throws ISMigrationException
-     * @throws IOException
-     */
-    public static String pickQueryFromResources(String migrateVersion) throws SQLException, ISMigrationException,
-            IOException {
-
-        String queryTobeExecuted;
-        try {
-            String databaseType = DatabaseCreator.getDatabaseType(JDBCPersistenceManager.getInstance().getDBConnection());
-
-            String resourcePath;
-
-            if (migrateVersion.equalsIgnoreCase(Constants.VERSION_5_1_0)) {
-                resourcePath = CarbonUtils.getCarbonHome() + "/dbscripts/migration-5.0.0_to_5.1.0/";
-            } else {
-                throw new ISMigrationException("No query picked up for the given migrate version. Please check the migrate version.");
-            }
-            queryTobeExecuted = resourcePath +  databaseType + ".sql";
-                //queryTobeExecuted = IOUtils.toString(new FileInputStream(new File(resourcePath + databaseType + ".sql")), "UTF-8");
-
-
-        } catch (IOException e) {
-            throw new ISMigrationException("Error occurred while accessing the sql from resources. " + e);
-        } catch (Exception e) {
-            throw new ISMigrationException("Error occurred while accessing the sql from resources. " + e);
+    public static String setMySQLDBName(Connection conn) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
+        ResultSet rs = ps.executeQuery();
+        String name = null;
+        if(rs.next()){
+            name = rs.getString(1);
+            ps = conn.prepareStatement("SET @databasename = ?;");
+            ps.setString(1, name);
+            ps.execute();
         }
-
-        return queryTobeExecuted;
+        return name;
     }
 
-    /**
-     * To handle exceptions
-     *
-     * @param msg error message
-     * @throws ISMigrationException
-     */
-    public static void handleException(String msg, Throwable e) throws ISMigrationException {
-        log.error(msg, e);
-        throw new ISMigrationException(msg, e);
+    public static boolean isSchemaMigrated(DataSource dataSource) throws Exception {
+
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            String databaseType = DatabaseCreator.getDatabaseType(conn);
+            DatabaseMetaData meta = conn.getMetaData();
+            String schema = null;
+            if ("oracle".equals(databaseType)) {
+                schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
+            }
+            ResultSet res = meta.getTables(null, schema, "WF_WORKFLOW_REQUEST_RELATION", new String[]{"TABLE"});
+            boolean schemaMigrated = false;
+            if (res.next()) {
+                schemaMigrated = true;
+            }
+            return schemaMigrated;
+        } finally {
+            IdentityDatabaseUtil.closeConnection(conn);
+        }
     }
 
 }

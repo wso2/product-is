@@ -30,8 +30,13 @@
 
 		<!-- Action to be performed -->
 		<init-param>
-            <param-name>action</param-name>
+            <param-name>loginaction</param-name>
             <param-value>wsignin1.0</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>logoutaction</param-name>
+            <param-value>wsignout1.0</param-value>
         </init-param>
 
         <!-- Display the full payload received from STS -->

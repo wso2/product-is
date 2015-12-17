@@ -27,6 +27,7 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
@@ -161,8 +162,9 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveRolesOfUser(newUserName, newRoles, deletedRoles);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Error occurred while getting database type from DB connection")
-                    , "Error Message mismatched");
+            Assert.assertTrue(e.getMessage().contains("Error occurred while updating hybrid role list of user")
+                    , "Error Message mismatched, expected 'Error occurred while updating hybrid role list of user', " +
+                    "but was '" + e.getMessage() + " ,");
         }
     }
 
@@ -175,8 +177,8 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveUsersOfRole(newUserRole, newUsers, deletedUsers);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Read-only user store.Roles cannot be added or modfified"),
-                    "Error message mismatched, expected 'Read-only user store.Roles cannot be added or modfified', " +
+            Assert.assertTrue(e.getMessage().contains("Read-only user store.Roles cannot be added or modified"),
+                    "Error message mismatched, expected 'Read-only user store.Roles cannot be added or modified', " +
                             "but was '" + e.getMessage() + " '");
         }
 
@@ -196,6 +198,22 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         String[] usersList = userMgtClient.listUsers("*", 100);
         Assert.assertNotNull(usersList, "UserList null");
         Assert.assertTrue(usersList.length > 0, "List users return empty list");
+    }
+
+    @Test(groups = "wso2.is", description = "Check delete role")
+    public void testListByClaimUsers() throws Exception {
+
+        ClaimValue claimValue = new ClaimValue();
+        claimValue.setClaimURI("http://wso2.org/claims/lastname");
+        claimValue.setValue("*");
+        FlaggedName[] flaggedNames = userMgtClient.listUserByClaim(claimValue, "*", 1000);
+
+        for (FlaggedName name : flaggedNames){
+            if(name.getItemName().equals("krbtgt") || name.getItemName().equals("ldap")){
+                Assert.fail("invalid user retrieved with claim : " + name.getItemName());
+
+            }
+        }
     }
 
     @AfterClass(alwaysRun = true)

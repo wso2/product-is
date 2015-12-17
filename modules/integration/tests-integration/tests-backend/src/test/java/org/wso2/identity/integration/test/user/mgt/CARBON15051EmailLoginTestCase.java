@@ -61,6 +61,13 @@ public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfiguration(new File(pathToCarbonXML), new File(targetCarbonXML));
 
+
+        String pathToUserMgtXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" +
+                File.separator +
+                "userMgt" + File.separator + "carbon15051" + File.separator + "user-mgt.xml";
+        String targetUserMgtXML = CarbonUtils.getCarbonHome() + "repository" + File.separator + "conf" + File.separator + "user-mgt.xml";
+        serverConfigurationManager.applyConfiguration(new File(pathToUserMgtXML), new File(targetUserMgtXML));
+
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         loginLogoutClient = new LoginLogoutClient(isServer);
 

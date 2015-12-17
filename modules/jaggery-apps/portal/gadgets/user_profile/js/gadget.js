@@ -4,54 +4,55 @@ function drawPage() {
     var u2fScript="<script src=\"u2f-api.js\"></script>";
     var start = "<div class=\"container-fluid\" style=\"width:95%\">\n" +
         "    <div class=\"row\">\n" +
-        "        <div class=\"col-lg-12\">\n" +
-        "            <!--<form method=\"post\" class=\"form-horizontal\" id=\"updateProfileform\" name=\"updateProfileform\" action=\"controllers/my-profile/edit-finish.jag?\" >-->\n" +
-        "\n" +
-        "                <input type=\"hidden\" name=\"profile\" value=\"default\" />\n" +
-        "                <div class=\"control-group\">" +
-        "                    <label class=\"control-label\" for=\"profileName\">Profile Name<span class=\"required\">*</span></label>" +
-        "                    <div class=\"controls\">" +
-        "                        <input type=\"text\" id=\"profileName\" disabled=\"\" name=\"profileName\" placeholder=\"Profile Name\" value=\"" + json.return.profileName + "\" class=\"required\"/>" +
-        "                    </div>" +
-        "                </div>";
+        "        <div class=\"col-lg-12\" style=\"margin-top: 25px; margin-left: 25px; \">\n" +
+        "              <table class=\"table\">\n" +
+        "                  <thead>\n" +
+        "                      <tr>\n" +
+        "                          <th colspan=\"2\">Manage Profile</th>\n" +
+        "                      </tr>\n" +
+        "                  </thead>\n" +
+        "                  <tbody>\n" +
+        "                <input type=\"hidden\" name=\"profile\" value=\"default\" />\n";
 
     var body = "";
 
     for (var i in json.return.fieldValues) {
-        body = body + "                <div class=\"control-group\">\n" +
-            "                    <label class=\"control-label\">" + json.return.fieldValues[i].displayName;
+        body = body + "          <tr>\n" +
+        "                           <td>" +
+        "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
         if (json.return.fieldValues[i].required == "true") {
             body = body + " <span class=\"required\">*</span>";
         }
 
-        body = body + " </label>\n" +
-            "\n" +
-            "                    <div class=\"controls\">";
+        body = body + " </label>\n</td>" +
+            "                    <td><div class=\"controls\">";
 
         if (json.return.fieldValues[i].readOnly == "true") {
-            body = body + "                        <input type=\"text\" disabled=\"\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\"  />\n" +
+            body = body + "                        <input type=\"text\" disabled=\"\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />\n" +
                 " <input type=\"hidden\" name=\"" + json.return.fieldValues[i].claimUri + "\" value=\"" + json.return.fieldValues[i].fieldValue + "\" />";
         }
         else {
-            body = body + "<input type=\"text\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\"  />";
+            body = body + "<input type=\"text\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri +
+                "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />";
 
         }
         body = body + "                    </div>\n" +
-            "                </div>";
+            "                </td></tr>";
 
     }
 
 
-    var endString = "                <div class=\"control-group\">\n" +
-        "                    <div class=\"controls\">\n" +
-	    "					 <button id=\"connectFedBtn\" class=\"btn btn-primary mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
-        "                    </div>\n <div class=\"controls\">\n  <br/> </div>" +
-        "                    <div class=\"controls\">\n" +
+    var endString ="<tr>\n" +
+        "               <td colspan=\"2\">" +
+        "                   <div style=\"margin: auto;\">" +
+        "                    <button id=\"connectFedBtn\" class=\"btn btn-primary mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
+        "                    </td></div></tr>"+
+        "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
         "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
-        "                    </div>\n" +
-        "                </div>\n" +
-        "            <!--</form>-->\n" +
+        "                    </td></tr>" +
+        "                  </tbody>\n" +
+        "</table>"+
         "        </div>\n" +
         "        </div>\n" +
         "    </div>";
@@ -141,7 +142,7 @@ function validateEmpty(fldname) {
         return error;
     }
     return error;
-} 
+}
 
 function reloadGrid() {
     $.ajax({
@@ -255,7 +256,7 @@ if(data != null && "" != data){
                        var middle = middle + "            </tbody>\n" +
                                   "        </table>\n" +
                                   "    </div>";
- } 
+ }
 else {
 middle = middle + "<label > Device not registered yet please register your device ! </label>";
 }

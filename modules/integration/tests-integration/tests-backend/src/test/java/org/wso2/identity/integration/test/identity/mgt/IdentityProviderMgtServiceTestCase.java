@@ -444,16 +444,16 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "Default federated authenticator FacebookAuthenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("OpenIDConnectAuthenticator"), true,
                             "Default federated authenticator OpenIDConnectAuthenticator not found");
-        Assert.assertEquals(allFedAuthenticators.containsKey("MicrosoftWindowsLive"), true,
-                            "Default federated authenticator MicrosoftWindowsLive not found");
+        Assert.assertEquals(allFedAuthenticators.containsKey("MicrosoftWindowsLiveAuthenticator"), true,
+                            "Default federated authenticator MicrosoftWindowsLiveAuthenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("OpenIDAuthenticator"), true,
                             "Default federated authenticator OpenIDAuthenticator not found");
-        Assert.assertEquals(allFedAuthenticators.containsKey("YahooOpenIDAuthenticator"), true,
-                            "Default federated authenticator YahooOpenIDAuthenticator not found");
+        Assert.assertEquals(allFedAuthenticators.containsKey("YahooOAuth2Authenticator"), true,
+                            "Default federated authenticator YahooOAuth2Authenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("SAMLSSOAuthenticator"), true,
                             "Default federated authenticator SAMLSSOAuthenticator not found");
-        Assert.assertEquals(allFedAuthenticators.containsKey("GoogleOAUth2OpenIDAuthenticator"), true,
-                            "Default federated authenticator GoogleOAUth2OpenIDAuthenticator not found");
+        Assert.assertEquals(allFedAuthenticators.containsKey("GoogleOIDCAuthenticator"), true,
+                            "Default federated authenticator GoogleOIDCAuthenticator     not found");
     }
 
     @Test(priority = 7, groups = "wso2.is", description = "test getAllLocalClaimUris operation")

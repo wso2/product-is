@@ -107,7 +107,6 @@ public class UserManagementClient {
             assert false : "Role: " + roleName + " was not added properly.";
         }
     }
-
     public void updateUserListOfRole(String roleName, String[] addingUsers,
                                      String[] deletingUsers)
             throws UserAdminUserAdminException, RemoteException {
@@ -185,6 +184,10 @@ public class UserManagementClient {
         return userAdminStub.listAllUsers(filter, limit);
     }
 
+    public FlaggedName[] listUsersByClaim(ClaimValue value, String filter, int limit) throws RemoteException,
+            UserAdminUserAdminException {
+        return userAdminStub.listUserByClaim(value, filter, limit);
+    }
     public boolean userNameExists(String roleName, String userName)
             throws RemoteException, UserAdminUserAdminException {
 
@@ -299,9 +302,9 @@ public class UserManagementClient {
         return userAdminStub.isSharedRolesEnabled();
     }
 
-    public void bulkImportUsers(String filename, DataHandler handler, String defaultPassword)
+    public void bulkImportUsers(String userStoreDomain, String filename, DataHandler handler, String defaultPassword)
             throws RemoteException, UserAdminUserAdminException {
-        userAdminStub.bulkImportUsers(filename, handler, defaultPassword);
+        userAdminStub.bulkImportUsers(userStoreDomain, filename, handler, defaultPassword);
     }
 
     public HashSet<String> getUserList() throws RemoteException, UserAdminUserAdminException {

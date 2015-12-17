@@ -33,13 +33,10 @@ function accessService() {
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/simpleQuery";
-        var usrName = "admin";
-        var pass = "admin";
         var payload = "<ns:simpleQuery xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"" +
                 " xmlns:ns1=\"http://docs.oasis-open" +
                 ".org/ns/bpel4people/ws-humantask/types/200803\"><ns:simpleQueryInput> " +
                 "<ns1:status>COMPLETED</ns1:status><ns1:status>RESERVED</ns1:status>" +
-                "<ns1:status>SUSPENDED</ns1:status><ns1:status>IN-PROGRESS</ns1:status>" +
                 "<ns1:pageSize>100000</ns1:pageSize> <ns1:pageNumber>0</ns1:pageNumber> " +
                 "<ns1:simpleQueryCategory>ASSIGNED_TO_ME</ns1:simpleQueryCategory></ns:simpleQueryInput></ns:simpleQuery>";
 

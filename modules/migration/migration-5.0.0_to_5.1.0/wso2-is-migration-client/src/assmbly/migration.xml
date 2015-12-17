@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<assembly>
+    <id>migration</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>
+                ../scripts/identity
+            </directory>
+            <outputDirectory>wso2is-${pom.version}-migration/dbscripts/identity/migration-5.0.0SP1_to_5.1.0</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../scripts/identity/tosp1
+            </directory>
+            <outputDirectory>wso2is-${pom.version}-migration/dbscripts/identity/migration-5.0.0_to_5.0.0SP1</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../scripts/um
+            </directory>
+            <outputDirectory>wso2is-${pom.version}-migration/dbscripts/migration-5.0.0_to_5.1.0</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <files>
+        <file>
+            <source>
+                target/org.wso2.carbon.is.migrate.client-${pom.version}.jar
+            </source>
+            <outputDirectory>wso2is-${pom.version}-migration/dropins/</outputDirectory>
+        </file>
+    </files>
+</assembly>

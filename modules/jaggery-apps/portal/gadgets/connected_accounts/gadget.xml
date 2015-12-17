@@ -115,7 +115,7 @@
             </div>
 	        <div id="message"></div>
         </form>
-        <div id="light" class="white_content associationWindow" style="width: 35%;height: 45%;">This is the lightbox content. <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a></div>
+        <div id="light" class="white_content associationWindow" style="width: initial;height: initial;">This is the lightbox content. <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a></div>
         <div id="fade" class="black_overlay"></div>
 
         ]]>

@@ -35,8 +35,6 @@ function callService() {
         var options = new Array();
         options.useSOAP = 1.1;
         options.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/" + requestType;
-        var usrName = "admin";
-        var pass = "admin";
 
         var payload = "<ns:" + requestType + " xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"><ns:identifier>" + id + "</ns:identifier></ns:" + requestType + ">";
 

@@ -1,15 +1,16 @@
 <%
 include("../wsUtil.jag");
 var util = require("../../util/utility.jag");
+var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
 var serverUrl2 = serverUrl + "/SAML2SSOAuthenticationService";
-var bpsJson = "ppppp";
+var identityServerUrl = identityUtil.getServerURL(getServicePath() + "/SAML2SSOAuthenticationService", true, true);
 var ws = require('ws');
 var webService = new ws.WSRequest();
 var carbon = require('carbon');
-var PERMISSION_EXECUTE ="ui.execute";
+var PERMISSION_EXECUTE = "ui.execute";
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 
@@ -27,7 +28,7 @@ function login(request){
     var userName = multitenantUtils.getTenantAwareUsername(session.get("loggedInUser"));
     var tenantDomain = multitenantUtils.getTenantDomain(session.get("loggedInUser"));
     session.remove("loggedInUser");
-    var perm = "/permission/admin/configure";
+    var perm = "/permission/admin/manage/humantask/viewtasks";
 
     if (checkAuthorizationForUser(userName, perm, tenantDomain)) {
         getBPSSessions(request);
@@ -47,8 +48,9 @@ function getBPSSessions(request){
         var webService2 = new ws.WSRequest();
         var host = hostArray[i].*::workerHostURL[0].text();
         var profileName = hostArray[i].*::profileName[0].text();
-        if(serverUrl2.equals( host + "/services/SAML2SSOAuthenticationService") || serverUrl2.equals(host + "//services/SAML2SSOAuthenticationService")){
-            if(profileOutputJson != "\"list\" : ["){
+        if (identityServerUrl.equals(host + "/SAML2SSOAuthenticationService") || identityServerUrl.equals
+                (host + "SAML2SSOAuthenticationService")) {
+            if (profileOutputJson != "\"list\" : [") {
                 profileOutputJson = profileOutputJson + ",";
             }
 
@@ -58,7 +60,7 @@ function getBPSSessions(request){
 
         }
         try {
-            var result = callWSReturnJSON(webService2, host + "/services/SAML2SSOAuthenticationService", "urn:login", new Array(request));
+            var result = callWSReturnJSON(webService2, host + "/SAML2SSOAuthenticationService", "urn:login", new Array(request));
             var isAuthenticated = result.return;
             if (isAuthenticated.equals("true")) {
                 if(profileOutputJson != "\"list\" : ["){
@@ -68,7 +70,7 @@ function getBPSSessions(request){
                 profileOutputJson = profileOutputJson + "{\"host\" : \"" + host + "\", \"profile\" : \"" + profileName + "\", \"cookie\" : \"" + webService2.getResponseHeader("Set-Cookie") + "\"}";
             }
         }catch (e){
-            if (log.isDebugEnabeld()) {
+            if (log.isDebugEnabled()) {
                 log.debug(e);
             }
             log.error("Error while authenticating from external workflow engine.");
@@ -102,7 +104,7 @@ function getProfileList(){
         }
         return result;
     }catch(e){
-        if (log.isDebugEnabeld()) {
+        if (log.isDebugEnabled()) {
             log.debug(e);
         }
         log.error("Error while retrieving workflow engine list.");
@@ -126,12 +128,24 @@ var checkAuthorizationForUser = function (userName, permission, tenantDomain) {
 
     if (!isUserAuthorized) {
         var errorMessage = "Un-authorized!!!. User:" + userName + " does not have permission:" + permission;
-        log.debug(errorMessage);
+        if (log.isDebugEnabled()) {
+            log.debug(errorMessage);
+        }
     }
     return isUserAuthorized;
 
 };
 
+function getServicePath() {
+    var path = "/conf/site.json";
+    var file = new File(path);
+    file.open("r");
+    var json = "";
 
+    json = file.readAll();
+    file.close();
+    var jsonConf = parse(json);
+    return jsonConf.proxy.servicePath;
+};
 
 %>

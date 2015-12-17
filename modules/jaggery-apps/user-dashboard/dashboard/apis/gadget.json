@@ -59,7 +59,7 @@
         "wid":"44",
         "x":"1",
         "y":"2",
-        "title":"My Profiles",
+        "title":"My Profile",
         "width":"2",
         "height":"1",
         "prefs":"{}",
@@ -79,7 +79,7 @@
         "prefs":"{}",
         "wclass":"",
         "url":"/portal/gadgets/approvals/gadget.xml",
-        "permissions":["/permission/admin/configure"],
+        "permissions":["/permission/admin/manage/humantask/viewtasks"],
         "authorized":"true",
         "id" : "approvals"
     }

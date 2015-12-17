@@ -32,7 +32,6 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
-import org.wso2.identity.integration.test.user.mgt.UserManagementServiceAbstractTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -40,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
+    private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils =  new UserStoreConfigUtils();
     private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
@@ -139,7 +139,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
         authenticatorClient = new AuthenticatorClient(backendURL);
 
 
-        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
+        userMgtClient.addRole(newUserRole, null, new String[]{PERMISSION_LOGIN});
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole)
                 , "Role name doesn't exists");
 
@@ -164,6 +164,31 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
 //        Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
 //        authenticatorClient.logOut();
 //    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
+    public void testUserRoleCacheWithSecondary() throws Exception {
+
+        String loginRole = "login";
+        String secondaryUsername = "WSO2TEST.COM/user4219";
+        String secondaryUserPassword = "password2";
+        String primaryUsername = "user4219";
+        String primaryUserPassword = "password1";
+
+        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
+        authenticatorClient = new AuthenticatorClient(backendURL);
+        userMgtClient.addRole(loginRole, null, new String[]{PERMISSION_LOGIN});
+        userMgtClient.addUser(secondaryUsername, secondaryUserPassword, new String[]{}, null);
+        userMgtClient.addUser(primaryUsername, primaryUserPassword, new String[]{loginRole}, null);
+        authenticatorClient.unsuccessfulLogin(primaryUsername, primaryUserPassword, isServer
+                .getInstance().getHosts().get("default"));
+        Assert.assertFalse(authenticatorClient.unsuccessfulLogin(secondaryUsername, secondaryUserPassword, isServer
+                .getInstance().getHosts().get("default")), "User from secondary user store logged in without login " +
+                "permissions.");
+        userMgtClient.deleteUser(primaryUsername);
+        userMgtClient.deleteUser(secondaryUsername);
+        userMgtClient.deleteRole(loginRole);
+        authenticatorClient.logOut();
+    }
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void changePassWordByUserTest() throws Exception {

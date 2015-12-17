@@ -151,7 +151,7 @@
           sorted.push(key);
        }
        sorted.sort();
-        var body = "    <div class=\"col-lg-12 content-section\">\n";
+        var body = "    <div id=\"questionSets\" class=\"col-lg-12 content-section\">\n";
        for(var i=0;i<sorted.length;i++){
           var questionSet = json[sorted[i]];
           var setId = sorted[i].slice(-1);
@@ -228,26 +228,25 @@ function validate() {
         "</div>";
     $("#message").append(element);
 
-
-    if (validateEmpty("ans_1").length > 0) {
-        var msg = "Challenge Question Set 1 is required";
-        message({content:msg, type:'warning', cbk:function () {
-        } });
-        return false;
+    var collection = document.getElementById('questionSets').getElementsByTagName('INPUT');
+    for (var x=0; x < collection.length; x++) {
+      if (collection[x].type.toUpperCase() == 'PASSWORD') {
+        var collection_number = collection[x].name;
+        collection_number = collection_number.replace("ans_", "");
+        if (validateEmpty(collection[x]).length > 0) {
+          var msg = "Challenge Question Set " + collection_number + " is required";
+          message({content:msg, type:'warning', cbk:function () {
+          } });
+          return false;
+        }
+      }
     }
-    if (validateEmpty("ans_2").length > 0) {
-        var msg = "Challenge Question Set 2 is required";
-        message({content:msg, type:'warning', cbk:function () {
-        } });
-        return false;
-    }
-
     submitUpdate();
 
 }
 
-function validateEmpty(fldname) {
-    var fld = document.getElementsByName(fldname)[0];
+function validateEmpty(fldelement) {
+    var fld = fldelement;
     var error = "";
     var value = fld.value;
     if (value.length == 0) {

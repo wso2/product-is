@@ -16,8 +16,14 @@ function login(){
     if(user == null){
     	
     	if(application.get(SAML_ENABLED) === true){
-    		//redirect to the saml idp
-    		response.sendRedirect("samlsso.jag?login=true");
+			if (session.get(AUTHZ_FAILURE) === 'true' || request.getParameter("authz_failure") === 'true') {
+				//redirect to the saml idp
+				response.sendRedirect("samlsso.jag?login=true&authz_failure=true");
+				session.put(AUTHZ_FAILURE,'false');
+			}
+			else{
+				response.sendRedirect("samlsso.jag?login=true");
+			}
     		return;
     	}else{
 lg.info('saml not enabled');
@@ -54,7 +60,6 @@ function initAuthenticationProtocol(){
 		if(server.indexOf("[") > -1 || server.indexOf("]") > -1){
 			serverUrl = serverUrl[0];
 		}
-		lg.debug(samlConfig);
 
         var serverCoreUrl = application.get(SERVER_CORE_URL);
 
