@@ -81,6 +81,9 @@ Other Key Features
 *  Custom permissions.
 *  Encrypted SAML2 Assertions.
 *  NTLM grant type for OAuth 2.0
+*  Workflows for user management operations
+*  2 factor authentication with FIDO
+*  Linking 2 or more local/federated user accounts
 
 System Requirements
 ===================
@@ -122,12 +125,12 @@ Installation and Running
 Known Issues
 ============
 
-All known issues have been recorded at https://wso2.org/jira/issues/?filter=11786
+All known issues have been recorded at https://wso2.org/jira/issues/?filter=12587
 
 Issues Fixed In This Release
 ============================
 
-https://wso2.org/jira/issues/?filter=11808
+https://wso2.org/jira/issues/?filter=12586
 
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
