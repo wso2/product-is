@@ -57,6 +57,10 @@
                     <groupId>com.ibm.icu</groupId>
                     <artifactId>icu4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>xerces.wso2</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
