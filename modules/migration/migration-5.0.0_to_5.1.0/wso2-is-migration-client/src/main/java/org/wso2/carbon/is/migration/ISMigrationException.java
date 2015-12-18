@@ -30,8 +30,4 @@ public class ISMigrationException extends IdentityException {
     public ISMigrationException(String msg, Throwable e) {
         super(msg, e);
     }
-
-    public ISMigrationException(Throwable throwable) {
-        super(throwable);
-    }
 }
