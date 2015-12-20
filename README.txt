@@ -51,35 +51,35 @@ Other Key Features
 
 *  Dynamically discovered federation
 *  Identity Bridge - translation between heterogeneous Identity authentication protocols
-*  SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider</li>
+*  SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider
 *  SAML2 Single Logout profile support
 *  OpenID 2.0 Provider
 *  OpenID Connect Authorization Server
 *  Social login with Facebook, Google, Yahoo and Windows Live
 *  XACML 3.0/2.0 based Entitlement Engine with WS-XACML support
 *  OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support
-*  Inbound and Outbound Identity Provisioning with SCIM 1.1</li>
-*  Outbound Identiy Provisioning with SPML 2.0, Salesforce and GoogleApps
+*  Inbound and Outbound Identity Provisioning with SCIM 1.1
+*  Outbound Identity Provisioning with SPML 2.0, Salesforce and GoogleApps
 *  Integrated Windows Authentication and webSEAL authentication
 *  Multi-option and multi-step (multi-factor) authentication
-*  Claim based Security Token Service(STS) with SAML 2.0/1.1 support.
-*  Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.
+*  Claim based Security Token Service(STS) with SAML 2.0/1.1 support
+*  Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode
 *  Claim Management
 *  User Profiles and Profile Management
-*  Separable front-end and back-end - a single front-end server can be used to administer several back-endservers
+*  Separable front-end and back-end - a single front-end server can be used to administer several back-end servers
 *  Identity Bridge
 *  Multi-option and multi-step authentication
-*  Request Path Authenticators.
+*  Request Path Authenticators
 *  Social Login with Facebook / Google / Microsoft Windows Live.
 *  Ability to plug-in custom developed authenticators.
-*  Provisioning Bridge.
-*  Just-in-time provisioning.</li>
-*  Ability to plug-in custom developed provisioning connectors.
-*  User Dashboard.
-*  SAML2 Web SSO profile Request / Response validator.
-*  Remote User Store Management.
-*  Custom permissions.
-*  Encrypted SAML2 Assertions.
+*  Provisioning Bridge
+*  Just-in-time provisioning
+*  Ability to plug-in custom developed provisioning connectors
+*  User Dashboard
+*  SAML2 Web SSO profile Request / Response validator
+*  Remote User Store Management
+*  Custom permissions
+*  Encrypted SAML2 Assertions
 *  NTLM grant type for OAuth 2.0
 *  Workflows for user management operations
 *  2 factor authentication with FIDO
@@ -137,23 +137,23 @@ WSO2 Identity Server Distribution Directory Structure
 
 
             CARBON_HOME
-            ├── bin
-            ├── dbscripts
-            ├── lib
-            ├── repository
-            │   ├── components
-            │   ├── conf
-            │   │   └── identity
-            │   │       ├── identity-providers
-            │   │       └── service-providers
-            │   ├── database
-            │   ├── deployment
-            │   ├── logs
-            │   ├── resources
-            │   │   ├── identity
-            │   │   └── security
-            │   └── tenants
-            └── tmp
+                    |--- bin
+                    |--- dbscripts
+                    |--- lib
+                    |--- repository
+                    |       |--- components
+                    |       |--- conf
+                    |       |       |--- identity
+                    |       |       |--- identity-providers
+                    |       |       |--- service-providers
+                    |       |--- database
+                    |       |--- deployment
+                    |       |--- logs
+                    |       |--- resources
+                    |       |       |--- identity
+                    |       |       |--- security
+                    |       |--- tenants
+                    |--- tmp
 
 
     - bin
@@ -240,7 +240,7 @@ This script would do following configurations that you need to do by manually
 cipher-tool.properties, cipher-text.properties and secret-conf.properties files 
 			can be found at repository/conf/security directory. 
 
-2. Start server by running wso2server sciprt from bin directory
+2. Start server by running wso2server script from bin directory
 
 > wso2server.sh   (in UNIX)
 
