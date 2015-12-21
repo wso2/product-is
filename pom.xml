@@ -798,6 +798,12 @@
             <organization>WSO2</organization>
         </developer>
         <developer>
+            <name>Hasanthi Dissanayake</name>
+            <id>hasanthi</id>
+            <email>hasanthi AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
             <name>Maduranga Siriwardena</name>
             <id>maduranga</id>
             <email>maduranga AT wso2.com</email>
@@ -3633,6 +3639,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3715,6 +3722,10 @@
         <carbon.identity.version>5.0.6</carbon.identity.version>
         <carbon.identity.jar.version>5.0.6</carbon.identity.jar.version>
 >>>>>>> 25c1325... upgrading carbon-identity version
+=======
+        <carbon.identity.version>5.0.7</carbon.identity.version>
+        <carbon.identity.jar.version>5.0.7</carbon.identity.jar.version>
+>>>>>>> df7e2e9... upgrading carbon-identity version to 5.0.7
         <product.identity.version>5.1.0</product.identity.version>
 >>>>>>> 239c03d... updating release notes, license and un-used poms
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
