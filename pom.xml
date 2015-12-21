@@ -572,7 +572,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.1.0</version>
+    <version>5.2.0-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -3734,9 +3734,13 @@
 =======
         <carbon.identity.version>5.0.7</carbon.identity.version>
         <carbon.identity.jar.version>5.0.7</carbon.identity.jar.version>
+<<<<<<< HEAD
 >>>>>>> df7e2e9... upgrading carbon-identity version to 5.0.7
         <product.identity.version>5.1.0</product.identity.version>
 >>>>>>> 239c03d... updating release notes, license and un-used poms
+=======
+        <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
+>>>>>>> fe4dc19... [maven-release-plugin] prepare for next development iteration
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
@@ -4206,7 +4210,7 @@
         <url>https://github.com/wso2/product-is.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-is.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-is.git</connection>
-        <tag>v5.1.0-rc2</tag>
+        <tag>HEAD</tag>
     </scm>
 
 

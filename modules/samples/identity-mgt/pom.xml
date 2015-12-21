@@ -23,6 +23,7 @@
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-identity-samples</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <version>5.1.0-SNAPSHOT</version>
 =======
     	<groupId>org.wso2.is</groupId>
@@ -32,6 +33,9 @@
 =======
         <version>5.1.0</version>
 >>>>>>> 00c54fb... [maven-release-plugin] prepare release v5.1.0-rc2
+=======
+        <version>5.2.0-SNAPSHOT</version>
+>>>>>>> fe4dc19... [maven-release-plugin] prepare for next development iteration
         <relativePath>../pom.xml</relativePath>
     </parent>
 
