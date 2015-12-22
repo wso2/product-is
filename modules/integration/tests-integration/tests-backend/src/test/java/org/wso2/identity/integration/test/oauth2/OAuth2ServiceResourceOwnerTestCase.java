@@ -189,4 +189,31 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals("invalid_client", errormsg, "Invalid error message");
     }
 
+	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
+	public void testSendInvalidAuthenticationPost() throws Exception {
+
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("grant_type",
+                OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        urlParameters.add(new BasicNameValuePair("username", "admin"));
+        urlParameters.add(new BasicNameValuePair("password", "admin1"));
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":" + consumerSecret)
+                .getBytes()).trim());
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(request);
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Object obj = JSONValue.parse(rd);
+        String errormsg = ((JSONObject) obj).get("error_description").toString();
+
+        EntityUtils.consume(response.getEntity());
+        Assert.assertTrue(errormsg.contains("Authentication failed for admin"));
+	}
+
 }
