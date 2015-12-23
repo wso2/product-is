@@ -3645,6 +3645,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3739,6 +3740,10 @@
         <product.identity.version>5.1.0</product.identity.version>
 >>>>>>> 239c03d... updating release notes, license and un-used poms
 =======
+=======
+        <carbon.identity.version>5.0.8-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.jar.version>5.0.8-SNAPSHOT</carbon.identity.jar.version>
+>>>>>>> 21b5bee... Merge branch 'release-5.1.0-rc2'
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
 >>>>>>> fe4dc19... [maven-release-plugin] prepare for next development iteration
         <bcprov.jdk13.version>140</bcprov.jdk13.version>

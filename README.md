@@ -224,7 +224,7 @@ Bouncycastle     : http://www.bouncycastle.org/
 WSO2 IDENTITY SERVER
 =======
 ==========================
-WSO2 Identity Server 5.1.0
+WSO2 Identity Server 5.2.0
 ==========================
 >>>>>>> cee4465... adding readme content
 
@@ -237,7 +237,7 @@ WSO2 Identity Server 5.1.0
 
 ---
 
-Welcome to the WSO2 Identity Server 5.1.0 release.
+Welcome to the WSO2 Identity Server 5.2.0 release.
 
 <<<<<<< HEAD
 WSO2 Identity Server provides sophisticated security and identity management of enterprise web applications, services, and APIs, and makes life easier for developers and architects with its hassle-free, minimal monitoring and maintenance requirements. In its latest version, Identity Server acts as an Enterprise Identity Bus (EIB) — a central backbone to connect and manage multiple identities regardless of the standards on which they are based.In addition to using role-based access control (RBAC) convention, fine-grained policy based access control, and SSO bridging to make identity and entitlement management effortless, the all-new version of Identity Server now includes features such as identity token transformation and mediation for seamless integration between internal applications and cloud apps such as Salesforce, Google Apps, and Microsoft Office 365; new user and group provisioning capabilities; and multi-option and multi-step authentication to provide flexibility in selecting authentication options and enable robust multi-factor authentication.
@@ -281,13 +281,13 @@ New Features
 *   SAML 2.0 Bearer Token Renewal
 
     In IS 5.0.0, STS feature supports renewing Bearer type SAML 1.1 tokens only;
-    attempts to renew Bearer type SAML 2.0 Tokens get failed. With IS 5.1.0 product will
+    attempts to renew Bearer type SAML 2.0 Tokens get failed. With IS 5.2.0 product will
     facilitate renewing expired Bearer type SAML 2.0 Tokens.
 
 *   OpenID Connect Core 1.0 Compliance
 
     The IS 5.0.0 had OpenID Support, however there were many points in the spec that were being violated.
-    Now that the specification is finalized we have made IS 5.1.0 OpenID Connect support specification
+    Now that the specification is finalized we have made IS 5.2.0 OpenID Connect support specification
     compliant. A major improvement this area is support for IDToken response type from the
     OpenID Connect authorization endpoint.
 
