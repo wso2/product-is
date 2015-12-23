@@ -8,7 +8,7 @@ This describes the steps to configure and run the Password Recovery Sample web a
 Prerequisites
 --------------
 
-Build Identity Server 5.1.0
+Build Identity Server 5.2.0
 Tomcat 6 - To deploy the sample web app
 
 
