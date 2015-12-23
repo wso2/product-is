@@ -14,13 +14,12 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.2.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -28,7 +27,7 @@
     <artifactId>wso2is</artifactId>
     <packaging>jar</packaging>
     <name>Identity Server</name>
-    <url></url>
+    <url />
     <description>Identity Server: Distribution</description>
 
     <dependencies>
@@ -61,8 +60,7 @@
               <version>${carbon.version}</version> </dependency> <dependency>
               <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.theme.mgt</artifactId>
-              <version>${carbon.version}</version > </dependency
-          -->
+              <version>${carbon.version}</version > </dependency -->
 
     </dependencies>
 
@@ -107,170 +105,79 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <property name="tempdir" value="target/docs-temp"/>
-                                <property name="registryPolicyHandler"
-                                          value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator}       &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator}           &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator}       &lt;/filter&gt;${line.separator}   &lt;/handler&gt;${line.separator}${line.separator}   &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"/>
+                                <property name="tempdir" value="target/docs-temp" />
+                                <property name="registryPolicyHandler" value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator} &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator}           &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator}       &lt;/filter&gt;${line.separator}   &lt;/handler&gt;${line.separator}${line.separator}   &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" />
 
-                                <property name="xss-kernel-token"
-                                          value="&lt;XSSPreventionConfig&gt;${line.separator}            &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}        &lt;/XSSPreventionConfig&gt;"/>
+                                <property name="xss-kernel-token" value="&lt;XSSPreventionConfig&gt;${line.separator} &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator}            &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator}            &lt;Patterns&gt;${line.separator}                &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator}            &lt;/Patterns&gt;${line.separator}        &lt;/XSSPreventionConfig&gt;" />
 
-                                <property name="xss-is-token" value=""/>
+                                <property name="xss-is-token" value="" />
 
-                                <property name="sso-idp-config-default"
-                                          value="&lt;!--ServiceProvider&gt;&lt;/ServiceProvider--&gt;"/>
+                                <property name="sso-idp-config-default" value="&lt;!--ServiceProvider&gt;&lt;/ServiceProvider--&gt;" />
 
-                                <property name="sso-idp-config-replace"
-                                          value="&lt;ServiceProvider&gt;${line.separator}      &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator}      &lt;AssertionConsumerServiceURLs&gt;${line.separator}        &lt;AssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator}      &lt;/AssertionConsumerServiceURLs&gt;${line.separator}      &lt;DefaultAssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator}      &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator}      &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator}      &lt;AudiencesList&gt;${line.separator}        &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator}      &lt;/AudiencesList&gt;${line.separator}    &lt;/ServiceProvider&gt;"/>
+                                <property name="sso-idp-config-replace" value="&lt;ServiceProvider&gt;${line.separator} &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator}      &lt;AssertionConsumerServiceURLs&gt;${line.separator}        &lt;AssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator}      &lt;/AssertionConsumerServiceURLs&gt;${line.separator}      &lt;DefaultAssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator}      &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator}      &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator}      &lt;AudiencesList&gt;${line.separator}        &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator}      &lt;/AudiencesList&gt;${line.separator}    &lt;/ServiceProvider&gt;" />
 
-                                <mkdir dir="${tempdir}"/>
+                                <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="wso2is-${project.version}.zip"/>
+                                        <include name="wso2is-${project.version}.zip" />
                                     </fileset>
                                 </unzip>
 
                                 <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
                                 </unzip-->
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="${product.name}" value="WSO2 Identity Server"/>
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml"
-                                        token="&lt;Context crossContext=&quot;true&quot;&gt;"
-                                        value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;"/>
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml"
-                                        token="clientAuth=&quot;false&quot;"
-                                        value="clientAuth=&quot;want&quot;"/>
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;ServerURL&gt;https://${carbon.local.ip}"
-                                        value="&lt;ServerURL&gt;https://localhost"/>
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;"
-                                        value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;"/>
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;"
-                                        value="&lt;HostName&gt;localhost&lt;/HostName&gt;"/>
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;!--LdapServer&gt;"
-                                        value="&lt;LdapServer&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.name}" value="WSO2 Identity Server" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Context crossContext=&quot;true&quot;&gt;" value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml" token="clientAuth=&quot;false&quot;" value="clientAuth=&quot;want&quot;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;" value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;" value="&lt;HostName&gt;localhost&lt;/HostName&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;/LdapServer--&gt;"
-                                        value="&lt;/LdapServer&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/LdapServer--&gt;" value="&lt;/LdapServer&gt;" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;!--TokenStoreClassName&gt;"
-                                        value="&lt;TokenStoreClassName&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--TokenStoreClassName&gt;" value="&lt;TokenStoreClassName&gt;" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="&lt;/TokenStoreClassName--&gt;"
-                                        value="&lt;/TokenStoreClassName&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/TokenStoreClassName--&gt;" value="&lt;/TokenStoreClassName&gt;" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                        token="${xss-kernel-token}"
-                                        value="${xss-is-token}"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${xss-kernel-token}" value="${xss-is-token}" />
 
                                 <!-- Update log4j.properties file with Identity related log files -->
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
-                                        token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR"
-                                        value="log4j.logger.net.sf.ehcache=ERROR${line.separator}
-#log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.security=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator}
-#log4j.logger.org.wso2.carbon.identity.core=DEBUG"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR" value="log4j.logger.net.sf.ehcache=ERROR${line.separator} #log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.security=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.core=DEBUG" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
-                                        token="log4j.appender.CARBON_MEMORY=org.wso2.carbon.utils.logging.appenders.MemoryAppender"
-                                        value="log4j.appender.CARBON_MEMORY=org.wso2.carbon.logging.service.appender.CarbonMemoryAppender"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.appender.CARBON_MEMORY=org.wso2.carbon.utils.logging.appenders.MemoryAppender" value="log4j.appender.CARBON_MEMORY=org.wso2.carbon.logging.service.appender.CarbonMemoryAppender" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
-                                        token="log4j.appender.CARBON_MEMORY.layout=org.apache.log4j.PatternLayout"
-                                        value="log4j.appender.CARBON_MEMORY.layout=org.wso2.carbon.utils.logging.TenantAwarePatternLayout"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.appender.CARBON_MEMORY.layout=org.apache.log4j.PatternLayout" value="log4j.appender.CARBON_MEMORY.layout=org.wso2.carbon.utils.logging.TenantAwarePatternLayout" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties"
-                                        token="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=[%d] %5p {%c} - %x %m %n"
-                                        value="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=TID: [%T] [%S] [%d] %P%5p {%c} - %x %m {%c}%n${line.separator}log4j.appender.CARBON_MEMORY.layout.TenantPattern=%U%@%D [%T] [%S]${line.separator}log4j.appender.CARBON_MEMORY.columnList=%T,%S,%A,%d,%c,%p,%m,%H,%I,%Stacktrace"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=[%d] %5p {%c} - %x %m %n" value="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=TID: [%T] [%S] [%d] %P%5p {%c} - %x %m {%c}%n${line.separator}log4j.appender.CARBON_MEMORY.layout.TenantPattern=%U%@%D [%T] [%S]${line.separator}log4j.appender.CARBON_MEMORY.columnList=%T,%S,%A,%d,%c,%p,%m,%H,%I,%Stacktrace" />
 
                                 <!-- Comment all active UserStoreManagers -->
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                        token="&lt;UserStoreManager"
-                                        value="&lt;!--UserStoreManager"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;UserStoreManager" value="&lt;!--UserStoreManager" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                        token="&lt;/UserStoreManager&gt;"
-                                        value="&lt;/UserStoreManager--&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;/UserStoreManager&gt;" value="&lt;/UserStoreManager--&gt;" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                        token="&lt;!--ISUserStoreManager"
-                                        value="&lt;UserStoreManager"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;!--ISUserStoreManager" value="&lt;UserStoreManager" />
 
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                        token="&lt;/ISUserStoreManager--&gt;"
-                                        value="&lt;/UserStoreManager&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;/ISUserStoreManager--&gt;" value="&lt;/UserStoreManager&gt;" />
 
-                               <replace
-                                       file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                       token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;"
-                                       value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;"/>
+                               <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;!--Property name=&quot;GetAllRolesOfUserEnabled&quot;&gt;true&lt;/Property--&gt;" />
 
                                 <!-- turn off IsBulkImportSupported -->
-                                <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml"
-                                        token="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;true&lt;/Property&gt;"
-                                        value="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;false&lt;/Property&gt;"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;false&lt;/Property&gt;" />
 
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml"
-                                        token="${sso-idp-config-default}"
-                                        value="${sso-idp-config-replace}"/>
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
 
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml"
-                                        token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;"
-                                        value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;"/>
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;" value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;" />
 
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml"
-                                        token="&lt;/Authenticator--&gt;"
-                                        value="&lt;/Authenticator&gt;"/>
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;/Authenticator--&gt;" value="&lt;/Authenticator&gt;" />
 
                                 <unzip dest="${tempdir}/shindig">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="shindig.war"/>
+                                        <include name="shindig.war" />
                                     </fileset>
                                 </unzip>
 
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/shindig.war"/>
-                                <delete file="${tempdir}/shindig/WEB-INF/web.xml"/>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/shindig.war" />
+                                <delete file="${tempdir}/shindig/WEB-INF/web.xml" />
 
                                 <copy todir="${tempdir}/shindig/WEB-INF" overwrite="false">
                                     <fileset dir="conf/shindig">
@@ -282,88 +189,67 @@
 
                                 <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
 
-                                <replace
-                                        file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml"
-                                        token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;"
-                                        value="${registryPolicyHandler}"/>
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" value="${registryPolicyHandler}" />
 
                                 <!-- Enable KDC for IS -->
 
-                                <copy
-                                        todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/"
-                                        overwrite="false">
-                                    <fileset
-                                            dir="${tempdir}/wso2is-${project.version}/repository/components/">
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/" overwrite="false">
+                                    <fileset dir="${tempdir}/wso2is-${project.version}/repository/components/">
                                     </fileset>
                                 </copy>
-                                <copy
-                                        todir="target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/client/modules"
-                                        overwrite="false">
-                                    <fileset
-                                            dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/client/modules" overwrite="false">
+                                    <fileset dir="${tempdir}/wso2is-${project.version}/repository/deployment/client/modules">
                                     </fileset>
                                 </copy>
-                                <copy
-                                        todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity"
-                                        overwrite="false">
-                                    <fileset
-                                            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/">
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity" overwrite="false">
+                                    <fileset dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/">
                                     </fileset>
                                 </copy>
 
                                 <path id="h2.classpath">
-                                    <path refid="maven.compile.classpath"/>
+                                    <path refid="maven.compile.classpath" />
                                 </path>
-                                <echo
-                                        message="########### Create Identity Database ##############"/>
-                                <sql
-                                        driver="org.h2.Driver"
-                                        url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB"
-                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
-                                        onerror="continue">
+                                <echo message="########### Create Identity Database ##############" />
+                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
-                                        <path refid="h2.classpath"/>
+                                        <path refid="h2.classpath" />
                                     </classpath>
-                                    <fileset
-                                            file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/h2.sql"/>
+                                    <fileset file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/h2.sql" />
                                 </sql>
-                                <echo
-                                        message="##################### END ########################"/>
+                                <echo message="##################### END ########################" />
 
-                                <delete file="target/wso2is-${project.version}.zip"/>
-                                <delete dir="${tempdir}"/>
-                                <mkdir dir="${tempdir}"/>
+                                <delete file="target/wso2is-${project.version}.zip" />
+                                <delete dir="${tempdir}" />
+                                <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
-                                    <fileset
-                                            dir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/">
-                                        <include name="*.ui*.jar"/>
+                                    <fileset dir="target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins/">
+                                        <include name="*.ui*.jar" />
                                     </fileset>
                                 </unzip>
                                 <move todir="${tempdir}/web/" includeemptydirs="false">
                                     <fileset dir="${tempdir}/web/">
-                                        <exclude name="**/yui/**"/>
-                                        <exclude name="**/ajax/**"/>
-                                        <exclude name="**/WEB-INF/**"/>
-                                        <include name="**/*.html"/>
-                                        <exclude name="**/editarea/**"/>
-                                        <exclude name="**/codepress/**"/>
+                                        <exclude name="**/yui/**" />
+                                        <exclude name="**/ajax/**" />
+                                        <exclude name="**/WEB-INF/**" />
+                                        <include name="**/*.html" />
+                                        <exclude name="**/editarea/**" />
+                                        <exclude name="**/codepress/**" />
                                     </fileset>
-                                    <mapper type="glob" from="*.html" to="*.xml"/>
+                                    <mapper type="glob" from="*.html" to="*.xml" />
                                 </move>
-                                <copy todir="src/site/xdoc" overwrite="false"
-                                      includeemptydirs="false">
+                                <copy todir="src/site/xdoc" overwrite="false" includeemptydirs="false">
                                     <fileset dir="${tempdir}/web">
-                                        <exclude name="**/yui/**"/>
-                                        <exclude name="**/ajax/**"/>
-                                        <exclude name="**/WEB-INF/**"/>
-                                        <exclude name="**/gadget/**"/>
-                                        <exclude name="**/*.html"/>
-                                        <exclude name="**/*.js"/>
-                                        <exclude name="**/*.jsp"/>
-                                        <exclude name="**/*.xsl"/>
-                                        <exclude name="*.*"/>
-                                        <exclude name="**/template.xml"/>
-                                        <exclude name="**/codepress.xml"/>
+                                        <exclude name="**/yui/**" />
+                                        <exclude name="**/ajax/**" />
+                                        <exclude name="**/WEB-INF/**" />
+                                        <exclude name="**/gadget/**" />
+                                        <exclude name="**/*.html" />
+                                        <exclude name="**/*.js" />
+                                        <exclude name="**/*.jsp" />
+                                        <exclude name="**/*.xsl" />
+                                        <exclude name="*.*" />
+                                        <exclude name="**/template.xml" />
+                                        <exclude name="**/codepress.xml" />
                                     </fileset>
                                 </copy>
                                 <copy todir="src/site" overwrite="false" includeemptydirs="false">
@@ -372,22 +258,22 @@
                                 </copy>
                                 <copy todir="src/site" overwrite="true" includeemptydirs="false">
                                     <fileset dir="../documentation/src/site">
-                                        <exclude name="**/images/*.*"/>
-                                        <exclude name="**/user-mgt-actdir.xml"/>
-                                        <exclude name="**/user-mgt-jdbc.xml"/>
-                                        <exclude name="**/user-mgt-ldap.xml"/>
-                                        <exclude name="**/user-mgt-ldap-read-write.xml"/>
+                                        <exclude name="**/images/*.*" />
+                                        <exclude name="**/user-mgt-actdir.xml" />
+                                        <exclude name="**/user-mgt-jdbc.xml" />
+                                        <exclude name="**/user-mgt-ldap.xml" />
+                                        <exclude name="**/user-mgt-ldap-read-write.xml" />
                                     </fileset>
                                     <filterset>
-                                        <filter token="buildNumber" value="${buildNumber}"/>
+                                        <filter token="buildNumber" value="${buildNumber}" />
                                     </filterset>
                                 </copy>
                                 <copy todir="target/site/" overwrite="false" includeemptydirs="false">
                                     <fileset dir="src/site/xdoc/">
-                                        <include name="**/images/*.*"/>
+                                        <include name="**/images/*.*" />
                                     </fileset>
                                 </copy>
-                                <delete dir="${tempdir}"/>
+                                <delete dir="${tempdir}" />
                             </tasks>
                         </configuration>
                     </execution>
@@ -399,14 +285,14 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <delete dir="target/archive-tmp"/>
-                                <delete dir="target/dependency-maven-plugin-markers"/>
-                                <delete dir="target/maven-archiver"/>
-                                <delete dir="target/wso2carbon-core-${carbon.kernel.version}"/>
-                                <delete file="target/wso2is-${project.version}.jar"/>
-                                <delete dir="target/sources"/>
-                                <delete dir="target/site"/>
-                                <delete dir="src/site"/>
+                                <delete dir="target/archive-tmp" />
+                                <delete dir="target/dependency-maven-plugin-markers" />
+                                <delete dir="target/maven-archiver" />
+                                <delete dir="target/wso2carbon-core-${carbon.kernel.version}" />
+                                <delete file="target/wso2is-${project.version}.jar" />
+                                <delete dir="target/sources" />
+                                <delete dir="target/site" />
+                                <delete dir="src/site" />
                             </tasks>
                         </configuration>
                     </execution>
