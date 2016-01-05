@@ -26,7 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.user.account.association.stub.UserAccountAssociationServiceStub;
 import org.wso2.carbon.identity.user.account.association.stub.types.UserAccountAssociationDTO;
+import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class UserAccountConnectorServiceClient {
 
@@ -47,6 +49,18 @@ public class UserAccountConnectorServiceClient {
 
     }
 
+    public UserAccountConnectorServiceClient(String username, String password, String backendServerURL,
+                                             ConfigurationContext configCtx)
+            throws AxisFault {
+
+        String serviceURL = backendServerURL + "UserAccountAssociationService";
+        serviceStub = new UserAccountAssociationServiceStub(configCtx, serviceURL);
+        ServiceClient client = serviceStub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        AuthenticateStubUtil.authenticateStub(username, password, serviceStub);
+    }
+
     /**
      * Create new user account association
      *
@@ -56,6 +70,17 @@ public class UserAccountConnectorServiceClient {
      */
     public void createUserAccountAssociation(String userName, String[] password) throws Exception {
         serviceStub.createUserAccountAssociation(userName, password);
+    }
+
+    /**
+     * Associate two accounts as Admin
+     *
+     * @param user1 username1
+     * @param user2 username2
+     * @throws Exception
+     */
+    public void associateTwoAccounts(String user1, String user2) throws Exception {
+        serviceStub.associateTwoAccounts(user1, user2);
     }
 
     /**
@@ -76,6 +101,17 @@ public class UserAccountConnectorServiceClient {
      */
     public UserAccountAssociationDTO[] getAccountAssociationsOfUser() throws Exception {
         return serviceStub.getAccountAssociationsOfUser();
+    }
+
+    /**
+     * Get association of a user as an admin
+     *
+     * @param userName username of user to get associations of
+     * @return
+     * @throws Exception
+     */
+    public UserAccountAssociationDTO[] getAccountAssociations(String userName) throws Exception {
+        return serviceStub.getAccountAssociations(userName);
     }
 
     /**
