@@ -272,9 +272,9 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testGetAccessToken")
+    @Test(groups = "wso2.is", description = "Validate the user claim values", dependsOnMethods = "testGetAccessToken")
     public void testClaims() throws Exception {
-        HttpGet request = new HttpGet("https://localhost:9853/oauth2/userinfo?schema=openid");
+        HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Bearer " + accessToken);
