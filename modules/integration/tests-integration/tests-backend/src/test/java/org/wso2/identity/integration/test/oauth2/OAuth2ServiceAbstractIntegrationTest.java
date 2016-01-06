@@ -37,6 +37,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -57,6 +58,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
+    protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+
 
 	/**
 	 * Initialize
@@ -69,6 +72,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		super.init(userMode);
 		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 	}
 
 	/**
