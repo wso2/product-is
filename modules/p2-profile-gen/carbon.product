@@ -2,7 +2,7 @@
 <?pde version="3.5"?>
 
 <product name="Carbon Product" uid="carbon.product.id" id="carbon.product" application="carbon.application"
-version="5.1.0.SNAPSHOT" useFeatures="true" includeLaunchers="true">
+version="5.2.0.SNAPSHOT" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
