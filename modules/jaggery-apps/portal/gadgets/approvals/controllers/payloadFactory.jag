@@ -104,10 +104,7 @@ if (!application.get(SAML_ENABLED)) {
 application.put("urn:getUserInfo", getUserInfo);
 application.put("urn:startRegistration", startRegistration);
 application.put("urn:finishRegistration", finishRegistration);
-
 application.put("urn:humanTaskpayload", humanTaskpayload);
-
-
 
 function getPayload(method, param) {
 
