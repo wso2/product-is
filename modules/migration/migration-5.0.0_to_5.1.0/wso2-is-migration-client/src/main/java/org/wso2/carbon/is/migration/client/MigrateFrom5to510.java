@@ -156,10 +156,54 @@ public class MigrateFrom5to510 implements MigrationClient {
      * @throws SQLException
      */
     public void databaseMigration() throws Exception {
+        String migrateIdentity = System.getProperty("migrateIdentity");
+        String migrateIdentityDB = System.getProperty("migrateIdentityDB");
+        String migrateIdentityData = System.getProperty("migrateIdentityData");
+        String migrateUMDB = System.getProperty("migrateUMDB");
+        String migrateUMData = System.getProperty("migrateUMData");
+        String migrateIdentityDBFinalize = System.getProperty("migrateIdentityDBFinalize");
+
+        if (Boolean.parseBoolean(migrateIdentity)) {
+            migrateIdentity();
+            log.info("Migrated the identity database");
+        } else if (Boolean.parseBoolean(migrateIdentityDB)) {
+            migrateIdentityDB();
+            log.info("Migrated the identity database schema");
+        } else if (Boolean.parseBoolean(migrateUMDB)) {
+            migrateUMDB();
+            log.info("Migrated the user management database schema");
+        } else if (Boolean.parseBoolean(migrateIdentityData)) {
+            migrateIdentityData();
+            log.info("Migrated the identity data");
+        } else if (Boolean.parseBoolean(migrateUMData)) {
+            migrateUMData();
+            log.info("Migrated the user management data");
+        } else if (Boolean.parseBoolean(migrateIdentityDBFinalize)) {
+            migrateIdentityDBFinalize();
+            log.info("Finalized the identity database");
+        } else {
+            migrateAll();
+            log.info("Migrated the identity and user management databases");
+        }
+    }
+
+    public void migrateAll() throws Exception {
         if (!ResourceUtil.isSchemaMigrated(dataSource)) {
             MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
             migrationDatabaseCreator.executeIdentityMigrationScript();
             migrationDatabaseCreator.executeUmMigrationScript();
+            migrateIdentityData();
+            migrateIdentityDBFinalize();
+            migrateUMData();
+        } else {
+            log.info("Identity schema is already migrated");
+        }
+    }
+
+    public void migrateIdentity() throws Exception {
+        if (!ResourceUtil.isSchemaMigrated(dataSource)) {
+            MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
+            migrationDatabaseCreator.executeIdentityMigrationScript();
             migrateIdentityData();
             migrateIdentityDBFinalize();
             migrateUMData();
