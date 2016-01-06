@@ -21,10 +21,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -35,13 +38,17 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +78,12 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 	private DefaultHttpClient client;
 	private Tomcat tomcat;
 
+    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
+
+    private static final String USER_EMAIL = "abc@wso2.com";
+    private static final String USERNAME = "authcodegrantuser";
+    private static final String PASSWORD = "pass123";
+
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
@@ -86,7 +99,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
 		client = new DefaultHttpClient();
 		setSystemproperties();
-	}
+        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
+    }
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
@@ -257,6 +271,24 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 		EntityUtils.consume(response.getEntity());
 	}
 
+    @Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testGetAccessToken")
+    public void testClaims() throws Exception {
+        HttpGet request = new HttpGet("https://localhost:9853/oauth2/userinfo?schema=openid");
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Authorization", "Bearer " + accessToken);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Object obj = JSONValue.parse(rd);
+        String email = ((org.json.simple.JSONObject) obj).get("email").toString();
+
+        EntityUtils.consume(response.getEntity());
+        Assert.assertEquals(USER_EMAIL, email, "Incorrect email claim value");
+    }
+
     @Test(groups = "wso2.is", description = "Validate Token Expiration Time",
           dependsOnMethods = "testValidateAccessToken")
     public void testValidateTokenExpirationTime() throws Exception {
@@ -290,7 +322,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
 	@Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
 			"testGetAccessToken")
-    public void AuthorizationContextValidateJwtToken() throws Exception {
+    public void testAuthorizationContextValidateJwtToken() throws Exception {
         String claimURI[] = {OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE};
         OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
         OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
@@ -311,8 +343,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
             String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.replaceAll("[\\[\\]\"]", "").split(",");
             List<String> jwtClaimMappingRoleElementsList = Arrays.asList(jwtClaimMappingRoleElements);
-            Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Application/PlaygroundServiceProver"), "Invalid " +
-                    "JWT Token Role Values");
+            Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/everyone"), "Invalid JWT Token Role " +
+                    "Values");
         }
     }
 
@@ -336,6 +368,29 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         log.info("Replacing identity.xml with default configurations");
         serverConfigurationManager.restoreToLastConfiguration();
+    }
+
+    public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("username", USERNAME));
+        urlParameters.add(new BasicNameValuePair("password", PASSWORD));
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+
+        return response;
+    }
+
+
+    protected ClaimValue[] getUserClaims() {
+        ClaimValue[] claimValues = new ClaimValue[1];
+
+        ClaimValue email = new ClaimValue();
+        email.setClaimURI(emailClaimURI);
+        email.setValue(USER_EMAIL);
+        claimValues[0] = email;
+
+        return claimValues;
     }
 
 }
