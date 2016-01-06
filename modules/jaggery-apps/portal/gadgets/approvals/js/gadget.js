@@ -59,7 +59,6 @@ function drawNoServerErrorpage(errorMessage) {
 
 function drawTablepage(json, engineValue) {
 
-
     var dropDown = " <script type=\"text/javascript\" charset=\"utf-8\" src=\"https://cdn.datatables.net/1.10.0/js/jquery.dataTables.js\"></script><div class=\"col-lg-12 sectionSub\">" +
         "<table class=\"carbonFormTable\" style=\"width:100%; padding-left: 10px;\">" +
         "<tr>" +
@@ -74,7 +73,6 @@ function drawTablepage(json, engineValue) {
         "</select>" +
         "</td>" +
         "</tr>" +
-
         "<tr>" +
         "<td style=\"width:20%\" class=\"leftCol-med labelField\">BPEL Profile Engine :     </td>" +
         "<td>" +
@@ -113,8 +111,8 @@ function drawTablepage(json, engineValue) {
     if (obj.taskSimpleQueryResultSet.row != undefined) {
         for (var i = 0; i < obj.taskSimpleQueryResultSet.row.length; i++) {
             var entry = obj.taskSimpleQueryResultSet.row[i];
-            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "RESERVED"))) {
-
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" &&
+                (entry.status == "READY" || entry.status == "RESERVED"))) {
                 middle = middle +
                     "                <tr>\n" +
                     "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
@@ -125,13 +123,11 @@ function drawTablepage(json, engineValue) {
                     "                </tr>\n";
                 hasRows = 1;
             }
-
-
         }
         if (obj.taskSimpleQueryResultSet.row != null && obj.taskSimpleQueryResultSet.row.length == undefined) {
             var entry = obj.taskSimpleQueryResultSet.row;
-            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" && (entry.status == "READY" || entry.status == "RESERVED"))) {
-
+            if (listOptions == "ALL_TASKS" || listOptions == entry.status || (listOptions == "DEFAULT" &&
+                (entry.status == "READY" || entry.status == "RESERVED"))) {
                 middle = middle +
                     "                <tr>\n" +
                     "                    <td><input type='button' id='" + entry.id + "' class=\"btn btn-info\" onclick='table_button_click(\"" + entry.id + "\",\"" + entry.status + "\")' value='" + entry.id + "'/></td>" +
@@ -317,8 +313,6 @@ function approve_button_click(state, id) {
             }
         });
     } else if (state == "2") {
-
-
         var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
             "  <div class=\"modal-dialog\">\n" +
             "    <div class=\"modal-content\">\n" +
@@ -374,8 +368,6 @@ function changeOption() {
 
 
 function getList(engine, serverCookie) {
-
-
     $.ajax({
         url: "/portal/gadgets/approvals/controllers/approvals/ht-client.jag",
         type: "POST",
