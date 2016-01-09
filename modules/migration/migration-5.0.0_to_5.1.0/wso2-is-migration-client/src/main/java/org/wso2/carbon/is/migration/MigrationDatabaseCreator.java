@@ -66,13 +66,13 @@ public class MigrationDatabaseCreator {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if (Constants.MSSQL_DATABASE.equals(databaseType)){
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
             DatabaseMetaData meta = conn.getMetaData();
             String schema = null;
-            if ("oracle".equals(databaseType)){
+            if (Constants.ORACLE_DATABASE.equals(databaseType)){
                 schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
             }
             ResultSet res = meta.getTables(null, schema, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
@@ -109,7 +109,7 @@ public class MigrationDatabaseCreator {
             conn = umDataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if (Constants.MSSQL_DATABASE.equals(databaseType)){
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
@@ -138,7 +138,7 @@ public class MigrationDatabaseCreator {
     protected String getIdentityDbScriptLocation(String databaseType, String from, String to) {
 
         String scriptName = databaseType + ".sql";
-        String carbonHome = System.getProperty("carbon.home");
+        String carbonHome = System.getProperty(Constants.CARBON_HOME);
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_0_0_SP1.equals(to)) {
             return carbonHome + File.separator + "dbscripts" + File.separator + "identity" + File.separator +
@@ -154,7 +154,7 @@ public class MigrationDatabaseCreator {
     protected String getUmDbScriptLocation(String databaseType, String from, String to) {
 
         String scriptName = databaseType + ".sql";
-        String carbonHome = System.getProperty("carbon.home");
+        String carbonHome = System.getProperty(Constants.CARBON_HOME);
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
             return carbonHome + File.separator + "dbscripts" + File.separator + "migration-5.0.0_to_5.1.0" + File
