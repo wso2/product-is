@@ -75,8 +75,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             Connection conn = null;
             try {
                 conn = dataSource.getConnection();
-                if (Constants.ORACLE_DATABASE.equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
-                        .getIdentityOracleUser() == null) {
+                if (Constants.DatabaseTypes.oracle.toString().equals(DatabaseCreator.getDatabaseType(conn)) &&
+                        ISMigrationServiceDataHolder.getIdentityOracleUser() == null) {
                     ISMigrationServiceDataHolder.setIdentityOracleUser(dataSource.getConnection().getMetaData()
                             .getUserName());
                 }
@@ -91,7 +91,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             }
             try {
                 conn = umDataSource.getConnection();
-                if (Constants.ORACLE_DATABASE.equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
+                if (Constants.DatabaseTypes.oracle.toString().equals(DatabaseCreator.getDatabaseType(conn)) &&
+                        ISMigrationServiceDataHolder
                         .getIdentityOracleUser() == null) {
                     ISMigrationServiceDataHolder.setIdentityOracleUser(umDataSource.getConnection().getMetaData()
                             .getUserName());
@@ -102,12 +103,11 @@ public class MigrateFrom5to510 implements MigrationClient {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    log.warn("Error while closing the user manager database connection", e);
+                    log.error("Error while closing the user manager database connection", e);
                 }
             }
         } catch (IdentityException e) {
             String errorMsg = "Error when reading the JDBC Configuration from the file.";
-            log.error(errorMsg, e);
             throw new ISMigrationException(errorMsg, e);
         }
     }
@@ -176,27 +176,33 @@ public class MigrateFrom5to510 implements MigrationClient {
         String migrateUMData = System.getProperty("migrateUMData");
         String migrateIdentityDBFinalize = System.getProperty("migrateIdentityDBFinalize");
 
-        if (Boolean.parseBoolean(migrateIdentity)) {
-            migrateIdentity();
-            log.info("Migrated the identity database");
-        } else if (Boolean.parseBoolean(migrateIdentityDB)) {
-            migrateIdentityDB();
-            log.info("Migrated the identity database schema");
-        } else if (Boolean.parseBoolean(migrateUMDB)) {
-            migrateUMDB();
-            log.info("Migrated the user management database schema");
-        } else if (Boolean.parseBoolean(migrateIdentityData)) {
-            migrateIdentityData();
-            log.info("Migrated the identity data");
-        } else if (Boolean.parseBoolean(migrateUMData)) {
-            migrateUMData();
-            log.info("Migrated the user management data");
-        } else if (Boolean.parseBoolean(migrateIdentityDBFinalize)) {
-            migrateIdentityDBFinalize();
-            log.info("Finalized the identity database");
-        } else {
-            migrateAll();
-            log.info("Migrated the identity and user management databases");
+        try {
+            if (Boolean.parseBoolean(migrateIdentity)) {
+                migrateIdentity();
+                log.info("Migrated the identity database");
+            } else if (Boolean.parseBoolean(migrateIdentityDB)) {
+                migrateIdentityDB();
+                log.info("Migrated the identity database schema");
+            } else if (Boolean.parseBoolean(migrateUMDB)) {
+                migrateUMDB();
+                log.info("Migrated the user management database schema");
+            } else if (Boolean.parseBoolean(migrateIdentityData)) {
+                migrateIdentityData();
+                log.info("Migrated the identity data");
+            } else if (Boolean.parseBoolean(migrateUMData)) {
+                migrateUMData();
+                log.info("Migrated the user management data");
+            } else if (Boolean.parseBoolean(migrateIdentityDBFinalize)) {
+                migrateIdentityDBFinalize();
+                log.info("Finalized the identity database");
+            } else {
+                migrateAll();
+                log.info("Migrated the identity and user management databases");
+            }
+        }catch (Exception e){
+            String errorMessage = "Error while migrating the databases";
+            log.error(errorMessage, e);
+            throw new Exception(errorMessage, e);
         }
     }
 
@@ -453,13 +459,13 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
             String alterTokenIdNotNull;
-            if (Constants.ORACLE_DATABASE.equals(databaseType)) {
+            if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
-            } else if (Constants.MSSQL_DATABASE.equals(databaseType)) {
+            } else if (Constants.DatabaseTypes.mssql.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
-            } else if (Constants.POSTGRESQL_DATABASE.equals(databaseType)) {
+            } else if (Constants.DatabaseTypes.postgresql.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
-            } else if (Constants.H2_DATABASE.equals(databaseType)) {
+            } else if (Constants.DatabaseTypes.h2.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
             } else {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;

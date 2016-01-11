@@ -22,8 +22,8 @@ public class Constants {
     public static final String VERSION_5_0_0 = "5.0.0";
     public static final String VERSION_5_0_0_SP1 = "5.0.0SP1";
     public static final String CARBON_HOME = "carbon.home";
-    public static final String ORACLE_DATABASE = "oracle";
-    public static final String MSSQL_DATABASE = "mssql";
-    public static final String POSTGRESQL_DATABASE = "postgresql";
-    public static final String H2_DATABASE = "h2";
+
+    public enum DatabaseTypes{
+        oracle, mssql, mysql, postgresql, h2
+    }
 }

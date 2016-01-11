@@ -43,8 +43,8 @@ public class Utils {
     }
 
     public static String getResidentCarbonHome() {
-        if(StringUtils.isEmpty(RESIDENT_CARBON_HOME)){
-            RESIDENT_CARBON_HOME = System.getProperty("carbon.home");;
+        if (StringUtils.isEmpty(RESIDENT_CARBON_HOME)) {
+            RESIDENT_CARBON_HOME = System.getProperty("carbon.home");
         }
         return RESIDENT_CARBON_HOME;
     }

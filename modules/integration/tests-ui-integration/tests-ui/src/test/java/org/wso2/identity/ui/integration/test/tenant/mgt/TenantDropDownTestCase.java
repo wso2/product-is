@@ -43,9 +43,16 @@ import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServic
 import org.wso2.identity.ui.integration.test.login.ISLoginTestCase;
 
 import java.io.File;
+import java.lang.String;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class TenantDropDownTestCase extends ISLoginTestCase {
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "password";
+    private static final String EMAIL = "admin@dropdown.com";
+    private static final String FIRST_NAME = "Dropdown";
+    private static final String LAST_NAME = "User";
     private WebDriver driver;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
@@ -70,35 +77,25 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
     public void setUp() throws Exception {
         super.init();
 
-        applicationAuthenticationXml = new File(CarbonUtils.getCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "application-authentication.xml");
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "tenantDropdown" + File.separator
-                + "application-authentication-tanantDropdown-enabled.xml");
+        applicationAuthenticationXml = Paths.get(CarbonUtils.getCarbonHome(), "repository", "conf", "identity",
+                "application-authentication.xml").toFile();
+        File applicationAuthenticationXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),
+                "artifacts","IS","tenantDropdown","application-authentication-tanantDropdown-enabled.xml").toFile();
 
-        authenticatorsXml = new File(CarbonUtils.getCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "security" + File.separator + "authenticators.xml");
-        File authenticatorsXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
-                .separator + "IS"
-                + File.separator + "tenantDropdown" + File.separator
-                + "authenticators-tenantDropdown-enabled.xml");
+        authenticatorsXml = Paths.get(CarbonUtils.getCarbonHome(), "repository", "conf", "security", "authenticators" +
+                ".xml").toFile();
+        File authenticatorsXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),"artifacts", "IS",
+                "tenantDropdown", "authenticators-tenantDropdown-enabled.xml").toFile();
 
-        catalinaServerXml = new File(CarbonUtils.getCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "tomcat" + File.separator + "catalina-server.xml");
-        File catalinaServerXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
-                .separator + "IS"
-                + File.separator + "tenantDropdown" + File.separator
-                + "catalina-server-tanantDropdown-enabled.xml");
+        catalinaServerXml = Paths.get(CarbonUtils.getCarbonHome(), "repository", "conf", "tomcat", "catalina-server" +
+                ".xml").toFile();
+        File catalinaServerXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),"artifacts", "IS",
+                "tenantDropdown", "catalina-server-tanantDropdown-enabled.xml").toFile();
 
-        endpointConfigProperties = new File(CarbonUtils.getCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "EndpointConfig.properties");
-        File endpointConfigPropertiesToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "IS" + File.separator + "tenantDropdown" + File.separator +
-                "EndpointConfigTenantDropdownEnabled.properties");
+        endpointConfigProperties = Paths.get(CarbonUtils.getCarbonHome(), "repository", "conf", "identity",
+                "EndpointConfig.properties").toFile();
+        File endpointConfigPropertiesToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),"artifacts",
+                "IS", "tenantDropdown", "EndpointConfigTenantDropdownEnabled.properties").toFile();
 
         userIdentityMgt = new ServerConfigurationManager(isServer);
         userIdentityMgt.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
@@ -111,22 +108,21 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
 
         super.init();
 
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
-                        , null);
+        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
+                (null, null);
 
         driver = BrowserManager.getWebDriver();
 
-        tenantServiceClient = new TenantManagementServiceClient( isServer.getContextUrls().getBackEndUrl(),
+        tenantServiceClient = new TenantManagementServiceClient(isServer.getContextUrls().getBackEndUrl(),
                 sessionCookie);
-        tenantServiceClient.addTenant(TENANT_DOMAIN, "admin", "password", "admin@dropdown.com", "Dropdown", "User");
+        tenantServiceClient.addTenant(TENANT_DOMAIN, USERNAME, PASSWORD, EMAIL, FIRST_NAME, LAST_NAME);
 
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         applicationManagementServiceClient =
                 new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
         ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
         createApplication();
-        driver.get(isServer.getContextUrls().getWebAppURLHttps()+"/samlsso?spEntityID=" + SAML_ISSUER);
+        driver.get(isServer.getContextUrls().getWebAppURLHttps() + "/samlsso?spEntityID=" + SAML_ISSUER);
     }
 
     @Test(groups = "wso2.identity", description = "verify login to IS Server")
@@ -137,7 +133,7 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
 
         boolean tenantFound = false;
         for (WebElement option : allOptions) {
-            if (TENANT_DOMAIN.equals(option.getText())) {
+            if (option != null && TENANT_DOMAIN.equals(option.getText())) {
                 tenantFound = true;
                 break;
             }
@@ -154,19 +150,17 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
         ssoConfigServiceClient.removeServiceProvider(SAML_ISSUER);
         applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
 
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "tenantDropdown" + File.separator +
-                "application-authentication-default.xml");
+        File applicationAuthenticationXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),
+                "artifacts", "IS", "tenantDropdown", "application-authentication-default.xml").toFile();
 
-        File authenticatorsXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
-                .separator + "IS" + File.separator + "tenantDropdown" + File.separator + "authenticators-default.xml");
+        File authenticatorsXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(), "artifacts", "IS",
+                "tenantDropdown", "authenticators-default.xml").toFile();
 
-        File catalinaServerXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
-                .separator + "IS" + File.separator + "tenantDropdown" + File.separator + "catalina-server-default.xml");
+        File catalinaServerXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(), "artifacts", "IS",
+                "tenantDropdown", "catalina-server-default.xml").toFile();
 
-        File endpointConfigPropertiesToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" +
-                File.separator + "IS" + File.separator + "tenantDropdown" + File.separator + "EndpointConfigDefault" +
-                ".properties");
+        File endpointConfigPropertiesToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(), "artifacts",
+                "IS", "tenantDropdown", "EndpointConfigDefault.properties").toFile();
 
         userIdentityMgt.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
                 applicationAuthenticationXml, true);
@@ -180,7 +174,7 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(SAML_ISSUER);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[] {String.format(ACS_URL,
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(ACS_URL,
                 SAML_ISSUER)});
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, SAML_ISSUER));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
@@ -194,7 +188,7 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
         return samlssoServiceProviderDTO;
     }
 
-    private void createApplication() throws Exception{
+    private void createApplication() throws Exception {
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(APPLICATION_NAME);
         serviceProvider.setDescription("This is a test Service Provider");

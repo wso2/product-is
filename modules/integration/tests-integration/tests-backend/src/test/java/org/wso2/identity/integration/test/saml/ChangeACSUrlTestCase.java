@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,14 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
     private String COMMON_AUTH_URL_CHANGED = "https://localhost:%s/commonauth1";
 
+    private static final String SAML_RESPONSE = "SAMLResponse";
+    private static final String RELAY_STATE = "RelayState";
+    private static final String USER_AGENT_HEADER = "User-Agent";
+    private static final String SESSION_DATA_KEY_PARAMETER = "sessionDataKey";
+    private static final String REFERER = "Referer";
+    private static final String USERNAME_PARAMETER = "username";
+    private static final String PASSWORD_PARAMETER = "password";
+
     private String usrName = "admin";
     private String usrPwd = "admin";
 
@@ -86,12 +95,10 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     public void initTest() throws Exception {
 
         super.initTest();
-        applicationAuthenticationXml = new File(Utils.getResidentCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "application-authentication.xml");
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
-                + "application-authentication-changed-acs.xml");
+        applicationAuthenticationXml = Paths.get(Utils.getResidentCarbonHome(), "repository", "conf", "identity",
+                "application-authentication.xml").toFile();
+        File applicationAuthenticationXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),
+                "artifacts", "IS", "saml", "application-authentication-changed-acs.xml").toFile();
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
@@ -115,8 +122,10 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
 
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
-                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants
+                .ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants
+                .ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
 
         //create identity provider in primary IS
         IdentityProvider identityProvider = new IdentityProvider();
@@ -137,13 +146,17 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
 
-        updateServiceProviderWithSAMLConfigs(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL, serviceProvider);
+        updateServiceProviderWithSAMLConfigs(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL,
+                serviceProvider);
 
         AuthenticationStep authStep = new AuthenticationStep();
-        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
+        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity
+                .application.common.model.xsd.IdentityProvider();
         idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
-        authStep.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{idP});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(new AuthenticationStep[]{authStep});
+        authStep.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd
+                .IdentityProvider[]{idP});
+        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(new
+                AuthenticationStep[]{authStep});
         serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType(AUTHENTICATION_TYPE);
 
         updateServiceProvider(PORT_OFFSET_0, serviceProvider);
@@ -171,8 +184,8 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
 
         Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
-        Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
-        Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
+        Assert.assertNotNull(responseParameters.get(SAML_RESPONSE), "Unable to acquire 'SAMLResponse' value");
+        Assert.assertNotNull(responseParameters.get(RELAY_STATE), "Unable to acquire 'RelayState' value");
 
         redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
         Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
@@ -199,9 +212,8 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.stopHttpClient();
 
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator +
-                "application-authentication-default.xml");
+        File applicationAuthenticationXmlToCopy = Paths.get(FrameworkPathUtil.getSystemResourceLocation(),
+                "artifacts", "IS", "saml", "application-authentication-default.xml").toFile();
 
 
         serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
@@ -214,10 +226,10 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
 
         HttpGet request = new HttpGet(SAML_SSO_URL);
-        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader(USER_AGENT_HEADER, USER_AGENT);
         HttpResponse response = client.execute(request);
 
-        return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
+        return extractValueFromResponse(response, "name=\"" + SESSION_DATA_KEY_PARAMETER + "\"", 1);
     }
 
     private String authenticateWithSecondaryIS(HttpClient client, String sessionId)
@@ -228,9 +240,9 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", usrName));
-        urlParameters.add(new BasicNameValuePair("password", usrPwd));
-        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionId));
+        urlParameters.add(new BasicNameValuePair(USERNAME_PARAMETER, usrName));
+        urlParameters.add(new BasicNameValuePair(PASSWORD_PARAMETER, usrPwd));
+        urlParameters.add(new BasicNameValuePair(SESSION_DATA_KEY_PARAMETER, sessionId));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(request);
@@ -241,24 +253,24 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client, String redirectURL) throws Exception {
 
         HttpPost request = new HttpPost(redirectURL);
-        request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
+        request.addHeader(USER_AGENT_HEADER, USER_AGENT);
+        request.addHeader(REFERER, PRIMARY_IS_SAML_ACS_URL);
         HttpResponse response = client.execute(request);
 
         Map<String, Integer> searchParams = new HashMap<String, Integer>();
-        searchParams.put("SAMLResponse", 5);
-        searchParams.put("RelayState", 5);
+        searchParams.put(SAML_RESPONSE, 5);
+        searchParams.put(RELAY_STATE, 5);
         return extractValuesFromResponse(response, searchParams);
     }
 
     private String sendSAMLResponseToPrimaryIS(HttpClient client, Map<String, String> searchResults) throws Exception {
 
         HttpPost request = new HttpPost(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0));
-        request.setHeader("User-Agent", USER_AGENT);
+        request.setHeader(USER_AGENT_HEADER, USER_AGENT);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("SAMLResponse", searchResults.get("SAMLResponse")));
-        urlParameters.add(new BasicNameValuePair("RelayState", searchResults.get("RelayState")));
+        urlParameters.add(new BasicNameValuePair(SAML_RESPONSE, searchResults.get(SAML_RESPONSE)));
+        urlParameters.add(new BasicNameValuePair(RELAY_STATE, searchResults.get(RELAY_STATE)));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = new DefaultHttpClient().execute(request);
@@ -270,19 +282,19 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
             throws Exception {
 
         HttpGet request = new HttpGet(redirectURL);
-        request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader(USER_AGENT_HEADER, USER_AGENT);
         HttpResponse response = client.execute(request);
 
-        return extractValueFromResponse(response, "SAMLResponse", 5);
+        return extractValueFromResponse(response, SAML_RESPONSE, 5);
     }
 
     private boolean sendSAMLResponseToWebApp(HttpClient client, String samlResponse)
             throws Exception {
 
         HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
-        request.setHeader("User-Agent", USER_AGENT);
+        request.setHeader(USER_AGENT_HEADER, USER_AGENT);
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
+        urlParameters.add(new BasicNameValuePair(SAML_RESPONSE, samlResponse));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = new DefaultHttpClient().execute(request);
 

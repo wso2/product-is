@@ -32,7 +32,7 @@ public class ResourceUtil {
         PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
         ResultSet rs = ps.executeQuery();
         String name = null;
-        if(rs.next()){
+        if (rs.next()) {
             name = rs.getString(1);
             ps = conn.prepareStatement("SET @databasename = ?;");
             ps.setString(1, name);
