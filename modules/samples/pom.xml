@@ -39,6 +39,7 @@
         <module>sts</module>
         <module>passive-sts</module>
         <module>identity-mgt</module>
+        <module>workflow-sample-handler</module>
     </modules>
 
 </project>

@@ -3545,8 +3545,16 @@
                 <artifactId>xercesImpl</artifactId>
                 <version>${xercesImpl.version}</version>
             </dependency>
+<<<<<<< HEAD
 
 >>>>>>> 2cf712c... fixing passive sts sample
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.workflow.mgt</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+>>>>>>> ee4597a... Workflow custom event handler sample
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
