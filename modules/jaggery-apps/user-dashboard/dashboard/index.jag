@@ -707,7 +707,6 @@ window.location=('index.jag');
 
 }
 </script>
-<input type="hidden" id="cookie" name="cookie" value="<%= session.get('auth-cookie') %>">
  <div id="message"></div>
 </body>
 </html>
