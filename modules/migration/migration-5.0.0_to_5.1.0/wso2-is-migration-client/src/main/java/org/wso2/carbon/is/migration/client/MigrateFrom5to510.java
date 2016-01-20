@@ -430,7 +430,8 @@ public class MigrateFrom5to510 implements MigrationClient {
         PreparedStatement authorizationCodePrimaryKeyPS = null;
         PreparedStatement foreignKeyPS = null;
         PreparedStatement dropColumnPS = null;
-        PreparedStatement notNullPS = null;
+        PreparedStatement tokenIdNotNullPS = null;
+        PreparedStatement codeIdNotNullPS = null;
 
         try {
             identityConnection = dataSource.getConnection();
@@ -452,17 +453,33 @@ public class MigrateFrom5to510 implements MigrationClient {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
             }
             String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
+
+            String alterCodeIdNotNull;
+            if ("oracle".equals(databaseType)){
+                alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_ORACLE;
+            } else if ("mssql".equals(databaseType)){
+                alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_MSSQL;
+            } else if ("postgresql".equals(databaseType)){
+                alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_POSTGRESQL;
+            } else if ("h2".equals(databaseType)) {
+                alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_H2;
+            } else {
+                alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_MYSQL;
+            }
             String setAuthorizationCodePrimaryKey = SQLQueries.SET_AUTHORIZATION_CODE_PRIMARY_KEY;
             String setScopeAssociationPrimaryKey = SQLQueries.SET_SCOPE_ASSOCIATION_PRIMARY_KEY;
 
             dropColumnPS = identityConnection.prepareStatement(dropTokenScopeColumn);
             dropColumnPS.execute();
 
-            notNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
-            notNullPS.execute();
+            tokenIdNotNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
+            tokenIdNotNullPS.execute();
 
             primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
             primaryKeyPS.execute();
+
+            codeIdNotNullPS = identityConnection.prepareStatement(alterCodeIdNotNull);
+            codeIdNotNullPS.execute();
 
             authorizationCodePrimaryKeyPS = identityConnection.prepareStatement(setAuthorizationCodePrimaryKey);
             authorizationCodePrimaryKeyPS.execute();
@@ -476,7 +493,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(authorizationCodePrimaryKeyPS);
             IdentityDatabaseUtil.closeStatement(foreignKeyPS);
             IdentityDatabaseUtil.closeStatement(dropColumnPS);
-            IdentityDatabaseUtil.closeStatement(notNullPS);
+            IdentityDatabaseUtil.closeStatement(tokenIdNotNullPS);
+            IdentityDatabaseUtil.closeStatement(codeIdNotNullPS);
             IdentityDatabaseUtil.closeConnection(identityConnection);
 
         }
