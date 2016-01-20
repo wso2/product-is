@@ -399,9 +399,9 @@ public class MigrateFrom5to510 implements MigrationClient {
 
         } catch (SQLException e) {
             IdentityDatabaseUtil.rollBack(identityConnection);
-            log.error(e);
+            log.error("Error while migrating identity data", e);
         } catch (Exception e) {
-            log.error(e);
+            log.error("Error while migrating identity data",e);
         } finally {
             IdentityDatabaseUtil.closeResultSet(accessTokenRS);
             IdentityDatabaseUtil.closeResultSet(authzCodeRS);
@@ -486,8 +486,10 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             foreignKeyPS = identityConnection.prepareStatement(setScopeAssociationPrimaryKey);
             foreignKeyPS.execute();
+
+            identityConnection.commit();
         } catch (Exception e) {
-            log.error(e);
+            log.error("Error while finalizing the identity database migration", e);
         }finally {
             IdentityDatabaseUtil.closeStatement(primaryKeyPS);
             IdentityDatabaseUtil.closeStatement(authorizationCodePrimaryKeyPS);
@@ -534,7 +536,7 @@ public class MigrateFrom5to510 implements MigrationClient {
             identityConnection.commit();
             umConnection.commit();
         } catch (SQLException e) {
-            log.error(e);
+            log.error("Error while migrating user management data", e);
         } finally {
             IdentityDatabaseUtil.closeResultSet(selectServiceProvidersRS);
             IdentityDatabaseUtil.closeStatement(selectServiceProviders);
