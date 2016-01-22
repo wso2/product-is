@@ -31,7 +31,7 @@
     <name>Identity Server : Workflow Samples</name>
 
     <modules>
-        <module>workflow-sample-handler</module>
+        <module>handler/service-provider</module>
     </modules>
 
 </project>
