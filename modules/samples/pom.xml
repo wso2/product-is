@@ -39,7 +39,7 @@
         <module>sts</module>
         <module>passive-sts</module>
         <module>identity-mgt</module>
-        <module>workflows</module>
+        <module>workflow</module>
     </modules>
 
 </project>
