@@ -41,7 +41,7 @@ if(request.getParameter("login") === 'true'){
     authzFailure = request.getParameter("authz_failure");
     session.put(AUTHZ_FAILURE,authzFailure);
     sso_sessions = application.get('sso_sessions'),
-            encodedSAMLRequest = sso.client.getEncodedSAMLLogoutRequest(user, sso_sessions[sessionId], issuer);
+    encodedSAMLRequest = sso.client.getEncodedSAMLLogoutRequest(user, sso_sessions[sessionId], issuer);
 }
 
 %>
