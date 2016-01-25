@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
  ~ Version 2.0 (the "License"); you may not use this file except
@@ -18,28 +19,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-    	<groupId>org.wso2.is</groupId>
-    	<artifactId>identity-server-parent</artifactId>
-    	<version>5.2.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>wso2is-identity-samples</artifactId>
+        <version>5.2.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2is-identity-samples</artifactId>
+    <artifactId>wso2is-workflow-samples</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : Samples</name>
+    <name>Identity Server : Workflow Samples</name>
 
     <modules>
-        <module>user-mgt</module>
-        <module>scim</module>
-        <module>oauth</module>
-        <module>oauth2</module>
-        <module>sso</module>
-        <module>xacml</module>
-        <module>sts</module>
-        <module>passive-sts</module>
-        <module>identity-mgt</module>
-        <module>workflow</module>
+        <module>handler/service-provider</module>
     </modules>
 
 </project>
