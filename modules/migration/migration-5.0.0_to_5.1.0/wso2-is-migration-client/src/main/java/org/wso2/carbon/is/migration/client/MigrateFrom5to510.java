@@ -20,8 +20,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.context.RegistryType;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.core.IdentityRegistryResources;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
@@ -30,6 +33,11 @@ import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.is.migration.util.SQLQueries;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.util.DatabaseUtil;
@@ -52,6 +60,8 @@ import java.util.UUID;
 public class MigrateFrom5to510 implements MigrationClient {
 
     private static final Log log = LogFactory.getLog(MigrateFrom5to510.class);
+    private static final String SAMLSSO_ASSERTION_CONSUMER_URL = "SAMLSSOAssertionConsumerURL";
+    private static final String LOGOUT_URL = "logoutURL";
     private DataSource dataSource;
     private DataSource umDataSource;
 
@@ -162,6 +172,7 @@ public class MigrateFrom5to510 implements MigrationClient {
         String migrateUMDB = System.getProperty("migrateUMDB");
         String migrateUMData = System.getProperty("migrateUMData");
         String migrateIdentityDBFinalize = System.getProperty("migrateIdentityDBFinalize");
+        String migrateRegistryData = System.getProperty("migrateRegistry");
 
         if (Boolean.parseBoolean(migrateIdentity)) {
             migrateIdentity();
@@ -181,6 +192,9 @@ public class MigrateFrom5to510 implements MigrationClient {
         } else if (Boolean.parseBoolean(migrateIdentityDBFinalize)) {
             migrateIdentityDBFinalize();
             log.info("Finalized the identity database");
+        } else if (Boolean.parseBoolean(migrateRegistryData)) {
+            migrateRegistryData();
+            log.info("Migrated the registry database");
         } else {
             migrateAll();
             log.info("Migrated the identity and user management databases");
@@ -195,6 +209,7 @@ public class MigrateFrom5to510 implements MigrationClient {
             migrateIdentityData();
             migrateIdentityDBFinalize();
             migrateUMData();
+            migrateRegistryData();
         } else {
             log.info("Identity schema is already migrated");
         }
@@ -207,6 +222,7 @@ public class MigrateFrom5to510 implements MigrationClient {
             migrateIdentityData();
             migrateIdentityDBFinalize();
             migrateUMData();
+            migrateRegistryData();
         } else {
             log.info("Identity schema is already migrated");
         }
@@ -543,6 +559,61 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(updateRole);
             IdentityDatabaseUtil.closeConnection(identityConnection);
             IdentityDatabaseUtil.closeConnection(umConnection);
+        }
+    }
+
+    public void migrateRegistryData() throws Exception{
+
+        //migrating super tenant configurations
+        migrateSAMLConfiguration();
+
+        //migrating tenant configurations
+        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        for (Tenant tenant : tenants) {
+            try {
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext
+                        .getThreadLocalCarbonContext();
+                carbonContext.setTenantId(tenant.getId());
+                carbonContext.setTenantDomain(tenant.getDomain());
+
+                migrateSAMLConfiguration();
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    private void migrateSAMLConfiguration() throws IdentityException {
+
+        Registry registry = (UserRegistry) PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                .getRegistry(RegistryType.SYSTEM_CONFIGURATION);
+        try {
+            if (registry.resourceExists(IdentityRegistryResources.SAML_SSO_SERVICE_PROVIDERS)) {
+                String[] providers = (String[]) registry.get(
+                        IdentityRegistryResources.SAML_SSO_SERVICE_PROVIDERS).getContent();
+                if (providers != null) {
+                    for (int i = 0; i < providers.length; i++) {
+                        Resource resource = registry.get(providers[i]);
+                        String samlssoAssertionConsumerURL = resource.getProperty(SAMLSSO_ASSERTION_CONSUMER_URL);
+                        if (samlssoAssertionConsumerURL != null) {
+                            resource.setProperty(IdentityRegistryResources.PROP_SAML_SSO_ASSERTION_CONS_URLS,
+                                    samlssoAssertionConsumerURL);
+                            resource.setProperty(IdentityRegistryResources.PROP_DEFAULT_SAML_SSO_ASSERTION_CONS_URL,
+                                    samlssoAssertionConsumerURL);
+                            resource.removeProperty(SAMLSSO_ASSERTION_CONSUMER_URL);
+                        }
+                        String logoutURL = resource.getProperty(LOGOUT_URL);
+                        if (logoutURL != null) {
+                            resource.setProperty(IdentityRegistryResources.PROP_SAML_SLO_RESPONSE_URL, logoutURL);
+                            resource.removeProperty(LOGOUT_URL);
+                        }
+                        registry.put(resource.getPath(), resource);
+                    }
+                }
+            }
+        } catch (RegistryException e) {
+            throw IdentityException.error("Error while migration registry data", e);
         }
     }
 }
