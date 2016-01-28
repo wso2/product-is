@@ -105,6 +105,12 @@
         </classes>
     </test>
 
+    <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-migration" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.user.store.ResourcePathMigrationTestCase"/>
