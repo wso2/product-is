@@ -1192,7 +1192,6 @@
         <gadget.module.version>${jaggery.extensions.version}</gadget.module.version>
         <i18n.module.version>${jaggery.extensions.version}</i18n.module.version>
         <wso2.store.version>2.0.0</wso2.store.version>
-        <test.framework.version>4.4.2</test.framework.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
@@ -1203,7 +1202,7 @@
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
-        <carbon.automation.version>4.4.1</carbon.automation.version>
+        <carbon.automation.version>4.4.3</carbon.automation.version>
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
         <charon.orbit.version>2.0.4</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
@@ -1225,10 +1224,10 @@
         <equinox.jsp.jasper.version>1.0.1.R33x_v20070816</equinox.jsp.jasper.version>
         <javax.servlet.jsp.version>2.0.0.v200706191603</javax.servlet.jsp.version>
         <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
-        <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
+        <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.4</carbon.business-process.version>
-	    <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+        <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
