@@ -3957,7 +3957,6 @@
         <gadget.module.version>${jaggery.extensions.version}</gadget.module.version>
         <i18n.module.version>${jaggery.extensions.version}</i18n.module.version>
         <wso2.store.version>2.0.0</wso2.store.version>
-        <test.framework.version>4.4.2</test.framework.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
@@ -4042,6 +4041,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.automation.version>4.3.1</carbon.automation.version>
 		<carbon.automationutils.version>4.3.0</carbon.automationutils.version>
 <<<<<<< HEAD
@@ -4079,6 +4079,9 @@
 >>>>>>> 1bc44ea... updating test framework version
 =======
         <carbon.automation.version>4.4.1</carbon.automation.version>
+=======
+        <carbon.automation.version>4.4.3</carbon.automation.version>
+>>>>>>> 869fe9f... Update test automation framework version
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4130,10 +4133,14 @@
 =======
         <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 27c278a... adding cipher tool feature, removing saml-sso-demo sample
 =======
         <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
 >>>>>>> 690e5e1... Resolving merge conflicts
+=======
+        <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
+>>>>>>> 869fe9f... Update test automation framework version
         <project.scm.id>my-scm-server</project.scm.id>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4156,8 +4163,12 @@
 >>>>>>> 932d089... updating bps version
 =======
         <carbon.business-process.version>4.4.4</carbon.business-process.version>
+<<<<<<< HEAD
 >>>>>>> 9afb09b... updating commons,  registry versions
 	    <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+=======
+        <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
+>>>>>>> 869fe9f... Update test automation framework version
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
