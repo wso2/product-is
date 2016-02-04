@@ -119,9 +119,7 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public void addWorkflow(WorkflowWizard workflow)
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
-
+    public void addWorkflow(WorkflowWizard workflow) throws RemoteException, WorkflowAdminServiceWorkflowException {
         stub.addWorkflow(workflow);
 
     }
@@ -133,10 +131,8 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public void addBPSProfile(BPSProfile bpsProfileDTO)
-            throws RemoteException, WorkflowAdminServiceWorkflowException,
-                   WorkflowImplAdminServiceWorkflowImplException {
-
+    public void addBPSProfile(BPSProfile bpsProfileDTO) throws RemoteException,
+            WorkflowAdminServiceWorkflowException, WorkflowImplAdminServiceWorkflowImplException {
         stubImpl.addBPSProfile(bpsProfileDTO);
     }
 
@@ -150,7 +146,7 @@ public class WorkflowAdminClient {
      */
     public BPSProfile[] listBPSProfiles()
             throws RemoteException, WorkflowAdminServiceWorkflowException,
-                   WorkflowImplAdminServiceWorkflowImplException {
+            WorkflowImplAdminServiceWorkflowImplException {
 
         BPSProfile[] bpsProfiles = stubImpl.listBPSProfiles();
         if (bpsProfiles == null) {
@@ -167,10 +163,8 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public BPSProfile getBPSProfiles(String profileName)
-            throws RemoteException, WorkflowAdminServiceWorkflowException,
-                   WorkflowImplAdminServiceWorkflowImplException {
-
+    public BPSProfile getBPSProfiles(String profileName) throws RemoteException, WorkflowAdminServiceWorkflowException,
+            WorkflowImplAdminServiceWorkflowImplException {
         BPSProfile bpsProfile = stubImpl.getBPSProfile(profileName);
         return bpsProfile;
     }
@@ -182,17 +176,13 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public void updateBPSProfile(BPSProfile bpsProfileDTO)
-            throws RemoteException, WorkflowAdminServiceWorkflowException,
-                   WorkflowImplAdminServiceWorkflowImplException {
-
+    public void updateBPSProfile(BPSProfile bpsProfileDTO) throws RemoteException,
+            WorkflowAdminServiceWorkflowException, WorkflowImplAdminServiceWorkflowImplException {
         stubImpl.updateBPSProfile(bpsProfileDTO);
     }
 
-    public void deleteBPSProfile(String profileName)
-            throws RemoteException, WorkflowAdminServiceWorkflowException,
-                   WorkflowImplAdminServiceWorkflowImplException {
-
+    public void deleteBPSProfile(String profileName) throws RemoteException, WorkflowAdminServiceWorkflowException,
+            WorkflowImplAdminServiceWorkflowImplException {
         stubImpl.removeBPSProfile(profileName);
     }
 
@@ -213,12 +203,11 @@ public class WorkflowAdminClient {
     }
 
     public void deleteWorkflow(String workflowId) throws RemoteException, WorkflowAdminServiceWorkflowException {
-
         stub.removeWorkflow(workflowId);
     }
 
-    public Association[] listAssociationsForWorkflow(String workflowId)
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public Association[] listAssociationsForWorkflow(String workflowId) throws RemoteException,
+            WorkflowAdminServiceWorkflowException {
 
         Association[] associationsForWorkflow = stub.listAssociations(workflowId);
         if (associationsForWorkflow == null) {
@@ -237,13 +226,11 @@ public class WorkflowAdminClient {
     }
 
     public void deleteAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
-
         stub.removeAssociation(associationId);
     }
 
     public void addAssociation(String workflowId, String associationName, String eventId, String condition)
             throws RemoteException, WorkflowAdminServiceWorkflowException {
-
         stub.addAssociation(associationName, workflowId, eventId, condition);
     }
 
@@ -254,9 +241,7 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public void enableAssociation(String associationId)
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
-
+    public void enableAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
         stub.changeAssociationState(associationId, true);
     }
 
@@ -267,14 +252,11 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public void disableAssociation(String associationId)
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
-
+    public void disableAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
         stub.changeAssociationState(associationId, false);
     }
 
     public WorkflowEvent getEvent(String id) throws RemoteException {
-
         return stub.getEvent(id);
     }
 
@@ -284,7 +266,6 @@ public class WorkflowAdminClient {
 
     public WorkflowRequestAssociation[] getWorkflowsOfRequest(String requestId) throws
             WorkflowAdminServiceWorkflowException, RemoteException {
-
         return stub.getWorkflowsOfRequest(requestId);
     }
 

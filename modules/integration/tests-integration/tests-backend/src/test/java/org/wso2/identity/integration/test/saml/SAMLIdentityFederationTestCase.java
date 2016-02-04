@@ -78,6 +78,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
+    private static final String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
 
     private String usrName = "testFederatedUser";
@@ -146,7 +147,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         identityProvider.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
 
         FederatedAuthenticatorConfig saml2SSOAuthnConfig = new FederatedAuthenticatorConfig();
-        saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
+        saml2SSOAuthnConfig.setName(SAMLSSOAUTHENTICATOR);
         saml2SSOAuthnConfig.setDisplayName("samlsso");
         saml2SSOAuthnConfig.setEnabled(true);
         saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
@@ -245,7 +246,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
                     attributeConsumerServiceIndex = properties[0].getValue();
                     break;
                 }
-                if (i == properties.length -1 ) {
+                if (i == properties.length - 1) {
                     Assert.fail();
                 }
             }
@@ -258,7 +259,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
                 .getFederatedAuthenticatorConfigs();
         FederatedAuthenticatorConfig SAMLAuthenticatorConfig = null;
         for (int i = 0; i < federatedAuthenticatorConfigs.length; i++) {
-            if (federatedAuthenticatorConfigs[i].getName().equals("SAMLSSOAuthenticator")) {
+            if (SAMLSSOAUTHENTICATOR.equals(federatedAuthenticatorConfigs[i].getName())) {
                 SAMLAuthenticatorConfig = federatedAuthenticatorConfigs[i];
                 break;
             }
@@ -533,25 +534,25 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         return properties;
     }
 
-    private void assertLocalClaims(String resultPage){
+    private void assertLocalClaims(String resultPage) {
         String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
         Map<String, String> attributeMap = extractClaims(claimString);
         Assert.assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
-        Assert.assertEquals(attributeMap.get(lastNameClaimURI),usrName,
+        Assert.assertEquals(attributeMap.get(lastNameClaimURI), usrName,
                 "Expected claim value for lastname is " + usrName);
     }
 
-    private Map<String,String> extractClaims(String claimString){
+    private Map<String, String> extractClaims(String claimString) {
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
-        Map<String,String> attributeMap = new HashMap<String, String>();
+        Map<String, String> attributeMap = new HashMap<String, String>();
         String key = null;
         String value;
-        for (int i = 0; i< dataArray.length; i++){
-            if((i%2) == 0){
+        for (int i = 0; i < dataArray.length; i++) {
+            if ((i % 2) == 0) {
                 key = dataArray[i];
-            }else{
+            } else {
                 value = dataArray[i].trim();
-                attributeMap.put(key,value);
+                attributeMap.put(key, value);
             }
         }
 
