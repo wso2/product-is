@@ -29,20 +29,21 @@ import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationUITest;
 
 public class DashboardSecurityTestCase extends ISIntegrationUITest {
-    public static final String LOGIN_PAGE_USERNAME_ELEMENT_ID = "username";
-    public static final String LOGIN_PAGE_PASSWORD_ELEMENT_ID = "password";
-    public static final String ADMIN_USERNAME = "admin";
-    public static final String ADMIN_PASSWORD = "admin";
-    public static final String JSESSIONID = "jsessionid";
-    public static final String HTTPS = "https";
-    public static final String LOGIN_BUTTON_XPATH = "//*[@id=\"loginForm\"]/div[4]/div[2]/button";
+    private static final String LOGIN_PAGE_USERNAME_ELEMENT_ID = "username";
+    private static final String LOGIN_PAGE_PASSWORD_ELEMENT_ID = "password";
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
+    private static final String JSESSIONID = "jsessionid";
+    private static final String HTTPS = "https";
+    private static final String LOGIN_BUTTON_XPATH = "//*[@id=\"loginForm\"]/div[4]/div[2]/button";
+    private static final String DASHBOARD_CONTEXT_URL = "/dashboard";
     private WebDriver driver;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
         driver = BrowserManager.getWebDriver();
-        driver.get(isServer.getContextUrls().getWebAppURL() + "/dashboard");
+        driver.get(isServer.getContextUrls().getWebAppURL() + DASHBOARD_CONTEXT_URL);
     }
 
     @Test(groups = "wso2.identity", description = "Verify that cookie not get printed in dashboard page and switching" +
@@ -56,8 +57,8 @@ public class DashboardSecurityTestCase extends ISIntegrationUITest {
         String content = driver.getPageSource();
         Assert.assertFalse(content.toLowerCase().contains(JSESSIONID), "jseesion id is printing in the dashboard " +
                 "index page after login.");
-        driver.get(isServer.getContextUrls().getWebAppURL() + "/dashboard");
-        driver.get(isServer.getContextUrls().getWebAppURL() + "/dashboard");
+        driver.get(isServer.getContextUrls().getWebAppURL() + DASHBOARD_CONTEXT_URL);
+        driver.get(isServer.getContextUrls().getWebAppURL() + DASHBOARD_CONTEXT_URL);
         Assert.assertTrue(driver.getCurrentUrl().startsWith(HTTPS), "Switching between HTTPS and HTTP after login " +
                 "is possible.");
     }
