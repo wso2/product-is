@@ -42,10 +42,21 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.ui.integration.test.login.ISLoginTestCase;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.List;
 
 public class TenantDropDownTestCase extends ISLoginTestCase {
+    private static final String TENANT_LIST_URL_PARAMETER = "tenantList";
+    private static final String TENANT_LIST_ELEMENT_ID = "tenantList";
+    private static final String DASHBOARD_CONTEXT = "dashboard";
+    private static final String AUTHENTICATIONENDPOINT_CONTEXT = "authenticationendpoint";
+    private static final String TENANTLISTREFRESHER_DO = "tenantlistrefresher.do";
+    private static final String INVALID_TENANT_DOMAIN = "invalid.com";
+    private static final String URL_RESOURCE_SEPERATOR = "/";
+    private static final String URL_QUERY_SEPERATOR = "?";
+    private static final String EQUAL = "=";
     private WebDriver driver;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
@@ -131,7 +142,7 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
 
     @Test(groups = "wso2.identity", description = "verify login to IS Server")
     public void testLogin() throws Exception {
-        WebElement tenantList = driver.findElement(By.id("tenantList"));
+        WebElement tenantList = driver.findElement(By.id(TENANT_LIST_ELEMENT_ID));
         Select select = new Select(tenantList);
         List<WebElement> allOptions = select.getOptions();
 
@@ -144,6 +155,48 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
         }
         Assert.assertTrue(tenantFound);
         driver.close();
+    }
+
+    @Test(groups = "wso2.identity", description = "verify security vulnerability of tenant dropdown menu",
+            dependsOnMethods = "testLogin")
+    public void testTenantDropdownAlteringVulnerability() {
+        try {
+            driver = BrowserManager.getWebDriver();
+            driver.get(isServer.getContextUrls().getWebAppURLHttps() + URL_RESOURCE_SEPERATOR +
+                    AUTHENTICATIONENDPOINT_CONTEXT + URL_RESOURCE_SEPERATOR + TENANTLISTREFRESHER_DO +
+                    URL_QUERY_SEPERATOR + TENANT_LIST_URL_PARAMETER + EQUAL + INVALID_TENANT_DOMAIN);
+            driver.close();
+            driver = BrowserManager.getWebDriver();
+            driver.get(isServer.getContextUrls().getWebAppURLHttps() + URL_RESOURCE_SEPERATOR + DASHBOARD_CONTEXT);
+            WebElement tenantList = driver.findElement(By.id(TENANT_LIST_ELEMENT_ID));
+            Select select = new Select(tenantList);
+            List<WebElement> allOptions = select.getOptions();
+
+            boolean tenantFound = false;
+            boolean falseTenantFound = false;
+            for (WebElement option : allOptions) {
+                if (TENANT_DOMAIN.equals(option.getText())) {
+                    tenantFound = true;
+                    break;
+                }
+                if (INVALID_TENANT_DOMAIN.equals(option.getText())) {
+                    falseTenantFound = true;
+                    break;
+                }
+            }
+            String errorMsgVulnerable = "Tenant dropdown menu vulnerable for attacks.";
+            Assert.assertTrue(tenantFound, errorMsgVulnerable);
+            Assert.assertFalse(falseTenantFound, errorMsgVulnerable);
+            driver.close();
+        } catch (XPathExpressionException e) {
+            String errorMsg = "Error while retrieving server url.";
+            log.error(errorMsg, e);
+            Assert.fail(errorMsg);
+        } catch (MalformedURLException e) {
+            String errorMsg = "Error due to malformed url..";
+            log.error(errorMsg, e);
+            Assert.fail(errorMsg);
+        }
     }
 
     @AfterClass(alwaysRun = true)
