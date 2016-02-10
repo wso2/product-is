@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 // This is the servlet which handles OAuth callbacks.
 public class OAuth2ClientServlet extends HttpServlet {
+   
 	/**
 	 * 
 	 */
@@ -43,6 +44,7 @@ public class OAuth2ClientServlet extends HttpServlet {
 	static String userName;
 	static String password;
 	static String serverUrl;
+        static String clientId;
 	
 
 	@Override
@@ -108,6 +110,7 @@ public class OAuth2ClientServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+        clientId = req.getParameter("clientId");
 		doGet(req, resp);
 	}
 }

@@ -13,6 +13,11 @@ String code = null;
 String accessToken = null;
 String idToken = null;
 String name = null;
+OAuth2ServiceClient oAuth2ServiceClient = new OAuth2ServiceClient();
+String clientId = oAuth2ServiceClient.getClientID();
+String endpoint = OAuth2Constants.OP_ENDPOINT_URL;
+String targetOrigin = OAuth2Constants.TARGET_URL;
+String opStatus = OAuth2Constants.OP_STATUS_LOGGED;
 
 try {
     
@@ -62,7 +67,16 @@ try {
 <script type="text/javascript" src="js/kickstart.js"></script>                                  <!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />                  <!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="style.css" media="all" />                          <!-- CUSTOM STYLES -->
-
+ <iframe id="opIFrame" style='visibility: hidden;' src=endpoint>
+ </iframe>
+    <script type="text/javascript">
+        var opStatus = '<%=opStatus%>';
+        var endPoint = '<%=endpoint%>';
+        var targetOrigin = '<%=targetOrigin%>';
+        var clientId = '<%=clientId%>';
+    </script>
+    <script type="text/javascript" src="js/polling.js">
+    </script>
 <script type="text/javascript">
 	     function setVisibility() {
  
@@ -120,6 +134,27 @@ try {
 	         }
 	         return "";
 	     }
+        /**
+         *This method gets the clientId and post it to the servlet
+         */
+        function getClientId() {
+            var consumerKey = document.getElementsByName("consumerKey");
+            if (consumerKey.item(0) != null) {
+                var clientId = consumerKey.item(0).value
+            }
+            else {
+                clientId = null;
+            }
+            $.ajax({
+                url: "/playground/oauth2client",
+                data: 'clientId=' + clientId,
+                type: "POST",
+                async: false,
+                success: function (data) {
+
+                }
+            });
+        }
 </script>
 
 </head><body><a id="top-of-page"></a><div id="wrap" class="clearfix"/>
@@ -215,7 +250,7 @@ try {
                             </tr>
                                      
                             <tr>
-                                 <td colspan="2"><input type="submit" name="authorize" value="Authorize"></td>
+                                 <td colspan="2"><input type="submit" onclick="getClientId()" name="authorize" value="Authorize"></td>
                            </tr>                         
                            </tbody>
                         </table>
