@@ -50,7 +50,6 @@ public class MigrationDatabaseCreator {
 
     public MigrationDatabaseCreator(DataSource dataSource, DataSource umDataSource) {
 
-//        super(dataSource);
         this.dataSource = dataSource;
         this.umDataSource = umDataSource;
     }
@@ -66,13 +65,13 @@ public class MigrationDatabaseCreator {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if (Constants.DatabaseTypes.mysql.toString().equals(databaseType)){
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
             DatabaseMetaData meta = conn.getMetaData();
             String schema = null;
-            if ("oracle".equals(databaseType)){
+            if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)){
                 schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
             }
             ResultSet res = meta.getTables(null, schema, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
@@ -89,9 +88,7 @@ public class MigrationDatabaseCreator {
                 log.trace("Migration script executed successfully.");
             }
         } catch (SQLException e) {
-            String msg = "Failed to execute the migration script. " + e.getMessage();
-            log.fatal(msg, e);
-            throw new Exception(msg, e);
+            throw new Exception("Failed to execute the migration script.", e);
         } finally {
             try {
                 if (conn != null) {
@@ -109,7 +106,7 @@ public class MigrationDatabaseCreator {
             conn = umDataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if (Constants.DatabaseTypes.mysql.toString().equals(databaseType)){
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
@@ -138,7 +135,7 @@ public class MigrationDatabaseCreator {
     protected String getIdentityDbScriptLocation(String databaseType, String from, String to) {
 
         String scriptName = databaseType + ".sql";
-        String carbonHome = System.getProperty("carbon.home");
+        String carbonHome = System.getProperty(Constants.CARBON_HOME);
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_0_0_SP1.equals(to)) {
             return carbonHome + File.separator + "dbscripts" + File.separator + "identity" + File.separator +
@@ -154,7 +151,7 @@ public class MigrationDatabaseCreator {
     protected String getUmDbScriptLocation(String databaseType, String from, String to) {
 
         String scriptName = databaseType + ".sql";
-        String carbonHome = System.getProperty("carbon.home");
+        String carbonHome = System.getProperty(Constants.CARBON_HOME);
 
         if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
             return carbonHome + File.separator + "dbscripts" + File.separator + "migration-5.0.0_to_5.1.0" + File
@@ -210,8 +207,8 @@ public class MigrationDatabaseCreator {
                     }
                 }
                 //add the oracle database owner
-                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")){
-                    line = "databasename := '"+ISMigrationServiceDataHolder.getIdentityOracleUser()+"';";
+                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")) {
+                    line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
                     oracleUserChanged = true;
                 }
                 sql.append(keepFormat ? "\n" : " ").append(line);
@@ -222,7 +219,7 @@ public class MigrationDatabaseCreator {
                 if (!keepFormat && line.indexOf("--") >= 0) {
                     sql.append("\n");
                 }
-                if ((DatabaseCreator.checkStringBufferEndsWith(sql, delimiter))) {
+                if (DatabaseCreator.checkStringBufferEndsWith(sql, delimiter)) {
                     executeSQL(sql.substring(0, sql.length() - delimiter.length()));
                     sql.replace(0, sql.length(), "");
                 }
@@ -232,9 +229,7 @@ public class MigrationDatabaseCreator {
                 executeSQL(sql.toString());
             }
         } catch (Exception e) {
-            log.error("Error occurred while executing SQL script for migrating database", e);
             throw new Exception("Error occurred while executing SQL script for migrating database", e);
-
         } finally {
             if(reader != null){
                 reader.close();

@@ -51,6 +51,11 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractIntegrationTest {
+	private static final String USERNAME = "username";
+	private static final String PASSWORD = "password";
+	private static final String RESOURCE_OWNER_USERNAME = "admin";
+	private static final String RESOURCE_OWNER_PASSWORD = "admin";
+	private static final String RESOURCE_OWNER_INCORRECT_PASSWORD = "admin1";
 	private AuthenticatorClient logManger;
 	private String adminUsername;
 	private String adminPassword;
@@ -169,8 +174,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
+        urlParameters.add(new BasicNameValuePair(USERNAME, RESOURCE_OWNER_USERNAME));
+        urlParameters.add(new BasicNameValuePair(PASSWORD, RESOURCE_OWNER_PASSWORD));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + consumerSecret)
@@ -196,8 +201,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin1"));
+        urlParameters.add(new BasicNameValuePair(USERNAME, RESOURCE_OWNER_USERNAME));
+        urlParameters.add(new BasicNameValuePair(PASSWORD, RESOURCE_OWNER_INCORRECT_PASSWORD));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":" + consumerSecret)

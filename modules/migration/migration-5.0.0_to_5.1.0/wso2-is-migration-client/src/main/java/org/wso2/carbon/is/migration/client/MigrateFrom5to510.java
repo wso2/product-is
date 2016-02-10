@@ -28,6 +28,7 @@ import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.util.Constants;
 import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.is.migration.util.SQLQueries;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -52,6 +53,18 @@ import java.util.UUID;
 public class MigrateFrom5to510 implements MigrationClient {
 
     private static final Log log = LogFactory.getLog(MigrateFrom5to510.class);
+    private static final String USERNAME = "USERNAME";
+    private static final String USER_DOMAIN = "USER_DOMAIN";
+    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    private static final String TOKEN_SCOPE = "TOKEN_SCOPE";
+    private static final String AUTHZ_USER = "AUTHZ_USER";
+    private static final String TOKEN_ID = "TOKEN_ID";
+    private static final String AUTHORIZATION_CODE = "AUTHORIZATION_CODE";
+    private static final String USER_NAME = "USER_NAME";
+    private static final String DOMAIN_NAME = "DOMAIN_NAME";
+    private static final String APP_NAME = "APP_NAME";
+    private static final String TENANT_ID = "TENANT_ID";
+    private static final String ID = "ID";
     private DataSource dataSource;
     private DataSource umDataSource;
 
@@ -62,8 +75,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             Connection conn = null;
             try {
                 conn = dataSource.getConnection();
-                if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
-                        .getIdentityOracleUser() == null) {
+                if (Constants.DatabaseTypes.oracle.toString().equals(DatabaseCreator.getDatabaseType(conn)) &&
+                        ISMigrationServiceDataHolder.getIdentityOracleUser() == null) {
                     ISMigrationServiceDataHolder.setIdentityOracleUser(dataSource.getConnection().getMetaData()
                             .getUserName());
                 }
@@ -78,7 +91,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             }
             try {
                 conn = umDataSource.getConnection();
-                if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
+                if (Constants.DatabaseTypes.oracle.toString().equals(DatabaseCreator.getDatabaseType(conn)) &&
+                        ISMigrationServiceDataHolder
                         .getIdentityOracleUser() == null) {
                     ISMigrationServiceDataHolder.setIdentityOracleUser(umDataSource.getConnection().getMetaData()
                             .getUserName());
@@ -89,12 +103,11 @@ public class MigrateFrom5to510 implements MigrationClient {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    log.warn("Error while closing the user manager database connection", e);
+                    log.error("Error while closing the user manager database connection", e);
                 }
             }
         } catch (IdentityException e) {
             String errorMsg = "Error when reading the JDBC Configuration from the file.";
-            log.error(errorMsg, e);
             throw new ISMigrationException(errorMsg, e);
         }
     }
@@ -143,7 +156,7 @@ public class MigrateFrom5to510 implements MigrationClient {
         }
     }
 
-    private void initUMDataSource(){
+    private void initUMDataSource() {
         umDataSource = DatabaseUtil.getRealmDataSource(ISMigrationServiceDataHolder.getRealmService()
                 .getBootstrapRealmConfiguration());
     }
@@ -163,27 +176,33 @@ public class MigrateFrom5to510 implements MigrationClient {
         String migrateUMData = System.getProperty("migrateUMData");
         String migrateIdentityDBFinalize = System.getProperty("migrateIdentityDBFinalize");
 
-        if (Boolean.parseBoolean(migrateIdentity)) {
-            migrateIdentity();
-            log.info("Migrated the identity database");
-        } else if (Boolean.parseBoolean(migrateIdentityDB)) {
-            migrateIdentityDB();
-            log.info("Migrated the identity database schema");
-        } else if (Boolean.parseBoolean(migrateUMDB)) {
-            migrateUMDB();
-            log.info("Migrated the user management database schema");
-        } else if (Boolean.parseBoolean(migrateIdentityData)) {
-            migrateIdentityData();
-            log.info("Migrated the identity data");
-        } else if (Boolean.parseBoolean(migrateUMData)) {
-            migrateUMData();
-            log.info("Migrated the user management data");
-        } else if (Boolean.parseBoolean(migrateIdentityDBFinalize)) {
-            migrateIdentityDBFinalize();
-            log.info("Finalized the identity database");
-        } else {
-            migrateAll();
-            log.info("Migrated the identity and user management databases");
+        try {
+            if (Boolean.parseBoolean(migrateIdentity)) {
+                migrateIdentity();
+                log.info("Migrated the identity database");
+            } else if (Boolean.parseBoolean(migrateIdentityDB)) {
+                migrateIdentityDB();
+                log.info("Migrated the identity database schema");
+            } else if (Boolean.parseBoolean(migrateUMDB)) {
+                migrateUMDB();
+                log.info("Migrated the user management database schema");
+            } else if (Boolean.parseBoolean(migrateIdentityData)) {
+                migrateIdentityData();
+                log.info("Migrated the identity data");
+            } else if (Boolean.parseBoolean(migrateUMData)) {
+                migrateUMData();
+                log.info("Migrated the user management data");
+            } else if (Boolean.parseBoolean(migrateIdentityDBFinalize)) {
+                migrateIdentityDBFinalize();
+                log.info("Finalized the identity database");
+            } else {
+                migrateAll();
+                log.info("Migrated the identity and user management databases");
+            }
+        }catch (Exception e){
+            String errorMessage = "Error while migrating the databases";
+            log.error(errorMessage, e);
+            throw new Exception(errorMessage, e);
         }
     }
 
@@ -212,7 +231,7 @@ public class MigrateFrom5to510 implements MigrationClient {
         }
     }
 
-    public void migrateIdentityDB() throws Exception{
+    public void migrateIdentityDB() throws Exception {
 
         if (!ResourceUtil.isSchemaMigrated(dataSource)) {
             MigrationDatabaseCreator migrationDatabaseCreator = new MigrationDatabaseCreator(dataSource, umDataSource);
@@ -230,7 +249,7 @@ public class MigrateFrom5to510 implements MigrationClient {
     /**
      * migrate data in the identity database and finalize the database table restructuring
      */
-    public void migrateIdentityData(){
+    public void migrateIdentityData() {
 
         Connection identityConnection = null;
         PreparedStatement selectFromAccessTokenPS = null;
@@ -257,10 +276,10 @@ public class MigrateFrom5to510 implements MigrationClient {
             updateConsumerAppsPS = identityConnection.prepareStatement(SQLQueries.UPDATE_CONSUMER_APPS);
 
             selectConsumerAppsRS = selectConsumerAppsPS.executeQuery();
-            while (selectConsumerAppsRS.next()){
-                int id = selectConsumerAppsRS.getInt("ID");
-                String username = selectConsumerAppsRS.getString("USERNAME");
-                String userDomainFromDB = selectConsumerAppsRS.getString("USER_DOMAIN");
+            while (selectConsumerAppsRS.next()) {
+                int id = selectConsumerAppsRS.getInt(ID);
+                String username = selectConsumerAppsRS.getString(USERNAME);
+                String userDomainFromDB = selectConsumerAppsRS.getString(USER_DOMAIN);
 
                 if (userDomainFromDB == null) {
                     String userDomain = UserCoreUtil.extractDomainFromName(username);
@@ -290,13 +309,13 @@ public class MigrateFrom5to510 implements MigrationClient {
             updateUserNamePS = identityConnection.prepareStatement(updateUserName);
 
             accessTokenRS = selectFromAccessTokenPS.executeQuery();
-            while (accessTokenRS.next()){
+            while (accessTokenRS.next()) {
                 String accessToken = null;
                 try {
-                    accessToken = accessTokenRS.getString("ACCESS_TOKEN");
-                    String scopeString = accessTokenRS.getString("TOKEN_SCOPE");
-                    String authzUser = accessTokenRS.getString("AUTHZ_USER");
-                    String tokenIdFromDB = accessTokenRS.getString("TOKEN_ID");
+                    accessToken = accessTokenRS.getString(ACCESS_TOKEN);
+                    String scopeString = accessTokenRS.getString(TOKEN_SCOPE);
+                    String authzUser = accessTokenRS.getString(AUTHZ_USER);
+                    String tokenIdFromDB = accessTokenRS.getString(TOKEN_ID);
 
                     if (tokenIdFromDB == null) {
                         String tokenId = UUID.randomUUID().toString();
@@ -343,12 +362,12 @@ public class MigrateFrom5to510 implements MigrationClient {
             updateUserNameAuthorizationCodePS = identityConnection.prepareStatement(updateUserNameAuthorizationCode);
 
             authzCodeRS = selectFromAuthorizationCodePS.executeQuery();
-            while (authzCodeRS.next()){
+            while (authzCodeRS.next()) {
                 String authorizationCode = null;
                 try {
-                    authorizationCode = authzCodeRS.getString("AUTHORIZATION_CODE");
-                    String authzUser = authzCodeRS.getString("AUTHZ_USER");
-                    String userDomainFromDB = authzCodeRS.getString("USER_DOMAIN");
+                    authorizationCode = authzCodeRS.getString(AUTHORIZATION_CODE);
+                    String authzUser = authzCodeRS.getString(AUTHZ_USER);
+                    String userDomainFromDB = authzCodeRS.getString(USER_DOMAIN);
 
                     if (userDomainFromDB == null) {
                         String username = UserCoreUtil.removeDomainFromName(MultitenantUtils.getTenantAwareUsername
@@ -383,8 +402,8 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             while (selectIdnAssociatedIdRS.next()) {
                 int id = selectIdnAssociatedIdRS.getInt("ID");
-                String username = selectIdnAssociatedIdRS.getString("USER_NAME");
-                String userDomainFromDB = selectIdnAssociatedIdRS.getString("DOMAIN_NAME");
+                String username = selectIdnAssociatedIdRS.getString(USER_NAME);
+                String userDomainFromDB = selectIdnAssociatedIdRS.getString(DOMAIN_NAME);
 
                 if (userDomainFromDB == null) {
                     updateIdnAssociatedIdPS.setString(1, UserCoreUtil.extractDomainFromName(username));
@@ -424,7 +443,7 @@ public class MigrateFrom5to510 implements MigrationClient {
         }
     }
 
-    public void migrateIdentityDBFinalize(){
+    public void migrateIdentityDBFinalize() {
         Connection identityConnection = null;
         PreparedStatement primaryKeyPS = null;
         PreparedStatement authorizationCodePrimaryKeyPS = null;
@@ -440,13 +459,13 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
             String alterTokenIdNotNull;
-            if ("oracle".equals(databaseType)){
+            if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
-            } else if ("mssql".equals(databaseType)){
+            } else if (Constants.DatabaseTypes.mssql.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
-            } else if ("postgresql".equals(databaseType)){
+            } else if (Constants.DatabaseTypes.postgresql.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
-            } else if ("h2".equals(databaseType)) {
+            } else if (Constants.DatabaseTypes.h2.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
             } else {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
@@ -471,7 +490,7 @@ public class MigrateFrom5to510 implements MigrationClient {
             foreignKeyPS.execute();
         } catch (Exception e) {
             log.error(e);
-        }finally {
+        } finally {
             IdentityDatabaseUtil.closeStatement(primaryKeyPS);
             IdentityDatabaseUtil.closeStatement(authorizationCodePrimaryKeyPS);
             IdentityDatabaseUtil.closeStatement(foreignKeyPS);
@@ -503,8 +522,8 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             updateRole = umConnection.prepareStatement(SQLQueries.UPDATE_ROLES);
             while (selectServiceProvidersRS.next()) {
-                String appName = selectServiceProvidersRS.getString("APP_NAME");
-                int tenantId = selectServiceProvidersRS.getInt("TENANT_ID");
+                String appName = selectServiceProvidersRS.getString(APP_NAME);
+                int tenantId = selectServiceProvidersRS.getInt(TENANT_ID);
                 updateRole.setString(1, ApplicationConstants.APPLICATION_DOMAIN + UserCoreConstants.DOMAIN_SEPARATOR
                         + appName);
                 updateRole.setString(2, appName);
