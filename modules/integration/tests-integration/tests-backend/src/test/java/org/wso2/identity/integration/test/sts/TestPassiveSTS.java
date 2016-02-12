@@ -48,6 +48,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private String adminPassword;
     private String sessionDataKey;
     private String resultPage;
+    private Header locationHeader;
     private Tomcat tomcat;
 
     private AuthenticatorClient logManger;
@@ -184,7 +185,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         Assert.assertNotNull(response, "Login response is null.");
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 302, "Invalid Response");
 
-        Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
 
         HttpGet getRequest = new HttpGet(locationHeader.getValue());
@@ -192,7 +193,16 @@ public class TestPassiveSTS extends ISIntegrationTest {
         response = client.execute(getRequest);
         resultPage = DataExtractUtil.getContentData(response);
         EntityUtils.consume(response.getEntity());
+    }
 
+    @Test(alwaysRun = true, description = "Test Session Hijacking", dependsOnMethods =
+            { "testSendLoginRequestPost" })
+    public void testSessionHijacking() throws Exception {
+        HttpGet getRequest = new HttpGet(locationHeader.getValue());
+        HttpResponse response = client.execute(getRequest);
+        String resultPage2 = DataExtractUtil.getContentData(response);
+        Assert.assertTrue(resultPage2.contains("Authentication Error !"), "Session hijacking is possible.");
+        EntityUtils.consume(response.getEntity());
     }
 
 //    @Test(alwaysRun = true, description = "Test PassiveSTS Claims",
