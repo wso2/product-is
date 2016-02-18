@@ -23,6 +23,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -83,6 +84,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
             "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_INDEX_URL = "http://localhost:8490/%s/";
     private static final String SAML_SSO_LOGOUT_URL =
             "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
 
@@ -354,7 +356,22 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
-          dependsOnMethods = { "testAddSP" })
+            dependsOnMethods = { "testAddSP" })
+    public void testSAMLSSOIsPassiveLogin() {
+        try {
+            HttpResponse response;
+            response = sendGetRequest(
+                    String.format(SAML_SSO_INDEX_URL, config.getApp().getArtifact()));
+            String samlResponse = extractDataFromResponse(response, "name='SAMLResponse'", 5);
+            samlResponse = new String(Base64.decodeBase64(samlResponse));
+            Assert.assertTrue(samlResponse.contains("Destination=\""+String.format(ACS_URL, config.getApp().getArtifact())+"\""));
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Login test failed for " + config, e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
+          dependsOnMethods = { "testSAMLSSOIsPassiveLogin" })
     public void testSAMLSSOLogin() {
         try {
             HttpResponse response;
