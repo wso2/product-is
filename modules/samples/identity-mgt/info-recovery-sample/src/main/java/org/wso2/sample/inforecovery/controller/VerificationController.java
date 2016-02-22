@@ -70,6 +70,11 @@ public class VerificationController extends HttpServlet {
         if (!("PRIMARY".equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
             username = userstoredomain + "/" + username;
         }
+        String tenantDomain = req.getParameter("tenantdomain");
+        if (tenantDomain == null) {
+            tenantDomain = "carbon.super";
+        }
+        username = username + "@" + tenantDomain;
         String captchaPath = req.getParameter("captchaImagePath");
         String captchaKey = req.getParameter("captchaSecretKey");
         String captchaAnswer = req.getParameter("captchaAnswer");

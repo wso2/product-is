@@ -22,7 +22,6 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
-import org.wso2.carbon.user.core.UserStoreConfigConstants;
 import org.wso2.sample.inforecovery.client.UserInformationRecoveryClient;
 
 import javax.servlet.RequestDispatcher;
@@ -44,20 +43,21 @@ public class SelfSignupConfirmationController extends HttpServlet {
 
     private static final String CONFIRMATION = "confirmation";
     private static final String USER_STORE_DOMAIN = "userstoredomain";
-    private static final String USER_NAME = "userName";
+    private static final String USER_NAME = "username";
+    private static final String TENANT_DOMAIN = "tenantdomain";
     private static final String CAPTCHA = "captcha";
     private static final String CARBON_SERVER_URL = "carbonServerUrl";
-    private static final String CAPTCHA_IMAGE_URL = "captchImageUrl";
+    private static final String CAPTCHA_IMAGE_URL = "captchaImageUrl";
     private static final String CAPTCHA_ANSWER = "captchaAnswer";
     private static final String STATUS = "status";
+    private static final String PRIMARY_USERSTORE = "PRIMARY";
+    private static final String SUPER_TENANT = "carbon.super";
 
     public void init() {
         try {
             ConfigurationContext configContext = (ConfigurationContext) this.getServletContext()
                     .getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-            String carbonServerUrl = this.getServletConfig().getServletContext()
-                    .getInitParameter(SelfSignupConfirmationController.CARBON_SERVER_URL);
-
+            String carbonServerUrl = this.getServletConfig().getServletContext().getInitParameter(CARBON_SERVER_URL);
             client = new UserInformationRecoveryClient(carbonServerUrl, configContext);
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,20 +68,22 @@ public class SelfSignupConfirmationController extends HttpServlet {
             IOException {
 
         HttpSession session = req.getSession();
-        session.setAttribute(SelfSignupConfirmationController.CONFIRMATION,
-                                                    req.getParameter(SelfSignupConfirmationController.CONFIRMATION));
-        String userstoredomain = req.getParameter(SelfSignupConfirmationController.USER_STORE_DOMAIN);
-        String username = req.getParameter(SelfSignupConfirmationController.USER_NAME.toLowerCase());
-        if (!(UserStoreConfigConstants.PRIMARY.equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
+        session.setAttribute(CONFIRMATION, req.getParameter(CONFIRMATION));
+        String userstoredomain = req.getParameter(USER_STORE_DOMAIN);
+        String username = req.getParameter(USER_NAME);
+        if (!(PRIMARY_USERSTORE.equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
             username = userstoredomain + "/" + username;
         }
-        session.setAttribute(SelfSignupConfirmationController.USER_NAME, username);
+        session.setAttribute(USER_NAME, username);
+        String tenantDomain = req.getParameter(TENANT_DOMAIN);
+        if (tenantDomain == null) {
+            tenantDomain = SUPER_TENANT;
+        }
+        session.setAttribute(TENANT_DOMAIN, tenantDomain);
         CaptchaInfoBean bean = client.generateCaptcha();
-
-        session.setAttribute(SelfSignupConfirmationController.CAPTCHA, bean);
-        String carbonServerUrl = this.getServletConfig().getServletContext()
-                .getInitParameter(SelfSignupConfirmationController.CARBON_SERVER_URL);
-        session.setAttribute(SelfSignupConfirmationController.CAPTCHA_IMAGE_URL, carbonServerUrl + bean.getImagePath());
+        session.setAttribute(CAPTCHA, bean);
+        String carbonServerUrl = this.getServletConfig().getServletContext().getInitParameter(CARBON_SERVER_URL);
+        session.setAttribute(CAPTCHA_IMAGE_URL, carbonServerUrl + bean.getImagePath());
 
         RequestDispatcher view = req.getRequestDispatcher("signup_confirm.jsp");
         view.forward(req, res);
@@ -92,14 +94,13 @@ public class SelfSignupConfirmationController extends HttpServlet {
             IOException {
 
         HttpSession session = req.getSession(false);
-        String userName = (String) session.getAttribute(SelfSignupConfirmationController.USER_NAME);
-        String code = (String) session.getAttribute(SelfSignupConfirmationController.CONFIRMATION);
-        CaptchaInfoBean captcha = (CaptchaInfoBean) session.getAttribute(SelfSignupConfirmationController.CAPTCHA);
-        captcha.setUserAnswer(req.getParameter(SelfSignupConfirmationController.CAPTCHA_ANSWER));
-        VerificationBean bean = client.confirmUserSelfRegistration(userName, code, captcha, null);
-
-        req.setAttribute(SelfSignupConfirmationController.STATUS, bean);
-
+        String userName = (String) session.getAttribute(USER_NAME);
+        String code = (String) session.getAttribute(CONFIRMATION);
+        CaptchaInfoBean captcha = (CaptchaInfoBean) session.getAttribute(CAPTCHA);
+        captcha.setUserAnswer(req.getParameter(CAPTCHA_ANSWER));
+        String tenantDomain = (String) session.getAttribute(TENANT_DOMAIN);
+        VerificationBean bean = client.confirmUserSelfRegistration(userName, code, captcha, tenantDomain);
+        req.setAttribute(STATUS, bean);
         RequestDispatcher view = req.getRequestDispatcher("signup_confirm_status.jsp");
         view.forward(req, res);
     }
