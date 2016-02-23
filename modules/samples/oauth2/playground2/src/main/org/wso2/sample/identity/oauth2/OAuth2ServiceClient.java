@@ -61,4 +61,8 @@ public class OAuth2ServiceClient {
 		OAuth2TokenValidationResponseDTO resp = stub.validate(params);
 		return resp;
 	}
+
+	public String getClientID(){
+		return OAuth2ClientServlet.clientId;
+	}
 }

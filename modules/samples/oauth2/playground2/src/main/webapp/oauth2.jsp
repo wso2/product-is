@@ -4,6 +4,7 @@
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@page import="com.nimbusds.jwt.SignedJWT"%>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuth2ServiceClient" %>
 <%
 String error = request.getParameter("error");    
 String grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
@@ -13,6 +14,13 @@ String code = null;
 String accessToken = null;
 String idToken = null;
 String name = null;
+    OAuth2ServiceClient oAuth2ServiceClient = new OAuth2ServiceClient();
+    String clientId = oAuth2ServiceClient.getClientID();
+    String endpoint = OAuth2Constants.OP_ENDPOINT_URL;
+    String targetOrigin = OAuth2Constants.TARGET_URL;
+    String opStatus = OAuth2Constants.OP_STATUS_LOGGED;
+    String statusCookieParam = null;
+    String statusCookie = null;
 
 try {
     
@@ -54,12 +62,34 @@ try {
 <!DOCTYPE html>
 <html><head>
 <title>WSO2 OAuth2 Playground</title>
+    <iframe id="logoutIFrame" style='visibility: hidden;'
+            src=<%=OAuth2Constants.LOGOUT_IFRAME_SRC%>>
+    </iframe>
+    <iframe id="rpIFrame" style='visibility: hidden;' src="">
+    </iframe>
+    <%
+        String logoutUrl = OAuth2Constants.LOGOUT_URL + idToken;
+    %>
+    <a onclick="changeSrc('<%=logoutUrl%>')" target="logoutIFrame">logout</a>
 <meta charset="UTF-8">
 <meta name="description" content="" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 <script type="text/javascript" src="js/prettify.js"></script>                                   <!-- PRETTIFY -->
-<script type="text/javascript" src="js/kickstart.js"></script>                                  <!-- KICKSTART -->
+<script type="text/javascript" src="js/kickstart.js"></script>
+    <script>
+        var clientId = '<%=clientId%>';
+    </script>
+    <script type="text/javascript">
+        var sessionState = '<%=statusCookie%>';
+
+        document.getElementById("rpIFrame").src = '<%=OAuth2Constants.RP_IFRAME_SRC%>' + sessionState + '&id_token=' + '<%=idToken%>';
+    </script>
+    <script type="text/javascript">
+        function changeSrc(loc) {
+            document.getElementById('logoutIFrame').src = loc;
+        }
+    </script><!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />                  <!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="style.css" media="all" />                          <!-- CUSTOM STYLES -->
 
@@ -120,6 +150,27 @@ try {
 	         }
 	         return "";
 	     }
+         /**
+          *This method gets the clientId and post it to the servlet
+          */
+         function getClientId() {
+             var consumerKey = document.getElementsByName("consumerKey");
+             if (consumerKey.item(0) != null) {
+                 var clientId = consumerKey.item(0).value
+             }
+             else {
+                 clientId = null;
+             }
+             $.ajax({
+                 url: "/playground/oauth2client",
+                 data: 'clientId=' + clientId,
+                 type: "POST",
+                 async: false,
+                 success: function (data) {
+
+                 }
+             });
+         }
 </script>
 
 </head><body><a id="top-of-page"></a><div id="wrap" class="clearfix"/>
