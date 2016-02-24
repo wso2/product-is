@@ -719,6 +719,7 @@
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 >>>>>>> 1f04960... Adding test cases
 
