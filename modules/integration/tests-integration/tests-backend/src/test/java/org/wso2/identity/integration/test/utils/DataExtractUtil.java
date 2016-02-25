@@ -229,9 +229,9 @@ public class DataExtractUtil {
 		String[] params = query.split("&");
 		for (String param : params) {
 			String name = param.split("=")[0];
-			String value = param.split("=")[1];
-			if (name.contains("access_token"))
-				return value;
+			if (name.contains("access_token")) {
+				return param.split("=")[1];
+			}
 		}
 		return null;
 	}

@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.identity.integration.test.identity.mgt;
+package org.wso2.identity.integration.test.idp.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
