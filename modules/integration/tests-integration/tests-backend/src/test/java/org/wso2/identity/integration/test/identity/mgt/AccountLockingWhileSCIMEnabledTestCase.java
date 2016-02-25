@@ -59,6 +59,7 @@ public class AccountLockingWhileSCIMEnabledTestCase extends ISIntegrationTest {
     private static final String TEST_USER_PASSWORD = "Ab@123";
     private static final String WRONG_PASSWORD = "wrongPassword";
     private static final String TEST_ROLE = "testRole";
+    private static final String DISABLED_CLAIM = "http://wso2.org/claims/identity/accountDisabled";
 
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
@@ -122,8 +123,26 @@ public class AccountLockingWhileSCIMEnabledTestCase extends ISIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Check whether the user cannot login when account is disabled",
+    dependsOnMethods = "testSuccessfulLoginInitially", expectedExceptions = LoginAuthenticationExceptionException.class)
+    public void testUnsuccessfulLoginWithAccountDisabled() throws Exception {
+        remoteUSMServiceClient.setUserClaimValue(TEST_USER_USERNAME, DISABLED_CLAIM, "true", null);
+        loginManger.login(TEST_USER_USERNAME, TEST_USER_PASSWORD, isServer.getInstance().getHosts().get("default"));
+        loginManger.logOut();
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Check whether the user can login when account is enabled again",
+            dependsOnMethods = "testUnsuccessfulLoginWithAccountDisabled", expectedExceptions = LoginAuthenticationExceptionException.class)
+    public void testSuccessfulLoginWithAccountEnabled() throws Exception {
+        remoteUSMServiceClient.setUserClaimValue(TEST_USER_USERNAME, DISABLED_CLAIM, "false", null);
+        loginManger.login(TEST_USER_USERNAME, TEST_USER_PASSWORD, isServer.getInstance().getHosts().get("default"));
+        loginManger.logOut();
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check user account verification",
-            dependsOnMethods = "testSuccessfulLoginInitially", expectedExceptions = LoginAuthenticationExceptionException.class)
+            dependsOnMethods = "testSuccessfulLoginWithAccountEnabled", expectedExceptions = LoginAuthenticationExceptionException.class)
     public void testUnsuccessfulFirstLogin() throws Exception {
         loginManger.login(TEST_USER_USERNAME, WRONG_PASSWORD, isServer.getInstance().getHosts().get("default"));
         loginManger.logOut();
