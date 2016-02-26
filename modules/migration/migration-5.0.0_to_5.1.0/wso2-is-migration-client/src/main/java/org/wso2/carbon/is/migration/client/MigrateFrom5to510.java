@@ -20,6 +20,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.context.RegistryType;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
@@ -28,6 +29,7 @@ import org.wso2.carbon.identity.core.IdentityRegistryResources;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
@@ -54,6 +56,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("unchecked")
@@ -62,6 +65,7 @@ public class MigrateFrom5to510 implements MigrationClient {
     private static final Log log = LogFactory.getLog(MigrateFrom5to510.class);
     private static final String SAMLSSO_ASSERTION_CONSUMER_URL = "SAMLSSOAssertionConsumerURL";
     private static final String LOGOUT_URL = "logoutURL";
+    private static final String DEFAULT_CONST = "[default]";
     private DataSource dataSource;
     private DataSource umDataSource;
 
@@ -565,7 +569,14 @@ public class MigrateFrom5to510 implements MigrationClient {
     public void migrateRegistryData() throws Exception{
 
         //migrating super tenant configurations
-        migrateSAMLConfiguration();
+        try {
+            migrateSAMLConfiguration();
+            log.info("SAML Service Provider details are migrated successfully for tenant : " +
+                    MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            log.error("Error while migrating registry data for tenant : " +
+                    MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, e);
+        }
 
         //migrating tenant configurations
         Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
@@ -577,7 +588,11 @@ public class MigrateFrom5to510 implements MigrationClient {
                 carbonContext.setTenantId(tenant.getId());
                 carbonContext.setTenantDomain(tenant.getDomain());
 
+                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
                 migrateSAMLConfiguration();
+                log.info("SAML Service Provider details are migrated successfully for tenant : " + tenant.getDomain());
+            } catch (Exception e) {
+                log.error("Error while migrating registry data for tenant : " + tenant.getDomain(), e);
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
             }
@@ -592,22 +607,48 @@ public class MigrateFrom5to510 implements MigrationClient {
             if (registry.resourceExists(IdentityRegistryResources.SAML_SSO_SERVICE_PROVIDERS)) {
                 String[] providers = (String[]) registry.get(
                         IdentityRegistryResources.SAML_SSO_SERVICE_PROVIDERS).getContent();
+
                 if (providers != null) {
-                    for (int i = 0; i < providers.length; i++) {
-                        Resource resource = registry.get(providers[i]);
-                        String samlssoAssertionConsumerURL = resource.getProperty(SAMLSSO_ASSERTION_CONSUMER_URL);
-                        if (samlssoAssertionConsumerURL != null) {
+                    for (String provider : providers) {
+                        Resource resource = registry.get(provider);
+
+                        if (resource.getProperty(IdentityRegistryResources.PROP_SAML_SSO_ASSERTION_CONS_URLS) != null) {
+                            List<String> acsUrls = resource.getPropertyValues(IdentityRegistryResources
+                                    .PROP_SAML_SSO_ASSERTION_CONS_URLS);
+                            if (acsUrls.size() > 1) {
+                                String defaultAcsUrl = null;
+                                for (int i = 0; i < acsUrls.size(); i++) {
+                                    if (acsUrls.get(i).startsWith(DEFAULT_CONST)) {
+                                        defaultAcsUrl = acsUrls.get(i).substring(acsUrls.get(i).indexOf("]") + 1);
+                                        acsUrls.set(i, defaultAcsUrl);
+                                        break;
+                                    }
+                                }
+                                if (defaultAcsUrl != null) {
+                                    resource.setProperty(IdentityRegistryResources.PROP_SAML_SSO_ASSERTION_CONS_URLS,
+                                            acsUrls);
+                                    resource.setProperty(IdentityRegistryResources
+                                                    .PROP_DEFAULT_SAML_SSO_ASSERTION_CONS_URL, defaultAcsUrl);
+                                }
+                            }else if (acsUrls.size() == 1){
+                                resource.setProperty(IdentityRegistryResources
+                                                .PROP_DEFAULT_SAML_SSO_ASSERTION_CONS_URL, acsUrls.get(0));
+                            }
+                        } else if (resource.getProperty(SAMLSSO_ASSERTION_CONSUMER_URL) != null) {
+                            String samlssoAssertionConsumerURL = resource.getProperty(SAMLSSO_ASSERTION_CONSUMER_URL);
                             resource.setProperty(IdentityRegistryResources.PROP_SAML_SSO_ASSERTION_CONS_URLS,
                                     samlssoAssertionConsumerURL);
                             resource.setProperty(IdentityRegistryResources.PROP_DEFAULT_SAML_SSO_ASSERTION_CONS_URL,
                                     samlssoAssertionConsumerURL);
                             resource.removeProperty(SAMLSSO_ASSERTION_CONSUMER_URL);
                         }
+
                         String logoutURL = resource.getProperty(LOGOUT_URL);
                         if (logoutURL != null) {
                             resource.setProperty(IdentityRegistryResources.PROP_SAML_SLO_RESPONSE_URL, logoutURL);
                             resource.removeProperty(LOGOUT_URL);
                         }
+
                         registry.put(resource.getPath(), resource);
                     }
                 }
