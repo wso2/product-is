@@ -33,6 +33,7 @@ import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.util.Constants;
 import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.is.migration.util.SQLQueries;
 import org.wso2.carbon.registry.core.Registry;
@@ -452,6 +453,8 @@ public class MigrateFrom5to510 implements MigrationClient {
         PreparedStatement dropColumnPS = null;
         PreparedStatement tokenIdNotNullPS = null;
         PreparedStatement codeIdNotNullPS = null;
+        PreparedStatement reorgIdnOauth2AccessToken = null;
+        PreparedStatement reorgDb2IdnOauthAuthorizationCode = null;
 
         try {
             identityConnection = dataSource.getConnection();
@@ -461,28 +464,32 @@ public class MigrateFrom5to510 implements MigrationClient {
 
             String dropTokenScopeColumn = SQLQueries.DROP_TOKEN_SCOPE_COLUMN;
             String alterTokenIdNotNull;
-            if ("oracle".equals(databaseType)){
+            if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_ORACLE;
-            } else if ("mssql".equals(databaseType)){
+            } else if (Constants.DatabaseTypes.mssql.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MSSQL;
-            } else if ("postgresql".equals(databaseType)){
+            } else if (Constants.DatabaseTypes.postgresql.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_POSTGRESQL;
-            } else if ("h2".equals(databaseType)) {
+            } else if (Constants.DatabaseTypes.h2.toString().equals(databaseType)) {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_H2;
+            } else if (Constants.DatabaseTypes.db2.toString().equals(databaseType)) {
+                alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_DB2;
             } else {
                 alterTokenIdNotNull = SQLQueries.ALTER_TOKEN_ID_NOT_NULL_MYSQL;
             }
             String setAccessTokenPrimaryKey = SQLQueries.SET_ACCESS_TOKEN_PRIMARY_KEY;
 
             String alterCodeIdNotNull;
-            if ("oracle".equals(databaseType)){
+            if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)) {
                 alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_ORACLE;
-            } else if ("mssql".equals(databaseType)){
+            } else if (Constants.DatabaseTypes.mssql.toString().equals(databaseType)) {
                 alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_MSSQL;
-            } else if ("postgresql".equals(databaseType)){
+            } else if (Constants.DatabaseTypes.postgresql.toString().equals(databaseType)) {
                 alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_POSTGRESQL;
-            } else if ("h2".equals(databaseType)) {
+            } else if (Constants.DatabaseTypes.h2.toString().equals(databaseType)) {
                 alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_H2;
+            } else if (Constants.DatabaseTypes.db2.toString().equals(databaseType)) {
+                alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_DB2;
             } else {
                 alterCodeIdNotNull = SQLQueries.ALTER_CODE_ID_NOT_NULL_MYSQL;
             }
@@ -495,11 +502,22 @@ public class MigrateFrom5to510 implements MigrationClient {
             tokenIdNotNullPS = identityConnection.prepareStatement(alterTokenIdNotNull);
             tokenIdNotNullPS.execute();
 
+            if (Constants.DatabaseTypes.db2.toString().equals(databaseType)) {
+                reorgIdnOauth2AccessToken = identityConnection.prepareStatement(SQLQueries
+                        .REORG_IDN_OAUTH2_ACCESS_TOKEN_DB2);
+                reorgIdnOauth2AccessToken.execute();
+            }
             primaryKeyPS = identityConnection.prepareStatement(setAccessTokenPrimaryKey);
             primaryKeyPS.execute();
 
             codeIdNotNullPS = identityConnection.prepareStatement(alterCodeIdNotNull);
             codeIdNotNullPS.execute();
+
+            if (Constants.DatabaseTypes.db2.toString().equals(databaseType)) {
+                reorgDb2IdnOauthAuthorizationCode = identityConnection.prepareStatement(SQLQueries
+                        .REORG_IDN_OAUTH2_AUTHORIZATION_CODE_DB2);
+                reorgDb2IdnOauthAuthorizationCode.execute();
+            }
 
             authorizationCodePrimaryKeyPS = identityConnection.prepareStatement(setAuthorizationCodePrimaryKey);
             authorizationCodePrimaryKeyPS.execute();
@@ -517,6 +535,8 @@ public class MigrateFrom5to510 implements MigrationClient {
             IdentityDatabaseUtil.closeStatement(dropColumnPS);
             IdentityDatabaseUtil.closeStatement(tokenIdNotNullPS);
             IdentityDatabaseUtil.closeStatement(codeIdNotNullPS);
+            IdentityDatabaseUtil.closeStatement(reorgIdnOauth2AccessToken);
+            IdentityDatabaseUtil.closeStatement(reorgDb2IdnOauthAuthorizationCode);
             IdentityDatabaseUtil.closeConnection(identityConnection);
 
         }
