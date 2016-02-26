@@ -44,6 +44,9 @@ if (!sso_sessions) {
 if (samlResponse != null) {
     samlRespObj = sso.client.getSamlObject(samlResponse);
     if (!sso.client.isLogoutResponse(samlRespObj)) {
+        session.invalidate();
+        session = request.getSession(true);
+        sessionId = session.getId();
 
         // validating the signature
         if (samlConfig['SAML.EnableResponseSigning']) {

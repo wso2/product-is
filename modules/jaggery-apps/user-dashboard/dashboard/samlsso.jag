@@ -1,7 +1,8 @@
 <%
 
 include("util/constants.jag");
-
+var util = require("util/utility.jag");
+var log = new Log();
 var samlConfig = application.get(SAML_PROPERTIES);
 var sso = require("sso");
 var sessionId = session.getId();
@@ -20,10 +21,23 @@ else{
 
 if(request.getParameter("login") === 'true'){
     authzFailure = request.getParameter("authz_failure");
-	encodedSAMLRequest = sso.client.getEncodedSAMLAuthRequest(issuer);
-
+    encodedSAMLRequest = sso.client.getEncodedSAMLAuthRequest(issuer);
 }else if(request.getParameter("logout") === 'true'){
-	var user = session.get(LOGGED_IN_USER);
+    try {
+        var ws = require("ws");
+        var wsRequest = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "http://sso.saml2.authenticator.identity.carbon.wso2.org/logout";
+        options.mep = 'in-only';
+        var payload1 = "<sso:logout xmlns:sso=\"http://sso.saml2.authenticator.identity.carbon.wso2.org\"/>";
+        options["HTTPHeaders"] = [{name: "cookie", value: session.get("auth-cookie")}];
+        wsRequest.open(options, util.getServerUrl() + "/SAML2SSOAuthenticationService", false);
+        wsRequest.send(payload1);
+    } catch (e) {
+        log.error(e.toString());
+    }
+    var user = session.get(LOGGED_IN_USER);
     authzFailure = request.getParameter("authz_failure");
     session.put(AUTHZ_FAILURE,authzFailure);
     sso_sessions = application.get('sso_sessions'),

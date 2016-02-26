@@ -22,6 +22,7 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -45,7 +46,13 @@ public class CarbonTestServerManager extends TestServerManager {
     }
 
     public String startServer() throws IOException, AutomationFrameworkException {
-        String carbonHome = super.startServer();
+        String carbonHome;
+        try {
+            carbonHome = super.startServer();
+        } catch (XPathExpressionException e) {
+            throw new AutomationFrameworkException("Failed to startup server.", e);
+        }
+
         System.setProperty("carbon.home", carbonHome);
         return carbonHome;
     }

@@ -62,7 +62,7 @@ function getBPSSessions(request){
         try {
             var result = callWSReturnJSON(webService2, host + "/SAML2SSOAuthenticationService", "urn:login", new Array(request));
             var isAuthenticated = result.return;
-            if (isAuthenticated.equals("true")) {
+            if (java.lang.Boolean.parseBoolean(isAuthenticated)) {
                 if(profileOutputJson != "\"list\" : ["){
                     profileOutputJson = profileOutputJson + ",";
                 }
