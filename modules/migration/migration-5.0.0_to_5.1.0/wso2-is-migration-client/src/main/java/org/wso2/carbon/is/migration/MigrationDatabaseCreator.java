@@ -66,13 +66,13 @@ public class MigrationDatabaseCreator {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if (Constants.DatabaseTypes.mysql.toString().equals(databaseType)){
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
             DatabaseMetaData meta = conn.getMetaData();
             String schema = null;
-            if ("oracle".equals(databaseType)){
+            if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)){
                 schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
             }
             ResultSet res = meta.getTables(null, schema, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
@@ -88,10 +88,8 @@ public class MigrationDatabaseCreator {
             if (log.isTraceEnabled()) {
                 log.trace("Migration script executed successfully.");
             }
-        } catch (SQLException e) {
-            String msg = "Failed to execute the migration script. " + e.getMessage();
-            log.fatal(msg, e);
-            throw new Exception(msg, e);
+        } catch (Exception e) {
+            throw new Exception("Failed to execute the migration script.", e);
         } finally {
             try {
                 if (conn != null) {
@@ -109,7 +107,7 @@ public class MigrationDatabaseCreator {
             conn = umDataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if (Constants.DatabaseTypes.mysql.toString().equals(databaseType)){
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
@@ -120,10 +118,8 @@ public class MigrationDatabaseCreator {
             if (log.isTraceEnabled()) {
                 log.trace("Migration script executed successfully.");
             }
-        } catch (SQLException e) {
-            String msg = "Failed to execute the migration script. " + e.getMessage();
-            log.fatal(msg, e);
-            throw new Exception(msg, e);
+        } catch (Exception e) {
+            throw new Exception("Failed to execute the migration script.", e);
         } finally {
             try {
                 if (conn != null) {
@@ -175,10 +171,10 @@ public class MigrationDatabaseCreator {
         String databaseType = DatabaseCreator.getDatabaseType(this.conn);
         boolean oracleUserChanged = true;
         boolean keepFormat = false;
-        if ("oracle".equals(databaseType)) {
+        if (Constants.DatabaseTypes.oracle.toString().equals(databaseType)) {
             delimiter = "/";
             oracleUserChanged = false;
-        } else if ("db2".equals(databaseType)) {
+        } else if (Constants.DatabaseTypes.db2.toString().equals(databaseType)) {
             delimiter = "/";
         } else if ("openedge".equals(databaseType)) {
             delimiter = "/";
@@ -210,8 +206,9 @@ public class MigrationDatabaseCreator {
                     }
                 }
                 //add the oracle database owner
-                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")){
-                    line = "databasename := '"+ISMigrationServiceDataHolder.getIdentityOracleUser()+"';";
+                if (!oracleUserChanged && Constants.DatabaseTypes.oracle.toString().equals(databaseType) &&
+                        line.contains("databasename :=")) {
+                    line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
                     oracleUserChanged = true;
                 }
                 sql.append(keepFormat ? "\n" : " ").append(line);
@@ -232,9 +229,7 @@ public class MigrationDatabaseCreator {
                 executeSQL(sql.toString());
             }
         } catch (Exception e) {
-            log.error("Error occurred while executing SQL script for migrating database", e);
             throw new Exception("Error occurred while executing SQL script for migrating database", e);
-
         } finally {
             if(reader != null){
                 reader.close();
