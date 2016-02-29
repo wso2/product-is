@@ -17,6 +17,7 @@
     //String scope = request.getParameter(OAuth2Constants.SCOPE);
     //String callback = request.getScheme() +"://" + request.getServerName() + ":" + request.getServerPort() + "/playground/oauth2client";
     String code = (String) session.getAttribute(OAuth2Constants.CODE);
+        String idToken = null;
    
     OAuthClientRequest accessRequest = OAuthClientRequest.tokenLocation(tokenEndpoint)
     .setGrantType(GrantType.AUTHORIZATION_CODE)
@@ -31,13 +32,19 @@
     
     OAuthClientResponse oAuthResponse = oAuthClient.accessToken(accessRequest);
     String accessToken = oAuthResponse.getParam(OAuth2Constants.ACCESS_TOKEN);
-    session.setAttribute(OAuth2Constants.ACCESS_TOKEN,accessToken);
-    
-    String idToken = oAuthResponse.getParam("id_token");
+    session.setAttribute(OAuth2Constants.ACCESS_TOKEN, accessToken);
+
+     idToken = oAuthResponse.getParam("id_token");
+        String idTokenHint =  (String)session.getAttribute("id_token");
+        session.removeAttribute("id_token");
     if(idToken != null) {
         session.setAttribute("id_token", idToken);
+
     }
-    
+        if (idTokenHint != null) {
+            session.setAttribute("id_token_hint", idTokenHint);
+        }
+
     } catch (Exception e) {
 %>
       	 <script type="text/javascript">

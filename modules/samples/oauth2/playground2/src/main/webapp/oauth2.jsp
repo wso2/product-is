@@ -4,6 +4,9 @@
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@page import="com.nimbusds.jwt.SignedJWT"%>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuth2ServiceClient" %>
+<%@ page import="javax.servlet.http.Cookie" %>
+<%@ page import="java.util.Enumeration" %>
 <%
 String error = request.getParameter("error");    
 String grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
@@ -12,36 +15,39 @@ OAuthAuthzResponse authzResponse = null;
 String code = null;
 String accessToken = null;
 String idToken = null;
+String idTokenHint = null;
 String name = null;
+String statusCookie = request.getParameter("session");
 
 try {
     
     String reset = request.getParameter("reset");
 
     if (reset!=null && "true".equals(reset)){
+
     	session.removeAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
     	session.removeAttribute(OAuth2Constants.ACCESS_TOKEN);
     	session.removeAttribute(OAuth2Constants.CODE);
-    	session.removeAttribute("id_token");
+    	session.removeAttribute("id_token_hint");
     	session.removeAttribute("result");
     }    
     
     if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_CODE.equals(grantType)) {
     	code = (String) session.getAttribute(OAuth2Constants.CODE);
-    	if (code==null) {
+    	if (code == null) {
         	authzResponse = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
         	code = authzResponse.getCode();
         	session.setAttribute(OAuth2Constants.CODE,code);
     	} else {
         	accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
         	idToken = (String) session.getAttribute("id_token");
-    	}   
+            idTokenHint =(String) session.getAttribute("id_token_hint");
+    	}
     } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS.equals(grantType)) {
     	accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
     } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_RESOURCE_OWNER.equals(grantType)) {
     	accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
     }
-
   } catch (Exception e) {
 %>
       <script type="text/javascript">
@@ -54,6 +60,15 @@ try {
 <!DOCTYPE html>
 <html><head>
 <title>WSO2 OAuth2 Playground</title>
+    <iframe id="logoutIFrame" style='visibility: hidden;'
+            src="">
+    </iframe>
+    <iframe id="rpIFrame" style='visibility: hidden;' src="">
+    </iframe>
+    <%
+        String logoutUrl = OAuth2Constants.LOGOUT_URL + idTokenHint;
+    %>
+    <iframe id="rpIFrame" style='visibility: hidden;'  src=""></iframe>
 <meta charset="UTF-8">
 <meta name="description" content="" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
@@ -62,7 +77,21 @@ try {
 <script type="text/javascript" src="js/kickstart.js"></script>                                  <!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />                  <!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="style.css" media="all" />                          <!-- CUSTOM STYLES -->
+    <script>
 
+
+    </script>
+    <script type="text/javascript">
+        var sessionState = '<%=statusCookie%>';
+
+        document.getElementById("rpIFrame").src = "http://localhost:8080/playground2/rpIFrame.jsp?session="+ '<%=statusCookie%>';
+
+    </script>
+    <script type="text/javascript">
+        function changeSrc(loc) {
+            document.getElementById('logoutIFrame').src = loc;
+        }
+    </script>
 <script type="text/javascript">
 	     function setVisibility() {
  
@@ -120,6 +149,24 @@ try {
 	         }
 	         return "";
 	     }
+         function getClientId() {
+             var consumerKey = document.getElementsByName("consumerKey");
+             if (consumerKey.item(0) != null) {
+                 var clientId = consumerKey.item(0).value
+             }
+             else {
+                 clientId = null;
+             }
+             $.ajax({
+                 url: "http://localhost:8080/playground2/rpIFrame.jsp",
+                 data: { clientId: clientId} ,
+                 type: "POST",
+                 async: false,
+                 success: function (data) {
+
+                 }
+             });
+         }
 </script>
 
 </head><body><a id="top-of-page"></a><div id="wrap" class="clearfix"/>
@@ -133,7 +180,8 @@ try {
 	 -->
 	 <!-- Menu Horizontal -->
 	<ul class="menu">
-	<li class="current"><a href="index.jsp">Home</a></li>
+	<li class="current"><a href="index.jsp">Home</a>
+        <a onclick="changeSrc('<%=logoutUrl%>')" target="logoutIFrame">logout</a></li>
 	
 	</ul>
 	 
@@ -215,7 +263,7 @@ try {
                             </tr>
                                      
                             <tr>
-                                 <td colspan="2"><input type="submit" name="authorize" value="Authorize"></td>
+                                 <td colspan="2"><input type="submit" onclick="getClientId()" name="authorize" value="Authorize"></td>
                            </tr>                         
                            </tbody>
                         </table>
