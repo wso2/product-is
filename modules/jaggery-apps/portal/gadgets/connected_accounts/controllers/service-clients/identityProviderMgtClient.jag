@@ -1,6 +1,6 @@
 <%
 
-var log = new Log();
+var log = new Log("connected_accounts/controllers/service-clients/identityProviderMgtClient.jag");
 
 var util = require("../../util/utility.jag");
 var serverUrl = util.getServerUrl() + "/IdentityApplicationManagementService";
