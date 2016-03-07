@@ -6,6 +6,7 @@
 <%@page import="org.apache.oltu.oauth2.common.message.types.GrantType"%>
 <%@ page import="org.apache.oltu.oauth2.client.request.OAuthClientRequest" %>
 <%@ page import="org.apache.oltu.oauth2.common.message.types.ResponseType" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuthTokenPKCERequestBuilder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     try {
@@ -17,8 +18,11 @@
     //String scope = request.getParameter(OAuth2Constants.SCOPE);
     //String callback = request.getScheme() +"://" + request.getServerName() + ":" + request.getServerPort() + "/playground/oauth2client";
     String code = (String) session.getAttribute(OAuth2Constants.CODE);
-   
-    OAuthClientRequest accessRequest = OAuthClientRequest.tokenLocation(tokenEndpoint)
+    String PKCECodeVerifier = request.getParameter(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER);
+
+    OAuthTokenPKCERequestBuilder oAuthTokenPKCERequestBuilder = new OAuthTokenPKCERequestBuilder(tokenEndpoint);
+    OAuthClientRequest accessRequest = oAuthTokenPKCERequestBuilder
+    .setPKCECodeVerifier(PKCECodeVerifier)
     .setGrantType(GrantType.AUTHORIZATION_CODE)
     .setClientId(consumerKey)
     .setClientSecret(consumerSecret)

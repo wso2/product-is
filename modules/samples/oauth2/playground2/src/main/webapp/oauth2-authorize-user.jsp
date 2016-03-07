@@ -4,7 +4,7 @@
 <%@page import="org.apache.oltu.oauth2.client.OAuthClient"%>
 <%@page import="org.apache.oltu.oauth2.common.message.types.GrantType"%>
 <%@ page import="org.apache.oltu.oauth2.client.request.OAuthClientRequest" %>
-<%@ page import="org.apache.oltu.oauth2.common.message.types.ResponseType" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuthPKCEAuthenticationRequestBuilder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -15,6 +15,8 @@
         String authzEndpoint = request.getParameter(OAuth2Constants.OAUTH2_AUTHZ_ENDPOINT);
         String accessEndpoint = request.getParameter(OAuth2Constants.OAUTH2_ACCESS_ENDPOINT);
         String consumerSecret = request.getParameter(OAuth2Constants.CONSUMER_SECRET);
+        String PKCECodeChallenge = request.getParameter(OAuth2Constants.OAUATH2_PKCE_CODE_CHALLENGE);
+        String PKCECodeChallengeMethod = request.getParameter(OAuth2Constants.OAUATH2_PKCE_CODE_CHALLENGE_METHOD);
 
         String recowner = request.getParameter("recowner");
         String recpassword = request.getParameter("recpassword");
@@ -50,14 +52,19 @@
         return;
     }
 
-    OAuthClientRequest authzRequest = OAuthClientRequest
-            .authorizationLocation(authzEndpoint)
+    OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
+    if(authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE)) {
+        oAuthPKCEAuthenticationRequestBuilder = oAuthPKCEAuthenticationRequestBuilder.setPKCECodeChallenge(PKCECodeChallenge, PKCECodeChallengeMethod);
+    }
+
+    oAuthPKCEAuthenticationRequestBuilder
             .setClientId(consumerKey)
             .setRedirectURI((String)session.getAttribute("callbackurl"))
             .setResponseType(authzGrantType)
-            .setScope(scope)
-            .buildQueryMessage();
-    response.sendRedirect(authzRequest.getLocationUri());
+            .setScope(scope);
+
+    OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildBodyMessage();
+    response.sendRedirect(authzRequest.getLocationUri() + "?" + authzRequest.getBody());
     return;
 
 } else {
