@@ -40,6 +40,7 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
     private AuthenticatorClient loginManger;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private UserIdentityManagementAdminServiceClient userIdentityManagementAdminServiceClient;
+    private static long loginTime;
 
     private static final String PROFILE_NAME = "default";
     private static final String TEST_USER_USERNAME = "testUser";
@@ -52,7 +53,7 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
 
         super.init();
-
+        loginTime = System.currentTimeMillis();
         loginManger = new AuthenticatorClient(backendURL);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
         userIdentityManagementAdminServiceClient = new UserIdentityManagementAdminServiceClient(backendURL, sessionCookie);
@@ -98,6 +99,28 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
         Assert.assertNotNull(userChallengesDTOsReceived[0].getAnswer(), "Answer of the challenge question is null");
     }
 
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Last Login Time set to claim")
+    public void testLastLoginTime() throws Exception {
+        String lastLoginTime = remoteUSMServiceClient.getUserClaimValue(TEST_USER_USERNAME, "http://wso2" +
+                ".org/claims/identity/lastLoginTime", null);
+        Assert.assertNotNull(lastLoginTime);
+        Assert.assertTrue(loginTime < Long.parseLong(lastLoginTime) && Long.parseLong(lastLoginTime) < System
+                .currentTimeMillis());
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Last Password Update Time set to claim")
+    public void testLastPasswordUpdatedTime() throws Exception {
+        Long timeBeforeUpdatePassword = System.currentTimeMillis();
+        userMgtClient.changePasswordByUser(TEST_USER_USERNAME, TEST_USER_PASSWORD, "newpass");
+        Long timeAfterUpdatePassword = System.currentTimeMillis();
+        String lastPasswordUpdatedTime = remoteUSMServiceClient.getUserClaimValue(TEST_USER_USERNAME, "http://wso2" +
+                ".org/claims/identity/lastPasswordUpdateTime", null);
+        Assert.assertNotNull(lastPasswordUpdatedTime);
+        Assert.assertTrue(timeBeforeUpdatePassword < Long.parseLong(lastPasswordUpdatedTime) && Long.parseLong
+                (lastPasswordUpdatedTime) < timeAfterUpdatePassword);
+    }
 
     /**
      * Checks whether the passed Name exists in the FlaggedName array.
