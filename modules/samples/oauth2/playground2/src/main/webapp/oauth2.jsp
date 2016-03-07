@@ -4,6 +4,9 @@
 <%@page import="org.json.simple.JSONObject"%>
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@page import="com.nimbusds.jwt.SignedJWT"%>
+<%@ page import="java.security.MessageDigest" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
+<%@ page import="java.util.UUID" %>
 <%
 String error = request.getParameter("error");    
 String grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
@@ -13,6 +16,8 @@ String code = null;
 String accessToken = null;
 String idToken = null;
 String name = null;
+String code_verifier = null;
+String code_challenge = null;
 
 try {
     
@@ -24,6 +29,7 @@ try {
     	session.removeAttribute(OAuth2Constants.CODE);
     	session.removeAttribute("id_token");
     	session.removeAttribute("result");
+        session.removeAttribute(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER);
     }    
     
     if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_CODE.equals(grantType)) {
@@ -63,64 +69,7 @@ try {
 <link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />                  <!-- KICKSTART -->
 <link rel="stylesheet" type="text/css" href="style.css" media="all" />                          <!-- CUSTOM STYLES -->
 
-<script type="text/javascript">
-	     function setVisibility() {
- 
-    		var grantType = document.getElementById("grantType").value;
-   
-        	if ('code' == grantType) {
-        		document.getElementById("clientsecret").style.display = "none";
-                document.getElementById("callbackurltr").style.display = "";
-        		document.getElementById("authzep").style.display = "";  
-        		document.getElementById("accessep").style.display = "none";  
-        		document.getElementById("recownertr").style.display = "none"; 
-        		document.getElementById("recpasswordtr").style.display = "none"; 
-        	} else if ("token" == grantType) {
-        		document.getElementById("clientsecret").style.display = "none";
-                document.getElementById("callbackurltr").style.display = "";
-        		document.getElementById("authzep").style.display = "";  
-        		document.getElementById("accessep").style.display = "none"; 
-        		document.getElementById("recownertr").style.display = "none"; 
-        		document.getElementById("recpasswordtr").style.display = "none"; 
-            } else if ("password" == grantType) {
-            	document.getElementById("clientsecret").style.display = "";
-                document.getElementById("callbackurltr").style.display = "none";
-        		document.getElementById("authzep").style.display = "none";  
-        		document.getElementById("accessep").style.display = "";   
-        		document.getElementById("recownertr").style.display = ""; 
-        		document.getElementById("recpasswordtr").style.display = ""; 
-            } else if ("client_credentials" == grantType) {
-            	document.getElementById("clientsecret").style.display = "";
-                document.getElementById("callbackurltr").style.display = "none";
-        		document.getElementById("authzep").style.display = "none";  
-        		document.getElementById("accessep").style.display = ""; 
-        		document.getElementById("recownertr").style.display = "none"; 
-        		document.getElementById("recpasswordtr").style.display = "none"; 
-            }                    
-        		
-            return true;
-   		 }
-	     
-	     function getAcceesToken() 
-	     {
-	        var fragment = window.location.hash.substring(1);  
-	         if (fragment.indexOf("&") > 0)
-	         {
-	            var arrParams = fragment.split("&");         
-    
-	            var i = 0;
-	            for (i=0;i<arrParams.length;i++)
-	            {
-	             	var sParam =  arrParams[i].split("=");
 
-	             	if (sParam[0] == "access_token"){
-	            	 return sParam[1];
-	             	}
-	          	}
-	         }
-	         return "";
-	     }
-</script>
 
 </head><body><a id="top-of-page"></a><div id="wrap" class="clearfix"/>
 <!-- ===================================== END HEADER ===================================== -->
@@ -144,7 +93,17 @@ try {
 <table>
 <tr>
 <td>
-      <% if (accessToken==null && code==null && grantType == null) { %>
+      <% if (accessToken==null && code==null && grantType == null) {
+          code_verifier = UUID.randomUUID().toString() + UUID.randomUUID().toString();
+          code_verifier = code_verifier.replaceAll("-","");
+
+          MessageDigest digest = MessageDigest.getInstance("SHA-256");
+          byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
+          code_challenge = new String(java.util.Base64.getEncoder().encode(hash), StandardCharsets.US_ASCII);
+            //set the generated code verifier to the current user session
+          session.setAttribute(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER,code_verifier);
+
+      %>
               <div id="loginDiv" class="sign-in-box" width="100%">
                   <% if (error!=null && error.trim().length()>0) {%>
                     <table class="user_pass_table" width="100%">
@@ -154,7 +113,7 @@ try {
                     </table>
                    <%} %>
               
-                    <form action="oauth2-authorize-user.jsp" id="loginForm" method="post">
+                    <form action="oauth2-authorize-user.jsp" id="loginForm" method="post" name="oauthLoginForm">
                         <table class="user_pass_table" width="100%">
                             <tbody>
                           
@@ -213,7 +172,21 @@ try {
                                 <td>Access Token Endpoint : </td>
                                 <td><input type="text" id="accessEndpoint" name="accessEndpoint" style= "width:350px"></td>
                             </tr>
-                                     
+                            <tr id="pkceMethod">
+                                <td>PKCE Challenge Method</td>
+                                <td><input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"value="S256" checked>S256 &nbsp;
+                                    <input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"value="plain">plain
+                                </td>
+                            </tr>
+                            <tr id="pkceChallenge">
+                                <td>PKCE Code Challenge</td>
+                                <td><input type="text" style="width: 350px" readonly name="code_challenge" value="<%=code_challenge%>"></td>
+                            </tr>
+                            <tr id="pkceVerifier">
+                                <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
+                                <td><label><%=code_verifier%></label></td>
+                            </tr>
+
                             <tr>
                                  <td colspan="2"><input type="submit" name="authorize" value="Authorize"></td>
                            </tr>                         
@@ -245,6 +218,11 @@ try {
                                 <td><label>Client Secret : </label></td>
                                 <td><input type="password" id="consumerSecret" name="consumerSecret" style= "width:350px">
                                 </td>
+                           </tr>
+                           <tr >
+                               <td><label>PKCE Verifier : </label></td>
+                               <td><input type="text" id="pkce_verifier" name="code_verifier" style= "width:350px" value="<%=(String)session.getAttribute(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER)%>">
+                               </td>
                            </tr>
                            <tr>
                                  <td colspan="2"><input type="submit" name="authorize" value="Get Access Token"></td>
@@ -356,6 +334,91 @@ try {
 </td>
 </tr>
 </table>
+<script type="text/javascript">
+    function setVisibility() {
 
+        var grantType = document.getElementById("grantType").value;
+
+        if ('code' == grantType) {
+            document.getElementById("clientsecret").style.display = "none";
+            document.getElementById("callbackurltr").style.display = "";
+            document.getElementById("authzep").style.display = "";
+            document.getElementById("accessep").style.display = "none";
+            document.getElementById("recownertr").style.display = "none";
+            document.getElementById("recpasswordtr").style.display = "none";
+        } else if ("token" == grantType) {
+            document.getElementById("clientsecret").style.display = "none";
+            document.getElementById("callbackurltr").style.display = "";
+            document.getElementById("authzep").style.display = "";
+            document.getElementById("accessep").style.display = "none";
+            document.getElementById("recownertr").style.display = "none";
+            document.getElementById("recpasswordtr").style.display = "none";
+        } else if ("password" == grantType) {
+            document.getElementById("clientsecret").style.display = "";
+            document.getElementById("callbackurltr").style.display = "none";
+            document.getElementById("authzep").style.display = "none";
+            document.getElementById("accessep").style.display = "";
+            document.getElementById("recownertr").style.display = "";
+            document.getElementById("recpasswordtr").style.display = "";
+        } else if ("client_credentials" == grantType) {
+            document.getElementById("clientsecret").style.display = "";
+            document.getElementById("callbackurltr").style.display = "none";
+            document.getElementById("authzep").style.display = "none";
+            document.getElementById("accessep").style.display = "";
+            document.getElementById("recownertr").style.display = "none";
+            document.getElementById("recpasswordtr").style.display = "none";
+        }
+
+        return true;
+    }
+
+    function getAcceesToken()
+    {
+        var fragment = window.location.hash.substring(1);
+        if (fragment.indexOf("&") > 0)
+        {
+            var arrParams = fragment.split("&");
+
+            var i = 0;
+            for (i=0;i<arrParams.length;i++)
+            {
+                var sParam =  arrParams[i].split("=");
+
+                if (sParam[0] == "access_token"){
+                    return sParam[1];
+                }
+            }
+        }
+        return "";
+    }
+    function togglePKCEMethod() {
+        var radios = document.getElementsByName('code_challenge_method');
+        var pkceMethod = "";
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                pkceMethod = radios[i].value;
+                break;
+            }
+        }
+        var pkceChallenge = document.getElementsByName("code_challenge")[0];
+        console.log(pkceMethod +  " " + pkceChallenge.value);
+        if(pkceMethod == "S256") {
+            pkceChallenge.value = "<%=code_challenge%>";
+        } else if(pkceMethod == "plain") {
+            pkceChallenge.value = "<%=code_verifier%>";
+        }
+    }
+    $("form[name='oauthLoginForm']").change(function() {
+        if($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
+            $("#pkceMethod").show();
+            $("#pkceChallenge").show();
+            $("#pkceVerifier").show();
+        } else {
+            $("#pkceMethod").hide();
+            $("#pkceChallenge").hide();
+            $("#pkceVerifier").hide();
+        }
+    })
+</script>
 </body>
 </html>
