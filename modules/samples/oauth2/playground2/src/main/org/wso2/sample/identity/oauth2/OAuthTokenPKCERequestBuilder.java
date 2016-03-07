@@ -24,7 +24,8 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
  * This extends the default <code>OAuthClientRequest.TokenRequestBuilder</code> to support PKCE as apache oltu doesn't
  * support pkce as of now.
  */
-public class OAuthTokenPKCERequestBuilder extends OAuthClientRequest.TokenRequestBuilder{
+public class OAuthTokenPKCERequestBuilder extends OAuthClientRequest.TokenRequestBuilder {
+
     public OAuthTokenPKCERequestBuilder(String url) {
         super(url);
     }
