@@ -3554,7 +3554,15 @@
                 <artifactId>org.wso2.carbon.identity.workflow.mgt</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
+<<<<<<< HEAD
 >>>>>>> ee4597a... Workflow custom event handler sample
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
+                <version>${carbon.identity.version}</version>
+            </dependency>
+>>>>>>> cd861cd... Fix dependency issues
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
