@@ -19,10 +19,8 @@
 package org.wso2.sample.inforecovery.controller;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
-import org.wso2.carbon.user.core.UserStoreConfigConstants;
 import org.wso2.sample.inforecovery.client.UserInformationRecoveryClient;
 
 import javax.servlet.RequestDispatcher;
@@ -47,14 +45,15 @@ public class SelfSignupConfirmationController extends HttpServlet {
     private static final String USER_NAME = "userName";
     private static final String CAPTCHA = "captcha";
     private static final String CARBON_SERVER_URL = "carbonServerUrl";
-    private static final String CAPTCHA_IMAGE_URL = "captchImageUrl";
+    private static final String CAPTCHA_IMAGE_URL = "captchaImageUrl";
     private static final String CAPTCHA_ANSWER = "captchaAnswer";
     private static final String STATUS = "status";
+    private static final String CONFIGURATION_CONTEXT = "ConfigurationContext";
 
     public void init() {
         try {
             ConfigurationContext configContext = (ConfigurationContext) this.getServletContext()
-                    .getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+                    .getAttribute(CONFIGURATION_CONTEXT);
             String carbonServerUrl = this.getServletConfig().getServletContext()
                     .getInitParameter(SelfSignupConfirmationController.CARBON_SERVER_URL);
 
@@ -72,7 +71,7 @@ public class SelfSignupConfirmationController extends HttpServlet {
                                                     req.getParameter(SelfSignupConfirmationController.CONFIRMATION));
         String userstoredomain = req.getParameter(SelfSignupConfirmationController.USER_STORE_DOMAIN);
         String username = req.getParameter(SelfSignupConfirmationController.USER_NAME.toLowerCase());
-        if (!(UserStoreConfigConstants.PRIMARY.equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
+        if (!("PRIMARY".equalsIgnoreCase(userstoredomain)) && userstoredomain != null) {
             username = userstoredomain + "/" + username;
         }
         session.setAttribute(SelfSignupConfirmationController.USER_NAME, username);
