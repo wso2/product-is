@@ -24,7 +24,7 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
  * oltu doesn't support pkce as of now.
  */
 public class OAuthPKCEAuthenticationRequestBuilder extends OAuthClientRequest.AuthenticationRequestBuilder {
-    
+
     public OAuthPKCEAuthenticationRequestBuilder(String url) {
         super(url);
     }
