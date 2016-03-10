@@ -15,8 +15,9 @@
         String authzEndpoint = request.getParameter(OAuth2Constants.OAUTH2_AUTHZ_ENDPOINT);
         String accessEndpoint = request.getParameter(OAuth2Constants.OAUTH2_ACCESS_ENDPOINT);
         String consumerSecret = request.getParameter(OAuth2Constants.CONSUMER_SECRET);
-        String PKCECodeChallenge = request.getParameter(OAuth2Constants.OAUATH2_PKCE_CODE_CHALLENGE);
-        String PKCECodeChallengeMethod = request.getParameter(OAuth2Constants.OAUATH2_PKCE_CODE_CHALLENGE_METHOD);
+        String PKCECodeChallenge = request.getParameter(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE);
+        String PKCECodeChallengeMethod = request.getParameter(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE_METHOD);
+        String usePKCEParameter = request.getParameter(OAuth2Constants.OAUTH2_USE_PKCE);
 
         String recowner = request.getParameter("recowner");
         String recpassword = request.getParameter("recpassword");
@@ -25,6 +26,12 @@
         String authzGrantType = request.getParameter(OAuth2Constants.OAUTH2_GRANT_TYPE);
         String scope = request.getParameter(OAuth2Constants.SCOPE);
         session.setAttribute("callbackurl", request.getParameter("callbackurl"));
+
+        boolean usePKCE = usePKCEParameter != null && "yes".equals(usePKCEParameter);
+        if(usePKCE) {
+            session.setAttribute(OAuth2Constants.OAUTH2_USE_PKCE, usePKCE);
+        }
+
 
         // By default IS does not validate scope. To validate we need to write a callback handler.
         if (scope == null || scope.trim().length() == 0){
@@ -53,7 +60,7 @@
     }
 
     OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
-    if(authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE)) {
+    if(authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE) {
         oAuthPKCEAuthenticationRequestBuilder = oAuthPKCEAuthenticationRequestBuilder.setPKCECodeChallenge(PKCECodeChallenge, PKCECodeChallengeMethod);
     }
 
