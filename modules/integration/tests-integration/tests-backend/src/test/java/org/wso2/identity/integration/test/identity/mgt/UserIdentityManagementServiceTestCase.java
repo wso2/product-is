@@ -26,7 +26,9 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.identity.mgt.stub.dto.UserChallengesDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.mgt.UserIdentityManagementAdminServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
@@ -40,23 +42,30 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
     private AuthenticatorClient loginManger;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private UserIdentityManagementAdminServiceClient userIdentityManagementAdminServiceClient;
+    private ServerConfigurationManager serverConfigurationManager;
+    private File identityXML;
+    private static long timeBeforeUserLogin;
 
     private static final String PROFILE_NAME = "default";
     private static final String TEST_USER_USERNAME = "testUser";
     private static final String TEST_USER_PASSWORD = "Ab@123";
+    private static final String TEST_USER_CHANGE_PASSWORD = "newpass";
     private static final String TEST_ROLE = "testRole";
-
+    private static final String lastLoginClaimURI = "http://wso2.org/claims/identity/lastLoginTime";
+    private static final String lastPasswordUpdateURI = "http://wso2.org/claims/identity/lastPasswordUpdateTime";
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
-
+        changeISConfiguration();
+        super.init();
+        timeBeforeUserLogin = System.currentTimeMillis();
         loginManger = new AuthenticatorClient(backendURL);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
         userIdentityManagementAdminServiceClient = new UserIdentityManagementAdminServiceClient(backendURL, sessionCookie);
-
+        Thread.sleep(5000);
         loginManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
@@ -98,6 +107,33 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
         Assert.assertNotNull(userChallengesDTOsReceived[0].getAnswer(), "Answer of the challenge question is null");
     }
 
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Last Login Time set to claim")
+    public void testLastLoginTime() throws Exception {
+        String lastLoginTime = remoteUSMServiceClient.getUserClaimValue(isServer.getSuperTenant().getTenantAdmin()
+                .getUserName(), lastLoginClaimURI, null);
+        Assert.assertNotNull(lastLoginTime);
+        Assert.assertTrue(timeBeforeUserLogin < Long.parseLong(lastLoginTime) && Long.parseLong(lastLoginTime) < System
+                .currentTimeMillis());
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Last Password Update Time set to claim")
+    public void testLastPasswordUpdatedTime() throws Exception {
+        Long timeBeforeUpdatePassword = System.currentTimeMillis();
+        String oldPassword = isServer.getSuperTenant().getTenantAdmin().getPassword();
+        userMgtClient.changePasswordByUser(isServer.getSuperTenant().getTenantAdmin().getUserName(), oldPassword,
+                TEST_USER_CHANGE_PASSWORD);
+        Thread.sleep(5000);
+        Long timeAfterUpdatePassword = System.currentTimeMillis();
+        String lastPasswordUpdatedTime = remoteUSMServiceClient.getUserClaimValue(isServer.getSuperTenant()
+                .getTenantAdmin().getUserName(), lastPasswordUpdateURI, null);
+        userMgtClient.changePasswordByUser(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                TEST_USER_CHANGE_PASSWORD, oldPassword);
+        Assert.assertNotNull(lastPasswordUpdatedTime);
+        Assert.assertTrue(timeBeforeUpdatePassword < Long.parseLong(lastPasswordUpdatedTime) && Long.parseLong
+                (lastPasswordUpdatedTime) < timeAfterUpdatePassword);
+    }
 
     /**
      * Checks whether the passed Name exists in the FlaggedName array.
@@ -122,5 +158,18 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
         return exists;
     }
 
+    private void changeISConfiguration() throws Exception {
 
+        log.info("Replacing identity.xml changing the entity id of SSOService");
+
+        String carbonHome = CarbonUtils.getCarbonHome();
+        identityXML = new File(carbonHome + File.separator
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
+                + "identity.xml");
+        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "identityMgt" + File
+                .separator + "identity-identitymgtlistener-enabled.xml");
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.restartGracefully();
+    }
 }
