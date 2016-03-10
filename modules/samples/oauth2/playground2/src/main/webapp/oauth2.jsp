@@ -29,7 +29,8 @@ try {
     	session.removeAttribute(OAuth2Constants.CODE);
     	session.removeAttribute("id_token");
     	session.removeAttribute("result");
-        session.removeAttribute(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER);
+        session.removeAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER);
+        session.removeAttribute(OAuth2Constants.OAUTH2_USE_PKCE);
     }    
     
     if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_CODE.equals(grantType)) {
@@ -101,7 +102,7 @@ try {
           byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
           code_challenge = new String(java.util.Base64.getEncoder().encode(hash), StandardCharsets.US_ASCII);
             //set the generated code verifier to the current user session
-          session.setAttribute(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER,code_verifier);
+          session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER,code_verifier);
 
       %>
               <div id="loginDiv" class="sign-in-box" width="100%">
@@ -172,6 +173,12 @@ try {
                                 <td>Access Token Endpoint : </td>
                                 <td><input type="text" id="accessEndpoint" name="accessEndpoint" style= "width:350px"></td>
                             </tr>
+                            <tr id="pkceOption">
+                                <td>Use PKCE</td>
+                                <td><input type="radio" name="use_pkce" value="yes" checked>Yes &nbsp;
+                                    <input type="radio" name="use_pkce" value="no">No
+                                </td>
+                            </tr>
                             <tr id="pkceMethod">
                                 <td>PKCE Challenge Method</td>
                                 <td><input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"value="S256" checked>S256 &nbsp;
@@ -219,11 +226,13 @@ try {
                                 <td><input type="password" id="consumerSecret" name="consumerSecret" style= "width:350px">
                                 </td>
                            </tr>
+                           <% if(session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
                            <tr >
                                <td><label>PKCE Verifier : </label></td>
-                               <td><input type="text" id="pkce_verifier" name="code_verifier" style= "width:350px" value="<%=(String)session.getAttribute(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER)%>">
+                               <td><input type="text" id="pkce_verifier" name="code_verifier" style= "width:350px" value="<%=(String)session.getAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER)%>">
                                </td>
                            </tr>
+                           <% }%>
                            <tr>
                                  <td colspan="2"><input type="submit" name="authorize" value="Get Access Token"></td>
                            </tr>
@@ -409,14 +418,21 @@ try {
         }
     }
     $("form[name='oauthLoginForm']").change(function() {
-        if($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
+        if($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
+                $("input[name='use_pkce']:checked")[0].value == "yes") {
             $("#pkceMethod").show();
             $("#pkceChallenge").show();
             $("#pkceVerifier").show();
+            $("input[name='code_challenge_method']")[0].removeAttribute('disabled');
+            $("input[name='code_challenge_method']")[1].removeAttribute('disabled');
+            $("input[name='code_challenge']")[0].removeAttribute('disabled');
         } else {
             $("#pkceMethod").hide();
             $("#pkceChallenge").hide();
             $("#pkceVerifier").hide();
+            $("input[name='code_challenge_method']")[0].setAttribute('disabled', true);
+            $("input[name='code_challenge_method']")[1].setAttribute('disabled', true);
+            $("input[name='code_challenge']")[0].setAttribute('disabled', true);
         }
     })
 </script>

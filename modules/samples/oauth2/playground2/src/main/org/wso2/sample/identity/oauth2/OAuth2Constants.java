@@ -38,8 +38,9 @@ public final class OAuth2Constants {
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
 
-	public static final String OAUATH2_PKCE_CODE_VERIFIER = "code_verifier";
-	public static final String OAUATH2_PKCE_CODE_CHALLENGE = "code_challenge";
-	public static final String OAUATH2_PKCE_CODE_CHALLENGE_METHOD = "code_challenge_method";
+	public static final String OAUTH2_PKCE_CODE_VERIFIER = "code_verifier";
+	public static final String OAUTH2_PKCE_CODE_CHALLENGE = "code_challenge";
+	public static final String OAUTH2_PKCE_CODE_CHALLENGE_METHOD = "code_challenge_method";
+	public static final String OAUTH2_USE_PKCE = "use_pkce";
 
 }

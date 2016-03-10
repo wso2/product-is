@@ -31,7 +31,7 @@ public class OAuthTokenPKCERequestBuilder extends OAuthClientRequest.TokenReques
     }
 
     public OAuthTokenPKCERequestBuilder setPKCECodeVerifier(String codeVerifier) {
-        this.parameters.put(OAuth2Constants.OAUATH2_PKCE_CODE_VERIFIER, codeVerifier);
+        this.parameters.put(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER, codeVerifier);
         return this;
     }
 }
