@@ -49,6 +49,7 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
     private static final String PROFILE_NAME = "default";
     private static final String TEST_USER_USERNAME = "testUser";
     private static final String TEST_USER_PASSWORD = "Ab@123";
+    private static final String TEST_USER_CHANGE_PASSWORD = "newpass";
     private static final String TEST_ROLE = "testRole";
     private static final String lastLoginClaimURI = "http://wso2.org/claims/identity/lastLoginTime";
     private static final String lastPasswordUpdateURI = "http://wso2.org/claims/identity/lastPasswordUpdateTime";
@@ -122,13 +123,13 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
         Long timeBeforeUpdatePassword = System.currentTimeMillis();
         String oldPassword = isServer.getSuperTenant().getTenantAdmin().getPassword();
         userMgtClient.changePasswordByUser(isServer.getSuperTenant().getTenantAdmin().getUserName(), oldPassword,
-                "newpass");
+                TEST_USER_CHANGE_PASSWORD);
         Thread.sleep(5000);
         Long timeAfterUpdatePassword = System.currentTimeMillis();
         String lastPasswordUpdatedTime = remoteUSMServiceClient.getUserClaimValue(isServer.getSuperTenant()
                 .getTenantAdmin().getUserName(), lastPasswordUpdateURI, null);
-        userMgtClient.changePasswordByUser(isServer.getSuperTenant().getTenantAdmin().getUserName(), "newpass",
-                oldPassword);
+        userMgtClient.changePasswordByUser(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                TEST_USER_CHANGE_PASSWORD, oldPassword);
         Assert.assertNotNull(lastPasswordUpdatedTime);
         Assert.assertTrue(timeBeforeUpdatePassword < Long.parseLong(lastPasswordUpdatedTime) && Long.parseLong
                 (lastPasswordUpdatedTime) < timeAfterUpdatePassword);
