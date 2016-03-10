@@ -29,6 +29,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
@@ -53,6 +56,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	private final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProver";
 	private final static String SERVICE_PROVIDER_DESC = "Playground Service Prover";
+	private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 	private final static int TOMCAT_PORT = 8490;
 
 	protected ApplicationManagementServiceClient appMgtclient;
@@ -106,6 +110,17 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appMgtclient.createApplication(serviceProvider);
 
 		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		ClaimConfig claimConfig = new ClaimConfig();
+		Claim emailClaim = new Claim();
+		emailClaim.setClaimUri(emailClaimURI);
+		ClaimMapping emailClaimMapping = new ClaimMapping();
+		emailClaimMapping.setRequested(true);
+		emailClaimMapping.setLocalClaim(emailClaim);
+		emailClaimMapping.setRemoteClaim(emailClaim);
+		claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
+				.ClaimMapping[]{emailClaimMapping});
+
+		serviceProvider.setClaimConfig(claimConfig);
 		serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
 		List<InboundAuthenticationRequestConfig> authRequestList =
 		                                                           new ArrayList<InboundAuthenticationRequestConfig>();
