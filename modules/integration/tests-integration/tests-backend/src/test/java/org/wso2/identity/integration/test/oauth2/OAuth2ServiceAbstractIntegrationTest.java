@@ -56,12 +56,12 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	private final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProver";
 	private final static String SERVICE_PROVIDER_DESC = "Playground Service Prover";
-	private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
+	private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private final static int TOMCAT_PORT = 8490;
 
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
-    protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
 
 	/**
@@ -75,7 +75,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		super.init(userMode);
 		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
 		ClaimConfig claimConfig = new ClaimConfig();
 		Claim emailClaim = new Claim();
-		emailClaim.setClaimUri(emailClaimURI);
+		emailClaim.setClaimUri(EMAIL_CLAIM_URI);
 		ClaimMapping emailClaimMapping = new ClaimMapping();
 		emailClaimMapping.setRequested(true);
 		emailClaimMapping.setLocalClaim(emailClaim);
