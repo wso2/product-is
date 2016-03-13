@@ -51,7 +51,7 @@
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
             <!--Identity Management Test Cases-->
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
-            <class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>-->
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
@@ -104,7 +104,7 @@
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
         </classes>
     </test>
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
