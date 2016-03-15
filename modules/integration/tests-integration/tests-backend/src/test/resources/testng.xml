@@ -628,6 +628,7 @@
             <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>
             <!--Provisioning Test Cases-->
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
+            <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <!--OAuth Test Cases-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceClientCredentialTestCase"/>
