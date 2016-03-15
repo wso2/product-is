@@ -30,6 +30,7 @@ public class CommonConstants {
     public static final String INVALID_CREDENTIAL = "17002";
     public static final String USER_IS_LOCKED = "17003";
     public static final String BASIC_AUTHENTICATOR="BasicAuthenticator";
+    public static final String USER_AGENT_HEADER = "User-Agent";
 
     public enum AdminClients {
         IDENTITY_PROVIDER_MGT_SERVICE_CLIENT,
