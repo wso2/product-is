@@ -35,6 +35,7 @@
             <!--<class name="org.wso2.identity.ui.integration.test.login.ISLoginTestCase"/>-->
             <class name="org.wso2.identity.ui.integration.test.tenant.mgt.TenantDropDownTestCase"/>
             <class name="org.wso2.identity.ui.integration.test.dashboard.DashboardSecurityTestCase"/>
+            <class name="org.wso2.identity.ui.integration.test.oidc.OIDCAuthCodeSessionTestCase"/>
         </classes>
     </test>
 </suite>
