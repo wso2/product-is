@@ -31,6 +31,10 @@
                     </suiteXmlFiles>
                     <systemProperties>
                         <property>
+                            <name>samples.dir</name>
+                            <value>${basedir}/../../../../samples/product</value>
+                        </property>
+                        <property>
                             <name>framework.resource.location</name>
                             <value>
                                 ${basedir}/src/test/resources/
@@ -46,11 +50,11 @@
                             <name>usedefaultlisteners</name>
                             <value>false</value>
                         </property>
-                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-                        <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
                             ${basedir}/../../../distribution/target/wso2is-${project.version}.zip
                         </carbon.zip>
+                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
+                        <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
@@ -123,6 +127,58 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>copy-playground2</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>
+                            <includeTypes>war</includeTypes>
+                            <includeArtifactIds>playground2</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>unpack-playground2</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>playground2</artifactId>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/playground2
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>packaging-war-artifacts-openid</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="src/test/resources/artifacts/IS/oidc/playground-app-build.xml" target="playground3-app-build" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -300,6 +356,12 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.agent</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>playground2</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
         </dependency>
     </dependencies>
 
