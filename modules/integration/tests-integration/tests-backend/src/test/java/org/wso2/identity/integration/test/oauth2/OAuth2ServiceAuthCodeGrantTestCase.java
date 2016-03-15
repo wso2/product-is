@@ -19,23 +19,31 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +64,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 	private String consumerKey;
 	private String consumerSecret;
 
+	private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + (8080 + CommonConstants
+			.IS_DEFAULT_OFFSET) + "/playground2/oauth2.jsp?reset=true";
 	private DefaultHttpClient client;
 	private Tomcat tomcat;
 
@@ -158,7 +168,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
 		response = sendGetRequest(client, locationHeader.getValue());
 		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
-		keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
+		keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
 		List<KeyValue> keyValues =
 		                           DataExtractUtil.extractSessionConsentDataFromResponse(response,
 		                                                                                 keyPositionMap);
@@ -232,6 +242,74 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
 		EntityUtils.consume(response.getEntity());
 	}
+
+    @Test(groups = "wso2.is", description = "Resending authorization code", dependsOnMethods =
+            "testValidateAccessToken")
+    public void testAuthzCodeResend() throws Exception {
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, OAuth2Constant
+                .OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME, authorizationCode));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
+        request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
+                .encodeBase64String((consumerKey + ":" + consumerSecret).getBytes()).trim());
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(request);
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Object obj = JSONValue.parse(rd);
+        String errorMessage = ((JSONObject) obj).get("error").toString();
+        EntityUtils.consume(response.getEntity());
+        Assert.assertEquals(OAuth2Constant.INVALID_GRANT_ERROR, errorMessage, "Reusing the Authorization code has not" +
+                " revoked the access token issued.");
+    }
+
+    @Test(groups = "wso2.is", description = "Retrying authorization code flow", dependsOnMethods =
+            "testAuthzCodeResend")
+	public void testAuthzCodeGrantRetry() throws Exception {
+		String oldAccessToken = accessToken;
+
+        HttpResponse response = sendGetRequest(client, PLAYGROUND_RESET_PAGE);
+        EntityUtils.consume(response.getEntity());
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_PLAYGROUND_NAME, OAuth2Constant
+                .OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.CONSUMER_KEY_PLAYGROUND_NAME, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.CALLBACKURL_PLAYGROUND_NAME, OAuth2Constant
+                .CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_ENDPOINT_PLAYGROUND_NAME, OAuth2Constant
+                .APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_PLAYGROUND_NAME, OAuth2Constant
+                .AUTHORIZE_PARAM));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.SCOPE_PLAYGROUND_NAME, ""));
+
+        response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.AUTHORIZED_USER_URL);
+        Assert.assertNotNull(response, "Authorized response is null");
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Authorized response header is null");
+        EntityUtils.consume(response.getEntity());
+
+        response = sendGetRequest(client, locationHeader.getValue());
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
+        List<KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response, keyPositionMap);
+        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
+        sessionDataKeyConsent = keyValues.get(0).getValue();
+        EntityUtils.consume(response.getEntity());
+
+        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
+
+        testSendApprovalPost();
+        testGetAccessToken();
+        Assert.assertNotEquals(oldAccessToken, accessToken, "Access token not revoked from authorization code reusing");
+        testAuthzCodeResend();
+    }
 
 }
 =======

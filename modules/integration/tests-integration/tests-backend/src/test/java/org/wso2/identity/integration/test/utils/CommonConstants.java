@@ -23,6 +23,7 @@ public class CommonConstants {
     public static final int IS_DEFAULT_HTTPS_PORT = 9853;
     public static final int DEFAULT_TOMCAT_PORT = 8490;
     public static final String DEFAULT_SERVICE_URL = "https://localhost:9853/services/";
+<<<<<<< HEAD
     public static final String SAML_REQUEST_PARAM = "SAMLRequest";
     public static final String SAML_RESPONSE_PARAM = "SAMLResponse";
     public static final String SESSION_DATA_KEY = "name=\"sessionDataKey\"";
@@ -30,6 +31,9 @@ public class CommonConstants {
     public static final String INVALID_CREDENTIAL = "17002";
     public static final String USER_IS_LOCKED = "17003";
     public static final String BASIC_AUTHENTICATOR="BasicAuthenticator";
+=======
+    public static final String USER_AGENT_HEADER = "User-Agent";
+>>>>>>> 954e7b1... Testcase for IDENTITY-4398
 
     public enum AdminClients {
         IDENTITY_PROVIDER_MGT_SERVICE_CLIENT,
