@@ -28,6 +28,9 @@ public final class OAuth2Constant {
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
 
+    public static final String OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     public final static String ACCESS_TOKEN = "access_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
     public final static String OAUTH_VERSION_2 = "OAuth-2.0";
@@ -51,9 +54,20 @@ public final class OAuth2Constant {
     public final static String GET_ACCESS_TOKEN_URL = "http://localhost:8490/playground2/oauth2-get-access-token.jsp";
     public final static String ACCESS_RESOURCES_URL = "http://localhost:8490/playground2/oauth2-access-resource.jsp";
     public final static String PLAYGROUND_APP_CONTEXT_ROOT = "/playground2";
-
+    public static final String GRANT_TYPE_PLAYGROUND_NAME = "grantType";
+    public static final String CONSUMER_KEY_PLAYGROUND_NAME = "consumerKey";
+    public static final String CALLBACKURL_PLAYGROUND_NAME = "callbackurl";
+    public static final String AUTHORIZE_ENDPOINT_PLAYGROUND_NAME = "authorizeEndpoint";
+    public static final String AUTHORIZE_PLAYGROUND_NAME = "authorize";
+    public static final String SCOPE_PLAYGROUND_NAME = "scope";
 
     public final static String WSO2_CLAIM_DIALECT_ROLE="http://wso2.org/claims/role";
+    public static final String GRANT_TYPE_NAME = "grant_type";
+    public static final String AUTHORIZATION_CODE_NAME = "code";
+    public static final String REDIRECT_URI_NAME = "redirect_uri";
+    public static final String BASIC_HEADER = "Basic";
+    public static final String INVALID_GRANT_ERROR = "invalid_grant";
+    public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
 
     private OAuth2Constant() {
 	}

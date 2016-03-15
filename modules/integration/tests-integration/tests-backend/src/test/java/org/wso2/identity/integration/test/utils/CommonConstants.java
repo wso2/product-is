@@ -22,6 +22,7 @@ public class CommonConstants {
     public static final int IS_DEFAULT_OFFSET = 410;
     public static final int IS_DEFAULT_HTTPS_PORT = 9853;
     public static final String DEFAULT_SERVICE_URL = "https://localhost:9853/services/";
+    public static final String USER_AGENT_HEADER = "User-Agent";
 
     public enum AdminClients {
         IDENTITY_PROVIDER_MGT_SERVICE_CLIENT,
