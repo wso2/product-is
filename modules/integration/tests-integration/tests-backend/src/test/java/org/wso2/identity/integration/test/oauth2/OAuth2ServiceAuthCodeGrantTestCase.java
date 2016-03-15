@@ -63,9 +63,9 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 	private String consumerKey;
 	private String consumerSecret;
 
-	private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + (8080 + CommonConstants
-			.IS_DEFAULT_OFFSET) + "/playground2/oauth2.jsp?reset=true";
-	private DefaultHttpClient client;
+    private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
+            "/playground2/oauth2.jsp?reset=true";
+    private DefaultHttpClient client;
 	private Tomcat tomcat;
 
 	@BeforeClass(alwaysRun = true)
