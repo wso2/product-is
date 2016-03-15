@@ -128,7 +128,7 @@ public class DBSeperationTestCase extends ISIntegrationTest {
             identityProviderMgtServiceClient.addIdP(identityProvider);
             identityProviderMgtServiceClient.deleteIdP(TENANT_IDP);
             Assert.assertFalse("Not functioning when UM tables and Identity tables seperated into two databases.",
-                    logViewer.getAllRemoteSystemLogs()[0].getStacktrace().contains("Table  \"UM_TENANT\" not found"));
+                    logViewer.getAllRemoteSystemLogs()[0].getPriority().equals("ERROR"));
         } catch (Exception e) {
             Assert.fail("Identity Provider addition or deletion failed at db seperation test.");
         }
