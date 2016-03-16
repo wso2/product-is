@@ -199,7 +199,7 @@
             }
         }
 
-        $("form[name='oauthLoginForm']").change(function () {
+        function pkceChangeVisibility(jQuery ) {
             if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
                     $("input[name='use_pkce']:checked")[0].value == "yes") {
                 $("#pkceMethod").show();
@@ -223,7 +223,10 @@
             if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
                 $("#pkceOption").show();
             }
-        })
+        }
+
+        $( document ).ready(pkceChangeVisibility);
+
     </script>
 
 </head>
@@ -546,6 +549,9 @@
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+    $("form[name='oauthLoginForm']").change(pkceChangeVisibility)
+</script>
 <%
     if (isOIDCSessionEnabled) {
 %>
