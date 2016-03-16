@@ -83,6 +83,10 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.user.store.count.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
         </dependency>
 <<<<<<< HEAD
