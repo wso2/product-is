@@ -275,7 +275,7 @@ try {
             }
         }
 
-        $("form[name='oauthLoginForm']").change(function () {
+        function pkceChangeVisibility(jQuery ) {
             if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
                     $("input[name='use_pkce']:checked")[0].value == "yes") {
                 $("#pkceMethod").show();
@@ -299,7 +299,10 @@ try {
             if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
                 $("#pkceOption").show();
             }
-        })
+        }
+
+        $( document ).ready(pkceChangeVisibility);
+
     </script>
 
 </head>
@@ -846,11 +849,17 @@ try {
 </table>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <script type="text/javascript">
     function setVisibility() {
 =======
 =======
 >>>>>>> 6b631f0... Fixing playground2 sample.
+=======
+<script type="text/javascript">
+    $("form[name='oauthLoginForm']").change(pkceChangeVisibility)
+</script>
+>>>>>>> e2c2002... Fixing playground2 sample
 <%
     if (isOIDCSessionEnabled) {
 %>
