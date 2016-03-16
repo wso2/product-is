@@ -54,7 +54,14 @@ try {
 <%@page import="org.apache.commons.lang.StringUtils" %>
 <%@page import="org.apache.oltu.oauth2.client.response.OAuthAuthzResponse" %>
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
+<<<<<<< HEAD
 
+=======
+<%@ page import="java.security.MessageDigest" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
+<%@ page import="java.util.UUID" %>
+<%@ page import="org.apache.commons.codec.binary.Base64" %>
+>>>>>>> b222826... Replace java 8 Base64 with apache commons Base64
 <%
     String code = null;
     String accessToken = null;
@@ -269,7 +276,7 @@ try {
 
           MessageDigest digest = MessageDigest.getInstance("SHA-256");
           byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
-          code_challenge = new String(java.util.Base64.getEncoder().encode(hash), StandardCharsets.US_ASCII);
+          code_challenge = new String(Base64.encodeBase64(hash), StandardCharsets.US_ASCII);
             //set the generated code verifier to the current user session
           session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER,code_verifier);
 
