@@ -5,7 +5,6 @@
 <%@ page import="java.security.MessageDigest" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.util.UUID" %>
-<%@ page import="org.apache.commons.codec.binary.Base64" %>
 <%
     String code = null;
     String accessToken = null;
@@ -48,7 +47,7 @@
         error = request.getParameter(OAuth2Constants.ERROR);
         grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
         if (StringUtils.isNotBlank(request.getHeader(OAuth2Constants.REFERER)) &&
-            request.getHeader(OAuth2Constants.REFERER).contains("rpIFrame")) {
+                request.getHeader(OAuth2Constants.REFERER).contains("rpIFrame")) {
             /**
              * Here referer is being checked to identify that this is exactly is an response to the passive request
              * initiated by the session checking iframe.
@@ -180,6 +179,50 @@
             }
             return "";
         }
+
+        function togglePKCEMethod() {
+            var radios = document.getElementsByName('code_challenge_method');
+            var pkceMethod = "";
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    pkceMethod = radios[i].value;
+                    break;
+                }
+            }
+            var pkceChallenge = document.getElementsByName("code_challenge")[0];
+            console.log(pkceMethod + " " + pkceChallenge.value);
+            if (pkceMethod == "S256") {
+                pkceChallenge.value = "<%=code_challenge%>";
+            } else if (pkceMethod == "plain") {
+                pkceChallenge.value = "<%=code_verifier%>";
+            }
+        }
+
+        $("form[name='oauthLoginForm']").change(function () {
+            if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
+                    $("input[name='use_pkce']:checked")[0].value == "yes") {
+                $("#pkceMethod").show();
+                $("#pkceChallenge").show();
+                $("#pkceVerifier").show();
+
+
+                $("input[name='code_challenge_method']")[0].removeAttribute('disabled');
+                $("input[name='code_challenge_method']")[1].removeAttribute('disabled');
+                $("input[name='code_challenge']")[0].removeAttribute('disabled');
+            } else {
+                $("#pkceMethod").hide();
+                $("#pkceChallenge").hide();
+                $("#pkceVerifier").hide();
+                $("#pkceOption").hide();
+
+                $("input[name='code_challenge_method']")[0].setAttribute('disabled', true);
+                $("input[name='code_challenge_method']")[1].setAttribute('disabled', true);
+                $("input[name='code_challenge']")[0].setAttribute('disabled', true);
+            }
+            if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
+                $("#pkceOption").show();
+            }
+        })
     </script>
 
 </head>
@@ -197,71 +240,78 @@
 <h3>WSO2 OAuth2 Playground</h3>
 
 <table>
-<tr>
-<td>
-      <% if (accessToken==null && code==null && grantType == null) {
-          code_verifier = UUID.randomUUID().toString() + UUID.randomUUID().toString();
-          code_verifier = code_verifier.replaceAll("-","");
+    <tr>
+        <td>
+            <% if (accessToken == null && code == null && grantType == null) {
+                code_verifier = UUID.randomUUID().toString() + UUID.randomUUID().toString();
+                code_verifier = code_verifier.replaceAll("-", "");
 
-          MessageDigest digest = MessageDigest.getInstance("SHA-256");
-          byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
-          code_challenge = new String(Base64.encodeBase64(hash), StandardCharsets.US_ASCII);
-            //set the generated code verifier to the current user session
-          session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER,code_verifier);
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
+                code_challenge = new String(java.util.Base64.getEncoder().encode(hash), StandardCharsets.US_ASCII);
+                //set the generated code verifier to the current user session
+                session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER, code_verifier);
 
-      %>
-              <div id="loginDiv" class="sign-in-box" width="100%">
-                  <% if (error!=null && error.trim().length()>0) {%>
+            %>
+            <div id="loginDiv" class="sign-in-box" width="100%">
+                <% if (error != null && error.trim().length() > 0) {%>
+                <table class="user_pass_table" width="100%">
+                    <tr>
+                        <td><font color="#CC0000"><%=error%>
+                        </font></td>
+                    </tr>
+                </table>
+                <%} %>
+
+                <form action="oauth2-authorize-user.jsp" id="loginForm" method="post" name="oauthLoginForm">
                     <table class="user_pass_table" width="100%">
-                      <tr>
-                          <td><font color="#CC0000"><%=error%></font></td>
-                      </tr>
-                    </table>
-                   <%} %>
+                        <tbody>
 
-                    <form action="oauth2-authorize-user.jsp" id="loginForm" method="post" name="oauthLoginForm">
-                        <table class="user_pass_table" width="100%">
-                            <tbody>
-                          
-                            <tr>
-                                <td>Authorization Grant Type : </td>
-                                <td>
-                                   <select id="grantType" name="grantType"  onchange ="setVisibility();">
-            			              <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" selected="selected">Authorization Code</option>
-            			              <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT%>">Implicit</option>
-            		                  <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS%>">Client Credentials</option>
-                                      <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_RESOURCE_OWNER%>">Resource Owner</option>           			              
-        			               </select>                                
-                                </td>
-                            </tr>
-                          
-                            <tr>
-                                <td><label>Client Id : </label></td>
-                                <td><input type="text" id="consumerKey" name="consumerKey" style= "width:350px"></td>
-                            </tr>
-                            
-                            <tr id="clientsecret" style="display:none">
-                                <td><label>Client Secret : </label></td>
-                                <td><input type="password" id="consumerSecret" name="consumerSecret" style= "width:350px">
-                                </td>
-                            </tr>
-                            
-                            <tr id="recownertr" style="display:none">
-                                <td><label>Resource Owner User Name: </label></td>
-                                <td><input type="text" id="recowner" name="recowner" style= "width:350px"></td>
-                            </tr>
-                            
-                            <tr id="recpasswordtr" style="display:none">
-                                <td><label>Resource Owner Password : </label></td>
-                                <td><input type="password" id="recpassword" name="recpassword" style= "width:350px">
-                                </td>
-                            </tr>
-                           
-                            <tr>
-                                <td><label>Scope : </label></td>
-                                <td><input type="text" id="scope" name="scope">
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>Authorization Grant Type :</td>
+                            <td>
+                                <select id="grantType" name="grantType" onchange="setVisibility();">
+                                    <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" selected="selected">
+                                        Authorization Code
+                                    </option>
+                                    <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT%>">Implicit</option>
+                                    <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS%>">Client
+                                        Credentials
+                                    </option>
+                                    <option value="<%=OAuth2Constants.OAUTH2_GRANT_TYPE_RESOURCE_OWNER%>">Resource
+                                        Owner
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><label>Client Id : </label></td>
+                            <td><input type="text" id="consumerKey" name="consumerKey" style="width:350px"></td>
+                        </tr>
+
+                        <tr id="clientsecret" style="display:none">
+                            <td><label>Client Secret : </label></td>
+                            <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
+                            </td>
+                        </tr>
+
+                        <tr id="recownertr" style="display:none">
+                            <td><label>Resource Owner User Name: </label></td>
+                            <td><input type="text" id="recowner" name="recowner" style="width:350px"></td>
+                        </tr>
+
+                        <tr id="recpasswordtr" style="display:none">
+                            <td><label>Resource Owner Password : </label></td>
+                            <td><input type="password" id="recpassword" name="recpassword" style="width:350px">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><label>Scope : </label></td>
+                            <td><input type="text" id="scope" name="scope" onchange="setVisibility();">
+                            </td>
+                        </tr>
 
                         <tr id="callbackurltr">
                             <td><label>Callback URL : </label></td>
@@ -279,26 +329,7 @@
                             <td>Access Token Endpoint :</td>
                             <td><input type="text" id="accessEndpoint" name="accessEndpoint" style="width:350px"></td>
                         </tr>
-                            <tr id="pkceOption">
-                                <td>Use PKCE</td>
-                                <td><input type="radio" name="use_pkce" value="yes" checked>Yes &nbsp;
-                                    <input type="radio" name="use_pkce" value="no">No
-                                </td>
-                            </tr>
-                            <tr id="pkceMethod">
-                                <td>PKCE Challenge Method</td>
-                                <td><input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"value="S256" checked>S256 &nbsp;
-                                    <input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"value="plain">plain
-                                </td>
-                            </tr>
-                            <tr id="pkceChallenge">
-                                <td>PKCE Code Challenge</td>
-                                <td><input type="text" style="width: 350px" readonly name="code_challenge" value="<%=code_challenge%>"></td>
-                            </tr>
-                            <tr id="pkceVerifier">
-                                <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
-                                <td><label><%=code_verifier%></label></td>
-                            </tr>
+
                         <tr id="logutep" style="display:none">
                             <td>Logout Endpoint :</td>
                             <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" style="width:350px">
@@ -309,6 +340,31 @@
                             <td>Session Iframe Endpoint :</td>
                             <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint"
                                        style="width:350px"></td>
+                        </tr>
+
+                        <tr id="pkceOption">
+                            <td>Use PKCE</td>
+                            <td><input type="radio" name="use_pkce" value="yes">Yes &nbsp;
+                                <input type="radio" name="use_pkce" value="no" checked>No
+                            </td>
+                        </tr>
+                        <tr id="pkceMethod">
+                            <td>PKCE Challenge Method</td>
+                            <td><input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"
+                                       value="S256" checked>S256 &nbsp;
+                                <input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"
+                                       value="plain">plain
+                            </td>
+                        </tr>
+                        <tr id="pkceChallenge">
+                            <td>PKCE Code Challenge</td>
+                            <td><input type="text" style="width: 350px" readonly name="code_challenge"
+                                       value="<%=code_challenge%>"></td>
+                        </tr>
+                        <tr id="pkceVerifier">
+                            <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
+                            <td><label><%=code_verifier%>
+                            </label></td>
                         </tr>
 
                         <tr>
@@ -328,7 +384,8 @@
                         <tbody>
                         <tr>
                             <td>Authorization Code :</td>
-                            <td><%=code%></td>
+                            <td><%=code%>
+                            </td>
                         </tr>
                         <tr>
                             <td>Callback URL :</td>
@@ -343,10 +400,11 @@
                             <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
                             </td>
                         </tr>
-                        <% if(session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
-                        <tr >
+                        <% if (session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
+                        <tr>
                             <td><label>PKCE Verifier : </label></td>
-                            <td><input type="text" id="pkce_verifier" name="code_verifier" style= "width:350px" value="<%=(String)session.getAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER)%>">
+                            <td><input type="text" id="pkce_verifier" name="code_verifier" style="width:350px"
+                                       value="<%=(String)session.getAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER)%>">
                             </td>
                         </tr>
                         <% }%>
@@ -388,11 +446,13 @@
                         <tbody>
                         <tr>
                             <td><label>Logged In User :</label></td>
-                            <td><label id="loggedUser"><%=name%></label></td>
+                            <td><label id="loggedUser"><%=name%>
+                            </label></td>
                         </tr>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px" value="<%=accessToken%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:350px"
+                                       value="<%=accessToken%>"/>
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
@@ -430,7 +490,8 @@
                         <tbody>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px" value="<%=accessToken%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:350px"
+                                       value="<%=accessToken%>"/>
                         </tr>
                         <% if (application.getInitParameter("setup").equals("AM")) { %>
                         <tr>
@@ -484,106 +545,6 @@
         </td>
     </tr>
 </table>
-<script type="text/javascript">
-    function setVisibility() {
-
-        var grantType = document.getElementById("grantType").value;
-
-        if ('code' == grantType) {
-            document.getElementById("clientsecret").style.display = "none";
-            document.getElementById("callbackurltr").style.display = "";
-            document.getElementById("authzep").style.display = "";
-            document.getElementById("accessep").style.display = "none";
-            document.getElementById("recownertr").style.display = "none";
-            document.getElementById("recpasswordtr").style.display = "none";
-        } else if ("token" == grantType) {
-            document.getElementById("clientsecret").style.display = "none";
-            document.getElementById("callbackurltr").style.display = "";
-            document.getElementById("authzep").style.display = "";
-            document.getElementById("accessep").style.display = "none";
-            document.getElementById("recownertr").style.display = "none";
-            document.getElementById("recpasswordtr").style.display = "none";
-        } else if ("password" == grantType) {
-            document.getElementById("clientsecret").style.display = "";
-            document.getElementById("callbackurltr").style.display = "none";
-            document.getElementById("authzep").style.display = "none";
-            document.getElementById("accessep").style.display = "";
-            document.getElementById("recownertr").style.display = "";
-            document.getElementById("recpasswordtr").style.display = "";
-        } else if ("client_credentials" == grantType) {
-            document.getElementById("clientsecret").style.display = "";
-            document.getElementById("callbackurltr").style.display = "none";
-            document.getElementById("authzep").style.display = "none";
-            document.getElementById("accessep").style.display = "";
-            document.getElementById("recownertr").style.display = "none";
-            document.getElementById("recpasswordtr").style.display = "none";
-        }
-
-        return true;
-    }
-
-    function getAcceesToken()
-    {
-        var fragment = window.location.hash.substring(1);
-        if (fragment.indexOf("&") > 0)
-        {
-            var arrParams = fragment.split("&");
-
-            var i = 0;
-            for (i=0;i<arrParams.length;i++)
-            {
-                var sParam =  arrParams[i].split("=");
-
-                if (sParam[0] == "access_token"){
-                    return sParam[1];
-                }
-            }
-        }
-        return "";
-    }
-    function togglePKCEMethod() {
-        var radios = document.getElementsByName('code_challenge_method');
-        var pkceMethod = "";
-        for (var i = 0, length = radios.length; i < length; i++) {
-            if (radios[i].checked) {
-                pkceMethod = radios[i].value;
-                break;
-            }
-        }
-        var pkceChallenge = document.getElementsByName("code_challenge")[0];
-        console.log(pkceMethod +  " " + pkceChallenge.value);
-        if(pkceMethod == "S256") {
-            pkceChallenge.value = "<%=code_challenge%>";
-        } else if(pkceMethod == "plain") {
-            pkceChallenge.value = "<%=code_verifier%>";
-        }
-    }
-    $("form[name='oauthLoginForm']").change(function() {
-        if($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
-                $("input[name='use_pkce']:checked")[0].value == "yes") {
-            $("#pkceMethod").show();
-            $("#pkceChallenge").show();
-            $("#pkceVerifier").show();
-
-
-            $("input[name='code_challenge_method']")[0].removeAttribute('disabled');
-            $("input[name='code_challenge_method']")[1].removeAttribute('disabled');
-            $("input[name='code_challenge']")[0].removeAttribute('disabled');
-        } else {
-            $("#pkceMethod").hide();
-            $("#pkceChallenge").hide();
-            $("#pkceVerifier").hide();
-            $("#pkceOption").hide();
-
-            $("input[name='code_challenge_method']")[0].setAttribute('disabled', true);
-            $("input[name='code_challenge_method']")[1].setAttribute('disabled', true);
-            $("input[name='code_challenge']")[0].setAttribute('disabled', true);
-        }
-        if($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
-            $("#pkceOption").show();
-        }
-    })
-</script>
 <%
     if (isOIDCSessionEnabled) {
 %>
