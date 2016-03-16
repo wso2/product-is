@@ -539,8 +539,19 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.social.server.feature:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.facebook.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.google.server.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.yahoo.server.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.live.server.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+
+
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.fido.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
@@ -1288,10 +1299,27 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.social.server.feature.group
+                                    <id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group
                                     </id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.google.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.live.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.yahoo.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
                                     </id>
@@ -2608,11 +2636,28 @@
                                     </id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.social.server.feature.group
+                                    <id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group
                                     </id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.google.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.live.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.yahoo.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
                                     </id>
@@ -2981,11 +3026,29 @@
                                     </id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.social.server.feature.group
+                                    <id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group
                                     </id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.google.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.live.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.yahoo.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
                                     </id>
