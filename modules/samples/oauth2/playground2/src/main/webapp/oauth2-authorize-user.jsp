@@ -5,6 +5,7 @@
 <%@page import="org.apache.oltu.oauth2.client.response.OAuthClientResponse" %>
 <%@page import="org.apache.oltu.oauth2.common.message.types.GrantType" %>
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OAuthPKCEAuthenticationRequestBuilder" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -15,6 +16,9 @@
 
         String authzEndpoint = request.getParameter(OAuth2Constants.OAUTH2_AUTHZ_ENDPOINT);
         String accessEndpoint = request.getParameter(OAuth2Constants.OAUTH2_ACCESS_ENDPOINT);
+        String PKCECodeChallenge = request.getParameter(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE);
+        String PKCECodeChallengeMethod = request.getParameter(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE_METHOD);
+        String usePKCEParameter = request.getParameter(OAuth2Constants.OAUTH2_USE_PKCE);
         String logoutEndpoint = request.getParameter(OAuth2Constants.OIDC_LOGOUT_ENDPOINT);
         String sessionIFrameEndpoint = request.getParameter(OAuth2Constants.OIDC_SESSION_IFRAME_ENDPOINT);
 
@@ -24,6 +28,12 @@
         String authzGrantType = request.getParameter(OAuth2Constants.OAUTH2_GRANT_TYPE);
         String scope = request.getParameter(OAuth2Constants.SCOPE);
         String callBackUrl = request.getParameter(OAuth2Constants.CALL_BACK_URL);
+
+        boolean usePKCE = usePKCEParameter != null && "yes".equals(usePKCEParameter);
+        if(usePKCE) {
+            session.setAttribute(OAuth2Constants.OAUTH2_USE_PKCE, usePKCE);
+        }
+
 
         // By default IS does not validate scope. To validate we need to write a callback handler.
         if (scope == null || scope.trim().length() == 0) {
@@ -55,14 +65,19 @@
         return;
     }
 
-    OAuthClientRequest authzRequest = OAuthClientRequest
-            .authorizationLocation(authzEndpoint)
+    OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
+    if(authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE) {
+        oAuthPKCEAuthenticationRequestBuilder = oAuthPKCEAuthenticationRequestBuilder.setPKCECodeChallenge(PKCECodeChallenge, PKCECodeChallengeMethod);
+    }
+
+    oAuthPKCEAuthenticationRequestBuilder
             .setClientId(consumerKey)
             .setRedirectURI((String) session.getAttribute(OAuth2Constants.CALL_BACK_URL))
             .setResponseType(authzGrantType)
-            .setScope(scope)
-            .buildQueryMessage();
-    response.sendRedirect(authzRequest.getLocationUri());
+            .setScope(scope);
+
+    OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildBodyMessage();
+    response.sendRedirect(authzRequest.getLocationUri() + "?" + authzRequest.getBody());
     return;
 
 } else {

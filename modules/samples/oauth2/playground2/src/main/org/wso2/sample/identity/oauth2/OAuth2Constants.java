@@ -40,4 +40,10 @@ public final class OAuth2Constants {
 
     // request headers
     public static final String REFERER = "referer";
+
+    //OAuth 2.0 PKCE Constants
+    public static final String OAUTH2_PKCE_CODE_VERIFIER = "code_verifier";
+    public static final String OAUTH2_PKCE_CODE_CHALLENGE = "code_challenge";
+    public static final String OAUTH2_PKCE_CODE_CHALLENGE_METHOD = "code_challenge_method";
+    public static final String OAUTH2_USE_PKCE = "use_pkce";
 }
