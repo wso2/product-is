@@ -388,8 +388,7 @@
                         <tbody>
                         <tr>
                             <td>Authorization Code :</td>
-                            <td><%=code%>
-                            </td>
+                            <td><%=code%></td>
                         </tr>
                         <tr>
                             <td>Callback URL :</td>
@@ -450,13 +449,11 @@
                         <tbody>
                         <tr>
                             <td><label>Logged In User :</label></td>
-                            <td><label id="loggedUser"><%=name%>
-                            </label></td>
+                            <td><label id="loggedUser"><%=name%></label></td>
                         </tr>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px"
-                                       value="<%=accessToken%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:350px" value="<%=accessToken%>"/>
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
@@ -494,8 +491,7 @@
                         <tbody>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px"
-                                       value="<%=accessToken%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:350px" value="<%=accessToken%>"/>
                         </tr>
                         <% if (application.getInitParameter("setup").equals("AM")) { %>
                         <tr>
