@@ -284,6 +284,9 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.ldap.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.user.store.remote.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.scim.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <!-- Features related to Cloud Identity -->
@@ -500,6 +503,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.ldap.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
@@ -966,6 +973,10 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.system.statistics.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
@@ -1381,6 +1392,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.ldap.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
@@ -1852,6 +1867,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.ldap.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 
