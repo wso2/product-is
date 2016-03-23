@@ -414,6 +414,8 @@
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
+
+
                                 <!--jaggery features-->
                                 <featureArtifactDef>org.jaggeryjs:org.jaggeryjs.server.feature:${jaggeryjs.version}
                                 </featureArtifactDef>
@@ -465,6 +467,8 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.sts.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.mex.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
 
                                 <!-- registry related features -->
@@ -746,8 +750,7 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
 >>>>>>> 49b8672... Correct some code formatting issues in https://github.com/wso2/product-is/pull/180
                             <features>
-
-                                    <feature>
+                                <feature>
                                     <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggeryjs.version}</version>
                                 </feature>
@@ -1075,6 +1078,7 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 								<feature>
 									<id>org.wso2.carbon.identity.xacml.feature.group</id>
@@ -1134,6 +1138,12 @@
                                 <!-- Features required for Cloud Identity -->
                                 <feature>
 =======
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.mex.server.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+>>>>>>> b73f67d... Packing Office365-Mex Feature
 
                                 <!-- Features required for Cloud Identity -->
                                 <feature>
@@ -2404,7 +2414,7 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-				<feature>
+				                <feature>
                                     <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggeryjs.version}</version>
                                 </feature>
@@ -2593,6 +2603,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mex.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 
