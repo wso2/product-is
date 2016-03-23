@@ -95,6 +95,8 @@
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
+
+
                                 <!--jaggery features-->
                                 <featureArtifactDef>org.jaggeryjs:org.jaggeryjs.server.feature:${jaggeryjs.version}
                                 </featureArtifactDef>
@@ -146,6 +148,8 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.sts.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.mex.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
 
                                 <!-- registry related features -->
@@ -426,8 +430,7 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-
-                                    <feature>
+                                <feature>
                                     <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggeryjs.version}</version>
                                 </feature>
@@ -616,6 +619,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mex.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 
@@ -890,7 +897,7 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-				<feature>
+				                <feature>
                                     <id>org.jaggeryjs.server.feature.group</id>
                                     <version>${jaggeryjs.version}</version>
                                 </feature>
@@ -1079,6 +1086,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
+                                    <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mex.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
 
