@@ -17,6 +17,10 @@ function drawPage() {
     var body = "";
 
     for (var i in json.return.fieldValues) {
+        if (json.return.fieldValues[i].claimUri =="http://wso2.org/claims/identity/accountDisabled") {
+            continue;
+        }
+
         body = body + "          <tr>\n" +
         "                           <td>" +
         "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
