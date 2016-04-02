@@ -4188,11 +4188,16 @@
 =======
         <carbon.business-process.version>4.4.4</carbon.business-process.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 9afb09b... updating commons,  registry versions
 	    <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
 =======
         <carbon.analytics-common.version>1.0.0</carbon.analytics-common.version>
 >>>>>>> 869fe9f... Update test automation framework version
+=======
+        <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
+        <carbon.analytics.common.version>1.0.0</carbon.analytics.common.version>
+>>>>>>> 6f48faf... Fixing build breaks
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
