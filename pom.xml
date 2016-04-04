@@ -3786,6 +3786,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <opensaml.version>2.4.1</opensaml.version>
         <opensaml2.wso2.version>2.0.0.alpha1-wso2v1</opensaml2.wso2.version>
 <<<<<<< HEAD
@@ -3823,6 +3824,10 @@
         <opensaml.version>2.6.4</opensaml.version>
         <opensaml2.wso2.version>2.6.4.wso2v1</opensaml2.wso2.version>
 >>>>>>> 9dab0c5... upgrade opensaml version 2.4.1 to 2.6.4
+=======
+        <opensaml.version>2.6.4</opensaml.version>
+        <opensaml2.wso2.version>2.6.4.wso2v1</opensaml2.wso2.version>
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
 <<<<<<< HEAD
 >>>>>>> 7e87ff2... Upgrading wss4j, rampart and jaggeryjs versions
@@ -3845,8 +3850,13 @@
 >>>>>>> c59f03d... upgrading charon version.
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
+<<<<<<< HEAD
         <rampart.wso2.version>1.6.1.wso2v20-SNAPSHOT</rampart.wso2.version>
         <rampart.wso2.version.1>1.6.1-wso2v16</rampart.wso2.version.1>
+=======
+        <rampart.wso2.version>1.6.1.wso2v19</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v19</rampart.wso2.version.1>
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
@@ -3860,6 +3870,7 @@
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
 >>>>>>> 4a59e73... remove duplicate dependencies
         <junit.version>3.8.1</junit.version>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3929,9 +3940,14 @@
 >>>>>>> 9afb09b... updating commons,  registry versions
         <carbon.dashboards.version>1.0.0</carbon.dashboards.version>
 =======
+=======
+        <carbon.kernel.version>4.4.5</carbon.kernel.version>
+        <carbon.commons.version>4.5.2</carbon.commons.version>
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <carbon.dashboards.version>1.0.8</carbon.dashboards.version>
 >>>>>>> c0137e2... updating versions
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
+<<<<<<< HEAD
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -3949,6 +3965,8 @@
         <oauth2.client.version>0.22.1358727-wso2v8</oauth2.client.version>
 >>>>>>> 400acef... Revert "Revert "update dependency versions""
 =======
+=======
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <oauth2.client.version>1.0.0</oauth2.client.version>
 >>>>>>> fab7cef... changing amber to oltu
         <orbit.version.axis2>1.6.1.wso2v11</orbit.version.axis2>
@@ -3966,7 +3984,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.2</jaggeryjs.version>
+        <jaggeryjs.version>0.12.3</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -3984,6 +4002,7 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4057,10 +4076,16 @@
         <carbon.registry.version>4.4.8</carbon.registry.version>
 >>>>>>> fa10e77... Downgrading registry version due to test failures
         <carbon.multitenancy.version>4.5.0</carbon.multitenancy.version>
+=======
+        <carbon.deployment.version>4.6.1</carbon.deployment.version>
+        <carbon.registry.version>4.5.2</carbon.registry.version>
+        <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
 >>>>>>> c52f04c... updating versions
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
+<<<<<<< HEAD
         <axiom.wso2.version>1.2.11.wso2v6</axiom.wso2.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4104,6 +4129,9 @@
 =======
         <carbon.automation.version>4.4.1</carbon.automation.version>
 =======
+=======
+        <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <carbon.automation.version>4.4.3</carbon.automation.version>
 >>>>>>> 869fe9f... Update test automation framework version
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
@@ -4169,6 +4197,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
 =======
         <carbon.business-process.version>4.4.2</carbon.business-process.version>
@@ -4198,6 +4227,10 @@
         <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
         <carbon.analytics.common.version>1.0.0</carbon.analytics.common.version>
 >>>>>>> 6f48faf... Fixing build breaks
+=======
+        <carbon.business-process.version>4.4.7</carbon.business-process.version>
+        <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
+>>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
