@@ -663,7 +663,7 @@
                 <version>${carbon.identity.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.neethi.wso2</groupId>
+                <groupId>org.wso2.orbit.org.apache.neethi</groupId>
                 <artifactId>neethi</artifactId>
                 <version>${neethi.wso2.version}</version>
             </dependency>
@@ -1143,7 +1143,7 @@
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
-        <neethi.wso2.version>2.0.4.wso2v3</neethi.wso2.version>
+        <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
         <axiom.impl.version>1.2.12</axiom.impl.version>
         <axiom.version>1.2.11-wso2v6</axiom.version>
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
