@@ -318,7 +318,8 @@ try {
 
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
-                code_challenge = new String(new Base64().encode(hash), StandardCharsets.US_ASCII);
+                //Base64 encoded string is trimmed to remove trailing CR LF
+                code_challenge = new String(Base64.encodeBase64URLSafe(hash), StandardCharsets.US_ASCII).trim();
                 //set the generated code verifier to the current user session
                 session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER, code_verifier);
 
@@ -807,7 +808,6 @@ try {
 >>>>>>> 6b631f0... Fixing playground2 sample.
 =======
 <script type="text/javascript">
-    //method used to toggle the corresponding values of the pkce method in the form input
     function togglePKCEMethod() {
         var radios = document.getElementsByName('code_challenge_method');
         var pkceMethod = "";
@@ -818,15 +818,15 @@ try {
             }
         }
         var pkceChallenge = document.getElementsByName("code_challenge")[0];
-
+        console.log(pkceMethod + " " + pkceChallenge.value);
         if (pkceMethod == "S256") {
             pkceChallenge.value = "<%=code_challenge%>";
         } else if (pkceMethod == "plain") {
             pkceChallenge.value = "<%=code_verifier%>";
         }
     }
-    //function used to hide and show pkce related inputs in the form
-    function pkceChangeVisibility() {
+
+    function pkceChangeVisibility(jQuery ) {
         if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
                 $("input[name='use_pkce']:checked")[0].value == "yes") {
             $("#pkceMethod").show();
@@ -853,6 +853,7 @@ try {
     }
 
     $( document ).ready(pkceChangeVisibility);
+    //set form change handler.
     $("form[name='oauthLoginForm']").change(pkceChangeVisibility)
 </script>
 >>>>>>> e2c2002... Fixing playground2 sample
