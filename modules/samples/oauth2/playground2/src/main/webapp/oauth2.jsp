@@ -319,7 +319,7 @@ try {
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
                 //Base64 encoded string is trimmed to remove trailing CR LF
-                code_challenge = new String(Base64.encodeBase64URLSafe(hash), StandardCharsets.US_ASCII).trim();
+                code_challenge = new String(Base64.encodeBase64URLSafe(hash), StandardCharsets.UTF_8).trim();
                 //set the generated code verifier to the current user session
                 session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER, code_verifier);
 
