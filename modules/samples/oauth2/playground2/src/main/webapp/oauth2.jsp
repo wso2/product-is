@@ -181,52 +181,6 @@
             return "";
         }
 
-        function togglePKCEMethod() {
-            var radios = document.getElementsByName('code_challenge_method');
-            var pkceMethod = "";
-            for (var i = 0, length = radios.length; i < length; i++) {
-                if (radios[i].checked) {
-                    pkceMethod = radios[i].value;
-                    break;
-                }
-            }
-            var pkceChallenge = document.getElementsByName("code_challenge")[0];
-            console.log(pkceMethod + " " + pkceChallenge.value);
-            if (pkceMethod == "S256") {
-                pkceChallenge.value = "<%=code_challenge%>";
-            } else if (pkceMethod == "plain") {
-                pkceChallenge.value = "<%=code_verifier%>";
-            }
-        }
-
-        function pkceChangeVisibility(jQuery ) {
-            if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
-                    $("input[name='use_pkce']:checked")[0].value == "yes") {
-                $("#pkceMethod").show();
-                $("#pkceChallenge").show();
-                $("#pkceVerifier").show();
-
-
-                $("input[name='code_challenge_method']")[0].removeAttribute('disabled');
-                $("input[name='code_challenge_method']")[1].removeAttribute('disabled');
-                $("input[name='code_challenge']")[0].removeAttribute('disabled');
-            } else {
-                $("#pkceMethod").hide();
-                $("#pkceChallenge").hide();
-                $("#pkceVerifier").hide();
-                $("#pkceOption").hide();
-
-                $("input[name='code_challenge_method']")[0].setAttribute('disabled', true);
-                $("input[name='code_challenge_method']")[1].setAttribute('disabled', true);
-                $("input[name='code_challenge']")[0].setAttribute('disabled', true);
-            }
-            if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
-                $("#pkceOption").show();
-            }
-        }
-
-        $( document ).ready(pkceChangeVisibility);
-
     </script>
 
 </head>
@@ -252,7 +206,8 @@
 
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
-                code_challenge = new String(new Base64().encode(hash), StandardCharsets.US_ASCII);
+                //Base64 encoded string is trimmed to remove trailing CR LF
+                code_challenge = new String(Base64.encodeBase64URLSafe(hash), StandardCharsets.UTF_8).trim();
                 //set the generated code verifier to the current user session
                 session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER, code_verifier);
 
@@ -546,6 +501,52 @@
     </tr>
 </table>
 <script type="text/javascript">
+    function togglePKCEMethod() {
+        var radios = document.getElementsByName('code_challenge_method');
+        var pkceMethod = "";
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                pkceMethod = radios[i].value;
+                break;
+            }
+        }
+        var pkceChallenge = document.getElementsByName("code_challenge")[0];
+        console.log(pkceMethod + " " + pkceChallenge.value);
+        if (pkceMethod == "S256") {
+            pkceChallenge.value = "<%=code_challenge%>";
+        } else if (pkceMethod == "plain") {
+            pkceChallenge.value = "<%=code_verifier%>";
+        }
+    }
+
+    function pkceChangeVisibility(jQuery ) {
+        if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
+                $("input[name='use_pkce']:checked")[0].value == "yes") {
+            $("#pkceMethod").show();
+            $("#pkceChallenge").show();
+            $("#pkceVerifier").show();
+
+
+            $("input[name='code_challenge_method']")[0].removeAttribute('disabled');
+            $("input[name='code_challenge_method']")[1].removeAttribute('disabled');
+            $("input[name='code_challenge']")[0].removeAttribute('disabled');
+        } else {
+            $("#pkceMethod").hide();
+            $("#pkceChallenge").hide();
+            $("#pkceVerifier").hide();
+            $("#pkceOption").hide();
+
+            $("input[name='code_challenge_method']")[0].setAttribute('disabled', true);
+            $("input[name='code_challenge_method']")[1].setAttribute('disabled', true);
+            $("input[name='code_challenge']")[0].setAttribute('disabled', true);
+        }
+        if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
+            $("#pkceOption").show();
+        }
+    }
+
+    $( document ).ready(pkceChangeVisibility);
+    //set form change handler.
     $("form[name='oauthLoginForm']").change(pkceChangeVisibility)
 </script>
 <%
