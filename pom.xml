@@ -3568,7 +3568,25 @@
                 <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
+<<<<<<< HEAD
 >>>>>>> cd861cd... Fix dependency issues
+=======
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons.codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.schema.wso2</groupId>
+                <artifactId>XmlSchema</artifactId>
+                <version>${XmlSchema.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>wsdl4j.wso2</groupId>
+                <artifactId>wsdl4j</artifactId>
+                <version>${wsdl4j.version}</version>
+            </dependency>
+>>>>>>> 56c9e74... fixing commons-codec conflict
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
@@ -4251,7 +4269,13 @@
 >>>>>>> 0ebee64... add carbon metrics to product
 =======
         <xercesImpl.version>2.8.1</xercesImpl.version>
+<<<<<<< HEAD
 >>>>>>> 2cf712c... fixing passive sts sample
+=======
+        <commons.codec.version>1.8</commons.codec.version>
+        <XmlSchema.version>1.4.7.wso2v3</XmlSchema.version>
+        <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
+>>>>>>> 56c9e74... fixing commons-codec conflict
     </properties>
 
     <repositories>
