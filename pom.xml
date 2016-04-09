@@ -1165,14 +1165,14 @@
         <json.simple.version>1.1</json.simple.version>
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.6.4</opensaml.version>
-        <opensaml2.wso2.version>2.6.4.wso2v1</opensaml2.wso2.version>
+        <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
         <charon.version>2.0.4</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v19</rampart.wso2.version>
-        <rampart.wso2.version.1>1.6.1-wso2v19</rampart.wso2.version.1>
+        <rampart.wso2.version>1.6.1.wso2v20-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v20-SNAPSHOT</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
