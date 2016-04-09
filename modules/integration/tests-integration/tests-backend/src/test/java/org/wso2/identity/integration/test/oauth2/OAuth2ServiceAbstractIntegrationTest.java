@@ -79,20 +79,29 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
-	 * Create Application
+	 * Create Application with the given app configurations
 	 *
 	 * @return OAuthConsumerAppDTO
 	 * @throws Exception
 	 */
 	public OAuthConsumerAppDTO createApplication() throws Exception {
-		OAuthConsumerAppDTO appDtoResult = null;
-
 		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
 		appDTO.setApplicationName(org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME);
 		appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
 		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
-		                     "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
+				+ "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+		return createApplication(appDTO);
+	}
+
+	/**
+	 * Create Application with a given appDTO
+	 *
+	 * @return OAuthConsumerAppDTO
+	 * @throws Exception
+	 */
+	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO) throws Exception {
+		OAuthConsumerAppDTO appDtoResult = null;
 
 		adminClient.registerOAuthApplicationData(appDTO);
 		OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
