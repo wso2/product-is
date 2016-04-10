@@ -20,12 +20,12 @@
         </repository>
     </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-            <artifactId>axiom</artifactId>
-        </dependency>
-        <dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom.wso2</groupId>
+			<artifactId>axiom</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
@@ -35,10 +35,25 @@
 			<artifactId>jstl</artifactId>
 		</dependency>
 		<dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-    </dependencies>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart.wso2</groupId>
+			<artifactId>rampart-trust</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart.wso2</groupId>
+			<artifactId>rampart-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rampart.wso2</groupId>
+			<artifactId>rampart-policy</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
