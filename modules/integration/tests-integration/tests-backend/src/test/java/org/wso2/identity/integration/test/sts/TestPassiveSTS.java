@@ -76,16 +76,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
         this.passiveStsURL = isURL + "passivests";
 
         setSystemProperties();
-
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass()
-                    .getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war");
-            startTomcat(tomcat, PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("PassiveSTSSampleApp application deployment failed.", e);
-        }
     }
 
     @AfterClass(alwaysRun = true)
