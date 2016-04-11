@@ -50,8 +50,8 @@ public final class OAuth2Constant {
     public static final String UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
 
     public final static String CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
-    public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8080\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
-    public final static String CALLBACK_REQUEST_URL_WITH_PARAMS = "http://localhost:8080/playground2/oauth2client?param=value&param2=value2";
+    public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8490\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
+    public final static String CALLBACK_REQUEST_URL_WITH_PARAMS = "http://localhost:8490/playground2/oauth2client?param=value&param2=value2";
     public final static String AUTHORIZED_USER_URL = "http://localhost:8490/playground2/oauth2-authorize-user.jsp";
     public final static String AUTHORIZED_URL = "http://localhost:8490/playground2/oauth2.jsp";
     public final static String GET_ACCESS_TOKEN_URL = "http://localhost:8490/playground2/oauth2-get-access-token.jsp";
