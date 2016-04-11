@@ -3919,6 +3919,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 =======
 		<carbon.kernel.version>4.4.0-SNAPSHOT</carbon.kernel.version>
@@ -3985,6 +3986,9 @@
 =======
         <carbon.kernel.version>4.4.6</carbon.kernel.version>
 >>>>>>> f91eaff... unabling remote user store manager wild card test case, until been fixed
+=======
+        <carbon.kernel.version>4.4.5</carbon.kernel.version>
+>>>>>>> 4b4b805... unabling remote user store manager wild card test case, until been fixed
         <carbon.commons.version>4.5.2</carbon.commons.version>
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <carbon.dashboards.version>1.0.8</carbon.dashboards.version>
