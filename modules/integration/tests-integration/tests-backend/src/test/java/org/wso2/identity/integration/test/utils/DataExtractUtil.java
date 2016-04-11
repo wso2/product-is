@@ -226,7 +226,8 @@ public class DataExtractUtil {
 	 * @return Access Token
 	 */
 	public static String extractAccessTokenFromQueryString(String query) {
-		String[] params = query.split("&");
+		String fragment = query.substring(query.indexOf("#") + 1);
+		String[] params = fragment.split("&");
 		for (String param : params) {
 			String name = param.split("=")[0];
 			if (name.contains(OAuth2Constant.ACCESS_TOKEN)) {
