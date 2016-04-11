@@ -1168,7 +1168,7 @@
         <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
-        <charon.version>2.0.4</charon.version>
+        <charon.version>2.0.5-SNAPSHOT</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1.wso2v20-SNAPSHOT</rampart.wso2.version>
@@ -1182,7 +1182,7 @@
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
-        <carbon.kernel.version>4.4.5</carbon.kernel.version>
+        <carbon.kernel.version>4.4.6</carbon.kernel.version>
         <carbon.commons.version>4.5.2</carbon.commons.version>
         <carbon.dashboards.version>1.0.8</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
@@ -1229,7 +1229,7 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
         <carbon.automation.version>4.4.3</carbon.automation.version>
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
-        <charon.orbit.version>2.0.4</charon.orbit.version>
+        <charon.orbit.version>2.0.5-SNAPSHOT</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
         <commons-collections.version>3.2.2</commons-collections.version>
@@ -1272,6 +1272,16 @@
 	the past. Therefore configuring additional repositories here should be
 	considered very carefully. -->
         <repository>
+            <id>wso2-nexus-446-stage</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbon-1004/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+	<repository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
             <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
