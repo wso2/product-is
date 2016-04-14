@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <a href="http://wso2.com/products/identity-server/">
 <img src="http://b.content.wso2.com/sites/all/common/images/product-logos/identity-server.svg"
      srcset="http://b.content.wso2.com/sites/all/common/images/product-logos/identity-server.svg@2x.png 2x"
@@ -227,6 +228,11 @@ WSO2 IDENTITY SERVER
 WSO2 Identity Server 5.2.0
 ==========================
 >>>>>>> cee4465... adding readme content
+=======
+===============================
+WSO2 Identity Server 5.2.0 Beta
+===============================
+>>>>>>> 2c9d7c8... update the notes
 
 ---
 
@@ -237,7 +243,7 @@ WSO2 Identity Server 5.2.0
 
 ---
 
-Welcome to the WSO2 Identity Server 5.2.0 release.
+Welcome to the WSO2 Identity Server 5.2.0 Beta release.
 
 <<<<<<< HEAD
 WSO2 Identity Server provides sophisticated security and identity management of enterprise web applications, services, and APIs, and makes life easier for developers and architects with its hassle-free, minimal monitoring and maintenance requirements. In its latest version, Identity Server acts as an Enterprise Identity Bus (EIB) — a central backbone to connect and manage multiple identities regardless of the standards on which they are based.In addition to using role-based access control (RBAC) convention, fine-grained policy based access control, and SSO bridging to make identity and entitlement management effortless, the all-new version of Identity Server now includes features such as identity token transformation and mediation for seamless integration between internal applications and cloud apps such as Salesforce, Google Apps, and Microsoft Office 365; new user and group provisioning capabilities; and multi-option and multi-step authentication to provide flexibility in selecting authentication options and enable robust multi-factor authentication.
@@ -350,7 +356,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   http://docs.wso2.org/wiki/display/IS510/Installation+Prerequisites
+   https://docs.wso2.com/display/IS520/Installation+Prerequisites
 
 
 Project Resources
@@ -514,8 +520,12 @@ http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
 <<<<<<< HEAD
+<<<<<<< HEAD
 (c) Copyright 2014 WSO2 Inc.
 >>>>>>> cee4465... adding readme content
 =======
 (c) Copyright 2015 WSO2 Inc.
 >>>>>>> 2f44c55... Update README.md
+=======
+(c) Copyright 2016 WSO2 Inc.
+>>>>>>> 2c9d7c8... update the notes
