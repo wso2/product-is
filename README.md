@@ -1,6 +1,6 @@
-==========================
-WSO2 Identity Server 5.2.0
-==========================
+===============================
+WSO2 Identity Server 5.2.0 Beta
+===============================
 
 ---
 
@@ -11,7 +11,7 @@ WSO2 Identity Server 5.2.0
 
 ---
 
-Welcome to the WSO2 Identity Server 5.2.0 release.
+Welcome to the WSO2 Identity Server 5.2.0 Beta release.
 
 WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
 protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
@@ -119,7 +119,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   http://docs.wso2.org/wiki/display/IS510/Installation+Prerequisites
+   https://docs.wso2.com/display/IS520/Installation+Prerequisites
 
 
 Project Resources
@@ -282,4 +282,4 @@ For further details, see the WSO2 Carbon documentation at
 http://docs.wso2.org/wiki/display/Carbon420/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2015 WSO2 Inc.
+(c) Copyright 2016 WSO2 Inc.
