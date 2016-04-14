@@ -356,7 +356,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   https://docs.wso2.com/display/IS520/Installation+Prerequisites
+   http://docs.wso2.com/display/IS520/Installation+Prerequisites
 
 
 Project Resources
