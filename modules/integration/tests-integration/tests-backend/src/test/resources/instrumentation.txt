@@ -2,7 +2,7 @@ org.wso2.carbon.idp.mgt*
 org.wso2.carbon.sts*
 org.wso2.carbon.user.core*
 org.wso2.carbon.user.mgt*
-org.wso2.carbon.claim.mgt*
+org.wso2.carbon.identity.claim.mgt*
 org.wso2.carbon.identity.application.authentication.framework*
 org.wso2.carbon.identity.application.authenticator.basicauth*
 org.wso2.carbon.identity.application.authenticator.facebook*
