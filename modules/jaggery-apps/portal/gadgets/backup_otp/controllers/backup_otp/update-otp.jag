@@ -1,0 +1,107 @@
+<%
+
+include("../../util/constants.jag");
+
+var log = new Log();
+
+var profile = require('profileClient.jag');
+
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+var i18n = session.get("i18n");
+
+function edit(){
+	var cookie = session.get('auth-cookie');
+	if(cookie == null){
+		var cookie = request.getParameter("cookie");
+		session.put('auth-cookie', cookie);
+	}
+
+	var userName = request.getParameter("user");
+	var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(userName);
+
+	try{
+		var values = profile.getProfileFieldsForInternalStore();
+		var fieldValues = values.*::['return'].*::['fieldValues'];
+
+		var req = <mgt:setUserProfile xmlns:mgt="http://mgt.profile.user.identity.carbon.wso2.org" xmlns:xsd="http://mgt.profile.user.identity.carbon.wso2.org/xsd">
+		<mgt:username></mgt:username>
+		<mgt:profile>
+		<xsd:profileConfigurations></xsd:profileConfigurations>
+		<xsd:profileConifuration></xsd:profileConifuration>
+		<xsd:profileName></xsd:profileName>
+		</mgt:profile>
+		</mgt:setUserProfile>;
+
+
+
+		req.*::['username'].setChildren(tenantAwareUserName);
+		var profileName = request.getParameter('profile');
+		var profileConfiguration = request.getParameter('profileConfiguration');
+
+		if(profileName == null ){
+			throw "profile_name_null"
+		}
+
+		profileName = profileName.toString();
+		if(profileConfiguration != null){
+			profileConfiguration = profileConfiguration.toString();
+		}else{
+			profileConfiguration = profileName;
+		}
+
+		req.*::['profile'].*::['profileName'].setChildren(profileName);
+		req.*::['profile'].*::['profileConifuration'].setChildren(profileConfiguration);
+
+		for each (var f in fieldValues){
+
+			if(f.*::['claimUri'].text().toString()==SMS_OTP_CLAIM_URL){
+				var paramName = f.*::['claimUri'].text().toString();
+					
+				var value= generateOTPList();
+
+				var fieldValue = <xsd:fieldValues xmlns:xsd="http://mgt.profile.user.identity.carbon.wso2.org/xsd">
+				<xsd:checkedAttribute></xsd:checkedAttribute>
+				<xsd:claimUri></xsd:claimUri>
+				<xsd:displayName></xsd:displayName>
+				<xsd:displayOrder></xsd:displayOrder>
+				<xsd:fieldValue></xsd:fieldValue>
+				<xsd:readOnly></xsd:readOnly>
+				<xsd:regEx></xsd:regEx>
+				<xsd:required></xsd:required>
+				</xsd:fieldValues>;
+				fieldValue.*::checkedAttribute.setChildren(f.*::['checkedAttribute'].text());
+				fieldValue.*::claimUri.setChildren(f.*::['claimUri'].text());
+				fieldValue.*::displayName.setChildren(f.*::['displayName'].text());
+				fieldValue.*::displayOrder.setChildren(f.*::['displayOrder'].text());
+				fieldValue.*::readOnly.setChildren(f.*::['readOnly'].text());
+				fieldValue.*::regEx.setChildren(f.*::['regEx'].text());
+				fieldValue.*::required.setChildren(f.*::['required'].text());
+
+				if(value != null && value.length > 0){
+					fieldValue.*::fieldValue.setChildren(value);
+				}
+				req.*::['profile'].prependChild(fieldValue);
+			}
+		}
+		profile.updateProfile(req);
+
+	}catch(e){
+		log.error(e);
+		response.sendRedirect("../../index.jag?e=1&error=" + "Unable to update SMS OTP Backup Code Claim");
+
+	}
+}
+edit();
+
+function generateOTPList(){
+
+	var claimOTP ="";
+
+	for (i = 0; i < OTP_COUNT; i++) {
+		claimOTP = claimOTP + (Math.floor(Math.random()*900000) +100000).toString() + ",";
+	}
+	return claimOTP;
+}
+%>
+
