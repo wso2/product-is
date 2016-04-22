@@ -507,6 +507,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 </li>
 
+<!--
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="0" data-row="0"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/backup_otp/gadget.xml" data-wid="46" data-prefs="{}"
     data-title="Generate and Download SMS OTP Backup Codes">
@@ -528,6 +529,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
     </div>
 
 </li> 
+-->
 
 </ul>
 </div>
