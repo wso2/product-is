@@ -19,12 +19,11 @@
 
 <project name="sts-app-seperation" default="default" basedir="../../../../../../">
     <description>
-        This script builds war file for the playground2 app for combinations of consumer type and openid attribute
-        exchange
+        This script builds war file for the passive sts sample app by removing slf4j libs and changing respective ports
     </description>
     <!-- set global properties for this build -->
     <property name="build" location="${basedir}/target/test-classes/samples"/>
-    <property name="sts.webapp" location="${basedir}/target/test-classes/samples/stsSample"/>
+    <property name="sts.webapp" location="${basedir}/target/test-classes/samples/PassiveSTSSampleApp"/>
     <property name="sts.webapp.webinf" location="${sts.webapp}/WEB-INF"/>
     <property name="sts.webapp.classes" location="${sts.webapp}/WEB-INF/classes"/>
     <property name="sts.webapp.lib" location="${sts.webapp}/WEB-INF/lib"/>
@@ -32,20 +31,22 @@
     <property name="openid.properties.default" location="${oauth.properties}/PassiveSTSSampleApp"/>
 
     <target name="default">
-        <delete
-                file="${sts.webapp.webinf}/web.xml"/>
-        <copy file="${openid.properties.default}/web.xml"
-              tofile="${sts.webapp.webinf}/web.xml"/>
-        <war destfile="${build}/PassiveSTSSampleApp.war"
-             webxml="${sts.webapp}/WEB-INF/web.xml">
-            <fileset
-                    dir="${sts.webapp}/">
+        <delete file="${sts.webapp.webinf}/web.xml"/>
+        <copy file="${openid.properties.default}/web.xml" tofile="${sts.webapp.webinf}/web.xml"/>
+        <war destfile="${build}/PassiveSTSSampleApp.war" webxml="${sts.webapp}/WEB-INF/web.xml">
+            <fileset dir="${sts.webapp}/">
                 <exclude name="**/WEB-INF/**"/>
             </fileset>
             <lib dir="${sts.webapp.lib}/" />
-            <classes
-                    dir="${sts.webapp.classes}/">
+            <classes dir="${sts.webapp.classes}/">
             </classes>
         </war>
+    </target>
+
+    <target name="clear-slf4j-libs">
+        <delete file="${sts.webapp.lib}/jul-to-slf4j-1.6.1.jar"/>
+        <delete file="${sts.webapp.lib}/log4j-over-slf4j-1.6.1.jar"/>
+        <delete file="${sts.webapp.lib}/jcl-over-slf4j-1.6.1.jar"/>
+        <delete file="${sts.webapp.lib}/slf4j-api-1.6.1.jar"/>
     </target>
 </project>
