@@ -82,19 +82,5 @@
         "permissions":["/permission/admin/manage/humantask/viewtasks"],
         "authorized":"true",
         "id" : "approvals"
-    },
-    {
-        "wid":"46",
-        "x":"1",
-        "y":"4",
-        "title":"SMS OTP Backup Codes",
-        "width":"2",
-        "height":"1",
-        "prefs":"{}",
-        "wclass":"",
-        "url":"/portal/gadgets/backup_otp/gadget.xml",
-        "permissions":["/permission/admin/login"],
-        "authorized":"true",
-        "id" : "backup_otp"
     }
 ]}

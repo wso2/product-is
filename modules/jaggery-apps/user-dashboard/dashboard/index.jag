@@ -527,7 +527,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
     </div>
 
-</li>
+</li> 
 
 </ul>
 </div>
