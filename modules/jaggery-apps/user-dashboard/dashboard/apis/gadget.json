@@ -106,6 +106,7 @@
         "authorized":"true",
         "id" : "approvals"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 86438d6... IDENTITY-3367 Create IS dashboard gadget for workflow feature
 =======
     },
@@ -123,5 +124,7 @@
         "authorized":"true",
         "id" : "backup_otp"
 >>>>>>> b160d1a... Added the Backup OTP gadget
+=======
+>>>>>>> ca9da05... Removed the gadget from Dashboard
     }
 ]}
