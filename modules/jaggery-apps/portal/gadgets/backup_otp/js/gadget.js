@@ -56,9 +56,12 @@ function cancel() {
 }
 
 function download(){
-    var downloadElement = document.createElement('a');
-    downloadElement.href = 'data:attachment/text,' + encodeURI(otpList);
-    downloadElement.target = '_blank';
-    downloadElement.download = 'otp_backup_codes.txt';
-    downloadElement.click();
+    var downloadElement = $('<a>')
+    .attr('href', "data:attachment/text," + encodeURI(otpList))
+    .attr('target', '_blank')
+    .attr('download', 'otp_backup_codes.txt')
+    .text('');
+    $('#downloadDiv').append(downloadElement);
+
+    downloadElement[0].click();
 }
