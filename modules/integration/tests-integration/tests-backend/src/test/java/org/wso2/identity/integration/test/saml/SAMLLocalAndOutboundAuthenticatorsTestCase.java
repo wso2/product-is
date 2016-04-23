@@ -19,19 +19,11 @@ package org.wso2.identity.integration.test.saml;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -61,18 +53,13 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * This calss test the defferent type of authenticators
+ * This class tests the different types of authenticators
  * with SAML Service provider and different kind of users.
  */
 public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTest {
@@ -539,7 +526,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     }
 
     /**
-     * Create the Deault Authenticator.
+     * Create the Default Authenticator.
      * Use this method to assign properties to the default authenticator.
      */
     private void createDefaultAuthenticator() {
@@ -547,8 +534,8 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     }
 
     /**
-     * Create the AdvancedAutrhenticatior with Multi options.
-     * Use any attributes needed if needed to do multipl tests with different advanced authenticators.
+     * Create the AdvancedAuthenticator with Multi options.
+     * Use any attributes needed if needed to do multiple tests with different advanced authenticators.
      * @throws Exception
      */
     private void createAdvanceAuthenticatorWithMultiOptions() throws Exception {
