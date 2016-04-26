@@ -2,7 +2,10 @@
 <%@page import="org.apache.commons.lang.StringUtils" %>
 <%@page import="org.apache.oltu.oauth2.client.response.OAuthAuthzResponse" %>
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
-
+<%@ page import="java.security.MessageDigest" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
+<%@ page import="java.util.UUID" %>
+<%@ page import="org.apache.commons.codec.binary.Base64" %>
 <%
     String code = null;
     String accessToken = null;
@@ -12,6 +15,8 @@
     String sessionState = null;
     String error = null;
     String grantType = null;
+    String code_verifier = null;
+    String code_challenge = null;
 
     boolean isOIDCLogoutEnabled = false;
     boolean isOIDCSessionEnabled = false;
@@ -31,6 +36,8 @@
             session.removeAttribute(OAuth2Constants.OAUTH2_AUTHZ_ENDPOINT);
             session.removeAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT);
             session.removeAttribute(OAuth2Constants.OIDC_SESSION_IFRAME_ENDPOINT);
+            session.removeAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER);
+            session.removeAttribute(OAuth2Constants.OAUTH2_USE_PKCE);
         }
 
         sessionState = request.getParameter(OAuth2Constants.SESSION_STATE);
@@ -41,7 +48,7 @@
         error = request.getParameter(OAuth2Constants.ERROR);
         grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
         if (StringUtils.isNotBlank(request.getHeader(OAuth2Constants.REFERER)) &&
-            request.getHeader(OAuth2Constants.REFERER).contains("rpIFrame")) {
+                request.getHeader(OAuth2Constants.REFERER).contains("rpIFrame")) {
             /**
              * Here referer is being checked to identify that this is exactly is an response to the passive request
              * initiated by the session checking iframe.
@@ -173,6 +180,7 @@
             }
             return "";
         }
+
     </script>
 
 </head>
@@ -192,19 +200,29 @@
 <table>
     <tr>
         <td>
+            <% if (accessToken == null && code == null && grantType == null) {
+                code_verifier = UUID.randomUUID().toString() + UUID.randomUUID().toString();
+                code_verifier = code_verifier.replaceAll("-", "");
 
-            <% if (error != null && error.trim().length() > 0) {%>
-            <table class="user_pass_table" width="100%">
-                <tr>
-                    <td><font color="#CC0000"><%=error%>
-                    </font></td>
-                </tr>
-            </table>
-            <%} %>
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                byte[] hash = digest.digest(code_verifier.getBytes(StandardCharsets.US_ASCII));
+                //Base64 encoded string is trimmed to remove trailing CR LF
+                code_challenge = new String(Base64.encodeBase64URLSafe(hash), StandardCharsets.UTF_8).trim();
+                //set the generated code verifier to the current user session
+                session.setAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER, code_verifier);
 
-            <% if (accessToken == null && code == null && grantType == null) { %>
+            %>
             <div id="loginDiv" class="sign-in-box" width="100%">
-                <form action="oauth2-authorize-user.jsp" id="loginForm" method="post">
+                <% if (error != null && error.trim().length() > 0) {%>
+                <table class="user_pass_table" width="100%">
+                    <tr>
+                        <td><font color="#CC0000"><%=error%>
+                        </font></td>
+                    </tr>
+                </table>
+                <%} %>
+
+                <form action="oauth2-authorize-user.jsp" id="loginForm" method="post" name="oauthLoginForm">
                     <table class="user_pass_table" width="100%">
                         <tbody>
 
@@ -283,6 +301,31 @@
                                        style="width:350px"></td>
                         </tr>
 
+                        <tr id="pkceOption">
+                            <td>Use PKCE</td>
+                            <td><input type="radio" name="use_pkce" value="yes">Yes &nbsp;
+                                <input type="radio" name="use_pkce" value="no" checked>No
+                            </td>
+                        </tr>
+                        <tr id="pkceMethod">
+                            <td>PKCE Challenge Method</td>
+                            <td><input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"
+                                       value="S256" checked>S256 &nbsp;
+                                <input type="radio" name="code_challenge_method" onchange="togglePKCEMethod()"
+                                       value="plain">plain
+                            </td>
+                        </tr>
+                        <tr id="pkceChallenge">
+                            <td>PKCE Code Challenge</td>
+                            <td><input type="text" style="width: 350px" readonly name="code_challenge"
+                                       value="<%=code_challenge%>"></td>
+                        </tr>
+                        <tr id="pkceVerifier">
+                            <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
+                            <td><label><%=code_verifier%>
+                            </label></td>
+                        </tr>
+
                         <tr>
                             <td colspan="2"><input type="submit" name="authorize" value="Authorize"></td>
                         </tr>
@@ -315,6 +358,14 @@
                             <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
                             </td>
                         </tr>
+                        <% if (session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
+                        <tr>
+                            <td><label>PKCE Verifier : </label></td>
+                            <td><input type="text" id="pkce_verifier" name="code_verifier" style="width:350px"
+                                       value="<%=(String)session.getAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER)%>">
+                            </td>
+                        </tr>
+                        <% }%>
                         <tr>
                             <td><input type="submit" name="authorize" value="Get Access Token"></td>
                             <%
@@ -449,6 +500,55 @@
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+    function togglePKCEMethod() {
+        var radios = document.getElementsByName('code_challenge_method');
+        var pkceMethod = "";
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                pkceMethod = radios[i].value;
+                break;
+            }
+        }
+        var pkceChallenge = document.getElementsByName("code_challenge")[0];
+        console.log(pkceMethod + " " + pkceChallenge.value);
+        if (pkceMethod == "S256") {
+            pkceChallenge.value = "<%=code_challenge%>";
+        } else if (pkceMethod == "plain") {
+            pkceChallenge.value = "<%=code_verifier%>";
+        }
+    }
+
+    function pkceChangeVisibility(jQuery ) {
+        if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
+                $("input[name='use_pkce']:checked")[0].value == "yes") {
+            $("#pkceMethod").show();
+            $("#pkceChallenge").show();
+            $("#pkceVerifier").show();
+
+
+            $("input[name='code_challenge_method']")[0].removeAttribute('disabled');
+            $("input[name='code_challenge_method']")[1].removeAttribute('disabled');
+            $("input[name='code_challenge']")[0].removeAttribute('disabled');
+        } else {
+            $("#pkceMethod").hide();
+            $("#pkceChallenge").hide();
+            $("#pkceVerifier").hide();
+            $("#pkceOption").hide();
+
+            $("input[name='code_challenge_method']")[0].setAttribute('disabled', true);
+            $("input[name='code_challenge_method']")[1].setAttribute('disabled', true);
+            $("input[name='code_challenge']")[0].setAttribute('disabled', true);
+        }
+        if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>") {
+            $("#pkceOption").show();
+        }
+    }
+
+    $( document ).ready(pkceChangeVisibility);
+    //set form change handler.
+    $("form[name='oauthLoginForm']").change(pkceChangeVisibility)
+</script>
 <%
     if (isOIDCSessionEnabled) {
 %>

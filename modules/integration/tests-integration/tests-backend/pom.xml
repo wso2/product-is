@@ -229,7 +229,7 @@
                                     <type>war</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
-                                        ${basedir}/target/test-classes/samples/stsSample
+                                        ${basedir}/target/test-classes/samples/PassiveSTSSampleApp
                                     </outputDirectory>
                                 </artifactItem>
                             </artifactItems>
@@ -242,11 +242,12 @@
                 <executions>
                     <!--TODO: Remove this execution once tomcat dependency issue was resolved-->
                     <execution>
-                        <id>packaging-travelocity-war-artifact</id>
+                        <id>packaging-sample-war-artifacts-without-slf4j</id>
                         <phase>process-test-resources</phase>
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent/travelocity-app-build.xml" target="clear-slf4j-libs" />
+                                <ant antfile="src/test/resources/artifacts/IS/passivests/sts-app-build.xml" target="clear-slf4j-libs" />
                             </tasks>
                         </configuration>
                         <goals>
@@ -262,7 +263,29 @@
                                 <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-smartconsumerwithoutclaims" />
                                 <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-dumbconsumerwithclaims" />
                                 <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-dumbconsumerwithoutclaims" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>packaging-war-artifacts-oauth</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/oauth/oauth-app-build.xml" target="default" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>packaging-war-artifacts-passivests</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/passivests/sts-app-build.xml" target="default" />
                             </tasks>
                         </configuration>
@@ -424,6 +447,12 @@
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.charon</groupId>
