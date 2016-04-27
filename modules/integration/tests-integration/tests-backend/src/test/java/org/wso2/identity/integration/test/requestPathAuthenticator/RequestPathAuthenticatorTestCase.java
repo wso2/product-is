@@ -28,6 +28,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -43,8 +44,11 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +134,7 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+        appMgtclient.deleteApplication(serviceProvider.getApplicationID()+"");
         if(tomcat != null){
             tomcat.stop();
             tomcat.destroy();
@@ -137,17 +142,79 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(alwaysRun = true, description = "Deploy PassiveSTSSampleApp")
-    public void testLogin()  throws Exception {
+    @Test(alwaysRun = true, description = "Test login success")
+    public void testLoginSuccess()  throws Exception {
         HttpPost request = new HttpPost("http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-POST");
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", adminUsername));
-        urlParameters.add(new BasicNameValuePair("password", "ddddddddddd"));
+        urlParameters.add(new BasicNameValuePair("password", "admin"));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
-        String samlResponse = Utils.extractDataFromResponse(response, "name='SAMLRequest'", 5);
-        String sectoken = Utils.extractDataFromResponse(response, "name='sectoken'", 5);
-        Assert.assertFalse(false);
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+        String line;
+        String samlRequest = "";
+        String secToken = "";
+
+        while ((line = rd.readLine()) != null) {
+            if (line.contains("name='SAMLRequest'")) {
+                String[] tokens = line.split("'");
+                samlRequest = tokens[5];
+            }
+            if (line.contains("name='sectoken'")) {
+                String[] tokens = line.split("'");
+                secToken = tokens[5];
+            }
+        }
+        //rd.close();
+        EntityUtils.consume(response.getEntity());
+        request = new HttpPost("https://localhost:9853/samlsso");
+        urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("sectoken", secToken));
+        urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+        response = client.execute(request);
+        String html = DataExtractUtil.getContentData(response);
+        int responseCode = response.getStatusLine().getStatusCode();
+        Assert.assertEquals(responseCode ,200, "Successful login response returned code " + responseCode);
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(alwaysRun = true, description = "Test login success", dependsOnMethods = {"testLoginSuccess"})
+    public void testLoginFail()  throws Exception {
+//        HttpPost request = new HttpPost("http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-POST");
+//        List<NameValuePair> urlParameters = new ArrayList<>();
+//        urlParameters.add(new BasicNameValuePair("username", adminUsername));
+//        urlParameters.add(new BasicNameValuePair("password", "admin123"));
+//        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+//        HttpResponse response = client.execute(request);
+//        BufferedReader rd = new BufferedReader(
+//                new InputStreamReader(response.getEntity().getContent()));
+//        String line;
+//        String samlRequest = "";
+//        String secToken = "";
+//
+//        while ((line = rd.readLine()) != null) {
+//            if (line.contains("name='SAMLRequest'")) {
+//                String[] tokens = line.split("'");
+//                samlRequest = tokens[5];
+//            }
+//            if (line.contains("name='sectoken'")) {
+//                String[] tokens = line.split("'");
+//                secToken = tokens[5];
+//            }
+//        }
+//        //rd.close();
+//        EntityUtils.consume(response.getEntity());
+//        request = new HttpPost("https://localhost:9853/samlsso");
+//        urlParameters = new ArrayList<>();
+//        urlParameters.add(new BasicNameValuePair("sectoken", secToken));
+//        urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
+//        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+//        response = client.execute(request);
+//        String html = DataExtractUtil.getContentData(response);
+//        EntityUtils.consume(response.getEntity());
+        //Send next request as well with saml response
     }
 
     private Tomcat getTomcat() {

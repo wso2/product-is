@@ -76,8 +76,8 @@
             .setResponseType(authzGrantType)
             .setScope(scope);
 
-    OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildBodyMessage();
-    response.sendRedirect(authzRequest.getLocationUri() + "?" + authzRequest.getBody());
+    OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildQueryMessage();
+    response.sendRedirect(authzRequest.getLocationUri());
     return;
 
 } else {
