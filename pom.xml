@@ -1015,7 +1015,7 @@
             <dependency>
                 <groupId>org.apache.tomcat.wso2</groupId>
                 <artifactId>tomcat</artifactId>
-                <version>7.0.52.wso2v5</version>
+                <version>${org.apache.tomcat.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.santuario</groupId>
@@ -1182,8 +1182,8 @@
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
-        <carbon.kernel.version>4.4.5</carbon.kernel.version>
-        <carbon.commons.version>4.5.2</carbon.commons.version>
+        <carbon.kernel.version>4.4.6-SNAPSHOT</carbon.kernel.version>
+        <carbon.commons.version>4.5.3-SNAPSHOT</carbon.commons.version>
         <carbon.dashboards.version>1.0.8</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <oauth2.client.version>1.0.0</oauth2.client.version>
@@ -1202,7 +1202,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.3</jaggeryjs.version>
+        <jaggeryjs.version>0.12.4</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -1220,8 +1220,8 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <carbon.deployment.version>4.6.1</carbon.deployment.version>
-        <carbon.registry.version>4.5.2</carbon.registry.version>
+        <carbon.deployment.version>4.6.2-SNAPSHOT</carbon.deployment.version>
+        <carbon.registry.version>4.5.3</carbon.registry.version>
         <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
@@ -1271,7 +1271,16 @@
 	by default) and nothing else. We had troubles with other repositories in
 	the past. Therefore configuring additional repositories here should be
 	considered very carefully. -->
-	    <repository>
+        <repository>
+            <id>jaggery.modified</id>
+            <name>Wcde</name>
+            <url>https://maven.wso2.org/nexus/content/repositories/orgjaggeryjs-1002/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+
+        <repository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
             <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
@@ -1305,6 +1314,7 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+
     </repositories>
 
     <scm>
