@@ -31,10 +31,6 @@
 	<url>http://wso2.org</url>
 
 	<dependencies>
-		<dependency>
-				<groupId>org.apache.derby.wso2</groupId>
-				<artifactId>derby</artifactId>
-			</dependency>
 			<dependency>
 				<groupId>org.hibernate.wso2</groupId>
 				<artifactId>hibernate</artifactId>
@@ -95,7 +91,6 @@
 								</properties>
 						    	</adviceFile>
 							<bundles>
-								<bundleDef>org.apache.derby.wso2:derby</bundleDef>
 								<bundleDef>org.hibernate.wso2:hibernate</bundleDef>
 								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
