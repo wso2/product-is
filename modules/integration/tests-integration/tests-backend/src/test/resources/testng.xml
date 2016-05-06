@@ -154,6 +154,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> dd7af57... adding test case for IDENTITY-3943
 =======
 >>>>>>> 1f04960... Adding test cases
@@ -165,6 +166,14 @@
     </test>
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+    <!--<test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+>>>>>>> 0fc48d0... Adding removed identity-mgt and notification-mgt
 
 >>>>>>> 0dd84a5... uncommenting notification mgt test case
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
@@ -172,7 +181,7 @@
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase" />
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase" />-->
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
@@ -623,9 +632,9 @@
             <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
             <!--Identity Management Test Cases-->
-            <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>-->
-            <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>-->
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
