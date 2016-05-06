@@ -1153,6 +1153,8 @@
 
     <properties>
         <carbon.identity.version>5.0.9-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.governance.version>1.0.0-SNAPSHOT</carbon.identity.governance.version>
+        <carbon.identity.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.account.lock.version>
         <carbon.identity.jar.version>5.0.9-SNAPSHOT</carbon.identity.jar.version>
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
