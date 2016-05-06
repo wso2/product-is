@@ -3787,6 +3787,8 @@
 >>>>>>> 21b5bee... Merge branch 'release-5.1.0-rc2'
 =======
         <carbon.identity.version>5.0.9-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.governance.version>1.0.0-SNAPSHOT</carbon.identity.governance.version>
+        <carbon.identity.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.account.lock.version>
         <carbon.identity.jar.version>5.0.9-SNAPSHOT</carbon.identity.jar.version>
 >>>>>>> bc698c7... Updating carbon-identity version
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>

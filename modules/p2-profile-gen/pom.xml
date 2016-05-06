@@ -506,6 +506,12 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.governance.feature:${carbon.identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.account.lock.feature:${carbon.identity.account.lockversion}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -923,6 +929,7 @@
                                 <feature>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.identity.relying.party.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
@@ -930,6 +937,16 @@
                                     <id>org.wso2.carbon.identity.self.registration.feature.group</id>
 =======
 =======
+=======
+                                    <id>org.wso2.carbon.identity.governance.feature.group</id>
+                                    <version>${carbon.identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.account.lock.feature.group</id>
+                                    <version>${carbon.identity.account.lock.version}</version>
+                                </feature>
+                                <feature>
+>>>>>>> 4864008... Add identity mgt features
                                     <id>org.wso2.carbon.identity.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
@@ -2575,6 +2592,14 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.governance.feature.group</id>
+                                    <version>${carbon.identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.account.lock.feature.group</id>
+                                    <version>${carbon.identity.account.lock.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
                                     <version>${carbon.identity.version}</version>
                                 </feature>
@@ -2999,6 +3024,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.mgt.server.feature.group</id>
                                     <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.governance.server.feature.group</id>
+                                    <version>${carbon.identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.account.lock.feature.group</id>
+                                    <version>${carbon.identity.account.lock.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.server.feature.group</id>
