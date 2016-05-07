@@ -101,6 +101,7 @@
             <!--Identity Provider Management Test Cases-->
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorTestCase" />
         </classes>
     </test>
 
