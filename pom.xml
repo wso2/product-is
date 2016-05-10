@@ -1103,12 +1103,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -1218,7 +1218,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.neethi</groupId>
@@ -1268,17 +1268,17 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -3221,7 +3221,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -3272,7 +3272,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -3302,7 +3302,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.saml.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -3314,13 +3314,13 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -3457,7 +3457,7 @@
 	    <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jacoco</groupId>
@@ -3687,6 +3687,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.identity.version>4.4.1-SNAPSHOT</carbon.identity.version>
 >>>>>>> 2d1bb2f... refactor parent pom
 =======
@@ -3791,6 +3792,10 @@
         <carbon.identity.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.account.lock.version>
         <carbon.identity.jar.version>5.0.9-SNAPSHOT</carbon.identity.jar.version>
 >>>>>>> bc698c7... Updating carbon-identity version
+=======
+        <carbon.identity.version>5.1.1-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.extension.version>5.0.9-SNAPSHOT</carbon.identity.extension.version>
+>>>>>>> a709e84... Update identity-framework version, add 2 versions to framework and extensions
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
 >>>>>>> fe4dc19... [maven-release-plugin] prepare for next development iteration
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
@@ -3855,12 +3860,16 @@
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
 =======
         <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
+<<<<<<< HEAD
 >>>>>>> d921a5e... IDENTITY-4490 Passive STS not working after opensaml upgrade
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
 <<<<<<< HEAD
 >>>>>>> 7e87ff2... Upgrading wss4j, rampart and jaggeryjs versions
         <openws.version>1.4.2</openws.version>
 =======
+=======
+        <wss4j.wso2.version>1.5.11.wso2v13</wss4j.wso2.version>
+>>>>>>> a709e84... Update identity-framework version, add 2 versions to framework and extensions
         <openws.version>1.4.1</openws.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4041,7 +4050,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.3</jaggeryjs.version>
+        <jaggeryjs.version>0.12.5-SNAPSHOT</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -4135,7 +4144,7 @@
         <carbon.multitenancy.version>4.5.0</carbon.multitenancy.version>
 =======
         <carbon.deployment.version>4.6.1</carbon.deployment.version>
-        <carbon.registry.version>4.5.2</carbon.registry.version>
+        <carbon.registry.version>4.5.4</carbon.registry.version>
         <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
@@ -4365,6 +4374,7 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+
     </repositories>
 
     <scm>
