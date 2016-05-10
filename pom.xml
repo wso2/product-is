@@ -559,12 +559,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -660,7 +660,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.neethi</groupId>
@@ -710,17 +710,17 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -777,7 +777,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -828,7 +828,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -858,7 +858,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.saml.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -870,13 +870,13 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -995,7 +995,7 @@
 	    <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
-                <version>${carbon.identity.version}</version>
+                <version>${carbon.identity.extension.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jacoco</groupId>
@@ -1152,8 +1152,8 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>5.0.9-SNAPSHOT</carbon.identity.version>
-        <carbon.identity.jar.version>5.0.9-SNAPSHOT</carbon.identity.jar.version>
+        <carbon.identity.version>5.1.1-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.extension.version>5.0.9-SNAPSHOT</carbon.identity.extension.version>
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1166,7 +1166,7 @@
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.6.4</opensaml.version>
         <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
-        <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11.wso2v13</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
         <charon.version>2.0.5</charon.version>
         <xalan.version>2.7.1</xalan.version>
@@ -1202,7 +1202,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.3</jaggeryjs.version>
+        <jaggeryjs.version>0.12.5-SNAPSHOT</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -1221,7 +1221,7 @@
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
         <carbon.deployment.version>4.6.1</carbon.deployment.version>
-        <carbon.registry.version>4.5.2</carbon.registry.version>
+        <carbon.registry.version>4.5.4</carbon.registry.version>
         <carbon.multitenancy.version>4.5.1</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
@@ -1305,6 +1305,7 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+
     </repositories>
 
     <scm>
