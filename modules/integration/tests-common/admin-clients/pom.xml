@@ -103,6 +103,10 @@
             <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.governance.stub</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
