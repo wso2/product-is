@@ -154,7 +154,14 @@
             <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
             <scope>compile</scope>
         </dependency>
+<<<<<<< HEAD
 >>>>>>> 4037f55... Adding Fixes for product-is test-suite to resolve IDENTITY-3629
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.governance.stub</artifactId>
+        </dependency>
+>>>>>>> 471c8f6... Adding IdentityGovernanceTestCase
     </dependencies>
 
 </project>
