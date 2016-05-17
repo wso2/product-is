@@ -16,12 +16,12 @@
         </classes>
     </test>
 
-    <test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>
-            <class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>
-        </classes>
-    </test>
+    <!--<test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
         <classes>
@@ -51,9 +51,10 @@
             <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
             <!--Identity Management Test Cases-->
-            <class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>-->
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
+            <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
