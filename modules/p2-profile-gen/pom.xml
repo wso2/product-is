@@ -512,6 +512,12 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.account.lock.feature:${carbon.identity.account.lockversion}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${carbon.identity.email.mgt.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.event.handler.email.server.feature:${carbon.identity.email.mgt.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -951,7 +957,18 @@
                                     <version>${carbon.identity.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
 >>>>>>> 0fc48d0... Adding removed identity-mgt and notification-mgt
+=======
+                                    <id>org.wso2.carbon.email.mgt.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
+                                </feature>
+                                <feature>
+>>>>>>> 4521216... Adding Email-event-feature
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
 >>>>>>> 49b8672... Correct some code formatting issues in https://github.com/wso2/product-is/pull/180
                                     <version>${carbon.identity.version}</version>
@@ -2610,6 +2627,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.account.lock.feature.group</id>
                                     <version>${carbon.identity.account.lock.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.email.mgt.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
