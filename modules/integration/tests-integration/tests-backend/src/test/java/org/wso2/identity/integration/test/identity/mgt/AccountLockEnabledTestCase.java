@@ -51,7 +51,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private String testLockUser1 = "TestLockUser1";
     private String testLockUser1Password = "TestLockUser1Password";
     private String testLockUser1WrongPassword = "TestLockUser1WrongPassword";
-    private String testLockUser2 = "TestLockUser1";
+    private String testLockUser2 = "TestLockUser2";
     private String testLockUser2Password = "TestLockUser2Password";
 
     private String accountLockTemplate = "accountlock";
@@ -104,7 +104,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                     ("Test Failure : User Account Didn't Locked Properly", Boolean.valueOf(userAccountLockClaimValue));
 
         } catch (Exception e) {
-            log.error("Error occurred when adding test role.", e);
+            log.error("Error occurred when locking the test user.", e);
         }
     }
 
@@ -130,7 +130,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                     "Account lock is not available ", StringUtils.isNotEmpty(emailTemplateResourceContent));
 
         } catch (Exception e) {
-            log.error("Error occurred when adding test role.", e);
+            log.error("Error occurred when retrieving the Account lock email template.", e);
         }
     }
 
