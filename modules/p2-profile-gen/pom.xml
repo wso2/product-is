@@ -193,6 +193,12 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.account.lock.feature:${carbon.identity.account.lock.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${carbon.identity.email.mgt.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.event.handler.email.server.feature:${carbon.identity.email.mgt.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -584,6 +590,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature.group</id>
                                     <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.email.mgt.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
@@ -1075,6 +1089,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.account.lock.feature.group</id>
                                     <version>${carbon.identity.account.lock.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.email.mgt.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
+                                    <version>${carbon.identity.email.mgt.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
