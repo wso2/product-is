@@ -138,11 +138,10 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        File identityMgtConfigFile = new File(getISResourceLocation()
-                + File.separator + "identityMgt" + File.separator
-                + "identity-accountlock-enabled.xml");
+        usmClient.deleteUser(testLockUser1);
+        usmClient.deleteUser(testLockUser2);
 
-        scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityXmlServerFile, true);
+        scm.restoreToLastConfiguration();
         scm.restartGracefully();
 
     }
