@@ -161,7 +161,15 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.governance.stub</artifactId>
         </dependency>
+<<<<<<< HEAD
 >>>>>>> 471c8f6... Adding IdentityGovernanceTestCase
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.registry</groupId>
+            <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
+            <scope>compile</scope>
+        </dependency>
+>>>>>>> 6e021c5... Adding Account-Lock/Email Template Retrieving Testcases
     </dependencies>
 
 </project>

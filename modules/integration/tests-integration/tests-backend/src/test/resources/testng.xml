@@ -638,6 +638,7 @@
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>-->
 =======
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
+            <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
 >>>>>>> 471c8f6... Adding IdentityGovernanceTestCase
             <!--User Store Test Cases-->

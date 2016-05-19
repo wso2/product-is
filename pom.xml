@@ -1090,6 +1090,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
                 <version>${product.identity.version}</version>
