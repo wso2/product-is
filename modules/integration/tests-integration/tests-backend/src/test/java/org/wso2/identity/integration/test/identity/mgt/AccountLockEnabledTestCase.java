@@ -110,7 +110,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user account lock email " +
-            "template successfully retrieved ")
+            "template successfully retrieved ", dependsOnMethods = "testSuccessfulLockedInitially")
     public void testSuccessfulEmailRetrieval() {
 
         try {
