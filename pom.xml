@@ -564,12 +564,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.oauth.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.oauth.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -782,7 +782,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.sts.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -875,7 +875,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.openid.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -1166,8 +1166,11 @@
         <carbon.identity.governance.version>1.0.0-SNAPSHOT</carbon.identity.governance.version>
         <carbon.identity.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.account.lock.version>
         <carbon.identity.email.mgt.version>1.0.0-SNAPSHOT</carbon.identity.email.mgt.version>
-        <carbon.identity.jar.version>5.5.0-SNAPSHOT</carbon.identity.jar.version>
-        <carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>
+        <carbon.identity.inbound.auth.openid.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.openid.version>
+        <carbon.identity.user.workflow.version>5.1.1-SNAPSHOT</carbon.identity.user.workflow.version>
+        <carbon.identity.inbound.auth.oauth.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.oauth.version>
+        <carbon.identity.inbound.auth.sts.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.sts.version>
+        <carbon.identity.extension.version>5.1.0</carbon.identity.extension.version>
         <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
