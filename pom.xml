@@ -4343,8 +4343,12 @@
 >>>>>>> 6f48faf... Fixing build breaks
 =======
         <carbon.business-process.version>4.4.7</carbon.business-process.version>
+<<<<<<< HEAD
         <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
+=======
+        <carbon.analytics-common.version>5.0.12-SNAPSHOT</carbon.analytics-common.version>
+>>>>>>> 42a2bd0... Adding authentication data publisher feature
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
