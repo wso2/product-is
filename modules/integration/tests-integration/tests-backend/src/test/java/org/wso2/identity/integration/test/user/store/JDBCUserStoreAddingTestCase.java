@@ -228,7 +228,6 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     public void countUsers() throws Exception {
         Map<String, String> users =  userStoreCountServiceClient.countUsers("%");
         Assert.assertEquals(Long.valueOf(1), Long.valueOf(users.get(domainId)));
-        Assert.assertEquals(Long.valueOf(-1), Long.valueOf(users.get(UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME)));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
