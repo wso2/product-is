@@ -87,7 +87,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public OAuthConsumerAppDTO createApplication() throws Exception {
 		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-		appDTO.setApplicationName(org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME);
+		appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
 		appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
 		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
 		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
