@@ -99,15 +99,12 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
 
         try {
             updateConsumerAppState(OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED);
-            System.out.println("getOauthApplicationState(): " + getOauthApplicationState());
-            log.info("getOauthApplicationState(): " + getOauthApplicationState());
             if(getOauthApplicationState().equalsIgnoreCase(OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED)) {
                 updated = true;
             }
         } catch (Exception e) {
             Assert.assertFalse(false, "Error when retrieving oauth app state");
         }
-        log.info("Updated: " + updated);
         Assert.assertTrue(updated);
     }
 
@@ -122,7 +119,6 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.assertFalse(false, "Error when retrieving oauth app state");
         }
-        log.info("Updated: " + updated);
         Assert.assertTrue(updated);
     }
 
