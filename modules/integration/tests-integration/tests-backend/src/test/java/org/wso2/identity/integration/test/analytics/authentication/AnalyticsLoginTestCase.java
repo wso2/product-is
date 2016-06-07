@@ -348,7 +348,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Event event = (Event) thriftServer.getPreservedEventList().get(0);
             Object[] eventStreamData = event.getPayloadData();
 
-            Assert.assertEquals(eventStreamData[2], true);
+            Assert.assertEquals(eventStreamData[2], false);
             Assert.assertEquals(eventStreamData[3], "samluser1");
             Assert.assertEquals(eventStreamData[4], "PRIMARY");
             Assert.assertEquals(eventStreamData[5], "carbon.super");
@@ -357,7 +357,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[9], false);
             Assert.assertEquals(eventStreamData[10], false);
             Assert.assertEquals(eventStreamData[12], "Internal/everyone");
-            Assert.assertEquals(eventStreamData[13], "0");
+            Assert.assertEquals(eventStreamData[13], "1");
+            Assert.assertEquals(eventStreamData[17], true);
 
             thriftServer.resetPreservedEventList();;
 
@@ -401,16 +402,16 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Event event = (Event) thriftServer.getPreservedEventList().get(0);
             Object[] eventStreamData = event.getPayloadData();
 
-//            Assert.assertEquals(eventStreamData[2], true);
-//            Assert.assertEquals(eventStreamData[3], "samluser1");
-//            Assert.assertEquals(eventStreamData[4], "PRIMARY");
-//            Assert.assertEquals(eventStreamData[5], "carbon.super");
-//            Assert.assertEquals(eventStreamData[7], "samlsso");
-//            Assert.assertEquals(eventStreamData[8], "SAML-SSO-TestApplication");
-//            Assert.assertEquals(eventStreamData[9], false);
-//            Assert.assertEquals(eventStreamData[10], false);
-//            Assert.assertEquals(eventStreamData[12], "Internal/everyone");
-//            Assert.assertEquals(eventStreamData[13], "0");
+            Assert.assertEquals(eventStreamData[2], false);
+            Assert.assertEquals(eventStreamData[3], "dummy");
+            Assert.assertEquals(eventStreamData[4], "PRIMARY");
+            Assert.assertEquals(eventStreamData[5], "carbon.super");
+            Assert.assertEquals(eventStreamData[7], "samlsso");
+            Assert.assertEquals(eventStreamData[8], "SAML-SSO-TestApplication");
+            Assert.assertEquals(eventStreamData[9], false);
+            Assert.assertEquals(eventStreamData[10], false);
+            Assert.assertEquals(eventStreamData[12], "");
+            Assert.assertEquals(eventStreamData[13], "1");
 
             thriftServer.resetPreservedEventList();
 
