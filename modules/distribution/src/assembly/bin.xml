@@ -203,7 +203,7 @@
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>accountrecovery.war</include>
+                <include>account-recovery.war</include>
             </includes>
         </fileSet>
 
