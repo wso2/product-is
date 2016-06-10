@@ -455,8 +455,12 @@
                         </tr>
                         <% } %>
                         <tr>
+                            <td><label>Introspection Endpoint :</label></td>
+                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                        </tr>
+                        <tr>
                             <td>
-                                <input type="submit" class="button" value="Get Photos">
+                                <input type="submit" class="button" value="Get TokenInfo">
                             </td>
                         </tr>
                         </tbody>
@@ -486,8 +490,12 @@
                         </tr>
                         <% } %>
                         <tr>
+                            <td><label>Introspection Endpoint :</label></td>
+                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                        </tr>
+                        <tr>
                             <td>
-                                <input type="submit" class="button" value="Get Photos">
+                                <input type="submit" class="button" value="Get TokenInfo">
                             </td>
                         </tr>
                         </tbody>
