@@ -387,6 +387,16 @@
         </CacheManager>
     </CacheConfig>
 
+    <ISAnalytics>
+        <DefaultValues>
+            <userName>NOT_AVAILABLE</userName>
+            <userStoreDomain>NOT_AVAILABLE</userStoreDomain>
+            <rolesCommaSeperated>NOT_AVAILABLE</rolesCommaSeperated>
+            <serviceprovider>NOT_AVAILABLE</serviceprovider>
+            <identityProvider>NOT_AVAILABLE</identityProvider>
+        </DefaultValues>
+    </ISAnalytics>
+
     <!--Cookies>
         <Cookie name="commonAuthId" domain="localhost" httpOnly="true" secure="true" />
     </Cookies-->

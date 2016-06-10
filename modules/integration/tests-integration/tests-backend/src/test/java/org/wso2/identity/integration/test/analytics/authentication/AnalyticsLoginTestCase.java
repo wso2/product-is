@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -79,14 +79,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
-    private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String SAML_SSO_INDEX_URL = "http://localhost:8490/%s/";
-    private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
-
-    private static final String NAMEID_FORMAT =
-            "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
+    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
+    private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String profileName = "default";
 
@@ -95,9 +91,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private SAMLConfig config;
     private Tomcat tomcatServer;
-    ThriftServer thriftServer;
+    private ThriftServer thriftServer;
     private ServerConfigurationManager serverConfigurationManager;
-    private File notificationMgtProperties;
 
 
     private String resultPage;
@@ -105,7 +100,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private enum HttpBinding {
         HTTP_REDIRECT("HTTP-Redirect"),
         HTTP_POST("HTTP-POST");
-
         String binding;
 
         HttpBinding(String binding) {
@@ -118,8 +112,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
     private enum User {
-        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1"),
-        TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2");
+        SUPER_TENANT_USER("samlAnalyticsuser1", "samlAnalyticsuser1", "carbon.super", "samlAnalyticsuser1", "samlAnalyticsuser1@abc.com",
+                "samlnickuser1"),
+        TENANT_USER("samlAnalyticsuser2@wso2.com", "samlAnalyticsuser2", "wso2.com", "samlAnalyticsuser2", "samlAnalyticsuser2@abc.com",
+                "samlnickuser2");
 
         private String username;
         private String password;
@@ -161,11 +157,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         public String getNickname() {
             return nickname;
         }
-    }
-
-    ;
+    };
 
     private enum App {
+
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false);
 
@@ -236,26 +231,23 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     @Factory(dataProvider = "samlConfigProvider")
     public AnalyticsLoginTestCase(SAMLConfig config) {
         if (log.isDebugEnabled()) {
-            log.info("SAML SSO Test initialized for " + config);
+            log.debug("SAML SSO Test initialized for " + config);
         }
         this.config = config;
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
-        copyFileContents();
+        changeIdentityXml();
         super.init(config.getUserMode());
-        thriftServer = new ThriftServer("Wso2EventTestCase", 7611, true);
-        thriftServer.start(7611);
+        thriftServer = new ThriftServer("Wso2EventTestCase", 8021, true);
+        thriftServer.start(8021);
         log.info("Thrift Server is Started on port 8462");
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
-                        , null);
-        applicationManagementServiceClient =
-                new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
-        ssoConfigServiceClient =
-                new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
+        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         createUser();
         createApplication();
@@ -264,22 +256,22 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         log.info("Starting Tomcat");
         tomcatServer = Utils.getTomcat(getClass());
 
-        URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + config.getApp().getArtifact() + ".war");
+        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + config.getApp()
+                .getArtifact() + ".war");
         Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
 
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
+
         deleteUser();
         deleteApplication();
-
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         thriftServer.stop();
-        serverConfigurationManager.restoreToLastConfiguration();
+        replaceIdentityXml();
         //Stopping tomcat
         tomcatServer.stop();
         tomcatServer.destroy();
@@ -288,8 +280,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
-        Boolean isAddSuccess = ssoConfigServiceClient
-                .addServiceProvider(createSsoServiceProviderDTO());
+
+        Boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
 
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
@@ -298,8 +290,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 "Adding a service provider has failed for " + config);
     }
 
-    @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
-            dependsOnMethods = {"testAddSP"})
+    @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is", dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOIsPassiveLogin() {
         try {
             HttpClient httpClient = new DefaultHttpClient();
@@ -328,7 +319,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
                 response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
                 EntityUtils.consume(response.getEntity());
-
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
             }
@@ -338,32 +328,47 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
-                    httpClient);
+            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
             Thread.sleep(2000);
 
+            Assert.assertEquals(thriftServer.getPreservedEventList().size(), 2);
+
             Event event = (Event) thriftServer.getPreservedEventList().get(0);
             Object[] eventStreamData = event.getPayloadData();
-
+            if ((Boolean) eventStreamData[2]) {
+                event = (Event) thriftServer.getPreservedEventList().get(1);
+            }
+            eventStreamData = event.getPayloadData();
+            // authenticationSuccess
             Assert.assertEquals(eventStreamData[2], false);
-            Assert.assertEquals(eventStreamData[3], "samluser1");
+            // userName
+            Assert.assertEquals(eventStreamData[3], "samlAnalyticsuser1");
+            // userStoreDomain
             Assert.assertEquals(eventStreamData[4], "PRIMARY");
+            // tenantDomain
             Assert.assertEquals(eventStreamData[5], "carbon.super");
+            // inboundAuthType
             Assert.assertEquals(eventStreamData[7], "samlsso");
+            // serviceprovider
             Assert.assertEquals(eventStreamData[8], "SAML-SSO-TestApplication");
+            // remembermeEnabled
             Assert.assertEquals(eventStreamData[9], false);
+            // forceAuthEnabled
             Assert.assertEquals(eventStreamData[10], false);
+            // rolesCommaSeperated
             Assert.assertEquals(eventStreamData[12], "Internal/everyone");
+            // authenticationStep
             Assert.assertEquals(eventStreamData[13], "1");
+            // isFirstLogin
             Assert.assertEquals(eventStreamData[17], true);
 
-            thriftServer.resetPreservedEventList();;
+            thriftServer.resetPreservedEventList();
 
         } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + config, e);
+            Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
         }
     }
 
@@ -388,12 +393,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
-                    .getArtifact(), "dummy", config.getUser().getPassword(),
-                    httpClient);
+                    .getArtifact(), "dummy", config.getUser().getPassword(), httpClient);
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
-                    httpClient);
+            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
@@ -402,21 +405,31 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Event event = (Event) thriftServer.getPreservedEventList().get(0);
             Object[] eventStreamData = event.getPayloadData();
 
+            // authenticationSuccess
             Assert.assertEquals(eventStreamData[2], false);
+            // userName
             Assert.assertEquals(eventStreamData[3], "dummy");
+            // userStoreDomain
             Assert.assertEquals(eventStreamData[4], "PRIMARY");
+            // tenantDomain
             Assert.assertEquals(eventStreamData[5], "carbon.super");
+            // inboundAuthType
             Assert.assertEquals(eventStreamData[7], "samlsso");
+            // serviceprovider
             Assert.assertEquals(eventStreamData[8], "SAML-SSO-TestApplication");
+            // remembermeEnabled
             Assert.assertEquals(eventStreamData[9], false);
+            // forceAuthEnabled
             Assert.assertEquals(eventStreamData[10], false);
-            Assert.assertEquals(eventStreamData[12], "");
+            // rolesCommaSeperated
+            Assert.assertEquals(eventStreamData[12], "NOT_AVAILABLE");
+            // authenticationStep
             Assert.assertEquals(eventStreamData[13], "1");
 
             thriftServer.resetPreservedEventList();
 
         } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + config, e);
+            Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
         }
     }
 
@@ -514,33 +527,89 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
 
-    public void copyFileContents() {
+    public void changeIdentityXml() {
         log.info("Changing identity.xml file to enable analytics");
 
         String carbonHome = CarbonUtils.getCarbonHome();
 
-        String identityXmlFileLocation = getISResourceLocation()
-                + File.separator + "analytics" + File.separator + "config" + File.separator
-                + "identit_analytics_enabled.xml";
-        notificationMgtProperties = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator +
-                "identity.xml");
+        String analyticsEnabledIdentityXml = getISResourceLocation() + File.separator + "analytics" + File.separator
+                + "config" + File.separator + "identit_analytics_enabled.xml";
+        File defaultIdentityXml = new File(carbonHome + File.separator
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
         try {
             serverConfigurationManager = new ServerConfigurationManager(isServer);
-            File configuredNotificationProperties = new File(identityXmlFileLocation);
-
+            File configuredNotificationProperties = new File(analyticsEnabledIdentityXml);
             serverConfigurationManager = new ServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
-                    notificationMgtProperties, true);
+                    defaultIdentityXml, true);
+            copyAuthenticationDataPublisher();
             serverConfigurationManager.restartForcefully();
+
         } catch (AutomationUtilException e) {
-            e.printStackTrace();
+            log.error("Error while changing configurations in identity.xml");
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            log.error("Error while changing configurations in identity.xml");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error("Error while changing configurations in identity.xml");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while changing configurations in identity.xml");
+        }
+    }
+
+    public void copyAuthenticationDataPublisher() {
+        log.info("Changing AuthenticationDataPublisher.xml file to change default port");
+
+        String carbonHome = CarbonUtils.getCarbonHome();
+        String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
+                + "config" + File.separator + "AuthenticationDataPublisher.xml";
+        File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
+                + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
+                "eventpublishers" + File.separator + "AuthenticationDataPublisher.xml");
+        try {
+
+            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            File configuredPublisherFile = new File(authnDataPublisherWithOffset);
+            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            serverConfigurationManager.applyConfigurationWithoutRestart(configuredPublisherFile,
+                    defaultAuthenticationDataPublisher, true);
+
+        } catch (AutomationUtilException e) {
+            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+        } catch (XPathExpressionException e) {
+            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+        } catch (MalformedURLException e) {
+            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+        } catch (IOException e) {
+            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+        }
+    }
+
+    public void replaceIdentityXml() {
+        log.info("Changing identity.xml file to enable analytics");
+
+        String carbonHome = CarbonUtils.getCarbonHome();
+
+        String defaultIdentityXml = getISResourceLocation() + File.separator + "analytics" + File.separator
+                + "config" + File.separator + "identit_original.xml";
+        File defaultIdentityXmlLocation = new File(carbonHome + File.separator
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
+        try {
+            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            File configuredNotificationProperties = new File(defaultIdentityXml);
+            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
+                    defaultIdentityXmlLocation, true);
+            copyAuthenticationDataPublisher();
+            serverConfigurationManager.restartForcefully();
+
+        } catch (AutomationUtilException e) {
+            log.error("Error while changing configurations in identity.xml to default configurations");
+        } catch (XPathExpressionException e) {
+            log.error("Error while changing configurations in identity.xml to default configurations");
+        } catch (MalformedURLException e) {
+            log.error("Error while changing configurations in identity.xml to default configurations");
+        } catch (IOException e) {
+            log.error("Error while changing configurations in identity.xml to default configurations");
         }
     }
 
