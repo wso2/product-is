@@ -604,7 +604,7 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.feature:${carbon.identity.extension.oauth2.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.feature:${carbon.identity.inbound.auth.oauth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.iwa.feature:${carbon.identity.extension.version}
@@ -1122,7 +1122,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.feature.group</id>
-                                    <version>${carbon.identity.extension.oauth2.version}</version>
+                                    <version>${carbon.identity.inbound.auth.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.iwa.feature.group</id>
@@ -2694,7 +2694,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.feature.group</id>
-                                    <version>${carbon.identity.extension.oauth2.version}</version>
+                                    <version>${carbon.identity.inbound.auth.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.iwa.feature.group</id>
@@ -3124,7 +3124,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.server.feature.group</id>
-                                    <version>${carbon.identity.extension.oauth2.version}</version>
+                                    <version>${carbon.identity.inbound.auth.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.iwa.server.feature.group</id>
