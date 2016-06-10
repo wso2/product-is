@@ -3596,7 +3596,25 @@
                 <artifactId>wsdl4j</artifactId>
                 <version>${wsdl4j.version}</version>
             </dependency>
+<<<<<<< HEAD
 >>>>>>> 56c9e74... fixing commons-codec conflict
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <version>${carbon.analytics-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.core</artifactId>
+                <version>${carbon.analytics-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+                <version>${carbon.analytics-common.version}</version>
+            </dependency>
+>>>>>>> abc3f31... adding analytics tests for 5.2.0
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
@@ -4344,11 +4362,15 @@
 =======
         <carbon.business-process.version>4.4.7</carbon.business-process.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
 =======
         <carbon.analytics-common.version>5.0.12-SNAPSHOT</carbon.analytics-common.version>
 >>>>>>> 42a2bd0... Adding authentication data publisher feature
+=======
+        <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
+>>>>>>> abc3f31... adding analytics tests for 5.2.0
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>

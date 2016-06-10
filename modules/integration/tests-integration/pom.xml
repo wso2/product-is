@@ -517,24 +517,6 @@
             <artifactId>org.wso2.carbon.um.ws.api</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.analytics-common</groupId>
-            <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-            <version>5.0.11</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.analytics-common</groupId>
-            <artifactId>org.wso2.carbon.databridge.core</artifactId>
-            <version>5.0.11</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.analytics-common</groupId>
-            <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
-            <version>5.0.11</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 =======
     <name>Identity Integration Test Module</name>
