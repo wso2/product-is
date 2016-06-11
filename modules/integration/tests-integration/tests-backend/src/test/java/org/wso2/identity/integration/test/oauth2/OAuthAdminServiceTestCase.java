@@ -37,7 +37,7 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         // create a user with capital letters in user name
         userMgtClient.addUser(userName, password, null, "default");
 
-        String[] userList = new String[] {userName};
+        String[] userList = new String[]{userName};
         FlaggedName[] userFlagList = new FlaggedName[userList.length];
 
         for (int i = 0; i < userFlagList.length; i++) {
@@ -82,7 +82,8 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.is", description = "Testing retrieving Oauth2 application state", dependsOnMethods = "testRegisterApplication")
+    @Test(groups = "wso2.is", description = "Testing retrieving Oauth2 application state",
+            dependsOnMethods = "testRegisterApplication")
     public void testGetOauthAppState() throws Exception {
 
         try {
@@ -92,14 +93,15 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.is", description = "Testing updating Oauth2 application state", dependsOnMethods = "testRegisterApplication")
+    @Test(groups = "wso2.is", description = "Testing updating Oauth2 application state",
+            dependsOnMethods = {"testRegisterApplication", "testGetOauthAppState"})
     public void testUpdateOauthAppState() throws Exception {
 
         boolean updated = false;
 
         try {
             updateConsumerAppState(OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED);
-            if(getOauthApplicationState().equalsIgnoreCase(OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED)) {
+            if (OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED.equalsIgnoreCase(getOauthApplicationState())) {
                 updated = true;
             }
         } catch (Exception e) {
@@ -108,7 +110,8 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         Assert.assertTrue(updated);
     }
 
-    @Test(groups = "wso2.is", description = "Testing updating Oauth2 application state", dependsOnMethods = "testRegisterApplication")
+    @Test(groups = "wso2.is", description = "Testing updating Oauth2 application state",
+            dependsOnMethods = {"testRegisterApplication", "testUpdateOauthAppState"})
     public void testUpdateOauthSecretKey() throws Exception {
 
         boolean updated = false;
