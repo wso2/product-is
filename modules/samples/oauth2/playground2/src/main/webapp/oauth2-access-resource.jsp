@@ -58,6 +58,9 @@
                 String result = executePost(resource_url, "token=" + accessTokenIdentifier, accessTokenIdentifier);
                 session.setAttribute("result", result);
                 response.sendRedirect("token-info.jsp");
+            } else {
+                RequestDispatcher view = request.getRequestDispatcher("my-photos.jsp");
+                view.forward(request, response);
             }
         } catch(Exception e) {
 %>
