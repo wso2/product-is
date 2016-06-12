@@ -1163,7 +1163,7 @@
 
     <properties>
         <carbon.identity.version>5.5.0-SNAPSHOT</carbon.identity.version>
-        <carbon.identity.governance.version>1.0.0-SNAPSorg.wso2.carbon.user.mgt.workflowHOT</carbon.identity.governance.version>
+        <carbon.identity.governance.version>1.0.0-SNAPSHOT</carbon.identity.governance.version>
         <carbon.identity.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.account.lock.version>
         <carbon.identity.email.mgt.version>1.0.0-SNAPSHOT</carbon.identity.email.mgt.version>
         <carbon.identity.jar.version>5.5.0-SNAPSHOT</carbon.identity.jar.version>
