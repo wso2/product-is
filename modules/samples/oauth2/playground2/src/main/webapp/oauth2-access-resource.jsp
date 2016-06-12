@@ -28,19 +28,10 @@
     if(application.getInitParameter("setup").equals("IS")){
         OAuth2TokenValidationRequestDTO  oauthReq = new OAuth2TokenValidationRequestDTO();
         OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessToken =  new OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-        OAuth2TokenValidationRequestDTO_TokenValidationContextParam[] contextParams =
-                                                new OAuth2TokenValidationRequestDTO_TokenValidationContextParam[1];
-        OAuth2TokenValidationRequestDTO_TokenValidationContextParam resourceUriParam =
-                                                new OAuth2TokenValidationRequestDTO_TokenValidationContextParam();
-        resourceUriParam.setKey("resource");
-        resourceUriParam.setValue("my-photos.jsp");
-
-        contextParams[0] = resourceUriParam;
 
         accessToken.setTokenType("bearer");
         accessToken.setIdentifier(accessTokenIdentifier);
         oauthReq.setAccessToken(accessToken);
-        oauthReq.setContext(contextParams);
 
         try {
             // Validate the OAuth access token.
@@ -63,9 +54,10 @@
             	String result = executeGet(resource_url, "", accessTokenIdentifier);
             	session.setAttribute("result", result);
                 response.sendRedirect("user-info.jsp");
-            } else {
-                RequestDispatcher view = request.getRequestDispatcher("my-photos.jsp");
-                view.forward(request, response);
+            } else if (resource_url != null && resource_url.contains("introspect")) {
+                String result = executePost(resource_url, "token=" + accessTokenIdentifier, accessTokenIdentifier);
+                session.setAttribute("result", result);
+                response.sendRedirect("token-info.jsp");
             }
         } catch(Exception e) {
 %>

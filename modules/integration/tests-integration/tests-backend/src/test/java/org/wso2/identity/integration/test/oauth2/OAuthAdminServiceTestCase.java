@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceException;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.identity.oauth.xsd.IdentityOAuthAdminException;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -36,7 +37,7 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         // create a user with capital letters in user name
         userMgtClient.addUser(userName, password, null, "default");
 
-        String[] userList = new String[] {userName};
+        String[] userList = new String[]{userName};
         FlaggedName[] userFlagList = new FlaggedName[userList.length];
 
         for (int i = 0; i < userFlagList.length; i++) {
@@ -81,9 +82,51 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
 
     }
 
+    @Test(groups = "wso2.is", description = "Testing retrieving Oauth2 application state",
+            dependsOnMethods = "testRegisterApplication")
+    public void testGetOauthAppState() throws Exception {
+
+        try {
+            getOauthApplicationState();
+        } catch (Exception e) {
+            Assert.assertFalse(false, "Error when retrieving oauth app state");
+        }
+    }
+
+    @Test(groups = "wso2.is", description = "Testing updating Oauth2 application state",
+            dependsOnMethods = {"testRegisterApplication", "testGetOauthAppState"})
+    public void testUpdateOauthAppState() throws Exception {
+
+        boolean updated = false;
+
+        try {
+            updateConsumerAppState(OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED);
+            if (OAuth2Constant.OAUTH_APPLICATION_STATE_REVOKED.equalsIgnoreCase(getOauthApplicationState())) {
+                updated = true;
+            }
+        } catch (Exception e) {
+            Assert.assertFalse(false, "Error when retrieving oauth app state");
+        }
+        Assert.assertTrue(updated);
+    }
+
+    @Test(groups = "wso2.is", description = "Testing updating Oauth2 application state",
+            dependsOnMethods = {"testRegisterApplication", "testUpdateOauthAppState"})
+    public void testUpdateOauthSecretKey() throws Exception {
+
+        boolean updated = false;
+
+        try {
+            updateOauthSecretKey();
+            updated = true;
+        } catch (Exception e) {
+            Assert.assertFalse(false, "Error when retrieving oauth app state");
+        }
+        Assert.assertTrue(updated);
+    }
+
     private void createOauthApp() throws RemoteException, OAuthAdminServiceException {
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
         appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
                 "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
@@ -94,5 +137,17 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
 
     private void removeOAuthApplicationData() throws Exception {
         adminClient.removeOAuthApplicationData(consumerKey);
+    }
+
+    private String getOauthApplicationState() throws Exception {
+        return adminClient.getOauthApplicationState(applicationName);
+    }
+
+    private void updateConsumerAppState(String newState) throws Exception {
+        adminClient.updateConsumerAppState(applicationName, newState);
+    }
+
+    private void updateOauthSecretKey() throws Exception {
+        adminClient.updateOauthSecretKey(applicationName);
     }
 }

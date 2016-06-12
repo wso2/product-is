@@ -23,6 +23,7 @@ import org.apache.axis2.AxisFault;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceException;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
+import org.wso2.carbon.identity.oauth.stub.types.IdentityOAuthAdminException;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class OauthAdminClient {
@@ -58,5 +59,23 @@ public class OauthAdminClient {
     
     public void removeOAuthApplicationData(String consumerKey) throws RemoteException, OAuthAdminServiceException{
     	oauthAdminStub.removeOAuthApplicationData(consumerKey);
+    }
+
+    public String getOauthApplicationState(String appName)
+            throws Exception {
+        OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
+        return oauthAdminStub.getOauthApplicationState(authConsumerAppDTO.getOauthConsumerKey());
+    }
+
+    public void updateConsumerAppState(String appName, String newState)
+            throws Exception {
+        OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
+        oauthAdminStub.updateConsumerAppState(authConsumerAppDTO.getOauthConsumerKey(), newState);
+    }
+
+    public void updateOauthSecretKey(String appName)
+            throws Exception {
+        OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
+        oauthAdminStub.updateOauthSecretKey(authConsumerAppDTO.getOauthConsumerKey());
     }
 }
