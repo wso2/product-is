@@ -875,7 +875,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.openid.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -1166,10 +1166,9 @@
         <carbon.identity.governance.version>1.0.0-SNAPSHOT</carbon.identity.governance.version>
         <carbon.identity.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.account.lock.version>
         <carbon.identity.email.mgt.version>1.0.0-SNAPSHOT</carbon.identity.email.mgt.version>
-        <carbon.identity.jar.version>5.5.0-SNAPSHOT</carbon.identity.jar.version>
+        <carbon.identity.inbound.auth.openid.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.openid.version>
         <carbon.identity.extension.version>5.1.0</carbon.identity.extension.version>
         <org.wso2.carbon.user.mgt.workflow.version>5.1.1-SNAPSHOT</org.wso2.carbon.user.mgt.workflow.version>
-        <org.wso2.carbon.identity.provider.version>5.1.1-SNAPSHOT</org.wso2.carbon.identity.provider.version>
         <org.wso2.carbon.identity.sso.saml.version>5.1.1-SNAPSHOT</org.wso2.carbon.identity.sso.saml.version>
         <org.wso2.carbon.identity.sts.mgt.version>5.1.1-SNAPSHOT</org.wso2.carbon.identity.sts.mgt.version>
         <org.wso2.carbon.identity.sts.passive.version>5.1.1-SNAPSHOT</org.wso2.carbon.identity.sts.passive.version>
