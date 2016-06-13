@@ -1162,20 +1162,21 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>5.5.0-SNAPSHOT</carbon.identity.version>
-        <carbon.identity.governance.version>1.0.0-SNAPSHOT</carbon.identity.governance.version>
-        <carbon.identity.event.handler.account.lock.version>1.0.0-SNAPSHOT</carbon.identity.event.handler.account.lock.version>
-        <carbon.identity.event.handler.email.version>1.0.0-SNAPSHOT</carbon.identity.event.handler.email.version>
-        <carbon.identity.inbound.auth.openid.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.openid.version>
-        <carbon.identity.user.workflow.version>5.1.1-SNAPSHOT</carbon.identity.user.workflow.version>
-        <carbon.identity.inbound.auth.saml.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.saml.version>
-        <carbon.identity.inbound.auth.sts.version>5.1.1-SNAPSHOT</carbon.identity.inbound.auth.sts.version>
-        <carbon.identity.outbound.auth.requestpath.basicauth.version>5.1.1-SNAPSHOT
+        <carbon.identity.version>5.5.0-m2</carbon.identity.version>
+        <carbon.identity.governance.version>1.0.0-m2</carbon.identity.governance.version>
+        <carbon.identity.event.handler.account.lock.version>
+            1.0.0-m2</carbon.identity.event.handler.account.lock.version>
+        <carbon.identity.event.handler.email.version>1.0.0-m2</carbon.identity.event.handler.email.version>
+        <carbon.identity.inbound.auth.openid.version>5.1.1-m2</carbon.identity.inbound.auth.openid.version>
+        <carbon.identity.user.workflow.version>5.1.1-m2</carbon.identity.user.workflow.version>
+        <carbon.identity.inbound.auth.saml.version>5.1.1-m1</carbon.identity.inbound.auth.saml.version>
+        <carbon.identity.inbound.auth.sts.version>5.1.1-m2</carbon.identity.inbound.auth.sts.version>
+        <carbon.identity.outbound.auth.requestpath.basicauth.version>5.1.1-m1
         </carbon.identity.outbound.auth.requestpath.basicauth.version>
-        <carbon.identity.local.auth.iwa.version>5.2.0-SNAPSHOT</carbon.identity.local.auth.iwa.version>
-        <carbon.identity.inbound.auth.oauth.version>5.2.0-SNAPSHOT</carbon.identity.inbound.auth.oauth.version>
+        <carbon.identity.local.auth.iwa.version>5.2.0-m1</carbon.identity.local.auth.iwa.version>
+        <carbon.identity.inbound.auth.oauth.version>5.2.0-m2</carbon.identity.inbound.auth.oauth.version>
         <carbon.identity.extension.version>5.1.0</carbon.identity.extension.version>
-        <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
+        <product.identity.version>${project.version}</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
