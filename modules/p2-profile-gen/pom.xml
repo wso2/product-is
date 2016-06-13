@@ -145,9 +145,9 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.security.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.sts.feature:${org.wso2.carbon.sts.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.sts.feature:${carbon.identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.mex.server.feature:${org.wso2.carbon.mex.version}
+                                <featureArtifactDef>org.wso2.carbon.identity:org.wso2.carbon.mex.server.feature:${carbon.identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
 
                                 <!-- registry related features -->
@@ -190,13 +190,13 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.governance.feature:${carbon.identity.governance.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.account.lock.feature:${carbon.identity.account.lock.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.account.lock.feature:${carbon.identity.event.handler.account.lock.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${carbon.identity.email.mgt.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${carbon.identity.event.handler.email.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.event.handler.email.server.feature:${carbon.identity.email.mgt.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.event.handler.email.server.feature:${carbon.identity.event.handler.email.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.version}
@@ -211,7 +211,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.claim.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sso.saml.feature:${org.wso2.carbon.identity.sso.saml.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sso.saml.feature:${carbon.identity.inbound.auth.saml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.mgt.feature:${carbon.identity.version}
@@ -222,7 +222,7 @@
                                 </featureArtifactDef>
                                 <!-- Authenticators -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature:${org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature:${carbon.identity.outbound.auth.requestpath.basicauth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature:${carbon.identity.extension.version}
@@ -292,10 +292,10 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sts.passive.feature:${org.wso2.carbon.identity.sts.passive.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sts.passive.feature:${carbon.identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sts.mgt.feature:${org.wso2.carbon.identity.sts.mgt.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.sts.mgt.feature:${carbon.identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.ldap.server.feature:${carbon.identity.extension.version}
@@ -389,7 +389,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.workflow.feature:${org.wso2.carbon.user.mgt.workflow.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.workflow.feature:${carbon.identity.user.workflow.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.workflow.impl.feature:${carbon.identity.extension.version}
@@ -545,7 +545,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.sts.feature.group</id>
-                                    <version>${org.wso2.carbon.sts.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
@@ -585,7 +585,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.account.lock.feature.group</id>
-                                    <version>${carbon.identity.account.lock.version}</version>
+                                    <version>${carbon.identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature.group</id>
@@ -593,11 +593,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.email.mgt.feature.group</id>
-                                    <version>${carbon.identity.email.mgt.version}</version>
+                                    <version>${carbon.identity.event.handler.email.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
-                                    <version>${carbon.identity.email.mgt.version}</version>
+                                    <version>${carbon.identity.event.handler.email.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
@@ -613,7 +613,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sso.saml.version}</version>
+                                    <version>${carbon.identity.inbound.auth.saml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.mgt.feature.group</id>
@@ -645,11 +645,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sts.passive.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.mgt.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sts.mgt.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
@@ -669,7 +669,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.mex.server.feature.group</id>
-                                    <version>${org.wso2.carbon.mex.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
 
                                 <!-- Features required for Cloud Identity -->
@@ -718,7 +718,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
-                                    <version>${org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.version}</version>
+                                    <version>${carbon.identity.outbound.auth.requestpath.basicauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -849,7 +849,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
-                                    <version>${org.wso2.carbon.user.mgt.workflow.version}</version>
+                                    <version>${carbon.identity.user.workflow.version}</version>
                                 </feature>
 
                                 <!--BPEL and HumanTask features -->
@@ -1044,7 +1044,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.sts.feature.group</id>
-                                    <version>${org.wso2.carbon.sts.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
@@ -1088,15 +1088,15 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.account.lock.feature.group</id>
-                                    <version>${carbon.identity.account.lock.version}</version>
+                                    <version>${carbon.identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.email.mgt.feature.group</id>
-                                    <version>${carbon.identity.email.mgt.version}</version>
+                                    <version>${carbon.identity.event.handler.email.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
-                                    <version>${carbon.identity.email.mgt.version}</version>
+                                    <version>${carbon.identity.event.handler.email.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
@@ -1112,7 +1112,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sso.saml.version}</version>
+                                    <version>${carbon.identity.inbound.auth.saml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.mgt.feature.group</id>
@@ -1144,11 +1144,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sts.passive.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.mgt.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sts.mgt.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
@@ -1168,7 +1168,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.mex.server.feature.group</id>
-                                    <version>${org.wso2.carbon.mex.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
 
                                 <!-- Features required for Cloud Identity -->
@@ -1217,7 +1217,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
-                                    <version>${org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.version}</version>
+                                    <version>${carbon.identity.outbound.auth.requestpath.basicauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -1351,7 +1351,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
-                                    <version>${org.wso2.carbon.user.mgt.workflow.version}</version>
+                                    <version>${carbon.identity.user.workflow.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.metrics.feature.group</id>
@@ -1490,7 +1490,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.sts.server.feature.group</id>
-                                    <version>${org.wso2.carbon.sts.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.server.feature.group</id>
@@ -1530,7 +1530,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.account.lock.feature.group</id>
-                                    <version>${carbon.identity.account.lock.version}</version>
+                                    <version>${carbon.identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.server.feature.group</id>
@@ -1546,7 +1546,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sso.saml.version}</version>
+                                    <version>${carbon.identity.inbound.auth.saml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.mgt.server.feature.group</id>
@@ -1574,11 +1574,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.passive.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sts.passive.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.mgt.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.sts.mgt.version}</version>
+                                    <version>${carbon.identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
@@ -1639,7 +1639,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
-                                    <version>${org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.version}</version>
+                                    <version>${carbon.identity.outbound.auth.requestpath.basicauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -1771,7 +1771,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
-                                    <version>${org.wso2.carbon.user.mgt.workflow.version}</version>
+                                    <version>${carbon.identity.user.workflow.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.metrics.server.feature.group</id>
