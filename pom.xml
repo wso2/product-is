@@ -1176,7 +1176,7 @@
         <carbon.identity.local.auth.iwa.version>5.2.0-m1</carbon.identity.local.auth.iwa.version>
         <carbon.identity.inbound.auth.oauth.version>5.2.0-m2</carbon.identity.inbound.auth.oauth.version>
         <carbon.identity.extension.version>5.1.0</carbon.identity.extension.version>
-        <product.identity.version>${project.version}</product.identity.version>
+        <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
