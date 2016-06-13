@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.3.0-SNAPSHOT</version>
+    <version>5.3.0-m2</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1176,7 +1176,7 @@
         <carbon.identity.local.auth.iwa.version>5.2.0-m1</carbon.identity.local.auth.iwa.version>
         <carbon.identity.inbound.auth.oauth.version>5.2.0-m2</carbon.identity.inbound.auth.oauth.version>
         <carbon.identity.extension.version>5.1.0</carbon.identity.extension.version>
-        <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
+        <product.identity.version>5.3.0-m2</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
@@ -1334,7 +1334,7 @@
         <url>https://github.com/wso2/product-is.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-is.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-is.git</connection>
-        <tag>HEAD</tag>
+        <tag>v5.3.0-m2</tag>
     </scm>
 
 
