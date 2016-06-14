@@ -576,7 +576,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.openid.server.feature:${carbon.identity.extension.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.identity.local.auth.iwa.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.identity.extension.version}
@@ -1508,7 +1508,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.iwa.server.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.local.auth.iwa.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
@@ -2841,7 +2841,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.iwa.server.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.local.auth.iwa.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
@@ -3264,7 +3264,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.iwa.server.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.local.auth.iwa.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
