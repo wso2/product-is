@@ -205,6 +205,9 @@
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;/Authenticator--&gt;" value="&lt;/Authenticator&gt;" />
 
+                                <!-- turn off Registry Indexing -->
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;startIndexing&gt;true&lt;/startIndexing&gt;" value="&lt;startIndexing&gt;false&lt;/startIndexing&gt;"/>
+
                                 <unzip dest="${tempdir}/shindig">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
                                         <include name="shindig.war" />
