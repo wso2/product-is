@@ -32,13 +32,17 @@ keyStoreProps = {
     IDP_ALIAS: samlConfig['SAML.IdPCertAlias']
 },
 sso_sessions = application.get('sso_sessions');
+sso_session_objects = application.get('sso_session_objects');
 
 if (!sso_sessions) {
     application.put('sso_sessions', {});
     sso_sessions = application.get('sso_sessions');
 }
 
-
+if (!sso_session_objects) {
+    application.put('sso_session_objects', {});
+    sso_session_objects = application.get('sso_session_objects');
+}
 
 
 if (samlResponse != null) {
@@ -58,6 +62,7 @@ if (samlResponse != null) {
                     //session.put("Loged", "true");
 
                     sso_sessions[sessionObj.sessionId] = sessionObj.sessionIndex;
+                    sso_session_objects[sessionObj.sessionIndex] = session;
                 	
                 	var success = loginClient.login(samlResponse);
 					if(success === "true")
@@ -121,5 +126,11 @@ if (samlResponse != null) {
     log.debug('store Session Id :::' + jSessionId);
 
     session.invalidate();
+
+    var sessionObject = application.get('sso_session_objects')[index];
+    if (sessionObject) {
+        sessionObject.invalidate();
+    }
+    delete application.get('sso_session_objects')[index];
 }
 %>
