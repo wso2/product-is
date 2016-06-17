@@ -39,7 +39,7 @@ if (!sso_sessions) {
     sso_sessions = application.get('sso_sessions');
 }
 
-if(!sso_session_objects) {
+if (!sso_session_objects) {
     application.put('sso_session_objects', {});
     sso_session_objects = application.get('sso_session_objects');
 }
