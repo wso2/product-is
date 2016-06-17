@@ -128,7 +128,7 @@ if (samlResponse != null) {
     session.invalidate();
 
     var sessionObject = application.get('sso_session_objects')[index];
-    if(sessionObject) {
+    if (sessionObject) {
         sessionObject.invalidate();
     }
     delete application.get('sso_session_objects')[index];
