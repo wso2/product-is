@@ -376,7 +376,7 @@
                        orderId="50" enable="false"/>
         <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener" name="org.wso2.carbon.identity.scim.common.listener.SCIMUserOperationListener"
                        orderId="90" enable="true"/>
-        <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+        <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.impl.DASAuthnDataPublisherImpl"
                        orderId="11" enable="false"/>
     </EventListeners>
