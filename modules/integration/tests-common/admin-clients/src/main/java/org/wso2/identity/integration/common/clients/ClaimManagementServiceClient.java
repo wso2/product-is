@@ -21,11 +21,14 @@ package org.wso2.identity.integration.common.clients;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceException;
-import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimDialectDTO;
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimMappingDTO;
+import org.wso2.carbon.identity.claim.mgt.stub.IdentityClaimManagementServiceClaimManagementException;
+import org.wso2.carbon.identity.claim.mgt.stub.IdentityClaimManagementServiceException;
+import org.wso2.carbon.identity.claim.mgt.stub.IdentityClaimManagementServiceIdentityException;
+import org.wso2.carbon.identity.claim.mgt.stub.IdentityClaimManagementServiceStub;
+import org.wso2.carbon.identity.claim.mgt.stub.IdentityClaimManagementServiceUserStoreException;
+import org.wso2.carbon.identity.claim.mgt.stub.dto.ClaimDTO;
+import org.wso2.carbon.identity.claim.mgt.stub.dto.ClaimDialectDTO;
+import org.wso2.carbon.identity.claim.mgt.stub.dto.ClaimMappingDTO;
 
 
 import java.rmi.RemoteException;
@@ -34,25 +37,27 @@ public class ClaimManagementServiceClient {
 
     private static Log log = LogFactory.getLog(ClaimManagementServiceClient.class);
 
-    private final String serviceName = "ClaimManagementService";
-    private ClaimManagementServiceStub claimManagementServiceStub;
+    private final String serviceName = "IdentityClaimManagementService";
+    private IdentityClaimManagementServiceStub claimManagementServiceStub;
     private String endPoint;
 
     public ClaimManagementServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        claimManagementServiceStub = new ClaimManagementServiceStub(endPoint);
+        claimManagementServiceStub = new IdentityClaimManagementServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, claimManagementServiceStub);
     }
 
     public ClaimManagementServiceClient(String backEndUrl, String userName, String password)
             throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        claimManagementServiceStub = new ClaimManagementServiceStub(endPoint);
+        claimManagementServiceStub = new IdentityClaimManagementServiceStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, claimManagementServiceStub);
     }
 
     public void addNewClaimMapping(String dialectURI, String claimUri, String description, String mappedAttribute)
-            throws ClaimManagementServiceException, RemoteException {
+            throws IdentityClaimManagementServiceException, RemoteException,
+            IdentityClaimManagementServiceIdentityException, IdentityClaimManagementServiceClaimManagementException,
+            IdentityClaimManagementServiceUserStoreException {
         ClaimMappingDTO claimMappingDTO = new ClaimMappingDTO();
 
         ClaimDTO claimDTO = new ClaimDTO();
@@ -113,7 +118,7 @@ public class ClaimManagementServiceClient {
     public void updateClaimMapping(ClaimMappingDTO claimMappingDTO)
             throws RemoteException, Exception {
         try {
-            claimManagementServiceStub.upateClaimMapping(claimMappingDTO);
+            claimManagementServiceStub.updateClaimMapping(claimMappingDTO);
         } catch (RemoteException e) {
             throw new RemoteException("Unable to update claim Mapping", e);
         }

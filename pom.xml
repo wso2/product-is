@@ -868,7 +868,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
-                <artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
+                <artifactId>org.wso2.carbon.identity.claim.mgt.stub</artifactId>
                 <version>${carbon.identity.version}</version>
                 <scope>compile</scope>
             </dependency>

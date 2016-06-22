@@ -1,4 +1,4 @@
-org.wso2.carbon.claim.mgt_
+org.wso2.carbon.identity.claim.mgt_
 org.wso2.carbon.identity.application.authentication.framework_
 org.wso2.carbon.identity.application.authenticator.basicauth_
 org.wso2.carbon.identity.authentication_

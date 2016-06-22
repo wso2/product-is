@@ -22,15 +22,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimAttributeDTO;
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimDialectDTO;
-import org.wso2.carbon.claim.mgt.stub.dto.ClaimMappingDTO;
+import org.wso2.carbon.identity.claim.mgt.stub.dto.ClaimDTO;
+import org.wso2.carbon.identity.claim.mgt.stub.dto.ClaimDialectDTO;
+import org.wso2.carbon.identity.claim.mgt.stub.dto.ClaimMappingDTO;
 import org.wso2.identity.integration.common.clients.ClaimManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 
@@ -44,7 +40,8 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 	private final static String DESCRIPTION_NEW = "New Description";
 	private final static String DIALECT = "http://wso2.com/testing";
 	private final static String REGEX = "TestRegx";
-	private final static String ATTRIBUTE = "attr1;attr2";
+	private final static String ATTRIBUTE = "http://wso2.org/claims/country";
+    private final static String NEW_ATTRIBUTE = "http://wso2.org/claims/emailaddress";
 	private final static String STORE = "store";
 
 	private final static int DISPLAY_ORDER = 0;
@@ -65,7 +62,7 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 	}
 
 	@Test(alwaysRun = true, description = "Add new claim dialect")
-	public void testAddNewCliamDialect() {
+	public void testAddNewClaimDialect() {
 		ClaimMappingDTO mapping = new ClaimMappingDTO();
 		ClaimDTO claim = new ClaimDTO();
 
@@ -82,30 +79,7 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 		mapping.setClaim(claim);
 
 		if (ATTRIBUTE != null) {
-			String[] attributes = ATTRIBUTE.split(";");
-			List<ClaimAttributeDTO> attrList = new ArrayList<ClaimAttributeDTO>();
-
-			for (int i = 0; i < attributes.length; i++) {
-				int index = 0;
-				if ((index = attributes[i].indexOf("/")) > 1) {
-					String domain = attributes[i].substring(0, index);
-					String attrName = attributes[i].substring(index + 1);
-					if (domain != null) {
-						ClaimAttributeDTO attr = new ClaimAttributeDTO();
-						attr.setAttributeName(attrName);
-						attr.setDomainName(domain);
-						attrList.add(attr);
-					}
-				} else {
-					ClaimAttributeDTO attr = new ClaimAttributeDTO();
-					attr.setAttributeName(attributes[i]);
-					attr.setDomainName(null);
-					attrList.add(attr);
-				}
-			}
-			if (attrList.size() > 0) {
-				mapping.setMappedAttributes(attrList.toArray(new ClaimAttributeDTO[attrList.size()]));
-			}
+			mapping.setMappedAttribute(ATTRIBUTE);
 		}
 		try {
 			ClaimDialectDTO dialectDTO = new ClaimDialectDTO();
@@ -122,8 +96,8 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 		}
 	}
 
-	@Test(alwaysRun = true, description = "Add new claim mapping dialect", dependsOnMethods = "testAddNewCliamDialect")
-	public void testAddNewCliamMapping() {
+	@Test(alwaysRun = true, description = "Add new claim mapping dialect", dependsOnMethods = "testAddNewClaimDialect")
+	public void testAddNewClaimMapping() {
 		ClaimMappingDTO mapping = new ClaimMappingDTO();
 		ClaimDTO claim = new ClaimDTO();
 
@@ -139,51 +113,29 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 
 		mapping.setClaim(claim);
 
-		if (ATTRIBUTE != null) {
-			String[] attributes = ATTRIBUTE.split(";");
-			List<ClaimAttributeDTO> attrList = new ArrayList<ClaimAttributeDTO>();
-
-			for (int i = 0; i < attributes.length; i++) {
-				int index = 0;
-				if ((index = attributes[i].indexOf("/")) > 1) {
-					String domain = attributes[i].substring(0, index);
-					String attrName = attributes[i].substring(index + 1);
-					if (domain != null) {
-						ClaimAttributeDTO attr = new ClaimAttributeDTO();
-						attr.setAttributeName(attrName);
-						attr.setDomainName(domain);
-						attrList.add(attr);
-					}
-				} else {
-					ClaimAttributeDTO attr = new ClaimAttributeDTO();
-					attr.setAttributeName(attributes[i]);
-					attr.setDomainName(null);
-					attrList.add(attr);
-				}
-			}
-			if (attrList.size() > 0) {
-				mapping.setMappedAttributes(attrList.toArray(new ClaimAttributeDTO[attrList.size()]));
-			}
+		if (NEW_ATTRIBUTE != null) {
+            mapping.setMappedAttribute(NEW_ATTRIBUTE);
 		}
 		try {
 			adminClient.addNewClaimMapping(mapping);
 			ClaimDialectDTO dialectDTO = adminClient.getClaimMappingByDialect(DIALECT);
 			Assert.assertNotNull(dialectDTO, "Claim dialect adding failed.");
 
-			String dialectURI = null;
+			String mappedAttribute = null;
 			for (ClaimMappingDTO mappingDTO : dialectDTO.getClaimMappings()) {
 				if (CLAIM_URI_NEW.equals(mappingDTO.getClaim().getClaimUri())) {
-					dialectURI = mappingDTO.getClaim().getDialectURI();
+					mappedAttribute = mappingDTO.getMappedAttribute();
+                    break;
 				}
 			}
-			Assert.assertNotNull(dialectURI, "Error occured while adding claim mapping.");
+			Assert.assertNotNull(mappedAttribute, "Error occured while adding claim mapping.");
 		} catch (Exception e) {
 			Assert.fail("Error while trying to add new claim dialect", e);
 		}
 	}
 
-	@Test(alwaysRun = true, description = "Update claim mapping", dependsOnMethods = "testAddNewCliamMapping")
-	public void testUpdateCliamMapping() {
+	@Test(alwaysRun = true, description = "Update claim mapping", dependsOnMethods = "testAddNewClaimMapping")
+	public void testUpdateClaimMapping() {
 		ClaimMappingDTO mapping = new ClaimMappingDTO();
 		ClaimDTO claim = new ClaimDTO();
 		claim.setClaimUri(CLAIM_URI_NEW);
@@ -199,28 +151,7 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 		mapping.setClaim(claim);
 
 		if (ATTRIBUTE != null) {
-			String[] attributes = ATTRIBUTE.split(";");
-			List<ClaimAttributeDTO> attrList = new ArrayList<ClaimAttributeDTO>();
-
-			for (int i = 0; i < attributes.length; i++) {
-				int index = 0;
-				if ((index = attributes[i].indexOf("/")) > 1 &&
-				    attributes[i].indexOf("/") == attributes[i].lastIndexOf("/")) {
-					String domain = attributes[i].substring(0, index);
-					String attrName = attributes[i].substring(index + 1);
-
-					ClaimAttributeDTO attr = new ClaimAttributeDTO();
-					attr.setAttributeName(attrName);
-					attr.setDomainName(domain);
-					attrList.add(attr);
-				} else {
-
-					mapping.setMappedAttribute(attributes[i]);
-				}
-			}
-			if (attrList.size() > 0) {
-				mapping.setMappedAttributes(attrList.toArray(new ClaimAttributeDTO[attrList.size()]));
-			}
+            mapping.setMappedAttribute(NEW_ATTRIBUTE);
 		}
 		try {
 			adminClient.updateClaimMapping(mapping);
@@ -233,6 +164,8 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 					                    "Claim mapping update failed.");
 					Assert.assertEquals(DISPLAY_NAME_NEW, mappingDTO.getClaim().getDisplayTag(),
 					                    "Claim mapping update failed.");
+                    Assert.assertEquals(NEW_ATTRIBUTE, mappingDTO.getMappedAttribute(), "Claim mapping update failed" +
+                            ".");
 					break;
 				}
 			}
@@ -241,8 +174,8 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 		}
 	}
 
-	@Test(alwaysRun = true, description = "Remove claim mapping", dependsOnMethods = "testUpdateCliamMapping")
-	public void testRemoveCliamMapping() {
+	@Test(alwaysRun = true, description = "Remove claim mapping", dependsOnMethods = "testUpdateClaimMapping")
+	public void testRemoveClaimMapping() {
 		try {
 			adminClient.removeClaimMapping(DIALECT, CLAIM_URI);
 			ClaimDialectDTO dialectDTO = adminClient.getClaimMappingByDialect(DIALECT);
@@ -259,8 +192,8 @@ public class ClaimManagementServiceTestCase extends ISIntegrationTest {
 		}
 	}
 
-	@Test(alwaysRun = true, description = "Remove claim dialect", dependsOnMethods = "testRemoveCliamMapping")
-	public void testRemoveCliamDialect() {
+	@Test(alwaysRun = true, description = "Remove claim dialect", dependsOnMethods = "testRemoveClaimMapping")
+	public void testRemoveClaimDialect() {
 		try {
 			adminClient.removeClaimDialect(DIALECT);
 			ClaimDialectDTO dialectDTO = adminClient.getClaimMappingByDialect(DIALECT);
