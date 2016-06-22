@@ -23,9 +23,9 @@ function edit(){
         log.debug(setIDs);
 
         var req = <ser:setUserChallengeAnswers xmlns:ser="http://services.recovery.identity.carbon.wso2.org">
-                               <ser:fullyQualifiedUserName></ser:fullyQualifiedUserName>
+                               <ser:tenantAwareUserName></ser:tenantAwareUserName>
                             </ser:setUserChallengeAnswers>;
-        req.*::fullyQualifiedUserName.setChildren(tenantAwareUserName);
+        req.*::tenantAwareUserName.setChildren(tenantAwareUserName);
 
         for(var i = 0; i < setIDs.length; i++){
             var count = setIDs[i];
@@ -58,8 +58,7 @@ function edit(){
 
             }
         }
-        log.debug("Sending challenge question answer response to backend.")
-        log.debug(req);
+        log.info("Sending challenge question answer response to backend.")
         identityClient.setUserChallengeAnswers(req);
        // response.sendRedirect("../../account_recovery.jag?s=1&sMsg=updated_acc_rec_q");
     }
