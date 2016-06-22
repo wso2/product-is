@@ -4,11 +4,11 @@ include("../util/constants.jag");
 
 
 var getChallengeQuestionsForUser = "<ser:getChallengeQuestionsForUser xmlns:ser=\"http://services.recovery.identity.carbon.wso2.org\">\n" +
-        "<ser:fullyQualifiedUserName>{0}</ser:fullyQualifiedUserName>\n" +
+        "<ser:tenantAwareUserName>{0}</ser:tenantAwareUserName>\n" +
         "</ser:getChallengeQuestionsForUser>\n";
 
 var getChallengeAnswersOfUser = "<ser:getUserChallengeAnswers xmlns:ser=\"http://services.recovery.identity.carbon.wso2.org\">\n" +
-        "<ser:userName>{0}</ser:userName>\n" +
+        "<ser:tenantAwareUserName>{0}</ser:tenantAwareUserName>\n" +
         "</ser:getUserChallengeAnswers>\n";
 
 
