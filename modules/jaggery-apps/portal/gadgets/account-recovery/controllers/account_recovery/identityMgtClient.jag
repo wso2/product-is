@@ -10,17 +10,19 @@ serverUrl = serverUrl + "/UserIdentityManagementAdminService";
 var ws = require('ws');
 var webService = new ws.WSRequest();
 
-function setChallengeQuestionsOfUser(payload){
-    callWSInOnly(webService, serverUrl, "urn:setChallengeQuestionsOfUser", payload);
+// sending challenge question answers to the backend
+function setUserChallengeAnswers(payload){
+    callWSInOnly(webService, serverUrl, "urn:setUserChallengeAnswers", payload);
 }
 
-function getAllRecoveryQuestions(){
-    return callWSReturnJSON(webService, serverUrl, "urn:getAllChallengeQuestions", null);
+// get answered challenge questions from the backend
+function getUserChallengeAnswers(userName){
+    return callWSReturnJSON(webService, serverUrl, "urn:getUserChallengeAnswers", new Array(userName));
 }
 
-
-function getUserChallengeQuestions(userName){
-    return callWSReturnJSON(webService, serverUrl, "urn:getChallengeQuestionsOfUser", new Array(userName));
+// get challenge questions for a user based on his tenant domain and locale
+function getChallengeQuestionsForUser(userName) {
+    return callWSReturnJSON(webService, serverUrl, "urn:getChallengeQuestionsForUser", new Array(userName));
 }
 
 
