@@ -154,9 +154,13 @@
         var body = "    <div id=\"questionSets\" class=\"col-lg-12 content-section\">\n";
        for(var i=0;i<sorted.length;i++){
           var questionSet = json[sorted[i]];
+          var questionSetId = sorted[i];
+          var locale = questionSet[0].locale; // locale within a questionSet are same.
           var setId = sorted[i].slice(-1);
           body = body + "<fieldset>\n" +
-               "                <input type=\"hidden\" name=\"challangedId_"+setId+"\" value=\"http://wso2.org/claims/challengeQuestion"+setId+"\"/>\n" +
+               "                <input type=\"hidden\" name=\"qid[]\" value=\""+setId+"\"/>\n" +
+               "                <input type=\"hidden\" name=\"challengeId_"+setId+"\" value=\""+questionSetId+"\"/>\n" +
+               "                <input type=\"hidden\" name=\"locale_"+setId+"\" value=\""+locale+"\"/>\n" +
                "                <legend>Challenge Question Set "+setId+"</legend>\n" +
                "                <div class=\"control-group\">\n" +
                "                    <label class=\"control-label\" for=\"q"+setId+"\">Challenge Question <span class=\"required\">*</span></label>\n" +
