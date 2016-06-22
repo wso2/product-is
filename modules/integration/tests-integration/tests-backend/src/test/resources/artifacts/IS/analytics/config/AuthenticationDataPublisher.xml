@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <eventPublisher name="AuthenticationDataPublisher" statistics="disable"
   trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
-  <from streamName="authentication-analytics-stream" version="1.0.0"/>
+  <from streamName="org.wso2.is.analytics.stream.OverallAuthentication" version="1.0.0"/>
   <mapping customMapping="disable" type="wso2event"/>
   <to eventAdapterType="wso2event">
     <property name="username">admin</property>
