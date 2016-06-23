@@ -32,12 +32,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.ss.formula.functions.Even;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.FrameworkConstants;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
@@ -85,6 +87,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String profileName = "default";
+    private static final String sessionStreamId = "org.wso2.is.analytics.stream.OverallSession:1.0.0";
+    private static final String authenticationStreamId = "org.wso2.is.analytics.stream.OverallAuthentication:1.0.0";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -334,14 +338,30 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                     .SAML_RESPONSE_PARAM, samlResponse);
             Thread.sleep(2000);
 
-            Assert.assertEquals(thriftServer.getPreservedEventList().size(), 2);
+            Assert.assertEquals(thriftServer.getPreservedEventList().size(), 3);
 
-            Event event = (Event) thriftServer.getPreservedEventList().get(0);
-            Object[] eventStreamData = event.getPayloadData();
-            if ((Boolean) eventStreamData[2]) {
-                event = (Event) thriftServer.getPreservedEventList().get(1);
+            Event sessionEvent = null;
+            Event authStepEvent = null;
+            Event overallAuthEvent = null;
+
+            for(Event event : thriftServer.getPreservedEventList()) {
+                String streamId = event.getStreamId();
+                if (sessionStreamId.equalsIgnoreCase(streamId)){
+                    sessionEvent = event;
+                }
+                if(authenticationStreamId.equalsIgnoreCase(streamId)){
+                    Object[] eventStreamData = event.getPayloadData();
+                    if ((Boolean) eventStreamData[2]) {
+                        overallAuthEvent = event;
+                    } else if((Boolean) eventStreamData[15])  {
+                        authStepEvent = event;
+                    }
+                }
             }
-            eventStreamData = event.getPayloadData();
+
+            Object[] eventStreamData = overallAuthEvent.getPayloadData();
+
+            eventStreamData = authStepEvent.getPayloadData();
             // authenticationSuccess
             Assert.assertEquals(eventStreamData[2], false);
             // userName
@@ -364,11 +384,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[13], "1");
             // isFirstLogin
             Assert.assertEquals(eventStreamData[17], true);
-
-            thriftServer.resetPreservedEventList();
-
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
+        } finally {
+            thriftServer.resetPreservedEventList();
         }
     }
 
@@ -425,11 +444,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[12], "NOT_AVAILABLE");
             // authenticationStep
             Assert.assertEquals(eventStreamData[13], "1");
-
-            thriftServer.resetPreservedEventList();
-
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
+        } finally {
+            thriftServer.resetPreservedEventList();
         }
     }
 
@@ -565,13 +583,21 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
                 "eventpublishers" + File.separator + "AuthenticationDataPublisher.xml");
+
+        String sessionDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
+                + "config" + File.separator + "SessionDataPublisher.xml";
+        File defaultSessionDataPublisher = new File(carbonHome + File.separator
+                + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
+                "eventpublishers" + File.separator + "SessionDataPublisher.xml");
         try {
 
+            File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
+            File configuredSessionPublisherFile = new File(sessionDataPublisherWithOffset);
             serverConfigurationManager = new ServerConfigurationManager(isServer);
-            File configuredPublisherFile = new File(authnDataPublisherWithOffset);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            serverConfigurationManager.applyConfigurationWithoutRestart(configuredPublisherFile,
+            serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,
                     defaultAuthenticationDataPublisher, true);
+            serverConfigurationManager.applyConfigurationWithoutRestart(configuredSessionPublisherFile,
+                    defaultSessionDataPublisher, true);
 
         } catch (AutomationUtilException e) {
             log.error("Error while changing configurations in AuthenticationDataPublisher.xml");

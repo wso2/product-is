@@ -363,6 +363,26 @@
         </SCIMAuthenticators>
     </SCIM>
 
+    <Recovery>
+        <notification>
+            <password>
+                <enable>true</enable>
+            </password>
+            <username>
+                <enable>true</enable>
+            </username>
+            <internallyManage>true</internallyManage>
+        </notification>
+        <question>
+            <password>
+                <enable>true</enable>
+                <separator>!</separator>
+                <minAnswers>2</minAnswers>
+            </password>
+        </question>
+        <expiryTime>3</expiryTime>
+    </Recovery>
+
     <!--SessionContextCache>
         <Enable>true</Enable>
         <Capacity>100000</Capacity>
@@ -372,13 +392,20 @@
         <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.workflow.userstore.UserStoreActionListener"
                        orderId="10" enable="true"/>
-        <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener" name="org.wso2.carbon.identity.mgt.IdentityMgtEventListener"
+        <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
+                       name="org.wso2.carbon.identity.mgt.IdentityMgtEventListener"
                        orderId="50" enable="false"/>
         <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener" name="org.wso2.carbon.identity.scim.common.listener.SCIMUserOperationListener"
                        orderId="90" enable="true"/>
+        <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener" name="org.wso2.carbon.identity.governance.listener.IdentityMgtEventListener"
+                       orderId="95" enable="false"/>
+        <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener" name="org.wso2.carbon.identity.governance.listener.IdentityStoreEventListener"
+                       orderId="100" enable="false">
+            <Property name="Data.Store">org.wso2.carbon.identity.governance.store.UserStoreBasedIdentityDataStore</Property>
+        </EventListener>
         <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.impl.DASAuthnDataPublisherImpl"
-                       orderId="11" enable="true"/>
+                       orderId="10" enable="true"/>
     </EventListeners>
 
     <CacheConfig>
@@ -386,16 +413,6 @@
             <!--<Cache name="AppAuthFrameworkSessionContextCache" enable="false" timeout="1" capacity="5000"/>-->
         </CacheManager>
     </CacheConfig>
-
-    <ISAnalytics>
-        <DefaultValues>
-            <userName>NOT_AVAILABLE</userName>
-            <userStoreDomain>NOT_AVAILABLE</userStoreDomain>
-            <rolesCommaSeperated>NOT_AVAILABLE</rolesCommaSeperated>
-            <serviceprovider>NOT_AVAILABLE</serviceprovider>
-            <identityProvider>NOT_AVAILABLE</identityProvider>
-        </DefaultValues>
-    </ISAnalytics>
 
     <!--Cookies>
         <Cookie name="commonAuthId" domain="localhost" httpOnly="true" secure="true" />
