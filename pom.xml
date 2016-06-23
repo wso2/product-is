@@ -703,11 +703,6 @@
                 <version>${wss4j.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.rampart</groupId>
-                <artifactId>rampart-trust</artifactId>
-                <version>${rampart.wso2.version.1}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.httpcomponents.wso2</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpcore.wso2.version}</version>
@@ -1099,21 +1094,6 @@
                 <artifactId>wsdl4j</artifactId>
                 <version>${wsdl4j.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
-                <version>${carbon.analytics-common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.core</artifactId>
-                <version>${carbon.analytics-common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
-                <version>${carbon.analytics-common.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1191,7 +1171,6 @@
         <carbon.identity.local.auth.iwa.version>5.2.0-SNAPSHOT</carbon.identity.local.auth.iwa.version>
         <carbon.identity.inbound.auth.oauth.version>5.2.0-SNAPSHOT</carbon.identity.inbound.auth.oauth.version>
         <carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>
-        <carbon.identity.authen.data.publisher.version>5.2.0-SNAPSHOT</carbon.identity.authen.data.publisher.version>
         <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1209,8 +1188,8 @@
         <charon.version>2.0.5</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v20</rampart.wso2.version>
-        <rampart.wso2.version.1>1.6.1-wso2v20</rampart.wso2.version.1>
+        <rampart.wso2.version>1.6.1.wso2v21-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v21-SNAPSHOT</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
@@ -1290,7 +1269,7 @@
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.7</carbon.business-process.version>
-        <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
+        <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
