@@ -547,7 +547,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${carbon.identity.authen.data.publisher.version}
                                 </featureArtifactDef>
                                 <!-- Authenticators -->
                                 <featureArtifactDef>
@@ -1358,7 +1358,7 @@
                                     <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.authen.data.publisher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -2779,7 +2779,7 @@
                                     <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.authen.data.publisher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -3205,7 +3205,7 @@
                                     <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.authen.data.publisher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
