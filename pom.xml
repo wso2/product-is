@@ -1183,7 +1183,7 @@
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.6.4</opensaml.version>
         <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
-        <wss4j.wso2.version>1.5.11.wso2v13</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11.wso2v14-SNAPSHOT</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
         <charon.version>2.0.5</charon.version>
         <xalan.version>2.7.1</xalan.version>
