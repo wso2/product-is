@@ -703,11 +703,6 @@
                 <version>${wss4j.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.rampart</groupId>
-                <artifactId>rampart-trust</artifactId>
-                <version>${rampart.wso2.version.1}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.httpcomponents.wso2</groupId>
                 <artifactId>httpcore</artifactId>
                 <version>${httpcore.wso2.version}</version>
@@ -1175,7 +1170,7 @@
         </carbon.identity.outbound.auth.requestpath.basicauth.version>
         <carbon.identity.local.auth.iwa.version>5.2.0-SNAPSHOT</carbon.identity.local.auth.iwa.version>
         <carbon.identity.inbound.auth.oauth.version>5.2.0-SNAPSHOT</carbon.identity.inbound.auth.oauth.version>
-        <carbon.identity.extension.version>5.1.0</carbon.identity.extension.version>
+        <carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>
         <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1188,13 +1183,13 @@
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.6.4</opensaml.version>
         <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
-        <wss4j.wso2.version>1.5.11.wso2v13</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11.wso2v14-SNAPSHOT</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
         <charon.version>2.0.5</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v20</rampart.wso2.version>
-        <rampart.wso2.version.1>1.6.1-wso2v20</rampart.wso2.version.1>
+        <rampart.wso2.version>1.6.1.wso2v21-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v21-SNAPSHOT</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>

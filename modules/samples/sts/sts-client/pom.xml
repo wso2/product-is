@@ -51,7 +51,7 @@
             <artifactId>rampart-policy</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.rampart</groupId>
+            <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-trust</artifactId>
         </dependency>
         <dependency>
