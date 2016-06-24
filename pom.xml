@@ -3910,6 +3910,7 @@
 =======
         <opensaml2.wso2.version>2.6.4.wso2v2</opensaml2.wso2.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> d921a5e... IDENTITY-4490 Passive STS not working after opensaml upgrade
         <wss4j.wso2.version>1.5.11.wso2v11</wss4j.wso2.version>
 <<<<<<< HEAD
@@ -3919,6 +3920,9 @@
 =======
         <wss4j.wso2.version>1.5.11.wso2v13</wss4j.wso2.version>
 >>>>>>> a709e84... Update identity-framework version, add 2 versions to framework and extensions
+=======
+        <wss4j.wso2.version>1.5.11.wso2v14-SNAPSHOT</wss4j.wso2.version>
+>>>>>>> 47cd911... updated wss4j version to 1.5.11.wso2v14-SNAPSHOT
         <openws.version>1.4.1</openws.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
