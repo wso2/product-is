@@ -3597,24 +3597,41 @@
                 <version>${wsdl4j.version}</version>
             </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 56c9e74... fixing commons-codec conflict
 =======
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <scope>test</scope>
+>>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.core</artifactId>
+<<<<<<< HEAD
+=======
+                <scope>test</scope>
+>>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+<<<<<<< HEAD
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
 >>>>>>> abc3f31... adding analytics tests for 5.2.0
+=======
+                <scope>test</scope>
+                <version>${carbon.analytics-common.version}</version>
+            </dependency>
+>>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
@@ -4390,6 +4407,7 @@
         <carbon.business-process.version>4.4.7</carbon.business-process.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
 =======
@@ -4398,6 +4416,9 @@
 =======
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
 >>>>>>> abc3f31... adding analytics tests for 5.2.0
+=======
+        <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
+>>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
@@ -4420,7 +4441,11 @@
         <commons.codec.version>1.8</commons.codec.version>
         <XmlSchema.version>1.4.7.wso2v3</XmlSchema.version>
         <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
+<<<<<<< HEAD
 >>>>>>> 56c9e74... fixing commons-codec conflict
+=======
+        <carbon.identity.authen.data.publisher.version>5.2.0-SNAPSHOT</carbon.identity.authen.data.publisher.version>
+>>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
     </properties>
 
     <repositories>
