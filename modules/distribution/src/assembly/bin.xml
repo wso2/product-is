@@ -219,18 +219,6 @@
             </includes>
         </fileSet>
 
-        <!--copy web app for certificate authority feature -->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>ca.war</include>
-            </includes>
-        </fileSet>
-
-
         <!--Multitenancy related file -->
         <fileSet>
             <directory>
@@ -302,7 +290,33 @@
             <fileMode>644</fileMode>
             <directoryMode>775</directoryMode>
         </fileSet>
-
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/data-bridge
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/data-bridge</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/eventpublishers
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/eventpublishers</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/eventstreams
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/eventstreams</outputDirectory>
+            <includes>
+                <include>**/**.json</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -569,6 +583,14 @@
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
             </outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-processor.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
+            </outputDirectory>
+            <filtered>true</filtered>
         </file>
         <!--copy scim-consumer-config.xml-->
         <file>
