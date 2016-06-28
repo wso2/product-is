@@ -1,0 +1,52 @@
+{
+  "name": "org.wso2.is.analytics.stream.OverallSession",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "payloadData": [
+    {
+      "name": "sessionId",
+      "type": "STRING"
+    },
+    {
+      "name": "startTimestamp",
+      "type": "LONG"
+    },
+    {
+      "name": "renewTimestamp",
+      "type": "LONG"
+    },
+    {
+      "name": "terminationTimestamp",
+      "type": "LONG"
+    },
+    {
+      "name": "action",
+      "type": "INT"
+    },
+    {
+      "name": "userName",
+      "type": "STRING"
+    },
+    {
+      "name": "userstoreDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "IP",
+      "type": "STRING"
+    },
+    {
+      "name": "tenantDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "rememberMeFlag",
+      "type": "BOOL"
+    },
+    {
+      "name": "_timestamp",
+      "type": "LONG"
+    }
+  ]
+}

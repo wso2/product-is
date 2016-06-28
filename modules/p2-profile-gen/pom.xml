@@ -461,6 +461,9 @@
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.datapublisher.feature:${carbon.analytics-common.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.publisher.aggregate.feature:${carbon.analytics-common.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.security.mgt.feature:${carbon.identity.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -542,6 +545,9 @@
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.identity.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${carbon.identity.authen.data.publisher.version}
                                 </featureArtifactDef>
                                 <!-- Authenticators -->
                                 <featureArtifactDef>
@@ -856,6 +862,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
@@ -1343,6 +1353,12 @@
                                         org.wso2.carbon.identity.application.authentication.framework.server.feature.group
                                     </id>
                                     <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.authen.data.publisher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -2565,6 +2581,10 @@
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.ldap.server.feature.group</id>
                                     <version>${carbon.identity.extension.version}</version>
                                 </feature>
@@ -2754,6 +2774,12 @@
                                         org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
                                     </id>
                                     <version>${carbon.identity.extension.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.authen.data.publisher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -3011,6 +3037,10 @@
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.ldap.server.feature.group</id>
                                     <version>${carbon.identity.extension.version}</version>
                                 </feature>
@@ -3170,6 +3200,12 @@
                                         org.wso2.carbon.identity.application.authentication.framework.server.feature.group
                                     </id>
                                     <version>${carbon.identity.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.authen.data.publisher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -3509,6 +3545,10 @@
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.databridge.commons.thrift.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
@@ -3578,6 +3618,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 49b8672... Correct some code formatting issues in https://github.com/wso2/product-is/pull/180
 </project>
 =======
@@ -3589,3 +3630,6 @@
 =======
 </project>
 >>>>>>> 0c2b15f... Revert "Analytics with sessons"
+=======
+</project>
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""

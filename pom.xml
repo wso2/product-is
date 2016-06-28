@@ -3599,31 +3599,42 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 56c9e74... fixing commons-codec conflict
 =======
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
 =======
+=======
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <scope>test</scope>
+<<<<<<< HEAD
 >>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
+=======
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.core</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 <scope>test</scope>
 >>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
+=======
+                <scope>test</scope>
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+<<<<<<< HEAD
 <<<<<<< HEAD
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
@@ -3635,6 +3646,11 @@
 >>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
 =======
 >>>>>>> 0c2b15f... Revert "Analytics with sessons"
+=======
+                <scope>test</scope>
+                <version>${carbon.analytics-common.version}</version>
+            </dependency>
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
@@ -4412,6 +4428,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
 =======
@@ -4426,6 +4443,9 @@
 =======
         <carbon.analytics-common.version>5.0.9</carbon.analytics-common.version>
 >>>>>>> 0c2b15f... Revert "Analytics with sessons"
+=======
+        <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
@@ -4451,6 +4471,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 56c9e74... fixing commons-codec conflict
 =======
         <carbon.identity.authen.data.publisher.version>5.2.0-SNAPSHOT</carbon.identity.authen.data.publisher.version>
@@ -4460,6 +4481,9 @@
 >>>>>>> cdea782... changing publisher names
 =======
 >>>>>>> 0c2b15f... Revert "Analytics with sessons"
+=======
+        <carbon.identity.authen.data.publisher.version>5.1.1-SNAPSHOT</carbon.identity.authen.data.publisher.version>
+>>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
     </properties>
 
     <repositories>
