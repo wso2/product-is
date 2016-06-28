@@ -404,8 +404,11 @@
             <Property name="Data.Store">org.wso2.carbon.identity.governance.store.UserStoreBasedIdentityDataStore</Property>
         </EventListener>
         <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
-                       name="org.wso2.carbon.identity.data.publisher.application.authentication.impl.DASAuthnDataPublisherImpl"
+                       name="org.wso2.carbon.identity.data.publisher.application.authentication.impl.DASLoginDataPublisherImpl"
                        orderId="10" enable="true"/>
+        <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
+                       name="org.wso2.carbon.identity.data.publisher.application.authentication.impl.DASSessionDataPublisherImpl"
+                       orderId="11" enable="true"/>
     </EventListeners>
 
     <CacheConfig>
