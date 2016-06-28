@@ -57,8 +57,10 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -85,6 +87,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String profileName = "default";
+    private static final String sessionStreamId = "org.wso2.is.analytics.stream.OverallSession:1.0.0";
+    private static final String authenticationStreamId = "org.wso2.is.analytics.stream.OverallAuthentication:1.0.0";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -93,6 +97,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private Tomcat tomcatServer;
     private ThriftServer thriftServer;
     private ServerConfigurationManager serverConfigurationManager;
+    HttpClient sharedHttpClient = new DefaultHttpClient();
 
 
     private String resultPage;
@@ -157,7 +162,9 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         public String getNickname() {
             return nickname;
         }
-    };
+    }
+
+    ;
 
     private enum App {
 
@@ -293,7 +300,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is", dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOIsPassiveLogin() {
         try {
-            HttpClient httpClient = new DefaultHttpClient();
+            HttpClient httpClient = sharedHttpClient;
             HttpResponse response;
             response = Utils.sendGetRequest(String.format(SAML_SSO_INDEX_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
@@ -311,7 +318,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     public void testSAMLSSOLogin() {
         try {
             HttpResponse response;
-            HttpClient httpClient = new DefaultHttpClient();
+            HttpClient httpClient = sharedHttpClient;
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
 
@@ -334,14 +341,31 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                     .SAML_RESPONSE_PARAM, samlResponse);
             Thread.sleep(2000);
 
-            Assert.assertEquals(thriftServer.getPreservedEventList().size(), 2);
+            Assert.assertEquals(thriftServer.getPreservedEventList().size(), 3);
 
-            Event event = (Event) thriftServer.getPreservedEventList().get(0);
-            Object[] eventStreamData = event.getPayloadData();
-            if ((Boolean) eventStreamData[2]) {
-                event = (Event) thriftServer.getPreservedEventList().get(1);
+            Event sessionEvent = null;
+            Event authStepEvent = null;
+            Event overallAuthEvent = null;
+
+            for (Event event : thriftServer.getPreservedEventList()) {
+                String streamId = event.getStreamId();
+                if (sessionStreamId.equalsIgnoreCase(streamId)) {
+                    sessionEvent = event;
+                }
+                if (authenticationStreamId.equalsIgnoreCase(streamId)) {
+                    Object[] eventStreamData = event.getPayloadData();
+                    if ((Boolean) eventStreamData[2]) {
+                        overallAuthEvent = event;
+                    } else if ((Boolean) eventStreamData[15]) {
+                        authStepEvent = event;
+                    }
+                }
             }
-            eventStreamData = event.getPayloadData();
+
+            assertSessionEvent(sessionEvent);
+            Object[] eventStreamData = overallAuthEvent.getPayloadData();
+
+            eventStreamData = authStepEvent.getPayloadData();
             // authenticationSuccess
             Assert.assertEquals(eventStreamData[2], false);
             // userName
@@ -364,17 +388,52 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[13], "1");
             // isFirstLogin
             Assert.assertEquals(eventStreamData[17], true);
-
-            thriftServer.resetPreservedEventList();
-
+            extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
+        } finally {
+            thriftServer.resetPreservedEventList();
         }
     }
 
 
+    @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
+            dependsOnMethods = {"testSAMLSSOLogin"})
+    public void testSAMLSSOLoginWithExistingSession() {
+        try {
+            HttpResponse response;
+            HttpClient httpClient = sharedHttpClient;
+            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
+                    .getHttpBinding().binding), USER_AGENT, httpClient);
+
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+                String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
+                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+                EntityUtils.consume(response.getEntity());
+                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
+                        httpClient);
+            }
+
+            Event sessionEvent = null;
+            for (Event event : thriftServer.getPreservedEventList()) {
+                String streamId = event.getStreamId();
+                if (sessionStreamId.equalsIgnoreCase(streamId)) {
+                    sessionEvent = event;
+                }
+            }
+
+            assertSessionUpdateEvent(sessionEvent);
+            thriftServer.resetPreservedEventList();
+            extractDataFromResponse(response);
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
+        } finally {
+            thriftServer.resetPreservedEventList();
+        }
+    }
+
     @Test(alwaysRun = true, description = "Testing SAML SSO login fail", groups = "wso2.is",
-            dependsOnMethods = {"testSAMLSSOIsPassiveLogin"})
+            dependsOnMethods = {"testSAMLSSOLogout"})
     public void testSAMLSSOLoginFail() {
         try {
             HttpResponse response;
@@ -425,11 +484,37 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[12], "NOT_AVAILABLE");
             // authenticationStep
             Assert.assertEquals(eventStreamData[13], "1");
-
-            thriftServer.resetPreservedEventList();
-
+            extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
+        } finally {
+            thriftServer.resetPreservedEventList();
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
+            dependsOnMethods = {"testSAMLSSOLoginWithExistingSession"})
+    public void testSAMLSSOLogout() throws Exception {
+        try {
+            HttpResponse response;
+            HttpClient httpClient = sharedHttpClient;
+            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGOUT_URL, config.getApp().getArtifact(), config
+                    .getHttpBinding().binding), USER_AGENT, httpClient);
+
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+                String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
+                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+            }
+
+            String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
+                    .SAML_RESPONSE_PARAM, samlResponse);
+            assertSessionTerminationEvent(thriftServer.getPreservedEventList().get(0));
+            thriftServer.resetPreservedEventList();
+            extractDataFromResponse(response);
+
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Logout test failed for " + config, e);
         }
     }
 
@@ -443,7 +528,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
-        HttpClient httpClient = new DefaultHttpClient();
+        HttpClient httpClient = sharedHttpClient;
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
@@ -565,22 +650,30 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
                 "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
+
+        String sessionDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
+                + "config" + File.separator + "IsAnalytics-Publisher-wso2event-SessionData.xml";
+        File defaultSessionDataPublisher = new File(carbonHome + File.separator
+                + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
+                "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-SessionData.xml");
         try {
 
+            File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
+            File configuredSessionPublisherFile = new File(sessionDataPublisherWithOffset);
             serverConfigurationManager = new ServerConfigurationManager(isServer);
-            File configuredPublisherFile = new File(authnDataPublisherWithOffset);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            serverConfigurationManager.applyConfigurationWithoutRestart(configuredPublisherFile,
+            serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,
                     defaultAuthenticationDataPublisher, true);
+            serverConfigurationManager.applyConfigurationWithoutRestart(configuredSessionPublisherFile,
+                    defaultSessionDataPublisher, true);
 
         } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xmll");
+            log.error("Error while changing publisher configurations");
         } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
+            log.error("Error while changing publisher configurations");
         } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
+            log.error("Error while changing publisher configurations");
         } catch (IOException e) {
-            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
+            log.error("Error while changing publisher configurations");
         }
     }
 
@@ -611,6 +704,46 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         } catch (IOException e) {
             log.error("Error while changing configurations in identity.xml to default configurations");
         }
+    }
+
+
+    public void assertSessionEvent(Event sessionEvent) {
+        Object[] sessionObjects = sessionEvent.getPayloadData();
+        Assert.assertEquals(sessionObjects[1], sessionObjects[2]);
+        Assert.assertEquals(sessionObjects[4], 1);
+        Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
+        Assert.assertEquals(sessionObjects[6], "PRIMARY");
+        Assert.assertTrue((Long) sessionObjects[2] < (Long) sessionObjects[10]);
+    }
+
+    public void assertSessionUpdateEvent(Event sessionEvent) {
+        Object[] sessionObjects = sessionEvent.getPayloadData();
+        // Assert.assertTrue((Long)sessionObjects[1] < (Long)sessionObjects[2]);
+        Assert.assertEquals(sessionObjects[4], 2);
+        Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
+        Assert.assertEquals(sessionObjects[6], "PRIMARY");
+        //  Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
+    }
+
+    public void assertSessionTerminationEvent(Event sessionEvent) {
+        Object[] sessionObjects = sessionEvent.getPayloadData();
+        // Assert.assertTrue((Long) sessionObjects[1] < (Long) sessionObjects[2]);
+        Assert.assertEquals(sessionObjects[4], 0);
+        Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
+        Assert.assertEquals(sessionObjects[6], "PRIMARY");
+        // Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
+    }
+
+    private String extractDataFromResponse(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+        StringBuilder result = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+        rd.close();
+        return result.toString();
     }
 
 }
