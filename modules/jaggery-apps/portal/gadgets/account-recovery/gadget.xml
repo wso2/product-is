@@ -156,12 +156,12 @@
           var questionSet = json[sorted[i]];
           var questionSetId = sorted[i];
           var locale = questionSet[0].locale; // locale within a questionSet are same.
-          var setId = sorted[i].slice(-1);
+          var setId = sorted[i].split("/").pop();
           body = body + "<fieldset>\n" +
                "                <input type=\"hidden\" name=\"qid[]\" value=\""+setId+"\"/>\n" +
                "                <input type=\"hidden\" name=\"challengeId_"+setId+"\" value=\""+questionSetId+"\"/>\n" +
                "                <input type=\"hidden\" name=\"locale_"+setId+"\" value=\""+locale+"\"/>\n" +
-               "                <legend>Challenge Question Set "+setId+"</legend>\n" +
+               "                <legend>Challenge Question Set ID : "+setId+"</legend>\n" +
                "                <div class=\"control-group\">\n" +
                "                    <label class=\"control-label\" for=\"q"+setId+"\">Challenge Question <span class=\"required\">*</span></label>\n" +
                "                    <div class=\"controls\">\n" +
