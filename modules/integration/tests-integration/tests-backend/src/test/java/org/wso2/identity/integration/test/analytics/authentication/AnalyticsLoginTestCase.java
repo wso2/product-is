@@ -561,10 +561,10 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
         String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "AuthenticationDataPublisher.xml";
+                + "config" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
         File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
-                "eventpublishers" + File.separator + "AuthenticationDataPublisher.xml");
+                "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
         try {
 
             serverConfigurationManager = new ServerConfigurationManager(isServer);
@@ -574,13 +574,13 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                     defaultAuthenticationDataPublisher, true);
 
         } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xmll");
         } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
         } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
         } catch (IOException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing configurations in IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
         }
     }
 
