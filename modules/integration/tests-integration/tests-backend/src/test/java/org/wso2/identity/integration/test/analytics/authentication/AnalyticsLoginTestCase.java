@@ -645,16 +645,16 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
         String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "AuthenticationDataPublisher.xml";
+                + "config" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
         File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
-                "eventpublishers" + File.separator + "AuthenticationDataPublisher.xml");
+                "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
 
         String sessionDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "SessionDataPublisher.xml";
+                + "config" + File.separator + "IsAnalytics-Publisher-wso2event-SessionData.xml";
         File defaultSessionDataPublisher = new File(carbonHome + File.separator
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
-                "eventpublishers" + File.separator + "SessionDataPublisher.xml");
+                "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-SessionData.xml");
         try {
 
             File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
@@ -666,13 +666,13 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                     defaultSessionDataPublisher, true);
 
         } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing publisher configurations");
         } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing publisher configurations");
         } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing publisher configurations");
         } catch (IOException e) {
-            log.error("Error while changing configurations in AuthenticationDataPublisher.xml");
+            log.error("Error while changing publisher configurations");
         }
     }
 
@@ -712,7 +712,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         Assert.assertEquals(sessionObjects[4], 1);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-        Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
+        Assert.assertTrue((Long) sessionObjects[2] < (Long)sessionObjects[10]);
     }
 
     public void assertSessionUpdateEvent (Event sessionEvent ){

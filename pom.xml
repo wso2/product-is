@@ -1305,7 +1305,7 @@
         <commons.codec.version>1.8</commons.codec.version>
         <XmlSchema.version>1.4.7.wso2v3</XmlSchema.version>
         <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
-        <carbon.identity.authen.data.publisher.version>5.2.0-SNAPSHOT</carbon.identity.authen.data.publisher.version>
+        <carbon.identity.authen.data.publisher.version>5.1.1-SNAPSHOT</carbon.identity.authen.data.publisher.version>
     </properties>
 
     <repositories>
