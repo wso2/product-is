@@ -614,12 +614,6 @@
     </test>
 >>>>>>> 1f04960... Adding test cases
 
-    <test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
-        </classes>
-    </test>
-
     <test name="is-tests-all" preserve-order="true" parallel="false">
         <packages>
             <!--Entitlement Test Cases-->
