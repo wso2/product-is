@@ -383,6 +383,14 @@
         <expiryTime>3</expiryTime>
     </Recovery>
 
+    <SelfRegistration>
+        <Enable>true</Enable>
+        <LockOnCreation>true</LockOnCreation>
+        <Notification>
+            <InternallyManage>true</InternallyManage>
+        </Notification>
+    </SelfRegistration>
+
     <!--SessionContextCache>
         <Enable>true</Enable>
         <Capacity>100000</Capacity>
