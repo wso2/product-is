@@ -4393,6 +4393,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> eebf801... updating kernal version, adding axis2-transports-version
 =======
         <carbon.business-process.version>4.4.2</carbon.business-process.version>
@@ -4438,6 +4439,9 @@
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
 >>>>>>> abc3f31... adding analytics tests for 5.2.0
 =======
+=======
+        <carbon.business-process.version>4.4.8</carbon.business-process.version>
+>>>>>>> f9cba3f... updated business process version to 4.4.8
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
 >>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
 =======
