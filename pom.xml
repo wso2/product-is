@@ -1293,7 +1293,7 @@
         <cipher-tool.version>1.0.0-wso2v3</cipher-tool.version>
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
-        <carbon.business-process.version>4.4.7</carbon.business-process.version>
+        <carbon.business-process.version>4.4.8</carbon.business-process.version>
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
