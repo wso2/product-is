@@ -423,7 +423,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             }
 
             assertSessionUpdateEvent(sessionEvent);
-            thriftServer.resetPreservedEventList();
             extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
@@ -510,11 +509,11 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
             assertSessionTerminationEvent(thriftServer.getPreservedEventList().get(0));
-            thriftServer.resetPreservedEventList();
             extractDataFromResponse(response);
-
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
+        } finally {
+            thriftServer.resetPreservedEventList();
         }
     }
 
