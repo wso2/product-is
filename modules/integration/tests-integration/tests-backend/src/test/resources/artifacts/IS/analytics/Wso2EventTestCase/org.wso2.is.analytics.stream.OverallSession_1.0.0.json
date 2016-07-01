@@ -37,6 +37,10 @@
       "type": "STRING"
     },
     {
+      "name": "region",
+      "type": "STRING"
+    },
+    {
       "name": "tenantDomain",
       "type": "STRING"
     },
