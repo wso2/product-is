@@ -162,7 +162,9 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         public String getNickname() {
             return nickname;
         }
-    };
+    }
+
+    ;
 
     private enum App {
 
@@ -345,16 +347,16 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Event authStepEvent = null;
             Event overallAuthEvent = null;
 
-            for(Event event : thriftServer.getPreservedEventList()) {
+            for (Event event : thriftServer.getPreservedEventList()) {
                 String streamId = event.getStreamId();
-                if (sessionStreamId.equalsIgnoreCase(streamId)){
+                if (sessionStreamId.equalsIgnoreCase(streamId)) {
                     sessionEvent = event;
                 }
-                if(authenticationStreamId.equalsIgnoreCase(streamId)){
+                if (authenticationStreamId.equalsIgnoreCase(streamId)) {
                     Object[] eventStreamData = event.getPayloadData();
                     if ((Boolean) eventStreamData[2]) {
                         overallAuthEvent = event;
-                    } else if((Boolean) eventStreamData[15])  {
+                    } else if ((Boolean) eventStreamData[16]) {
                         authStepEvent = event;
                     }
                 }
@@ -373,19 +375,19 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             // tenantDomain
             Assert.assertEquals(eventStreamData[5], "carbon.super");
             // inboundAuthType
-            Assert.assertEquals(eventStreamData[7], "samlsso");
+            Assert.assertEquals(eventStreamData[8], "samlsso");
             // serviceprovider
-            Assert.assertEquals(eventStreamData[8], "SAML-SSO-TestApplication");
+            Assert.assertEquals(eventStreamData[9], "SAML-SSO-TestApplication");
             // remembermeEnabled
-            Assert.assertEquals(eventStreamData[9], false);
-            // forceAuthEnabled
             Assert.assertEquals(eventStreamData[10], false);
+            // forceAuthEnabled
+            Assert.assertEquals(eventStreamData[11], false);
             // rolesCommaSeperated
-            Assert.assertEquals(eventStreamData[12], "Internal/everyone");
+            Assert.assertEquals(eventStreamData[13], "Internal/everyone");
             // authenticationStep
-            Assert.assertEquals(eventStreamData[13], "1");
+            Assert.assertEquals(eventStreamData[14], "1");
             // isFirstLogin
-            Assert.assertEquals(eventStreamData[17], true);
+            Assert.assertEquals(eventStreamData[18], true);
             extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
@@ -470,17 +472,17 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             // tenantDomain
             Assert.assertEquals(eventStreamData[5], "carbon.super");
             // inboundAuthType
-            Assert.assertEquals(eventStreamData[7], "samlsso");
+            Assert.assertEquals(eventStreamData[8], "samlsso");
             // serviceprovider
-            Assert.assertEquals(eventStreamData[8], "SAML-SSO-TestApplication");
+            Assert.assertEquals(eventStreamData[9], "SAML-SSO-TestApplication");
             // remembermeEnabled
-            Assert.assertEquals(eventStreamData[9], false);
-            // forceAuthEnabled
             Assert.assertEquals(eventStreamData[10], false);
+            // forceAuthEnabled
+            Assert.assertEquals(eventStreamData[11], false);
             // rolesCommaSeperated
-            Assert.assertEquals(eventStreamData[12], "NOT_AVAILABLE");
+            Assert.assertEquals(eventStreamData[13], "NOT_AVAILABLE");
             // authenticationStep
-            Assert.assertEquals(eventStreamData[13], "1");
+            Assert.assertEquals(eventStreamData[14], "1");
             extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
@@ -490,7 +492,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
-            dependsOnMethods = { "testSAMLSSOLoginWithExistingSession" })
+            dependsOnMethods = {"testSAMLSSOLoginWithExistingSession"})
     public void testSAMLSSOLogout() throws Exception {
         try {
             HttpResponse response;
@@ -498,7 +500,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGOUT_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
 
-            if (config.getHttpBinding() == HttpBinding.HTTP_POST){
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
                 response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
             }
@@ -514,7 +516,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             thriftServer.resetPreservedEventList();
         }
     }
-
 
 
     @DataProvider(name = "samlConfigProvider")
@@ -705,31 +706,31 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
 
-    public void assertSessionEvent (Event sessionEvent ){
+    public void assertSessionEvent(Event sessionEvent) {
         Object[] sessionObjects = sessionEvent.getPayloadData();
         Assert.assertEquals(sessionObjects[1], sessionObjects[2]);
         Assert.assertEquals(sessionObjects[4], 1);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-        Assert.assertTrue((Long) sessionObjects[2] < (Long)sessionObjects[10]);
+        Assert.assertTrue((Long) sessionObjects[2] < (Long) sessionObjects[11]);
     }
 
-    public void assertSessionUpdateEvent (Event sessionEvent ){
+    public void assertSessionUpdateEvent(Event sessionEvent) {
         Object[] sessionObjects = sessionEvent.getPayloadData();
-       // Assert.assertTrue((Long)sessionObjects[1] < (Long)sessionObjects[2]);
+        // Assert.assertTrue((Long)sessionObjects[1] < (Long)sessionObjects[2]);
         Assert.assertEquals(sessionObjects[4], 2);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-      //  Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
+        //  Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
     }
 
-    public void assertSessionTerminationEvent (Event sessionEvent ){
+    public void assertSessionTerminationEvent(Event sessionEvent) {
         Object[] sessionObjects = sessionEvent.getPayloadData();
-       // Assert.assertTrue((Long) sessionObjects[1] < (Long) sessionObjects[2]);
+        // Assert.assertTrue((Long) sessionObjects[1] < (Long) sessionObjects[2]);
         Assert.assertEquals(sessionObjects[4], 0);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-       // Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
+        // Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {
