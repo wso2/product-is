@@ -712,7 +712,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         Assert.assertEquals(sessionObjects[4], 1);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-        Assert.assertTrue((Long) sessionObjects[2] < (Long) sessionObjects[11]);
+        Assert.assertTrue((Long) sessionObjects[2] < (Long) sessionObjects[12]);
     }
 
     public void assertSessionUpdateEvent(Event sessionEvent) {
