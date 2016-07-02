@@ -341,6 +341,40 @@
         </ThirftBasedEntitlementConfig>
     </EntitlementSettings>
 
+    <Recovery>
+        <Notification>
+            <Password>
+                <Enable>true</Enable>
+            </Password>
+            <Username>
+                <Enable>true</Enable>
+            </Username>
+            <InternallyManage>true</InternallyManage>
+        </Notification>
+        <Question>
+            <Password>
+                <Enable>true</Enable>
+                <Separator>!</Separator>
+                <MinAnswers>2</MinAnswers>
+                <ReCaptcha>
+                    <Enable>false</Enable>
+                    <MaxFailedAttempts>3</MaxFailedAttempts>
+                </ReCaptcha>
+            </Password>
+        </Question>
+        <ExpiryTime>3</ExpiryTime>
+    </Recovery>
+
+    <SelfRegistration>
+        <Enable>true</Enable>
+        <LockOnCreation>true</LockOnCreation>
+        <Notification>
+            <InternallyManage>true</InternallyManage>
+        </Notification>
+        <ReCaptcha>false</ReCaptcha>
+    </SelfRegistration>
+
+
     <SCIM>
         <!--
             Default value for UserEPUrl and GroupEPUrl are built in following format
