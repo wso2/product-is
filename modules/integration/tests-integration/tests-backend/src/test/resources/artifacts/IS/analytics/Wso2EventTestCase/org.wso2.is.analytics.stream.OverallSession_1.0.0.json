@@ -49,6 +49,10 @@
       "type": "BOOL"
     },
     {
+      "name": "userAgent",
+      "type": "STRING"
+    },
+    {
       "name": "_timestamp",
       "type": "LONG"
     }
