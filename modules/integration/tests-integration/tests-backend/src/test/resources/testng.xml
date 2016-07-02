@@ -54,7 +54,8 @@
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
-            <class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimMetadataManagementServiceTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
             <!--Identity Management Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />-->
