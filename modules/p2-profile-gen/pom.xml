@@ -557,7 +557,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature:${carbon.identity.extension.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${carbon.identity.local.auth.basicauth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.samlsso.server.feature:${carbon.identity.extension.version}
@@ -1364,7 +1364,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.local.auth.basicauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -2773,7 +2773,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.local.auth.basicauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -3211,7 +3211,7 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.local.auth.basicauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
