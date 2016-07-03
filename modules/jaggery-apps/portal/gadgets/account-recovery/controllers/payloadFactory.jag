@@ -1,6 +1,17 @@
 <%
 include("../util/constants.jag");
 
+
+
+var getChallengeQuestionsForUser = "<ser:getChallengeQuestionsForUser xmlns:ser=\"http://services.recovery.identity.carbon.wso2.org\">\n" +
+        "<ser:tenantAwareUserName>{0}</ser:tenantAwareUserName>\n" +
+        "</ser:getChallengeQuestionsForUser>\n";
+
+var getChallengeAnswersOfUser = "<ser:getUserChallengeAnswers xmlns:ser=\"http://services.recovery.identity.carbon.wso2.org\">\n" +
+        "<ser:tenantAwareUserName>{0}</ser:tenantAwareUserName>\n" +
+        "</ser:getUserChallengeAnswers>\n";
+
+
 var getUserProfile = "<mgt:getUserProfile xmlns:mgt=\"http://mgt.profile.user.identity.carbon.wso2.org\">\n" +
                                                 "<mgt:username>{0}</mgt:username>\n" +
                                                 "<mgt:profileName>{1}</mgt:profileName>\n" +
@@ -12,9 +23,6 @@ var getAppsAuthorizedByUser = "<xsd:getAppsAuthorizedByUser xmlns:xsd=\"http://o
 
 var getAllChallengeQuestions = "<ser:getAllChallengeQuestions xmlns:ser=\"http://services.mgt.identity.carbon.wso2.org\" />";
 
-var getChallengeQuestionsOfUser = "<ser:getChallengeQuestionsOfUser xmlns:ser=\"http://services.mgt.identity.carbon.wso2.org\">\n" +
-                                    "<ser:userName>{0}</ser:userName>\n" +
-                                   "</ser:getChallengeQuestionsOfUser>\n";
 var getAllUserProviders = "<con:getAllUserProviders xmlns:con=\"http://config.common.scim.identity.carbon.wso2.org\">\n" +
              "<con:consumerId>{0}</con:consumerId>\n" +
           "</con:getAllUserProviders>\n";
@@ -54,12 +62,14 @@ var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.ca
 
 var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
 
+// adding new
+application.put("urn:getChallengeQuestionsForUser", getChallengeQuestionsForUser);
+application.put("urn:getUserChallengeAnswers", getChallengeAnswersOfUser);
 
 application.put("urn:getUserProfile", getUserProfile);
 application.put("urn:getProfileFieldsForInternalStore", getProfileFieldsForInternalStore);
 application.put("urn:getAppsAuthorizedByUser", getAppsAuthorizedByUser);
 application.put("urn:getAllChallengeQuestions", getAllChallengeQuestions);
-application.put("urn:getChallengeQuestionsOfUser", getChallengeQuestionsOfUser);
 application.put("urn:getAllUserProviders", getAllUserProviders);
 application.put("urn:getUserIM", getUserIM);
 application.put("urn:getXmppSettings", getXmppSettings);
