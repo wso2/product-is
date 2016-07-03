@@ -15,50 +15,57 @@ function edit(){
     var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(userName);
 
     try{
-        var count = 1;
-        var req = <ser:setChallengeQuestionsOfUser xmlns:ser="http://services.mgt.identity.carbon.wso2.org">
-                               <ser:userName></ser:userName>
-                            </ser:setChallengeQuestionsOfUser>;
-        req.*::userName.setChildren(tenantAwareUserName);
+        var setIDs = request.getParameter("qid[]");
+        if (setIDs != null && setIDs.constructor != Array) {
+            setIDs = [setIDs];
+        }
+        log.debug("Available challenge question set IDs");
+        log.debug(setIDs);
 
-        while(true){
-            var questionId = request.getParameter("challangedId_" + count);
-            var question = request.getParameter("question_" + count);
+        var req = <ser:setUserChallengeAnswers xmlns:ser="http://services.recovery.identity.carbon.wso2.org">
+                               <ser:tenantAwareUserName></ser:tenantAwareUserName>
+                            </ser:setUserChallengeAnswers>;
+        req.*::tenantAwareUserName.setChildren(tenantAwareUserName);
+
+        for(var i = 0; i < setIDs.length; i++){
+            var count = setIDs[i];
+            var questionSetId = request.getParameter("challengeId_" + count);
+            var questionText = request.getParameter("question_" + count);
+            var locale = request.getParameter("locale_" + count);
             var ans = request.getParameter("ans_" + count);
 
-
-            if(questionId == null || questionId.length == 0 ){
-                break;
-            }
             if(ans != null && ans.length > 0){
-                var child = <ser:challengesDTOs xmlns:xsd="http://dto.mgt.identity.carbon.wso2.org/xsd" xmlns:ser="http://services.mgt.identity.carbon.wso2.org">
+                var child = <ser:userChallengeAnswers xmlns:xsd="http://model.recovery.identity.carbon.wso2.org/xsd" xmlns:ser="http://services.mgt.identity.carbon.wso2.org">
                                 <xsd:answer>ans</xsd:answer>
-                                <xsd:error></xsd:error>
-                                <xsd:id></xsd:id>
-                                <xsd:key></xsd:key>
-                                <xsd:order></xsd:order>
-                                <xsd:primary></xsd:primary>
-                                <xsd:question></xsd:question>
-                                <xsd:verfied></xsd:verfied>
-                            </ser:challengesDTOs>;
-                child.*::id.setChildren(questionId);
-                child.*::question.setChildren(question);
+                            </ser:userChallengeAnswers>;
                 child.*::answer.setChildren(ans);
-                child.*::primary.setChildren(false);
-                child.*::verfied.setChildren(false);
-                child.*::order.setChildren(0);
 
+                var challengeQuestion = <ser:question xmlns:xsd="http://model.recovery.identity.carbon.wso2.org/xsd" xmlns:ser="http://services.mgt.identity.carbon.wso2.org">
+                    <xsd:question>questionText</xsd:question>
+                    <xsd:questionSetId>questionSetId</xsd:questionSetId>
+                    <xsd:questionId>questionId</xsd:questionId>
+                    <xsd:locale>locale</xsd:locale>
+                </ser:question>;
+
+                challengeQuestion.*::question.setChildren(questionText);
+                challengeQuestion.*::questionSetId.setChildren(questionSetId);
+                challengeQuestion.*::questionId.setChildren(null);
+                challengeQuestion.*::locale.setChildren(locale);
+
+                // append challenge question payload to challenges element
+                child.appendChild(challengeQuestion);
                 req.appendChild(child);
 
             }
-            count = count + 1;
         }
-
-        identityClient.setChallengeQuestionsOfUser(req);
+        log.info("Sending challenge question answer response to backend.")
+        identityClient.setUserChallengeAnswers(req);
        // response.sendRedirect("../../account_recovery.jag?s=1&sMsg=updated_acc_rec_q");
     }
     catch(e){
         log.error(e);
+        message({content:'Error While updating recovery questions',type:'error', cbk:function(){} });
+        console.log('error');
         response.sendRedirect("../../index.jag?e=1&error=" + e);
     }
 
