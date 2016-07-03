@@ -24,6 +24,8 @@
                 <Password>admin</Password>
             </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
+            <Property name="isCascadeDeleteEnabled">true</Property>
+            <Property name="initializeNewClaimManager">true</Property>
             <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
         </Configuration>
         <!-- Following is the default user store manager. This user store manager is based on embedded-apacheds LDAP. It reads/writes users and roles into the 		     default apacheds LDAP user store. Descriptions about each of the following properties can be found in user management documentation of the 	 respective product. In case if user core cache domain is needed to identify uniquely set property <Property name="UserCoreCacheIdentifier">domain</Property>

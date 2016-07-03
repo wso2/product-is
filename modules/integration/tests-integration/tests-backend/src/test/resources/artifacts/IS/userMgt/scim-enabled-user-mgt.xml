@@ -24,6 +24,8 @@
                 <Password>admin</Password>
             </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
+            <Property name="isCascadeDeleteEnabled">true</Property>
+            <Property name="initializeNewClaimManager">true</Property>
             <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
             <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder</Property>x
         </Configuration>

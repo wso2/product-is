@@ -27,6 +27,7 @@
             </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
             <Property name="isCascadeDeleteEnabled">true</Property>
+            <Property name="initializeNewClaimManager">true</Property>
             <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
         </Configuration>
 
