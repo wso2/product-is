@@ -1200,6 +1200,7 @@
         <carbon.identity.local.auth.iwa.version>5.2.0-SNAPSHOT</carbon.identity.local.auth.iwa.version>
         <carbon.identity.inbound.auth.oauth.version>5.2.0-SNAPSHOT</carbon.identity.inbound.auth.oauth.version>
         <carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>
+        <carbon.identity.local.auth.basicauth.version>5.2.0-SNAPSHOT</carbon.identity.local.auth.basicauth.version>
         <product.identity.version>5.3.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
