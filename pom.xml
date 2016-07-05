@@ -4128,9 +4128,13 @@
         <carbon.kernel.version>4.4.6</carbon.kernel.version>
 >>>>>>> c01f014... Upgrading kernel 4.4.6
         <carbon.commons.version>4.5.2</carbon.commons.version>
+<<<<<<< HEAD
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
         <carbon.dashboards.version>1.0.8</carbon.dashboards.version>
 >>>>>>> c0137e2... updating versions
+=======
+        <carbon.dashboards.version>1.0.18</carbon.dashboards.version>
+>>>>>>> 6faba6f... Fixing IDENTITY-4650
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
 <<<<<<< HEAD
         <orbit.version.axiom>1.2.11.wso2v5</orbit.version.axiom>
