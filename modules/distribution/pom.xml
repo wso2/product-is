@@ -139,6 +139,8 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/TokenStoreClassName--&gt;" value="&lt;/TokenStoreClassName&gt;" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;DisableTokenStore&gt;false&lt;/DisableTokenStore&gt;" value="&lt;DisableTokenStore&gt;false&lt;/DisableTokenStore&gt;${line.separator}${line.separator}    &lt;STSCallBackHandlerName&gt;org.wso2.carbon.identity.provider.AttributeCallbackHandler&lt;/STSCallBackHandlerName&gt;"/>
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${xss-kernel-token}" value="${xss-is-token}" />
 
                                 <!-- Update log4j.properties file with Identity related log files -->
