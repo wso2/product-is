@@ -237,7 +237,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${carbon.identity.local.auth.basicauth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.samlsso.server.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.samlsso.server.feature:${carbon.identity.outbound.auth.samlsso.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.server.feature:${carbon.identity.extension.version}
@@ -266,11 +266,11 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.iwa.server.feature:${carbon.identity.local.auth.iwa.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature:${carbon.identity.outbound.auth.passive.sts.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${carbon.identity.carbon.auth.saml2.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.version}
@@ -364,7 +364,7 @@
                                 </featureArtifactDef>
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.extension.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.tools.saml.validator.feature:${carbon.identity.tool.samlsso.validator.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt.feature:${carbon.identity.version}
@@ -635,7 +635,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.carbon.auth.saml2.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.mutualssl.feature.group</id>
@@ -746,13 +746,13 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.outbound.auth.samlsso.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.outbound.auth.passive.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.oidc.server.feature.group
@@ -811,7 +811,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.tool.samlsso.validator.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.openid.server.feature.group
@@ -1144,7 +1144,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.carbon.auth.saml2.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.mutualssl.feature.group</id>
@@ -1255,13 +1255,13 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.outbound.auth.samlsso.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.outbound.auth.passive.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.oidc.server.feature.group
@@ -1320,7 +1320,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.tool.samlsso.validator.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.openid.server.feature.group
@@ -1588,7 +1588,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.saml2.sso.server.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.carbon.auth.saml2.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.mutualssl.feature.group</id>
@@ -1687,13 +1687,13 @@
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.outbound.auth.samlsso.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.passive.sts.server.feature.group
                                     </id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.outbound.auth.passive.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.oidc.server.feature.group
@@ -1753,7 +1753,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.tools.saml.validator.server.feature.group</id>
-                                    <version>${carbon.identity.extension.version}</version>
+                                    <version>${carbon.identity.tool.samlsso.validator.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.openid.server.feature.group
