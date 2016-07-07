@@ -139,6 +139,8 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/TokenStoreClassName--&gt;" value="&lt;/TokenStoreClassName&gt;" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;DisableTokenStore&gt;false&lt;/DisableTokenStore&gt;" value="&lt;DisableTokenStore&gt;false&lt;/DisableTokenStore&gt;${line.separator}${line.separator}    &lt;STSCallBackHandlerName&gt;org.wso2.carbon.identity.provider.AttributeCallbackHandler&lt;/STSCallBackHandlerName&gt;"/>
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${xss-kernel-token}" value="${xss-is-token}" />
 
                                 <!-- Update log4j.properties file with Identity related log files -->
@@ -168,7 +170,7 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;false&lt;/Property&gt;" />
 
                                 <replace
-                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;            &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator}            &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
 

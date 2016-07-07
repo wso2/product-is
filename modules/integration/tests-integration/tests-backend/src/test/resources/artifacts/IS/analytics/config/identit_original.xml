@@ -424,7 +424,7 @@
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.impl.DASSessionDataPublisherImpl"
                        orderId="11" enable="false"/>
         <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
-                       name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublisherProxy"
+                       name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublishHandlerManager"
                        orderId="11" enable="false"/>
     </EventListeners>
 
