@@ -1,4 +1,19 @@
 <%
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 var log = new Log();
 //var userName = session.get("user");
@@ -7,6 +22,10 @@ var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUt
 
 var i18n = session.get("i18n");
 
+var ENCODING_CLAIM_URL = "http://wso2.org/claims/identity/encoding";
+var QR_CODE_URL = "http://wso2.org/claims/identity/qrcodeurl";
+var SECRET_KEY = "http://wso2.org/claims/identity/secretkey";
+var REFRESH_KEY = "http://wso2.org/claims/identity/refreshsecretkey";
 function edit(){
 var cookie = session.get('auth-cookie');
 if(cookie == null){
@@ -54,6 +73,9 @@ var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(userName);
 
         for each (var f in fieldValues){
             var paramName = f.*::['claimUri'].text().toString();
+            if (paramName == ENCODING_CLAIM_URL || paramName == QR_CODE_URL || paramName == SECRET_KEY || paramName == REFRESH_KEY) {
+            	continue;
+            }
             var value = request.getParameter(paramName);
 
             var isValid = validate(value, f);
