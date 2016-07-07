@@ -425,10 +425,14 @@
                        orderId="11" enable="true"/>
         <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
 <<<<<<< HEAD
+<<<<<<< HEAD
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublishHandlerManager"
 =======
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublisherProxy"
 >>>>>>> 051c447... changing test resources due to IDENTITY-4783
+=======
+                       name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublisherProxy"
+>>>>>>> 0e2b958... changing test resource due to IDENTITY-4783
                        orderId="11" enable="true"/>
     </EventListeners>
 
