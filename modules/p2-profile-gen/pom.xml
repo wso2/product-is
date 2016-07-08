@@ -193,7 +193,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.governance.feature:${carbon.identity.governance.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.account.lock.feature:${carbon.identity.event.handler.account.lock.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.handler.event.account.lock.feature:${carbon.identity.event.handler.account.lock.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${carbon.identity.event.handler.email.version}
@@ -594,7 +594,7 @@
                                     <version>${carbon.identity.governance.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.account.lock.feature.group</id>
+                                    <id>org.wso2.carbon.identity.handler.event.account.lock.feature.group</id>
                                     <version>${carbon.identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
@@ -1107,7 +1107,7 @@
                                     <version>${carbon.identity.governance.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.account.lock.feature.group</id>
+                                    <id>org.wso2.carbon.identity.handler.event.account.lock.feature.group</id>
                                     <version>${carbon.identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
@@ -1559,7 +1559,7 @@
                                     <version>${carbon.identity.governance.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.account.lock.feature.group</id>
+                                    <id>org.wso2.carbon.identity.handler.event.account.lock.feature.group</id>
                                     <version>${carbon.identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
