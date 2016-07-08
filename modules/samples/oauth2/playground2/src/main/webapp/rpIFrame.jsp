@@ -4,7 +4,6 @@
 <html>
 <head>
     <title>OpenID Connect Session Management RP IFrame</title>
-    <script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/sha256.js"></script>
     <script language="JavaScript" type="text/javascript">
         var stat = "unchanged";
         var client_id = '<%=session.getAttribute(OAuth2Constants.CONSUMER_KEY)%>';
