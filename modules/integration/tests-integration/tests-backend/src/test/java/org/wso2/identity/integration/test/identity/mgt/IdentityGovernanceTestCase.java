@@ -35,8 +35,8 @@ import java.rmi.RemoteException;
 public class IdentityGovernanceTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(IdentityGovernanceTestCase.class.getName());
-    private static final String ACCOUNT_LOCK_TIME_PROPERTY_NAME = "accountLock.Time";
-    private static final String CONNECTOR_FRIENDLY_NAME = "Account Locking";
+    private static final String ACCOUNT_LOCK_TIME_PROPERTY_NAME = "account.lock.handler.Time";
+    private static final String CONNECTOR_FRIENDLY_NAME = "Account Locking Connector";
     private static final String ACCOUNT_LOCK_TIME_NEW_VALUE = "30";
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
 
