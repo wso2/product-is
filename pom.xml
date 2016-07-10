@@ -546,6 +546,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
                 <version>${product.identity.version}</version>
@@ -559,12 +564,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.oauth.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.oauth.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -643,6 +648,11 @@
                 <version>${opensaml.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.orbit.joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda.wso2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>xalan</groupId>
                 <artifactId>xalan</artifactId>
                 <version>${xalan.version}</version>
@@ -660,7 +670,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.agent</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.agent.sso.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.neethi</groupId>
@@ -671,11 +681,6 @@
                 <groupId>org.wso2.orbit.org.opensaml</groupId>
                 <artifactId>opensaml</artifactId>
                 <version>${opensaml2.wso2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>${joda.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -777,7 +782,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.sts.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -858,7 +863,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.saml.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.saml.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -869,8 +874,14 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.claim.metadata.mgt.stub</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-                <version>${carbon.identity.extension.version}</version>
+                <version>${carbon.identity.inbound.auth.openid.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -992,7 +1003,7 @@
                 <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
                 <version>${carbon.identity.version}</version>
             </dependency>
-	    <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
                 <version>${carbon.identity.extension.version}</version>
@@ -1092,16 +1103,19 @@
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <scope>test</scope>
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.core</artifactId>
+                <scope>test</scope>
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+                <scope>test</scope>
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
         </dependencies>
@@ -1167,8 +1181,25 @@
     </profiles>
 
     <properties>
-        <carbon.identity.version>5.1.1-SNAPSHOT</carbon.identity.version>
+        <carbon.identity.version>5.2.0</carbon.identity.version>
+        <carbon.identity.inbound.auth.openid.version>5.1.1</carbon.identity.inbound.auth.openid.version>
+        <carbon.identity.user.workflow.version>5.1.1-SNAPSHOT</carbon.identity.user.workflow.version>
+        <carbon.identity.inbound.auth.saml.version>5.1.1</carbon.identity.inbound.auth.saml.version>
+        <carbon.identity.inbound.auth.sts.version>5.1.1</carbon.identity.inbound.auth.sts.version>
+        <carbon.identity.outbound.auth.requestpath.basicauth.version>5.1.1-SNAPSHOT
+        </carbon.identity.outbound.auth.requestpath.basicauth.version>
+        <carbon.identity.local.auth.iwa.version>5.1.1-SNAPSHOT</carbon.identity.local.auth.iwa.version>
+        <carbon.identity.inbound.auth.oauth.version>5.1.1</carbon.identity.inbound.auth.oauth.version>
         <carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>
+        <carbon.identity.local.auth.basicauth.version>5.1.1</carbon.identity.local.auth.basicauth.version>
+        <carbon.identity.outbound.auth.passive.sts.version>5.1.1-SNAPSHOT
+        </carbon.identity.outbound.auth.passive.sts.version>
+        <carbon.identity.outbound.auth.samlsso.version>5.1.1</carbon.identity.outbound.auth.samlsso.version>
+        <carbon.identity.carbon.auth.saml2.version>5.1.1</carbon.identity.carbon.auth.saml2.version>
+        <carbon.identity.tool.samlsso.validator.version>5.1.1-SNAPSHOT</carbon.identity.tool.samlsso.validator.version>
+        <carbon.identity.outbound.auth.oidc.version>5.1.1</carbon.identity.outbound.auth.oidc.version>
+        <carbon.identity.entitlement.proxy.version>5.1.1</carbon.identity.entitlement.proxy.version>
+        <carbon.identity.agent.sso.version>5.1.1</carbon.identity.agent.sso.version>
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
@@ -1280,6 +1311,7 @@
         <commons.codec.version>1.8</commons.codec.version>
         <XmlSchema.version>1.4.7.wso2v3</XmlSchema.version>
         <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
+        <carbon.identity.authen.data.publisher.version>5.1.1-SNAPSHOT</carbon.identity.authen.data.publisher.version>
     </properties>
 
     <repositories>
