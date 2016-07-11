@@ -648,11 +648,16 @@
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 471c8f6... Adding IdentityGovernanceTestCase
 =======
             <class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>
 
 >>>>>>> c519394... Adding test case for password history validation
+=======
+            <class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>
+
+>>>>>>> 27120eb... Adding password history validation test case (#586)
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
