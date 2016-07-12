@@ -1183,7 +1183,8 @@
         <identity.inbound.auth.sts.version>5.1.1</identity.inbound.auth.sts.version>
         <identity.local.auth.fido.version>5.1.1</identity.local.auth.fido.version>
         <identity.outbound.auth.passive.sts.version>5.1.1</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.requestpath.basicauth.version>5.1.1</identity.outbound.auth.requestpath.basicauth.version>
+        <identity.outbound.auth.requestpath.basicauth.version>5.1.1
+        </identity.outbound.auth.requestpath.basicauth.version>
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <identity.carbon.auth.mutual.ssl.version>5.1.1</identity.carbon.auth.mutual.ssl.version>
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
@@ -1204,7 +1205,7 @@
         <identity.outbound.auth.windows.live.version>5.1.1</identity.outbound.auth.windows.live.version>
         <identity.outbound.auth.yahoo.version>5.1.1</identity.outbound.auth.yahoo.version>
         <identity.local.auth.iwa.version>5.1.1</identity.local.auth.iwa.version>
-        <!--<identity.agent-entitlement-filter.version>5.1.1-SNAPSHOT</identity.agent-entitlement-filter.version>-->
+        <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <identity.carbon.auth.iwa.version>5.1.1</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.1</identity.workflow.template.multisteps.version>
         <identity.outbound.auth.requestpath.oauth.version>5.1.1</identity.outbound.auth.requestpath.oauth.version>
@@ -1589,7 +1590,7 @@
         <repository>
             <id>wso2.releases28</id>
             <name>WSO2 internal Repository</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/orgwso2carbonidentity-1130/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/orgwso2carbonidentity-1135/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -1599,7 +1600,7 @@
         <repository>
             <id>wso2.releases29</id>
             <name>WSO2 internal Repository</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/orgwso2carbonidentity-1131/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/orgwso2carbonidentity-1136/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
