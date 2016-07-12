@@ -1216,8 +1216,7 @@
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <!--Identity Repo Versions End-->
-
-        <!--<carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>-->
+        
         <product.identity.version>5.2.0-SNAPSHOT</product.identity.version>
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
