@@ -649,6 +649,7 @@
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 471c8f6... Adding IdentityGovernanceTestCase
 =======
             <class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>
@@ -656,6 +657,9 @@
 >>>>>>> c519394... Adding test case for password history validation
 =======
             <class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>
+=======
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>-->
+>>>>>>> 18cf9eb... Commenting PasswordHistoryValidationTestCase until it fixed
 
 >>>>>>> 27120eb... Adding password history validation test case (#586)
             <!--User Store Test Cases-->
