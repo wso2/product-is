@@ -192,6 +192,7 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=[%d] %5p {%c} - %x %m %n" value="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=TID: [%T] [%S] [%d] %P%5p {%c} - %x %m {%c}%n${line.separator}log4j.appender.CARBON_MEMORY.layout.TenantPattern=%U%@%D [%T] [%S]${line.separator}log4j.appender.CARBON_MEMORY.columnList=%T,%S,%A,%d,%c,%p,%m,%H,%I,%Stacktrace" />
 
+                                <!-- Update carbon webapps web.xml file for HttpHeaderSecurityFilter to skip /oidc/* path from antiClickJacking  -->
                                 <replaceregexp
                                         file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml"
                                         match="(?s)&lt;filter&gt;\s+&lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;.*&lt;/filter&gt;"
