@@ -1179,13 +1179,11 @@
         <identity.inbound.auth.oauth.version>5.1.1</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.1.1</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.1</identity.agent.sso.version>
-        <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <identity.inbound.auth.sts.version>5.1.1</identity.inbound.auth.sts.version>
         <identity.local.auth.fido.version>5.1.1</identity.local.auth.fido.version>
         <identity.outbound.auth.passive.sts.version>5.1.1</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.1
         </identity.outbound.auth.requestpath.basicauth.version>
-        <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <identity.carbon.auth.mutual.ssl.version>5.1.1</identity.carbon.auth.mutual.ssl.version>
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
         <identity.notification.json.version>5.1.1</identity.notification.json.version>
@@ -1195,7 +1193,6 @@
         <identity.user.account.association.version>5.1.1</identity.user.account.association.version>
         <identity.user.workflow.version>5.1.1</identity.user.workflow.version>
         <identity.user.ws.version>5.1.1</identity.user.ws.version>
-        <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <identity.userstore.ldap.version>5.1.1</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.1.1</identity.userstore.remote.version>
         <identity.workflow.impl.bps.version>5.1.1</identity.workflow.impl.bps.version>
@@ -1205,7 +1202,6 @@
         <identity.outbound.auth.windows.live.version>5.1.1</identity.outbound.auth.windows.live.version>
         <identity.outbound.auth.yahoo.version>5.1.1</identity.outbound.auth.yahoo.version>
         <identity.local.auth.iwa.version>5.1.1</identity.local.auth.iwa.version>
-        <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <identity.carbon.auth.iwa.version>5.1.1</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.1</identity.workflow.template.multisteps.version>
         <identity.outbound.auth.requestpath.oauth.version>5.1.1</identity.outbound.auth.requestpath.oauth.version>
@@ -1215,6 +1211,10 @@
         <identity.data.publisher.authentication.version>5.1.1</identity.data.publisher.authentication.version>
         <identity.carbon.auth.thrift.version>5.2.0</identity.carbon.auth.thrift.version>
         <identity.application.auth.oidc.version>5.1.1</identity.application.auth.oidc.version>
+        <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
+        <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
+        <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
+        <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <!--Identity Repo Versions End-->
 
         <!--<carbon.identity.extension.version>5.1.1-SNAPSHOT</carbon.identity.extension.version>-->
