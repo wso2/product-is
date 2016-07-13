@@ -4256,7 +4256,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.5</jaggeryjs.version>
+        <jaggeryjs.version>0.12.6</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -4364,9 +4364,13 @@
 >>>>>>> 311598b... Identity-3648 upgraded opensaml, kernel, registry, commons, analytics-commons, business-process, multitenancy, axiom, rampart versions
 =======
         <carbon.multitenancy.version>4.5.2</carbon.multitenancy.version>
+<<<<<<< HEAD
 >>>>>>> 8eed26a... Update identity-framework, extensions, jaggery and multi tenancy versions
         <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
 >>>>>>> c52f04c... updating versions
+=======
+        <jaggery.extensions.version>1.5.3</jaggery.extensions.version>
+>>>>>>> d3bf1da... Updated jaggeryjs version to 0.12.6 and jaggery-extensions version to 1.5.3.
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
 <<<<<<< HEAD
