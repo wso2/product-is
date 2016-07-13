@@ -1,60 +1,68 @@
 {
-  "name": "org.wso2.is.analytics.stream.OverallSession",
-  "version": "1.0.0",
-  "nickName": "",
-  "description": "",
-  "payloadData": [
-    {
-      "name": "sessionId",
-      "type": "STRING"
-    },
-    {
-      "name": "startTimestamp",
-      "type": "LONG"
-    },
-    {
-      "name": "renewTimestamp",
-      "type": "LONG"
-    },
-    {
-      "name": "terminationTimestamp",
-      "type": "LONG"
-    },
-    {
-      "name": "action",
-      "type": "INT"
-    },
-    {
-      "name": "userName",
-      "type": "STRING"
-    },
-    {
-      "name": "userstoreDomain",
-      "type": "STRING"
-    },
-    {
-      "name": "IP",
-      "type": "STRING"
-    },
-    {
-      "name": "region",
-      "type": "STRING"
-    },
-    {
-      "name": "tenantDomain",
-      "type": "STRING"
-    },
-    {
-      "name": "rememberMeFlag",
-      "type": "BOOL"
-    },
-    {
-      "name": "userAgent",
-      "type": "STRING"
-    },
-    {
-      "name": "_timestamp",
-      "type": "LONG"
-    }
-  ]
+    "name": "org.wso2.is.analytics.stream.OverallSession",
+    "version": "1.0.0",
+    "nickName": "",
+    "description": "",
+    "payloadData": [
+        {
+            "name": "sessionId",
+            "type": "STRING"
+        },
+        {
+            "name": "startTimestamp",
+            "type": "LONG"
+        },
+        {
+            "name": "renewTimestamp",
+            "type": "LONG"
+        },
+        {
+            "name": "terminationTimestamp",
+            "type": "LONG"
+        },
+        {
+            "name": "action",
+            "type": "INT"
+        },
+        {
+            "name": "userName",
+            "type": "STRING"
+        },
+        {
+            "name": "userstoreDomain",
+            "type": "STRING"
+        },
+        {
+            "name": "IP",
+            "type": "STRING"
+        },
+        {
+            "name": "region",
+            "type": "STRING"
+        },
+        {
+            "name": "tenantDomain",
+            "type": "STRING"
+        },
+        {
+            "name": "serviceProvider",
+            "type": "STRING"
+        },
+        {
+            "name": "identityProviders",
+            "type": "STRING"
+        },
+        {
+            "name": "rememberMeFlag",
+            "type": "BOOL"
+        },
+        {
+            "name": "userAgent",
+            "type": "STRING"
+        },
+        {
+            "name": "_timestamp",
+            "type": "LONG"
+        }
+    ]
 }
