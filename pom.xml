@@ -1267,7 +1267,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.12.5</jaggeryjs.version>
+        <jaggeryjs.version>0.12.6</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
@@ -1288,7 +1288,7 @@
         <carbon.deployment.version>4.7.0</carbon.deployment.version>
         <carbon.registry.version>4.5.4</carbon.registry.version>
         <carbon.multitenancy.version>4.5.2</carbon.multitenancy.version>
-        <jaggery.extensions.version>1.5.0</jaggery.extensions.version>
+        <jaggery.extensions.version>1.5.3</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
