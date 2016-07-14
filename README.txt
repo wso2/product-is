@@ -130,7 +130,7 @@ All known issues have been recorded at https://wso2.org/jira/issues/?filter=1302
 Issues Fixed In This Release
 ============================
 
-All the fixed for WSO2 Identity Server 5.2.0-BETA release have been recorded at https://wso2.org/jira/issues/?filter=13027
+All the fixed for WSO2 Identity Server 5.2.0-BETA-2 release have been recorded at https://wso2.org/jira/issues/?filter=13027
 
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
