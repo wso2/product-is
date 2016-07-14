@@ -4558,6 +4558,7 @@
 >>>>>>> f9cba3f... updated business process version to 4.4.8
 =======
         <carbon.business-process.version>4.4.9</carbon.business-process.version>
+<<<<<<< HEAD
 >>>>>>> 9ca3cb5... Updating feature versions for identity-framework and identity-extension features
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
 >>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
@@ -4567,6 +4568,9 @@
 =======
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
 >>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
+=======
+        <carbon.analytics-common.version>5.1.0</carbon.analytics-common.version>
+>>>>>>> f3f1481... updating analytics commons version
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
