@@ -169,8 +169,10 @@
                                         replace="${security-header-filter-mapping-is-token}"/>
 
 
-                                <!-- Update Owasp.CsrfGuard.properties file with ValidateWhenNoSessionExists to disable validation on requests made with no valid session -->
+                                <!-- Update Owasp.CsrfGuard.properties file location to fix IBM JDK and DevStudio issue-->
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" token="/repository/conf/security/Owasp.CsrfGuard.Carbon.properties" value="repository/conf/security/Owasp.CsrfGuard.Carbon.properties"/>
 
+                                <!-- Update Owasp.CsrfGuard.properties file with ValidateWhenNoSessionExists to disable validation on requests made with no valid session -->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/Owasp.CsrfGuard.Carbon.properties" token="org.owasp.csrfguard.ValidateWhenNoSessionExists = true" value="org.owasp.csrfguard.ValidateWhenNoSessionExists = false"/>
 
                                 <!-- Update Owasp.CsrfGuard.properties file with authenticator endpoint URLs -->
