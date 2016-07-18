@@ -35,6 +35,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenti
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.application.mgt.stub.IdentityApplicationManagementServiceIdentityApplicationManagementException;
 import org.wso2.carbon.identity.application.mgt.stub.IdentityApplicationManagementServiceStub;
+import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserStoreInfo;
@@ -77,6 +78,33 @@ public class ApplicationManagementServiceClient {
             log.debug("Invoking service " + serviceURL);
         }
 
+    }
+
+    /**
+     *
+     * @param username
+     * @param password
+     * @param backendServerURL
+     * @param configCtx
+     * @throws org.apache.axis2.AxisFault
+     */
+    public ApplicationManagementServiceClient(String username, String password, String backendServerURL,
+                                              ConfigurationContext configCtx) throws AxisFault {
+
+        String serviceURL = backendServerURL + "IdentityApplicationManagementService";
+        String userAdminServiceURL = backendServerURL + "UserAdmin";
+        stub = new IdentityApplicationManagementServiceStub(configCtx, serviceURL);
+        userAdminStub = new UserAdminStub(configCtx, userAdminServiceURL);
+
+        ServiceClient client = stub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        AuthenticateStubUtil.authenticateStub(username, password, stub);
+
+        ServiceClient userAdminClient = userAdminStub._getServiceClient();
+        Options userAdminOptions = userAdminClient.getOptions();
+        userAdminOptions.setManageSession(true);
+        AuthenticateStubUtil.authenticateStub(username, password, userAdminStub);
     }
 
     /**
