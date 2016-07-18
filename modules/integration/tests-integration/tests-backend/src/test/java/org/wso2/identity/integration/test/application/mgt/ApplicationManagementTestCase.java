@@ -23,6 +23,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
@@ -35,13 +36,14 @@ import java.util.List;
 
 public class ApplicationManagementTestCase extends ISIntegrationTest {
 
+    private static final String PERMISSION_ADMIN_LOGIN = "/permission/admin/login";
+    private ConfigurationContext configContext;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
+        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
                         , null);
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
 
@@ -513,6 +515,33 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
 
         } catch (Exception e) {
             Assert.fail("Error while trying to update Claim Configuration", e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Retrieve all federated IdPs with login permission")
+    public void testRetrieveFederatedIdPsWithLoginPermission() {
+        try {
+            String loginRole = "loginRole";
+            String testAssociationUser1 = "testAssociationUser1";
+            String testPassword1 = "testPassword1";
+
+            UserManagementClient userMgtClient =
+                    new UserManagementClient(backendURL, sessionCookie);
+            userMgtClient
+                    .addRole(loginRole, new String[0], new String[] { PERMISSION_ADMIN_LOGIN });
+            userMgtClient
+                    .addUser(testAssociationUser1, testPassword1, new String[] { loginRole }, null);
+
+            ApplicationManagementServiceClient appManageServiceClient =
+                    new ApplicationManagementServiceClient(testAssociationUser1, testPassword1,
+                                                           backendURL, configContext);
+            IdentityProvider[] idps = appManageServiceClient.getAllFederatedIdentityProvider();
+
+            Assert.assertTrue(idps != null && idps.length != 0,
+                              "Federated IdPs have been retrieved by a" +
+                              " user with login permission.");
+        } catch (Exception e) {
+            Assert.fail("Error while trying to retrieve federated idps with login permission", e);
         }
     }
 
