@@ -113,6 +113,7 @@
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
+            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
@@ -128,7 +129,7 @@
             <!--Identity Provider Management Test Cases-->
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
-            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorTestCase" />
+            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorBaseTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
