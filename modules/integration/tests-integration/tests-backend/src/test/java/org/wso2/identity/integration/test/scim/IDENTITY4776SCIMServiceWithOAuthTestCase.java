@@ -1,5 +1,5 @@
 /*
- * Copyright (c)  2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -67,7 +67,7 @@ import java.util.ArrayList;
  * 4. Login to carbon using secondary store user (to invoke BasicAuthHandler).
  * 5. Try to create new user using SCIM Service (using auth token generated on step 3).
  */
-public class SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private static final String DOMAIN_ID = "WSO2TEST.COM";
     private static final String USER_STORE_DB_NAME = "JDBC_USER_STORE_DB";
@@ -92,8 +92,8 @@ public class SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstractIntegrati
     public void init() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        String pathToCatalinaXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "IS" + File.separator + "scim" + File.separator + "catalina-server.xml";
+        String pathToCatalinaXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS"
+                + File.separator + "scim" + File.separator + "IDENTITY4776" + File.separator + "catalina-server.xml";
         String targetCatalinaXML = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator
                 + "conf" + File.separator + "tomcat" + File.separator + "catalina-server.xml";
         serverConfigurationManager = new ServerConfigurationManager(isServer);
