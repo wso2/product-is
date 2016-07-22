@@ -49,7 +49,7 @@ public class SampleContextEventListener implements ServletContextListener {
                         getResourceAsStream("/WEB-INF/classes/avis.properties"));
             }
             InputStream keyStoreInputStream = servletContextEvent.getServletContext().
-                    getResourceAsStream("WEB-INF/classes/wso2carbon.jks");
+                    getResourceAsStream("/WEB-INF/classes/wso2carbon.jks");
             SSOAgentX509Credential credential =
                     new SSOAgentX509KeyStoreCredential(keyStoreInputStream,
                             properties.getProperty("KeyStorePassword").toCharArray(),
