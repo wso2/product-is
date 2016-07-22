@@ -387,7 +387,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             // authenticationStep
             Assert.assertEquals(eventStreamData[14], "1");
             // isFirstLogin
-            Assert.assertEquals(eventStreamData[18], true);
+            Assert.assertEquals(eventStreamData[18], false);
             extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
