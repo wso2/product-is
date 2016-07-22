@@ -258,7 +258,7 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${identity.carbon.auth.saml2.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.thrift.authentication.feature:${identity.carbon.auth.thrift.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.authenticator.mutualssl.feature:${identity.carbon.auth.mutual.ssl.version}
@@ -789,7 +789,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
-                                    <version>${identity.carbon.auth.thrift.version}</version>
+                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
@@ -1278,7 +1278,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
-                                    <version>${identity.carbon.auth.thrift.version}</version>
+                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
@@ -1699,7 +1699,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
-                                    <version>${identity.carbon.auth.thrift.version}</version>
+                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.server.feature.group</id>
