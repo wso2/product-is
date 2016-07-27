@@ -109,7 +109,7 @@
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorTestCase" />
             <!--Entitlement Test Cases-->
-            <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>
         </classes>
     </test>
 
