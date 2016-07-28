@@ -184,13 +184,13 @@
             </includes>
         </fileSet>
 
-        <!--copy the authentication jars for x509,emailotp, smsotp, office365 and twitter authenticators-->
+        <!--copy the authentication jars for totp, x509, emailotp, smsotp, office365 and twitter authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/jar</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy web apps for for smsotp and emailotp authenticators-->
+        <!--copy web apps for for totp, smsotp and emailotp authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
