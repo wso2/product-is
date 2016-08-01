@@ -30,7 +30,7 @@ var webService = new ws.WSRequest();
 
 function removeSession(sessionId){
     var result = callWSReturnJSON(webService, serverUrl, "ser:removeSession", sessionId);
-    return stringify(result.return);
+    return result;
 }
 
 %>
