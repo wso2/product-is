@@ -1234,6 +1234,7 @@
         <identity.carbon.auth.thrift.version>5.5.0-SNAPSHOT</identity.carbon.auth.thrift.version>
         <identity.application.auth.oidc.version>5.1.1</identity.application.auth.oidc.version>
         <identity.governance.version>1.0.0-SNAPSHOT</identity.governance.version>
+        <org.wso2.carbon.identity.auth.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>
             1.0.0-SNAPSHOT</identity.event.handler.account.lock.version>
         <identity.event.handler.email.version>1.0.0-SNAPSHOT</identity.event.handler.email.version>
