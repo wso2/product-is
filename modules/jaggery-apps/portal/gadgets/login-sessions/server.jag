@@ -35,6 +35,16 @@ if (log.isDebugEnabled()) {
 
 var sessionMgtAdminClient = require('controllers/sessionMgtAdminClient.jag');
 
-print(sessionMgtAdminClient.removeSession(sessionId));
+var result = sessionMgtAdminClient.removeSession(sessionId);
+
+if(result != null || result != undefined) {
+    if(result.return.equals("true")) {
+        print("Session Termination Successful");
+    }else {
+        print("Session Termination is Failed due to Invalid Session ID");
+    }
+}else {
+        print("Session Termination is Failed due to Unexpected Error");
+}
 
 %>

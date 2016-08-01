@@ -74,6 +74,7 @@
                     url:PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/server.jag?sessionId=" + sessionId
 
                 }).done(function (data) {
+                    alert(data);
                     return data;
                 }).fail(function () {
                     console.log('error');
@@ -81,6 +82,22 @@
                     console.log('completed');
                 });
             }
+
+            function search() {
+                var username = document.getElementById("username").value;
+                $.ajax({
+                    type:"GET",
+                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/index.jag?username=" + username
+
+                }).done(function (data) {
+                   drawPage(data);
+                }).fail(function () {
+                    console.log('error');
+                }).always(function () {
+                    console.log('completed');
+                });
+            }
+
         </script>
 
         <script type="text/javascript">
@@ -131,8 +148,24 @@
             });
 
             function drawPage(data) {
-
                 var top =
+            "    <div class=\"container\">\n" +
+            "        <div class=\"row\">\n" +
+            "            <div class=\"col-md-6\">\n" +
+            "                <h4>Search User</h4>\n" +
+            "                <div id=\"custom-search-input\">\n" +
+            "                    <div style = 'width: 400px;' class=\"input-group col-md-12\">\n" +
+            "                        <input type=\"text\" class=\"form-control input-lg\" placeholder=\"Username\" style = 'height: 40px; font-size: 25px;' id=username />\n" +
+            "                        <span class=\"input-group-btn\">\n" +
+            "                            <button onclick='search()' class=\"btn btn-info btn-lg\" type=\"button\">\n" +
+            "                                <i class=\"glyphicon glyphicon-search\"></i>\n" +
+            "                            </button>\n" +
+            "                        </span>\n" +
+            "                    </div>\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "    </div>\n" +
             "    <div class=\"col-lg-12 content-section\">\n" +
             "        <table class=\"table table-bordered\">\n" +
             "            <thead>\n" +

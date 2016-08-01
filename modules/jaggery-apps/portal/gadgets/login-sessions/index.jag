@@ -2,14 +2,25 @@
 include("util/constants.jag");
 var log = new Log();
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
 var cookie = request.getParameter("cookie") ;
 var user = request.getParameter("user");
-var tenantDomain = multitenantUtils.getTenantDomain(user);
+var userName = request.getParameter("username");
+
 fetchData();
 function fetchData(){
 
-  session.put('auth-cookie', cookie);
-  session.put('user', user);
+  if(cookie != null) {
+    session.put('auth-cookie', cookie);
+  }
+
+  if(user != null) {
+    session.put('user', user);
+  } else {
+    user = session.get('user');
+  }
+
+  var tenantDomain = multitenantUtils.getTenantDomain(user);
 
   var Base64 = Packages.org.apache.commons.codec.binary.Base64;
 
@@ -19,24 +30,31 @@ function fetchData(){
   var base64Str = new java.lang.String(base64);
 
   var headers = {"Authorization":"Basic " + base64Str, "Content-Type":"application/json"};
-  var data = {"tableName":"ORG_WSO2_IS_ANALYTICS_STREAM_ACTIVESESSIONS", "query":"tenantDomain:" + tenantDomain, "start":0, "count":3};
+
+  var data = {"tableName":"ORG_WSO2_IS_ANALYTICS_STREAM_ACTIVESESSIONS", "query":"tenantDomain:" + tenantDomain, "start":0, "count":10};
+
+  if(userName != null ) {
+     data = {"tableName":"ORG_WSO2_IS_ANALYTICS_STREAM_ACTIVESESSIONS", "query":"tenantDomain:" + tenantDomain + " AND userName:" + userName ,"start":0, "count":3};
+  }
+
   var jsonResult = post(DAS_SERVER_URL, stringify(data), headers,"json");
   var dataResult = jsonResult.data;
 
   var tableRows = new Array ();
 
-  for (i = 0; i < dataResult.length; i++) {
+   if(dataResult != null) {
+      for (i = 0; i < dataResult.length; i++) {
 
-    var obj = {};
-    obj.userName = dataResult[i].values.userName;
-    obj.IP = dataResult[i].values.IP;
-    obj.userAgent = dataResult[i].values.userAgent;
-    obj.startTimestamp = new Date(dataResult[i].values.startTimestamp).toString("MMM dd");
-    obj.sessionId = dataResult[i].values.sessionId;
+        var obj = {};
+        obj.userName = dataResult[i].values.userName;
+        obj.IP = dataResult[i].values.IP;
+        obj.userAgent = dataResult[i].values.userAgent;
+        obj.startTimestamp = new Date(dataResult[i].values.startTimestamp).toString("MMM dd");
+        obj.sessionId = dataResult[i].values.sessionId;
 
-    tableRows [i] = obj;
-  }
-
+        tableRows [i] = obj;
+      }
+   }
   print(tableRows);
 }
 

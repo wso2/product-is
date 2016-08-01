@@ -27,7 +27,6 @@ function call(webService, serverUrl, options, payload) {
     var userName = session.get("user");
     var pwd = session.get("pwd");
 
-    log.debug(cookie);
     if (cookie != null) {
 
         options["HTTPHeaders"] = [{name: "cookie", value: cookie}];
@@ -39,9 +38,6 @@ function call(webService, serverUrl, options, payload) {
     } else {
         webService.open(options, serverUrl, false);
     }
-
-    log.debug(payload);
-
     webService.send(payload);
 
 }
@@ -84,31 +80,21 @@ function callWSInOnlyWithParams(webService, serverUrl, action, params, req) {
 
 function callWSReturnXML(webService, serverUrl, action, params, req) {
 
-    log.info(serverUrl);
-    log.info(action);
-    log.info("params :" + params);
     var options = new Array();
     options.useSOAP = 1.1;
     options.action = action;
 
     var payload = req;
     if (req == null) {
-        log.info("test1");
         if (params != null) {
-            log.info("test2");
             payload = payloadFac.getPayload(options.action, params);
         } else {
-            log.info("test3");
             payload = payloadFac.getPayload(options.action);
         }
     }
-    log.info("test4");
-    log.info(payload);
     var result;
 
     try {
-
-        log.debug(payload);
 
         call(webService, serverUrl, options, payload);
         if (webService.readyState == 4) {
@@ -125,7 +111,6 @@ function callWSReturnXML(webService, serverUrl, action, params, req) {
 }
 
 function callWSReturnJSON(webService, serverUrl, action, params, req) {
-    log.info("params1 :" + params);
     var result = callWSReturnXML(webService, serverUrl, action, params, req);
     return E4XtoJSON(result);
 
