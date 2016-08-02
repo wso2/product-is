@@ -11,10 +11,12 @@ function getUser() {
 
     try {
         var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(user);
+        var tenantDomain = multitenantUtils.getTenantDomain(user);
+
         var client = require('controllers/account_recovery/identityMgtClient.jag');
         // get all challenge questions for a user based on his tenantDomain and locale
-        var fieldValues = client.getChallengeQuestionsForUser(tenantAwareUserName);
-        var userChallenges = client.getUserChallengeAnswers(tenantAwareUserName);
+        var fieldValues = client.getChallengeQuestionsForUser(tenantAwareUserName, tenantDomain);
+        var userChallenges = client.getUserChallengeAnswers(tenantAwareUserName, tenantDomain);
         fieldValues.selectedChalanges = userChallenges.return;
 
         // Get User Challenges
