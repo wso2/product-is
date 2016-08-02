@@ -16,13 +16,13 @@ function setUserChallengeAnswers(payload){
 }
 
 // get answered challenge questions from the backend
-function getUserChallengeAnswers(userName){
-    return callWSReturnJSON(webService, serverUrl, "urn:getUserChallengeAnswers", new Array(userName));
+function getUserChallengeAnswers(userName, tenantDomain){
+    return callWSReturnJSON(webService, serverUrl, "urn:getUserChallengeAnswers", [userName, tenantDomain]);
 }
 
 // get challenge questions for a user based on his tenant domain and locale
-function getChallengeQuestionsForUser(userName) {
-    return callWSReturnJSON(webService, serverUrl, "urn:getChallengeQuestionsForUser", new Array(userName));
+function getChallengeQuestionsForUser(userName, tenantDomain) {
+    return callWSReturnJSON(webService, serverUrl, "urn:getChallengeQuestionsForUser", [userName, tenantDomain]);
 }
 
 
