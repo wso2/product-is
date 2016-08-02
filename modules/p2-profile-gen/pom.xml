@@ -755,10 +755,10 @@
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.event.output.adapter.server.feature:${carbon.analytics-common.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.output.adapter.sms.server.feature:${carbon.analytics-common.version}
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.commons.server.feature:${carbon.analytics-common.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.output.adapter.email.server.feature:${carbon.analytics-common.version}
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.event.stream.server.feature:${carbon.analytics-common.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.module.mgt.feature:${carbon.deployment.version}
@@ -2206,11 +2206,11 @@
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.event.output.adapter.sms.server.feature.group</id>
+                                    <id>org.wso2.carbon.event.stream.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.event.output.adapter.email.server.feature.group</id>
+                                    <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
@@ -2627,6 +2627,14 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.stream.server.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
@@ -3094,6 +3102,14 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.stream.server.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
@@ -3629,6 +3645,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.metrics.feature.group</id>
                                     <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.stream.server.feature.group</id>
+                                    <version>${carbon.analytics-common.version}</version>
                                 </feature>
 				
                             </features>
