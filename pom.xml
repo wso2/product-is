@@ -3951,7 +3951,7 @@
         <org.wso2.carbon.identity.auth.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>
             1.0.0-SNAPSHOT</identity.event.handler.account.lock.version>
-        <identity.event.handler.email.version>1.0.0-SNAPSHOT</identity.event.handler.email.version>
+        <identity.event.handler.notification.version>1.0.0-SNAPSHOT</identity.event.handler.notification.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->

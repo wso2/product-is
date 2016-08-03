@@ -527,10 +527,10 @@
 >>>>>>> 9ca3cb5... Updating feature versions for identity-framework and identity-extension features
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${identity.event.handler.email.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.email.mgt.feature:${identity.event.handler.notification.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.event.handler.email.server.feature:${identity.event.handler.email.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.event.handler.notification.server.feature:${identity.event.handler.notification.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.framework.version}
@@ -992,11 +992,11 @@
 >>>>>>> 0fc48d0... Adding removed identity-mgt and notification-mgt
 =======
                                     <id>org.wso2.carbon.email.mgt.feature.group</id>
-                                    <version>${identity.event.handler.email.version}</version>
+                                    <version>${identity.event.handler.notification.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
-                                    <version>${identity.event.handler.email.version}</version>
+                                    <id>org.wso2.carbon.event.handler.notification.server.feature.group</id>
+                                    <version>${identity.event.handler.notification.version}</version>
                                 </feature>
                                 <feature>
 >>>>>>> 4521216... Adding Email-event-feature
@@ -2707,11 +2707,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.email.mgt.feature.group</id>
-                                    <version>${identity.event.handler.email.version}</version>
+                                    <version>${identity.event.handler.notification.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.event.handler.email.server.feature.group</id>
-                                    <version>${identity.event.handler.email.version}</version>
+                                    <id>org.wso2.carbon.event.handler.notification.server.feature.group</id>
+                                    <version>${identity.event.handler.notification.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.registration.feature.group</id>
