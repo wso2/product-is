@@ -1237,7 +1237,7 @@
         <org.wso2.carbon.identity.auth.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>
             1.0.0-SNAPSHOT</identity.event.handler.account.lock.version>
-        <identity.event.handler.email.version>1.0.0-SNAPSHOT</identity.event.handler.email.version>
+        <identity.event.handler.notification.version>1.0.0-SNAPSHOT</identity.event.handler.notification.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
@@ -1343,7 +1343,7 @@
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.9</carbon.business-process.version>
-        <carbon.analytics-common.version>5.1.1</carbon.analytics-common.version>
+        <carbon.analytics-common.version>5.1.2-SNAPSHOT</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
