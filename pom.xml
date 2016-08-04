@@ -838,6 +838,12 @@
             <email>damiths AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
+        <developer>
+            <name>Jayanga Kaushalya</name>
+            <id>jayangak</id>
+            <email>jayangak AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
     </developers>
 
 
