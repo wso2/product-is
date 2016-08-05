@@ -16,6 +16,10 @@ function revoke(req){
 
 }
 
+function revokeApproveAlways(req){
+    var result = callWSReturnJSON(webService, serverUrl, "urn:updateApproveAlwaysForAppConsentByResourceOwner", null, req);
+    return result;
+}
 
 function getAppsAuthorizedByUser(){
 

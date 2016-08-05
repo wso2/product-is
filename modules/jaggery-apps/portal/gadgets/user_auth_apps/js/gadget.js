@@ -29,7 +29,10 @@ function drawPage() {
                     "                    <td>" + username + "</td>\n" +
                     "                    <td><a title=\"Remove Application\" onclick=\"validate('" + json.return[i].
                     applicationName + "');\"\n" +
-                    " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove Application</a></td>\n" +
+                    " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove Application</a>&nbsp&nbsp" +
+                    "                   <a title=\"Revoke ApproveAlways\" onclick=\"itemUpdateValidate('" + json.return[i].
+                    applicationName + "');\"\n" +
+                    " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Revoke ApproveAlways</a></td>\n" +
                     "                </tr>\n";
             }
         }
@@ -46,7 +49,10 @@ function drawPage() {
                 "                    <td>" + username + "</td>\n" +
                 "                    <td><a title=\"Remove Application\" onclick=\"validate('" + json.return.
                 applicationName + "');\"\n" +
-                " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove Application</a></td>\n" +
+                " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove Application</a>&nbsp&nbsp" +
+                "                    <a title=\"Revoke ApproveAlways\" onclick=\"itemUpdateValidate('" + json.return.
+                applicationName + "');\"\n" +
+                " href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Revoke ApproveAlways</a></td>\n" +
                 "                </tr>\n";
         }
     }
@@ -81,6 +87,28 @@ function itemRemove(appName) {
             console.log('completed');
         });
 
+}
+
+function itemUpdate(appName) {
+    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_auth_apps/controllers/my_auth_apps/revoke_app_consent_approveAlways.jag";
+    $.ajax({
+        url:str,
+        type:"POST",
+        data:"appName=" + appName + "&cookie=" + cookie + "&user=" + userName
+    })
+        .done(function (data) {
+            cancel();
+
+        })
+        .fail(function () {
+            message({content:'Error while revoking consent approve always of Application ', type:'error', cbk:function () {
+            } });
+            console.log('error');
+
+        })
+        .always(function () {
+            console.log('completed');
+        });
 }
 
 function isArray(element) {
@@ -121,7 +149,15 @@ function itemRemoveValidate(appName) {
         itemRemove(appName);
     }, cancelCallback:function () {
     }});
-} 
+}
+
+function itemUpdateValidate(appName) {
+    var msg = "You are about to revoke consent approve always of " + appName + ". Do you want to proceed?";
+    message({content:msg, type:'confirm', okCallback:function () {
+        itemUpdate(appName);
+    }, cancelCallback:function () {
+    }});
+}
 
 
 
