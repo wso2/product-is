@@ -116,6 +116,10 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
+
+            <!-- Request path authenticator test cases-->
+            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorInvalidUserTestCase" />
+            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.IDENTITY4604RequestPathAuthWithSAMLSSO" />
         </classes>
     </test>
 
