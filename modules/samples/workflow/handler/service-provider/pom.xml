@@ -24,7 +24,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.identity</groupId>
     <artifactId>sample-handler</artifactId>
     <packaging>bundle</packaging>
     <dependencies>
