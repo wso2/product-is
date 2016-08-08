@@ -31,7 +31,7 @@
             "type": "INT"
         },
         {
-            "name": "userName",
+            "name": "username",
             "type": "STRING"
         },
         {
@@ -39,7 +39,7 @@
             "type": "STRING"
         },
         {
-            "name": "IP",
+            "name": "remoteIp",
             "type": "STRING"
         },
         {

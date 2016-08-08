@@ -19,11 +19,19 @@
       "type": "STRING"
     },
     {
+      "name": "eventType",
+      "type": "STRING"
+    },
+    {
       "name": "authenticationSuccess",
       "type": "BOOL"
     },
     {
-      "name": "userName",
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "name": "localUserName",
       "type": "STRING"
     },
     {
@@ -47,11 +55,11 @@
       "type": "STRING"
     },
     {
-      "name": "serviceprovider",
+      "name": "serviceProvider",
       "type": "STRING"
     },
     {
-      "name": "remembermeEnabled",
+      "name": "rememberMeEnabled",
       "type": "BOOL"
     },
     {
@@ -63,7 +71,7 @@
       "type": "BOOL"
     },
     {
-      "name": "rolesCommaSeperated",
+      "name": "rolesCommaSeparated",
       "type": "STRING"
     },
     {

@@ -354,40 +354,41 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 }
                 if (authenticationStreamId.equalsIgnoreCase(streamId)) {
                     Object[] eventStreamData = event.getPayloadData();
-                    if ((Boolean) eventStreamData[2]) {
+                    if ("overall".equalsIgnoreCase((String) eventStreamData[2])) {
                         overallAuthEvent = event;
-                    } else if ((Boolean) eventStreamData[16]) {
+                    } else if ("step".equalsIgnoreCase((String) eventStreamData[2])) {
                         authStepEvent = event;
                     }
                 }
             }
 
             assertSessionEvent(sessionEvent);
+
             Object[] eventStreamData = overallAuthEvent.getPayloadData();
 
             eventStreamData = authStepEvent.getPayloadData();
             // authenticationSuccess
-            Assert.assertEquals(eventStreamData[2], false);
+            Assert.assertEquals(eventStreamData[3], false);
             // userName
-            Assert.assertEquals(eventStreamData[3], "samlAnalyticsuser1");
+            Assert.assertEquals(eventStreamData[4], "samlAnalyticsuser1");
             // userStoreDomain
-            Assert.assertEquals(eventStreamData[4], "PRIMARY");
+            Assert.assertEquals(eventStreamData[6], "PRIMARY");
             // tenantDomain
-            Assert.assertEquals(eventStreamData[5], "carbon.super");
+            Assert.assertEquals(eventStreamData[7], "carbon.super");
             // inboundAuthType
-            Assert.assertEquals(eventStreamData[8], "samlsso");
+            Assert.assertEquals(eventStreamData[10], "samlsso");
             // serviceprovider
-            Assert.assertEquals(eventStreamData[9], "SAML-SSO-TestApplication");
+            Assert.assertEquals(eventStreamData[11], "SAML-SSO-TestApplication");
             // remembermeEnabled
-            Assert.assertEquals(eventStreamData[10], false);
+            Assert.assertEquals(eventStreamData[12], false);
             // forceAuthEnabled
-            Assert.assertEquals(eventStreamData[11], false);
+            Assert.assertEquals(eventStreamData[13], false);
             // rolesCommaSeperated
-            Assert.assertEquals(eventStreamData[13], "Internal/everyone");
+            Assert.assertEquals(eventStreamData[15], "Internal/everyone");
             // authenticationStep
-            Assert.assertEquals(eventStreamData[14], "1");
+            Assert.assertEquals(eventStreamData[16], "1");
             // isFirstLogin
-            Assert.assertEquals(eventStreamData[18], false);
+            Assert.assertEquals(eventStreamData[20], false);
             extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
@@ -464,25 +465,25 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Object[] eventStreamData = event.getPayloadData();
 
             // authenticationSuccess
-            Assert.assertEquals(eventStreamData[2], false);
+            Assert.assertEquals(eventStreamData[3], false);
             // userName
-            Assert.assertEquals(eventStreamData[3], "dummy");
+            Assert.assertEquals(eventStreamData[4], "dummy");
             // userStoreDomain
-            Assert.assertEquals(eventStreamData[4], "PRIMARY");
+            Assert.assertEquals(eventStreamData[6], "PRIMARY");
             // tenantDomain
-            Assert.assertEquals(eventStreamData[5], "carbon.super");
+            Assert.assertEquals(eventStreamData[7], "carbon.super");
             // inboundAuthType
-            Assert.assertEquals(eventStreamData[8], "samlsso");
+            Assert.assertEquals(eventStreamData[10], "samlsso");
             // serviceprovider
-            Assert.assertEquals(eventStreamData[9], "SAML-SSO-TestApplication");
+            Assert.assertEquals(eventStreamData[11], "SAML-SSO-TestApplication");
             // remembermeEnabled
-            Assert.assertEquals(eventStreamData[10], false);
+            Assert.assertEquals(eventStreamData[12], false);
             // forceAuthEnabled
-            Assert.assertEquals(eventStreamData[11], false);
+            Assert.assertEquals(eventStreamData[13], false);
             // rolesCommaSeperated
-            Assert.assertEquals(eventStreamData[13], "NOT_AVAILABLE");
+            Assert.assertEquals(eventStreamData[15], "NOT_AVAILABLE");
             // authenticationStep
-            Assert.assertEquals(eventStreamData[14], "1");
+            Assert.assertEquals(eventStreamData[16], "1");
             extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
