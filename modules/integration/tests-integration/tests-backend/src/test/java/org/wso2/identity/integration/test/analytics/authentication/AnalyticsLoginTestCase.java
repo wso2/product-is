@@ -384,7 +384,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             // forceAuthEnabled
             Assert.assertEquals(eventStreamData[13], false);
             // rolesCommaSeperated
-            Assert.assertEquals(eventStreamData[15], "Internal/everyone");
+            Assert.assertEquals(eventStreamData[15], "NOT_AVAILABLE");
             // authenticationStep
             Assert.assertEquals(eventStreamData[16], "1");
             // isFirstLogin
