@@ -4103,8 +4103,12 @@
         <wss4j.wso2.version>1.5.11.wso2v15-SNAPSHOT</wss4j.wso2.version>
 =======
         <wss4j.wso2.version>1.5.11.wso2v14</wss4j.wso2.version>
+<<<<<<< HEAD
 >>>>>>> 9ca3cb5... Updating feature versions for identity-framework and identity-extension features
         <openws.version>1.4.1</openws.version>
+=======
+        <openws.version>1.5.4</openws.version>
+>>>>>>> c062130... Upgrading openws version.
         <charon.version>2.0.6</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
