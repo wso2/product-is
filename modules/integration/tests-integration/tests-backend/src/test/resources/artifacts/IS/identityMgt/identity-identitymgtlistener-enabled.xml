@@ -422,6 +422,7 @@
         <Question>
             <Password>
                 <Enable>true</Enable>
+                <NotifyStart>true</NotifyStart>
                 <Separator>!</Separator>
                 <MinAnswers>2</MinAnswers>
                 <ReCaptcha>
@@ -431,6 +432,7 @@
             </Password>
         </Question>
         <ExpiryTime>3</ExpiryTime>
+        <NotifySuccess>true</NotifySuccess>
     </Recovery>
 
     <SelfRegistration>

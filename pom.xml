@@ -3663,7 +3663,15 @@
                 <scope>test</scope>
                 <version>${carbon.analytics-common.version}</version>
             </dependency>
+<<<<<<< HEAD
 >>>>>>> 0d03209... Revert "Revert "Analytics with sessons""
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.multitenancy</groupId>
+                <artifactId>org.wso2.carbon.tenant.mgt.stub</artifactId>
+                <version>${carbon.multitenancy.version}</version>
+            </dependency>
+>>>>>>> 1c5c3e9... Fixing test cases in master branch
         </dependencies>
     </dependencyManagement>
 >>>>>>> 690e5e1... Resolving merge conflicts
