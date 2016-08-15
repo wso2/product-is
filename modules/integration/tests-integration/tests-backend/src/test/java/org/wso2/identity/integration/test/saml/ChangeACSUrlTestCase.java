@@ -98,7 +98,6 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
                 applicationAuthenticationXml, false);
 
         serverConfigurationManager.restartGracefully();
-        Thread.sleep(20000);
 
         super.initTest();
 
