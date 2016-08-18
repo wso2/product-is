@@ -1228,6 +1228,7 @@
         <identity.user.ws.version>5.1.1</identity.user.ws.version>
         <identity.userstore.ldap.version>5.1.1</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.1.1</identity.userstore.remote.version>
+	<identity.user.store.mongodb.version>5.1.2-SNAPSHOT</identity.user.store.mongodb.version>
         <identity.workflow.impl.bps.version>5.1.1</identity.workflow.impl.bps.version>
         <identity.outbound.auth.openid.version>5.1.1</identity.outbound.auth.openid.version>
         <identity.outbound.auth.facebook.version>5.1.1</identity.outbound.auth.facebook.version>

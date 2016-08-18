@@ -309,6 +309,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.user.store.remote.feature:${identity.userstore.remote.version}
                                 </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.user.store.mongodb.feature:${identity.user.store.mongodb.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.scim.feature:${identity.inbound.provisioning.scim.version}
                                 </featureArtifactDef>
@@ -549,6 +552,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${identity.userstore.remote.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.identity.user.store.mongodb.feature.group</id>
+			            <version>${identity.user.store.mongodb.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.feature.group</id>
@@ -1079,6 +1086,10 @@
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${identity.userstore.remote.version}</version>
                                 </feature>
+				<feature>
+                                    <id>org.wso2.carbon.identity.user.store.mongodb.feature.group</id>
+			            <version>${identity.user.store.mongodb.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.feature.group</id>
                                     <version>${carbon.commons.version}</version>
@@ -1553,6 +1564,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${identity.userstore.remote.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.identity.user.store.mongodb.feature.group</id>
+			            <version>${identity.user.store.mongodb.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.server.feature.group</id>
@@ -2040,7 +2055,10 @@
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${identity.userstore.remote.version}</version>
                                 </feature>
-
+				<feature>
+                                    <id>org.wso2.carbon.identity.user.store.mongodb.feature.group</id>
+			            <version>${identity.user.store.mongodb.version}</version>
+                                </feature>
 
                                 <!-- 6 Carbon Analytics Common -->
                                 <feature>
