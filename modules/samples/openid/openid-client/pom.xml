@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>openidclient</artifactId>
+	<packaging>war</packaging>
+	<name>OpenID Client App for the WSO2 Identity Server</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openid4java</groupId>
+			<artifactId>openid4java-consumer</artifactId>
+			<version>1.0.0</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+	</dependencies>
+	<repositories>
+	<repository>
+		<id>thirdparty-uploads</id>
+		<name>JBoss Thirdparty Uploads</name>
+		<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-uploads</url>
+	</repository>
+</repositories>
+	<build>
+		<finalName>openid-client</finalName>
+	</build>
+</project>

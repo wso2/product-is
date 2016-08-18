@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~ http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<tns:WSO2BPS xmlns:tns="http://wso2.org/bps/config">
+    <!-- Database Configuration for WSO2 BPS BPEL Engine's Persistence Storage  -->
+    <tns:DataBaseConfig>
+        <!-- Data source configuration. Use data sources created in data sources component. -->
+        <tns:DataSource name="bpsds">
+          <!--tns:JNDI contextFactory="com.sun.jndi.rmi.registry.RegistryContextFactory" providerURL="rmi://localhost:2199"/-->
+        </tns:DataSource>
+    </tns:DataBaseConfig>
+
+    <!-- Process dehydration configuration -->
+    <!--<tns:ProcessDehydration maxCount="0" value="true">
+        <tns:MaxAge value="0"/>
+    </tns:ProcessDehydration>-->
+
+    <!--<tns:TransactionFactory class=""/>-->
+
+    <!-- BPEL Event Listeners. They must implement BPELEventListener interface -->
+    <!--<tns:EventListeners>
+        <tns:listener class="org.wso2.bps.SampleEventListener"/>
+    </tns:EventListeners>-->
+
+    <!-- BPEL Message Exchange Interceptors. Used to track and handle incoming and out going
+         Messages from BPEL Processes.
+    -->
+    <!--<tns:MexInterceptors>
+        <tns:interceptor class=""/>
+    </tns:MexInterceptors>-->
+
+    <!-- BPEL Extensions -->
+    <!--<tns:ExtensionBundles>
+        <tns:runtimes>
+            <tns:runtime class="org.wso2.bps.SampleExtensionRuntime"/>
+        </tns:runtimes>
+        <tns:filters>
+            <tns:filter class="org.wso2.bps.SampleCorrelationFilter"/>
+        </tns:filters>
+    </tns:ExtensionBundles>-->
+
+    <!-- OpenJPA specific configuration properties -->
+    <tns:OpenJPAConfig>
+        <tns:property name="openjpa.FlushBeforeQueries" value="true"/>
+    </tns:OpenJPAConfig>
+
+    <!-- Message exchange timeout. Default value is 120000ms -->
+    <!--<tns:MexTimeOut value="120000"/>-->
+
+    <!-- External Service invocation timeout. Default value is 60000ms -->
+    <!--<tns:ExternalServiceTimeOut value="60000"/>-->
+
+    <!-- MultithreadedHttpConnectionManager tuning parameters -->
+    <!--<tns:MultithreadedHttpConnectionManagerConfig>
+        <tns:maxConnectionsPerHost value="20"/>
+        <tns:maxTotalConnections value="100"/>
+    </tns:MultithreadedHttpConnectionManagerConfig>-->
+
+    <!-- Process instance cleanup feature in WSO2 Business Process Server
+         allows you to configure periodic process instance cleanup tasks based
+         on various process instance properties to remove process instance data
+         from WSO2 BPS persistence storage.
+         Refer - http://www.quartz-scheduler.org/docs/tutorials/crontrigger.html to
+         declare cron expressions format
+         Following sample configuration schedule a cleanup task at 5:11 PM every day
+         to clean completed process instances.
+    -->
+    <!--<tns:Schedules>
+        <tns:Schedule when="0 11 17 * * ?">
+            <tns:cleanup>
+                <tns:filter><![CDATA[status=completed]]></tns:filter>
+            </tns:cleanup>
+        </tns:Schedule>
+    </tns:Schedules>-->
+
+    <!-- By default all the BPEL packages are read from the file system. If you need to Synchronize
+    the file system bpel repository with set the following parameter to true. This will check the
+    timestamp of the BPEL packages in the file system against the BPEL packages in the registry. If
+    they do not match then the BPEL package in the registry is copied to the file system. -->
+    <!--<tns:SyncWithRegistry>false</tns:SyncWithRegistry>-->
+
+    <!-- The property InMemoryInstanceTimeToLive may be used to limit the time-to-live of in-memory instances.
+     This setting can be useful to avoid memory leaks related to in-memory processes that may get
+      'stuck' during execution and never terminate (time should be specified in milliseconds) -->
+    <!--tns:InMemoryInstanceTimeToLive>600000</tns:InMemoryInstanceTimeToLive-->
+
+    <!-- This property  can be used to configure ode scheduler thread pool size  -->
+    <!--tns:ODESchedulerThreadPoolSize>0</tns:ODESchedulerThreadPoolSize-->
+     
+    <!-- Simple Scheduler related configuration -->
+    <!--<tns:ODESchedulerConfiguration>-->
+        <!-- Maximum number of jobs in the "near future" todo queue. -->
+        <!--<tns:ODESchedulerQueueLength>10000</tns:ODESchedulerQueueLength>-->
+
+        <!--Jobs scheduled with a time that is between [now, now+immediateInterval] will be assigned to the current node,
+        and placed directly on the todo queue. time in ms-->
+        <!--<tns:ODESchedulerImmediateInterval>30000</tns:ODESchedulerImmediateInterval>-->
+
+        <!--Jobs scheduled with a time that is between (now+immediateInterval,now+nearFutureInterval) will be assigned to the current
+        node, but will not be placed on the todo queue (the promoter will pick them up). time in ms -->
+        <!--<tns:ODESchedulerNearFutureInterval>600000</tns:ODESchedulerNearFutureInterval>-->
+
+        <!-- Stale node check interval in ms-->
+        <!--<tns:ODESchedulerStaleInterval>10000</tns:ODESchedulerStaleInterval>-->
+
+        <!--  Estimated sustained transaction per second capacity of the system.
+        e.g. 100 means the system can process 100 jobs per seconds, on average
+        This number is used to determine how many jobs to load from the database at once.-->
+        <!--<tns:ODESchedulerTransactionsPerSecond>100</tns:ODESchedulerTransactionsPerSecond>-->
+
+        <!-- Duration used to log a warning if a job scheduled at a date D is queued at D'>D+_warningDelay -->
+        <!--<tns:ODESchedulerWarningDelay>300000</tns:ODESchedulerWarningDelay>-->
+
+        <!--  Number of immediate retries when the transaction fails -->
+        <!--<tns:ODESchedulerImmediateTransactionRetryLimit>3</tns:ODESchedulerImmediateTransactionRetryLimit>-->
+
+        <!-- Interval between immediate retries when the transaction fails -->
+        <!--<tns:ODESchedulerImmediateTransactionRetryInterval>1000</tns:ODESchedulerImmediateTransactionRetryInterval>-->
+
+    <!-- End of Simple Scheduler related configuration -->
+    <!--</tns:ODESchedulerConfiguration>-->
+
+    <!--Configurations for BPEL UI-->
+    <tns:BpelUI>
+        <!--Set the maximum value size for a variable in a instance view in kilobytes,-->
+        <!--higher sizes may slowdown the instance view rendering. Default size is 1000KB.-->
+        <!--Please note that this only limits the displayed variable content size.-->
+        <!--<tns:InstanceViewVariableLength>1000</tns:InstanceViewVariableLength>-->
+
+        <!--This property specify the maximum number of BPEL process instances that can be deleted in a single delete instance-->
+        <!--request. Default value is 2000. Increase this with caution. It may result in various timeout exceptions.-->
+        <!--<tns:BpelInstanceDeletionLimit>1000</tns:BpelInstanceDeletionLimit>-->
+    </tns:BpelUI>
+
+    <!--Timeout for the BPEL Transaction Manager in seconds. Default is 10 minutes-->
+    <!--<tns:TransactionManagerTimeout></tns:TransactionManagerTimeout>-->
+
+</tns:WSO2BPS>

@@ -1,0 +1,26 @@
+<%
+
+var log = new Log("connected_accounts/controllers/service-clients/identityProviderMgtClient.jag");
+
+var util = require("../../util/utility.jag");
+var serverUrl = util.getServerUrl() + "/IdentityApplicationManagementService";
+var identityAppMgtStub = Packages.org.wso2.carbon.identity.application.mgt.stub
+                        .IdentityApplicationManagementServiceStub;
+var HTTPConstants = Packages.org.apache.axis2.transport.http.HTTPConstants;
+
+
+function getAllIdPs() {
+    try {
+        var serviceStub = new identityAppMgtStub(serverUrl);
+        var serviceClient = serviceStub._getServiceClient();
+        var option = serviceClient.getOptions();
+        option.setManageSession(true);
+        var cookie = session.get("auth-cookie");
+        option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
+        return serviceStub.getAllIdentityProviders();
+    } catch (e) {
+        throw e;
+    }
+}
+
+%>

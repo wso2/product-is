@@ -1,0 +1,106 @@
+{
+  "name": "org.wso2.is.analytics.stream.OverallAuthentication",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "tenantId",
+      "type": "INT"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "contextId",
+      "type": "STRING"
+    },
+    {
+      "name": "eventId",
+      "type": "STRING"
+    },
+    {
+      "name": "eventType",
+      "type": "STRING"
+    },
+    {
+      "name": "authenticationSuccess",
+      "type": "BOOL"
+    },
+    {
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "name": "localUserName",
+      "type": "STRING"
+    },
+    {
+      "name": "userStoreDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "tenantDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "remoteIp",
+      "type": "STRING"
+    },
+    {
+      "name": "region",
+      "type": "STRING"
+    },
+    {
+      "name": "inboundAuthType",
+      "type": "STRING"
+    },
+    {
+      "name": "serviceProvider",
+      "type": "STRING"
+    },
+    {
+      "name": "rememberMeEnabled",
+      "type": "BOOL"
+    },
+    {
+      "name": "forceAuthEnabled",
+      "type": "BOOL"
+    },
+    {
+      "name": "passiveAuthEnabled",
+      "type": "BOOL"
+    },
+    {
+      "name": "rolesCommaSeparated",
+      "type": "STRING"
+    },
+    {
+      "name": "authenticationStep",
+      "type": "STRING"
+    },
+    {
+      "name": "identityProvider",
+      "type": "STRING"
+    },
+    {
+      "name": "authStepSuccess",
+      "type": "BOOL"
+    },
+    {
+      "name": "stepAuthenticator",
+      "type": "STRING"
+    },
+    {
+      "name": "isFirstLogin",
+      "type": "BOOL"
+    },
+    {
+      "name": "identityProviderType",
+      "type": "STRING"
+    },
+    {
+      "name": "_timestamp",
+      "type": "LONG"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eventPublisher name="SessionDataPublisher" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+  <from streamName="org.wso2.is.analytics.stream.OverallSession" version="1.0.0"/>
+  <mapping customMapping="disable" type="wso2event"/>
+  <to eventAdapterType="wso2event">
+    <property name="username">admin</property>
+    <property name="protocol">thrift</property>
+    <property name="publishingMode">non-blocking</property>
+    <property name="publishTimeout">0</property>
+    <property name="receiverURL">tcp://localhost:8021</property>
+    <property encrypted="false" name="password">admin</property>
+  </to>
+</eventPublisher>

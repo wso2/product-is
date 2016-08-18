@@ -1,0 +1,29 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/ChallengeQuestionManagementAdminService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+// sending challenge question answers to the backend
+function setUserChallengeAnswers(payload){
+    callWSInOnly(webService, serverUrl, "urn:setUserChallengeAnswers", payload);
+}
+
+// get answered challenge questions from the backend
+function getUserChallengeAnswers(userName, tenantDomain){
+    return callWSReturnJSON(webService, serverUrl, "urn:getUserChallengeAnswers", [userName, tenantDomain]);
+}
+
+// get challenge questions for a user based on his tenant domain and locale
+function getChallengeQuestionsForUser(userName, tenantDomain) {
+    return callWSReturnJSON(webService, serverUrl, "urn:getChallengeQuestionsForUser", [userName, tenantDomain]);
+}
+
+
+%>

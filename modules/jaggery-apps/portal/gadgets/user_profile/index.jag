@@ -1,0 +1,26 @@
+<%
+var log = new Log();
+var cookie = request.getParameter("cookie") ;
+var user = request.getParameter("user");
+getUser();
+function getUser(){
+
+session.put('auth-cookie', cookie);
+
+ try{
+
+var profileClient = require('controllers/my-profile/profileClient.jag');
+var fidoClient = require('controllers/my-profile/fido-check.jag'); 
+var fieldValues = profileClient.getUserProfile(user, 'default');
+var isEnabled = fidoClient.isDeviceRegistered();
+fieldValues.return.fidoEnabled = isEnabled.return;
+
+print( fieldValues );
+    }catch(e){
+print(e);
+        log.error(e);
+            }
+
+}
+
+%>

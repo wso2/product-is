@@ -1,0 +1,90 @@
+<%
+response.addHeader("Access-Control-Allow-Origin", "*");
+response.addHeader("Content-Type", "application/json");
+
+var util = require("/util/utility.jag");
+util.setServerURL("false");
+var serverHttpsUrl = application.get(SERVER_CORE_URL);
+
+(function () {
+
+    var ssoUser = session.get(LOGGED_IN_USER),
+            user = ssoUser,
+            layout;
+
+    if (!user) {
+        //response.sendError(401, 'Unauthorized');
+        //return;
+    }
+
+    var matcher = new URIMatcher(request.getRequestURI());
+    var ues = require('/modules/ues.js');
+
+    if (matcher.match('/{context}/apis/ues/layout/{appName}') ||
+        matcher.match('/{context}/apis/ues/layout/')) {
+
+        var method = request.getMethod();
+        var appName = matcher.elements().appName || matcher.elements().context;
+
+        if (method == 'GET') {
+            layout = ues.getDashboardLayout(appName, user);
+log.debug(session.get(UI_USER_PERMISSIONS));
+
+	var path = "gadget.json";
+	var file = new File(path);
+	file.open("r");
+	var json = "";
+	
+	json = file.readAll();
+	file.close();
+	var json2 = parse(json);
+
+            for (var i in json2.widgets) {
+                var url = json2.widgets[i].url;
+                url = serverHttpsUrl + url;
+                json2.widgets[i].url = url;
+                var permissions = json2.widgets[i].permissions;
+                if(permissions != null){
+                    if(!isAuthorized(permissions)){
+                        json2.widgets[i].authorized = "false";
+                    }
+                }
+            }
+
+print(json2);
+          //new Log().info(layout);
+
+        } else if (method == 'POST') {
+            layout = request.getParameter('layout');
+            //new Log().info(layout);
+            print(ues.setDashboardLayout(appName, user, layout));
+
+        }
+    } else {
+        response.sendError(404, 'API Endpoint Not Found');
+    }
+})();
+
+function isAuthorized(resource){
+    var perms = session.get(UI_USER_PERMISSIONS);
+    if(perms == null) {
+        return false;
+    }
+
+    for each(var p in perms){
+        if(resource.indexOf(p) > -1){
+            return true;
+        }
+    }
+        for each(var res in resource){
+            for each(var p in perms){
+                if(res.indexOf(p) > -1){
+                    return true;
+                }
+            }
+
+        }
+
+    return false;
+}
+%>

@@ -1,0 +1,35 @@
+/*input, #search-button{
+ padding:0 !important;
+ }
+
+ a{
+ border:none !important;
+ }
+
+ @media all and (max-width: 980px) {
+
+ #container-search{
+ margin-top:60px;
+ }
+ }
+ */
+
+#placeholder, #placeholder * {
+    margin-left: 1200px !important;
+    left:1200px !important;
+}
+#placeholder{
+    left:-100px !important;
+}
+#feature-slider {
+    border-color: #cccccc;
+    border-width: 1px 1px 2px;
+    /* For IE 5.5 - 7*/
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#75FFFFFF, endColorstr=#75FFFFFF);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#75FFFFFF, endColorstr=#75FFFFFF)";
+}
+
+.jslider-pointer #pulse{
+    display:none;
+}

@@ -1,0 +1,56 @@
+<%
+
+var log = new Log();
+var userName = session.get("userName");
+var userAdmin = require('../service-clients/UserAdminClient.jag');
+var i18n = session.get("i18n");
+
+function edit(){
+	try{
+
+var cookie = session.get('auth-cookie');
+if(cookie == null){
+var cookie = request.getParameter("cookie");
+session.put('auth-cookie', cookie);
+var userName = request.getParameter("user");
+session.put("user",userName);
+}
+
+	    var currentPwd = request.getParameter('currentPwd');
+	    var newPwd = request.getParameter('newPwd');
+	    var confirmNewPwd = request.getParameter('confirmNewPwd');
+	    var userName = request.getParameter("user");
+	    if(newPwd == confirmNewPwd){
+	        userAdmin.changePasswordByUser(userName,currentPwd,newPwd);
+	        print('{"success":true}');
+	        //For now once the pwd is changed, we need to replace it in the session. This should be removed once authentication is done via framework.
+	     //   session.put("pwd", newPwd);
+	       // response.sendRedirect("../../index.jag?s=1&sMsg=success_change_pwd");
+	
+	    }else{
+	      //  response.sendRedirect("../../index.jag?e=1&error=password_doesnt_match" );
+	       // return;
+	    }
+	}catch(e){
+		log.error(e);
+        print(getErrorMessage(e.message));
+		
+	}
+}
+
+edit();
+
+function getErrorMessage(message) {
+    if (message != null && message.length > 0) {
+        if (message.indexOf('401 Error: Unauthorized') > -1) {
+            return '{"success":false, "reLogin":true}';
+        } else {
+            var msg = message.split(':');
+            if (msg.length > 0) {
+                return '{"success":false, "message":"' + msg[1] + '"}';
+            }
+        }
+    }
+    return '{"success":false, "message":null}';
+}
+%>

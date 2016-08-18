@@ -1,0 +1,29 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+	<servlet>
+		<servlet-name>OpenIDRelyingPartyServlet</servlet-name>
+		<display-name>OpenIDRelyingPartyServlet</display-name>
+		<description></description>
+		<servlet-class>org.wso2.carbon.identity.openid.openidclient.OpenIDRelyingPartyServlet</servlet-class>
+		<!--init-param>
+			<param-name>OpenIDUserPattern</param-name>
+			<param-value>https://localhost:9443/openid/</param-value>
+		</init-param-->
+		<!--init-param>
+			<param-name>TrustStore</param-name>
+			<param-value></param-value>
+		</init-param-->
+		<!--init-param>
+			<param-name>TrustStorePassword</param-name>
+			<param-value></param-value>
+		</init-param-->
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OpenIDRelyingPartyServlet</servlet-name>
+		<url-pattern>/OpenIDRelyingPartyServlet</url-pattern>
+	</servlet-mapping>
+</web-app>

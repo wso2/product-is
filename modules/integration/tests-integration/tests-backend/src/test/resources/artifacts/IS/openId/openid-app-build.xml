@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project name="travelocity-app-seperation" default="openid-smartconsumerwithclaims" basedir="../../../../../../">
+    <description>
+        This script builds four war files for the travelocity app for combinations of consumer type and openid attribute
+        exchange
+    </description>
+    <!-- set global properties for this build -->
+    <property name="build" location="${basedir}/target/test-classes/samples"/>
+    <property name="travelocity.webapp" location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
+    <property name="travelocity.webapp.classes" location="${travelocity.webapp}/WEB-INF/classes"/>
+    <property name="travelocity.webapp.lib" location="${travelocity.webapp}/WEB-INF/lib"/>
+    <property name="openid.properties" location="${basedir}/src/test/resources/artifacts/IS/openId/"/>
+    <property name="openid.properties.smartconsumerwithclaims" location="${openid.properties}/smartconsumerwithclaims"/>
+    <property name="openid.properties.smartconsumerwithoutclaims"
+              location="${openid.properties}/smartconsumerwithoutclaims"/>
+    <property name="openid.properties.dumbconsumerwithclaims"
+              location="${openid.properties}/dumbconsumerwithclaims"/>
+    <property name="openid.properties.dumbconsumerwithoutclaims"
+              location="${openid.properties}/dumbconsumerwithoutclaims"/>
+
+    <target name="openid-smartconsumerwithclaims">
+        <delete
+                file="${travelocity.webapp.classes}/travelocity.properties"/>
+        <copy file="${openid.properties.smartconsumerwithclaims}/travelocity.properties"
+              tofile="${travelocity.webapp.classes}/travelocity.properties"/>
+        <war destfile="${build}/travelocity.com-openid-smartconsumerwithclaims.war"
+             webxml="${travelocity.webapp}/WEB-INF/web.xml">
+            <fileset
+                    dir="${travelocity.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib
+                    dir="${travelocity.webapp.lib}/" />
+            <classes
+                    dir="${travelocity.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+
+    <target name="openid-smartconsumerwithoutclaims">
+        <delete
+                file="${travelocity.webapp.classes}/travelocity.properties"/>
+        <copy file="${openid.properties.smartconsumerwithoutclaims}/travelocity.properties"
+              tofile="${travelocity.webapp.classes}/travelocity.properties"/>
+        <war destfile="${build}/travelocity.com-openid-smartconsumerwithoutclaims.war"
+             webxml="${travelocity.webapp}/WEB-INF/web.xml">
+            <fileset
+                    dir="${travelocity.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib
+                    dir="${travelocity.webapp.lib}/" />
+            <classes
+                    dir="${travelocity.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+
+    <target name="openid-dumbconsumerwithclaims">
+        <delete
+                file="${travelocity.webapp.classes}/travelocity.properties"/>
+        <copy file="${openid.properties.dumbconsumerwithclaims}/travelocity.properties"
+              tofile="${travelocity.webapp.classes}/travelocity.properties"/>
+        <war destfile="${build}/travelocity.com-openid-dumbconsumerwithclaims.war"
+             webxml="${travelocity.webapp}/WEB-INF/web.xml">
+            <fileset
+                    dir="${travelocity.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib
+                    dir="${travelocity.webapp.lib}/" />
+            <classes
+                    dir="${travelocity.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+
+    <target name="openid-dumbconsumerwithoutclaims">
+        <delete
+                file="${travelocity.webapp.classes}/travelocity.properties"/>
+        <copy file="${openid.properties.dumbconsumerwithoutclaims}/travelocity.properties"
+              tofile="${travelocity.webapp.classes}/travelocity.properties"/>
+        <war destfile="${build}/travelocity.com-openid-dumbconsumerwithoutclaims.war"
+             webxml="${travelocity.webapp}/WEB-INF/web.xml">
+            <fileset
+                    dir="${travelocity.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib
+                    dir="${travelocity.webapp.lib}/" />
+            <classes
+                    dir="${travelocity.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+</project>

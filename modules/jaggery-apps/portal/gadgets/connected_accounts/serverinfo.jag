@@ -1,0 +1,23 @@
+<%
+
+include("../../util/constants.jag");
+var util = require("../../util/utility.jag");
+var log = new Log();
+util.setServerURL();
+
+var ProxyContextPath = application.get('ProxyContextPath');
+if(ProxyContextPath == null || ProxyContextPath === 'null' || ProxyContextPath.length <= 0){
+    ProxyContextPath = '';
+}
+
+if (log.isDebugEnabled()) {
+    log.debug('ProxyContextPath : ' + ProxyContextPath);
+}
+
+//create javascript content
+var jsStr = 'var PROXY_CONTEXT_PATH = \"' + ProxyContextPath + '\"' + ';\n';
+
+response.contentType = 'text/javascript';
+response.content = jsStr;
+
+%>

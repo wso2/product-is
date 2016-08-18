@@ -1,0 +1,306 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+.main-menu {
+    background: transparent url(../img/repeat.jpg) repeat-x;
+}
+.main-menu-inside{
+    padding-right:0;
+}
+.main-menu-inside li{
+    border-left: solid 1px #181b1e;
+    border-right: solid 1px #444b55;
+    text-align: center;
+}
+.main-menu li a{
+    padding:6px 10px 0;
+    height: 53px;
+    display:block;
+       width: 98px;
+       white-space: nowrap;
+       overflow: hidden;
+       text-overflow: ellipsis;
+}
+.main-menu li i{
+    color:#898989;
+    font-size: 18px;
+}
+.main-menu li.active i{
+    color: #ff9300;
+}
+.breadcrumb-strip {
+    background: #464646;
+    border-top: solid 1px #606060;
+    border-bottom: solid 1px #000;
+}
+
+.breadcrumb-strip ul.breadcrumb {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+}
+
+.breadcrumb-strip ul.breadcrumb a {
+    color: #ffb900;
+    height:auto;
+}
+
+.content-section{
+    padding:20px 10px 10px 10px;
+    min-height: 200px;
+    background: #fff;
+    margin-bottom:10px;
+}
+.content-section-wrapper{
+    padding-left:30px;
+    padding-right:30px;
+}
+.box-title{
+    padding:10px;
+    border:solid 1px #a2a2a2;
+    background: rgb(230,230,230); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2U2ZTZlNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZWZlZmUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  rgba(230,230,230,1) 0%, rgba(254,254,254,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,230,230,1)), color-stop(100%,rgba(254,254,254,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(254,254,254,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(254,254,254,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(230,230,230,1) 0%,rgba(254,254,254,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(230,230,230,1) 0%,rgba(254,254,254,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#fefefe',GradientType=0 ); /* IE6-8 */
+
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    min-height: 30px;
+    -webkit-box-shadow:  3px 3px 3px 3px rgba(0, 0, 0, 0.3);
+                box-shadow:  3px 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+.box-content{
+    border-left:solid 1px #a2a2a2;
+    border-right:solid 1px #a2a2a2;
+    border-bottom:solid 1px #a2a2a2;
+    min-height: 155px;
+    padding:10px;
+    background: #fff;
+    -webkit-box-shadow:  3px 3px 3px 3px rgba(0, 0, 0, 0.3);
+             box-shadow:  3px 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+.box-title h3{
+    margin:0;
+    padding:0;
+    font-size:14px;
+    font-weight: bold;
+    color:#666;
+    border-bottom:solid 1px #ccc;
+}
+.content-starter{
+    margin-top:30px;
+}
+h1{
+    color:#666;
+    font-family: 'Open Sans', sans-serif;
+}
+div.icon-marketing-styles {
+    color: #fff;
+    font-size: 60px;
+    padding: 20px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    border: 1px solid #4C799E;
+    text-align: center;
+    width: 100px;
+    margin: 0 10px 10px 0;
+    background: #fff;
+    float: left;
+}
+div.icon-user-dashboard{
+    background: #6babde;
+}
+div.icon-user-retweet {
+    background: #E54155;
+}
+div.icon-rotate-left-dashboard{
+    background: #6bab1e;
+    border: 1px solid #2a6e14;
+}
+div.icon-thumbs-up-alt-dashboard{
+    background: #ff9300;
+    border: 1px solid #995800;
+}
+div.icon-th-dashboard{
+    background: #b63e32;
+    border: 1px solid #752017;
+}
+div.icon-road-dashboard{
+    background: #7952a2;
+    border: 1px solid #4f2f73;
+}
+div.icon-repeat-dashboard{
+    background: #ffda00;
+    border: 1px solid #995800;
+}
+div.icon-key-dashboard{
+    background: #27a5a3;
+    border: 1px solid #995800;
+}
+div.second-row-gap{
+    margin-top:30px;
+}
+/* Sticky footer styles
+     -------------------------------------------------- */
+
+html,
+body {
+    height: 100%;
+    /* The html and body elements cannot have any padding or margin. */
+}
+form,input,label,div{
+    font-size: 12px;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -60px;
+}
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+    height: 62px;
+}
+
+#footer {
+    padding-top:10px;
+    border-top:solid 1px #ccc;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 1200px) {
+    div.main-menu-inside a span{
+        display: none;
+    }
+}
+@media (max-width: 767px) {
+    .container{min-width: 480px;}
+    #footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .menu1{
+        position: absolute;
+        right:22px;
+        margin-top: 35px;
+        background: #ccc;
+        border-bottom:solid 1px #444;
+    }
+    .menu2{
+        position: absolute;
+        right: 10px;
+        margin:0;
+        z-index: 100;
+    }
+    .main-menu  ul.menu2 li a{
+        height:35px;
+    }
+    body form.form-horizontal{
+	padding-top:20px;
+    }
+    .form-horizontal .control-label{
+        width:auto;
+        text-align: left;
+        float: none;
+    }
+    .form-horizontal .controls{
+        margin-left: 0;
+        float: none;
+    }
+
+}
+@media (max-width: 992px) {
+    .box-content{
+            margin-bottom: 10px;
+        }
+}
+input[type="text"],input[type="password"]{
+    height:30px;
+}
+.required{
+    color:red;
+}
+label.error{
+    color:red;
+    padding:5px 0 0 0;
+}
+input.error{
+
+}
+
+  td.info {
+         background: #009cff;
+         padding: 10px;
+     }
+    td.warning{
+            background: #ff8000;
+            padding:10px;
+    }
+    td.error {
+         background: #da0a00;
+         padding: 10px;
+     }
+    td.confirm {
+         background: #009cff;
+         padding: 10px;
+     }
+    td.warning i,td.info i,td.error i,td.confirm i{
+        color:#fff;
+        font-size: 30px;
+    }
+    td.messageText-wrapper{
+        padding-left: 10px;
+        vertical-align: middle;
+    }
+    .dropdown-menu{
+        background: #000;
+        color:#fff;
+        border-right:none;
+
+    }
+    ul.dropdown-menu li{
+        border-right:none;
+        margin: 0;
+    }
+    ul.dropdown-menu li a{
+        color:#fff;
+        display: block;
+        width:100%;
+        text-align: left;
+        padding:5px 10px;
+        height: 30px;
+    }
+ul.dropdown-menu li a:hover{
+    background: #222;
+
+}
+.fedarate{
+    background: transparent url(../img/trust.png) no-repeat;
+    display: inline-block;
+    width: 16px;
+    height:13px;
+}
+.resident-idp{
+    background: transparent url(../img/resident-idp.png) no-repeat;
+    display: inline-block;
+    width: 16px;
+    height:16px;
+}

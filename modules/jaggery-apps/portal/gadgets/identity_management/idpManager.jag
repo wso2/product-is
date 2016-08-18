@@ -1,0 +1,30 @@
+<%
+var log = new Log();
+
+getUser();
+function getUser(){
+
+ try{
+
+
+var idpMgtServiceClient = require('controllers/identity-management/IdentityProviderMgtServiceClient.jag');
+var idpList = idpMgtServiceClient.getIDPList(); 
+
+
+var jsonString = '{"idpNames":["idp1","idp2","idp3"]}';	
+
+var jsObj = parse(jsonString)
+
+
+
+print( idpList );
+    }catch(e){
+print(e);
+        log.error(e);
+            }
+
+}
+
+
+
+%>

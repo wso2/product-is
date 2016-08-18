@@ -1,0 +1,104 @@
+<%
+
+var util = require("util/utility.jag");
+include("util/constants.jag");
+
+var i18n = util.initI18N();
+
+var lg = new Log();
+
+
+function login(){
+    util.setServerURL("true");
+	initAuthenticationProtocol();
+	
+	var user = session.get(LOGGED_IN_USER);	
+    if(user == null){
+    	
+    	if(application.get(SAML_ENABLED) === true){
+			if (session.get(AUTHZ_FAILURE) === 'true' || request.getParameter("authz_failure") === 'true') {
+				//redirect to the saml idp
+				response.sendRedirect("samlsso.jag?login=true&authz_failure=true");
+				session.put(AUTHZ_FAILURE,'false');
+			}
+			else{
+				response.sendRedirect("samlsso.jag?login=true");
+			}
+    		return;
+    	}else{
+lg.info('saml not enabled');
+    	}
+    }
+    else{
+        var error = request.getParameter("e");
+        if(error != null && error.length > 0){
+            error = "e=1&error=" + request.getParameter("error");
+        }
+        error = (error == null) ? "" : error;
+        response.sendRedirect("index.jag?" + error);
+    }
+}
+
+function initAuthenticationProtocol(){
+	
+	if(application.get(AUTH_CONFIG_PARSED)){
+		return;
+	}
+	var authConfig = readFile("/authentication/auth_config.json");
+	if(authConfig.EnableSAMLSSOLogin === "true"){
+	
+
+			
+		//If only saml enabled, we do initialize the saml flow. 
+		var samlConfig = authConfig.saml_config;
+		var properties = {};
+		
+		var sys = Packages.java.lang.System;
+		var carbonHome = sys.getProperty("carbon.home");
+		var serverUrl = getServerUrl();
+		var server = stringify(serverUrl);
+		if(server.indexOf("[") > -1 || server.indexOf("]") > -1){
+			serverUrl = serverUrl[0];
+		}
+
+        var serverCoreUrl = application.get(SERVER_CORE_URL);
+
+		for (var prop in samlConfig){
+			if (samlConfig.hasOwnProperty(prop)) {
+				var value = samlConfig[prop];
+				if(prop === "SAML.KeyStore"){
+					value = value.replace("{carbon.home}", carbonHome);
+				}
+				if(prop === "SAML.IdPUrl"){
+					if(prop.indexOf("http") > -1){
+						value = value;
+					}else{
+						value = serverCoreUrl + "/" + (value);
+					}
+
+				}
+				properties[prop] = value;
+			}
+		}
+		
+		application.put(SAML_ENABLED, true);
+		application.put(SAML_PROPERTIES, properties);
+		
+		var samlLogin = "<sso:login xmlns:sso=\"http://sso.saml2.authenticator.identity.carbon.wso2.org\" xmlns:xsd=\"http://dto.sso.saml2.authenticator.identity.carbon.wso2.org/xsd\">\n" +
+						"<sso:authDto>\n" +
+							"<xsd:response>{0}</xsd:response>\n" +
+						"</sso:authDto>\n" + 
+						"</sso:login>";
+		
+		application.put("urn:login", samlLogin);
+
+
+	}
+	
+	application.put(AUTH_CONFIG_PARSED, true);
+	
+}
+
+login();
+
+%>

@@ -1,0 +1,136 @@
+<%
+
+var userInfoClient = require('/controllers/login-logout/loggedUserInfoAdminClient.jag');
+var userAccountConnectorClient = require('/controllers/account-connection/userAccountAssociationClient.jag');
+var authzFailure ;
+
+include("/util/constants.jag");
+var util = require("/util/utility.jag");
+var loginClient = require('/controllers/login-logout/SAML2SSOAuthenticationClient.jag');
+
+var i18n = util.initI18N();
+var log = new Log();
+
+//var filter = Packages.org.wso2.carbon.identity.user.saml.sso.SAML2SSOFilter;
+//filter.handleSSO(request.getHttpServletRequest(), response.getHttpServletResponse(), application.get(SERVER_URL));
+
+//var samlResponse = session.get(SAML_RESPONSE);
+//var success = loginClient.login(samlResponse);
+
+
+var samlConfig = application.get(SAML_PROPERTIES);
+
+var samlResponse = request.getParameter('SAMLResponse'),
+sessionId = session.getId(),
+samlRequest = request.getParameter('SAMLRequest'),
+relayState = request.getParameter('RelayState'),
+sso = require('sso'),
+samlRespObj,
+keyStoreProps = {
+    KEY_STORE_NAME: samlConfig['SAML.KeyStore'],
+    KEY_STORE_PASSWORD: samlConfig['SAML.KeyStorePassword'],
+    IDP_ALIAS: samlConfig['SAML.IdPCertAlias']
+},
+sso_sessions = application.get('sso_sessions');
+sso_session_objects = application.get('sso_session_objects');
+
+if (!sso_sessions) {
+    application.put('sso_sessions', {});
+    sso_sessions = application.get('sso_sessions');
+}
+
+if (!sso_session_objects) {
+    application.put('sso_session_objects', {});
+    sso_session_objects = application.get('sso_session_objects');
+}
+
+
+if (samlResponse != null) {
+    samlRespObj = sso.client.getSamlObject(samlResponse);
+    if (!sso.client.isLogoutResponse(samlRespObj)) {
+        session.invalidate();
+        session = request.getSession(true);
+        sessionId = session.getId();
+
+        // validating the signature
+        if (samlConfig['SAML.EnableResponseSigning']) {
+
+                var sessionObj = sso.client.decodeSAMLLoginResponse(samlRespObj, samlResponse, sessionId);
+                session.put("loggedInUser", sessionObj.loggedInUser);
+                if (sessionObj.sessionIndex != null || sessionObj.sessionIndex != 'undefined') {
+                    //session.put("LOGGED_IN_USER", sessionObj.loggedInUser);
+                    //session.put("Loged", "true");
+
+                    sso_sessions[sessionObj.sessionId] = sessionObj.sessionIndex;
+                    sso_session_objects[sessionObj.sessionIndex] = session;
+                	
+                	var success = loginClient.login(samlResponse);
+					if(success === "true")
+					{
+						session.put(LOGGED_IN_USER, sessionObj.loggedInUser);
+						log.debug(sessionObj.loggedInUser);
+						
+					    var userInfo = userInfoClient.getUserInfo();
+					    session.put(UI_USER_PERMISSIONS, userInfo.UIPermissionOfUser);
+					    log.debug(userInfo.UIPermissionOfUser);
+					    log.debug(session.get(LOGGED_IN_USER));
+
+					    
+					    //create the header html for the user
+					    var header = util.generateHeader(true, i18n);
+					    
+					    header = parse(stringify(header));
+					    
+					    session.put(USER_HEADER, header);
+
+                        //Get connected Accounts
+                        try {
+                            var connectedAccounts = userAccountConnectorClient.getAccountAssociationsOfUser();
+                            if (connectedAccounts != null && connectedAccounts.length > 0) {
+                                session.put(CONNECTED_ACCOUNTS, connectedAccounts);
+                            } else {
+                                session.remove(CONNECTED_ACCOUNTS);
+                            }
+                        } catch(e){
+                            log.error(e);
+                        }
+
+					    response.sendRedirect("index.jag");
+					}else{
+					    response.sendRedirect("/dashboard/samlsso.jag?logout=true&authz_failure=true");
+					}
+
+                }
+        }
+
+    } else {
+        authzFailure = session.get(AUTHZ_FAILURE);
+        session.invalidate();
+        if (authzFailure != null) {
+            response.sendRedirect("index.jag?authz_failure=" + authzFailure);
+        } else {
+            response.sendRedirect("index.jag");
+        }
+    }
+}else if (samlRequest != null) {
+	// if saml request is a log out request, then invalidate session.
+	
+	var index = sso.client.decodeSAMLLogoutRequest(sso.client.getSamlObject(samlRequest));
+    log.debug('BACKEND LOGOUT RECIEVED FROM STORE THE INDEX IS ######' + index);
+
+    var jSessionId = application.get('sso_sessions')[index];
+
+    delete application.get('sso_sessions')[index];
+
+
+    log.debug('store Session Id :::' + jSessionId);
+
+    session.invalidate();
+
+    var sessionObject = application.get('sso_session_objects')[index];
+    if (sessionObject) {
+        sessionObject.invalidate();
+    }
+    delete application.get('sso_session_objects')[index];
+}
+%>

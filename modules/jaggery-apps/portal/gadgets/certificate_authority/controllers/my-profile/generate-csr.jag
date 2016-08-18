@@ -1,0 +1,70 @@
+<%
+
+var log = new Log();
+var userName = session.get("user");
+var caClient = require('ca-client.jag');
+include("../wsUtil.jag");
+
+var i18n = session.get("i18n");
+
+
+function sendCSRToAdmin(csr) {
+    var cookie = session.get('auth-cookie');
+    if(cookie == null){
+        var cookie = request.getParameter("cookie");
+        session.put('auth-cookie', cookie);
+
+    }
+    if(userName==null){
+        var user = request.getParameter("user");
+        session.put('user', user);
+
+    }
+
+    var result;
+    var serialNo;
+
+    try {
+        result = caClient.sendCSR(csr);
+    } catch (e) {
+        return e.toString();
+    }
+
+    return result.return;
+}
+
+function getCSR(){
+
+    var commonName = request.getParameter("commonName");
+    var department = request.getParameter("department");
+    var organization = request.getParameter("organization");
+    var city = request.getParameter("city");
+    var state = request.getParameter("state");
+    var country = request.getParameter("country");
+    var keySize = request.getParameter("keySize");
+
+    try{
+
+        var CSRGenerator = Packages.org.wso2.csrGen.CSRGenerator;
+        var csrGenerator = new CSRGenerator(keySize);
+        var generatedCSR = csrGenerator.getCSR(commonName,department, organization,city, state, country );
+        var privateKey = csrGenerator.getUserPrivateKey( );
+        var serialNo = sendCSRToAdmin(generatedCSR);
+        var csrDetails = '{"serialNo":"", "pk":""}';
+        var csrDetailObject = parse(csrDetails);
+        if(serialNo != null){
+            csrDetailObject.serialNo = serialNo;
+            csrDetailObject.pk = privateKey;
+        }
+        print(csrDetailObject)
+
+    }catch(e){
+        log.error(e);
+        response.sendRedirect("../../index.jag?e=1&error=" + e);
+
+    }
+}
+getCSR();
+
+
+%>

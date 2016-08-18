@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Authorized Apps" >
+        <Require feature="pubsub-2"/>
+    </ModulePrefs>
+    <Content type="html" view="default">
+        <![CDATA[
+
+        <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+
+	    <script type="text/javascript" src="js/jquery.min.js"></script>
+	    <script type="text/javascript" src="serverinfo.jag"></script>
+	    <script>
+            var headID = document.getElementsByTagName("head")[0];
+            var cssNode = document.createElement('link');
+            cssNode.type = 'text/css';
+            cssNode.rel = 'stylesheet';
+            cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/user_auth_apps/js/ui/font-awesome/css/font-awesome.min.css';
+            headID.appendChild(cssNode);
+        </script>
+	<script>
+		$(function() {
+			$('.max_view').click(function() {
+				 gadgets.Hub.publish('org.wso2.is.dashboard', {
+                            msg : 'A message from User profile',
+                            id: "user_auth_apps .expand-widget"
+                        });
+			});
+		});
+	</script>
+
+	    <div class='icon-thumbs-up-alt icon-thumbs-up-alt-dashboard icon-marketing-styles'></div>
+        <p>Manage your authorized applications.</p>
+        <p><a class='btn btn-default max_view' href=''>View details</a></p>
+        ]]>
+    </Content>
+
+    <Content type="html" view="home">
+        <![CDATA[
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/modal.js"></script>
+        <script type="text/javascript" src="js/gadget.js"></script>
+        <script type="text/javascript" src="serverinfo.jag"></script>
+
+        <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+
+        <script>
+            var headID = document.getElementsByTagName("head")[0];
+            var cssNode = document.createElement('link');
+            cssNode.type = 'text/css';
+            cssNode.rel = 'stylesheet';
+            cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/user_auth_apps/js/ui/font-awesome/css/font-awesome.min.css';
+            headID.appendChild(cssNode);
+        </script>
+
+        <script type="text/javascript">
+            var cookie = null;
+            var json = null;
+            var userName = null;
+            var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
+
+            $(function WindowLoad(event) {
+                url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
+                ws = new WebSocket(url);
+
+                ws.onopen = function () {
+                    console.log("web Socket onopen. ");
+                    ws.send("First Message open");
+                };
+
+                ws.onmessage = function (event) {
+                    var obj = $.parseJSON(event.data);
+                    cookie = obj.cookie;
+                    userName = obj.user;
+                    if (cookie != null) {
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_auth_apps/index.jag?cookie=" + cookie + "&user=" + userName;
+
+                        $.ajax({
+                            type:"GET",
+                            url:str
+
+                        })
+                                .done(function (data) {
+    var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+        "  <div class=\"modal-dialog\">\n" +
+        "    <div class=\"modal-content\">\n" +
+        "      <div class=\"modal-header\">\n" +
+        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-body\">\n" +
+        "        <p>One fine body&hellip;</p>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-footer\">\n" +
+        "      </div>\n" +
+        "    </div>\n" +
+        "  </div>\n" +
+        "</div>";
+
+
+
+      json = $.parseJSON(data);
+      if(json == null){
+	        $("#message").append(element);
+            message({content:'No authorized applications found !', type:'info', cbk:function () {
+            cancel();
+            } });
+            
+}
+else {
+
+                                    drawPage();
+}
+
+                                })
+                                .fail(function () {
+                                    console.log('error');
+
+                                })
+                                .always(function () {
+                                    console.log('completed');
+                                });
+                    }
+                };
+                ws.onclose = function () {
+                    console.log("web Socket onclose. ");
+                };
+            });
+
+            function submitUpdate() {
+
+                var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/edit-finish.jag";
+                $.ajax({
+                    url:str,
+                    type:"POST",
+                    data:$('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                })
+                        .done(function (data) {
+
+                        })
+                        .fail(function () {
+                            console.log('error');
+
+                        })
+                        .always(function () {
+                            console.log('completed');
+                        });
+
+            }
+
+
+        </script>
+
+
+        <form id="gadgetForm" class="form-horizontal">
+            <div id="gadgetBody"></div>
+	    <div id="message"></div>
+        </form>
+        ]]>
+    </Content>
+</Module>

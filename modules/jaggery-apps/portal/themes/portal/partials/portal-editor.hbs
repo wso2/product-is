@@ -1,0 +1,286 @@
+<script>
+	var editor = {
+		site : '{{site}}',
+		path : '{{path}}',
+		pathHash : '{{pathHash}}',
+		fileName : '{{fileName}}'
+	}; 
+</script>
+{{{gadgetCode}}}
+
+<div class="container-fluid">
+
+	<div id="file-tree" class="demo" style="height:100px;">
+		<li id="phtml1"></li>
+	</div>
+
+</div>
+<!-- /container -->
+
+<!-- Modal -->
+<div id="modal-publish" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel"
+aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+		<h3 id="myModalLabel">{{t "Publish Page"}}</h3>
+	</div>
+	<div class="modal-body">
+		<div class="alert alert-block">
+
+			<p>
+				You are about to publish the page titled 'My Nice Page' to the Store. Best check yo self, you're not
+				looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, vel
+				scelerisque nisl consectetur et.
+			</p>
+		</div>
+		<div>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">Property 1</label>
+
+					<div class="controls">
+						<input type="text" id="inputEmail" placeholder="Property 1">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword">Property 2</label>
+
+					<div class="controls">
+						<input type="password" id="inputPassword" placeholder="Propery 2">
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<label class="checkbox">
+							<input type="checkbox">
+							{{t "Check this please"}} </label>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal-footer">
+
+		<button class="btn btn-primary">
+			{{t "Publish"}}
+		</button>
+	</div>
+</div>
+
+<!-- Modal -->
+<!--
+<div id="modal-add-gadget" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel" aria-hidden="true">
+
+<div class="modal-header">
+<div class="row-fluid">
+<div class="span8">
+<h3>Add Gadget from Store</h3>
+</div>
+<div class="span4">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+<i class="icon-remove"></i>
+</button>
+
+<input id="inp-search-gadget" type="text" placeholder="Search Gadget" class="span8 pull-right">
+</div>
+</div>
+
+</div>
+<div class="modal-body">
+<div class="row-fluid">
+<div class="span3">
+<h4>All Tags <span>(25)</span></h4>
+<ul id="ul-modal-tags">
+<li>
+<a href="#">Entertainment</a>
+</li>
+<li>
+<a href="#">Sports</a>
+</li>
+<li>
+<a href="#">News</a>
+</li>
+<li>
+<a href="#">WSO2</a>
+</li>
+<li>
+<a href="#">Entertainment</a>
+</li>
+<li>
+<a href="#">Sports</a>
+</li>
+<li>
+<a href="#">News</a>
+</li>
+<li>
+<a href="#">WSO2</a>
+</li>
+<li>
+<a href="#">Entertainment</a>
+</li>
+<li>
+<a href="#">Sports</a>
+</li>
+<li>
+<a href="#">News</a>
+</li>
+<li>
+<a href="#">WSO2</a>
+</li>
+<li>
+<a href="#">Entertainment</a>
+</li>
+<li>
+<a href="#">Sports</a>
+</li>
+<li>
+<a href="#">News</a>
+</li>
+<li>
+<a href="#">WSO2</a>
+</li>
+<li>
+<a href="#">Entertainment</a>
+</li>
+<li>
+<a href="#">Sports</a>
+</li>
+<li>
+<a href="#">News</a>
+</li>
+<li>
+<a href="#">WSO2</a>
+</li>
+
+</ul>
+</div>
+<div class="span9">
+<h4>Recently added</h4>
+<ul id="ul-modal-recent-gadgets">
+<li>
+<img src="/portal/themes/portal/img/store-gadget-recent.png" width="64">
+<div>
+<h4>
+Gadget Title goes here <span>v1.0.0</span>
+<span class="gadget-rating"><img src="/portal/themes/portal/img/store-stars.png"></span>
+</h4>
+<span>by WSO2</span>
+</div>
+
+</li>
+<li>
+<img src="/portal/themes/portal/img/store-gadget-recent.png" width="64">
+<div>
+<h4>
+Gadget Title goes here <span>v1.0.0</span>
+<span class="gadget-rating"><img src="/portal/themes/portal/img/store-stars.png"></span>
+</h4>
+<span>by WSO2</span>
+</div>
+
+</li>
+<li>
+<img src="/portal/themes/portal/img/store-gadget-recent.png" width="64">
+<div>
+<h4>
+Gadget Title goes here <span>v1.0.0</span>
+<span class="gadget-rating"><img src="/portal/themes/portal/img/store-stars.png"></span>
+</h4>
+<span>by WSO2</span>
+</div>
+
+</li>
+<li>
+<img src="/portal/themes/portal/img/store-gadget-recent.png" width="64">
+<div>
+<h4>
+Gadget Title goes here <span>v1.0.0</span>
+<span class="gadget-rating"><img src="/portal/themes/portal/img/store-stars.png"></span>
+</h4>
+<span>by WSO2</span>
+</div>
+
+</li>
+
+</ul>
+
+</div>
+
+</div>
+</div>
+
+</div>
+-->
+
+<!-- Modal -->
+<div id="modal-new-dir" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-body">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+
+		<div>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inp-title">{{t "Enter new directory name"}}</label>
+					<div class="controls">
+						<input type="text" id="inp-title" class="input-xlarge">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal-footer">
+
+		<button id="btn-new-site" class="btn btn-primary">
+			{{t "Create directory"}}
+		</button>
+	</div>
+</div>
+
+<!-- Modal -->
+<div id="modal-add-gadget" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel" aria-hidden="true">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+		<i class="icon-remove"></i>
+	</button>
+    <div id="store-gadget-div"></div>
+</div>
+
+<!-- Modal -->
+<div id="modal-resolve-versions" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+		<h3>{{t "This file has an unsaved version"}}</h3>
+	</div>
+	<div class="modal-body">
+		<div class="tabbable">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#version-new" data-toggle="tab">{{t "Unsaved"}}</a>
+				</li>
+				<li>
+					<a href="#version-old" data-toggle="tab">{{t "Saved"}}</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="version-new">
+					<pre id="preview-content-new"></pre>
+				</div>
+				<div class="tab-pane" id="version-old">
+					<pre id="preview-content-old"></pre>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" id="version-select-old">{{t "Use Saved Version"}}</a>
+		<a href="#" class="btn btn-primary" id="version-select-new">{{t "Use Unsaved Version"}}</a>
+	</div>
+</div>

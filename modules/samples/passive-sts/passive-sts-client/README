@@ -1,0 +1,30 @@
+Following explain how to test WSO2 Identity Server's Passive STS using the sample Relying Party (RP)
+
+Configuring the Relying Party
+-----------------------------
+In sample web app's web.xml...
+
+1. for 'idpUrl', give Identiy Server's Passive STS URL.
+		i.e. https://localhost:9443/passivests
+2.'replyUrl' should be the URL of the web app.
+		i.e. http://localhost:8080/PassiveSTSSampleApp/
+3.'realm' should be an unique identifier for the web app.
+		e.g. PassiveSTSSampleApp
+
+Configuring Identity Server (IS)
+-------------------------------
+1. In IS Management Console, add a new Service Provider.
+2. Go to Inbound Authentication Configuration -> WS-Federation (Passive) Configuration.
+3. For 'Service Realm Name' give the same identifier we gave as realm in Web app. 
+		e.g. PassiveSTSSampleApp
+4. Go to Claim Configuration and select the required claims. These will be returned to the RP by the IS.
+5. Once the changes are done, update the Service Provider.
+
+Execution Flow
+--------------
+1. From a web browser, try to access 'http://localhost:8080/PassiveSTSSampleApp'
+2. This request will be intercepted by a Servlet Filter and browser will redirect to IS' Passive STS service.
+3. Passive STS prompts the user for credentials.
+4. After obtaining the credentials, it will construct the response with the selected claims.
+5. Then, Passive STS redirects the browser to the RP.
+6. Finally, web browser will display the response received by the IS.

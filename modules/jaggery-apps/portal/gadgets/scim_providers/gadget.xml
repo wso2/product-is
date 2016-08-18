@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="SCIM Providers" >
+        <Require feature="pubsub-2"/>
+    </ModulePrefs>
+    <Content type="html" view="default">
+        <![CDATA[
+
+        <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+
+	    <script type="text/javascript" src="js/jquery.min.js"></script>
+	    <script type="text/javascript" src="serverinfo.jag"></script>
+	    <script>
+            var headID = document.getElementsByTagName("head")[0];
+            var cssNode = document.createElement('link');
+            cssNode.type = 'text/css';
+            cssNode.rel = 'stylesheet';
+            cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/scim_providers/js/ui/font-awesome/css/font-awesome.min.css';
+            headID.appendChild(cssNode);
+        </script>
+	<script>
+		$(function() {
+			$('.max_view').click(function() {
+				 gadgets.Hub.publish('org.wso2.is.dashboard', {
+                            msg : 'A message from User profile',
+                            id: "scim_providers .expand-widget"
+                        });
+			});
+		});
+	</script>
+
+	    <div class='icon-th icon-th-dashboard icon-marketing-styles'></div>
+        <p>Use WSO2 Identity Server to provision users and roles across heterogeneous identity management systems in a standard way</p>
+        <p><a class='btn btn-default max_view' href=''>View details</a></p>
+        ]]>
+    </Content>
+
+    <Content type="html" view="home">
+        <![CDATA[
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="../wso2-dev/js/jquery.numberformatter-1.2.3.js"></script>
+        <script type="text/javascript" src="../wso2-dev/js/jquery.dependClass-0.1.js"></script>
+        <script type="text/javascript" src="../wso2-dev/js/jquery.slider.js"></script>
+        <script type="text/javascript" src="../../themes/portal/js/UESContainer.js"></script>
+        <script type="text/javascript" src="serverinfo.jag"></script>
+
+        <script>
+            var headID = document.getElementsByTagName("head")[0];
+            var cssNode = document.createElement('link');
+            cssNode.type = 'text/css';
+            cssNode.rel = 'stylesheet';
+            cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/scim_providers/js/ui/font-awesome/css/font-awesome.min.css';
+            headID.appendChild(cssNode);
+        </script>
+
+        <script type="text/javascript">
+            var cookie = null;
+            var json = null;
+
+            gadgets.HubSettings.onConnect = function() {
+                gadgets.Hub.subscribe('org.wso2.ues.samples.ch', function(topic, data, subscriberData) {
+                    if(cookie == null ){
+                        cookie = data.cookie;
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/scim_providers/sample.jag?cookie=" + cookie ;
+
+                        $.ajax( {
+				type: "GET",
+				url: str 
+
+				})
+                                .done(function(data) {
+                                    json = $.parseJSON(data);
+                                    console.log(json);
+
+                                    var output="<ul>";
+                                    for (var i in json.return.fieldValues) {
+                                        output+="<li>" + json.return.fieldValues[i].displayName + " <input type =text id="+i+" name =" +json.return.fieldValues[i].claimUri+" value = " + json.return.fieldValues[i].fieldValue +" > </type></li>";
+                                    }
+                                    output+='</ul> <button onclick="myFunction()" type="button" >Click Me!</button> ';
+                                    $("#outputTitle").append(output);
+                                })
+                                .fail(function() {
+                                    console.log('error');
+
+                                })
+                                .always(function() {
+                                    console.log('completed');
+                                });
+
+
+                    }
+                });
+            };
+
+            function myFunction()
+            {
+alert($('#myprofile').serialize()+ "&cookie=" + cookie + "&profileConfiguration=default&profile=default");
+                json.return.fieldValues[1].fieldValue = document.getElementById("1").value;
+                document.getElementById("demo").innerHTML=json.return.fieldValues[1].fieldValue;
+		var userData = JSON.stringify(json);
+                var str = PROXY_CONTEXT_PATH + "/portal/gadgets/scim_providers/controllers/my-profile/edit-finish.jag";
+                $.ajax( {
+ url: str,
+type: "POST",
+data: $('#myprofile').serialize()+ "&profileConfiguration=default&profile=default" + "&cookie=" + cookie 
+})
+                        .done(function(data) {
+
+                        })
+                        .fail(function() {
+                            console.log('error');
+
+                        })
+                        .always(function() {
+                            console.log('completed');
+                        });
+
+            }
+
+
+        </script>
+
+
+
+<form id="myprofile">
+        <div id="outputTitle"></div>
+        <p id="demo"></p>
+</form>
+
+        ]]>
+    </Content>
+</Module>
