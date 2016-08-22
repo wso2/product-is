@@ -120,7 +120,6 @@
             <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
             <scope>compile</scope>
         </dependency>
-    <!-- opensaml 3 for query profile-->
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-core</artifactId>
