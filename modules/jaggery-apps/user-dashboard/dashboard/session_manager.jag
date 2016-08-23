@@ -1,6 +1,9 @@
 <%
 var log = new Log();
-var cookie = session.get('auth-cookie');
+var cryptoUtil = Packages.org.wso2.carbon.core.util.CryptoUtil;
+
+var cookieStr = new java.lang.String(session.get('auth-cookie'));
+var cookie = encodeURIComponent(cryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode(cookieStr.getBytes("UTF-8")));
 var bpsJson = session.get('listProfiles');
 var user = session.get('user');
 var jsonString = '{ ' + bpsJson + ',"cookie":"' +cookie+'","user":"'+user+'"}';
