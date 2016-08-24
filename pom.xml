@@ -1242,8 +1242,8 @@
         <charon.version>2.0.6</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v21</rampart.wso2.version>
-        <rampart.wso2.version.1>1.6.1-wso2v21</rampart.wso2.version.1>
+        <rampart.wso2.version>1.6.1.wso2v22-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v22-SNAPSHOT</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
