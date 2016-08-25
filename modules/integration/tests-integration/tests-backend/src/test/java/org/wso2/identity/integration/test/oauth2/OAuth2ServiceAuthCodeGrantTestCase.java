@@ -33,6 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -119,6 +120,22 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
 		consumerSecret = appDto.getOauthConsumerSecret();
 	}
+
+    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
+            = "testRegisterApplication") public void testSendAuthorozedPostForError() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertTrue(locationHeader.getValue().contains("redirect_uri"),
+                "Error response does not contain redirect_uri");
+        EntityUtils.consume(response.getEntity());
+    }
 
 	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
