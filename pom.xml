@@ -1237,7 +1237,7 @@
         <opensaml2.wso2.version>2.6.4.wso2v3</opensaml2.wso2.version>
         <joda.version>2.8.2</joda.version>
         <joda.wso2.version>2.8.2.wso2v1</joda.wso2.version>
-        <wss4j.wso2.version>1.5.11.wso2v14</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11-wso2v15-SNAPSHOT</wss4j.wso2.version>
         <openws.version>1.4.1</openws.version>
         <charon.version>2.0.6</charon.version>
         <xalan.version>2.7.1</xalan.version>
