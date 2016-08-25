@@ -1,7 +1,11 @@
 <%
 var log = new Log();
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-var cookie = request.getParameter("cookie") ;
+var cryptoUtil = Packages.org.wso2.carbon.core.util.CryptoUtil;
+
+var encodedString = decodeURIComponent(request.getParameter("cookie"));
+var cookieStr =  new java.lang.String(cryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(encodedString), "UTF-8");
+var cookie = String(cookieStr);
 var user = request.getParameter("user");
 getUser();
 function getUser(){
@@ -41,11 +45,16 @@ session.put('user', user);
                     if (orderedChallanges[fieldValues.return[i].questionSetId] == undefined) {
                         orderedChallanges[fieldValues.return[i].questionSetId] = [];
                     }
-                    if (count > 0 && selectedChallanges[fieldValues.return[i].questionSetId].question == fieldValues.return[i].question) {
-                        fieldValues.return[i].selected = "true";
-                        fieldValues.return[i].answer = selectedChallanges[fieldValues.return[i].questionSetId].answer;
-                    }
-                    else {
+                    if (selectedChallanges[fieldValues.return[i].questionSetId] != null) {
+                        if (count > 0 && selectedChallanges[fieldValues.return[i].questionSetId].question == fieldValues.return[i].question) {
+                            fieldValues.return[i].selected = "true";
+                            fieldValues.return[i].answer = selectedChallanges[fieldValues.return[i].questionSetId].answer;
+                        }
+                        else {
+                            fieldValues.return[i].selected = "false";
+                            fieldValues.return[i].answer = "";
+                        }
+                    } else {
                         fieldValues.return[i].selected = "false";
                         fieldValues.return[i].answer = "";
                     }
