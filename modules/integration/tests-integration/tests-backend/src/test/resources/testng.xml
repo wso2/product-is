@@ -106,7 +106,6 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
-            <class name="org.wso2.identity.integration.test.security.SECINT115EntitlementXSSTestCase"/>
 
             <!--Workflow Management test case-->
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
@@ -115,8 +114,10 @@
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorTestCase" />
+
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
         </classes>
     </test>
 

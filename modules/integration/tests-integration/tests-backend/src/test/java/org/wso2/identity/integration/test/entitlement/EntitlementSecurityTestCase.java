@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.security;
+package org.wso2.identity.integration.test.entitlement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.jivesoftware.smack.util.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -36,7 +36,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class SECINT115EntitlementXSSTestCase extends ISIntegrationTest {
+public class EntitlementSecurityTestCase extends ISIntegrationTest {
     private HttpClient httpClient;
     private String value;
     private String url;
@@ -67,7 +67,10 @@ public class SECINT115EntitlementXSSTestCase extends ISIntegrationTest {
             String line;
             boolean success = false;
             while ((line = rd.readLine()) != null) {
-                success = line.equals(StringUtils.escapeForXML(value));
+                success = line.equals(StringEscapeUtils.escapeHtml(value));
+                if (success){
+                    break;
+                }
             }
 
             rd.close();
