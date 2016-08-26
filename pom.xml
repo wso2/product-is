@@ -4125,6 +4125,7 @@
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <rampart.wso2.version>1.6.1.wso2v22-SNAPSHOT</rampart.wso2.version>
         <rampart.wso2.version.1>1.6.1-wso2v22-SNAPSHOT</rampart.wso2.version.1>
 >>>>>>> 20ddc1c... Version-upgrade wss4j,rampart,charon
@@ -4132,6 +4133,10 @@
         <rampart.wso2.version>1.6.1.wso2v21</rampart.wso2.version>
         <rampart.wso2.version.1>1.6.1-wso2v21</rampart.wso2.version.1>
 >>>>>>> 9ca3cb5... Updating feature versions for identity-framework and identity-extension features
+=======
+        <rampart.wso2.version>1.6.1.wso2v22-SNAPSHOT</rampart.wso2.version>
+        <rampart.wso2.version.1>1.6.1-wso2v22-SNAPSHOT</rampart.wso2.version.1>
+>>>>>>> e7925af... fixing IDENTITY-5030
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
