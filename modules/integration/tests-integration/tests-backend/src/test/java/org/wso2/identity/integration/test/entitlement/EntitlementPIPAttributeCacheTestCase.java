@@ -32,7 +32,7 @@ import org.wso2.identity.integration.common.clients.entitlement.EntitlementServi
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 
 import java.io.File;
-
+import java.io.FileFilter;
 import java.rmi.RemoteException;
 
 /**
@@ -150,11 +150,7 @@ public class EntitlementPIPAttributeCacheTestCase extends ISIntegrationTest {
     }
 
     private void addCustomAttributeFinder() throws Exception {
-        File jarFile = new File(
-                getISResourceLocation() + File.separator + ".." + File.separator + ".." + File.separator + ".." +
-                        File.separator + ".." +                         File.separator + ".."+ File.separator + ".." +
-                        File.separator + ".." + File.separator + "tests-common" + File.separator + "extensions" +
-                        File.separator + "target" + File.separator + "org.wso2.carbon.identity.custom.pip-4.2.2.jar");
+        File jarFile = getCustomAttributeFinder();
         scm.copyToComponentLib(jarFile);
 
         //Copy entitlement.properties
@@ -171,6 +167,35 @@ public class EntitlementPIPAttributeCacheTestCase extends ISIntegrationTest {
         scm.restartGracefully();
     }
 
+    private File getCustomAttributeFinder() throws Exception {
+
+        File targetDir = new File(
+                getISResourceLocation() + File.separator + ".." + File.separator + ".." + File.separator + ".." +
+                        File.separator + ".." + File.separator + ".." + File.separator + ".." +
+                        File.separator + ".." + File.separator + "tests-common" + File.separator + "extensions" +
+                        File.separator + "target");
+        if (!targetDir.isDirectory()) {
+            throw new Exception(targetDir + " is not a directory.");
+        }
+
+        File[] files = targetDir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                String fileName = file.getName();
+                if (fileName.indexOf("org.wso2.carbon.identity.custom.pip") >= 0 && !(fileName.indexOf("test") >= 0)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        if (files != null && files.length == 1) {
+            return files[0];
+        } else {
+            throw new Exception("Could not found custom attribute finder jar");
+        }
+    }
     private String buildRequest(String subject) {
         String request = "<Request xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" " +
                 "CombinedDecision=\"false\" ReturnPolicyIdList=\"false\">\n" +
