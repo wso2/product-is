@@ -32,6 +32,7 @@
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase" />
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>-->
             <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
         </classes>
@@ -116,6 +117,7 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorTestCase" />
             <!--Entitlement Test Cases-->
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>
+            <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
         </classes>
     </test>
 
