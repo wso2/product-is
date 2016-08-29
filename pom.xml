@@ -1360,7 +1360,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-        
+
         <repository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
