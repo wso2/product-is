@@ -37,6 +37,7 @@
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/connectors</module>
+        <module>modules/social-social-authenticators</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
         <module>modules/samples</module>
@@ -1230,10 +1231,6 @@
         <identity.userstore.remote.version>5.1.1</identity.userstore.remote.version>
         <identity.workflow.impl.bps.version>5.1.1</identity.workflow.impl.bps.version>
         <identity.outbound.auth.openid.version>5.1.1</identity.outbound.auth.openid.version>
-        <identity.outbound.auth.facebook.version>5.1.1</identity.outbound.auth.facebook.version>
-        <identity.outbound.auth.google.version>5.1.1</identity.outbound.auth.google.version>
-        <identity.outbound.auth.windows.live.version>5.1.1</identity.outbound.auth.windows.live.version>
-        <identity.outbound.auth.yahoo.version>5.1.1</identity.outbound.auth.yahoo.version>
         <identity.local.auth.iwa.version>5.2.0-SNAPSHOT</identity.local.auth.iwa.version>
         <identity.carbon.auth.iwa.version>5.1.1</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.1</identity.workflow.template.multisteps.version>
