@@ -37,7 +37,7 @@
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/connectors</module>
-        <module>modules/social-social-authenticators</module>
+        <module>modules/social-authenticators</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
         <module>modules/samples</module>
