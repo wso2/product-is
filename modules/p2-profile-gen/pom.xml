@@ -227,18 +227,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc.server.feature:${identity.outbound.auth.oidc.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.facebook.server.feature:${identity.outbound.auth.facebook.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.google.server.feature:${identity.outbound.auth.google.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.yahoo.server.feature:${identity.outbound.auth.yahoo.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.live.server.feature:${identity.outbound.auth.windows.live.version}
-                                </featureArtifactDef>
 
 
                                 <featureArtifactDef>
@@ -724,27 +712,6 @@
                                     </id>
                                     <version>${identity.outbound.auth.oidc.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.facebook.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.google.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.google.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.live.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.windows.live.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.yahoo.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.yahoo.version}</version>
-                                </feature>
-
 
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
@@ -1215,27 +1182,6 @@
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.facebook.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.google.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.google.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.live.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.windows.live.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.yahoo.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.yahoo.version}</version>
-                                </feature>
-
-                                <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
                                     </id>
                                     <version>${identity.local.auth.fido.version}</version>
@@ -1633,28 +1579,6 @@
                                     </id>
                                     <version>${identity.outbound.auth.oidc.version}</version>
                                 </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.facebook.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.facebook.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.google.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.google.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.live.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.windows.live.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.application.authenticator.yahoo.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.yahoo.version}</version>
-                                </feature>
-
 
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group

@@ -190,6 +190,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
+        <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
+        <fileSet>
+            <directory>../social-authenticators/target/socialauthenticatorCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
         <!--copy web apps for for totp, smsotp and emailotp authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
