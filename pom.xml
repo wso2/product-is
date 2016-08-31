@@ -4160,6 +4160,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<carbon.kernel.version>4.3.0</carbon.kernel.version>
 =======
 		<carbon.kernel.version>4.4.0-SNAPSHOT</carbon.kernel.version>
@@ -4240,6 +4241,9 @@
 =======
 =======
         <carbon.kernel.version>4.4.7</carbon.kernel.version>
+=======
+        <carbon.kernel.version>4.4.9</carbon.kernel.version>
+>>>>>>> 2f51aba... Kernel-upgrade
         <carbon.commons.version>4.5.4</carbon.commons.version>
 >>>>>>> 9ca3cb5... Updating feature versions for identity-framework and identity-extension features
         <carbon.dashboards.version>1.0.18</carbon.dashboards.version>
