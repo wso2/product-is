@@ -1229,7 +1229,7 @@
         <identity.user.ws.version>5.1.1</identity.user.ws.version>
         <identity.userstore.ldap.version>5.1.1</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.1.1</identity.userstore.remote.version>
-        <identity.workflow.impl.bps.version>5.1.1</identity.workflow.impl.bps.version>
+        <identity.workflow.impl.bps.version>5.1.2-SNAPSHOT</identity.workflow.impl.bps.version>
         <identity.outbound.auth.openid.version>5.1.1</identity.outbound.auth.openid.version>
         <identity.local.auth.iwa.version>5.2.0-SNAPSHOT</identity.local.auth.iwa.version>
         <identity.carbon.auth.iwa.version>5.1.1</identity.carbon.auth.iwa.version>
