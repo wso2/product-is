@@ -48,6 +48,7 @@ public final class OAuth2Constant {
     public final static String OAUTH2_SCOPE_DEFAULT = "";
     public final static String OAUTH_APPLICATION_NAME = "oauthTestApplication";
     public static final String UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
+    public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
 
     public final static String CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8490\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
