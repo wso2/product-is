@@ -1239,6 +1239,7 @@
         <identity.outbound.provisioning.scim.version>5.1.1</identity.outbound.provisioning.scim.version>
         <identity.tool.samlsso.validator.version>5.1.1</identity.tool.samlsso.validator.version>
         <identity.data.publisher.authentication.version>5.1.2-SNAPSHOT</identity.data.publisher.authentication.version>
+        <identity.data.publisher.oauth.version>1.0.0-SNAPSHOT</identity.data.publisher.oauth.version>
         <!--<identity.carbon.auth.thrift.version>5.5.0-SNAPSHOT</identity.carbon.auth.thrift.version>-->
         <identity.application.auth.oidc.version>5.1.1</identity.application.auth.oidc.version>
         <identity.governance.version>1.0.0-SNAPSHOT</identity.governance.version>
