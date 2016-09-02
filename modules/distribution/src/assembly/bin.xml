@@ -196,7 +196,7 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy the outbound authenticator jars OpenID,OIDC,Passive-STS.-->
+        <!--Copy the outbound authenticator jars OIDC, Passive-STS.-->
         <fileSet>
             <directory>../authenticators/target/authenticatoroutboundCopied/jar</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
