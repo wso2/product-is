@@ -226,6 +226,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.data.publisher.oauth.server.feature:${identity.data.publisher.oauth.version}
+                                </featureArtifactDef>
                                 <!-- Authenticators -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature:${identity.outbound.auth.requestpath.basicauth.version}
@@ -720,6 +723,13 @@
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.data.publisher.oauth.server.feature.group
+                                    </id>
+                                    <version>${identity.data.publisher.oauth.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group
@@ -1236,6 +1246,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.data.publisher.oauth.server.feature.group
+                                    </id>
+                                    <version>${identity.data.publisher.oauth.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
                                     <version>${identity.outbound.auth.requestpath.basicauth.version}</version>
@@ -1657,6 +1673,12 @@
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.data.publisher.oauth.server.feature.group
+                                    </id>
+                                    <version>${identity.data.publisher.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
