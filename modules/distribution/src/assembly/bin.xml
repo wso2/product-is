@@ -196,6 +196,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
+        <!--copy the outbound authenticator jars OpenID,OIDC,Passive-STS.-->
+        <fileSet>
+            <directory>../authenticators/target/authenticatoroutboundCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
         <!--copy web apps for for totp, smsotp and emailotp authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
