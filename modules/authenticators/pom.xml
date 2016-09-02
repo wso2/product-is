@@ -81,7 +81,7 @@
                     </execution>
                     <!-- Download OpenID jar from nexus and copy to the  authenticatoroutbound/jar folder-->
                     <execution>
-                        <id>download_passivests_jar</id>
+                        <id>download_openid_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
