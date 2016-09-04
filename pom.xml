@@ -1183,7 +1183,6 @@
         <identity.local.auth.basicauth.version>5.1.2-SNAPSHOT</identity.local.auth.basicauth.version>
         <identity.carbon.auth.saml2.version>5.1.3</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.2-SNAPSHOT</identity.inbound.auth.saml.version>
-        <identity.outbound.auth.samlsso.version>5.1.3-SNAPSHOT</identity.outbound.auth.samlsso.version>
         <identity.inbound.auth.oauth.version>5.1.3-SNAPSHOT</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.1.2-SNAPSHOT</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.2-SNAPSHOT</identity.agent.sso.version>
