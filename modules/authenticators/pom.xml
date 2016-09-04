@@ -79,7 +79,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download OpenID jar from nexus and copy to the  authenticatoroutbound/jar folder-->
+                    <!-- Download SAML Federated Authenticator jar from nexus and copy to the  authenticatoroutbound/jar folder-->
                     <execution>
                         <id>download_samlauthenticator_jar</id>
                         <phase>compile</phase>
