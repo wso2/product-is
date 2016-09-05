@@ -240,9 +240,6 @@
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${identity.local.auth.basicauth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.samlsso.server.feature:${identity.outbound.auth.samlsso.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.fido.server.feature:${identity.local.auth.fido.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -739,13 +736,6 @@
                                     <version>${identity.outbound.auth.requestpath.oauth.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.samlsso.version}</version>
-                                </feature>
-
-                                <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
                                     </id>
                                     <version>${identity.local.auth.fido.version}</version>
@@ -1237,12 +1227,6 @@
                                     <version>${identity.outbound.auth.requestpath.oauth.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.samlsso.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido.server.feature.group
                                     </id>
                                     <version>${identity.local.auth.fido.version}</version>
@@ -1654,12 +1638,6 @@
                                         org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature.group
                                     </id>
                                     <version>${identity.outbound.auth.requestpath.oauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.application.authenticator.samlsso.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.samlsso.version}</version>
                                 </feature>
 
                                 <feature>
