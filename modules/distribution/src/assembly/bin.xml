@@ -547,11 +547,10 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/samlsso_federate.html
-            </source>
+            <source>src/repository/resources/pages/samlsso_federate.html</source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
-            <fileMode>644</fileMode>
+            <destName>samlsso_federate.html</destName>
+            <filtered>true</filtered>
         </file>
         <file>
             <source>
