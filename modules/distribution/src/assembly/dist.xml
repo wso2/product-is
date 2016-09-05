@@ -17,35 +17,38 @@
  ~ under the License.
  -->
 <assembly>
-	<formats>
-		<format>zip</format>
-	</formats>
-	<includeBaseDirectory>false</includeBaseDirectory>
-	<fileSets>
-		<!-- Copying p2 profile and osgi bundles-->
-		<fileSet>
-			<directory>
-				../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/components
-			</directory>
-			<outputDirectory>wso2is-${pom.version}/repository/components
-			</outputDirectory>
-			<excludes>
-				<exclude>**/eclipse.ini</exclude>
-				<exclude>**/*.lock</exclude>
-				<exclude>**/.data</exclude>
-				<exclude>**/.settings</exclude>
-			</excludes>
-		</fileSet>
-	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>
-				wso2is-${pom.version}/repository/deployment/client/modules
-			</outputDirectory>
-			<includes>
-				<include>org.apache.rampart:rampart:mar
-				</include>
-			</includes>
-		</dependencySet>
-	</dependencySets>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <!-- Copying p2 profile and osgi bundles-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/components
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/components
+            </outputDirectory>
+            <excludes>
+                <exclude>**/eclipse.ini</exclude>
+                <exclude>**/*.lock</exclude>
+                <exclude>**/.data</exclude>
+                <exclude>**/.settings</exclude>
+                <!--removing jars and wars from repository/components/feature folder-->
+                <exclude>features/**/*.war</exclude>
+                <exclude>features/org.wso2.carbon.as.runtimes.cxf_*/cxf/*.jar</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>
+                wso2is-${pom.version}/repository/deployment/client/modules
+            </outputDirectory>
+            <includes>
+                <include>org.apache.rampart:rampart:mar
+                </include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
