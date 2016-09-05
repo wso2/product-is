@@ -4591,6 +4591,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 9ca3cb5... Updating feature versions for identity-framework and identity-extension features
         <carbon.analytics-common.version>5.0.12-beta2</carbon.analytics-common.version>
 >>>>>>> 12880d6... Merge branch 'master' into analytics-with-sessons
@@ -4612,6 +4613,9 @@
 =======
         <carbon.analytics-common.version>5.1.2-SNAPSHOT</carbon.analytics-common.version>
 >>>>>>> 4963913... resolved merge conflicts
+=======
+        <carbon.analytics-common.version>5.1.3</carbon.analytics-common.version>
+>>>>>>> 64afa58... Upgrade Carbon Analytics Common version
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
