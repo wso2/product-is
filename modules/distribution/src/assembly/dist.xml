@@ -34,6 +34,9 @@
 				<exclude>**/*.lock</exclude>
 				<exclude>**/.data</exclude>
 				<exclude>**/.settings</exclude>
+                <!--removing jars and wars from repository/components/feature folder-->
+                <exclude>features/**/*.war</exclude>
+                <exclude>features/org.wso2.carbon.as.runtimes.cxf_*/cxf/*.jar</exclude>
 			</excludes>
 		</fileSet>
 	</fileSets>
