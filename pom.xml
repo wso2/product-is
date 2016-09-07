@@ -1177,7 +1177,7 @@
 
     <properties>
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.2.1-SNAPSHOT</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.2.2-SNAPSHOT</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.local.auth.basicauth.version>5.1.2-SNAPSHOT</identity.local.auth.basicauth.version>
