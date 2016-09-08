@@ -5,7 +5,7 @@ WSO2 Identity Server ${product.version}
 Welcome to the WSO2 Identity Server ${product.version} release.
 
 WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
-protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
+protocols such as SAML 2.0 Web SSO, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive.
 It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
 supported through SCIM and SPML.
 
@@ -14,47 +14,45 @@ This is based on the revolutionary WSO2 Carbon framework. All the major features
 New Features
 ============
 
-*  In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
+*  OpenID Connect Session Management
 
-     logins to an application to obtain a fully privileged view for a single user's details, we now support merging
-     of multiple user profiles.
+     OpenID Connect is an emerging authentication protocol defined on top of OAuth 2.0 protocol. OpenID Connect Session
+     Management specification, defines a way for a Relying Party (RP), to monitor the login status of an end user with an
+     OpenID Connect Provider (OP) minimizing the network traffic. This will be supported with WSO2 IS ${product.version}.
 
-*  Workflow Support for Identity Server
+* Last SAML based login timestamp and Last password modified Timestamp
 
-     WSO2 IS ${product.version} now supports user store operations to engage with workflows. Administrators will be able select
-     at which levels each operation should be approved before they get executed. This will be available as a
-     optional feature where administrator will be able to select if to use them on their user store operations or not.
+     WSO2 IS ${product.version} is now able to know the last login time and last password updated time of a user.
+     You should be able to see the corresponding values listed through the user's profile.
 
-* FIDO Authentication
+*  API to get the number (count) of users
 
-     FIDO(Fast IDentity Online) will provide an extra layer of security to your account.  FIDO protocols use standard
-     public key cryptography techniques to provide stronger authentication. WSO2 IS ${product.version} now supports FIDO
-     authentication.
+     One of the new functionalities introduced with WSO2 IS ${product.version} is the service to count the number of users
+     based on user names patterns and claims and also to count the number of roles matching a role name pattern in user store.
+     By default this supports JDBC user store implementations only and provides freedom to extend the functionality to
+     LDAP user stores or any other type as well.
 
+*  Support for Microsoft Office 365 – WS Trust
 
-*  XACML cache invalidation notification when changes are made to Identities
+     With WSO2 IS ${product.version}, you will be able to successfully configure the WS-Trust protocol for
+     Microsoft Office 365 to provide active clients with SSO to many of Office 365 features such as the phone’s Mail app,
+     external mail apps, Lync.
 
-     WSO2 IS ${product.version} is now able to send invalidation notifications to external endpoints when there is a change in user
-     roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
-     been updated
+*  SAML2.0 support for WS-Federation Passive
 
-*  PATCH operation support for SCIM 1.1
-
-     PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
-     operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
-     added to the group, all the users should be sent in the PUT request.
-
-*  Renewed support for bearer type SAML 2.0 token
+     WSO2 IS ${product.version} is now able to support SAML2.0 tokens with Passive STS.
 
 Other Key Features
 =============
 
-*  Dynamically discovered federation
-*  Identity Bridge - translation between heterogeneous Identity authentication protocols
-*  SP Initiated and IDP Initiated SAML 2.0 Web Browser SSO provider
-*  SAML2 Single Logout profile support
-*  OpenID 2.0 Provider
-*  OpenID Connect Authorization Server
+*  User Account Enable,Disable.
+*  Exposing IdentityProviderManager an osgi service.
+*  Facilitated to configure the callback url in Facebook authenticator.
+*  Ability to configurable "ISS" value of JWT token (id_token) for a given tenant.
+*  Add PKCE Support for OAuth 2.0 Authorization Code Grant Type.
+*  Add PKCE Support Detection
+*  Scope parameter support for OIDC Id Token.
+*  Add user-profile in dashboard for TOTP authenticator
 *  Social login with Facebook, Google, Yahoo and Windows Live
 *  XACML 3.0/2.0 based Entitlement Engine with WS-XACML support
 *  OAuth 2.0/1.0a Authorization Server with OAuth 2.0/1.0a support
@@ -130,7 +128,7 @@ All known issues have been recorded at https://wso2.org/jira/issues/?filter=1302
 Issues Fixed In This Release
 ============================
 
-All the fixed for WSO2 Identity Server 5.2.0-BETA-2 release have been recorded at https://wso2.org/jira/issues/?filter=13027
+All the fixed for WSO2 Identity Server 5.2.0 release have been recorded at https://wso2.org/jira/browse/IDENTITY-5114?filter=13327
 
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
