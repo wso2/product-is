@@ -131,9 +131,9 @@
         </plugins>
     </build>
     <properties>
-        <social.authenticator.facebook.version>5.1.2-SNAPSHOT</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.1.2-SNAPSHOT</social.authenticator.google.version>
-        <social.authenticator.windowslive.version>5.1.2-SNAPSHOT</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.1.2-SNAPSHOT</social.authenticator.yahoo.version>
+        <social.authenticator.facebook.version>5.1.2</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.1.2</social.authenticator.google.version>
+        <social.authenticator.windowslive.version>5.1.2</social.authenticator.windowslive.version>
+        <social.authenticator.yahoo.version>5.1.2</social.authenticator.yahoo.version>
     </properties>
 </project>
