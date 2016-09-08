@@ -108,8 +108,8 @@
         </plugins>
     </build>
     <properties>
-        <identity.outbound.auth.oidc.version>5.1.2-SNAPSHOT</identity.outbound.auth.oidc.version>
-        <identity.outbound.auth.passive.sts.version>5.1.2-SNAPSHOT</identity.outbound.auth.passive.sts.version>
+        <identity.outbound.auth.oidc.version>5.1.2</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.passive.sts.version>5.1.2</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.1.3-SNAPSHOT</identity.outbound.auth.samlsso.version>
     </properties>
 </project>
