@@ -1,5 +1,5 @@
 ===============================
-WSO2 Identity Server 5.2.0 Beta2
+Welcome to WSO2 Identity Server
 ===============================
 
 ---
@@ -10,8 +10,6 @@ WSO2 Identity Server 5.2.0 Beta2
 
 
 ---
-
-Welcome to the WSO2 Identity Server 5.2.0 Beta2 release.
 
 WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
 protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
@@ -56,7 +54,7 @@ New Features
 *   OpenID Connect Core 1.0 Compliance
 
     The IS 5.0.0 had OpenID Support, however there were many points in the spec that were being violated.
-    Now that the specification is finalized we have made IS 5.2.0-Beta2 OpenID Connect support specification
+    Now that the specification is finalized we have made IS OpenID Connect support specification
     compliant. A major improvement this area is support for IDToken response type from the
     OpenID Connect authorization endpoint.
 
