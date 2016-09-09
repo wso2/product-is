@@ -58,7 +58,7 @@
                                     org.wso2.carbon.identity.application.authentication.framework.server:${carbon.identity.framework.version}
                                 </importFeatureDef>
                                 <importFeatureDef>
-                                    org.wso2.carbon.idp.mgt
+                                    org.wso2.carbon.idp.mgt:${carbon.identity.framework.version}
                                 </importFeatureDef>
                             </importFeatures>
                         </configuration>
