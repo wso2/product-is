@@ -66,9 +66,6 @@ public class SCIMServiceProviderGroupTestCase {
     UserManagementClient userMgtClient;
     SCIMConfigAdminClient scimConfigAdminClient;
 
-
-
-
     @BeforeClass(alwaysRun = true)
     public void initiate() throws Exception {
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
@@ -282,27 +279,27 @@ public class SCIMServiceProviderGroupTestCase {
         Assert.assertFalse(userMgtClient.roleNameExists(DISPLAY_NAME));
     }
 
-    @Test(alwaysRun = true, description = "Add SCIM Internal Group")
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
-    public void createInternalGroupTest() throws Exception {
-        DISPLAY_NAME = "Internal/testrole";
-        //create a group according to SCIM Group Schema
-        Group scimGroup = SCIMUtils.getSCIMGroup(scimClient, scimUserId, USERNAME, EXTERNAL_ID, DISPLAY_NAME);
-        String encodedGroup = scimClient.encodeSCIMObject(scimGroup, SCIMConstants.JSON);
-        Resource groupResource = SCIMUtils.getGroupResource(scimClient, scim_url);
-        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(userInfo);
-
-        //send previously registered SCIM consumer credentials in http headers.
-        String response = groupResource.
-                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
-                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
-                post(String.class, encodedGroup);
-        //decode the response
-        log.info(response);
-        Object obj= JSONValue.parse(response);
-        scimGroupId = ((JSONObject)obj).get("id").toString();
-        Assert.assertTrue(userMgtClient.roleNameExists(DISPLAY_NAME));
-    }
+//    @Test(alwaysRun = true, description = "Add SCIM Internal Group", dependsOnMethods = { "deleteGroup" })
+//    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
+//    public void createInternalGroupTest() throws Exception {
+//        DISPLAY_NAME = "Internal/testrole";
+//        //create a group according to SCIM Group Schema
+//        Group scimGroup = SCIMUtils.getSCIMGroup(scimClient, scimUserId, USERNAME, EXTERNAL_ID, DISPLAY_NAME);
+//        String encodedGroup = scimClient.encodeSCIMObject(scimGroup, SCIMConstants.JSON);
+//        Resource groupResource = SCIMUtils.getGroupResource(scimClient, scim_url);
+//        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(userInfo);
+//
+//        //send previously registered SCIM consumer credentials in http headers.
+//        String response = groupResource.
+//                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
+//                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
+//                post(String.class, encodedGroup);
+//        //decode the response
+//        log.info(response);
+//        Object obj= JSONValue.parse(response);
+//        scimGroupId = ((JSONObject)obj).get("id").toString();
+//        Assert.assertTrue(userMgtClient.roleNameExists(DISPLAY_NAME));
+//    }
 
 
     @AfterClass(alwaysRun = true)
