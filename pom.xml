@@ -1177,7 +1177,7 @@
 
     <properties>
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.2.1</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.2.2</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.local.auth.basicauth.version>5.1.2</identity.local.auth.basicauth.version>
