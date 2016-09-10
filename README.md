@@ -1,6 +1,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e74ff29... Add IS logo and gitter link to README
 <a href="http://wso2.com/products/identity-server/">
 <img src="http://b.content.wso2.com/sites/all/common/images/product-logos/identity-server.svg"
      srcset="http://b.content.wso2.com/sites/all/common/images/product-logos/identity-server.svg@2x.png 2x"
@@ -8,6 +11,7 @@
 </a>
 
 Welcome to WSO2 Identity Server
+<<<<<<< HEAD
 ===============================
 
 ---
@@ -231,6 +235,8 @@ WSO2 Identity Server 5.2.0
 =======
 ===============================
 WSO2 Identity Server 5.2.0 Beta
+=======
+>>>>>>> e74ff29... Add IS logo and gitter link to README
 ===============================
 >>>>>>> 2c9d7c8... update the notes
 
@@ -241,9 +247,10 @@ WSO2 Identity Server 5.2.0 Beta
 | master      | [![Build Status](https://wso2.org/jenkins/job/product-is/badge/icon)](https://wso2.org/jenkins/job/product-is) |
 
 
----
 
-Welcome to the WSO2 Identity Server 5.2.0 Beta release.
+[![Join the chat at https://gitter.im/wso2/product-identity-server](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wso2/product-identity-server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+---
 
 <<<<<<< HEAD
 WSO2 Identity Server provides sophisticated security and identity management of enterprise web applications, services, and APIs, and makes life easier for developers and architects with its hassle-free, minimal monitoring and maintenance requirements. In its latest version, Identity Server acts as an Enterprise Identity Bus (EIB) — a central backbone to connect and manage multiple identities regardless of the standards on which they are based.In addition to using role-based access control (RBAC) convention, fine-grained policy based access control, and SSO bridging to make identity and entitlement management effortless, the all-new version of Identity Server now includes features such as identity token transformation and mediation for seamless integration between internal applications and cloud apps such as Salesforce, Google Apps, and Microsoft Office 365; new user and group provisioning capabilities; and multi-option and multi-step authentication to provide flexibility in selecting authentication options and enable robust multi-factor authentication.
