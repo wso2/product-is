@@ -42,7 +42,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity</groupId>
+                                    <groupId>org.wso2.carbon.identity.outbound.auth.facebook</groupId>
                                     <artifactId>org.wso2.carbon.identity.application.authenticator.facebook
                                     </artifactId>
                                     <version>${social.authenticator.facebook.version}</version>
@@ -65,7 +65,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity</groupId>
+                                    <groupId>org.wso2.carbon.identity.outbound.auth.google</groupId>
                                     <artifactId>
                                         org.wso2.carbon.identity.application.authenticator.google
                                     </artifactId>
@@ -89,7 +89,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity</groupId>
+                                    <groupId>org.wso2.carbon.identity.outbound.auth.live</groupId>
                                     <artifactId>
                                         org.wso2.carbon.identity.application.authenticator.live
                                     </artifactId>
@@ -113,7 +113,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity</groupId>
+                                    <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
                                     <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo
                                     </artifactId>
                                     <version>${social.authenticator.yahoo.version}</version>
@@ -131,9 +131,9 @@
         </plugins>
     </build>
     <properties>
-        <social.authenticator.facebook.version>5.1.2</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.1.2</social.authenticator.google.version>
-        <social.authenticator.windowslive.version>5.1.2</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.1.2</social.authenticator.yahoo.version>
+        <social.authenticator.facebook.version>5.1.3-SNAPSHOT</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.1.3-SNAPSHOT</social.authenticator.google.version>
+        <social.authenticator.windowslive.version>5.1.3-SNAPSHOT</social.authenticator.windowslive.version>
+        <social.authenticator.yahoo.version>5.1.3-SNAPSHOT</social.authenticator.yahoo.version>
     </properties>
 </project>

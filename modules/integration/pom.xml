@@ -99,7 +99,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.identity</groupId>
+            <groupId>org.wso2.carbon.identity.inbound.auth.sts</groupId>
             <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
         </dependency>
         <dependency>
