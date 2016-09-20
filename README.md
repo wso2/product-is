@@ -31,9 +31,9 @@ New Features
 
 *   Workflow support for Identity Server
 
-        Engage workflows for any user/role operations carried out using WSO2 IS Management Console.
-        For example, when a new user gets registered with WSO2 IS, a workflow will automatically be triggered and
-        s/he will be assigned to a particular user role.
+    Engage workflows for any user/role operations carried out using WSO2 IS Management Console. For example, 
+    when a new user gets registered with WSO2 IS, a workflow will automatically be triggered and the user 
+    can be assigned to a particular user role.
 
 *   FIDO compliance
 
