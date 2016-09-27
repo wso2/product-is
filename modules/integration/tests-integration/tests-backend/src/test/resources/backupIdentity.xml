@@ -271,6 +271,13 @@
 		<ReCaptcha>false</ReCaptcha>
 	</SelfRegistration>
 
+	<EmailVerification>
+		<Enable>true</Enable>
+		<LockOnCreation>true</LockOnCreation>
+		<Notification>
+			<InternallyManage>true</InternallyManage>
+		</Notification>
+	</EmailVerification>
 
 	<SCIMAuthenticators>
 		<Authenticator class="org.wso2.carbon.identity.scim.provider.auth.BasicAuthHandler">
