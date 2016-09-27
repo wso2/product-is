@@ -398,6 +398,13 @@
         <ReCaptcha>false</ReCaptcha>
     </SelfRegistration>
 
+    <EmailVerification>
+        <Enable>true</Enable>
+        <LockOnCreation>true</LockOnCreation>
+        <Notification>
+            <InternallyManage>true</InternallyManage>
+        </Notification>
+    </EmailVerification>
 
     <!--SessionContextCache>
         <Enable>true</Enable>

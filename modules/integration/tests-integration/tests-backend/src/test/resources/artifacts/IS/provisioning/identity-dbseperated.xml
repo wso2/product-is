@@ -362,6 +362,14 @@
         <NotifySuccess>true</NotifySuccess>
     </Recovery>
 
+    <EmailVerification>
+        <Enable>true</Enable>
+        <LockOnCreation>true</LockOnCreation>
+        <Notification>
+            <InternallyManage>true</InternallyManage>
+        </Notification>
+    </EmailVerification>
+
     <SelfRegistration>
         <Enable>true</Enable>
         <LockOnCreation>true</LockOnCreation>
