@@ -19,13 +19,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+<<<<<<< HEAD
         <groupId>org.wso2.is</groupId>
+=======
+        <groupId>org.wso2.carbon.is</groupId>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
         <artifactId>product-is</artifactId>
         <relativePath>../pom.xml</relativePath>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
+<<<<<<< HEAD
     <artifactId>org.wso2.is.product</artifactId>
+=======
+    <artifactId>wso2is</artifactId>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
     <packaging>pom</packaging>
     <name>WSO2 Identity Server - Distribution</name>
     <description>WSO2 Identity Server - Distribution</description>
@@ -33,6 +41,21 @@
 
     <dependencies>
         <dependency>
+<<<<<<< HEAD
+=======
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
         </dependency>
@@ -42,11 +65,14 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+<<<<<<< HEAD
             <artifactId>org.wso2.carbon.tools.core</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
             <artifactId>org.wso2.carbon.kernel.feature</artifactId>
             <type>zip</type>
         </dependency>
@@ -56,6 +82,7 @@
             <type>zip</type>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.wso2.carbon.caching</groupId>
             <artifactId>org.wso2.carbon.caching.feature</artifactId>
             <type>zip</type>
@@ -66,6 +93,8 @@
             <type>zip</type>
         </dependency>
         <dependency>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
             <groupId>org.wso2.carbon.jndi</groupId>
             <artifactId>org.wso2.carbon.jndi.feature</artifactId>
             <type>zip</type>
@@ -76,6 +105,7 @@
             <type>zip</type>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
             <type>zip</type>
@@ -110,6 +140,20 @@
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>org.wso2.msf4j.feature</artifactId>
+=======
+            <groupId>org.wso2.carbon.caching</groupId>
+            <artifactId>org.wso2.carbon.caching.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.transport</groupId>
+            <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging.feature</artifactId>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
             <type>zip</type>
         </dependency>
         <dependency>
@@ -128,6 +172,14 @@
             <type>zip</type>
         </dependency>
         <dependency>
+<<<<<<< HEAD
+=======
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>org.wso2.msf4j.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.core.feature</artifactId>
             <type>zip</type>
@@ -145,6 +197,7 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
+<<<<<<< HEAD
             <type>zip</type>
         </dependency>
         <dependency>
@@ -186,10 +239,26 @@
             <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
             <!--<type>zip</type>-->
         <!--</dependency>-->
+=======
+            <version>${uuf.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
     </dependencies>
 
     <build>
         <plugins>
+<<<<<<< HEAD
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -212,6 +281,8 @@
                 </executions>
             </plugin>
 
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -237,14 +308,20 @@
                         </configuration>
                     </execution>
                     <execution>
+<<<<<<< HEAD
                         <id>unpack-dbscripts</id>
                         <phase>generate-resources</phase>
+=======
+                        <id>2-unpack-samples</id>
+                        <phase>test</phase>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                         <goals>
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
+<<<<<<< HEAD
                                     <groupId>org.wso2.carbon.security.userstore</groupId>
                                     <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
@@ -282,6 +359,14 @@
                                     <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                     <type>zip</type>
+=======
+                                    <groupId>org.wso2.carbon.mb</groupId>
+                                    <artifactId>org.wso2.mb.ui.management</artifactId>
+                                    <version>${carbon.is.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/deployment/uufapps</outputDirectory>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -303,10 +388,13 @@
                             <targetRepository>file:${basedir}/target/p2-repo</targetRepository>
                             <features>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.kernel.feature</id>
                                     <version>${carbon.kernel.version}</version>
                                 </feature>
                                 <feature>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                                     <id>org.wso2.carbon.deployment.engine.feature</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
@@ -315,10 +403,18 @@
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
+=======
+                                    <id>org.wso2.carbon.kernel.feature</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
+                                <feature>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                                     <id>org.wso2.carbon.runtime.feature</id>
                                     <version>${carbon.kernel.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.caching.feature</id>
                                     <version>${carbon.cache.version}</version>
                                 </feature>
@@ -329,12 +425,25 @@
                                 <feature>
                                     <id>org.wso2.carbon.messaging.feature</id>
                                     <version>${carbon.messaging.version}</version>
+=======
+                                    <id>org.wso2.carbon.jndi.feature</id>
+                                    <version>${carbon.jndi.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.datasource.core.feature</id>
+                                    <version>${carbon.datasources.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.caching.feature</id>
+                                    <version>${carbon.cache.version}</version>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.transport.http.netty.feature</id>
                                     <version>${carbon.transport.http.netty.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.uuf.core.feature</id>
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
@@ -419,6 +528,71 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+=======
+                                    <id>org.wso2.carbon.metrics.core.feature</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.jdbc.core.feature</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.das.core.feature</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.messaging.feature</id>
+                                    <version>${carbon.messaging.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.andes.feature</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.andes.rest.service.feature</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mb.ui.feature</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mb.amqp.feature</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mb.mqtt.feature</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.feature</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.core.feature</id>
+                                    <version>${uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature</id>
+                                    <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature</id>
+                                    <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
+                                    <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                             </features>
                         </configuration>
                     </execution>
@@ -468,10 +642,13 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.kernel.feature.group</id>
                                     <version>${carbon.kernel.version}</version>
                                 </feature>
                                 <feature>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                                     <id>org.wso2.carbon.deployment.engine.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
@@ -480,6 +657,7 @@
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.caching.feature.group</id>
                                     <version>${carbon.cache.version}</version>
                                 </feature>
@@ -579,6 +757,91 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+=======
+                                    <id>org.wso2.carbon.kernel.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.runtime.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.jndi.feature.group</id>
+                                    <version>${carbon.jndi.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.datasource.core.feature</id>
+                                    <version>${carbon.datasources.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.caching.feature.group</id>
+                                    <version>${carbon.cache.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.transport.http.netty.feature.group</id>
+                                    <version>${carbon.transport.http.netty.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.jdbc.core.feature</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.das.core.feature</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.messaging.feature.group</id>
+                                    <version>${carbon.messaging.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.andes.feature.group</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.andes.rest.service.feature.group</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mb.ui.feature.group</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mb.amqp.feature.group</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.mb.mqtt.feature.group</id>
+                                    <version>${carbon.mb.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.feature.group</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.core.feature.group</id>
+                                    <version>${uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature.group</id>
+                                    <version>${uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature.group</id>
+                                    <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.renderablecreator.html.feature.group</id>
+                                    <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature.group</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                             </features>
                         </configuration>
                     </execution>
@@ -589,7 +852,10 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+<<<<<<< HEAD
                         <id>replace-osgi-dir</id>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                         <phase>package</phase>
                         <configuration>
                             <target>
@@ -604,6 +870,7 @@
                         </goals>
                     </execution>
                     <execution>
+<<<<<<< HEAD
                         <id>create-carbon-database</id>
                         <phase>generate-resources</phase>
                         <goals>
@@ -631,6 +898,8 @@
                         </configuration>
                     </execution>
                     <execution>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                         <id>clean_target</id>
                         <phase>install</phase>
                         <configuration>
@@ -642,8 +911,11 @@
                                 <delete file="target/tmp"/>
                                 <delete dir="target/wso2carbon-kernel-${carbon.kernel.version}"/>
                                 <delete dir="target/antrun"/>
+<<<<<<< HEAD
                                 <delete dir="target/resources"/>
                                 <delete dir="target/maven-shared-archive-resources"/>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                             </target>
                         </configuration>
                         <goals>
@@ -666,7 +938,10 @@
                             <goal>attached</goal>
                         </goals>
                         <configuration>
+<<<<<<< HEAD
                             <finalName>wso2is-${project.version}</finalName>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                             <filters>
                                 <filter>${basedir}/src/assembly/filter.properties</filter>
                             </filters>
@@ -678,6 +953,7 @@
                     </execution>
                 </executions>
             </plugin>
+<<<<<<< HEAD
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -685,6 +961,8 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+=======
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
 
         </plugins>
     </build>

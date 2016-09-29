@@ -1,6 +1,10 @@
 <!--
   ~ /*
+<<<<<<< HEAD
   ~ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+=======
+  ~ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
   ~ *
   ~ * Licensed under the Apache License, Version 2.0 (the "License");
   ~ * you may not use this file except in compliance with the License.
@@ -30,6 +34,7 @@
             <excludes>
                 <exclude>README.txt</exclude>
                 <exclude>LICENSE.txt</exclude>
+<<<<<<< HEAD
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
@@ -42,6 +47,15 @@
                 <exclude>**/transports/netty-transports.yml</exclude>
             </excludes>
         </fileSet>
+=======
+                <exclude>release-notes.html</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iwr</exclude>
+                <exclude>**/*.eclipse</exclude>
+            </excludes>
+        </fileSet>
+
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
         <fileSet>
             <directory>..</directory>
             <outputDirectory>.</outputDirectory>
@@ -50,11 +64,15 @@
                 <include>LICENSE</include>
             </includes>
         </fileSet>
+<<<<<<< HEAD
         <fileSet>
             <directory>carbon-home/conf/transports</directory>
             <outputDirectory>conf/transports</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
+=======
+
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
         <fileSet>
             <directory>carbon-home/conf/osgi</directory>
             <outputDirectory>conf/osgi</outputDirectory>
@@ -72,6 +90,7 @@
         </fileSet>
         <fileSet>
             <directory>carbon-home/conf/identity</directory>
+<<<<<<< HEAD
             <outputDirectory>conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
@@ -87,6 +106,23 @@
         </fileSet>
     </fileSets>
 
+=======
+            <outputDirectory>conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/conf/hazelcast</directory>
+            <outputDirectory>conf/hazelcast</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/dbscripts</directory>
+            <outputDirectory>dbscripts</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
+    </fileSets>
+>>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
     <files>
 
     </files>

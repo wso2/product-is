@@ -17,22 +17,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.carbon.is</groupId>
-        <artifactId>product-is</artifactId>
+        <artifactId>carbon-is-osgi-tests</artifactId>
         <version>6.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>carbon-is-osgi-tests</artifactId>
-    <packaging>pom</packaging>
-    <name>WSO2 Identity Server - OSGi Tests</name>
-    <description>OSGi Tests for WSO2 Identity Server</description>
+    <artifactId>carbon-is-osgi-tests-util</artifactId>
+    <name>WSO2 Identity Server - OSGi Test Utils</name>
+    <description>OSGi Test Utils for WSO2 Identity Server </description>
     <url>http://wso2.com</url>
 
-    <modules>
-        <module>osgi-tests-util</module>
-        <module>osgi-tests-core</module>
-        <module>osgi-tests-rest</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
