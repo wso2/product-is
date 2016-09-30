@@ -64,6 +64,11 @@
             <artifactId>org.wso2.carbon.launcher</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.transport</groupId>
+            <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
 <<<<<<< HEAD
             <artifactId>org.wso2.carbon.tools.core</artifactId>
@@ -143,11 +148,6 @@
 =======
             <groupId>org.wso2.carbon.caching</groupId>
             <artifactId>org.wso2.carbon.caching.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -453,6 +453,10 @@
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.transport.http.netty.feature</id>
+                                    <version>${carbon.transport.http.netty.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
@@ -462,6 +466,7 @@
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.transport.http.netty.feature</id>
                                     <version>${carbon.transport.http.netty.version}</version>
                                 </feature>
@@ -552,6 +557,8 @@
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
 =======
+=======
+>>>>>>> b923233... Fixing test folders.
                                     <id>org.wso2.carbon.metrics.core.feature</id>
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
