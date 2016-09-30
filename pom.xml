@@ -468,6 +468,7 @@
                 <version>${carbon.uuf.common.version}</version>
                 <type>zip</type>
             </dependency>
+<<<<<<< HEAD
             <!--End of UUF Components-->
             <!--UUF Themes-->
             <dependency>
@@ -477,6 +478,11 @@
                 <type>zip</type>
             </dependency>
             <!--End of UUF Themes-->
+=======
+            <!--End of Dependent Features-->
+
+            <!--Identity Server Dependencies-->
+>>>>>>> e8bec0a... Remove userstore features for now.
 
             <!-- UUF Dependencies -->
 

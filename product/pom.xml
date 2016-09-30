@@ -243,6 +243,7 @@
             <version>${uuf.version}</version>
             <type>zip</type>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.security.caas</groupId>
             <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
@@ -254,6 +255,8 @@
             <type>zip</type>
         </dependency>
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+>>>>>>> e8bec0a... Remove userstore features for now.
     </dependencies>
 
     <build>
@@ -598,6 +601,7 @@
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
@@ -607,6 +611,8 @@
                                     <version>${carbon.security.version}</version>
                                 </feature>
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+>>>>>>> e8bec0a... Remove userstore features for now.
                             </features>
                         </configuration>
                     </execution>
@@ -831,6 +837,7 @@
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature.group</id>
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature.group</id>
                                     <version>${carbon.security.version}</version>
@@ -840,6 +847,8 @@
                                     <version>${carbon.security.version}</version>
                                 </feature>
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+>>>>>>> e8bec0a... Remove userstore features for now.
                             </features>
                         </configuration>
                     </execution>
