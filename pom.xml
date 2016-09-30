@@ -322,12 +322,6 @@
                 <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-                <version>${carbon.security.version}</version>
-                <type>zip</type>
-            </dependency>
             <!--End of Dependent Features-->
 
             <!--Identity Server Dependencies-->
