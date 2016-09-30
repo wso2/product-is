@@ -18,7 +18,7 @@
 <suite name="MB-OSGi-Test-Suite-Kernel" parallel="false">
     <test name="MB-OSGi-OSGi-Test-Kernel">
         <classes>
-            <class name="org.wso2.mb.osgi.kernel.KernelServerStartupTestCase"/>
+            <class name="org.wso2.is.osgi.kernel.KernelServerStartupTestCase"/>
         </classes>
     </test>
 </suite>

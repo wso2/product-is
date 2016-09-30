@@ -52,10 +52,10 @@
         <!--Features-->
 
         <!--Tests-->
-        <module>tests</module>
+        <!--<module>tests</module>-->
 
         <!--Tools-->
-        <module>tools</module>
+        <!--<module>tools</module>-->
 
         <!--Product-->
         <module>product</module>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.mb.osgi.kernel;
+package org.wso2.is.osgi.kernel;
 
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
@@ -28,7 +28,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.wso2.carbon.osgi.test.util.CarbonSysPropConfiguration;
 import org.wso2.carbon.osgi.test.util.OSGiTestConfigurationUtils;
-import org.wso2.mb.osgi.test.util.MBOSGiTestConfigurationUtils;
+import org.wso2.mb.osgi.test.util.ISOSGITestConfigurationUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,7 +49,7 @@ public class KernelServerStartupTestCase {
      */
     @Configuration
     public Option[] createConfiguration() {
-        List<Option> optionList = MBOSGiTestConfigurationUtils.getAndesOSGiConfigurationList();
+        List<Option> optionList = ISOSGITestConfigurationUtils.getBasicOSGiConfigurationList();
 
         String currentDir = Paths.get("").toAbsolutePath().toString();
         Path carbonHome = Paths.get(currentDir, "target", "carbon-home");
