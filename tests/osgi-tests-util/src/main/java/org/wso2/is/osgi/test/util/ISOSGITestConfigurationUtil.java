@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.mb.osgi.test.util;
+package org.wso2.is.osgi.test.util;
 
 import org.ops4j.pax.exam.Option;
 
@@ -24,20 +24,18 @@ import java.util.List;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
 /**
- * Utility class for PAX OSGi tests for MB product.
+ * Utility class for PAX OSGi tests for IS product.
  */
-public class MBOSGiTestConfigurationUtils {
+class ISOSGITestConfigurationUtil {
 
     /**
-     * Gets the maven bundles required for andes dependency.
+     * Gets the maven bundles of dependencies.
      *
      * @return A list of maven bundles.
      */
-    public static List<Option> getAndesOSGiConfigurationList() {
+    public static List<Option> getBasicOSGiConfigurationList() {
         List<Option> optionList = new ArrayList<>();
-        optionList.add(mavenBundle().groupId("org.wso2.carbon.mb").artifactId("andes").versionAsInProject());
         optionList.add(mavenBundle().groupId("com.hazelcast").artifactId("hazelcast").versionAsInProject());
-        optionList.add(mavenBundle().groupId("org.wso2.andes.wso2").artifactId("qpid").versionAsInProject());
         optionList.add(mavenBundle().groupId("libthrift.wso2").artifactId("libthrift").versionAsInProject());
         optionList.add(mavenBundle().groupId("commons-cli.wso2").artifactId("commons-cli").versionAsInProject());
         optionList.add(mavenBundle().groupId("commons-lang.wso2").artifactId("commons-lang").versionAsInProject());
@@ -54,41 +52,13 @@ public class MBOSGiTestConfigurationUtils {
     }
 
     /**
-     * Gets the maven bundles required for amqp dependency.
-     *
-     * @return A list of maven bundles.
-     */
-    public static List<Option> getAMQPOSGiConfigurationList() {
-        List<Option> optionList = new ArrayList<>();
-        optionList.addAll(getAndesOSGiConfigurationList());
-        //TODO : Need to add other dependencies
-        optionList.add(mavenBundle().groupId("org.wso2.carbon.mb").artifactId("amqp").versionAsInProject());
-        return optionList;
-    }
-
-    /**
-     * Gets the maven bundles required for mqtt dependency.
-     *
-     * @return A list of maven bundles.
-     */
-    public static List<Option> getMQTTConfigurationList() {
-        List<Option> optionList = new ArrayList<>();
-        optionList.addAll(getAndesOSGiConfigurationList());
-        //TODO : Need to add other dependencies
-        optionList.add(mavenBundle().groupId("org.wso2.carbon.mb").artifactId("mqtt").versionAsInProject());
-        return optionList;
-    }
-
-    /**
      * Gets the maven bundles required for andes rest service dependency.
      *
      * @return A list of maven bundles.
      */
     public static List<Option> getRESTOSGiConfigurationList() {
         List<Option> optionList = new ArrayList<>();
-        optionList.addAll(getAndesOSGiConfigurationList());
-        optionList.add(mavenBundle().groupId("org.wso2.carbon.mb")
-                .artifactId("andes.rest.service").versionAsInProject());
+        optionList.addAll(getBasicOSGiConfigurationList());
         optionList.add(mavenBundle().groupId("org.wso2.msf4j").artifactId("msf4j-core").versionAsInProject());
         optionList.add(mavenBundle().groupId("com.google.code.gson").artifactId("gson").versionAsInProject());
         return optionList;

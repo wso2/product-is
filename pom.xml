@@ -116,7 +116,21 @@
     </scm>
 
     <modules>
+<<<<<<< HEAD
         <module>portal</module>
+=======
+        <!--Components-->
+
+        <!--Features-->
+
+        <!--Tests-->
+        <!--<module>tests</module>-->
+
+        <!--Tools-->
+        <!--<module>tools</module>-->
+
+        <!--Product-->
+>>>>>>> 2472f6e... Initiating C5 adaption for wso2 identity server
         <module>product</module>
         <module>tests</module>
     </modules>

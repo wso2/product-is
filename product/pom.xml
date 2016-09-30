@@ -307,6 +307,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+<<<<<<< HEAD
                     <execution>
 <<<<<<< HEAD
                         <id>unpack-dbscripts</id>
@@ -371,6 +372,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+=======
+
+                    <!--<execution>-->
+                        <!--<id>2-unpack-samples</id>-->
+                        <!--<phase>test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>unpack</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<artifactItems>-->
+                                <!--<artifactItem>-->
+                                    <!--<groupId>org.wso2.carbon.is</groupId>-->
+                                    <!--<artifactId>org.wso2.is.ui.management</artifactId>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                    <!--<type>zip</type>-->
+                                    <!--<overWrite>true</overWrite>-->
+                                    <!--<outputDirectory>${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/deployment/uufapps</outputDirectory>-->
+                                <!--</artifactItem>-->
+                            <!--</artifactItems>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+>>>>>>> 2472f6e... Initiating C5 adaption for wso2 identity server
                 </executions>
             </plugin>
             <plugin>
@@ -544,26 +567,10 @@
                                     <id>org.wso2.carbon.messaging.feature</id>
                                     <version>${carbon.messaging.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.andes.feature</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.andes.rest.service.feature</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mb.ui.feature</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mb.amqp.feature</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mb.mqtt.feature</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.is.ui.feature</id>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.msf4j.feature</id>
                                     <version>${msf4j.version}</version>
@@ -793,26 +800,10 @@
                                     <id>org.wso2.carbon.messaging.feature.group</id>
                                     <version>${carbon.messaging.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.andes.feature.group</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.andes.rest.service.feature.group</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mb.ui.feature.group</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mb.amqp.feature.group</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mb.mqtt.feature.group</id>
-                                    <version>${carbon.mb.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.is.ui.feature.group</id>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.msf4j.feature.group</id>
                                     <version>${msf4j.version}</version>

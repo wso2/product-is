@@ -24,8 +24,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>carbon-is-osgi-tests-kernel</artifactId>
-    <name>WSO2 Identity Server - OSGi Andes Tests</name>
-    <description>OSGi Tests for WSO2 Identity Server</description>
+    <name>WSO2 Identity Server - OSGI Identity Tests</name>
+    <description>OSGI Tests for WSO2 Identity Server</description>
     <url>http://wso2.com</url>
 
     <dependencies>
@@ -79,6 +79,7 @@
             <artifactId>org.wso2.carbon.jndi</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.wso2.carbon.is</groupId>
             <artifactId>carbon-is-osgi-tests-util</artifactId>
