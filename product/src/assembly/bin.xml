@@ -76,6 +76,11 @@
             <outputDirectory>dbscripts</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>carbon-home/deployment</directory>
+            <outputDirectory>deployment</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
 
     </fileSets>
     <files>
