@@ -128,16 +128,6 @@
             <version>${uuf.version}</version>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-            <type>zip</type>
-        </dependency>
     </dependencies>
 
     <build>
@@ -274,14 +264,6 @@
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -397,14 +379,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature.group</id>
                                     <version>1.0.0-SNAPSHOT</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.security.caas.feature.group</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
-                                    <version>${carbon.security.version}</version>
                                 </feature>
                             </features>
                         </configuration>
