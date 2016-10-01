@@ -68,7 +68,7 @@ New Features
 
 *   Ability to notify external endpoints when changes are made to Identities</li>
 
-    @product.name@ is now able to send invalidation notifications to external endpoints when there is a change in user
+    WSO2 Identity Server is now able to send invalidation notifications to external endpoints when there is a change in user
     roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
     been updated
 
