@@ -227,7 +227,7 @@
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.data.publisher.oauth.server.feature:${identity.data.publisher.oauth.version}
+                                    org.wso2.carbon.identity.data.publisher.oauth:org.wso2.carbon.identity.data.publisher.oauth.server.feature:${identity.data.publisher.oauth.version}
                                 </featureArtifactDef>
                                 <!-- Authenticators -->
                                 <featureArtifactDef>
@@ -250,7 +250,7 @@
                                     org.wso2.carbon.identity.carbon.auth.saml2:org.wso2.carbon.identity.authenticator.saml2.sso.feature:${identity.carbon.auth.saml2.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.carbon.auth.mutualssl:org.wso2.carbon.identity.authenticator.mutualssl.feature:${identity.carbon.auth.mutual.ssl.version}
@@ -372,7 +372,7 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.user.mgt.workflow.feature:${identity.user.workflow.version}
+                                    org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.feature:${identity.user.workflow.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.workflow.impl.bps:org.wso2.carbon.identity.workflow.impl.feature:${identity.workflow.impl.bps.version}

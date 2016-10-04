@@ -130,10 +130,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <social.authenticator.facebook.version>5.1.3-SNAPSHOT</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.1.3-SNAPSHOT</social.authenticator.google.version>
-        <social.authenticator.windowslive.version>5.1.3-SNAPSHOT</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.1.3-SNAPSHOT</social.authenticator.yahoo.version>
-    </properties>
 </project>
