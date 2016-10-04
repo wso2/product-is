@@ -184,6 +184,17 @@
             </includes>
         </fileSet>
 
+        <!--copy web app for entitlement endpoint feature -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>entitlement.war</include>
+            </includes>
+        </fileSet>
+
 
         <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
         <fileSet>
