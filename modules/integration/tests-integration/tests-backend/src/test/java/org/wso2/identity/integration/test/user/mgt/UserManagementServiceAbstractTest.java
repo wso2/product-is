@@ -104,7 +104,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", dependsOnMethods = "testDeleteRole")
     public void addNewUser() throws Exception {
-        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
+        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login","/permission/admin/manage/identity/rolemgt/view"});
         userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole), "Role name doesn't exists");
         Assert.assertTrue(userMgtClient.userNameExists(newUserRole, newUserName), "User name doesn't exists");
