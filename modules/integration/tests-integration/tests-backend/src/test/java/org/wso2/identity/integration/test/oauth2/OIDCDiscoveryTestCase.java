@@ -39,7 +39,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     public static final String WEBFINGER_ENDPOINT_SUFFIX = "/.well-known/webfinger";
     public static final String RESOURCE = "resource";
-    public static final String REL = "relUri";
+    public static final String REL = "rel";
     private String isServerBackendUrl;
     private String webfingerEndpoint;
     private String relUri = "http://openid.net/specs/connect/1.0/issuer";
@@ -85,7 +85,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Discovery test", dependsOnMethods = { "testWebFinger" })
-    public void testDoscovery() throws IOException {
+    public void testDiscovery() throws IOException {
         RestClient restClient = new RestClient();
         String discoveryUrl;
         if(discoveryBasePath.endsWith("/")){
