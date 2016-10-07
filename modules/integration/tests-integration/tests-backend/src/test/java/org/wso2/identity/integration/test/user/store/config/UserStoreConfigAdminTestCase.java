@@ -23,6 +23,7 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdminServiceIdentityUserStoreMgtException;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager;
@@ -79,7 +80,7 @@ public class UserStoreConfigAdminTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(expectedExceptions = AxisFault.class, groups = "wso2.is", description = "Check add user store via DTO", dependsOnMethods = "testAddUserStore")
+    @Test(expectedExceptions = UserStoreConfigAdminServiceIdentityUserStoreMgtException.class, groups = "wso2.is", description = "Check add user store via DTO", dependsOnMethods = "testAddUserStore")
     public void testAddDuplicateUserStore() throws Exception {
 
         Property[] properties = (new JDBCUserStoreManager()).getDefaultUserStoreProperties().getMandatoryProperties();
