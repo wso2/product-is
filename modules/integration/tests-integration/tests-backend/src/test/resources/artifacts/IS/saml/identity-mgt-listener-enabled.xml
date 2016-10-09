@@ -433,6 +433,11 @@
         </Question>
         <ExpiryTime>3</ExpiryTime>
         <NotifySuccess>true</NotifySuccess>
+        <AdminPasswordReset>
+            <Offline>false</Offline>
+            <OTP>false</OTP>
+            <RecoveryLink>true</RecoveryLink>
+        </AdminPasswordReset>
     </Recovery>
 
     <EmailVerification>
