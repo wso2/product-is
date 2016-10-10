@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.3.0-SNAPSHOT</version>
+        <version>5.3.0-m5</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -299,8 +299,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/saml/saml-app-build.xml" target="saml-tenant-signingdisabled" />
-                                <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml"
-                                     target="saml-tenant-registrymount" />
+                                <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml" target="saml-tenant-registrymount" />
                             </tasks>
                         </configuration>
                         <goals>
