@@ -244,6 +244,7 @@
             <type>zip</type>
         </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.security.caas</groupId>
             <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
@@ -257,6 +258,35 @@
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
 =======
 >>>>>>> e8bec0a... Remove userstore features for now.
+=======
+
+        <!-- Sample Application -->
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.pets-store.feature</artifactId>
+            <version>${carbon.uuf.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.simple-auth.feature</artifactId>
+            <version>${carbon.uuf.version}</version>
+            <type>zip</type>
+        </dependency>
+        <!-- Sample Simple Authentication Component -->
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+            <version>${carbon.security.userstore.jdbc.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+            <version>${carbon.uuf.version}</version>
+            <type>zip</type>
+        </dependency>
+>>>>>>> e8068bb... Correcting netty transport file.
     </dependencies>
 
     <build>
@@ -602,6 +632,7 @@
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
@@ -613,6 +644,22 @@
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
 =======
 >>>>>>> e8bec0a... Remove userstore features for now.
+=======
+
+                                <!-- Sample Applications -->
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.pets-store.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.Features-app.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.simple-auth.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+>>>>>>> e8068bb... Correcting netty transport file.
                             </features>
                         </configuration>
                     </execution>
@@ -838,6 +885,7 @@
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature.group</id>
                                     <version>${carbon.security.version}</version>
@@ -849,6 +897,33 @@
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
 =======
 >>>>>>> e8bec0a... Remove userstore features for now.
+=======
+
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.pets-store.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.simple-auth.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+
+                                <!-- Authentication and Authorization -->
+                                <dependency>
+                                    <groupId>org.wso2.carbon.security.caas</groupId>
+                                    <artifactId>org.wso2.carbon.security.caas</artifactId>
+                                    <version>${carbon.security.caas.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.wso2.carbon.security.userstore</groupId>
+                                    <artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                </dependency>
+>>>>>>> e8068bb... Correcting netty transport file.
                             </features>
                         </configuration>
                     </execution>

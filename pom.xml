@@ -559,6 +559,38 @@
                 <version>${netty.version}</version>
                 <scope>test</scope>
             </dependency>
+<<<<<<< HEAD
+=======
+
+            <!-- Authentication and Authorization -->
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas</artifactId>
+                <version>${carbon.security.caas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>signed-build</id>
+            <activation>
+                <property>
+                    <name>sign</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+>>>>>>> e8068bb... Correcting netty transport file.
 
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
@@ -595,6 +627,7 @@
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
     </parent>
 
+<<<<<<< HEAD
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.is</groupId>
     <artifactId>product-is</artifactId>
@@ -603,6 +636,14 @@
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
     <description>WSO2 Identity Server</description>
+=======
+    <properties>
+        <project.scm.id>wso2-scm-server</project.scm.id>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
+        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
+        <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
+>>>>>>> e8068bb... Correcting netty transport file.
 
     <licenses>
         <license>

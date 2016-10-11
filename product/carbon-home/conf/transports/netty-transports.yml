@@ -1,5 +1,5 @@
 ################################################################################
-#   Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+#   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 ################################################################################
 listenerConfigurations:
  -
+<<<<<<< HEAD
 <<<<<<< HEAD
   id: "netty-gw-https"
   host: "0.0.0.0"
@@ -42,72 +43,38 @@ senderConfigurations:
   enableDisruptor: true
   workerThreadPoolSize: 250
   execHandlerThreadPoolSize: 60
+=======
+  id: "netty-gw"
+  host: "0.0.0.0"
+  port: 9090
+  bossThreadPoolSize: 4
+  workerThreadPoolSize: 8
+  enableDisruptor: false
+>>>>>>> e8068bb... Correcting netty transport file.
   parameters:
-#   -
-#    name: "execThreadPoolSize"
-#    value: 2048
-  -
-   name: "disruptor.buffer.size"
-   value: 1024
-  -
-   name: "disruptor.count"
-   value: 5
-  -
-   name: "disruptor.eventhandler.count"
-   value: 1
-  -
-   name: "disruptor.wait.strategy"
-   value: "SLEEP_WAITING"
-  -
-   name: "share.disruptor.with.outbound"
-   value: false
-  -
-   name: "disruptor.consumer.worker.pool.size"
-   value: 64
-  -
-   name: "executor.workerpool.size"
-   value: 512
+    -
+     name: "executor.workerpool.size"
+     value: 20
+
  -
-  id: "jaxrs-https"
-  host: "127.0.0.1"
-  port: 8888
-  bossThreadPoolSize: 2
-  enableDisruptor: true
-  workerThreadPoolSize: 250
-  execHandlerThreadPoolSize: 60
-  scheme: https
+  id: "netty-gw-https"
+  host: "0.0.0.0"
+  port: 9292
+  bossThreadPoolSize: 4
+  workerThreadPoolSize: 8
+  enableDisruptor: false
+  scheme: "https"
   keyStoreFile: "resources/security/wso2carbon.jks"
-  keyStorePass: wso2carbon
-  certPass: wso2carbon
-  trustStoreFile: "resources/security/client-truststore.jks"
-  trustStorePass: wso2carbon
+  keyStorePass: "wso2carbon"
+  certPass: "wso2carbon"
   parameters:
-#   -
-#    name: "execThreadPoolSize"
-#    value: 2048
-  -
-   name: "disruptor.buffer.size"
-   value: 1024
-  -
-   name: "disruptor.count"
-   value: 5
-  -
-   name: "disruptor.eventhandler.count"
-   value: 1
-  -
-   name: "disruptor.wait.strategy"
-   value: "SLEEP_WAITING"
-  -
-   name: "share.disruptor.with.outbound"
-   value: false
-  -
-   name: "disruptor.consumer.worker.pool.size"
-   value: 64
-  -
-   name: "executor.workerpool.size"
-   value: 512
+      -
+       name: "executor.workerpool.size"
+       value: 20
+
 senderConfigurations:
  -
+<<<<<<< HEAD
   id: "netty-gw"
   parameters:
     -
@@ -126,3 +93,6 @@ senderConfigurations:
 #     name: "connection.pool.count"
 #     value: 0
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+  id: "netty-gw"
+>>>>>>> e8068bb... Correcting netty transport file.
