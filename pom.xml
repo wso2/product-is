@@ -400,6 +400,18 @@
                 <artifactId>carbon-is-osgi-tests-util</artifactId>
                 <version>${carbon.is.version}</version>
             </dependency>
+
+            <!-- Authentication and Authorization -->
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas</artifactId>
+                <version>${carbon.security.caas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -443,6 +455,9 @@
     <properties>
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
+        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
+        <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
 
         <!--3rd party related properties-->
         <com.hazelcast.package.import.version.range>[3.6,4)</com.hazelcast.package.import.version.range>
