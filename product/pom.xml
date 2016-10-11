@@ -128,6 +128,33 @@
             <version>${uuf.version}</version>
             <type>zip</type>
         </dependency>
+
+        <!-- Sample Application -->
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.pets-store.feature</artifactId>
+            <version>${carbon.uuf.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.simple-auth.feature</artifactId>
+            <version>${carbon.uuf.version}</version>
+            <type>zip</type>
+        </dependency>
+        <!-- Sample Simple Authentication Component -->
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+            <version>${carbon.security.userstore.jdbc.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+            <version>${carbon.uuf.version}</version>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -264,6 +291,20 @@
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
+
+                                <!-- Sample Applications -->
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.pets-store.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.Features-app.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.simple-auth.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -380,6 +421,31 @@
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature.group</id>
                                     <version>1.0.0-SNAPSHOT</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.pets-store.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.simple-auth.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+
+                                <!-- Authentication and Authorization -->
+                                <dependency>
+                                    <groupId>org.wso2.carbon.security.caas</groupId>
+                                    <artifactId>org.wso2.carbon.security.caas</artifactId>
+                                    <version>${carbon.security.caas.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.wso2.carbon.security.userstore</groupId>
+                                    <artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                </dependency>
                             </features>
                         </configuration>
                     </execution>
