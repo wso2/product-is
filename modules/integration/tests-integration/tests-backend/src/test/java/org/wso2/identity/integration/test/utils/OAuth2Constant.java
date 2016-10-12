@@ -34,6 +34,7 @@ public final class OAuth2Constant {
     public final static String ACCESS_TOKEN = "access_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
     public final static String OAUTH_VERSION_2 = "OAuth-2.0";
+    public static final String OAUTH_2 = "oauth2";
     public final static String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
     public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
     public final static String USER_INFO_ENDPOINT = "https://localhost:9853/oauth2/userinfo?schema=openid";
@@ -51,6 +52,7 @@ public final class OAuth2Constant {
     public static final String UNSUPPORTED_GRANT_TYPE = "unsupported_grant_type";
     public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
     public final static String OAUTH_APPLICATION_STATE_REVOKED = "REVOKED";
+    public static final String OAUTH_CONSUMER_SECRET = "oauthConsumerSecret";
 
     public final static String CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8490\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
@@ -74,6 +76,17 @@ public final class OAuth2Constant {
     public static final String BASIC_HEADER = "Basic";
     public static final String INVALID_GRANT_ERROR = "invalid_grant";
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
+
+    public static final class PlaygroundAppPaths {
+
+        public static final String callBackPath = "/oauth2client";
+        public static final String homePagePath = "/index.jsp";
+        public static final String appResetPath = "/oauth2.jsp?reset=true";
+        public static final String appAuthorizePath = "/oauth2.jsp";
+        public static final String appUserAuthorizePath = "/oauth2-authorize-user.jsp";
+        public static final String accessTokenRequestPath = "/oauth2-get-access-token.jsp";
+        public static final String resourceAccessPath = "/oauth2-access-resource.jsp";
+    }
 
     private OAuth2Constant() {
 	}

@@ -1210,7 +1210,7 @@
         <identity.local.auth.basicauth.version>5.2.2</identity.local.auth.basicauth.version>
         <identity.carbon.auth.saml2.version>5.1.5</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.3</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.2.2</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.2.3</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.0</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.3</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.1.5</identity.inbound.auth.sts.version>
