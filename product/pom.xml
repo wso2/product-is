@@ -220,6 +220,10 @@
                             <targetRepository>file:${basedir}/target/p2-repo</targetRepository>
                             <features>
                                 <feature>
+                                    <id>org.wso2.carbon.kernel.feature</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.deployment.engine.feature</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
@@ -228,28 +232,44 @@
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.kernel.feature</id>
-                                    <version>${carbon.kernel.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.runtime.feature</id>
                                     <version>${carbon.kernel.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.jndi.feature</id>
-                                    <version>${carbon.jndi.version}</version>
+                                    <id>org.wso2.carbon.caching.feature</id>
+                                    <version>${carbon.cache.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.feature</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.messaging.feature</id>
+                                    <version>${carbon.messaging.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.transport.http.netty.feature</id>
                                     <version>${carbon.transport.http.netty.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.datasource.core.feature</id>
-                                    <version>${carbon.datasources.version}</version>
+                                    <id>org.wso2.carbon.uuf.core.feature</id>
+                                    <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.caching.feature</id>
-                                    <version>${carbon.cache.version}</version>
+                                    <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.jndi.feature</id>
+                                    <version>${carbon.jndi.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.metrics.core.feature</id>
@@ -264,34 +284,13 @@
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.messaging.feature</id>
-                                    <version>${carbon.messaging.version}</version>
-                                </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.ui.feature</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
-                                <!--</feature>-->
-                                <feature>
-                                    <id>org.wso2.msf4j.feature</id>
-                                    <version>${msf4j.version}</version>
+                                    <id>org.wso2.carbon.datasource.core.feature</id>
+                                    <version>${carbon.datasources.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.uuf.core.feature</id>
-                                    <version>${uuf.version}</version>
+                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature</id>
-                                    <version>1.0.0-SNAPSHOT</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature</id>
-                                    <version>1.0.0-SNAPSHOT</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
-                                    <version>1.0.0-SNAPSHOT</version>
-                                </feature>
-
                                 <!-- Sample Applications -->
                                 <feature>
                                     <id>org.wso2.carbon.uuf.pets-store.feature</id>
@@ -354,6 +353,10 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
                                 <feature>
+                                    <id>org.wso2.carbon.kernel.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.deployment.engine.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
@@ -362,66 +365,57 @@
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.kernel.feature.group</id>
-                                    <version>${carbon.kernel.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.runtime.feature.group</id>
-                                    <version>${carbon.kernel.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.jndi.feature.group</id>
-                                    <version>${carbon.jndi.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.datasource.core.feature</id>
-                                    <version>${carbon.datasources.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.caching.feature.group</id>
                                     <version>${carbon.cache.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.msf4j.feature.group</id>
+                                    <version>${msf4j.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.messaging.feature.group</id>
+                                    <version>${carbon.messaging.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.transport.http.netty.feature.group</id>
                                     <version>${carbon.transport.http.netty.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.metrics.jdbc.core.feature</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.das.core.feature</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.messaging.feature.group</id>
-                                    <version>${carbon.messaging.version}</version>
-                                </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.ui.feature.group</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
-                                <!--</feature>-->
-                                <feature>
-                                    <id>org.wso2.msf4j.feature.group</id>
-                                    <version>${msf4j.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.uuf.core.feature.group</id>
-                                    <version>${uuf.version}</version>
+                                    <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature.group</id>
-                                    <version>${uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature.group</id>
-                                    <version>1.0.0-SNAPSHOT</version>
+                                    <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.renderablecreator.html.feature.group</id>
-                                    <version>1.0.0-SNAPSHOT</version>
+                                    <version>${carbon.uuf.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.jndi.feature.group</id>
+                                    <version>${carbon.jndi.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.core.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.jdbc.core.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.metrics.das.core.feature.group</id>
+                                    <version>${carbon.metrics.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.datasource.core.feature.group</id>
+                                    <version>${carbon.datasources.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.pets-store.feature.group</id>
                                     <version>${carbon.uuf.version}</version>
@@ -434,18 +428,10 @@
                                     <id>org.wso2.carbon.uuf.simple-auth.feature.group</id>
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
-
-                                <!-- Authentication and Authorization -->
-                                <dependency>
-                                    <groupId>org.wso2.carbon.security.caas</groupId>
-                                    <artifactId>org.wso2.carbon.security.caas</artifactId>
-                                    <version>${carbon.security.caas.version}</version>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.wso2.carbon.security.userstore</groupId>
-                                    <artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>
+                                <feature>
+                                    <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
-                                </dependency>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
