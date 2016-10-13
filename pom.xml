@@ -899,6 +899,13 @@
         <carbon.datasources.import.version.range>[1.0.0, 2.0.0)</carbon.datasources.import.version.range>
         <carbon.datasources.version>1.0.0</carbon.datasources.version>
         <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
+<<<<<<< HEAD
+=======
+        <carbon-uuf-maven-plugin.version>1.0.0-SNAPSHOT</carbon-uuf-maven-plugin.version>
+        <carbon.hazelcast.feature.version>1.0.0</carbon.hazelcast.feature.version>
+        <carbon.hazelcast.package.import.version.range>[1.0.0, 2.0.0)</carbon.hazelcast.package.import.version.range>
+        <carbon.hazelcast.version>1.0.0-SNAPSHOT</carbon.hazelcast.version>
+>>>>>>> 960354e... added uuf maven plugin version property to pom.xml
         <carbon.jndi.version>1.0.0</carbon.jndi.version>
         <carbon.kernel.package.import.version.range>[5.1.0, 6.0.0)</carbon.kernel.package.import.version.range>
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
