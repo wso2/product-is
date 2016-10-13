@@ -35,7 +35,7 @@
     </parent>
 
     <modules>
-        <module>apps/org.wso2.carbon.is.userportal.uuf</module>
         <module>themes/org.wso2.carbon.is.default.uuf-theme</module>
+        <module>apps/org.wso2.carbon.is.userportal.uuf</module>
     </modules>
 </project>
