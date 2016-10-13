@@ -24,17 +24,17 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2is-identity-provisioning-connectors</artifactId>
+    <artifactId>wso2is-identity-local-authenticators</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : Provisioning Connectors</name>
+    <name>Identity Server : identity-local-authenticators</name>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download SPML Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
+                    <!-- Download Basic Auth jar from nexus and copy to the localauthenticator/jar folder-->
                     <execution>
-                        <id>download_spml_provisioning_jar</id>
+                        <id>download_basicauth_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -42,22 +42,21 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.spml</groupId>
-                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.spml
-                                    </artifactId>
-                                    <version>${provisioning.connector.spml.version}</version>
+                                    <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
+                                    <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth</artifactId>
+                                    <version>${identity.local.auth.basicauth.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Google Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
+                    <!-- Download IWA jar from nexus and copy to the  localauthenticator/jar folder-->
                     <execution>
-                        <id>download_google_provisioning_jar</id>
+                        <id>download_iwa_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -65,23 +64,23 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.google</groupId>
+                                    <groupId>org.wso2.carbon.identity.local.auth.iwa</groupId>
                                     <artifactId>
-                                        org.wso2.carbon.identity.provisioning.connector.google
+                                        org.wso2.carbon.identity.application.authenticator.iwa
                                     </artifactId>
-                                    <version>${provisioning.connector.google.version}</version>
+                                    <version>${identity.local.auth.iwa.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Salesforce Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
+                    <!-- Download FIDO jar from nexus and copy to the localauthenticator/jar folder-->
                     <execution>
-                        <id>download_salesforce_provisioning_jar</id>
+                        <id>download_fido_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -89,36 +88,14 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.salesforce</groupId>
-                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.salesforce
+                                    <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
+                                    <artifactId>
+                                        org.wso2.carbon.identity.application.authenticator.fido
                                     </artifactId>
-                                    <version>${provisioning.connector.salesforce.version}</version>
+                                    <version>${identity.local.auth.fido.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <!-- Download SCIM Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
-                    <execution>
-                        <id>download_scim_provisioning_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.scim</groupId>
-                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.scim
-                                    </artifactId>
-                                    <version>${provisioning.connector.scim.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
