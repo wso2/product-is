@@ -1,0 +1,173 @@
+@charset "UTF-8";
+/*
+~   Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+~
+~   Licensed under the Apache License, Version 2.0 (the "License");
+~   you may not use this file except in compliance with the License.
+~   You may obtain a copy of the License at
+~
+~        http://www.apache.org/licenses/LICENSE-2.0
+~
+~   Unless required by applicable law or agreed to in writing, software
+~   distributed under the License is distributed on an "AS IS" BASIS,
+~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~   See the License for the specific language governing permissions and
+~   limitations under the License.
+*/
+
+ul li, ul {list-style: none;margin: 0;padding: 0}
+
+
+header .product_name span {
+vertical-align: middle;
+display: inline-block;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+    margin: 0 0 0 5px;
+}
+
+
+.control-label {
+    font-weight: 500;
+}
+
+.breadcrumb a {-webkit-transition: color 250ms ease;
+-moz-transition: color 250ms ease; 
+transition: color 250ms ease;}
+.breadcrumb {padding-left:15px}
+.fw-helper-inverse::after, .fw-inverse::before, .fw-number {
+    color: inherit;
+}
+.notes {padding: 0;margin: 0}
+li.btn-notes {border-left: 1px solid #949494;}
+li.btn-notes a {padding: 5px 15px 7px;color:#fff;}
+.notes .fw-stack {width: 1em}
+.breadcrumb > li + li.btn-notes::before {content: none;}
+li.btn-notes a[aria-expanded=true], li.btn-notes a:hover {
+background: #424959;
+}
+/*Sidebar*/
+
+.close-handle {
+    background: #3d464f none repeat scroll 0 0;
+    border: medium none;
+    color: #d6dde5;
+    font-size: 10px;
+    height: 20px;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    width: 20px;
+    z-index: 1000;
+}
+.close-handle.close-sidebar {
+    background: #4f6a80 none repeat scroll 0 0;
+    color: #fff;
+    display: none;
+    font-size: 13px;
+    height: 30px;
+    width: 30px;
+}
+.sidebar-wrapper.toggled .close-handle.close-sidebar {
+    display: block;
+}
+[data-side="right"] .close-handle.close-sidebar {
+    left: -30px;
+}
+.sidebar-wrapper.sidebar-options {
+    overflow: visible;
+}
+
+.sidebar-wrapper.toggled[data-side="right"] {
+right: 0 !important;
+} 
+.actionBar {border-bottom: 1px solid #404040;text-align: right;}
+.actionBar a {color: #ff6a00;padding: 5px 10px;line-height: 30px;-webkit-transition: color 250ms ease;
+-moz-transition: color 250ms ease; 
+transition: color 250ms ease;}
+.actionBar a i {font-size: 13px}
+.actionBar > a:hover, .actionBar > a:focus {background-color: #424959;}
+.nav-tabs > li > a {
+ color: rgba(255, 255, 255, 0.5);
+ -webkit-transition: color 250ms ease;
+ -moz-transition: color 250ms ease;
+ transition: color 250ms ease;
+}
+.nav-tabs > li {margin-bottom:0;}
+.nav > li > a:hover, .nav > li > a:focus { color: #ffffff;background-color: rgba(255,255,255,0.25);border-color: transparent;}
+.nav-tabs {background-color: #353535;color: #fff;border: 0}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {background-color: #222;border-color: #222;border-top-color: #ff800f;color: #fff}
+.tab-content .content {padding: 15px}
+.sidebar-wrapper {background: #262726 linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.25) 95%, rgba(0, 0, 0, 0.5) 100%) repeat scroll 0 0;}
+.panel {background-color: transparent;}
+.panel-default > .panel-heading + .panel-collapse > .panel-body {padding: 10px;border-top-color: transparent;}
+.panel-group {
+margin: 20px 0 0;
+}
+.panel-group .panel + .panel {
+margin-top: -1px;
+}
+.panel-group .panel-heading {
+padding: 0;
+}
+.panel-group .panel-title a {
+display: block;
+padding: 10px 15px;
+text-decoration: none !important;
+background-color: rgba(102, 102, 102, 0.25);
+border: medium none;
+box-shadow: 0 1px 0 rgba(153, 153, 153, 0.25) inset, 0 -1px 0 rgba(0, 0, 0, 0.25) inset;
+color: rgba(255, 255, 255, 0.5);
+-webkit-transition: color 250ms ease;
+-moz-transition: color 250ms ease; 
+transition: color 250ms ease;
+}
+.panel-group .panel-title a[aria-expanded="true"] { 
+color: #ffffff;
+}
+.panel-group .panel-title .fw {font-size: 10px;line-height: 18px}
+.panel-group .panel-title a:hover {
+color: #ffffff;
+background-color: rgba(255,255,255,0.25);
+}
+.panel-group .panel,  .panel-heading {
+border-radius: 0;
+}
+.panel-default > .panel-heading {
+border: 0;  
+margin: 0
+}
+.panel-default {
+border-color: #c3c3c3;
+}
+.panel-title > a.collapsed > .fw,  .panel-title > a > *:first-child {
+display: none;
+}
+
+.panel-title > a.collapsed > *:first-child {
+display: inline-block;
+}
+.panel-title {font-weight: 300}
+.mce-panel {display: block !important;}
+
+.checkbox > input[type="checkbox"]:checked + .helper::after {background: transparent;}
+.checkbox > input[type="checkbox"]:not(:disabled) + .helper::before {
+    border: 1px solid #ccc;
+}
+.checkbox > input[type="checkbox"]:checked + .helper::after {
+    color: #F57B20;
+    content: "";
+    font: 400 16px/19px FontAwesome;
+    top: -1px;
+}
+.checkbox .helper {font-weight: 500;font-size: 12px}
+.checkbox .helper::before {top: -1px}
+.checkbox .helper {
+    padding-left: 26px;
+}
+
+.sidebar-wrapper .nav li {
+    border-bottom: 1px solid #242932;
+    margin: 0;
+}
