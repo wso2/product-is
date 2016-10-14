@@ -25,7 +25,7 @@
 
     <name>WSO2 Identity - Profile View</name>
     <description>
-        View user profile
+        View User Profile
     </description>
     <url>http://wso2.org</url>
 
@@ -37,7 +37,7 @@
     </parent>
 
     <dependencies>
-        <!-- Dependencies for UUF HTML -->
+        <!-- Dependencies IS user profile view -->
         <!--<dependency>-->
             <!--<groupId></groupId>-->
             <!--<artifactId></artifactId>-->
