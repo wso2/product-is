@@ -153,6 +153,7 @@
             <type>zip</type>
         </dependency>
 
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
@@ -163,6 +164,9 @@
             <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
             <type>zip</type>
         </dependency>
+=======
+        <!-- Sample Simple Authentication Component -->
+>>>>>>> 89611a7... Remove unwanted UUF features.
         <dependency>
             <groupId>org.wso2.carbon.identity.commons</groupId>
             <artifactId>org.wso2.carbon.identity.common.feature</artifactId>
@@ -434,6 +438,7 @@
                                 <!-- Sample Applications -->
 >>>>>>> 9bd8ee3... Adding structure for new component
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.identity.common.feature</id>
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
                                 </feature>
@@ -458,6 +463,11 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+=======
+                                    <id>org.wso2.carbon.uuf.Features-app.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+>>>>>>> 89611a7... Remove unwanted UUF features.
                             </features>
                         </configuration>
                     </execution>
@@ -587,6 +597,7 @@
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -668,6 +679,12 @@
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
 =======
+=======
+                                    <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+>>>>>>> 89611a7... Remove unwanted UUF features.
                                     <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
