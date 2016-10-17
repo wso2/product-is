@@ -18,8 +18,24 @@
 
 package org.wso2.carbon.identity.user.mgt.model;
 
+import org.wso2.carbon.security.caas.user.core.claim.Claim;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Model for the group
  */
 public class GroupModel {
+
+    private List<Claim> groupClaims = new ArrayList<>();
+
+    public List<Claim> getGroupClaims() {
+        return groupClaims;
+    }
+
+    public void setGroupClaims(List<Claim> groupClaims) {
+        this.groupClaims = groupClaims;
+    }
+
 }
