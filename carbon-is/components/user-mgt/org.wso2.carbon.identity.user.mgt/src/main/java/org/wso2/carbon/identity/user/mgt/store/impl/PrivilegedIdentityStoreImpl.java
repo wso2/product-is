@@ -37,12 +37,12 @@ import java.util.List;
 public class PrivilegedIdentityStoreImpl extends IdentityStoreImpl implements PrivilegedIdentityStore {
 
     @Override
-    public User addUser(UserModel users) throws IdentityStoreException {
+    public User addUser(UserModel user) throws IdentityStoreException {
         return null;
     }
 
     @Override
-    public User addUser(UserModel users, String domain) throws IdentityStoreException {
+    public User addUser(UserModel user, String domain) throws IdentityStoreException {
         return null;
     }
 
@@ -62,19 +62,8 @@ public class PrivilegedIdentityStoreImpl extends IdentityStoreImpl implements Pr
     }
 
     @Override
-    public void updateUserClaims(String userId, List<Claim> userClaims, String domain) throws IdentityStoreException {
-
-    }
-
-    @Override
     public void updateUserClaims(String userId, List<Claim> userClaimsToUpdate, List<Claim> userClaimsToRemove)
             throws IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateUserClaims(String userId, List<Claim> userClaimsToUpdate, List<Claim> userClaimsToRemove,
-                                 String domain) throws IdentityStoreException {
 
     }
 
@@ -84,30 +73,13 @@ public class PrivilegedIdentityStoreImpl extends IdentityStoreImpl implements Pr
     }
 
     @Override
-    public void deleteUser(String userId, String domain) throws IdentityStoreException {
+    public void updateGroupsOfUser(String userId, List<String> groupIds) throws IdentityStoreException {
 
     }
 
     @Override
-    public void updateGroupsOfUser(String userId, List<GroupModel> groups) throws IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateGroupsOfUser(String userId, List<GroupModel> groups, String domain) throws
-            IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateGroupsOfUser(String userId, List<GroupModel> groupsToUpdate, List<GroupModel> groupsToRemove)
+    public void updateGroupsOfUser(String userId, List<String> groupIdsToUpdate, List<String> groupIdsToRemove)
             throws IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateGroupsOfUser(String userId, List<GroupModel> groupsToUpdate, List<GroupModel> groupsToRemove,
-                                   String domain) throws IdentityStoreException {
 
     }
 
@@ -137,20 +109,8 @@ public class PrivilegedIdentityStoreImpl extends IdentityStoreImpl implements Pr
     }
 
     @Override
-    public Group updateGroupClaims(String groupId, List<Claim> groupClaims, String domain) throws
-            IdentityStoreException {
-        return null;
-    }
-
-    @Override
     public Group updateGroupClaims(String groupId, List<Claim> groupClaimsToUpdate, List<Claim> groupClaimsToRemove)
             throws IdentityStoreException {
-        return null;
-    }
-
-    @Override
-    public Group updateGroupClaims(String groupId, List<Claim> groupClaimsToUpdate, List<Claim> groupClaimsToRemove,
-                                   String domain) throws IdentityStoreException {
         return null;
     }
 
@@ -160,29 +120,13 @@ public class PrivilegedIdentityStoreImpl extends IdentityStoreImpl implements Pr
     }
 
     @Override
-    public void deleteGroup(String groupId, String domain) throws IdentityStoreException {
+    public void updateUsersOfGroup(String groupId, List<String> userIds) throws IdentityStoreException {
 
     }
 
     @Override
-    public void updateUsersOfGroup(String groupId, List<UserModel> users) throws IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateUsersOfGroup(String groupId, List<UserModel> users, String domain) throws IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateUsersOfGroup(String groupId, List<UserModel> usersToUpdate, List<UserModel> usersToRemove)
-            throws IdentityStoreException {
-
-    }
-
-    @Override
-    public void updateUsersOfGroup(String groupId, List<UserModel> usersToUpdate, List<UserModel> usersToRemove,
-                                   String domain) throws IdentityStoreException {
+    public void updateUsersOfGroup(String groupId, List<String> userIdsToAdd, List<String> userIdsToRemove) throws
+            IdentityStoreException {
 
     }
 }
