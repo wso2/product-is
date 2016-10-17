@@ -28,6 +28,48 @@
     <artifactId>product-is</artifactId>
     <packaging>pom</packaging>
     <version>6.0.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-all</artifactId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-all</artifactId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-all</artifactId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-all</artifactId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
     <description>WSO2 Identity Server</description>
@@ -509,10 +551,10 @@
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <carbon.messaging.version>1.0.4</carbon.messaging.version>
-        <carbon.transport.http.netty.version>2.1.2</carbon.transport.http.netty.version>
+        <carbon.messaging.version>1.0.6</carbon.messaging.version>
+        <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
-        <msf4j.version>2.0.0</msf4j.version>
+        <msf4j.version>2.1.0-SNAPSHOT</msf4j.version>
         <uuf.version>1.0.0-SNAPSHOT</uuf.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
