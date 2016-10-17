@@ -40,6 +40,7 @@
         <module>modules/authenticators</module>
         <module>modules/social-authenticators</module>
         <module>modules/provisioning-connectors</module>
+        <module>modules/local-authenticators</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
         <module>modules/samples</module>
@@ -1207,14 +1208,12 @@
         <carbon.identity.framework.version>5.5.8</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
-        <identity.local.auth.basicauth.version>5.2.2</identity.local.auth.basicauth.version>
         <identity.carbon.auth.saml2.version>5.1.5</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.1.3</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>5.2.3</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.0</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.3</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.1.5</identity.inbound.auth.sts.version>
-        <identity.local.auth.fido.version>5.1.3</identity.local.auth.fido.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.3</identity.outbound.auth.requestpath.basicauth.version>
         <identity.carbon.auth.mutual.ssl.version>5.1.2</identity.carbon.auth.mutual.ssl.version>
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
@@ -1225,7 +1224,6 @@
         <identity.userstore.ldap.version>5.1.2</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.1.2</identity.userstore.remote.version>
         <identity.workflow.impl.bps.version>5.1.3</identity.workflow.impl.bps.version>
-        <identity.local.auth.iwa.version>5.2.0</identity.local.auth.iwa.version>
         <identity.carbon.auth.iwa.version>5.1.4</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.2</identity.workflow.template.multisteps.version>
         <identity.outbound.auth.requestpath.oauth.version>5.1.3</identity.outbound.auth.requestpath.oauth.version>
@@ -1255,6 +1253,19 @@
         <social.authenticator.google.version>5.1.3</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.3</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.3</social.authenticator.yahoo.version>
+
+        <!-- Provisioning connector Properties -->
+        <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
+        <provisioning.connector.google.version>5.1.2</provisioning.connector.google.version>
+        <provisioning.connector.salesforce.version>5.1.2</provisioning.connector.salesforce.version>
+        <provisioning.connector.scim.version>5.1.2</provisioning.connector.scim.version>
+
+        <!-- Local Authenticator Properties -->
+        <identity.local.auth.basicauth.version>5.2.2</identity.local.auth.basicauth.version>
+        <identity.local.auth.fido.version>5.1.3</identity.local.auth.fido.version>
+        <identity.local.auth.iwa.version>5.2.1</identity.local.auth.iwa.version>
+
+
         <!--Identity Repo Versions End-->
 
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
