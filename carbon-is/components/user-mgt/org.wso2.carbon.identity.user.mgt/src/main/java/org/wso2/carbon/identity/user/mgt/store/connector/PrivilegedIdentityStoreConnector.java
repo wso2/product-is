@@ -62,8 +62,8 @@ public interface PrivilegedIdentityStoreConnector extends IdentityStoreConnector
      * @param attributesToRemove Attribute values to remove.
      * @throws IdentityStoreException Identity store exception.
      */
-    void updateUserAttributes(String userIdentifier, List<Attribute> attributesToAdd, List<Attribute>
-            attributesToRemove) throws IdentityStoreException;
+    void updateUserAttributes(String userIdentifier, List<Attribute> attributesToAdd,
+                              List<Attribute> attributesToRemove) throws IdentityStoreException;
 
     /**
      * Delete a user.
@@ -77,21 +77,21 @@ public interface PrivilegedIdentityStoreConnector extends IdentityStoreConnector
      * Update group list of user.
      *
      * @param userIdentifier User identifier.
-     * @param groupIds Group identifiers.
+     * @param groupIdentifiers Group identifiers.
      * @throws IdentityStoreException Identity store exception.
      */
-    void updateGroupsOfUser(String userIdentifier, List<String> groupIds) throws IdentityStoreException;
+    void updateGroupsOfUser(String userIdentifier, List<String> groupIdentifiers) throws IdentityStoreException;
 
     /**
      * Update selected group list of user.
      *
      * @param userIdentifier User identifier.
-     * @param groupIdsToAdd Group identifier list to update.
-     * @param groupIdsToRemove Group identifier list to remove.
+     * @param groupIdentifiersToAdd Group identifier list to update.
+     * @param groupIdentifiersToRemove Group identifier list to remove.
      * @throws IdentityStoreException Identity store exception.
      */
-    void updateGroupsOfUser(String userIdentifier, List<String> groupIdsToAdd, List<String> groupIdsToRemove) throws
-            IdentityStoreException;
+    void updateGroupsOfUser(String userIdentifier, List<String> groupIdentifiersToAdd,
+                            List<String> groupIdentifiersToRemove) throws IdentityStoreException;
 
     /**
      * Adds a new group.
@@ -126,8 +126,8 @@ public interface PrivilegedIdentityStoreConnector extends IdentityStoreConnector
      * @param attributesToRemove Attribute values to remove.
      * @throws IdentityStoreException Identity store exception.
      */
-    void updateGroupAttributes(String groupIdentifier, List<Attribute> attributesToAdd, List<Attribute>
-            attributesToRemove) throws IdentityStoreException;
+    void updateGroupAttributes(String groupIdentifier, List<Attribute> attributesToAdd,
+                               List<Attribute> attributesToRemove) throws IdentityStoreException;
 
     /**
      * Delete a group.
@@ -141,19 +141,19 @@ public interface PrivilegedIdentityStoreConnector extends IdentityStoreConnector
      * Update user list of a group.
      *
      * @param groupIdentifier Group identifier.
-     * @param userIds User identifier list.
+     * @param userIdentifiers User identifier list.
      * @throws IdentityStoreException Identity store exception.
      */
-    void updateUsersOfGroup(String groupIdentifier, List<String> userIds) throws IdentityStoreException;
+    void updateUsersOfGroup(String groupIdentifier, List<String> userIdentifiers) throws IdentityStoreException;
 
     /**
      *  Update selected user list of a group.
      *
      * @param groupIdentifier Group identifier.
-     * @param userIdsToAdd User identifier list to add.
-     * @param userIdsToRemove User identifier list to remove.
+     * @param userIdentifiersToAdd User identifier list to add.
+     * @param userIdentifiersToRemove User identifier list to remove.
      * @throws IdentityStoreException Identity store exception.
      */
-    void updateUsersOfGroup(String groupIdentifier, List<String> userIdsToAdd, List<String> userIdsToRemove) throws
-            IdentityStoreException;
+    void updateUsersOfGroup(String groupIdentifier, List<String> userIdentifiersToAdd,
+                            List<String> userIdentifiersToRemove) throws IdentityStoreException;
 }
