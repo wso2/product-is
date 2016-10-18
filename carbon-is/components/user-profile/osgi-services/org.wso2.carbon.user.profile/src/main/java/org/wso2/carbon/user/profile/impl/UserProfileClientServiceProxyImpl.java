@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.user.profile.internal.impl;
+package org.wso2.carbon.user.profile.impl;
 
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.kernel.context.PrivilegedCarbonContext;
+import org.wso2.carbon.messaging.CarbonMessage;
+import org.wso2.carbon.messaging.DefaultCarbonMessage;
+import org.wso2.carbon.security.caas.api.CarbonPrincipal;
+import org.wso2.carbon.security.caas.api.ProxyCallbackHandler;
 import org.wso2.carbon.security.caas.user.core.bean.User;
 import org.wso2.carbon.security.caas.user.core.claim.Claim;
 import org.wso2.carbon.security.caas.user.core.claim.MetaClaim;
 import org.wso2.carbon.user.profile.service.UserProfileClientService;
 
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of User Profile Service
  */
-@Component(name = "org.wso2.carbon.user.profile.internal.impl.UserProfileClientServiceProxyImpl",
+@Component(name = "org.wso2.carbon.user.profile.impl.UserProfileClientServiceProxyImpl",
            service = { UserProfileClientService.class },
            immediate = true)
 public class UserProfileClientServiceProxyImpl implements UserProfileClientService {
@@ -41,7 +49,25 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
 
     @Override
     public User authenticate(String username, String password) {
-        return null;
+        CarbonPrincipal principal;
+        PrivilegedCarbonContext.destroyCurrentContext();
+        CarbonMessage carbonMessage = new DefaultCarbonMessage();
+        carbonMessage.setHeader("Authorization",
+                "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+
+        ProxyCallbackHandler callbackHandler = new ProxyCallbackHandler(carbonMessage);
+        LoginContext loginContext = null;
+        try {
+            loginContext = new LoginContext("CarbonSecurityConfig", callbackHandler);
+            loginContext.login();
+            principal = (CarbonPrincipal) PrivilegedCarbonContext.getCurrentContext()
+                    .getUserPrincipal();
+//            principal.getUser().getClaims();
+        } catch (LoginException e) {
+            e.printStackTrace();
+        }
+
+        return principal.getUser();
     }
 
     @Override
@@ -156,13 +182,31 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
     }
 
     @Override
-    public List<Integer> getProfileTemplates() {
-        return null;
+    public Map<Integer, String> getProfileTemplates() {
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(1, "default");
+        map.put(2, "work");
+        map.put(3, "confidentials");
+        map.put(3, "advance");
+        map.put(3, "basic");
     }
 
     private HashMap<Integer, ArrayList<MetaClaim>> initiateProfileTemplates() {
         HashMap<Integer, ArrayList<MetaClaim>> metaClaims = new HashMap<>();
+        HashMap<String, String> properties = new HashMap<>();
+        ArrayList<MetaClaim> claims = new ArrayList<>();
 
+        properties.put("mandatory", "true");
+
+
+        claims.add(1, new MetaClaim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", properties));
+        claims.add(1, new MetaClaim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", null));
+        claims.add(1, new MetaClaim("http://wso2.org/claims/country", "http://wso2.org/claims/country", null));
+        claims.add(1, new MetaClaim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", properties));
+        claims.add(1, new MetaClaim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture", properties));
+        claims.add(1, new MetaClaim("http://wso2.org/claims/address", "http://wso2.org/claims/address", null));
+        claims.add(1, new MetaClaim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", null));
+        metaClaims.put(1, claims);
 
         return metaClaims;
     }
