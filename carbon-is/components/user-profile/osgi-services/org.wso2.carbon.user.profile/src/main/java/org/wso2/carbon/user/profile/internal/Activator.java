@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.selfcare.profile.internal;
+package org.wso2.carbon.user.profile.internal;
 
-import org.osgi.framework.BundleActivator; ///// TODO: check the best to use
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.selfcare.profile.internal.impl.UserProfileManagerImpl;
-import org.wso2.carbon.selfcare.profile.service.UserProfileService;
+import org.wso2.carbon.user.profile.internal.impl.UserProfileClientServiceProxyImpl;
+import org.wso2.carbon.user.profile.service.UserProfileClientService;
 
 /**
  * Activation class for the bundle
@@ -32,16 +32,16 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        bundleContext.registerService(UserProfileService.class.getName(), new UserProfileManagerImpl(), null);
+        bundleContext.registerService(UserProfileClientService.class.getName(), new UserProfileClientServiceProxyImpl(), null);
         if (log.isDebugEnabled()) {
-            log.debug("Self care profile BE Bundle Started.");
+            log.debug("User profile BE Bundle Started.");
         }
     }
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
         if (log.isDebugEnabled()) {
-            log.debug("Self care profile BE Bundle Stopped.");
+            log.debug("User profile BE Bundle Stopped.");
         }
     }
 }
