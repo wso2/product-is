@@ -104,14 +104,14 @@ public class PrivilegedIdentityStoreImpl extends IdentityStoreImpl implements Pr
     }
 
     @Override
-    public Group updateGroupClaims(String groupId, List<Claim> groupClaims) throws IdentityStoreException {
-        return null;
+    public void updateGroupClaims(String groupId, List<Claim> groupClaims) throws IdentityStoreException {
+
     }
 
     @Override
-    public Group updateGroupClaims(String groupId, List<Claim> groupClaimsToUpdate, List<Claim> groupClaimsToRemove)
+    public void updateGroupClaims(String groupId, List<Claim> groupClaimsToUpdate, List<Claim> groupClaimsToRemove)
             throws IdentityStoreException {
-        return null;
+
     }
 
     @Override
