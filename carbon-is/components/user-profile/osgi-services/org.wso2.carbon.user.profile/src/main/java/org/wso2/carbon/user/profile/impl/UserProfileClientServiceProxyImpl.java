@@ -189,6 +189,8 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
         map.put(3, "confidentials");
         map.put(3, "advance");
         map.put(3, "basic");
+
+        return map;
     }
 
     private HashMap<Integer, ArrayList<MetaClaim>> initiateProfileTemplates() {
