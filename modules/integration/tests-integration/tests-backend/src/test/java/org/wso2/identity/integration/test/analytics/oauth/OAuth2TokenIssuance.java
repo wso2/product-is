@@ -89,6 +89,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
     public void atEnd() throws Exception {
         deleteApplication();
         removeOAuthApplicationData();
+        thriftServer.stop();
         replaceIdentityXml();
         stopTomcat(tomcat);
 
