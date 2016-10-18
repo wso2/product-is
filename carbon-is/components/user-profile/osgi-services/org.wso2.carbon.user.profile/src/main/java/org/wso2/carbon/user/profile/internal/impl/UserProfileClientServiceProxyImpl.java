@@ -1,0 +1,169 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.wso2.carbon.user.profile.internal.impl;
+
+import org.osgi.service.component.annotations.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.security.caas.user.core.bean.User;
+import org.wso2.carbon.security.caas.user.core.claim.Claim;
+import org.wso2.carbon.security.caas.user.core.claim.MetaClaim;
+import org.wso2.carbon.user.profile.service.UserProfileClientService;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * Default implementation of User Profile Service
+ */
+@Component(name = "org.wso2.carbon.user.profile.internal.impl.UserProfileClientServiceProxyImpl",
+           service = { UserProfileClientService.class },
+           immediate = true)
+public class UserProfileClientServiceProxyImpl implements UserProfileClientService {
+    private static final Logger log = LoggerFactory.getLogger(UserProfileClientServiceProxyImpl.class);
+    private static final HashMap<Integer, ArrayList<MetaClaim>> profileTemplates = null;
+
+    @Override
+    public User authenticate(String username, String password) {
+        return null;
+    }
+
+    @Override
+    public Collection<Claim> getProfile(String profileId, String userid) {
+        ArrayList<Claim> claims = new ArrayList<Claim>();
+        claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
+        claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", "0779716248"));
+        claims.add(new Claim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
+                "../../resources/profilepic.jpg"));
+        claims.add(new Claim("http://wso2.org/claims/address", "http://wso2.org/claims/address", "71/D, Kirindiwela"));
+        claims.add(new Claim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", "10/10/1988"));
+
+        return claims;
+    }
+
+    @Override
+    public Collection<Claim> getProfile(String userid) {
+        ArrayList<Claim> claims = new ArrayList<Claim>();
+        claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
+        claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", "0779716248"));
+        claims.add(new Claim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
+                "../../resources/profilepic.jpg"));
+        claims.add(new Claim("http://wso2.org/claims/address", "http://wso2.org/claims/address", "71/D, Kirindiwela"));
+        claims.add(new Claim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", "10/10/1988"));
+
+        return claims;
+    }
+
+    @Override
+    public Collection<Claim> getMetaClaims(String dialect, Collection<String> claims) {
+        ArrayList<Claim> claims = new ArrayList<Claim>();
+        claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
+        claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", "0779716248"));
+        claims.add(new Claim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
+                "../../resources/profilepic.jpg"));
+        claims.add(new Claim("http://wso2.org/claims/address", "http://wso2.org/claims/address", "71/D, Kirindiwela"));
+        claims.add(new Claim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", "10/10/1988"));
+
+        return claims;
+    }
+
+    @Override
+    public Collection<Claim> getClaims(User user) {
+        ArrayList<Claim> claims = new ArrayList<Claim>();
+        claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
+        claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
+        claims.add(new Claim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", "0779716248"));
+        claims.add(new Claim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
+                "../../resources/profilepic.jpg"));
+        claims.add(new Claim("http://wso2.org/claims/address", "http://wso2.org/claims/address", "71/D, Kirindiwela"));
+        claims.add(new Claim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", "10/10/1988"));
+
+        return claims;
+    }
+
+    @Override
+    public void createProfile(String profileId, Collection<Claim> claims) {
+        log.info("Profile creation with below details started.");
+        log.info("Profile Id: " + profileId);
+
+        for (Claim claim : claims) {
+            log.info("DialectURI:" + claim.getClaimURI() + "|| ClaimURI:" + claim.getDialectURI() + "|| Value:" + claim
+                    .getValue());
+        }
+    }
+
+    @Override
+    public void createProfile(String templateId, String profileId, Collection<Claim> claims) {
+        log.info("Profile creation with below details started.");
+        log.info("Template Id: " + templateId);
+        log.info("Profile Id: " + profileId);
+
+        for (Claim claim : claims) {
+            log.info("DialectURI:" + claim.getClaimURI() + "|| ClaimURI:" + claim.getDialectURI() + "|| Value:" + claim
+                    .getValue());
+        }
+    }
+
+    @Override
+    public void updateProfile(String profileId, Collection<Claim> claims) {
+        log.info("Profile update with below details started.");
+        log.info("Profile Id: " + profileId);
+
+        for (Claim claim : claims) {
+            log.info("DialectURI:" + claim.getClaimURI() + "|| ClaimURI:" + claim.getDialectURI() + "|| Value:" + claim
+                    .getValue());
+        }
+    }
+
+    @Override
+    public void updateProfileName(String profileId, String newName) {
+        log.info("Profile name update with below details started.");
+        log.info("Profile Id: " + profileId);
+        log.info("New profile name: " + newName);
+    }
+
+    @Override
+    public void deleteProfile(String profileId) {
+        log.info("Profile with ID " + profileId + "deleted.");
+    }
+
+    @Override
+    public Collection<MetaClaim> getProfileTemplate(String profileTempleteId) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> getProfileTemplates() {
+        return null;
+    }
+
+    private HashMap<Integer, ArrayList<MetaClaim>> initiateProfileTemplates() {
+        HashMap<Integer, ArrayList<MetaClaim>> metaClaims = new HashMap<>();
+
+
+        return metaClaims;
+    }
+}

@@ -52,6 +52,15 @@
             <groupId>org.wso2.carbon.security.caas</groupId>
             <artifactId>org.wso2.carbon.security.caas</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi.services</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -64,7 +73,7 @@
                         <Import-Package>
                             org.osgi.framework,
                             org.slf4j.*;version="${slf4j.version.range}",
-                            org.wso2.carbon.security.caas.user.core,
+                            org.wso2.carbon.security.caas.user.core.*;version="${carbon.security.caas.version}"
                         </Import-Package>
                         <Private-Package>org.wso2.carbon.profile.internal.*</Private-Package>
                         <Export-Package>

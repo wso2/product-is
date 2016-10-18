@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.selfcare.profile.service;
+package org.wso2.carbon.user.profile.service;
 
 import org.wso2.carbon.security.caas.user.core.bean.User;
 import org.wso2.carbon.security.caas.user.core.claim.Claim;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Interface for the user profile related functionality
  */
-public interface UserProfileService {
+public interface UserProfileClientService {
 
     /**
      * Authenticates the user.
