@@ -20,7 +20,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.user.profile.internal.impl.UserProfileClientServiceProxyImpl;
+import org.wso2.carbon.user.profile.impl.UserProfileClientServiceProxyImpl;
 import org.wso2.carbon.user.profile.service.UserProfileClientService;
 
 /**
