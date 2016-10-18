@@ -129,26 +129,26 @@ public class EntitlementServiceTestCase extends ISIntegrationTest {
         Assert.assertTrue(decision.contains("Permit"), "Entitlement service get decision failed.");
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = {"testGetDecisionByAttributes"}, description = "Check get decision deny state")
-    public void testGetDecisionDenyState() throws Exception {
-        UserProfileDTO profile = userProfileMgtClient.getUserProfile("admin", "default");
-        UserFieldDTO country = new UserFieldDTO();
-        country.setClaimUri("http://wso2.org/claims/country");
-        country.setFieldValue("USA");
-        UserFieldDTO[] fields = profile.getFieldValues();
-        UserFieldDTO[] newfields = new UserFieldDTO[fields.length];
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].getDisplayName().toString().equals("Country")) {
-                newfields[i] = country;
-            } else {
-                newfields[i] = fields[i];
-            }
-        }
-        profile.setFieldValues(newfields);
-        userProfileMgtClient.setUserProfile("admin", profile);
-        Thread.sleep(5000);
-        String decision = entitlementServiceClient.getDecisionByAttributes("admin", "http://localhost:8280/services/echo/", "read", null);
-        log.info(decision);
-        Assert.assertTrue(decision.contains("Deny"), "Entitlement service get decision failed.");
-    }
+//    @Test(groups = "wso2.is", dependsOnMethods = {"testGetDecisionByAttributes"}, description = "Check get decision deny state")
+//    public void testGetDecisionDenyState() throws Exception {
+//        UserProfileDTO profile = userProfileMgtClient.getUserProfile("admin", "default");
+//        UserFieldDTO country = new UserFieldDTO();
+//        country.setClaimUri("http://wso2.org/claims/country");
+//        country.setFieldValue("USA");
+//        UserFieldDTO[] fields = profile.getFieldValues();
+//        UserFieldDTO[] newfields = new UserFieldDTO[fields.length];
+//        for (int i = 0; i < fields.length; i++) {
+//            if (fields[i].getDisplayName().toString().equals("Country")) {
+//                newfields[i] = country;
+//            } else {
+//                newfields[i] = fields[i];
+//            }
+//        }
+//        profile.setFieldValues(newfields);
+//        userProfileMgtClient.setUserProfile("admin", profile);
+//        Thread.sleep(5000);
+//        String decision = entitlementServiceClient.getDecisionByAttributes("admin", "http://localhost:8280/services/echo/", "read", null);
+//        log.info(decision);
+//        Assert.assertTrue(decision.contains("Deny"), "Entitlement service get decision failed.");
+//    }
 }
