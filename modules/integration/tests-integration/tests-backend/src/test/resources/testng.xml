@@ -138,5 +138,10 @@
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
         </classes>
     </test>
+    <test name="is-tests-governance" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>
+        </classes>
+    </test>
 
 </suite>
