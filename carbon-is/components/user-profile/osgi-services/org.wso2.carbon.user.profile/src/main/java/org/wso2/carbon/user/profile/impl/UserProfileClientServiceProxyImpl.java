@@ -31,11 +31,8 @@ import org.wso2.carbon.user.profile.service.UserProfileClientService;
 
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Default implementation of User Profile Service
@@ -45,15 +42,14 @@ import java.util.Map;
            immediate = true)
 public class UserProfileClientServiceProxyImpl implements UserProfileClientService {
     private static final Logger log = LoggerFactory.getLogger(UserProfileClientServiceProxyImpl.class);
-    private static final HashMap<Integer, ArrayList<MetaClaim>> profileTemplates = null;
 
     @Override
     public User authenticate(String username, String password) {
-        CarbonPrincipal principal;
+        CarbonPrincipal principal = null;
         PrivilegedCarbonContext.destroyCurrentContext();
         CarbonMessage carbonMessage = new DefaultCarbonMessage();
         carbonMessage.setHeader("Authorization",
-                "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
+                "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8)));
 
         ProxyCallbackHandler callbackHandler = new ProxyCallbackHandler(carbonMessage);
         LoginContext loginContext = null;
@@ -67,12 +63,12 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
             e.printStackTrace();
         }
 
-        return principal.getUser();
+        return principal == null? null : principal.getUser();
     }
 
     @Override
     public Collection<Claim> getProfile(String profileId, String userid) {
-        ArrayList<Claim> claims = new ArrayList<Claim>();
+        ArrayList<Claim> claims = new ArrayList<>();
         claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
         claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
         claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
@@ -102,22 +98,25 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
 
     @Override
     public Collection<Claim> getMetaClaims(String dialect, Collection<String> claims) {
-        ArrayList<Claim> claims = new ArrayList<Claim>();
-        claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
-        claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
-        claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
-        claims.add(new Claim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", "0779716248"));
-        claims.add(new Claim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
+        ArrayList<Claim> claimsResult = new ArrayList<>();
+        claimsResult.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
+        claimsResult
+                .add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
+        claimsResult.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
+        claimsResult.add(new Claim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", "0779716248"));
+        claimsResult.add(new Claim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
                 "../../resources/profilepic.jpg"));
-        claims.add(new Claim("http://wso2.org/claims/address", "http://wso2.org/claims/address", "71/D, Kirindiwela"));
-        claims.add(new Claim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", "10/10/1988"));
+        claimsResult.add(new Claim("http://wso2.org/claims/address", "http://wso2.org/claims/address",
+                "71/D, Kirindiwela"));
+        claimsResult.add(new Claim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth",
+                "10/10/1988"));
 
-        return claims;
+        return claimsResult;
     }
 
     @Override
     public Collection<Claim> getClaims(User user) {
-        ArrayList<Claim> claims = new ArrayList<Claim>();
+        ArrayList<Claim> claims = new ArrayList<>();
         claims.add(new Claim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", "Lanka"));
         claims.add(new Claim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", "Jayawardhana"));
         claims.add(new Claim("http://wso2.org/claims/country", "http://wso2.org/claims/country", "Sri Lanka"));
@@ -193,7 +192,7 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
         return map;
     }
 
-    private HashMap<Integer, ArrayList<MetaClaim>> initiateProfileTemplates() {
+    public HashMap<Integer, ArrayList<MetaClaim>> initiateProfileTemplates() {
         HashMap<Integer, ArrayList<MetaClaim>> metaClaims = new HashMap<>();
         HashMap<String, String> properties = new HashMap<>();
         ArrayList<MetaClaim> claims = new ArrayList<>();
@@ -201,11 +200,14 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
         properties.put("mandatory", "true");
 
 
-        claims.add(1, new MetaClaim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", properties));
+        claims.add(1,
+                new MetaClaim("http://wso2.org/claims/givenname", "http://wso2.org/claims/givenname", properties));
         claims.add(1, new MetaClaim("http://wso2.org/claims/lastname", "http://wso2.org/claims/lastname", null));
         claims.add(1, new MetaClaim("http://wso2.org/claims/country", "http://wso2.org/claims/country", null));
         claims.add(1, new MetaClaim("http://wso2.org/claims/mobile", "http://wso2.org/claims/mobile", properties));
-        claims.add(1, new MetaClaim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture", properties));
+        claims.add(1,
+                new MetaClaim("http://wso2.org/claims/profilepicture", "http://wso2.org/claims/profilepicture",
+                        properties));
         claims.add(1, new MetaClaim("http://wso2.org/claims/address", "http://wso2.org/claims/address", null));
         claims.add(1, new MetaClaim("http://wso2.org/claims/dateofbirth", "http://wso2.org/claims/dateofbirth", null));
         metaClaims.put(1, claims);
