@@ -22,6 +22,7 @@ import org.wso2.carbon.security.caas.user.core.claim.MetaClaim;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for the user profile related functionality
@@ -109,7 +110,7 @@ public interface UserProfileClientService {
      * The the list of available templates.
      * @return
      */
-    List<Integer> getProfileTemplates ();
+    Map<Integer, String> getProfileTemplates ();
 
 
 

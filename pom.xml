@@ -35,39 +35,9 @@
             <version>2.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>6.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <name>WSO2 Identity Server</name>
@@ -89,7 +59,21 @@
     </scm>
 
     <modules>
+<<<<<<< HEAD
         <module>portal</module>
+=======
+        <!--Components-->
+        <module>carbon-is/components/user-profile</module>
+        <!--Features-->
+
+        <!--Tests-->
+        <!--<module>tests</module>-->
+
+        <!--Tools-->
+        <!--<module>tools</module>-->
+
+        <!--Product-->
+>>>>>>> b74c743... Temporary hide/fix on build issues in user-portal
         <module>product</module>
         <module>tests</module>
     </modules>
@@ -106,6 +90,16 @@
                 <groupId>org.wso2.eclipse.osgi</groupId>
                 <artifactId>org.eclipse.osgi</artifactId>
                 <version>${equinox.osgi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
+                <version>${felix.scr.ds-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.osgi</groupId>
+                <artifactId>org.eclipse.osgi.services</artifactId>
+                <version>${org.wso2.eclipse.osgi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -242,11 +236,6 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
                 <version>${carbon.kernel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi.services</artifactId>
-                <version>${equinox.osgi.services.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -905,6 +894,8 @@
         <disruptor.wso2.version>3.3.2.wso2v2</disruptor.wso2.version>
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
+        <org.wso2.eclipse.osgi.version>3.4.0.v20140312-2051</org.wso2.eclipse.osgi.version>
+        <felix.scr.ds-annotations.version>0.10.0.v201209301215</felix.scr.ds-annotations.version>
         <gs-collections.version>7.0.3</gs-collections.version>
         <gson.version>2.6.2</gson.version>
         <guava.bundle.version>19.0.0</guava.bundle.version>
@@ -1012,6 +1003,7 @@
         <org.eclipse.equinox.cm.version>1.1.0.v20131021-1936</org.eclipse.equinox.cm.version>
 
 
+<<<<<<< HEAD
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
         <org.apache.commons.commons-lang3.version>3.4</org.apache.commons.commons-lang3.version>
@@ -1021,6 +1013,34 @@
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
 
     </properties>
+=======
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyleplugin.version}</version>
+            </plugin>
+           <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${maven.findbugsplugin.version}</version>
+                <configuration>
+                    <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+>>>>>>> b74c743... Temporary hide/fix on build issues in user-portal
 
     <developers>
         <developer>

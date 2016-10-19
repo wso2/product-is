@@ -37,7 +37,7 @@
     </parent>
 
     <modules>
-        <module>osgi-services/org.wso2.carbon.selfcare.profile</module>
+        <module>osgi-services/org.wso2.carbon.user.profile</module>
         <module>themes/org.wso2.carbon.is.default.uuf-theme</module>
         <module>apps/org.wso2.carbon.is.userportal.uuf</module>
     </modules>
