@@ -220,6 +220,18 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
+        <!--copy provisioning-connector jars SPML,Google,Salesforce,SCIM .-->
+        <fileSet>
+            <directory>../provisioning-connectors/target/provisioningconnectorCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--copy local-authenticator jars BaiscAuth,IWA,FIDO .-->
+        <fileSet>
+            <directory>../local-authenticators/target/localauthenticatorCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
         <!--copy the authentication jars for totp, x509, emailotp, smsotp, office365 and twitter authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/jar</directory>

@@ -282,6 +282,19 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>packaging-war-artifacts-oidc</id>
+                        <phase>process-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.appone-app-build" />
+                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.apptwo-app-build" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>packaging-war-artifacts-passivests</id>
                         <phase>process-test-resources</phase>
                         <configuration>
@@ -299,8 +312,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/saml/saml-app-build.xml" target="saml-tenant-signingdisabled" />
-                                <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml"
-                                     target="saml-tenant-registrymount" />
+                                <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml" target="saml-tenant-registrymount" />
                             </tasks>
                         </configuration>
                         <goals>

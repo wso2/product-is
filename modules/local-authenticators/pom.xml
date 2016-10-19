@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.is</groupId>
@@ -23,17 +24,17 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2is-identity-social-authenticators</artifactId>
+    <artifactId>wso2is-identity-local-authenticators</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : Social-authenticators</name>
+    <name>Identity Server : identity-local-authenticators</name>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download facebook social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download Basic Auth jar from nexus and copy to the localauthenticator/jar folder-->
                     <execution>
-                        <id>download_facebook_jar</id>
+                        <id>download_basicauth_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -41,22 +42,21 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.facebook</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.facebook
-                                    </artifactId>
-                                    <version>${social.authenticator.facebook.version}</version>
+                                    <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
+                                    <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth</artifactId>
+                                    <version>${identity.local.auth.basicauth.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Google social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download IWA jar from nexus and copy to the  localauthenticator/jar folder-->
                     <execution>
-                        <id>download_google_jar</id>
+                        <id>download_iwa_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -64,23 +64,23 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.google</groupId>
+                                    <groupId>org.wso2.carbon.identity.local.auth.iwa</groupId>
                                     <artifactId>
-                                        org.wso2.carbon.identity.application.authenticator.google
+                                        org.wso2.carbon.identity.application.authenticator.iwa
                                     </artifactId>
-                                    <version>${social.authenticator.google.version}</version>
+                                    <version>${identity.local.auth.iwa.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Windows-Live social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download FIDO jar from nexus and copy to the localauthenticator/jar folder-->
                     <execution>
-                        <id>download_windowslive_jar</id>
+                        <id>download_fido_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -88,37 +88,14 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.live</groupId>
+                                    <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
                                     <artifactId>
-                                        org.wso2.carbon.identity.application.authenticator.live
+                                        org.wso2.carbon.identity.application.authenticator.fido
                                     </artifactId>
-                                    <version>${social.authenticator.windowslive.version}</version>
+                                    <version>${identity.local.auth.fido.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <!-- Download Yahoo authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
-                    <execution>
-                        <id>download_yahoo_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo
-                                    </artifactId>
-                                    <version>${social.authenticator.yahoo.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>

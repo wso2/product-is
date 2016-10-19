@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.is</groupId>
@@ -23,17 +24,17 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2is-identity-social-authenticators</artifactId>
+    <artifactId>wso2is-identity-provisioning-connectors</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : Social-authenticators</name>
+    <name>Identity Server : Provisioning Connectors</name>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download facebook social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download SPML Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
                     <execution>
-                        <id>download_facebook_jar</id>
+                        <id>download_spml_provisioning_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -41,22 +42,22 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.facebook</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.facebook
+                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.spml</groupId>
+                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.spml
                                     </artifactId>
-                                    <version>${social.authenticator.facebook.version}</version>
+                                    <version>${provisioning.connector.spml.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Google social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download Google Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
                     <execution>
-                        <id>download_google_jar</id>
+                        <id>download_google_provisioning_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -64,23 +65,23 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.google</groupId>
+                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.google</groupId>
                                     <artifactId>
-                                        org.wso2.carbon.identity.application.authenticator.google
+                                        org.wso2.carbon.identity.provisioning.connector.google
                                     </artifactId>
-                                    <version>${social.authenticator.google.version}</version>
+                                    <version>${provisioning.connector.google.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Windows-Live social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download Salesforce Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
                     <execution>
-                        <id>download_windowslive_jar</id>
+                        <id>download_salesforce_provisioning_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -88,23 +89,22 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.live</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.identity.application.authenticator.live
+                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.salesforce</groupId>
+                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.salesforce
                                     </artifactId>
-                                    <version>${social.authenticator.windowslive.version}</version>
+                                    <version>${provisioning.connector.salesforce.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Yahoo authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <!-- Download SCIM Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
                     <execution>
-                        <id>download_yahoo_jar</id>
+                        <id>download_scim_provisioning_jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy</goal>
@@ -112,13 +112,13 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo
+                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.scim</groupId>
+                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.scim
                                     </artifactId>
-                                    <version>${social.authenticator.yahoo.version}</version>
+                                    <version>${provisioning.connector.scim.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
