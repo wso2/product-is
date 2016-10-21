@@ -32,7 +32,8 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        bundleContext.registerService(UserProfileClientService.class.getName(), new UserProfileClientServiceProxyImpl(), null);
+        bundleContext.registerService(UserProfileClientService.class.getName(),
+                new UserProfileClientServiceProxyImpl(), null);
         if (log.isDebugEnabled()) {
             log.debug("User profile BE Bundle Started.");
         }
