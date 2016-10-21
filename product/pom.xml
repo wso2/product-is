@@ -145,11 +145,14 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
+<<<<<<< HEAD
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+=======
+>>>>>>> e3ae06a... Fixing few of the pom.xml errors.
             <type>zip</type>
         </dependency>
 
@@ -168,6 +171,7 @@
         <!-- Sample Simple Authentication Component -->
 >>>>>>> 89611a7... Remove unwanted UUF features.
         <dependency>
+<<<<<<< HEAD
             <groupId>org.wso2.carbon.identity.commons</groupId>
             <artifactId>org.wso2.carbon.identity.common.feature</artifactId>
             <type>zip</type>
@@ -176,6 +180,21 @@
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
             <type>zip</type>
+=======
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+                <type>zip</type>
+>>>>>>> e3ae06a... Fixing few of the pom.xml errors.
         </dependency>
 
         <!-- Sample Simple Authentication Component -->
