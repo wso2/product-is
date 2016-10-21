@@ -28,23 +28,6 @@
     <artifactId>product-is</artifactId>
     <packaging>pom</packaging>
     <version>6.0.0-SNAPSHOT</version>
-    <dependencies>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>6.0.0</version>
-        </dependency>
-    </dependencies>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
     <description>WSO2 Identity Server</description>
@@ -1028,6 +1011,7 @@
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
         <org.apache.commons.commons-lang3.version>3.4</org.apache.commons.commons-lang3.version>
@@ -1063,6 +1047,8 @@
     </build>
 >>>>>>> b74c743... Temporary hide/fix on build issues in user-portal
 
+=======
+>>>>>>> a2541ae... Cleaning up product pom file.
     <developers>
         <developer>
             <name>Ruchith Fernando</name>
