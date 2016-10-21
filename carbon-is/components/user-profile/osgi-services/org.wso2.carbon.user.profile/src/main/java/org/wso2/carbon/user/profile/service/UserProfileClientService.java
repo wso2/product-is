@@ -19,6 +19,7 @@ package org.wso2.carbon.user.profile.service;
 import org.wso2.carbon.security.caas.user.core.bean.User;
 import org.wso2.carbon.security.caas.user.core.claim.Claim;
 import org.wso2.carbon.security.caas.user.core.claim.MetaClaim;
+import org.wso2.carbon.user.profile.bean.ChallengeQuestion;
 
 import java.util.Collection;
 import java.util.List;
@@ -51,6 +52,13 @@ public interface UserProfileClientService {
      * @return
      */
     Collection<Claim> getProfile(String userid);
+
+    /**
+     * Get the default profile of the given user
+     * @param claims
+     * @return
+     */
+    Collection<Claim> signUp(Collection<Claim> claims);
 
     /**
      *
@@ -101,16 +109,38 @@ public interface UserProfileClientService {
 
     /**
      * Get the template of a requested profile.
-     * @param profileTempleteId
+     * @param profileTemplateId
      * @return
      */
-    Collection<MetaClaim> getProfileTemplate (String profileTempleteId);
+    Collection<MetaClaim> getProfileTemplate (String profileTemplateId);
 
     /**
-     * The the list of available templates.
+     * Get the list of available templates.
      * @return
      */
     Map<Integer, String> getProfileTemplates ();
+
+    /**
+     * Update the password to a new one
+     * @param oldPassword
+     * @param newPassword
+     */
+    void updatePassword(char[] oldPassword, char[] newPassword) ;
+
+    /**
+     * Get the default list of challenge questions
+     * @return
+     */
+    Collection<String> getChallengeQuestions();
+
+    void updateChallengeQuestion(ChallengeQuestion question);
+    /**
+     * Update the existing challenge questions to this new set
+     * @param questions
+     */
+    void updateChallengeQuestions(Collection<ChallengeQuestion> questions);
+
+
 
 
 
