@@ -125,7 +125,6 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
-            <version>${uuf.version}</version>
             <type>zip</type>
         </dependency>
 
@@ -133,14 +132,17 @@
         <dependency>
             <groupId>org.wso2.carbon.security.userstore</groupId>
             <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-            <version>${carbon.security.userstore.jdbc.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
-            <version>${carbon.uuf.version}</version>
-            <type>zip</type>
+                <type>zip</type>
         </dependency>
     </dependencies>
 
