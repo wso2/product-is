@@ -35,8 +35,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.is</groupId>
-            <artifactId>org.wso2.carbon.is.default.uuf-theme</artifactId>
+            <groupId>org.wso2.carbon.is.userportal</groupId>
+            <artifactId>org.wso2.carbon.is.userportal.default.uuf-theme</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>tar</type>
         </dependency>
