@@ -20,7 +20,9 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.user.profile.impl.UserAccountAssociationClientServiceImpl;
 import org.wso2.carbon.user.profile.impl.UserProfileClientServiceProxyImpl;
+import org.wso2.carbon.user.profile.service.UserAccountAssociationClientService;
 import org.wso2.carbon.user.profile.service.UserProfileClientService;
 
 /**
@@ -34,15 +36,17 @@ public class Activator implements BundleActivator {
     public void start(BundleContext bundleContext) throws Exception {
         bundleContext.registerService(UserProfileClientService.class.getName(),
                 new UserProfileClientServiceProxyImpl(), null);
+        bundleContext.registerService(UserAccountAssociationClientService.class.getName(),
+                new UserAccountAssociationClientServiceImpl(), null);
         if (log.isDebugEnabled()) {
-            log.debug("User profile BE Bundle Started.");
+            log.debug("User profile UUF support Bundle Started.");
         }
     }
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
         if (log.isDebugEnabled()) {
-            log.debug("User profile BE Bundle Stopped.");
+            log.debug("User profile UUF support Bundle Stopped.");
         }
     }
 }

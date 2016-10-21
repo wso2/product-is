@@ -406,6 +406,12 @@
                 <version>${pax.url.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!--Pax exam Container Carbon-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.container</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.ow2.spec.ee</groupId>
                 <artifactId>ow2-jta-1.1-spec</artifactId>

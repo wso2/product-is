@@ -27,6 +27,7 @@ import org.wso2.carbon.security.caas.api.ProxyCallbackHandler;
 import org.wso2.carbon.security.caas.user.core.bean.User;
 import org.wso2.carbon.security.caas.user.core.claim.Claim;
 import org.wso2.carbon.security.caas.user.core.claim.MetaClaim;
+import org.wso2.carbon.user.profile.bean.ChallengeQuestion;
 import org.wso2.carbon.user.profile.service.UserProfileClientService;
 
 import javax.security.auth.login.LoginContext;
@@ -213,5 +214,30 @@ public class UserProfileClientServiceProxyImpl implements UserProfileClientServi
         metaClaims.put(1, claims);
 
         return metaClaims;
+    }
+
+    @Override
+    public Collection<Claim> signUp(Collection<Claim> claims) {
+        return null;
+    }
+
+    @Override
+    public void updatePassword(char[] oldPassword, char[] newPassword) {
+
+    }
+
+    @Override
+    public Collection<String> getChallengeQuestions() {
+        return null;
+    }
+
+    @Override
+    public void updateChallengeQuestion(ChallengeQuestion question) {
+
+    }
+
+    @Override
+    public void updateChallengeQuestions(Collection<ChallengeQuestion> questions) {
+
     }
 }
