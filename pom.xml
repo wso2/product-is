@@ -40,34 +40,9 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-all</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>6.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <name>WSO2 Identity Server</name>
@@ -444,6 +419,7 @@
             <!--End of UUF Components-->
             <!--UUF Themes-->
             <dependency>
+<<<<<<< HEAD
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
                 <version>${carbon.uuf.common.version}</version>
@@ -580,6 +556,31 @@
                 <!--<version>${carbon.uuf.version}</version>-->
                 <!--<type>zip</type>-->
             <!--</dependency>-->
+=======
+                <groupId>org.wso2.carbon.uuf</groupId>
+                <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
+                <version>${uuf.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+                <version>${carbon.security.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
+                <version>${carbon.security.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.uuf.sample</groupId>
+                <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+                <version>${carbon.uuf.version}</version>
+                <type>zip</type>
+            </dependency>
+>>>>>>> b0095c3... Fixing few of the pom.xml errors.
             <!--End of Dependent Features-->
 
             <!--Identity Server Dependencies-->
