@@ -4,8 +4,8 @@ package org.wso2.carbon.user.profile.bean;
  * User's challenge questions
  */
 public class ChallengeQuestion {
-    int questionId;
-    String answer;
+    private int questionId;
+    private String answer;
 
     public int getQuestionId() {
         return questionId;
