@@ -39,8 +39,9 @@
         <module>osgi-service/org.wso2.is.portal.user.client.profile</module>
         <module>osgi-service/org.wso2.is.portal.user.client.password</module>
         <module>osgi-service/org.wso2.is.portal.user.client.challengequestion</module>
-        <module>theme/org.wso2.is.portal.user.theme.default</module>
-        <module>app/org.wso2.is.portal.user.app</module>
+        <module>themes/org.wso2.carbon.uuf.is.portal.theme.default</module>
+        <module>components/org.wso2.carbon.uuf.is.foundation</module>
+        <module>app/org.wso2.carbon.is.user-portal</module>
     </modules>
 
 </project>

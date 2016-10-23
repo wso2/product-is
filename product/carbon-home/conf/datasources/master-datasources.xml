@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+<<<<<<< HEAD
  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
@@ -44,4 +45,52 @@
 
     </datasources>
 
+=======
+ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<datasources-configuration>
+
+    <providers>
+        <provider>org.wso2.carbon.datasource.rdbms.hikari.HikariDataSourceReader</provider>
+        <!--<provider>org.wso2.carbon.datasource.rdbms.tomcat.TomcatDataSourceReader</provider>-->
+    </providers>
+
+    <datasources>
+        <datasource>
+            <name>WSO2CarbonDB</name>
+            <description>The datasource used for identity server database</description>
+            <jndiConfig>
+                <name>jdbc/WSO2CarbonDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:h2:./database/WSO2IS_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;INIT=runscript from
+                        'dbscripts/identity-store/h2-is.sql'</url>
+                    <username>wso2carbon</username>
+                    <password>wso2carbon</password>
+                    <driverClassName>org.h2.Driver</driverClassName>
+                    <connectionTimeout>30000</connectionTimeout>
+                    <idleTimeout>600000</idleTimeout>
+                    <maxLifetime>1800000</maxLifetime>
+                    <maximumPoolSize>10</maximumPoolSize>
+                    <minimumIdle>10</minimumIdle>
+                    <autoCommit>false</autoCommit>
+                </configuration>
+            </definition>
+        </datasource>
+    </datasources>
+>>>>>>> b84e760... Refactoring c5 product-is branch
 </datasources-configuration>

@@ -1,10 +1,14 @@
 <!--
   ~ /*
 <<<<<<< HEAD
+<<<<<<< HEAD
   ~ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 =======
   ~ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+  ~ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> b84e760... Refactoring c5 product-is branch
   ~ *
   ~ * Licensed under the Apache License, Version 2.0 (the "License");
   ~ * you may not use this file except in compliance with the License.
@@ -35,6 +39,7 @@
                 <exclude>README.txt</exclude>
                 <exclude>LICENSE.txt</exclude>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
@@ -49,13 +54,18 @@
         </fileSet>
 =======
                 <exclude>release-notes.html</exclude>
+=======
+>>>>>>> b84e760... Refactoring c5 product-is branch
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
             </excludes>
         </fileSet>
+<<<<<<< HEAD
 
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+>>>>>>> b84e760... Refactoring c5 product-is branch
         <fileSet>
             <directory>..</directory>
             <outputDirectory>.</outputDirectory>
@@ -65,6 +75,7 @@
             </includes>
         </fileSet>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <fileSet>
             <directory>carbon-home/conf/transports</directory>
             <outputDirectory>conf/transports</outputDirectory>
@@ -73,6 +84,8 @@
 =======
 
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+>>>>>>> b84e760... Refactoring c5 product-is branch
         <fileSet>
             <directory>carbon-home/conf/osgi</directory>
             <outputDirectory>conf/osgi</outputDirectory>
@@ -90,6 +103,7 @@
         </fileSet>
         <fileSet>
             <directory>carbon-home/conf/identity</directory>
+<<<<<<< HEAD
 <<<<<<< HEAD
             <outputDirectory>conf/identity</outputDirectory>
             <fileMode>644</fileMode>
@@ -113,6 +127,9 @@
         <fileSet>
             <directory>carbon-home/conf/hazelcast</directory>
             <outputDirectory>conf/hazelcast</outputDirectory>
+=======
+            <outputDirectory>conf/identity</outputDirectory>
+>>>>>>> b84e760... Refactoring c5 product-is branch
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
@@ -125,9 +142,12 @@
             <outputDirectory>deployment</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
-
     </fileSets>
+<<<<<<< HEAD
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
+=======
+
+>>>>>>> b84e760... Refactoring c5 product-is branch
     <files>
 
     </files>

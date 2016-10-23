@@ -29,11 +29,19 @@ This is based on the revolutionary WSO2 Carbon framework. All the major features
 New Features
 ============
 
+<<<<<<< HEAD
 C5 User Portal
+=======
+*
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 Other Key Features
 =============
 
+<<<<<<< HEAD
+=======
+*
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 System Requirements
 ===================
@@ -42,7 +50,11 @@ System Requirements
 
 2. (processor)
 
+<<<<<<< HEAD
 3. JDK 1.8
+=======
+3. (jdk)
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 4. (browser/javascript)
 
@@ -51,14 +63,22 @@ For more details see (link to docs)
 Building Identity Server from Source
 ====================================
 
+<<<<<<< HEAD
 https://docs.wso2.com/display/IS600/Downloading+and+Running+the+Product
+=======
+(link to docs)
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 Project Resources
 =================
 
 * Home page           : http://wso2.com/products/identity-server
 * Library             : http://wso2.org/library/identity
+<<<<<<< HEAD
 * Documentation       : https://docs.wso2.com/display/IS600/WSO2+Identity+Server+Documentation
+=======
+* Documentation       : https://docs.wso2.com/display/IS520/WSO2+Identity+Server+Documentation
+>>>>>>> b84e760... Refactoring c5 product-is branch
 * JIRA-Issue Tracker  : https://wso2.org/jira/browse/IDENTITY
 * Forums              : http://stackoverflow.com/questions/tagged/wso2/
 * WSO2 Developer List : dev@wso2.org
@@ -68,7 +88,11 @@ Project Resources
 Installation and Running
 ========================
 
+<<<<<<< HEAD
 https://docs.wso2.com/display/IS600/Downloading+and+Running+the+Product
+=======
+(link to docs)
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 Upgrading from a Previous Version
 =================================
@@ -78,12 +102,21 @@ Upgrading from a Previous Version
 Known Issues
 ============
 
+<<<<<<< HEAD
 All known issues have been recorded at
+=======
+All known issues have been recorded at https://wso2.org/jira/issues/?filter=13028
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 Issues Fixed In This Release
 ============================
 
+<<<<<<< HEAD
 All issues fixed for WSO2 Identity Server 6.0.0-m1 release have been recorded at https://wso2.org/jira/issues/?filter=13640
+=======
+All issues fixed for WSO2 Identity Server {product.version} release have been recorded at https://wso2
+.org/jira/issues/?filter=13027
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -174,7 +207,19 @@ WSO2 Identity Server Distribution Directory Structure
         Contains additional resources that may be required.
     - security
     - tmp
+<<<<<<< HEAD
         Used for storing temporary files, and is pointed to by the java.io.tmpdir System property.
+=======
+      Used for storing temporary files, and is pointed to by the
+      java.io.tmpdir System property.
+
+
+    - LICENSE.txt
+      Apache License 2.0 under which WSO2 Carbon is distributed.
+
+    - README.txt
+      This document.
+>>>>>>> b84e760... Refactoring c5 product-is branch
 
 Secure sensitive information in carbon configuration files
 ----------------------------------------------------------
@@ -183,12 +228,21 @@ Secure sensitive information in carbon configuration files
 
 Support
 =======
+<<<<<<< HEAD
 
 (link to support - http://wso2.com/support/)
 
 Crypto Notice
 =============
 
+=======
+
+(link to support - http://wso2.com/support/)
+
+Crypto Notice
+=============
+
+>>>>>>> b84e760... Refactoring c5 product-is branch
 This distribution includes cryptographic software.  The country in
 which you currently reside may have restrictions on the import,
 possession, use, and/or re-export to another country, of

@@ -28,7 +28,6 @@ version="5.1.0" useFeatures="true" includeLaunchers="true">
            fact the second line sets reconcile to false (see org.eclipse.equinox.p2.publisher.eclipse.ConfigCUsAction#publishBundleCUs) -->
       <property name="org.eclipse.update.reconcile" value="false" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4"/>
-
       <property name="org.eclipse.equinox.simpleconfigurator.useReference" value="true" />
    </configurations>
 
