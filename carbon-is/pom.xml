@@ -35,8 +35,4 @@
     <name>WSO2 Identity Server - User Portal</name>
     <url>http://wso2.org</url>
 
-    <modules>
-        <module>components/identity-provider</module>
-    </modules>
-
 </project>
