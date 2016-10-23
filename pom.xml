@@ -89,6 +89,7 @@
     </scm>
 
     <modules>
+        <module>carbon-is</module>
         <module>product</module>
         <module>portal/user</module>
     </modules>
