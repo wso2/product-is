@@ -1,0 +1,126 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: WSO2 Identity Provider API
+  description: |
+    This document specifies a **RESTful API** for WSO2 **Identity Server** .
+    It is written with [swagger 2](http://swagger.io/).
+  version: "6.0.0-SNAPSHOT"
+  contact:
+    name: "WSO2"
+    url: "http://wso2.com/products/identity-server/"
+    email: "architecture@wso2.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+# the domain of the service
+# this is configured by the customer during deployment
+# the given host is just an example
+host: is.wso2.com
+# array of all schemes that your API supports
+schemes:
+  - https
+  - http
+# will be prefixed to all paths
+basePath: /identity/idp
+# the following media types can be passed as input in message bodies of the API.
+# the actual media type must be specified in the Content-Type header field of the request.
+# the default is json, i.e. the Content-Type header is not needed to be set, but supporting it serves extensibility.
+consumes:
+  - application/json
+# the following media types may be passed as output in message bodies of the API.
+# the media type(s) consumable by the requestor is specified in the Accept header field of the corresponding request.
+# the actual media type returned will be specfied in the Content-Type header field of the of the response.
+# the default of the Accept header is json, i.e. there is not needed to set the value, but supporting it serves extensibility.
+produces:
+  - application/json
+paths:
+  /products:
+    get:
+      summary: Product Types
+      description: |
+        The Products endpoint returns information about the *Uber* products
+        offered at a given location. The response includes the display name
+        and other details about each product, and lists the products in the
+        proper display order.
+      parameters:
+        - name: latitude
+          in: query
+          description: Latitude component of location.
+          required: true
+          type: number
+          format: double
+        - name: longitude
+          in: query
+          description: Longitude component of location.
+          required: true
+          type: number
+          format: double
+      tags:
+        - Products
+      responses:
+        200:
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  PriceEstimate:
+    type: object
+    properties:
+      product_id:
+        type: string
+        description: Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles
+      currency_code:
+        type: string
+        description: "[ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code."
+      display_name:
+        type: string
+        description: Display name of product.
+      estimate:
+        type: string
+        description: Formatted string of estimate in local currency of the start location. Estimate could be a range, a single number (flat rate) or "Metered" for TAXI.
+      low_estimate:
+        type: number
+        description: Lower bound of the estimated price.
+      high_estimate:
+        type: number
+        description: Upper bound of the estimated price.
+      surge_multiplier:
+        type: number
+        description: Expected surge multiplier. Surge is active if surge_multiplier is greater than 1. Price estimate already factors in the surge multiplier.
+  Activities:
+    type: object
+    properties:
+      offset:
+        type: integer
+        format: int32
+        description: Position in pagination.
+      limit:
+        type: integer
+        format: int32
+        description: Number of items to retrieve (100 max).
+      count:
+        type: integer
+        format: int32
+        description: Total number of items available.
+      history:
+        type: array
+        items:
+          $ref: '#/definitions/Activity'
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
