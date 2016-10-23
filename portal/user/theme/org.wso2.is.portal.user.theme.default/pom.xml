@@ -38,7 +38,7 @@
             <plugin>
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
-                <version>${carbon-uuf-maven-plugin.version}</version>
+                <version>${carbon.uuf.maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>create</id>
