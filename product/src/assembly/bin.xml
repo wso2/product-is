@@ -1,6 +1,6 @@
 <!--
   ~ /*
-  ~ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~ *
   ~ * Licensed under the Apache License, Version 2.0 (the "License");
   ~ * you may not use this file except in compliance with the License.
@@ -30,13 +30,11 @@
             <excludes>
                 <exclude>README.txt</exclude>
                 <exclude>LICENSE.txt</exclude>
-                <exclude>release-notes.html</exclude>
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
             </excludes>
         </fileSet>
-
         <fileSet>
             <directory>..</directory>
             <outputDirectory>.</outputDirectory>
@@ -45,7 +43,6 @@
                 <include>LICENSE</include>
             </includes>
         </fileSet>
-
         <fileSet>
             <directory>carbon-home/conf/osgi</directory>
             <outputDirectory>conf/osgi</outputDirectory>
@@ -63,12 +60,7 @@
         </fileSet>
         <fileSet>
             <directory>carbon-home/conf/identity</directory>
-            <outputDirectory>conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>carbon-home/conf/hazelcast</directory>
-            <outputDirectory>conf/hazelcast</outputDirectory>
+            <outputDirectory>conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
@@ -81,8 +73,8 @@
             <outputDirectory>deployment</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
-
     </fileSets>
+
     <files>
 
     </files>

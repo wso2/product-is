@@ -24,7 +24,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.is</groupId>
+    <groupId>org.wso2.is</groupId>
     <artifactId>product-is</artifactId>
     <packaging>pom</packaging>
     <version>6.0.0-SNAPSHOT</version>
@@ -47,18 +47,8 @@
     </scm>
 
     <modules>
-        <!--Components-->
-
-        <!--Features-->
-
-        <!--Tests-->
-        <!--<module>tests</module>-->
-
-        <!--Tools-->
-        <!--<module>tools</module>-->
-
-        <!--Product-->
         <module>product</module>
+        <module>portal/user</module>
     </modules>
 
     <dependencyManagement>
