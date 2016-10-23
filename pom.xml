@@ -49,6 +49,7 @@
     <modules>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <module>portal</module>
 =======
         <!--Components-->
@@ -66,6 +67,9 @@
         <module>product</module>
         <module>tests</module>
 =======
+=======
+        <module>carbon-is</module>
+>>>>>>> fd97d4c... Adding C5 Identity Provider implementation
         <module>product</module>
         <module>portal/user</module>
 >>>>>>> b84e760... Refactoring c5 product-is branch
