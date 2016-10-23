@@ -39,6 +39,7 @@
         <module>osgi-service/org.wso2.is.portal.user.client.profile</module>
         <module>osgi-service/org.wso2.is.portal.user.client.password</module>
         <module>osgi-service/org.wso2.is.portal.user.client.challengequestion</module>
+        <module>osgi-service/org.wso2.is.portal.user.client.association</module>
         <module>theme/org.wso2.is.portal.user.theme.default</module>
         <module>app/org.wso2.is.portal.user.app</module>
     </modules>
