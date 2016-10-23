@@ -20,6 +20,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <artifactId>org.wso2.is.portal.user.app</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>carbon-feature</packaging>
+
+    <name>WSO2 Identity Server - UUF App - User Portal</name>
+    <url>http://wso2.org</url>
+
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.is.portal.user</artifactId>
@@ -27,18 +34,13 @@
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>org.wso2.is.portal.user.app</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-
-    <name>WSO2 Identity Server - UUF App - User Portal</name>
-    <url>http://wso2.org</url>
-
     <dependencies>
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.theme.default</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-            <type>tar</type>
+            <type>zip</type>
+            <classifier>uuf-theme</classifier>
         </dependency>
     </dependencies>
 
@@ -53,7 +55,7 @@
                         <id>create</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>create-application</goal>
+                            <goal>create-app</goal>
                         </goals>
                         <configuration>
                             <instructions>
