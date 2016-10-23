@@ -20,18 +20,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <artifactId>org.wso2.is.portal.user.theme.default</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>uuf-theme</packaging>
+
+    <name>WSO2 Identity Server - UUF Theme - Default</name>
+    <url>http://wso2.org</url>
+
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.is.portal.user</artifactId>
         <relativePath>../../pom.xml</relativePath>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
-
-    <artifactId>org.wso2.is.portal.user.theme.default</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-
-    <name>WSO2 Identity Server - UUF Theme - Default</name>
-    <url>http://wso2.org</url>
 
     <build>
         <plugins>
