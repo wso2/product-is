@@ -274,19 +274,19 @@
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.core.feature</artifactId>
-                <version>${uuf.version}</version>
+                <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.hbs.feature</artifactId>
-                <version>${uuf.version}</version>
+                <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j.feature</artifactId>
-                <version>${uuf.version}</version>
+                <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -310,7 +310,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
-                <version>${uuf.version}</version>
+                <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -520,9 +520,10 @@
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
+        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
+
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0-SNAPSHOT</msf4j.version>
-        <uuf.version>1.0.0-SNAPSHOT</uuf.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
