@@ -1,0 +1,58 @@
+
+
+Create a tenant addition listener to create resident IDP for that tenant
+
+Create a user operation event listener to clear caches when role names or claimURIs are updated (provisioning
+role, subject claim, etc.)
+
+Create identity.common bundle to read identity.yaml. Expose a OSGi service from it. Subscribe for it's service and
+wait for it to be initialized. Get the configuration element corresponding to identity.provider and parse the
+configurations.
+
+Add methods in identity.common bundle to replace actual passwords by random passwords and vice verse to show
+passwords in UI. Replacing of actual password by random ones are done at admin service level.
+Discuss and finalize on file based IDPs and shared IDPs. Shared IDPs were removed at admin service level from sending
+to UI.
+
+If shared IDPs are not allowed to be added from UI validate it. E.g. if we are using IDP name prefix to identify
+shared IDPs need to validate for it when adding IDPs via admin service call.
+Create interceptor for service methods. Implement audit logging and validation using interceptors
+
+Need to design and implement Home Realm Discovery (HRD) properly. Removed homeRealmId and federationHub from
+IdentityProvider for the time being.
+
+Create IdentityException in identity.common and extend IdentityProviderException from it
+
+Create suitable local caches. Discuss further on distributed caching requirements and implementation.
+
+Check what does CarbonUtils.checkSecurity() do in caches class.
+
+Check why IdentityProviderUtil.removeRandomPasswords() was used in CacheBackedIdPMgtDAO
+
+Removed alias for IdentityProvider because we don't need it
+
+Removed primary from IdentityProvider because its not used anymore
+
+Removed "enabled" from IdentityProvider. It must be mapped in a different level. It's not part of IDP model. Model
+only has a proxy method isEnabled(). Removed isValid() since it doesn't look belong to model object after building it.
+
+Removed blocking from ProvisioningConnectorConfig since it needs to come from SP association.
+Need to create separate DTOs to transfer data from UI to backend. E.g. enabled, default, etc. Don't use model class
+for these stuff. Model classes will only have the proxy methods to retrieve these info.
+
+There are 4 kinds of data categories we need to consider in IDP.
+ - IDP metadata
+ - IDP data specific attribute data (which we can change/not meta)
+ - Data that is specific to SP-IDP relationship. E.g. OIDC scopes to be sent to IDP side.
+ - Data that can be specific to IDP but can be overridden at SP level. E.g. provisioning filter?
+
+Inbound provisioning requests can be federated to user store or IDP. Can't do either one. Always does both. Need to
+fix it.
+
+Similarly need to have IS proxying jit requests to IDP. This is a IDP-IDP relationship. E.g. Provision all the users
+federated from Google to SF. Currently to do this we need enable jit in all the SPs we have.
+
+Do we have SP-SP relationships - can SP grouping for SSO be considered a relationship? Or is it just a specific
+feature we need to provider. It may be pointless to provide generic relationship feature just to solve on requirement.
+Do we need SP-userstore relationship for jit provisioning?
+
