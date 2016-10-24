@@ -1140,9 +1140,178 @@
                 <version>${carbon.multitenancy.version}</version>
             </dependency>
 
+            <!-- Outbound Authenticators -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.oidc</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.oidc</artifactId>
+                <version>${identity.outbound.auth.oidc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.sts.passive</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.passive.sts</artifactId>
+                <version>${identity.outbound.auth.passive.sts.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.saml2</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.samlsso</artifactId>
+                <version>${identity.outbound.auth.samlsso.version}</version>
+            </dependency>
+
+            <!-- Social Authenticators -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.facebook</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.facebook</artifactId>
+                <version>${social.authenticator.facebook.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.google</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.google</artifactId>
+                <version>${social.authenticator.google.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.live</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.live</artifactId>
+                <version>${social.authenticator.windowslive.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo</artifactId>
+                <version>${social.authenticator.yahoo.version}</version>
+            </dependency>
+
+            <!-- Provisioning Connectors -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.spml</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.spml</artifactId>
+                <version>${provisioning.connector.spml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.google</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.google</artifactId>
+                <version>${provisioning.connector.google.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.salesforce</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.salesforce</artifactId>
+                <version>${provisioning.connector.salesforce.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.scim</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.scim</artifactId>
+                <version>${provisioning.connector.scim.version}</version>
+            </dependency>
+
+            <!-- Local Authenticators -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth</artifactId>
+                <version>${identity.local.auth.basicauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.iwa</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.iwa</artifactId>
+                <version>${identity.local.auth.iwa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.fido</artifactId>
+                <version>${identity.local.auth.fido.version}</version>
+            </dependency>
+
             <!--dependencies from this point is used in p2 profile gen, added here to get them updated along with
-            versions plugin (version plugin only reads the dependencies in dependencyManagement,
-            and dependenies section-->
+ versions plugin (version plugin only reads the dependencies in dependencyManagement,
+ and dependenies section-->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.carbon.auth.saml2</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.saml2.sso.feature</artifactId>
+                <version>${identity.carbon.auth.saml2.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.requestpath.basic</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature</artifactId>
+                <version>${identity.outbound.auth.requestpath.basicauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.carbon.auth.mutualssl</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.mutualssl.feature</artifactId>
+                <version>${identity.carbon.auth.mutual.ssl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.notification.email</groupId>
+                <artifactId>org.wso2.carbon.identity.notification.mgt.email.feature</artifactId>
+                <version>${identity.notification.email.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.notification.json</groupId>
+                <artifactId>org.wso2.carbon.identity.notification.mgt.json.feature</artifactId>
+                <version>${identity.notification.json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.workflow.user</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.workflow.feature</artifactId>
+                <version>${identity.user.workflow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.userstore.ldap</groupId>
+                <artifactId>org.wso2.carbon.ldap.server.feature</artifactId>
+                <version>${identity.userstore.ldap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.userstore.remote</groupId>
+                <artifactId>org.wso2.carbon.identity.user.store.remote.feature</artifactId>
+                <version>${identity.userstore.remote.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.carbon.auth.iwa</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.iwa.feature</artifactId>
+                <version>${identity.carbon.auth.iwa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.workflow.template.multisteps</groupId>
+                <artifactId>org.wso2.carbon.identity.workflow.template.server.feature</artifactId>
+                <version>${identity.workflow.template.multisteps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.requestpath.oauth</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature</artifactId>
+                <version>${identity.outbound.auth.requestpath.oauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.tool.validator.sso.saml2</groupId>
+                <artifactId>org.wso2.carbon.identity.tools.saml.validator.feature</artifactId>
+                <version>${identity.tool.samlsso.validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.datapublisher.authentication</groupId>
+                <artifactId>org.wso2.carbon.identity.data.publisher.application.authentication.server.feature</artifactId>
+                <version>${identity.data.publisher.authentication.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.data.publisher.oauth</groupId>
+                <artifactId>org.wso2.carbon.identity.data.publisher.oauth.server.feature</artifactId>
+                <version>${identity.data.publisher.oauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.data.publisher.audit</groupId>
+                <artifactId>org.wso2.carbon.identity.data.publisher.audit.user.operation.server.feature</artifactId>
+                <version>${identity.data.publisher.audit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.auth.rest</groupId>
+                <artifactId>org.wso2.carbon.identity.auth.server.feature</artifactId>
+                <version>${carbon.identity.auth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.event.handler.accountlock</groupId>
+                <artifactId>org.wso2.carbon.identity.handler.event.account.lock.feature</artifactId>
+                <version>${identity.event.handler.account.lock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+                <artifactId>org.wso2.carbon.email.mgt.feature</artifactId>
+                <version>${identity.event.handler.notification.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.identity.application.authz.xacml</groupId>
@@ -1225,8 +1394,6 @@
         <identity.inbound.auth.sts.version>5.1.5</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.3</identity.outbound.auth.requestpath.basicauth.version>
         <identity.carbon.auth.mutual.ssl.version>5.1.2</identity.carbon.auth.mutual.ssl.version>
-        <identity.notification.email.version>5.1.1</identity.notification.email.version>
-        <identity.notification.json.version>5.1.1</identity.notification.json.version>
         <identity.user.account.association.version>5.1.2</identity.user.account.association.version>
         <identity.user.workflow.version>5.1.2</identity.user.workflow.version>
         <identity.user.ws.version>5.1.3</identity.user.ws.version>
@@ -1277,6 +1444,10 @@
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>0.1.0</identity.metadata.saml.version>
+
+        <!-- Deprecated identity repos -->
+        <identity.notification.email.version>5.1.1</identity.notification.email.version>
+        <identity.notification.json.version>5.1.1</identity.notification.json.version>
 
         <!--Identity Repo Versions End-->
 
