@@ -520,7 +520,7 @@
         <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
-        <carbon.uuf.maven-plugin.version>1.0.0-SNAPSHOT</carbon.uuf.maven-plugin.version>
+        <carbon.uuf.maven-plugin.version>1.0.0-m5</carbon.uuf.maven-plugin.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0-SNAPSHOT</msf4j.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
