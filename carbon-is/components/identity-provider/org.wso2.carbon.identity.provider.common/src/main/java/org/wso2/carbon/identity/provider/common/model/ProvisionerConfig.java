@@ -26,6 +26,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Configuration of an provisioning entity.
+ */
 public class ProvisionerConfig implements Serializable {
 
     private static final long serialVersionUID = -4569973060498183209L;
@@ -56,6 +59,9 @@ public class ProvisionerConfig implements Serializable {
         return isJitEnabled;
     }
 
+    /**
+     * Builds the configuration of a provisioning connector.
+     */
     public class ProvisioningConnectorConfigBuilder {
 
         protected String name;
@@ -78,7 +84,7 @@ public class ProvisionerConfig implements Serializable {
         }
 
         public ProvisioningConnectorConfigBuilder setProperties(Collection<IdentityConnectorProperty> properties) {
-            if(CollectionUtils.isNotEmpty(properties)) {
+            if (CollectionUtils.isNotEmpty(properties)) {
                 this.properties = new HashSet<IdentityConnectorProperty>(properties);
             }
             return this;

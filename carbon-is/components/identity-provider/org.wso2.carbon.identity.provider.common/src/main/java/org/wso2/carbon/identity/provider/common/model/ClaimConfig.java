@@ -22,6 +22,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
+/**
+ * Representation of a user claim configuration.
+ */
 public class ClaimConfig implements Serializable {
 
     private static final long serialVersionUID = -3886962663799281628L;
@@ -37,12 +40,15 @@ public class ClaimConfig implements Serializable {
         return dialect;
     }
 
+    /**
+     * Builds the claim configuration to be used by the IDPs.
+     */
     public static class ClaimConfigBuilder {
 
         private String dialect;
 
         public ClaimConfigBuilder(String dialect) {
-            if(StringUtils.isNoneBlank(dialect)) {
+            if (StringUtils.isNoneBlank(dialect)) {
                 this.dialect = dialect;
             } else {
                 throw new IllegalArgumentException("Invalid claim dialect: " + dialect);

@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Representation of a property used by the identity connectors.
+ */
 public class IdentityConnectorProperty extends IdentityProperty {
 
     private static final long serialVersionUID = -3072914320353287472L;
@@ -32,23 +35,6 @@ public class IdentityConnectorProperty extends IdentityProperty {
         super(builder);
         this.connectorType = builder.connectorType;
         this.connectorName = builder.connectorName;
-    }
-
-    public class IdentityConnectorPropertyBuilder extends IdentityPropertyBuilder {
-
-        private ConnectorType connectorType;
-        private String connectorName;
-
-        public IdentityConnectorPropertyBuilder(ConnectorType connectorType, String connectorName, String
-                propertyName, String dataType) {
-            super(propertyName, dataType);
-            this.connectorType = connectorType;
-            this.connectorName = connectorName;
-        }
-
-        public IdentityProperty build() {
-            return new IdentityConnectorProperty(this);
-        }
     }
 
     @Override
@@ -78,5 +64,25 @@ public class IdentityConnectorProperty extends IdentityProperty {
         result = 31 * result + connectorType.hashCode();
         result = 31 * result + connectorName.hashCode();
         return result;
+    }
+
+    /**
+     * Builds the identity connector property.
+     */
+    public class IdentityConnectorPropertyBuilder extends IdentityPropertyBuilder {
+
+        private ConnectorType connectorType;
+        private String connectorName;
+
+        public IdentityConnectorPropertyBuilder(ConnectorType connectorType, String connectorName, String propertyName,
+                String dataType) {
+            super(propertyName, dataType);
+            this.connectorType = connectorType;
+            this.connectorName = connectorName;
+        }
+
+        public IdentityProperty build() {
+            return new IdentityConnectorProperty(this);
+        }
     }
 }

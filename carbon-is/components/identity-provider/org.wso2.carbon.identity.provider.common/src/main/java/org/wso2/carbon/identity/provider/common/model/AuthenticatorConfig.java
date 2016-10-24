@@ -26,6 +26,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represent the configurations of an authenticator of IDP.
+ */
 public class AuthenticatorConfig implements Serializable {
 
     private static final long serialVersionUID = -4569973060498183209L;
@@ -56,6 +59,9 @@ public class AuthenticatorConfig implements Serializable {
         return isEnabled;
     }
 
+    /**
+     * Builds the configuration of an authenticator of IDP.
+     */
     public class AuthenticatorConfigBuilder {
 
         protected String name;
@@ -72,7 +78,7 @@ public class AuthenticatorConfig implements Serializable {
         }
 
         public AuthenticatorConfigBuilder setProperties(Collection<IdentityConnectorProperty> properties) {
-            if(CollectionUtils.isNotEmpty(properties)) {
+            if (CollectionUtils.isNotEmpty(properties)) {
                 this.properties = new HashSet<IdentityConnectorProperty>(properties);
             }
             return this;

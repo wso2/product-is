@@ -25,30 +25,36 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Role configuration within an Identity Provider including the mappings.
+ */
 public class RoleConfig implements Serializable {
 
     private static final long serialVersionUID = 8637428653822260106L;
 
-    private Map<String,String> roleMapping = new HashMap<String, String>();
+    private Map<String, String> roleMapping = new HashMap<String, String>();
 
     private RoleConfig(RoleConfigBuilder builder) {
         this.roleMapping = builder.roleMapping;
     }
 
-    public Map<String,String> getRoleMapping(){
+    public Map<String, String> getRoleMapping() {
         return MapUtils.unmodifiableMap(roleMapping);
     }
 
+    /**
+     * Builds the role configuration with the given mappings.
+     */
     public static class RoleConfigBuilder {
 
-        private Map<String,String> roleMapping = new HashMap<String, String>();
+        private Map<String, String> roleMapping = new HashMap<String, String>();
 
         public RoleConfig build() {
             return new RoleConfig(this);
         }
 
-        public RoleConfig.RoleConfigBuilder setRoleMappings(Map<String,String> roleMap) {
-            if(MapUtils.isNotEmpty(roleMap)) {
+        public RoleConfig.RoleConfigBuilder setRoleMappings(Map<String, String> roleMap) {
+            if (MapUtils.isNotEmpty(roleMap)) {
                 this.roleMapping.clear();
                 this.roleMapping.putAll(roleMap);
             }
@@ -62,7 +68,7 @@ public class RoleConfig implements Serializable {
             return this;
         }
 
-        public RoleConfig.RoleConfigBuilder addRoleMappings(Map<String,String> roleMap) {
+        public RoleConfig.RoleConfigBuilder addRoleMappings(Map<String, String> roleMap) {
             if (MapUtils.isNotEmpty(roleMap)) {
                 this.roleMapping.putAll(roleMap);
             }

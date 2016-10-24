@@ -24,6 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * Representation of meta information of an Identity Provider.
+ */
 public class MetaIdentityProvider implements Serializable {
 
     private static final long serialVersionUID = -4977395047974321120L;
@@ -35,13 +38,23 @@ public class MetaIdentityProvider implements Serializable {
 
     // idp:cert -> 1..n
     // certs must be managed in keystore component
-    private Map<String,String> certMap;
+    private Map<String, String> certMap;
 
     // Do we need to have ClaimConfig object? Or can we directly store the claimDialectURI? UserId and RoleID will be
     // defined in ClaimMgt
     private ClaimConfig claimConfig;
 
     private RoleConfig roleConfig;
+
+    private MetaIdentityProvider(MetaIdentityProviderBuilder builder) {
+        this.identityProviderId = builder.identityProviderId;
+        this.name = builder.name;
+        this.displayName = builder.displayName;
+        this.description = builder.description;
+        this.certMap = builder.certMap;
+        this.claimConfig = builder.claimConfigBuilder.build();
+        this.roleConfig = builder.roleConfigBuilder.build();
+    }
 
     public int getIdentityProviderId() {
         return identityProviderId;
@@ -71,29 +84,22 @@ public class MetaIdentityProvider implements Serializable {
         return roleConfig;
     }
 
-    private MetaIdentityProvider(MetaIdentityProviderBuilder builder) {
-        this.identityProviderId = builder.identityProviderId;
-        this.name = builder.name;
-        this.displayName = builder.displayName;
-        this.description = builder.description;
-        this.certMap = builder.certMap;
-        this.claimConfig = builder.claimConfigBuilder.build();
-        this.roleConfig = builder.roleConfigBuilder.build();
-    }
-
+    /**
+     * Builder class for meta representation of an identity provider.
+     */
     public class MetaIdentityProviderBuilder {
 
         private int identityProviderId;
         private String name;
         private String displayName;
         private String description;
-        private Map<String,String> certMap;
+        private Map<String, String> certMap;
         private ClaimConfig.ClaimConfigBuilder claimConfigBuilder;
         private RoleConfig.RoleConfigBuilder roleConfigBuilder = new RoleConfig.RoleConfigBuilder();
 
         public MetaIdentityProviderBuilder(int identityProviderId, String name) {
             this.identityProviderId = identityProviderId;
-            if(StringUtils.isNoneBlank(name)) {
+            if (StringUtils.isNoneBlank(name)) {
                 this.name = name;
             } else {
                 throw new IllegalArgumentException("Invalid Identity Provider name: " + name);
@@ -110,8 +116,8 @@ public class MetaIdentityProvider implements Serializable {
             return this;
         }
 
-        public MetaIdentityProviderBuilder setCerts(Map<String,String> certMap) {
-            if(MapUtils.isNotEmpty(certMap)) {
+        public MetaIdentityProviderBuilder setCerts(Map<String, String> certMap) {
+            if (MapUtils.isNotEmpty(certMap)) {
                 this.certMap.clear();
                 this.certMap.putAll(certMap);
             }
@@ -125,7 +131,7 @@ public class MetaIdentityProvider implements Serializable {
             return this;
         }
 
-        public MetaIdentityProviderBuilder addCerts(Map<String,String> certMap) {
+        public MetaIdentityProviderBuilder addCerts(Map<String, String> certMap) {
             if (MapUtils.isNotEmpty(certMap)) {
                 this.certMap.putAll(certMap);
             }
@@ -137,7 +143,7 @@ public class MetaIdentityProvider implements Serializable {
             return this;
         }
 
-        public MetaIdentityProviderBuilder setRoleMappings(Map<String,String> roleMap) {
+        public MetaIdentityProviderBuilder setRoleMappings(Map<String, String> roleMap) {
             this.roleConfigBuilder.setRoleMappings(roleMap);
             return this;
         }
@@ -147,7 +153,7 @@ public class MetaIdentityProvider implements Serializable {
             return this;
         }
 
-        public MetaIdentityProviderBuilder addRoleMappings(Map<String,String> roleMap) {
+        public MetaIdentityProviderBuilder addRoleMappings(Map<String, String> roleMap) {
             this.roleConfigBuilder.addRoleMappings(roleMap);
             return this;
         }

@@ -18,11 +18,19 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Representation of claim used for provisioning purpose.
+ */
 public class ProvisioningClaim {
 
     private int claimId;
     private DataType dataType;
     private Object defaultValue;
+
+    private ProvisioningClaim(ProvisioningClaimBuilder builder) {
+        this.claimId = builder.claim;
+        this.dataType = builder.dataType;
+    }
 
     public int getClaimId() {
         return claimId;
@@ -36,11 +44,9 @@ public class ProvisioningClaim {
         return defaultValue;
     }
 
-    private ProvisioningClaim(ProvisioningClaimBuilder builder) {
-        this.claimId = builder.claim;
-        this.dataType = builder.dataType;
-    }
-
+    /**
+     * Builds a provisioning claim.
+     */
     protected static class ProvisioningClaimBuilder {
 
         private int claim;
