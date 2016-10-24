@@ -421,6 +421,11 @@
                 <artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.container</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
