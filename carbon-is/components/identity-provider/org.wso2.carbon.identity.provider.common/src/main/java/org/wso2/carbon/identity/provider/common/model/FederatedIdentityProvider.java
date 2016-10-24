@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Represents a federated identity provider.
+ */
 public class FederatedIdentityProvider extends IdentityProvider {
 
     protected FederatedIdentityProvider(MetaIdentityProvider metaIdentityProvider) {

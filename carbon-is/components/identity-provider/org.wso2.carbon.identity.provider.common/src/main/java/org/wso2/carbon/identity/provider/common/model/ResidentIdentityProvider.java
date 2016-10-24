@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Resident identity provider representation.
+ */
 public class ResidentIdentityProvider extends IdentityProvider {
 
     protected ResidentIdentityProvider(MetaIdentityProvider metaIdentityProvider) {

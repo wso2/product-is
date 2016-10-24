@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Basic representation of an IDP.
+ */
 public class IdentityProviderProperty extends IdentityProperty {
 
     private static final long serialVersionUID = 9110101982938078646L;
@@ -27,21 +30,6 @@ public class IdentityProviderProperty extends IdentityProperty {
     protected IdentityProviderProperty(IdentityProviderPropertyBuilder builder) {
         super(builder);
         this.identityProviderName = builder.identityProviderName;
-    }
-
-    public class IdentityProviderPropertyBuilder extends IdentityPropertyBuilder {
-
-        private String identityProviderName;
-
-        public IdentityProviderPropertyBuilder(String identityProviderName, String propertyName,
-                                               String dataType) {
-            super(propertyName, dataType);
-            this.identityProviderName = identityProviderName;
-        }
-
-        public IdentityProperty build() {
-            return new IdentityProviderProperty(this);
-        }
     }
 
     @Override
@@ -67,5 +55,22 @@ public class IdentityProviderProperty extends IdentityProperty {
         int result = super.hashCode();
         result = 31 * result + identityProviderName.hashCode();
         return result;
+    }
+
+    /**
+     * Builds the basic representation of an IDP.
+     */
+    public class IdentityProviderPropertyBuilder extends IdentityPropertyBuilder {
+
+        private String identityProviderName;
+
+        public IdentityProviderPropertyBuilder(String identityProviderName, String propertyName, String dataType) {
+            super(propertyName, dataType);
+            this.identityProviderName = identityProviderName;
+        }
+
+        public IdentityProperty build() {
+            return new IdentityProviderProperty(this);
+        }
     }
 }

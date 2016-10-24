@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Types of connectors available for IDPs.
+ */
 public enum ConnectorType {
     AUTHENTICATOR, PROVISIONER;
 }

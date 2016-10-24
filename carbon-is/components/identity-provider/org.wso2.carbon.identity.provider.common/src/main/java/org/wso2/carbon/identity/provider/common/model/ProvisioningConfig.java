@@ -23,7 +23,9 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.Collection;
 import java.util.HashSet;
 
-// Do we need to remove this class and move all the attributes to IDP level?
+/**
+ * Do we need to remove this class and move all the attributes to IDP level?
+ */
 public class ProvisioningConfig {
 
     private String provisioningRole;
@@ -48,7 +50,7 @@ public class ProvisioningConfig {
         return provisioningClaims;
     }
 
-    public JITProvisioningConfig getJitProvisioningConfig(){
+    public JITProvisioningConfig getJitProvisioningConfig() {
         return jitProvisioningConfig;
     }
 
@@ -56,6 +58,9 @@ public class ProvisioningConfig {
         return CollectionUtils.unmodifiableCollection(provisioners);
     }
 
+    /**
+     * Builds the configurations available for provisioning.
+     */
     public static class ProvisioningConfigBuilder {
 
         private String selectiveProvisioningRole;
@@ -68,7 +73,8 @@ public class ProvisioningConfig {
 
         }
 
-        public ProvisioningConfig.ProvisioningConfigBuilder setSelectiveProvisioningRole(String selectiveProvisioningRole) {
+        public ProvisioningConfig.ProvisioningConfigBuilder setSelectiveProvisioningRole(
+                String selectiveProvisioningRole) {
             this.selectiveProvisioningRole = selectiveProvisioningRole;
             return this;
         }
@@ -91,8 +97,7 @@ public class ProvisioningConfig {
             return this;
         }
 
-        public ProvisioningConfig.ProvisioningConfigBuilder setProvisioningIdP(
-                Collection<String> provisioningIdPs) {
+        public ProvisioningConfig.ProvisioningConfigBuilder setProvisioningIdP(Collection<String> provisioningIdPs) {
             this.jitProvisioningConfigBuilder.setProvisioningIdPs(provisioningIdPs);
             return this;
         }
@@ -102,8 +107,7 @@ public class ProvisioningConfig {
             return this;
         }
 
-        public ProvisioningConfig.ProvisioningConfigBuilder addProvisioningIdPs(
-                Collection<String> provisioningIdPs) {
+        public ProvisioningConfig.ProvisioningConfigBuilder addProvisioningIdPs(Collection<String> provisioningIdPs) {
             this.jitProvisioningConfigBuilder.addProvisioningIdPs(provisioningIdPs);
             return this;
         }

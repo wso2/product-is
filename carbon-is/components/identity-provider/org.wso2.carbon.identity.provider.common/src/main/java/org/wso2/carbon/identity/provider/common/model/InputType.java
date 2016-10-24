@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Input type available for the claims.
+ */
 public enum InputType {
     TEXT, CHECK_BOXES, OPTIONS, DROP_DOWN, TEXT_AREA
 }

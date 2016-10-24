@@ -25,6 +25,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Configuration of just-in-time provisioning.
+ */
 public class JITProvisioningConfig implements Serializable {
 
     private static final long serialVersionUID = -3886962663799281628L;
@@ -39,6 +42,9 @@ public class JITProvisioningConfig implements Serializable {
         return CollectionUtils.unmodifiableCollection(provisioningIdPs);
     }
 
+    /**
+     * Builds the configuration for just-in-time provisioning.
+     */
     public static class JITProvisioningConfigBuilder {
 
         private Collection<String> provisioningIdPs = new HashSet<String>();
