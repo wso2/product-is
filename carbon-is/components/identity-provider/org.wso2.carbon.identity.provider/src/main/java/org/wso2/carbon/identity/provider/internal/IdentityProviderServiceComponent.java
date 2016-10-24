@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.provider.internal;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
@@ -27,16 +26,12 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.identity.application.common.model.IdentityProvider;
 import org.wso2.carbon.identity.application.common.util.IdentityApplicationConstants;
-import org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.idp.mgt.IdentityProviderManagementException;
 import org.wso2.carbon.idp.mgt.listener.IDPMgtAuditLogger;
 import org.wso2.carbon.idp.mgt.listener.IdPMgtValidationListener;
 import org.wso2.carbon.idp.mgt.listener.IdentityProviderMgtListener;
-import org.wso2.carbon.idp.mgt.util.IdPManagementConstants;
-import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
-import org.wso2.carbon.user.core.listener.UserOperationEventListener;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -62,20 +57,16 @@ public class IdentityProviderServiceComponent {
 
     private static Log log = LogFactory.getLog(IdentityProviderServiceComponent.class);
 
-
     private static volatile List<IdentityProviderMgtListener> idpMgtListeners = new ArrayList<>();
-
 
     protected void activate(ComponentContext ctxt) {
         try {
             BundleContext bundleCtx = ctxt.getBundleContext();
 
+            ServiceRegistration auditLoggerSR = bundleCtx
+                    .registerService(IdentityProviderMgtListener.class.getName(), new IDPMgtAuditLogger(), null);
 
-
-            ServiceRegistration auditLoggerSR = bundleCtx.registerService(IdentityProviderMgtListener.class.getName()
-                    , new IDPMgtAuditLogger(), null);
-
-            if(auditLoggerSR != null) {
+            if (auditLoggerSR != null) {
                 log.debug("Identity Provider Management - Audit Logger registered");
             } else {
                 log.error("Identity Provider Management - Error while registering Audit Logger");
@@ -83,13 +74,13 @@ public class IdentityProviderServiceComponent {
             setIdentityProviderMgtListenerService(new IdPMgtValidationListener());
 
             CacheBackedIdPMgtDAO dao = new CacheBackedIdPMgtDAO(new org.wso2.carbon.idp.mgt.dao.IdentityProviderDAO());
-            if (dao.getIdPByName(null,
-                    IdentityApplicationConstants.RESIDENT_IDP_RESERVED_NAME,
+            if (dao.getIdPByName(null, IdentityApplicationConstants.RESIDENT_IDP_RESERVED_NAME,
                     IdentityTenantUtil.getTenantId(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME),
                     MultitenantConstants.SUPER_TENANT_DOMAIN_NAME) == null) {
                 addSuperTenantIdp();
             }
-            bundleCtx.registerService(org.wso2.carbon.idp.mgt.IdentityProviderService.class, org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance(), null);
+            bundleCtx.registerService(org.wso2.carbon.idp.mgt.IdentityProviderService.class,
+                    org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance(), null);
 
             buildFileBasedIdPList();
             cleanUpRemovedIdps();
@@ -108,8 +99,8 @@ public class IdentityProviderServiceComponent {
      */
     private void buildFileBasedIdPList() {
 
-        String spConfigDirPath = CarbonUtils.getCarbonConfigDirPath() + File.separator + "identity"
-                + File.separator + "identity-providers";
+        String spConfigDirPath = CarbonUtils.getCarbonConfigDirPath() + File.separator + "identity" + File.separator
+                + "identity-providers";
         FileInputStream fileInputStream = null;
         File spConfigDir = new File(spConfigDirPath);
         OMElement documentElement = null;
@@ -123,13 +114,14 @@ public class IdentityProviderServiceComponent {
                         documentElement = new StAXOMBuilder(fileInputStream).getDocumentElement();
                         IdentityProvider idp = IdentityProvider.build(documentElement);
                         if (idp != null) {
-                            org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl idpManager = org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
+                            org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl idpManager =
+                                    org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
                             String superTenantDN = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
                             if (isSharedIdP(idp)) {
-                                IdentityProvider currentIdp = idpManager.getIdPByName(idp.getIdentityProviderName(),
-                                        superTenantDN);
-                                if (currentIdp != null && !IdentityApplicationConstants.DEFAULT_IDP_CONFIG.equals(
-                                        currentIdp.getIdentityProviderName())) {
+                                IdentityProvider currentIdp = idpManager
+                                        .getIdPByName(idp.getIdentityProviderName(), superTenantDN);
+                                if (currentIdp != null && !IdentityApplicationConstants.DEFAULT_IDP_CONFIG
+                                        .equals(currentIdp.getIdentityProviderName())) {
                                     idpManager.updateIdP(idp.getIdentityProviderName(), idp, superTenantDN);
                                     if (log.isDebugEnabled()) {
                                         log.debug("Shared IdP " + idp.getIdentityProviderName() + " updated");
@@ -162,7 +154,8 @@ public class IdentityProviderServiceComponent {
     }
 
     private void cleanUpRemovedIdps() {
-        org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl idpManager = org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
+        org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl idpManager =
+                org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
         String superTenantDN = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
         List<IdentityProvider> idPs;
         try {
@@ -225,15 +218,17 @@ public class IdentityProviderServiceComponent {
     }
 
     private static Comparator<IdentityProviderMgtListener> idpMgtListenerComparator =
-            new Comparator<IdentityProviderMgtListener>(){
+            new Comparator<IdentityProviderMgtListener>() {
 
         @Override
         public int compare(IdentityProviderMgtListener identityProviderMgtListener1,
-                           IdentityProviderMgtListener identityProviderMgtListener2) {
+                IdentityProviderMgtListener identityProviderMgtListener2) {
 
-            if (identityProviderMgtListener1.getExecutionOrderId() > identityProviderMgtListener1.getExecutionOrderId()) {
+            if (identityProviderMgtListener1.getExecutionOrderId() > identityProviderMgtListener1
+                    .getExecutionOrderId()) {
                 return 1;
-            } else if (identityProviderMgtListener1.getExecutionOrderId() < identityProviderMgtListener1.getExecutionOrderId()) {
+            } else if (identityProviderMgtListener1.getExecutionOrderId() < identityProviderMgtListener1
+                    .getExecutionOrderId()) {
                 return -1;
             } else {
                 return 0;

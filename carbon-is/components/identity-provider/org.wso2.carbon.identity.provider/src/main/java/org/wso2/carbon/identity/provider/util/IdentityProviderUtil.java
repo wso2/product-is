@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,23 +18,18 @@
 
 package org.wso2.carbon.identity.provider.util;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.application.common.model.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.IdentityProviderProperty;
-import org.wso2.carbon.identity.application.common.model.Property;
-import org.wso2.carbon.identity.application.common.model.ProvisioningConnectorConfig;
-import org.wso2.carbon.identity.application.common.processors.RandomPasswordProcessor;
 import org.wso2.carbon.identity.application.common.util.IdentityApplicationConstants;
 import org.wso2.carbon.identity.application.common.util.IdentityApplicationManagementUtil;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.idp.mgt.IdentityProviderManagementException;
-import org.wso2.carbon.idp.mgt.internal.IdPManagementServiceComponent;
-import org.wso2.carbon.user.api.TenantManager;
-import org.wso2.carbon.user.api.UserStoreException;
 
+/**
+ * Provides utility functionality required by Identity Provider service.
+ */
 public class IdentityProviderUtil {
 
     private static final Log log = LogFactory.getLog(IdentityProviderUtil.class);
@@ -50,7 +45,7 @@ public class IdentityProviderUtil {
         if (StringUtils.isNotBlank(tenantDomain)) {
             // return tenant id
         } else {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Invalid tenant domain: " + tenantDomain);
             }
             throw new IllegalArgumentException("Invalid tenant domain: " + tenantDomain);
@@ -59,7 +54,6 @@ public class IdentityProviderUtil {
 
     /**
      * Get the resident entity id configured in identity.xml.
-     *
      */
     public static String getResidentIdPEntityId() {
 
@@ -67,13 +61,15 @@ public class IdentityProviderUtil {
 
     public static int getIdleSessionTimeOut(String tenantDomain) {
 
-        org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl identityProviderServiceImpl = org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
+        org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl identityProviderServiceImpl =
+                org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
         int timeout = Integer.parseInt(IdentityApplicationConstants.SESSION_IDLE_TIME_OUT_DEFAULT);
 
         try {
             IdentityProvider identityProvider = identityProviderServiceImpl.getResidentIdP(tenantDomain);
-            IdentityProviderProperty idpProperty = IdentityApplicationManagementUtil.getProperty(
-                    identityProvider.getIdpProperties(), IdentityApplicationConstants.SESSION_IDLE_TIME_OUT);
+            IdentityProviderProperty idpProperty = IdentityApplicationManagementUtil
+                    .getProperty(identityProvider.getIdpProperties(),
+                            IdentityApplicationConstants.SESSION_IDLE_TIME_OUT);
             if (idpProperty != null) {
                 timeout = Integer.parseInt(idpProperty.getValue());
             }
@@ -85,13 +81,15 @@ public class IdentityProviderUtil {
 
     public static int getRememberMeTimeout(String tenantDomain) {
 
-        org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl identityProviderServiceImpl = org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
+        org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl identityProviderServiceImpl =
+                org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance();
         int rememberMeTimeout = Integer.parseInt(IdentityApplicationConstants.REMEMBER_ME_TIME_OUT_DEFAULT);
 
         try {
             IdentityProvider identityProvider = identityProviderServiceImpl.getResidentIdP(tenantDomain);
-            IdentityProviderProperty idpProperty = IdentityApplicationManagementUtil.getProperty(
-                    identityProvider.getIdpProperties(), IdentityApplicationConstants.REMEMBER_ME_TIME_OUT);
+            IdentityProviderProperty idpProperty = IdentityApplicationManagementUtil
+                    .getProperty(identityProvider.getIdpProperties(),
+                            IdentityApplicationConstants.REMEMBER_ME_TIME_OUT);
             if (idpProperty != null) {
                 rememberMeTimeout = Integer.parseInt(idpProperty.getValue());
             }
@@ -100,6 +98,5 @@ public class IdentityProviderUtil {
         }
         return rememberMeTimeout * 60;
     }
-
 
 }
