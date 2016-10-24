@@ -20,6 +20,9 @@ package org.wso2.carbon.identity.provider.common.model;
 
 import java.io.Serializable;
 
+/**
+ * Represents a property of an IDP with all it's meta details.
+ */
 public abstract class IdentityProperty implements Serializable {
 
     private static final long serialVersionUID = 2423059969331364604L;
@@ -90,6 +93,29 @@ public abstract class IdentityProperty implements Serializable {
         return isAdvanced;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof IdentityProperty)) {
+            return false;
+        }
+
+        IdentityProperty that = (IdentityProperty) o;
+
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    /**
+     * Builds an identity property with all the required meta details.
+     */
     public abstract class IdentityPropertyBuilder {
 
         private String name;
@@ -150,25 +176,5 @@ public abstract class IdentityProperty implements Serializable {
         }
 
         public abstract IdentityProperty build();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof IdentityProperty)) {
-            return false;
-        }
-
-        IdentityProperty that = (IdentityProperty) o;
-
-        return name.equals(that.name);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
     }
 }

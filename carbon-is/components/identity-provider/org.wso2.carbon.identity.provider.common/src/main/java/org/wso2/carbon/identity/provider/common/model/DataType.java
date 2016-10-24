@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
+/**
+ * Data types to be used in the claims of identity provider.
+ */
 public enum DataType {
     STRING, INT, LONG, FLOAT, DOUBLE, BOOLEAN
 }

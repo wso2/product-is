@@ -24,6 +24,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Abstract representation of an Identity Provider
+ */
 public abstract class IdentityProvider implements Serializable {
 
     private static final long serialVersionUID = 690422066395820761L;
@@ -42,6 +45,10 @@ public abstract class IdentityProvider implements Serializable {
         this.properties = builder.properties;
     }
 
+    protected IdentityProvider(MetaIdentityProvider metaIdentityProvider) {
+        this.metaIdentityProvider = metaIdentityProvider;
+    }
+
     public boolean isEnabled() {
         return isEnabled;
     }
@@ -58,17 +65,17 @@ public abstract class IdentityProvider implements Serializable {
         return authenticatorConfig;
     }
 
+    // provisioning filter must go under JIT and Outbound provisioning configs
+    // Prov. filter is a example to have multiple values for one IDP based on SP
+
     public Collection<IdentityProviderProperty> getProperties() {
         return CollectionUtils.unmodifiableCollection(properties);
     }
 
-    // provisioning filter must go under JIT and Outbound provisioning configs
-    // Prov. filter is a example to have multiple values for one IDP based on SP
-
-    protected IdentityProvider(MetaIdentityProvider metaIdentityProvider) {
-        this.metaIdentityProvider = metaIdentityProvider;
-    }
-
+    /**
+     * Builds the representation of identity provider including mata details, provisioning configuration builder,
+     * authenticators and other properties.
+     */
     public class IdentityProviderBuilder {
 
         private boolean isEnabled = true;
@@ -92,8 +99,7 @@ public abstract class IdentityProvider implements Serializable {
             return this;
         }
 
-        public IdentityProviderBuilder setProvisioningClaims(
-                Collection<ProvisioningClaim> provisioningClaims) {
+        public IdentityProviderBuilder setProvisioningClaims(Collection<ProvisioningClaim> provisioningClaims) {
             this.provisioningConfigBuilder.setProvisioningClaims(provisioningClaims);
             return this;
         }
@@ -103,14 +109,12 @@ public abstract class IdentityProvider implements Serializable {
             return this;
         }
 
-        public IdentityProviderBuilder addProvisioningClaims(
-                Collection<ProvisioningClaim> provisioningClaims) {
+        public IdentityProviderBuilder addProvisioningClaims(Collection<ProvisioningClaim> provisioningClaims) {
             this.provisioningConfigBuilder.addProvisioningClaims(provisioningClaims);
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder setProvisioningIdPs(
-                Collection<String> provisioningIdPs) {
+        public IdentityProvider.IdentityProviderBuilder setProvisioningIdPs(Collection<String> provisioningIdPs) {
             this.provisioningConfigBuilder.setProvisioningIdP(provisioningIdPs);
             return this;
         }
@@ -120,14 +124,12 @@ public abstract class IdentityProvider implements Serializable {
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder addProvisioningIdPs(
-                Collection<String> provisioningIdPs) {
+        public IdentityProvider.IdentityProviderBuilder addProvisioningIdPs(Collection<String> provisioningIdPs) {
             this.provisioningConfigBuilder.addProvisioningIdPs(provisioningIdPs);
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder setProvisioners(
-                Collection<ProvisionerConfig> provisioners) {
+        public IdentityProvider.IdentityProviderBuilder setProvisioners(Collection<ProvisionerConfig> provisioners) {
             this.provisioningConfigBuilder.setProvisioners(provisioners);
             return this;
         }
@@ -137,8 +139,7 @@ public abstract class IdentityProvider implements Serializable {
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder addProvisioners(
-                Collection<ProvisionerConfig> provisioners) {
+        public IdentityProvider.IdentityProviderBuilder addProvisioners(Collection<ProvisionerConfig> provisioners) {
             this.provisioningConfigBuilder.addProvisioners(provisioners);
             return this;
         }
@@ -148,26 +149,25 @@ public abstract class IdentityProvider implements Serializable {
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder setAuthenticatorProperties
-                (Collection<IdentityConnectorProperty> properties) {
+        public IdentityProvider.IdentityProviderBuilder setAuthenticatorProperties(
+                Collection<IdentityConnectorProperty> properties) {
             this.authenticatorConfigBuilder.setProperties(properties);
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder addAuthenticatorProperty
-                (IdentityConnectorProperty property) {
+        public IdentityProvider.IdentityProviderBuilder addAuthenticatorProperty(IdentityConnectorProperty property) {
             this.authenticatorConfigBuilder.addProperty(property);
             return this;
         }
 
-        public IdentityProvider.IdentityProviderBuilder addAuthenticatorProperties
-                (Collection<IdentityConnectorProperty> properties) {
+        public IdentityProvider.IdentityProviderBuilder addAuthenticatorProperties(
+                Collection<IdentityConnectorProperty> properties) {
             this.authenticatorConfigBuilder.addProperties(properties);
             return this;
         }
 
         public IdentityProviderBuilder setIdentityProviderProperties(Collection<IdentityProviderProperty> properties) {
-            if(CollectionUtils.isNotEmpty(properties)) {
+            if (CollectionUtils.isNotEmpty(properties)) {
                 this.properties.clear();
                 this.properties.addAll(properties);
             }
