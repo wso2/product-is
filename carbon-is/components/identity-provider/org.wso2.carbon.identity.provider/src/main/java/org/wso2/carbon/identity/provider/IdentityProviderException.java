@@ -18,7 +18,9 @@
 
 package org.wso2.carbon.identity.provider;
 
-
+/**
+ * Exception thrown from Identity Provider related functions.
+ */
 public class IdentityProviderException extends Exception {
 
     private static final long serialVersionUID = 3848393984629150057L;
