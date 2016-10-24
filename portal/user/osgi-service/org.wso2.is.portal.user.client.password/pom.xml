@@ -31,7 +31,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>WSO2 User Profile Bundle</name>
+    <name>WSO2 User Profile Bundle - Password Update</name>
     <description>This feature contains the OSGi service for User profile</description>
     <url>http://wso2.org</url>
 
@@ -77,15 +77,14 @@
                         <Import-Package>
                             org.osgi.framework,
                             org.slf4j.*;version="${slf4j.import.version.range}",
-                            org.wso2.carbon.security.caas.user.core.*;version="${carbon.security.caas.version}"
                         </Import-Package>
-                        <Private-Package>org.wso2.carbon.user.profile.internal.*</Private-Package>
+                        <Private-Package>org.wso2.is.portal.user.client.password.internal.*</Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.user.profile.internal.*,
-                            org.wso2.carbon.user.profile.*;version="${version}"
+                            !org.wso2.is.portal.user.client.password.internal.*,
+                            org.wso2.is.portal.user.client.password.*;version="${project.version}"
                         </Export-Package>
                         <Bundle-Activator>
-                            org.wso2.carbon.user.profile.internal.Activator
+                            org.wso2.is.portal.user.client.password.internal.Activator
                         </Bundle-Activator>
                     </instructions>
                 </configuration>

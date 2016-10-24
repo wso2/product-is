@@ -1,4 +1,4 @@
-package org.wso2.is.portal.user.client.association.bean;
+package org.wso2.is.portal.user.client.challenge.question.bean;
 
 /**
  * User's challenge questions

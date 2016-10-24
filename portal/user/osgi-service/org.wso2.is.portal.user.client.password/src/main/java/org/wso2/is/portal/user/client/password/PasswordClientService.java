@@ -16,6 +16,9 @@
 
 package org.wso2.is.portal.user.client.password;
 
+/**
+ * Perform operations related to password handling
+ */
 public interface PasswordClientService {
 
     /**

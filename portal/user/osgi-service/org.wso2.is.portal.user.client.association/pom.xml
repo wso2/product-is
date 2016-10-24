@@ -109,13 +109,13 @@
                             org.slf4j.*;version="${slf4j.import.version.range}",
                             org.wso2.carbon.security.caas.user.core.*;version="${carbon.security.caas.version}"
                         </Import-Package>
-                        <Private-Package>org.wso2.carbon.user.profile.internal.*</Private-Package>
+                        <Private-Package>org.wso2.is.portal.user.client.association.internal.*</Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.user.profile.internal.*,
-                            org.wso2.carbon.user.profile.*;version="${version}"
+                            !org.wso2.is.portal.user.client.association.internal.*,
+                            org.wso2.is.portal.user.client.association.*;version="${project.version}"
                         </Export-Package>
                         <Bundle-Activator>
-                            org.wso2.carbon.user.profile.internal.Activator
+                            org.wso2.is.portal.user.client.association.internal.Activator
                         </Bundle-Activator>
                     </instructions>
                 </configuration>

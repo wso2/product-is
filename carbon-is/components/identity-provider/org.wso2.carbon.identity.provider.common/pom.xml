@@ -3,15 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <!--parent>
-        <artifactId>identity-provider</artifactId>
+    <parent>
         <groupId>org.wso2.carbon.identity.provider</groupId>
+        <artifactId>identity-provider</artifactId>
         <version>6-SNAPSHOT</version>
-    </parent-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.identity.provider</groupId>
-    <version>6-SNAPSHOT</version>
+
     <artifactId>org.wso2.carbon.identity.provider.common</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - Identity Provider Common Bundle</name>
+    <description>
+        This is a WSO2 Carbon bundle that provides the Identity Provider backend functionality.
+    </description>
+    <url>http://wso2.org</url>
+    <version>6-SNAPSHOT</version>
+
 
     <dependencies>
         <dependency>

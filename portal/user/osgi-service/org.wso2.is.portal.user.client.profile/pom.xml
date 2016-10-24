@@ -31,7 +31,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>WSO2 User Profile Bundle</name>
+    <name>WSO2 User Profile Bundle - User Profile</name>
     <description>This feature contains the OSGi service for User profile</description>
     <url>http://wso2.org</url>
 
