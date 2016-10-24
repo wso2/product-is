@@ -58,6 +58,7 @@
         <dependency>
             <groupId>org.wso2.carbon.caching</groupId>
             <artifactId>org.wso2.carbon.caching.feature</artifactId>
+<<<<<<< HEAD
             <type>zip</type>
         </dependency>
         <dependency>
@@ -68,14 +69,19 @@
         <dependency>
             <groupId>org.wso2.carbon.jndi</groupId>
             <artifactId>org.wso2.carbon.jndi.feature</artifactId>
+=======
+            <version>${org.wso2.carbon.caching.version}</version>
+>>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.datasources</groupId>
-            <artifactId>org.wso2.carbon.datasource.core.feature</artifactId>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging.feature</artifactId>
+            <version>${org.wso2.carbon.messaging.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
             <type>zip</type>
@@ -110,21 +116,30 @@
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>org.wso2.msf4j.feature</artifactId>
+=======
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
+            <groupId>org.wso2.carbon.jndi</groupId>
+            <artifactId>org.wso2.carbon.jndi.feature</artifactId>
+>>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
+            <groupId>org.wso2.carbon.datasources</groupId>
+            <artifactId>org.wso2.carbon.datasource.core.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -157,6 +172,7 @@
         </dependency>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
@@ -183,18 +199,32 @@
 =======
             <groupId>org.wso2.carbon.security.userstore</groupId>
             <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
+>>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
             <type>zip</type>
         </dependency>
+
+        <!-- Sample Simple Authentication Component -->
+
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+<<<<<<< HEAD
                 <type>zip</type>
 >>>>>>> e3ae06a... Fixing few of the pom.xml errors.
+=======
+            <type>zip</type>
+>>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
         </dependency>
 
         <!-- Sample Simple Authentication Component -->
@@ -449,6 +479,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
