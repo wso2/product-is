@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -63,11 +63,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Default implementation of Identity Prvider Service.
+ */
 public class IdentityProviderServiceImpl implements IdentityProviderService {
 
     private static final Log log = LogFactory.getLog(IdentityProviderServiceImpl.class);
 
-    private static CacheBackedIdPMgtDAO dao = new CacheBackedIdPMgtDAO(new org.wso2.carbon.idp.mgt.dao.IdentityProviderDAO());
+    private static CacheBackedIdPMgtDAO dao = new CacheBackedIdPMgtDAO(
+            new org.wso2.carbon.idp.mgt.dao.IdentityProviderDAO());
 
     private static volatile IdentityProviderServiceImpl instance = new IdentityProviderServiceImpl();
 
@@ -89,8 +93,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting Resident Identity Providers
      */
     @Override
-    public IdentityProvider getResidentIdP(String tenantDomain)
-            throws IdentityProviderManagementException {
+    public IdentityProvider getResidentIdP(String tenantDomain) throws IdentityProviderManagementException {
 
         String tenantContext = "";
         if (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equalsIgnoreCase(tenantDomain)) {
@@ -185,11 +188,11 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
 
         // If sts url is configured in file, change it according to tenant domain. If not configured, add a default url
         if (StringUtils.isNotBlank(stsUrl)) {
-            stsUrl = stsUrl.replace(IdentityConstants.STS.WSO2_CARBON_STS, tenantContext +
-                    IdentityConstants.STS.WSO2_CARBON_STS);
+            stsUrl = stsUrl.replace(IdentityConstants.STS.WSO2_CARBON_STS,
+                    tenantContext + IdentityConstants.STS.WSO2_CARBON_STS);
         } else {
-            stsUrl = IdentityUtil.getServerURL("services/" + tenantContext + IdentityConstants.STS.WSO2_CARBON_STS,
-                    true, true);
+            stsUrl = IdentityUtil
+                    .getServerURL("services/" + tenantContext + IdentityConstants.STS.WSO2_CARBON_STS, true, true);
         }
 
         if (StringUtils.isBlank(scimUserEndpoint)) {
@@ -199,9 +202,9 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         if (StringUtils.isBlank(scimGroupsEndpoint)) {
             scimGroupsEndpoint = IdentityUtil.getServerURL(IdentityConstants.SCIM.GROUP_EP, true, false);
         }
-        IdentityProvider identityProvider = dao.getIdPByName(null,
-                IdentityApplicationConstants.RESIDENT_IDP_RESERVED_NAME,
-                IdentityTenantUtil.getTenantId(tenantDomain), tenantDomain);
+        IdentityProvider identityProvider = dao
+                .getIdPByName(null, IdentityApplicationConstants.RESIDENT_IDP_RESERVED_NAME,
+                        IdentityTenantUtil.getTenantId(tenantDomain), tenantDomain);
 
         if (identityProvider == null) {
             String message = "Could not find Resident Identity Provider for tenant " + tenantDomain;
@@ -289,16 +292,14 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         if (IdentityApplicationManagementUtil.getProperty(saml2SSOFedAuthn.getProperties(),
                 IdentityApplicationConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL) == null) {
             Property logoutReqUrlProp = new Property();
-            logoutReqUrlProp
-                    .setName(IdentityApplicationConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL);
+            logoutReqUrlProp.setName(IdentityApplicationConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL);
             logoutReqUrlProp.setValue(samlLogoutUrl);
             propertiesList.add(logoutReqUrlProp);
         }
         if (IdentityApplicationManagementUtil.getProperty(saml2SSOFedAuthn.getProperties(),
                 IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID) == null) {
             Property idPEntityIdProp = new Property();
-            idPEntityIdProp
-                    .setName(IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
+            idPEntityIdProp.setName(IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
             idPEntityIdProp.setValue(org.wso2.carbon.idp.mgt.util.IdentityProviderUtil.getResidentIdPEntityId());
             propertiesList.add(idPEntityIdProp);
         }
@@ -320,8 +321,9 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             oauth1ReqTokUrlProp.setValue(oauth1RequestTokenUrl);
             propertiesList.add(oauth1ReqTokUrlProp);
         }
-        if (IdentityApplicationManagementUtil.getProperty(oauth1FedAuthn.getProperties(),
-                IdentityApplicationConstants.OAuth10A.OAUTH1_AUTHORIZE_URL) == null) {
+        if (IdentityApplicationManagementUtil
+                .getProperty(oauth1FedAuthn.getProperties(), IdentityApplicationConstants.OAuth10A.OAUTH1_AUTHORIZE_URL)
+                == null) {
             Property oauth1AuthzUrlProp = new Property();
             oauth1AuthzUrlProp.setName(IdentityApplicationConstants.OAuth10A.OAUTH1_AUTHORIZE_URL);
             oauth1AuthzUrlProp.setValue(oauth1AuthorizeUrl);
@@ -345,8 +347,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             oidcFedAuthn.setName(IdentityApplicationConstants.Authenticator.OIDC.NAME);
         }
         propertiesList = new ArrayList<Property>(Arrays.asList(oidcFedAuthn.getProperties()));
-        if (IdentityApplicationManagementUtil.getProperty(oidcFedAuthn.getProperties(),
-                OPENID_IDP_ENTITY_ID) == null) {
+        if (IdentityApplicationManagementUtil.getProperty(oidcFedAuthn.getProperties(), OPENID_IDP_ENTITY_ID) == null) {
             Property idPEntityIdProp = new Property();
             idPEntityIdProp.setName(OPENID_IDP_ENTITY_ID);
             idPEntityIdProp.setValue(getOIDCResidentIdPEntityId());
@@ -408,8 +409,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         if (IdentityApplicationManagementUtil.getProperty(passiveSTSFedAuthn.getProperties(),
                 IdentityApplicationConstants.Authenticator.PassiveSTS.IDENTITY_PROVIDER_URL) == null) {
             Property passiveSTSUrlProp = new Property();
-            passiveSTSUrlProp
-                    .setName(IdentityApplicationConstants.Authenticator.PassiveSTS.IDENTITY_PROVIDER_URL);
+            passiveSTSUrlProp.setName(IdentityApplicationConstants.Authenticator.PassiveSTS.IDENTITY_PROVIDER_URL);
             passiveSTSUrlProp.setValue(passiveStsUrl);
             propertiesList.add(passiveSTSUrlProp);
         }
@@ -417,13 +417,11 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         if (IdentityApplicationManagementUtil.getProperty(passiveSTSFedAuthn.getProperties(),
                 IdentityApplicationConstants.Authenticator.PassiveSTS.IDENTITY_PROVIDER_ENTITY_ID) == null) {
             Property idPEntityIdProp = new Property();
-            idPEntityIdProp
-                    .setName(IdentityApplicationConstants.Authenticator.PassiveSTS.IDENTITY_PROVIDER_ENTITY_ID);
+            idPEntityIdProp.setName(IdentityApplicationConstants.Authenticator.PassiveSTS.IDENTITY_PROVIDER_ENTITY_ID);
             idPEntityIdProp.setValue(org.wso2.carbon.idp.mgt.util.IdentityProviderUtil.getResidentIdPEntityId());
             propertiesList.add(idPEntityIdProp);
         }
-        passiveSTSFedAuthn
-                .setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
+        passiveSTSFedAuthn.setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
         fedAuthnCofigs.add(passiveSTSFedAuthn);
 
         FederatedAuthenticatorConfig stsFedAuthn = IdentityApplicationManagementUtil
@@ -441,10 +439,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             stsUrlProp.setValue(stsUrl);
             propertiesList.add(stsUrlProp);
         }
-        stsFedAuthn
-                .setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
+        stsFedAuthn.setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
         fedAuthnCofigs.add(stsFedAuthn);
-
 
         List<IdentityProviderProperty> identityProviderProperties = new ArrayList<IdentityProviderProperty>();
 
@@ -456,8 +452,9 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             sessionTimeoutConfig.setName(IdentityApplicationConstants.NAME);
         }
         propertiesList = new ArrayList<Property>(Arrays.asList(sessionTimeoutConfig.getProperties()));
-        if (IdentityApplicationManagementUtil.getProperty(sessionTimeoutConfig.getProperties(),
-                IdentityApplicationConstants.CLEAN_UP_PERIOD) == null) {
+        if (IdentityApplicationManagementUtil
+                .getProperty(sessionTimeoutConfig.getProperties(), IdentityApplicationConstants.CLEAN_UP_PERIOD)
+                == null) {
             Property cleanUpPeriodProp = new Property();
             cleanUpPeriodProp.setName(IdentityApplicationConstants.CLEAN_UP_PERIOD);
             String cleanUpPeriod = IdentityUtil.getProperty(IdentityConstants.ServerConfig.CLEAN_UP_PERIOD);
@@ -473,36 +470,32 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         sessionTimeoutConfig.setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
         fedAuthnCofigs.add(sessionTimeoutConfig);
 
-        identityProvider.setFederatedAuthenticatorConfigs(fedAuthnCofigs
-                .toArray(new FederatedAuthenticatorConfig[fedAuthnCofigs.size()]));
+        identityProvider.setFederatedAuthenticatorConfigs(
+                fedAuthnCofigs.toArray(new FederatedAuthenticatorConfig[fedAuthnCofigs.size()]));
 
         ProvisioningConnectorConfig scimProvConn = IdentityApplicationManagementUtil
-                .getProvisioningConnector(identityProvider.getProvisioningConnectorConfigs(),
-                        "scim");
+                .getProvisioningConnector(identityProvider.getProvisioningConnectorConfigs(), "scim");
         if (scimProvConn == null) {
             scimProvConn = new ProvisioningConnectorConfig();
             scimProvConn.setName("scim");
         }
-        propertiesList = new ArrayList<Property>(Arrays.asList(scimProvConn
-                .getProvisioningProperties()));
-        if (IdentityApplicationManagementUtil.getProperty(scimProvConn.getProvisioningProperties(),
-                "scimUserEndpoint") == null) {
+        propertiesList = new ArrayList<Property>(Arrays.asList(scimProvConn.getProvisioningProperties()));
+        if (IdentityApplicationManagementUtil.getProperty(scimProvConn.getProvisioningProperties(), "scimUserEndpoint")
+                == null) {
             Property property = new Property();
             property.setName("scimUserEndpoint");
             property.setValue(scimUserEndpoint);
             propertiesList.add(property);
         }
-        if (IdentityApplicationManagementUtil.getProperty(scimProvConn.getProvisioningProperties(),
-                "scimUserEndpoint") == null) {
+        if (IdentityApplicationManagementUtil.getProperty(scimProvConn.getProvisioningProperties(), "scimUserEndpoint")
+                == null) {
             Property property = new Property();
             property.setName("scimGroupEndpoint");
             property.setValue(scimGroupsEndpoint);
             propertiesList.add(property);
         }
-        scimProvConn.setProvisioningProperties(propertiesList.toArray(new Property[propertiesList
-                .size()]));
-        identityProvider
-                .setProvisioningConnectorConfigs(new ProvisioningConnectorConfig[]{scimProvConn});
+        scimProvConn.setProvisioningProperties(propertiesList.toArray(new Property[propertiesList.size()]));
+        identityProvider.setProvisioningConnectorConfigs(new ProvisioningConnectorConfig[] { scimProvConn });
 
         return identityProvider;
     }
@@ -555,20 +548,21 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
                 properties.add(property);
                 saml2SSOResidentAuthenticatorConfig.setProperties((Property[]) properties.toArray());
             } else {
-                saml2SSOResidentAuthenticatorConfig.setProperties(new Property[]{property});
+                saml2SSOResidentAuthenticatorConfig.setProperties(new Property[] { property });
             }
         }
 
         FederatedAuthenticatorConfig idpPropertiesResidentAuthenticatorConfig = IdentityApplicationManagementUtil
                 .getFederatedAuthenticator(identityProvider.getFederatedAuthenticatorConfigs(),
                         IdentityApplicationConstants.NAME);
-        if(idpPropertiesResidentAuthenticatorConfig == null){
+        if (idpPropertiesResidentAuthenticatorConfig == null) {
             idpPropertiesResidentAuthenticatorConfig = new FederatedAuthenticatorConfig();
             idpPropertiesResidentAuthenticatorConfig.setName(IdentityApplicationConstants.NAME);
         }
-        List<Property> propertiesList = new ArrayList<Property>(Arrays.asList(idpPropertiesResidentAuthenticatorConfig.getProperties()));
-        if(IdentityApplicationManagementUtil.getProperty(idpPropertiesResidentAuthenticatorConfig.getProperties(),
-                IdentityApplicationConstants.CLEAN_UP_PERIOD) == null){
+        List<Property> propertiesList = new ArrayList<Property>(
+                Arrays.asList(idpPropertiesResidentAuthenticatorConfig.getProperties()));
+        if (IdentityApplicationManagementUtil.getProperty(idpPropertiesResidentAuthenticatorConfig.getProperties(),
+                IdentityApplicationConstants.CLEAN_UP_PERIOD) == null) {
             Property cleanUpPeriodProp = new Property();
             cleanUpPeriodProp.setName(IdentityApplicationConstants.CLEAN_UP_PERIOD);
             String cleanUpPeriod = IdentityUtil.getProperty(IdentityConstants.ServerConfig.CLEAN_UP_PERIOD);
@@ -581,14 +575,15 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             cleanUpPeriodProp.setValue(cleanUpPeriod);
             propertiesList.add(cleanUpPeriodProp);
         }
-        idpPropertiesResidentAuthenticatorConfig.setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
+        idpPropertiesResidentAuthenticatorConfig
+                .setProperties(propertiesList.toArray(new Property[propertiesList.size()]));
 
         Property oidcProperty = new Property();
         oidcProperty.setName(OPENID_IDP_ENTITY_ID);
         oidcProperty.setValue(getOIDCResidentIdPEntityId());
 
         FederatedAuthenticatorConfig oidcAuthenticationConfig = new FederatedAuthenticatorConfig();
-        oidcAuthenticationConfig.setProperties(new Property[]{oidcProperty});
+        oidcAuthenticationConfig.setProperties(new Property[] { oidcProperty });
         oidcAuthenticationConfig.setName(IdentityApplicationConstants.Authenticator.OIDC.NAME);
 
         Property passiveStsProperty = new Property();
@@ -599,8 +594,10 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         passiveStsAuthenticationConfig.setProperties(new Property[] { passiveStsProperty });
         passiveStsAuthenticationConfig.setName(IdentityApplicationConstants.Authenticator.PassiveSTS.NAME);
 
-        FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs = {saml2SSOResidentAuthenticatorConfig,
-                idpPropertiesResidentAuthenticatorConfig, passiveStsAuthenticationConfig, oidcAuthenticationConfig};
+        FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs = {
+                saml2SSOResidentAuthenticatorConfig, idpPropertiesResidentAuthenticatorConfig,
+                passiveStsAuthenticationConfig, oidcAuthenticationConfig
+        };
         identityProvider.setFederatedAuthenticatorConfigs(IdentityApplicationManagementUtil
                 .concatArrays(identityProvider.getFederatedAuthenticatorConfigs(), federatedAuthenticatorConfigs));
 
@@ -678,8 +675,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[0]);
         }
 
-        IdentityProvider currentIdP = org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance().getIdPByName(
-                IdentityApplicationConstants.RESIDENT_IDP_RESERVED_NAME, tenantDomain, true);
+        IdentityProvider currentIdP = org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance()
+                .getIdPByName(IdentityApplicationConstants.RESIDENT_IDP_RESERVED_NAME, tenantDomain, true);
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
         validateUpdateOfIdPEntityId(currentIdP.getFederatedAuthenticatorConfigs(),
@@ -704,8 +701,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting list of Identity Providers
      */
     @Override
-    public List<IdentityProvider> getIdPs(String tenantDomain)
-            throws IdentityProviderManagementException {
+    public List<IdentityProvider> getIdPs(String tenantDomain) throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
         return dao.getIdPs(null, tenantId, tenantDomain);
@@ -721,8 +717,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting list of Identity Providers
      */
     @Override
-    public List<IdentityProvider> getEnabledIdPs(String tenantDomain)
-            throws IdentityProviderManagementException {
+    public List<IdentityProvider> getEnabledIdPs(String tenantDomain) throws IdentityProviderManagementException {
         List<IdentityProvider> enabledIdentityProviders = new ArrayList<IdentityProvider>();
         List<IdentityProvider> identityProviers = getIdPs(tenantDomain);
 
@@ -743,8 +738,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException
      */
     @Override
-    public IdentityProvider getIdPByName(String idPName, String tenantDomain,
-                                         boolean ignoreFileBasedIdps) throws IdentityProviderManagementException {
+    public IdentityProvider getIdPByName(String idPName, String tenantDomain, boolean ignoreFileBasedIdps)
+            throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
         if (StringUtils.isEmpty(idPName)) {
@@ -761,8 +756,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             }
 
             if (identityProvider == null) {
-                identityProvider = IdPManagementServiceComponent.getFileBasedIdPs().get(
-                        IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
+                identityProvider = IdPManagementServiceComponent.getFileBasedIdPs()
+                        .get(IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
             }
         }
 
@@ -777,8 +772,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException
      */
     @Override
-    public IdentityProvider getEnabledIdPByName(String idPName, String tenantDomain,
-                                                boolean ignoreFileBasedIdps) throws IdentityProviderManagementException {
+    public IdentityProvider getEnabledIdPByName(String idPName, String tenantDomain, boolean ignoreFileBasedIdps)
+            throws IdentityProviderManagementException {
 
         IdentityProvider idp = getIdPByName(idPName, tenantDomain, ignoreFileBasedIdps);
         if (idp != null && idp.isEnable()) {
@@ -794,7 +789,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @param tenantDomain Tenant domain whose information is requested
      * @return <code>IdentityProvider</code> Identity Provider information
      * @throws IdentityProviderManagementException Error when getting Identity Provider
-     *                                                information by IdP name
+     *                                             information by IdP name
      */
     @Override
     public IdentityProvider getIdPByName(String idPName, String tenantDomain)
@@ -808,12 +803,11 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @param tenantDomain
      * @return <code>IdentityProvider</code> Identity Provider information
      * @throws IdentityProviderManagementException Error when getting Identity Provider
-     *                                                information by authenticator property value
+     *                                             information by authenticator property value
      */
     @Override
     public IdentityProvider getIdPByAuthenticatorPropertyValue(String property, String value, String tenantDomain,
-                                                               boolean ignoreFileBasedIdps)
-            throws IdentityProviderManagementException {
+            boolean ignoreFileBasedIdps) throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
 
@@ -822,8 +816,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             throw new IdentityProviderManagementException(msg);
         }
 
-        IdentityProvider identityProvider = dao.getIdPByAuthenticatorPropertyValue(
-                null, property, value, tenantId, tenantDomain);
+        IdentityProvider identityProvider = dao
+                .getIdPByAuthenticatorPropertyValue(null, property, value, tenantId, tenantDomain);
 
         if (identityProvider == null && !ignoreFileBasedIdps) {
             identityProvider = new FileBasedIdPMgtDAO()
@@ -840,7 +834,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @param tenantDomain Tenant domain whose information is requested
      * @return <code>IdentityProvider</code> Identity Provider information
      * @throws IdentityProviderManagementException Error when getting Identity Provider
-     *                                                information by IdP name
+     *                                             information by IdP name
      */
     @Override
     public IdentityProvider getEnabledIdPByName(String idPName, String tenantDomain)
@@ -860,7 +854,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      *                     requested
      * @param tenantDomain Tenant domain whose information is requested
      * @throws IdentityProviderManagementException Error when getting Identity Provider
-     *                                                information by IdP home realm identifier
+     *                                             information by IdP home realm identifier
      */
     @Override
     public IdentityProvider getIdPByRealmId(String realmId, String tenantDomain)
@@ -887,7 +881,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      *                     requested
      * @param tenantDomain Tenant domain whose information is requested
      * @throws IdentityProviderManagementException Error when getting Identity Provider
-     *                                                information by IdP home realm identifier
+     *                                             information by IdP home realm identifier
      */
     @Override
     public IdentityProvider getEnabledIdPByRealmId(String realmId, String tenantDomain)
@@ -909,9 +903,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting claim mappings
      */
     @Override
-    public Set<ClaimMapping> getMappedLocalClaims(String idPName, String tenantDomain,
-                                                  List<String> idPClaimURIs) throws
-            IdentityProviderManagementException {
+    public Set<ClaimMapping> getMappedLocalClaims(String idPName, String tenantDomain, List<String> idPClaimURIs)
+            throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
         if (StringUtils.isEmpty(idPName)) {
@@ -926,8 +919,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         }
 
         if (identityProvider == null) {
-            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs().get(
-                    IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
+            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs()
+                    .get(IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
         }
 
         ClaimConfig claimConfiguration = identityProvider.getClaimConfig();
@@ -962,15 +955,13 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting claim mappings
      */
     @Override
-    public Map<String, String> getMappedLocalClaimsMap(String idPName, String tenantDomain,
-                                                       List<String> idPClaimURIs) throws
-            IdentityProviderManagementException {
+    public Map<String, String> getMappedLocalClaimsMap(String idPName, String tenantDomain, List<String> idPClaimURIs)
+            throws IdentityProviderManagementException {
 
         Set<ClaimMapping> claimMappings = getMappedLocalClaims(idPName, tenantDomain, idPClaimURIs);
         Map<String, String> returnMap = new HashMap<String, String>();
         for (ClaimMapping claimMapping : claimMappings) {
-            returnMap.put(claimMapping.getRemoteClaim().getClaimUri(), claimMapping.getLocalClaim()
-                    .getClaimUri());
+            returnMap.put(claimMapping.getRemoteClaim().getClaimUri(), claimMapping.getLocalClaim().getClaimUri());
         }
         return returnMap;
     }
@@ -984,9 +975,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting claim mappings
      */
     @Override
-    public Set<ClaimMapping> getMappedIdPClaims(String idPName, String tenantDomain,
-                                                List<String> localClaimURIs) throws
-            IdentityProviderManagementException {
+    public Set<ClaimMapping> getMappedIdPClaims(String idPName, String tenantDomain, List<String> localClaimURIs)
+            throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
         if (StringUtils.isEmpty(idPName)) {
@@ -1001,8 +991,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         }
 
         if (identityProvider == null) {
-            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs().get(
-                    IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
+            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs()
+                    .get(IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
         }
 
         ClaimConfig claimConfiguration = identityProvider.getClaimConfig();
@@ -1036,15 +1026,13 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting claim mappings
      */
     @Override
-    public Map<String, String> getMappedIdPClaimsMap(String idPName, String tenantDomain,
-                                                     List<String> localClaimURIs) throws
-            IdentityProviderManagementException {
+    public Map<String, String> getMappedIdPClaimsMap(String idPName, String tenantDomain, List<String> localClaimURIs)
+            throws IdentityProviderManagementException {
 
         Set<ClaimMapping> claimMappings = getMappedIdPClaims(idPName, tenantDomain, localClaimURIs);
         Map<String, String> returnMap = new HashMap<String, String>();
         for (ClaimMapping claimMapping : claimMappings) {
-            returnMap.put(claimMapping.getLocalClaim().getClaimUri(), claimMapping.getRemoteClaim()
-                    .getClaimUri());
+            returnMap.put(claimMapping.getLocalClaim().getClaimUri(), claimMapping.getRemoteClaim().getClaimUri());
         }
         return returnMap;
     }
@@ -1058,8 +1046,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting role mappings
      */
     @Override
-    public Set<RoleMapping> getMappedLocalRoles(String idPName, String tenantDomain,
-                                                String[] idPRoles) throws IdentityProviderManagementException {
+    public Set<RoleMapping> getMappedLocalRoles(String idPName, String tenantDomain, String[] idPRoles)
+            throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
 
@@ -1075,8 +1063,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         }
 
         if (identityProvider == null) {
-            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs().get(
-                    IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
+            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs()
+                    .get(IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
         }
 
         PermissionsAndRoleConfig roleConfiguration = identityProvider.getPermissionAndRoleConfig();
@@ -1109,8 +1097,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting role mappings
      */
     @Override
-    public Map<String, LocalRole> getMappedLocalRolesMap(String idPName, String tenantDomain,
-                                                         String[] idPRoles) throws IdentityProviderManagementException {
+    public Map<String, LocalRole> getMappedLocalRolesMap(String idPName, String tenantDomain, String[] idPRoles)
+            throws IdentityProviderManagementException {
 
         Set<RoleMapping> roleMappings = getMappedLocalRoles(idPName, tenantDomain, idPRoles);
         Map<String, LocalRole> returnMap = new HashMap<String, LocalRole>();
@@ -1129,8 +1117,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting role mappings
      */
     @Override
-    public Set<RoleMapping> getMappedIdPRoles(String idPName, String tenantDomain,
-                                              LocalRole[] localRoles) throws IdentityProviderManagementException {
+    public Set<RoleMapping> getMappedIdPRoles(String idPName, String tenantDomain, LocalRole[] localRoles)
+            throws IdentityProviderManagementException {
 
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
         if (StringUtils.isEmpty(idPName)) {
@@ -1144,8 +1132,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         }
 
         if (identityProvider == null) {
-            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs().get(
-                    IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
+            identityProvider = IdPManagementServiceComponent.getFileBasedIdPs()
+                    .get(IdentityApplicationConstants.DEFAULT_IDP_CONFIG);
         }
 
         PermissionsAndRoleConfig roleConfiguration = identityProvider.getPermissionAndRoleConfig();
@@ -1178,9 +1166,8 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException Error when getting role mappings
      */
     @Override
-    public Map<LocalRole, String> getMappedIdPRolesMap(String idPName, String tenantDomain,
-                                                       LocalRole[] localRoles) throws
-            IdentityProviderManagementException {
+    public Map<LocalRole, String> getMappedIdPRolesMap(String idPName, String tenantDomain, LocalRole[] localRoles)
+            throws IdentityProviderManagementException {
 
         Set<RoleMapping> roleMappings = getMappedIdPRoles(idPName, tenantDomain, localRoles);
         Map<LocalRole, String> returnMap = new HashMap<LocalRole, String>();
@@ -1195,7 +1182,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      *
      * @param identityProvider new Identity Provider information
      * @throws IdentityProviderManagementException Error when adding Identity Provider
-     *                                                information
+     *                                             information
      */
     @Override
     public void addIdP(IdentityProvider identityProvider, String tenantDomain)
@@ -1215,8 +1202,9 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
                 && !identityProvider.getIdentityProviderName().startsWith(IdPManagementConstants.SHARED_IDP_PREFIX)) {
             //If an IDP with name starting with "SHARED_" is added from UI, It's blocked at the service class
             // before calling this method
-            throw new IdentityProviderManagementException("Identity provider with the name" + identityProvider
-                    .getIdentityProviderName() + "exists in the file system.");
+            throw new IdentityProviderManagementException(
+                    "Identity provider with the name" + identityProvider.getIdentityProviderName()
+                            + "exists in the file system.");
         }
 
         PermissionsAndRoleConfig roleConfiguration = identityProvider.getPermissionAndRoleConfig();
@@ -1225,33 +1213,30 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             for (RoleMapping mapping : roleConfiguration.getRoleMappings()) {
                 UserStoreManager usm = null;
                 try {
-                    usm = IdPManagementServiceComponent.getRealmService()
-                            .getTenantUserRealm(tenantId).getUserStoreManager();
+                    usm = IdPManagementServiceComponent.getRealmService().getTenantUserRealm(tenantId)
+                            .getUserStoreManager();
                     String role = null;
                     if (mapping.getLocalRole().getUserStoreId() != null) {
-                        role = mapping.getLocalRole().getUserStoreId()
-                                + CarbonConstants.DOMAIN_SEPARATOR
-                                + mapping.getLocalRole().getLocalRoleName();
+                        role = mapping.getLocalRole().getUserStoreId() + CarbonConstants.DOMAIN_SEPARATOR + mapping
+                                .getLocalRole().getLocalRoleName();
                     }
                     if (usm.isExistingRole(role)) {
                         // perfect
                     } else {
-                        String msg = "Cannot find tenant role " + role + " for tenant "
-                                + tenantDomain;
+                        String msg = "Cannot find tenant role " + role + " for tenant " + tenantDomain;
                         throw new IdentityProviderManagementException(msg);
                     }
                 } catch (UserStoreException e) {
-                    String msg = "Error occurred while retrieving UserStoreManager for tenant "
-                            + tenantDomain;
+                    String msg = "Error occurred while retrieving UserStoreManager for tenant " + tenantDomain;
                     throw new IdentityProviderManagementException(msg, e);
                 }
             }
         }
 
-        if (org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance().getIdPByName(
-                identityProvider.getIdentityProviderName(), tenantDomain, true) != null) {
-            String msg = "An Identity Provider has already been registered with the name "
-                    + identityProvider.getIdentityProviderName() + " for tenant " + tenantDomain;
+        if (org.wso2.carbon.idp.mgt.IdentityProviderServiceImpl.getInstance()
+                .getIdPByName(identityProvider.getIdentityProviderName(), tenantDomain, true) != null) {
+            String msg = "An Identity Provider has already been registered with the name " + identityProvider
+                    .getIdentityProviderName() + " for tenant " + tenantDomain;
             throw new IdentityProviderManagementException(msg);
         }
 
@@ -1272,7 +1257,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      *
      * @param idPName Name of the IdP to be deleted
      * @throws IdentityProviderManagementException Error when deleting Identity Provider
-     *                                                information
+     *                                             information
      */
     @Override
     public void deleteIdP(String idPName, String tenantDomain) throws IdentityProviderManagementException {
@@ -1302,11 +1287,11 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @param oldIdPName          existing Identity Provider name
      * @param newIdentityProvider new IdP information
      * @throws IdentityProviderManagementException Error when updating Identity Provider
-     *                                                information
+     *                                             information
      */
     @Override
-    public void updateIdP(String oldIdPName, IdentityProvider newIdentityProvider,
-                          String tenantDomain) throws IdentityProviderManagementException {
+    public void updateIdP(String oldIdPName, IdentityProvider newIdentityProvider, String tenantDomain)
+            throws IdentityProviderManagementException {
 
         // invoking the pre listeners
         Collection<IdentityProviderMgtListener> listeners = IdPManagementServiceComponent.getIdpMgtListeners();
@@ -1316,14 +1301,13 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
             }
         }
 
-        if (IdPManagementServiceComponent.getFileBasedIdPs().containsKey(
-                newIdentityProvider.getIdentityProviderName())) {
+        if (IdPManagementServiceComponent.getFileBasedIdPs()
+                .containsKey(newIdentityProvider.getIdentityProviderName())) {
             throw new IdentityProviderManagementException(
                     "Identity provider with the same name exists in the file system.");
         }
 
-        IdentityProvider currentIdentityProvider = this
-                .getIdPByName(oldIdPName, tenantDomain, true);
+        IdentityProvider currentIdentityProvider = this.getIdPByName(oldIdPName, tenantDomain, true);
         if (currentIdentityProvider == null) {
             String msg = "Identity Provider with name " + oldIdPName + " does not exist";
             throw new IdentityProviderManagementException(msg);
@@ -1337,31 +1321,26 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
 
         if (newIdentityProvider.getPermissionAndRoleConfig() != null
                 && newIdentityProvider.getPermissionAndRoleConfig().getRoleMappings() != null) {
-            for (RoleMapping mapping : newIdentityProvider.getPermissionAndRoleConfig()
-                    .getRoleMappings()) {
+            for (RoleMapping mapping : newIdentityProvider.getPermissionAndRoleConfig().getRoleMappings()) {
                 UserStoreManager usm = null;
                 try {
-                    usm = CarbonContext.getThreadLocalCarbonContext().getUserRealm()
-                            .getUserStoreManager();
+                    usm = CarbonContext.getThreadLocalCarbonContext().getUserRealm().getUserStoreManager();
                     String role = null;
                     if (mapping.getLocalRole().getUserStoreId() != null) {
-                        role = mapping.getLocalRole().getUserStoreId()
-                                + CarbonConstants.DOMAIN_SEPARATOR
-                                + mapping.getLocalRole().getLocalRoleName();
+                        role = mapping.getLocalRole().getUserStoreId() + CarbonConstants.DOMAIN_SEPARATOR + mapping
+                                .getLocalRole().getLocalRoleName();
                     } else {
                         role = mapping.getLocalRole().getLocalRoleName();
                     }
                     if (usm.isExistingRole(role)) {
                         // perfect
                     } else {
-                        String msg = "Cannot find tenant role " + role + " for tenant "
-                                + tenantDomain;
+                        String msg = "Cannot find tenant role " + role + " for tenant " + tenantDomain;
                         throw new IdentityProviderManagementException(msg);
                     }
                 } catch (UserStoreException e) {
-                    String msg = "Error occurred while retrieving UserStoreManager for tenant "
-                            + tenantDomain;
-                    throw new IdentityProviderManagementException(msg,e);
+                    String msg = "Error occurred while retrieving UserStoreManager for tenant " + tenantDomain;
+                    throw new IdentityProviderManagementException(msg, e);
                 }
             }
         }
@@ -1369,8 +1348,7 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
         int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
 
         validateUpdateOfIdPEntityId(currentIdentityProvider.getFederatedAuthenticatorConfigs(),
-                newIdentityProvider.getFederatedAuthenticatorConfigs(),
-                tenantId, tenantDomain);
+                newIdentityProvider.getFederatedAuthenticatorConfigs(), tenantId, tenantDomain);
 
         dao.updateIdP(newIdentityProvider, currentIdentityProvider, tenantId, tenantDomain);
 
@@ -1387,13 +1365,12 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      *
      * @return <code>FederatedAuthenticatorConfig</code> array.
      * @throws IdentityProviderManagementException Error when getting authenticators registered
-     *                                                in the system
+     *                                             in the system
      */
     @Override
-    public FederatedAuthenticatorConfig[] getAllFederatedAuthenticators()
-            throws IdentityProviderManagementException {
-        List<FederatedAuthenticatorConfig> appConfig = ApplicationAuthenticatorService
-                .getInstance().getFederatedAuthenticators();
+    public FederatedAuthenticatorConfig[] getAllFederatedAuthenticators() throws IdentityProviderManagementException {
+        List<FederatedAuthenticatorConfig> appConfig = ApplicationAuthenticatorService.getInstance()
+                .getFederatedAuthenticators();
         if (CollectionUtils.isNotEmpty(appConfig)) {
             return appConfig.toArray(new FederatedAuthenticatorConfig[appConfig.size()]);
         }
@@ -1407,32 +1384,33 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
      * @throws IdentityProviderManagementException
      */
     @Override
-    public ProvisioningConnectorConfig[] getAllProvisioningConnectors()
-            throws IdentityProviderManagementException {
-        List<ProvisioningConnectorConfig> connectorConfigs = ProvisioningConnectorService
-                .getInstance().getProvisioningConnectorConfigs();
+    public ProvisioningConnectorConfig[] getAllProvisioningConnectors() throws IdentityProviderManagementException {
+        List<ProvisioningConnectorConfig> connectorConfigs = ProvisioningConnectorService.getInstance()
+                .getProvisioningConnectorConfigs();
         if (connectorConfigs != null && connectorConfigs.size() > 0) {
             return connectorConfigs.toArray(new ProvisioningConnectorConfig[connectorConfigs.size()]);
         }
         return null;
     }
 
-    private boolean validateIdPEntityId(FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs,
-                                        int tenantId, String tenantDomain) throws IdentityProviderManagementException {
+    private boolean validateIdPEntityId(FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs, int tenantId,
+            String tenantDomain) throws IdentityProviderManagementException {
         if (federatedAuthenticatorConfigs != null) {
             for (FederatedAuthenticatorConfig authConfig : federatedAuthenticatorConfigs) {
-                if (IdentityApplicationConstants.Authenticator.SAML2SSO.FED_AUTH_NAME.equals(authConfig.getName()) ||
-                        IdentityApplicationConstants.Authenticator.SAML2SSO.NAME.equals(authConfig.getName())) {
+                if (IdentityApplicationConstants.Authenticator.SAML2SSO.FED_AUTH_NAME.equals(authConfig.getName())
+                        || IdentityApplicationConstants.Authenticator.SAML2SSO.NAME.equals(authConfig.getName())) {
                     Property[] properties = authConfig.getProperties();
                     if (properties != null) {
                         for (Property property : properties) {
-                            if (IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID.equals(
-                                    property.getName())) {
+                            if (IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID
+                                    .equals(property.getName())) {
                                 if (dao.isIdPAvailableForAuthenticatorProperty(authConfig.getName(),
                                         IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID,
                                         property.getValue(), tenantId)) {
-                                    String msg = "An Identity Provider Entity Id has already been registered with the " +
-                                            "name '" + property.getValue() + "' for tenant '" + tenantDomain + "'";
+                                    String msg =
+                                            "An Identity Provider Entity Id has already been registered with the " +
+                                                    "name '" + property.getValue() + "' for tenant '" + tenantDomain
+                                                    + "'";
                                     throw new IdentityProviderManagementException(msg);
                                 }
                                 return true;
@@ -1446,19 +1424,18 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
     }
 
     private boolean validateUpdateOfIdPEntityId(FederatedAuthenticatorConfig[] currentFederatedAuthConfigs,
-                                                FederatedAuthenticatorConfig[] newFederatedAuthConfigs,
-                                                int tenantId, String tenantDomain)
+            FederatedAuthenticatorConfig[] newFederatedAuthConfigs, int tenantId, String tenantDomain)
             throws IdentityProviderManagementException {
         String currentIdentityProviderEntityId = null;
         if (currentFederatedAuthConfigs != null) {
             for (FederatedAuthenticatorConfig fedAuthnConfig : currentFederatedAuthConfigs) {
-                if (IdentityApplicationConstants.Authenticator.SAML2SSO.FED_AUTH_NAME.equals(fedAuthnConfig.getName()) ||
-                        IdentityApplicationConstants.Authenticator.SAML2SSO.NAME.equals(fedAuthnConfig.getName())) {
+                if (IdentityApplicationConstants.Authenticator.SAML2SSO.FED_AUTH_NAME.equals(fedAuthnConfig.getName())
+                        || IdentityApplicationConstants.Authenticator.SAML2SSO.NAME.equals(fedAuthnConfig.getName())) {
                     Property[] properties = fedAuthnConfig.getProperties();
                     if (properties != null) {
                         for (Property property : properties) {
-                            if (IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID.equals
-                                    (property.getName())) {
+                            if (IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID
+                                    .equals(property.getName())) {
                                 currentIdentityProviderEntityId = property.getValue();
                                 break;
                             }
@@ -1471,15 +1448,15 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
 
         if (newFederatedAuthConfigs != null) {
             for (FederatedAuthenticatorConfig fedAuthnConfig : newFederatedAuthConfigs) {
-                if (IdentityApplicationConstants.Authenticator.SAML2SSO.FED_AUTH_NAME.equals(fedAuthnConfig.getName()) ||
-                        IdentityApplicationConstants.Authenticator.SAML2SSO.NAME.equals(fedAuthnConfig.getName())) {
+                if (IdentityApplicationConstants.Authenticator.SAML2SSO.FED_AUTH_NAME.equals(fedAuthnConfig.getName())
+                        || IdentityApplicationConstants.Authenticator.SAML2SSO.NAME.equals(fedAuthnConfig.getName())) {
                     Property[] properties = fedAuthnConfig.getProperties();
                     if (properties != null) {
                         for (Property property : properties) {
                             if (IdentityApplicationConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID.equals(property.
                                     getName())) {
-                                if (currentIdentityProviderEntityId != null && currentIdentityProviderEntityId.equals
-                                        (property.getValue())) {
+                                if (currentIdentityProviderEntityId != null && currentIdentityProviderEntityId
+                                        .equals(property.getValue())) {
                                     return true;
                                 } else {
                                     if (dao.isIdPAvailableForAuthenticatorProperty(fedAuthnConfig.getName(),
@@ -1504,12 +1481,11 @@ public class IdentityProviderServiceImpl implements IdentityProviderService {
     }
 
     private String getOIDCResidentIdPEntityId() {
-        String OIDCEntityId = IdentityUtil.getProperty("OAuth.OpenIDConnect.IDTokenIssuerID");
-        if (StringUtils.isBlank(OIDCEntityId)) {
-            OIDCEntityId = "localhost";
+        String oidcEntityId = IdentityUtil.getProperty("OAuth.OpenIDConnect.IDTokenIssuerID");
+        if (StringUtils.isBlank(oidcEntityId)) {
+            oidcEntityId = "localhost";
         }
-        return OIDCEntityId;
+        return oidcEntityId;
     }
-
 
 }

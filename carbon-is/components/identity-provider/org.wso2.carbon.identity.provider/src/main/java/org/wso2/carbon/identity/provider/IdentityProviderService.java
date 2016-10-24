@@ -18,13 +18,15 @@
 
 package org.wso2.carbon.identity.provider;
 
-
 import org.wso2.carbon.identity.provider.common.model.IdentityProvider;
 import org.wso2.carbon.identity.provider.common.model.ResidentIdentityProvider;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Defines the functionality that should be supported by Identity Provider Service.
+ */
 public interface IdentityProviderService {
 
     ResidentIdentityProvider getResidentIdP() throws IdentityProviderException;
@@ -61,34 +63,32 @@ public interface IdentityProviderService {
 
     IdentityProvider getEnabledIdPByName(String idPName) throws IdentityProviderException;
 
-    Set<ClaimMapping> getMappedLocalClaims(String idPName, List<String> idPClaimURIs) throws
-                                                                                                           IdentityProviderException;
+    Set<ClaimMapping> getMappedLocalClaims(String idPName, List<String> idPClaimURIs) throws IdentityProviderException;
 
-    Map<String, String> getMappedLocalClaimsMap(String idPName, String tenantDomain, List<String> idPClaimURIs) throws
-                                                                                                                IdentityProviderException;
+    Map<String, String> getMappedLocalClaimsMap(String idPName, String tenantDomain, List<String> idPClaimURIs)
+            throws IdentityProviderException;
 
-    Set<ClaimMapping> getMappedIdPClaims(String idPName, String tenantDomain, List<String> localClaimURIs) throws
-                                                                                                           IdentityProviderException;
-    Map<String, String> getMappedIdPClaimsMap(String idPName, String tenantDomain, List<String> localClaimURIs) throws
-                                                                                                                IdentityProviderException;
+    Set<ClaimMapping> getMappedIdPClaims(String idPName, String tenantDomain, List<String> localClaimURIs)
+            throws IdentityProviderException;
 
-    Set<RoleMapping> getMappedLocalRoles(String idPName, String tenantDomain, String[] idPRoles) throws
-                                                                                                 IdentityProviderException;
+    Map<String, String> getMappedIdPClaimsMap(String idPName, String tenantDomain, List<String> localClaimURIs)
+            throws IdentityProviderException;
 
-    Map<String, LocalRole> getMappedLocalRolesMap(String idPName, String tenantDomain, String[] idPRoles) throws
-                                                                                                          IdentityProviderException;
+    Set<RoleMapping> getMappedLocalRoles(String idPName, String tenantDomain, String[] idPRoles)
+            throws IdentityProviderException;
 
-    Set<RoleMapping> getMappedIdPRoles(String idPName, String tenantDomain, LocalRole[] localRoles) throws
-                                                                                                    IdentityProviderException;
+    Map<String, LocalRole> getMappedLocalRolesMap(String idPName, String tenantDomain, String[] idPRoles)
+            throws IdentityProviderException;
 
-    Map<LocalRole, String> getMappedIdPRolesMap(String idPName, String tenantDomain, LocalRole[] localRoles) throws
-                                                                                                             IdentityProviderException;
+    Set<RoleMapping> getMappedIdPRoles(String idPName, String tenantDomain, LocalRole[] localRoles)
+            throws IdentityProviderException;
+
+    Map<LocalRole, String> getMappedIdPRolesMap(String idPName, String tenantDomain, LocalRole[] localRoles)
+            throws IdentityProviderException;
 
     void createIdP(IdentityProvider identityProvider) throws IdentityProviderException;
 
-
     void deleteIdP(String idPName) throws IdentityProviderException;
-
 
     void updateIdP(String oldIdPName, IdentityProvider newIdentityProvider) throws IdentityProviderException;
 
