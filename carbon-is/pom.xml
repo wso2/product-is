@@ -32,7 +32,7 @@
     <artifactId>org.wso2.carbon.identity</artifactId>
     <packaging>pom</packaging>
 
-    <name>WSO2 Identity Server - User Portal</name>
+    <name>WSO2 Identity Server - Product API</name>
     <url>http://wso2.org</url>
 
     <modules>

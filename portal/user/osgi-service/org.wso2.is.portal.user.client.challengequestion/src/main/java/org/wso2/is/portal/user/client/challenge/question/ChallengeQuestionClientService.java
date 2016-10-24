@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.password;
+package org.wso2.is.portal.user.client.challenge.question;
 
-/**
- * Perform operations related to password handling
- */
-public interface PasswordClientService {
+import org.wso2.is.portal.user.client.challenge.question.bean.ChallengeQuestion;
+
+import java.util.Collection;
+
+public interface ChallengeQuestionClientService {
 
     /**
-     * Update the password to a new one
-     * @param oldPassword
-     * @param newPassword
+     * Get the default list of challenge questions
+     * @return
      */
-    void updatePassword(char[] oldPassword, char[] newPassword) ;
+    Collection<String> getChallengeQuestions();
+
+    void updateChallengeQuestion(ChallengeQuestion question);
+    /**
+     * Update the existing challenge questions to this new set
+     * @param questions
+     */
+    void updateChallengeQuestions(Collection<ChallengeQuestion> questions);
 }
