@@ -45,7 +45,7 @@ public class LocalAccountAssociationClientServiceImplTest {
     public void testListUserAssociations() throws Exception {
         LocalAccountAssociationClientService localAccountAssociationClientService = getUserAccountAssociationClientService();
         User testUser = new User.UserBuilder().setUserId("testUser").setIdentityStore(new IdentityStoreImpl())
-                .setAuthorizationStore(new AuthorizationStoreImpl()).setPrimaryAttributeValue("userId")
+                .setAuthorizationStore(new AuthorizationStoreImpl())
                 .setClaimManager(new InMemoryClaimManager()).build();
         Assert.assertNotNull(localAccountAssociationClientService.listUserAssociations(testUser));
     }
@@ -54,11 +54,11 @@ public class LocalAccountAssociationClientServiceImplTest {
     public void testAddUserAssociation() throws Exception {
         LocalAccountAssociationClientService localAccountAssociationClientService = getUserAccountAssociationClientService();
         User testUser = new User.UserBuilder().setUserId("testUser").setIdentityStore(new IdentityStoreImpl())
-                .setAuthorizationStore(new AuthorizationStoreImpl()).setPrimaryAttributeValue("userId")
+                .setAuthorizationStore(new AuthorizationStoreImpl())
                 .setClaimManager(new InMemoryClaimManager()).build();
 
         User associationUser1 = new User.UserBuilder().setUserId("testUser1").setIdentityStore(new IdentityStoreImpl())
-                .setAuthorizationStore(new AuthorizationStoreImpl()).setPrimaryAttributeValue("userId")
+                .setAuthorizationStore(new AuthorizationStoreImpl())
                 .setClaimManager(new InMemoryClaimManager()).build();
 
         //Expect no exception
