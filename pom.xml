@@ -314,14 +314,25 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.tools.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
                 <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
+                <version>${carbon.security.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
                 <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
@@ -552,6 +563,9 @@
         <mockito.version>1.9.5</mockito.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <testng.version>6.9.4</testng.version>
+
+        <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
+        <org.wso2.carbon.messaging.version>1.0.3</org.wso2.carbon.messaging.version>
 
     </properties>
 

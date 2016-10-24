@@ -53,9 +53,8 @@
             <artifactId>org.wso2.carbon.launcher</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
-            <type>zip</type>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.tools.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -65,6 +64,23 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.caching</groupId>
+            <artifactId>org.wso2.carbon.caching.feature</artifactId>
+            <version>${org.wso2.carbon.caching.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging.feature</artifactId>
+            <version>${org.wso2.carbon.messaging.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -78,28 +94,13 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.caching</groupId>
-            <artifactId>org.wso2.carbon.caching.feature</artifactId>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.messaging</groupId>
-            <artifactId>org.wso2.carbon.messaging.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -128,21 +129,25 @@
             <type>zip</type>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
+            <version>${carbon.deployment.version}</version>
+            <type>zip</type>
+        </dependency>
+
         <!-- Sample Simple Authentication Component -->
-        <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-            <type>zip</type>
-        </dependency>
+
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
-                <type>zip</type>
+            <type>zip</type>
         </dependency>
     </dependencies>
 
@@ -275,6 +280,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
