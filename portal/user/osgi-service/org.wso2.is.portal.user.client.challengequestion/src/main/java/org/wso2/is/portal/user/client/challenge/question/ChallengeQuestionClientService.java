@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.association;
+package org.wso2.is.portal.user.client.challenge.question;
 
-import org.wso2.is.portal.user.client.association.bean.ChallengeQuestion;
+import org.wso2.is.portal.user.client.challenge.question.bean.ChallengeQuestion;
 
 import java.util.Collection;
 
