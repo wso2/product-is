@@ -20,6 +20,10 @@
     <url>http://wso2.org</url>
     <version>6-SNAPSHOT</version>
 
+    <properties>
+        <mavan.findbugsplugin.exclude.file>findbugs-exclude.xml</mavan.findbugsplugin.exclude.file>
+        <maven.checkstyleplugin.excludes>org/wso2/carbon/identity/**/*</maven.checkstyleplugin.excludes>
+    </properties>
 
     <dependencies>
         <dependency>
