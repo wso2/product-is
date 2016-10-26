@@ -23,7 +23,25 @@ package org.wso2.carbon.identity.provider.common.model;
  */
 public class ResidentIdentityProvider extends IdentityProvider {
 
-    protected ResidentIdentityProvider(MetaIdentityProvider metaIdentityProvider) {
-        super(metaIdentityProvider);
+
+
+    protected ResidentIdentityProvider(ResidentIdentityProviderBuilder builder) {
+        super(builder);
+    }
+
+    public static IdentityProviderBuilder newBuilder(MetaIdentityProvider metaIdentityProvide) {
+        return new ResidentIdentityProviderBuilder(metaIdentityProvide);
+    }
+
+    private static class ResidentIdentityProviderBuilder extends IdentityProviderBuilder {
+
+        protected ResidentIdentityProviderBuilder(MetaIdentityProvider metaIdentityProvider) {
+            super(metaIdentityProvider);
+        }
+
+        @Override
+        public ResidentIdentityProvider build() {
+            return new  ResidentIdentityProvider(this);
+        }
     }
 }
