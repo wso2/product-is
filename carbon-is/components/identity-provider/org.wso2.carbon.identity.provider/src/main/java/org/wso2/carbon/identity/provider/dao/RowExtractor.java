@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,14 +16,23 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.provider.common.model;
+package org.wso2.carbon.identity.provider.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- * Represents a federated identity provider.
+ * Binds domain object to prepared statement values.
+ * Usage:
+ * <code>
+ *     this.jdbcTemplate.executeUpdate(INSERT_SQL, (preparedStatement, bean) -> {
+ *          preparedStatement.setString(1, bean.getProperty1());
+ *          ...
+ *     }
+ * </code>
+ * @param <T>
  */
-public class FederatedIdentityProvider extends IdentityProvider {
+public interface RowExtractor<T extends Object> {
 
-    protected FederatedIdentityProvider(IdentityProviderBuilder builder) {
-        super(builder);
-    }
+    void extract(PreparedStatement preparedStatement, T bean) throws SQLException;
 }

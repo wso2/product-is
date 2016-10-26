@@ -32,21 +32,19 @@ public abstract class IdentityProvider implements Serializable {
     private static final long serialVersionUID = 690422066395820761L;
 
     private boolean isEnabled;
-    private MetaIdentityProvider metaIdentityProvider;
+    protected final MetaIdentityProvider metaIdentityProvider;
     private ProvisioningConfig provisioningConfig;
     private AuthenticatorConfig authenticatorConfig;
     private Collection<IdentityProviderProperty> properties = new HashSet<IdentityProviderProperty>();
 
-    private IdentityProvider(IdentityProviderBuilder builder) {
+    protected IdentityProvider(IdentityProviderBuilder builder) {
         this.isEnabled = builder.isEnabled;
         this.metaIdentityProvider = builder.metaIdentityProvider;
-        this.provisioningConfig = builder.provisioningConfigBuilder.build();
-        this.authenticatorConfig = builder.authenticatorConfigBuilder.build();
+        this.provisioningConfig =
+                builder.provisioningConfigBuilder != null ? builder.provisioningConfigBuilder.build() : null;
+        this.authenticatorConfig =
+                builder.authenticatorConfigBuilder != null ? builder.authenticatorConfigBuilder.build() : null;
         this.properties = builder.properties;
-    }
-
-    protected IdentityProvider(MetaIdentityProvider metaIdentityProvider) {
-        this.metaIdentityProvider = metaIdentityProvider;
     }
 
     public boolean isEnabled() {
@@ -56,6 +54,8 @@ public abstract class IdentityProvider implements Serializable {
     public MetaIdentityProvider getMetaIdentityProvider() {
         return metaIdentityProvider;
     }
+
+    void setMetaIdentityProvider(MetaIdentityProvider metaIdentityProvider) {}
 
     public ProvisioningConfig getProvisioningConfig() {
         return provisioningConfig;
@@ -76,7 +76,7 @@ public abstract class IdentityProvider implements Serializable {
      * Builds the representation of identity provider including mata details, provisioning configuration builder,
      * authenticators and other properties.
      */
-    public class IdentityProviderBuilder {
+    public static abstract class IdentityProviderBuilder {
 
         private boolean isEnabled = true;
         private MetaIdentityProvider metaIdentityProvider;
@@ -85,7 +85,7 @@ public abstract class IdentityProvider implements Serializable {
         private AuthenticatorConfig.AuthenticatorConfigBuilder authenticatorConfigBuilder;
         private Collection<IdentityProviderProperty> properties = new HashSet<IdentityProviderProperty>();
 
-        public IdentityProviderBuilder(MetaIdentityProvider metaIdentityProvider) {
+        protected IdentityProviderBuilder(MetaIdentityProvider metaIdentityProvider) {
             this.metaIdentityProvider = metaIdentityProvider;
         }
 
@@ -187,5 +187,7 @@ public abstract class IdentityProvider implements Serializable {
             }
             return this;
         }
+
+        public abstract <T extends Object> T build() ;
     }
 }
