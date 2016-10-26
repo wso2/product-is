@@ -55,7 +55,7 @@ public class JITProvisioningConfig implements Serializable {
 
         public JITProvisioningConfig.JITProvisioningConfigBuilder setProvisioningIdPs(
                 Collection<String> provisioningIdPs) {
-            if (CollectionUtils.isNotEmpty(provisioningIdPs)) {
+            if (!provisioningIdPs.isEmpty()) {
                 this.provisioningIdPs.clear();
                 this.provisioningIdPs.addAll(provisioningIdPs);
             }
@@ -71,7 +71,7 @@ public class JITProvisioningConfig implements Serializable {
 
         public JITProvisioningConfig.JITProvisioningConfigBuilder addProvisioningIdPs(
                 Collection<String> provisioningIdPs) {
-            if (CollectionUtils.isNotEmpty(provisioningIdPs)) {
+            if (!provisioningIdPs.isEmpty()) {
                 this.provisioningIdPs.addAll(provisioningIdPs);
             }
             return this;

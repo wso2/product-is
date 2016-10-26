@@ -18,11 +18,16 @@
 
 package org.wso2.carbon.identity.provider;
 
+import org.wso2.carbon.identity.provider.common.model.AuthenticatorConfig;
+import org.wso2.carbon.identity.provider.common.model.ClaimConfig;
 import org.wso2.carbon.identity.provider.common.model.IdentityProvider;
+import org.wso2.carbon.identity.provider.common.model.ProvisionerConfig;
 import org.wso2.carbon.identity.provider.common.model.ResidentIdentityProvider;
+import org.wso2.carbon.identity.provider.common.model.RoleConfig;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Defines the functionality that should be supported by Identity Provider Service.
@@ -61,29 +66,27 @@ public interface IdentityProviderService {
 
     IdentityProvider getIdPByAuthenticatorPropertyValue(String name, String value) throws IdentityProviderException;
 
-    IdentityProvider getEnabledIdPByName(String idPName) throws IdentityProviderException;
-
-    Set<ClaimMapping> getMappedLocalClaims(String idPName, List<String> idPClaimURIs) throws IdentityProviderException;
+    Set<ClaimConfig> getMappedLocalClaims(String idPName, List<String> idPClaimURIs) throws IdentityProviderException;
 
     Map<String, String> getMappedLocalClaimsMap(String idPName, String tenantDomain, List<String> idPClaimURIs)
             throws IdentityProviderException;
 
-    Set<ClaimMapping> getMappedIdPClaims(String idPName, String tenantDomain, List<String> localClaimURIs)
+    Set<ClaimConfig> getMappedIdPClaims(String idPName, String tenantDomain, List<String> localClaimURIs)
             throws IdentityProviderException;
 
     Map<String, String> getMappedIdPClaimsMap(String idPName, String tenantDomain, List<String> localClaimURIs)
             throws IdentityProviderException;
 
-    Set<RoleMapping> getMappedLocalRoles(String idPName, String tenantDomain, String[] idPRoles)
+    Set<RoleConfig> getMappedLocalRoles(String idPName, String tenantDomain, String[] idPRoles)
             throws IdentityProviderException;
 
-    Map<String, LocalRole> getMappedLocalRolesMap(String idPName, String tenantDomain, String[] idPRoles)
+    Map<String, RoleConfig> getMappedLocalRolesMap(String idPName, String tenantDomain, String[] idPRoles)
             throws IdentityProviderException;
 
-    Set<RoleMapping> getMappedIdPRoles(String idPName, String tenantDomain, LocalRole[] localRoles)
+    Set<RoleConfig> getMappedIdPRoles(String idPName, String tenantDomain, RoleConfig[] localRoles)
             throws IdentityProviderException;
 
-    Map<LocalRole, String> getMappedIdPRolesMap(String idPName, String tenantDomain, LocalRole[] localRoles)
+    Map<RoleConfig, String> getMappedIdPRolesMap(String idPName, String tenantDomain, RoleConfig[] localRoles)
             throws IdentityProviderException;
 
     void createIdP(IdentityProvider identityProvider) throws IdentityProviderException;
@@ -92,8 +95,8 @@ public interface IdentityProviderService {
 
     void updateIdP(String oldIdPName, IdentityProvider newIdentityProvider) throws IdentityProviderException;
 
-    FederatedAuthenticatorConfig[] getAllFederatedAuthenticators() throws IdentityProviderException;
+    AuthenticatorConfig[] getAllFederatedAuthenticators() throws IdentityProviderException;
 
-    ProvisioningConnectorConfig[] getAllProvisioningConnectors() throws IdentityProviderException;
+    ProvisionerConfig[] getAllProvisioningConnectors() throws IdentityProviderException;
 
 }
