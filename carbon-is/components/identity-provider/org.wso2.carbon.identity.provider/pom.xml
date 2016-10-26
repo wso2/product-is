@@ -38,120 +38,6 @@
         <name>WSO2</name>
         <url>http://www.wso2.org/</url>
     </organization>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>WSO2 Developer</name>
-            <email>dev@wso2.org</email>
-            <organization>WSO2</organization>
-            <organizationUrl>http://www.wso2.org/</organizationUrl>
-        </developer>
-    </developers>
-
-    <repositories>
-        <!-- WSO2 released artifact repository -->
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 Releases Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-
-        <!-- WSO2 Snapshot artifact repository -->
-        <repository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>wso2.releases</id>
-            <name>WSO2 Releases Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </pluginRepository>
-
-        <pluginRepository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-
-        <pluginRepository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>WSO2 Nexus Release Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <mailingLists>
-        <mailingList>
-            <name>WSO2 Dev List</name>
-            <subscribe>dev-request@wso2.org</subscribe>
-            <unsubscribe>dev-request@wso2.org</unsubscribe>
-            <post>dev@wso2.org</post>
-            <archive>http://mail.wso2.org/mailarchive/dev/</archive>
-        </mailingList>
-    </mailingLists>
 
     <scm>
         <connection>scm:git:https://github.com/wso2/carbon-parent.git</connection>
@@ -162,86 +48,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.provider</groupId>
             <artifactId>org.wso2.carbon.identity.provider.common</artifactId>
-            <version>6-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>${maven.wagon.ssh.version}</version>
-            </extension>
-        </extensions>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Import-Package>
-                            org.osgi.framework.*;version="${osgi.framework.package.import.version.range}",
-                            org.slf4j.*;version="${slf4j.logging.package.import.version.range}",
-                            org.wso2.carbon.context.api.*;version="${org.wso2.carbon.context.import.version.range}",
-                            org.yaml.snakeyaml.*;version="${org.snakeyaml.package.import.version.range}",
-                            javax.sql.*,
-                            javax.naming.*,
-                            javax.xml.*,
-                            javax.cache.*,
-                            org.osgi.service.component.annotations.*;version="${org.osgi.service.component.annotations.version.range}",
-                            net.minidev.asm.*;version="${asm.package.version.range}",
-                            org.wso2.carbon.kernel.*,
-                            org.wso2.carbon.messaging.*,
-                            org.wso2.carbon.caching.*
-                        </Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
-    <!--carbon.component>
-        startup.listener;
-        componentName="identity-provider";
-        requiredService="org.wso2.carbon.identity.common.IdentityCommonService"
-    </carbon.component-->
-
-    <!--<dsannotations>*</dsannotations>-->
 
     <properties>
         <mavan.findbugsplugin.exclude.file>findbugs-exclude.xml</mavan.findbugsplugin.exclude.file>
@@ -252,42 +70,13 @@
             org.wso2.carbon.identity.provider.*
         </export.package>
         <import.package>
-            org.osgi.framework.*;version="${osgi.framework.package.import.version.range}",
-            org.slf4j.*;version="${slf4j.logging.package.import.version.range}",
-            org.wso2.carbon.context.api.*;version="${org.wso2.carbon.context.import.version.range}",
-            org.yaml.snakeyaml.*;version="${org.snakeyaml.package.import.version.range}",
-            javax.sql.*,
-            javax.naming.*,
-            javax.xml.*,
-            javax.cache.*,
-            org.osgi.service.component.annotations.*;version="${org.osgi.service.component.annotations.version.range}",
-            net.minidev.asm.*;version="${asm.package.version.range}",
-            org.wso2.carbon.kernel.*,
-            org.wso2.carbon.messaging.*,
-            org.wso2.carbon.caching.*
+            org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+            org.slf4j.*;version="${slf4j.version}",
+            org.wso2.carbon.identity.provider.common.*;version="6-SNAPSHOT",
         </import.package>
 
-        <!--carbon.component>
-            startup.listener;
-            componentName="identity-provider";
-            requiredService="org.wso2.carbon.security.caas.user.core.store.connector.AuthorizationStoreConnectorFactory"
-        </carbon.component-->
-
         <dsannotations>*</dsannotations>
-
-        <!-- OSGi API version range-->
-        <osgi.framework.package.import.version.range>[1.8.0, 2.0.0)</osgi.framework.package.import.version.range>
-        <org.osgi.service.component.annotations.version.range>[1.2.0, 1.3.0)
-        </org.osgi.service.component.annotations.version.range>
-
-        <!-- Dependency package version ranges -->
-        <asm.package.version.range>[1.0.2, 2.0.0)</asm.package.version.range>
-
-        <!--Logging API version range-->
-        <slf4j.logging.package.import.version.range>[1.7.1, 2.0.0)</slf4j.logging.package.import.version.range>
-
-        <org.wso2.carbon.context.import.version.range>[5.0.0, 5.1.0)</org.wso2.carbon.context.import.version.range>
-        <org.snakeyaml.package.import.version.range>[1.16.0, 2.0.0)</org.snakeyaml.package.import.version.range>
     </properties>
+
 
 </project>

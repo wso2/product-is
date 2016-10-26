@@ -255,9 +255,15 @@
                 <version>${carbon.metrics.version}</version>
             </dependency>
             <dependency>
+<<<<<<< HEAD
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.recovery</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
+=======
+                <groupId>org.wso2.carbon.identity.provider</groupId>
+                <artifactId>org.wso2.carbon.identity.provider.common</artifactId>
+                <version>6-SNAPSHOT</version>
+>>>>>>> 7a96980... Making the required changes to compile new code.
             </dependency>
 
             <dependency>
@@ -381,6 +387,7 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+<<<<<<< HEAD
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
                 <version>${carbon.uuf.version}</version>
@@ -549,6 +556,8 @@
                 <!--<type>zip</type>-->
             <!--</dependency>-->
 =======
+=======
+>>>>>>> 7a96980... Making the required changes to compile new code.
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
                 <version>${uuf.version}</version>
@@ -859,6 +868,21 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.container</artifactId>
                 <version>${carbon.kernel.version}</version>
+            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon</groupId>-->
+                <!--<artifactId>org.wso2.carbon.commons.collections</artifactId>-->
+                <!--<version>3.1</version>-->
+            <!--</dependency>-->
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-all</artifactId>
+                <version>2.1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>apache-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
