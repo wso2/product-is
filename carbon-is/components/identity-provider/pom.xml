@@ -38,8 +38,8 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.identity.provider</module>
         <module>org.wso2.carbon.identity.provider.common</module>
+        <module>org.wso2.carbon.identity.provider</module>
     </modules>
 
 </project>

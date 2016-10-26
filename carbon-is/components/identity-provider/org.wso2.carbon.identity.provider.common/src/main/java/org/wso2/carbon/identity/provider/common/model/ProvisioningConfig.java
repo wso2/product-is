@@ -114,7 +114,7 @@ public class ProvisioningConfig {
 
         public ProvisioningConfig.ProvisioningConfigBuilder setProvisioners(
                 Collection<ProvisionerConfig> provisioners) {
-            if (CollectionUtils.isNotEmpty(provisioners)) {
+            if (!provisioners.isEmpty()) {
                 this.provisioners.clear();
                 this.provisioners.addAll(provisioners);
             }
@@ -130,7 +130,7 @@ public class ProvisioningConfig {
 
         public ProvisioningConfig.ProvisioningConfigBuilder addProvisioners(
                 Collection<ProvisionerConfig> provisioners) {
-            if (CollectionUtils.isNotEmpty(provisioners)) {
+            if (!provisioners.isEmpty()) {
                 this.provisioners.addAll(provisioners);
             }
             return this;

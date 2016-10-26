@@ -167,7 +167,7 @@ public abstract class IdentityProvider implements Serializable {
         }
 
         public IdentityProviderBuilder setIdentityProviderProperties(Collection<IdentityProviderProperty> properties) {
-            if (CollectionUtils.isNotEmpty(properties)) {
+            if (!properties.isEmpty()) {
                 this.properties.clear();
                 this.properties.addAll(properties);
             }
@@ -182,7 +182,7 @@ public abstract class IdentityProvider implements Serializable {
         }
 
         public IdentityProviderBuilder addIdentityProviderProperties(Collection<IdentityProviderProperty> properties) {
-            if (CollectionUtils.isNotEmpty(properties)) {
+            if (!properties.isEmpty()) {
                 properties.addAll(properties);
             }
             return this;

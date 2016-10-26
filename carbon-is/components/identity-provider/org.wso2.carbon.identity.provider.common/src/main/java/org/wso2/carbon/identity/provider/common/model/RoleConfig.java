@@ -54,7 +54,7 @@ public class RoleConfig implements Serializable {
         }
 
         public RoleConfig.RoleConfigBuilder setRoleMappings(Map<String, String> roleMap) {
-            if (MapUtils.isNotEmpty(roleMap)) {
+            if (!roleMap.isEmpty()) {
                 this.roleMapping.clear();
                 this.roleMapping.putAll(roleMap);
             }
@@ -69,7 +69,7 @@ public class RoleConfig implements Serializable {
         }
 
         public RoleConfig.RoleConfigBuilder addRoleMappings(Map<String, String> roleMap) {
-            if (MapUtils.isNotEmpty(roleMap)) {
+            if (!roleMap.isEmpty()) {
                 this.roleMapping.putAll(roleMap);
             }
             return this;

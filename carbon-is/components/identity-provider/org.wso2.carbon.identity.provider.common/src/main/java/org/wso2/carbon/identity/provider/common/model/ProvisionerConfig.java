@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.identity.provider.common.model;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -84,7 +82,7 @@ public class ProvisionerConfig implements Serializable {
         }
 
         public ProvisioningConnectorConfigBuilder setProperties(Collection<IdentityConnectorProperty> properties) {
-            if (CollectionUtils.isNotEmpty(properties)) {
+            if (!properties.isEmpty()) {
                 this.properties = new HashSet<IdentityConnectorProperty>(properties);
             }
             return this;
@@ -98,7 +96,7 @@ public class ProvisionerConfig implements Serializable {
         }
 
         public ProvisioningConnectorConfigBuilder addProperties(Collection<IdentityConnectorProperty> properties) {
-            if (CollectionUtils.isNotEmpty(properties)) {
+            if (!properties.isEmpty()) {
                 this.properties.addAll(properties);
             }
             return this;

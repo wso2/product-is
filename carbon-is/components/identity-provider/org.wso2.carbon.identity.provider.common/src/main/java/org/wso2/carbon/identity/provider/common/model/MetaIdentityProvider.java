@@ -117,7 +117,7 @@ public class MetaIdentityProvider implements Serializable {
         }
 
         public MetaIdentityProviderBuilder setCerts(Map<String, String> certMap) {
-            if (MapUtils.isNotEmpty(certMap)) {
+            if (!certMap.isEmpty()) {
                 this.certMap.clear();
                 this.certMap.putAll(certMap);
             }
@@ -132,7 +132,7 @@ public class MetaIdentityProvider implements Serializable {
         }
 
         public MetaIdentityProviderBuilder addCerts(Map<String, String> certMap) {
-            if (MapUtils.isNotEmpty(certMap)) {
+            if (!certMap.isEmpty()) {
                 this.certMap.putAll(certMap);
             }
             return this;
