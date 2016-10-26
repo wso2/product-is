@@ -46,6 +46,10 @@ public class MetaIdentityProvider implements Serializable {
 
     private RoleConfig roleConfig;
 
+    private MetaIdentityProvider() {
+
+    }
+
     private MetaIdentityProvider(MetaIdentityProviderBuilder builder) {
         this.identityProviderId = builder.identityProviderId;
         this.name = builder.name;
@@ -84,10 +88,15 @@ public class MetaIdentityProvider implements Serializable {
         return roleConfig;
     }
 
+
+    public static MetaIdentityProviderBuilder newBuilder(int identityProviderId, String name) {
+        return new MetaIdentityProviderBuilder(identityProviderId, name);
+    }
+
     /**
      * Builder class for meta representation of an identity provider.
      */
-    public class MetaIdentityProviderBuilder {
+    public static class MetaIdentityProviderBuilder {
 
         private int identityProviderId;
         private String name;
@@ -159,7 +168,9 @@ public class MetaIdentityProvider implements Serializable {
         }
 
         public MetaIdentityProvider build() {
-            return new MetaIdentityProvider(this);
+            MetaIdentityProvider result = new MetaIdentityProvider(this);
+
+            return result;
         }
     }
 
