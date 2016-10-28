@@ -91,7 +91,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
                     "                <Match MatchId=\"urn:oasis:names:tc:xacml:1.0:function:string-equal\">\n" +
                     "                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" +
                     APPLICATION_NAME + "</AttributeValue>\n" +
-                    "                    <AttributeDesignator AttributeId=\"urn:oasis:names:tc:xacml:1.0:resource:resource-id\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
+                    "                    <AttributeDesignator AttributeId=\"http://wso2.org/identity/auth/sp-name\" Category=\"http://wso2.org/identity/auth\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
                     "                </Match>\n" +
                     "            </AllOf>\n" +
                     "        </AnyOf>\n" +
