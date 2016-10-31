@@ -47,7 +47,6 @@
     </scm>
 
     <modules>
-        <module>carbon-is</module>
         <module>product</module>
         <module>portal/user</module>
     </modules>
@@ -438,6 +437,24 @@
                 <groupId>apache-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
