@@ -50,6 +50,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <module>portal</module>
 =======
         <!--Components-->
@@ -70,6 +71,8 @@
 =======
         <module>carbon-is</module>
 >>>>>>> fd97d4c... Adding C5 Identity Provider implementation
+=======
+>>>>>>> ec8cd2b... Removing the code that is moved to new repo https://github.com/wso2/carbon-identity-providers
         <module>product</module>
         <module>portal/user</module>
 >>>>>>> b84e760... Refactoring c5 product-is branch
@@ -883,6 +886,24 @@
                 <groupId>apache-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
