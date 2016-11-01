@@ -230,6 +230,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.authentication.framework.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.application.authz.xacml:org.wso2.carbon.identity.application.authz.xacml.server.feature:${identity.app.authz.xacml.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -708,6 +711,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.application.authz.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.app.authz.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1180,6 +1189,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.application.authz.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.app.authz.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1571,6 +1586,12 @@
                                         org.wso2.carbon.identity.application.authentication.framework.server.feature.group
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.application.authz.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.app.authz.xacml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
