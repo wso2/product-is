@@ -1265,6 +1265,8 @@
         <identity.local.auth.fido.version>5.1.3</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.2.1</identity.local.auth.iwa.version>
 
+        <!--SAML Metadata-->
+        <identity.metadata.saml.version>0.1.0</identity.metadata.saml.version>
 
         <!--Identity Repo Versions End-->
 
