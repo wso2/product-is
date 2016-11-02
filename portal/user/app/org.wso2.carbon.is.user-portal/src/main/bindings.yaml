@@ -1,3 +1,6 @@
 # zone name : fragment name
+<<<<<<< HEAD
 org.wso2.carbon.uuf.is.foundation.footer: org.wso2.carbon.uuf.is.foundation.footer
 org.wso2.carbon.uuf.is.foundation.menubar: org.wso2.carbon.uuf.is.foundation.menubar
+=======
+>>>>>>> 7014329... Made user portal App Runnable
