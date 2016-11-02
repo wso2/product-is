@@ -1,0 +1,40 @@
+<ul class="nav navbar-nav">
+    {{~#menu "main"}}
+        {{~#if @leaf}}
+            <li>
+                <a href="{{@contextPath}}/{{link}}">{{#if icon}}<i class="{{icon}}"></i>{{/if}}{{@key}}</a>
+            </li>
+        {{~else}}
+            <li class="dropdown">
+                <a href="{{#if @this.link}}{{@this.link}}{{else}}#{{/if}}" class="dropdown-toggle"
+                   data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {{#if @this.icon}}<i class="{{@this.icon}}"></i>{{/if}}{{@key~}}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {{~#menu .}}
+                        {{~#if @leaf}}
+                            <li>
+                                <a href="{{@contextPath}}/{{link}}">
+                                    {{#if icon}}<i class="{{icon}}"></i>{{/if}}{{@key}}</a>
+                            </li>
+                        {{~else}}
+                            <li class="dropdown-submenu">
+                                <a href="{{#if @this.link}}{{@this.link}}{{else}}#{{/if}}">{{@key}}</a>
+                                <ul class="dropdown-menu">
+                                    {{#menu .}}
+                                        <li>
+                                            <a href="{{@contextPath}}/{{link}}">
+                                                {{#if icon}}<i class="{{icon}}"></i>{{/if}}{{@key}}
+                                            </a>
+                                        </li>
+                                    {{/menu}}
+                                </ul>
+                            </li>
+                        {{~/if}}
+                    {{~/menu}}
+                </ul>
+            </li>
+        {{~/if}}
+    {{~/menu}}
+</ul>
