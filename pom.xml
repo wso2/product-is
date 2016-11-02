@@ -257,6 +257,7 @@
                 <artifactId>org.wso2.carbon.metrics.core</artifactId>
                 <version>${carbon.metrics.version}</version>
             </dependency>
+<<<<<<< HEAD
             <dependency>
 <<<<<<< HEAD
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -304,6 +305,8 @@
                 <artifactId>h2</artifactId>
                 <version>1.4.191</version>
             </dependency>
+=======
+>>>>>>> 6906998... Made the UUF app for user portal buildable
 
             <!--End Carbon Dependencies-->
 
@@ -339,6 +342,30 @@
                 <version>${carbon.cache.version}</version>
                 <type>zip</type>
             </dependency>
+<<<<<<< HEAD
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.metrics</groupId>
+                <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
+                <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <!--End of Dependent Features-->
+
+            <!--Identity Server Dependent Features-->
+>>>>>>> 6906998... Made the UUF app for user portal buildable
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>
                 <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
@@ -572,23 +599,17 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
-                <version>${carbon.security.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
                 <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-                <version>${carbon.security.version}</version>
-                <type>zip</type>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
+                <!--<artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>-->
+                <!--<version>${carbon.security.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.uuf.sample</groupId>
                 <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
@@ -803,6 +824,7 @@
                 <version>${carbon.security.userstore.jdbc.version}</version>
                 <scope>test</scope>
             </dependency>
+<<<<<<< HEAD
             <dependency>
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc</artifactId>
@@ -867,6 +889,13 @@
                 <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                 <type>zip</type>
             </dependency>
+=======
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
+                <!--<artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>-->
+                <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
+            <!--</dependency>-->
+>>>>>>> 6906998... Made the UUF app for user portal buildable
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.container</artifactId>
@@ -1010,8 +1039,12 @@
         <carbon.datasources.version>1.0.0</carbon.datasources.version>
         <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <carbon-uuf-maven-plugin.version>1.0.0-SNAPSHOT</carbon-uuf-maven-plugin.version>
+=======
+        <carbon-uuf-maven-plugin.version>1.0.0-m5</carbon-uuf-maven-plugin.version>
+>>>>>>> 6906998... Made the UUF app for user portal buildable
         <carbon.hazelcast.feature.version>1.0.0</carbon.hazelcast.feature.version>
         <carbon.hazelcast.package.import.version.range>[1.0.0, 2.0.0)</carbon.hazelcast.package.import.version.range>
         <carbon.hazelcast.version>1.0.0-SNAPSHOT</carbon.hazelcast.version>
