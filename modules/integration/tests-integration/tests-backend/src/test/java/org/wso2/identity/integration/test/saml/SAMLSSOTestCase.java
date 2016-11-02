@@ -678,7 +678,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             ClaimValue lastName = new ClaimValue();
             lastName.setClaimURI(lastNameClaimURI);
             lastName.setValue(config.getUser().getUsername());
-            claimValues[1] = lastName;
+            claimValues[0] = lastName;
         }
 
         return claimValues;
