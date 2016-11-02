@@ -130,6 +130,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
+            <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
         </classes>
     </test>
