@@ -25,21 +25,24 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.apache.http.client.HttpClient;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,6 +119,24 @@ public class Utils {
         return httpClient.execute(post);
     }
 
+    public static HttpResponse sendPOSTClaimMessage(HttpResponse response, String commonAuthUrl, String userAgent, String
+            acsUrl, String artifact,  HttpClient httpClient) throws Exception {
+
+        Map<String, String> queryParams = getQueryParams(getRedirectUrl(response));
+        String sessionKey = queryParams.get("sessionDataKey");
+        String[] claims = queryParams.get("missingClaims").split(",");
+
+        HttpPost post = new HttpPost(commonAuthUrl);
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+
+        for (int i=0; i<claims.length; i++) {
+            urlParameters.add(new BasicNameValuePair("claim_mand_"+claims[i], "providedClaimValue"));
+        }
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
+    }
+
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
             artifact, HttpClient httpClient) throws IOException {
         Header[] headers = response.getAllHeaders();
@@ -141,6 +162,17 @@ public class Utils {
             }
         }
         return url;
+    }
+
+    public static Map<String, String> getQueryParams(String Url) throws Exception {
+
+        Map<String, String> queryParams = new HashMap<>();
+
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(Url), "UTF-8");
+        for (NameValuePair param : params) {
+            queryParams.put(param.getName(),param.getValue());
+        }
+        return queryParams;
     }
 
     public static HttpResponse sendGetRequest(String url, String userAgent, HttpClient httpClient) throws Exception {
