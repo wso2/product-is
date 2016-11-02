@@ -564,7 +564,7 @@
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.ui.pages</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -641,7 +641,7 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.passivests.filter</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.ws.commons.axiom</groupId>
@@ -761,7 +761,7 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.styles</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -832,13 +832,13 @@
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.common.clients</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.identity.integration.common.utils</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -944,13 +944,13 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.integration.common.clients</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.integration.common.utils</artifactId>
-                <version>${product.identity.version}</version>
+                <version>${project.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -1212,7 +1212,6 @@
     </profiles>
 
     <properties>
-        <product.identity.version>${project.version}</product.identity.version>
 
         <!--Carbon Identity Framework Version-->
         <carbon.identity.framework.version>5.6.3</carbon.identity.framework.version>

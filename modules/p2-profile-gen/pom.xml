@@ -265,10 +265,10 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.is:org.wso2.identity.styles.feature:${product.identity.version}
+                                    org.wso2.is:org.wso2.identity.styles.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.is:org.wso2.identity.utils.feature:${product.identity.version}
+                                    org.wso2.is:org.wso2.identity.utils.feature:${project.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -304,7 +304,7 @@
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.is:org.wso2.identity.ui.feature:${product.identity.version}
+                                    org.wso2.is:org.wso2.identity.ui.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.core.feature:${carbon.kernel.version}
@@ -642,7 +642,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.styles.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
@@ -654,7 +654,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.feature.group</id>
@@ -684,7 +684,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.ui.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
@@ -1120,7 +1120,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.styles.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
@@ -1132,7 +1132,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.feature.group</id>
@@ -1162,7 +1162,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.ui.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
@@ -1540,7 +1540,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
-                                    <version>${product.identity.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.server.feature.group</id>
