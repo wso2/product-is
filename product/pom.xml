@@ -81,19 +81,29 @@
             <artifactId>org.wso2.carbon.datasource.core.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
-            <type>zip</type>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
+            <!--<artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>-->
+            <!--<type>zip</type>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>org.wso2.msf4j.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.metrics</groupId>
+            <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -150,6 +160,12 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
+            <version>${carbon.is.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
@@ -288,11 +304,15 @@
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.security.userstore.jdbc.feature</id>-->
+                                    <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
+                                <!--</feature>-->
                                 <!-- Sample Applications -->
+                                <feature>
+                                    <id>org.wso2.carbon.is.user-portal.feature</id>
+                                    <version>${carbon.is.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.Features-app.feature</id>
                                     <version>${carbon.uuf.version}</version>
@@ -414,9 +434,13 @@
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                    <id>org.wso2.carbon.is.user-portal.feature.group</id>
+                                    <version>${carbon.is.version}</version>
                                 </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>-->
+                                    <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
+                                <!--</feature>-->
                             </features>
                         </configuration>
                     </execution>
