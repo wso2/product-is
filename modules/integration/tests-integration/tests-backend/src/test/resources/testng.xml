@@ -111,6 +111,8 @@
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.MetadataTestCase"/>
+
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
             <!--Workflow Management test case-->
