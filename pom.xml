@@ -724,6 +724,7 @@
                 <version>${ow2.jta.spec.version}</version>
                 <scope>test</scope>
             </dependency>
+<<<<<<< HEAD
 
             <dependency>
                 <groupId>org.wso2.eclipse.equinox</groupId>
@@ -810,6 +811,8 @@
                 <artifactId>org.eclipse.equinox.cm</artifactId>
                 <version>${org.eclipse.equinox.cm.version}</version>
             </dependency>
+=======
+>>>>>>> 5c9fb84... Fixed some build issues and added i18n.
             <!--End of Dependencies for Testing-->
 
             <!-- Carbon Dependencies -->
@@ -899,7 +902,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.container</artifactId>
-                <version>${carbon.kernel.version}</version>
+                <version>${carbon.container.version}</version>
             </dependency>
             <!--<dependency>-->
                 <!--<groupId>org.wso2.carbon</groupId>-->
