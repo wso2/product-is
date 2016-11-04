@@ -2,20 +2,15 @@ appName : Identity Server User Portal
 theme : org.wso2.carbon.uuf.is.portal.theme.default
 menu :
   main :
-    Home : {link: "", icon: "fw-home"}
-    Features :
-      Call a Java class: {link: "osgi/call-class"}
-      Call an OSGi Service: {link: "osgi/call-service", icon: "fw fw-service"}
-      Include a Module: {link: "include-module", icon: "fw fw-use"}
-      Http Form POST : {link: "http-form"}
-      Send HTTP Error : {link: "send-error", icon: "fw fw-bug"}
-      Send HTTP Redirect : {link: "send-redirect"}
-      Session : {link: "session", icon: "fw fw-user"}
-      Theme :
-        this : {link: "theme"}
-        Session Scope : {link: "theme/session-scope"}
-      Menu : {link: "menu", icon: "fw fw-list"}
-      File Upload: {link: "file-upload", icon: "fw fw-upload"}
+    Home : {link: "#", icon: "fw-home"}
+    Stories :
+      Self Sign-up : {link: "user/self-signup"}
+      Filling out the default attribute profile : {link: "user/attribute-profile/default-attributes", icon: "fw fw-add"}
+      Creating an attribute profile : {link: "user/attribute-profile/new-attributes", icon: "fw fw-add" }
+      View Profile: {link: "user/attribute-profile/view-attributes", icon: "fw fw-view"}
+      Update Profile: {link: "user/attribute-profile/update-attributes", icon: "fw fw-user"}
+      Delete Profile (Tentative): {link: "user/attribute-profile/delete-attributes", icon: "fw fw-delete"}
+      Password Update: {link: "user/account/change-password", icon: "fw fw-user"}
 errorPages:
   "404": /foundation/error/404
   default: /foundation/error/default
