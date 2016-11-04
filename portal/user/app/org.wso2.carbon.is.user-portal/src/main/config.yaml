@@ -3,6 +3,9 @@ theme : org.wso2.carbon.uuf.is.portal.theme.default
 menu :
   main :
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1536c2c... Added few user stories
     Home : {link: "#", icon: "fw-home"}
     Stories :
       Self Sign-up : {link: "user/self-signup"}
@@ -12,6 +15,7 @@ menu :
       Update Profile: {link: "user/attribute-profile/update-attributes", icon: "fw fw-user"}
       Delete Profile (Tentative): {link: "user/attribute-profile/delete-attributes", icon: "fw fw-delete"}
       Password Update: {link: "user/account/change-password", icon: "fw fw-user"}
+<<<<<<< HEAD
 =======
     Home : {link: "", icon: "fw-home"}
     Features :
@@ -28,6 +32,8 @@ menu :
       Menu : {link: "menu", icon: "fw fw-list"}
       File Upload: {link: "file-upload", icon: "fw fw-upload"}
 >>>>>>> 7014329... Made user portal App Runnable
+=======
+>>>>>>> 1536c2c... Added few user stories
 errorPages:
   "404": /foundation/error/404
   default: /foundation/error/default
