@@ -1,13 +1,9 @@
 {{layout "org.wso2.carbon.uuf.is.foundation.main"}}
 {{title "Home | " @config.appName}}
 {{#fillZone "content"}}
-    <h3>User Self Sign-up</h3>
+    <h3>Update my default attributes</h3>
     <hr />
     <form method="post" class="form-horizontal">
-        <div class="form-group">
-            <label for="userName">User Name</label>
-            <input type="text" name="userName" id="userName" class="form-control" placeholder="userName" />
-        </div>
         <div class="form-group">
             <label for="firstName">First Name</label>
             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="firstName" />
@@ -16,9 +12,13 @@
             <label for="lastName">Last Name</label>
             <input type="text" name="lastName" id="lastName" class="form-control" placeholder="lastName" />
         </div>
-        <input type="submit" value="Register" />
+        <div class="form-group">
+            <label for="telephone">Telephone</label>
+            <input type="text" name="telephone" id="telephone" class="form-control" placeholder="telephone" />
+        </div>
+        <input type="submit" value="Update" />
     </form>
     {{#if successResult}}
-        Your account: {{successResult}}
+        Your default profile is updated: {{successResult}}
     {{/if}}
 {{/fillZone}}
