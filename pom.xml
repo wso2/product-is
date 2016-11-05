@@ -937,6 +937,18 @@
                 <version>${carbon.metrics.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.identity.mgt</groupId>-->
+                <!--<artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>-->
+                <!--<version>${carbon.itentity.mgt.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
@@ -1047,11 +1059,14 @@
         <carbon-uuf-maven-plugin.version>1.0.0-SNAPSHOT</carbon-uuf-maven-plugin.version>
 =======
         <carbon-uuf-maven-plugin.version>1.0.0-m5</carbon-uuf-maven-plugin.version>
+<<<<<<< HEAD
 >>>>>>> 6906998... Made the UUF app for user portal buildable
         <carbon.hazelcast.feature.version>1.0.0</carbon.hazelcast.feature.version>
         <carbon.hazelcast.package.import.version.range>[1.0.0, 2.0.0)</carbon.hazelcast.package.import.version.range>
         <carbon.hazelcast.version>1.0.0-SNAPSHOT</carbon.hazelcast.version>
 >>>>>>> 960354e... added uuf maven plugin version property to pom.xml
+=======
+>>>>>>> f20af8b... Updated MSF4J dependency.
         <carbon.jndi.version>1.0.0</carbon.jndi.version>
         <carbon.kernel.package.import.version.range>[5.1.0, 6.0.0)</carbon.kernel.package.import.version.range>
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
@@ -1065,10 +1080,11 @@
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
 =======
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
+        <carbon.itentity.mgt.version>1.0.0-SNAPSHOT</carbon.itentity.mgt.version>
         <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
-        <msf4j.version>2.1.0-SNAPSHOT</msf4j.version>
+        <msf4j.version>2.1.0</msf4j.version>
         <uuf.version>1.0.0-SNAPSHOT</uuf.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
