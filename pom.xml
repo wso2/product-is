@@ -156,11 +156,6 @@
                 <version>${org.snakeyaml.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.hazelcast</groupId>
-                <artifactId>hazelcast</artifactId>
-                <version>${hazelcast.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-configuration</groupId>
                 <artifactId>commons-configuration</artifactId>
                 <version>${commons-configuration.version}</version>
@@ -457,6 +452,18 @@
                 <version>${carbon.metrics.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.identity.mgt</groupId>-->
+                <!--<artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>-->
+                <!--<version>${carbon.itentity.mgt.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
@@ -505,8 +512,6 @@
         <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
 
         <!--3rd party related properties-->
-        <com.hazelcast.package.import.version.range>[3.6,4)</com.hazelcast.package.import.version.range>
-        <hazelcast.version>3.6</hazelcast.version>
         <commons-beanutils.wso2.version>1.8.0.wso2v1</commons-beanutils.wso2.version>
         <commons-cli.wso2.version>1.2.0.wso2v1</commons-cli.wso2.version>
         <commons-configuration.version>1.10</commons-configuration.version>
@@ -546,19 +551,17 @@
         <carbon.datasources.version>1.0.0</carbon.datasources.version>
         <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m5</carbon-uuf-maven-plugin.version>
-        <carbon.hazelcast.feature.version>1.0.0</carbon.hazelcast.feature.version>
-        <carbon.hazelcast.package.import.version.range>[1.0.0, 2.0.0)</carbon.hazelcast.package.import.version.range>
-        <carbon.hazelcast.version>1.0.0-SNAPSHOT</carbon.hazelcast.version>
         <carbon.jndi.version>1.0.0</carbon.jndi.version>
         <carbon.kernel.package.import.version.range>[5.1.0, 6.0.0)</carbon.kernel.package.import.version.range>
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.container.version>5.2.0-m2</carbon.container.version>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
+        <carbon.itentity.mgt.version>1.0.0-SNAPSHOT</carbon.itentity.mgt.version>
         <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
-        <msf4j.version>2.1.0-SNAPSHOT</msf4j.version>
+        <msf4j.version>2.1.0</msf4j.version>
         <uuf.version>1.0.0-SNAPSHOT</uuf.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
