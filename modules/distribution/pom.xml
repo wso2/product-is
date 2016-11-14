@@ -130,6 +130,7 @@
                                 <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
                                 </unzip-->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.name}" value="WSO2 Identity Server" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.version}" value="${project.version}" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Context crossContext=&quot;true&quot;&gt;" value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml" token="clientAuth=&quot;false&quot;" value="clientAuth=&quot;want&quot;" />
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
