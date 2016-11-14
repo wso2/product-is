@@ -1413,7 +1413,7 @@
         <!--<identity.carbon.auth.thrift.version>5.5.0-SNAPSHOT</identity.carbon.auth.thrift.version>-->
         <!--<identity.application.auth.oidc.version>5.1.2-SNAPSHOT</identity.application.auth.oidc.version>-->
         <identity.governance.version>0.1.11</identity.governance.version>
-        <org.wso2.carbon.identity.auth.version>0.1.0</org.wso2.carbon.identity.auth.version>
+        <carbon.identity.auth.version>0.1.0</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.0.0</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>0.1.3</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>0.1.0</identity.app.authz.xacml.version>
