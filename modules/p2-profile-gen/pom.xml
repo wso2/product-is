@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.is</groupId>
@@ -150,7 +151,8 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.sts.feature:${identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.mex.server.feature:${identity.inbound.auth.sts.version}
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.mex.server.feature:${identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
 
                                 <!-- registry related features -->
@@ -409,19 +411,18 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.metrics:org.wso2.carbon.metrics.feature:${carbon.metrics.version}
                                 </featureArtifactDef>
-				
-				<!--Auth/Authz for Rest API-->
-				                <featureArtifactDef>
-                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.auth.server.feature:${org.wso2.carbon.identity.auth.version}
+
+                                <!--Auth/Authz for Rest API-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.auth.server.feature:${carbon.identity.auth.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.authz.server.feature:${org.wso2.carbon.identity.auth.version}
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.authz.server.feature:${carbon.identity.auth.version}
                                 </featureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
                     </execution>
-
 
 
                     <!-- Default Profile (IS Front-End + IS Back-End) -->
@@ -842,14 +843,14 @@
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
 
-				<!-- Auth/Authz for Rest API  -->
-				<feature>
+                                <!-- Auth/Authz for Rest API  -->
+                                <feature>
                                     <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.auth.version}</version>
+                                    <version>${carbon.identity.auth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.auth.version}</version>
+                                    <version>${carbon.identity.auth.version}</version>
                                 </feature>
 
 
@@ -873,9 +874,6 @@
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                         </configuration>
                     </execution>
-
-
-
 
 
                     <!-- Only IS Profile (IS Front-End + IS Back-End) -->
@@ -1284,18 +1282,18 @@
                                     <id>org.wso2.carbon.metrics.feature.group</id>
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
-                           
-				<!-- Auth/Authz for Rest API  -->
+
+                                <!-- Auth/Authz for Rest API  -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.auth.version}</version>
+                                    <version>${carbon.identity.auth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.auth.version}</version>
+                                    <version>${carbon.identity.auth.version}</version>
                                 </feature>
-	
- 
+
+
                             </features>
                         </configuration>
                     </execution>
@@ -1682,14 +1680,14 @@
                                     <version>${carbon.metrics.version}</version>
                                 </feature>
 
-				<!-- Auth/Authz for Rest API  -->
+                                <!-- Auth/Authz for Rest API  -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.auth.version}</version>
+                                    <version>${carbon.identity.auth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.auth.version}</version>
+                                    <version>${carbon.identity.auth.version}</version>
                                 </feature>
 
                             </features>
@@ -1904,7 +1902,7 @@
                                     <id>org.wso2.carbon.event.stream.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
-				
+
                             </features>
                         </configuration>
                     </execution>
@@ -1920,10 +1918,13 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <replace token="false" value="true" dir="target/wso2carbon-core-${carbon.kernel.version}/repository/components">
-                                    <include name="**/bundles.info" />
+                                <replace token="false" value="true"
+                                         dir="target/wso2carbon-core-${carbon.kernel.version}/repository/components">
+                                    <include name="**/bundles.info"/>
                                 </replace>
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Context&gt;" value="&lt;Context crossContext=&quot;true&quot;&gt;" />
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml"
+                                        token="&lt;Context&gt;" value="&lt;Context crossContext=&quot;true&quot;&gt;"/>
                             </tasks>
                         </configuration>
                         <goals>
