@@ -3,7 +3,11 @@ include("util/constants.jag");
 var log = new Log();
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-var cookie = request.getParameter("cookie") ;
+var cryptoUtil = Packages.org.wso2.carbon.core.util.CryptoUtil;
+var encodedString = decodeURIComponent(request.getParameter("cookie"));
+var cookieStr =  new java.lang.String(cryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(encodedString), "UTF-8");
+var cookie = String(cookieStr);
+
 var user = request.getParameter("user");
 var userName = request.getParameter("username");
 
@@ -46,8 +50,8 @@ function fetchData(){
       for (i = 0; i < dataResult.length; i++) {
 
         var obj = {};
-        obj.userName = dataResult[i].values.userName;
-        obj.IP = dataResult[i].values.IP;
+        obj.userName = dataResult[i].values.username;
+        obj.IP = dataResult[i].values.remoteIp;
         obj.userAgent = dataResult[i].values.userAgent;
         obj.startTimestamp = new Date(dataResult[i].values.startTimestamp).toString("MMM dd");
         obj.sessionId = dataResult[i].values.sessionId;
