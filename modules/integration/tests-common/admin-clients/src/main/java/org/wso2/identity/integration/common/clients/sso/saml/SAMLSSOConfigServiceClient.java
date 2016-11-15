@@ -22,6 +22,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
+import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentitySAML2SSOException;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceStub;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
@@ -85,6 +86,17 @@ public class SAMLSSOConfigServiceClient {
             throw new IdentitySAMLSSOConfigServiceIdentityException("Error while adding service provider ", e);
         }
 
+    }
+
+    public SAMLSSOServiceProviderDTO uploadServiceProvider(String metadataString)
+            throws RemoteException, IdentitySAMLSSOConfigServiceIdentitySAML2SSOException {
+        try {
+            return identitySAMLSSOConfigServiceStub.uploadRPServiceProvider(metadataString);
+        } catch (RemoteException e) {
+            throw new RemoteException("Error while adding service provider ", e);
+        } catch (IdentitySAMLSSOConfigServiceIdentitySAML2SSOException e) {
+            throw new IdentitySAMLSSOConfigServiceIdentitySAML2SSOException("Error while adding service provider ", e);
+        }
     }
 
 
