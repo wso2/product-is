@@ -16,6 +16,11 @@
         </classes>
     </test>
 
+    <test name="is-tests-governance" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>
+        </classes>
+    </test>
     <!--<test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
         <!--<classes>-->
             <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
