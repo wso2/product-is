@@ -18,22 +18,17 @@
 package org.wso2.identity.integration.test.saml;
 
 
-import com.google.common.util.concurrent.UncheckedTimeoutException;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -127,8 +122,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     }
 
     private enum User {
-        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1"),
-        TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2");
+        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1", true),
+        TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2",true),
+        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser3", "samluser3", "carbon.super", "samluser3", "providedClaimValue", "providedClaimValue", false),
+        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser4@wso2.com", "samluser4", "wso2.com", "samluser4", "providedClaimValue", "providedClaimValue", false);
 
         private String username;
         private String password;
@@ -136,15 +133,17 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         private String tenantAwareUsername;
         private String email;
         private String nickname;
+        private boolean setUserClaims;
 
         User(String username, String password, String tenantDomain, String tenantAwareUsername, String email,
-             String nickname) {
+             String nickname, boolean setUserClaims) {
             this.username = username;
             this.password = password;
             this.tenantDomain = tenantDomain;
             this.tenantAwareUsername = tenantAwareUsername;
             this.email = email;
             this.nickname = nickname;
+            this.setUserClaims = setUserClaims;
         }
 
         public String getUsername() {
@@ -169,6 +168,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
         public String getNickname() {
             return nickname;
+        }
+
+        public boolean getSetUserClaims() {
+            return setUserClaims;
         }
     };
 
@@ -349,6 +352,12 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
             EntityUtils.consume(response.getEntity());
 
+            if (requestMissingClaims(response)) {
+                response = Utils.sendPOSTClaimMessage(response, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
+                        .getArtifact(), httpClient);
+                EntityUtils.consume(response.getEntity());
+            }
+
             response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                     httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
@@ -469,6 +478,11 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                                 ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
                                 ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
+                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
+                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -567,7 +581,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         try {
             // creating the user
             remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
-                                           null, getUserClaims(),
+                                           null, getUserClaims(config.getUser().getSetUserClaims()),
                                            profileName, true);
         } catch (Exception e) {
             Assert.fail("Error while creating the user", e);
@@ -611,6 +625,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         firstNameClaim.setClaimUri(firstNameClaimURI);
         ClaimMapping firstNameClaimMapping = new ClaimMapping();
         firstNameClaimMapping.setRequested(true);
+        firstNameClaimMapping.setMandatory(true);
         firstNameClaimMapping.setLocalClaim(firstNameClaim);
         firstNameClaimMapping.setRemoteClaim(firstNameClaim);
         claimMappingList.add(firstNameClaimMapping);
@@ -619,6 +634,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         lastNameClaim.setClaimUri(lastNameClaimURI);
         ClaimMapping lastNameClaimMapping = new ClaimMapping();
         lastNameClaimMapping.setRequested(true);
+        lastNameClaimMapping.setMandatory(true);
         lastNameClaimMapping.setLocalClaim(lastNameClaim);
         lastNameClaimMapping.setRemoteClaim(lastNameClaim);
         claimMappingList.add(lastNameClaimMapping);
@@ -627,6 +643,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         emailClaim.setClaimUri(emailClaimURI);
         ClaimMapping emailClaimMapping = new ClaimMapping();
         emailClaimMapping.setRequested(true);
+        emailClaimMapping.setMandatory(true);
         emailClaimMapping.setLocalClaim(emailClaim);
         emailClaimMapping.setRemoteClaim(emailClaim);
         claimMappingList.add(emailClaimMapping);
@@ -634,25 +651,45 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
     }
 
-    private ClaimValue[] getUserClaims(){
-        ClaimValue[] claimValues = new ClaimValue[3];
+    private ClaimValue[] getUserClaims(boolean setClaims){
 
-        ClaimValue firstName = new ClaimValue();
-        firstName.setClaimURI(firstNameClaimURI);
-        firstName.setValue(config.getUser().getNickname());
-        claimValues[0] = firstName;
+        ClaimValue[] claimValues;
 
-        ClaimValue lastName = new ClaimValue();
-        lastName.setClaimURI(lastNameClaimURI);
-        lastName.setValue(config.getUser().getUsername());
-        claimValues[1] = lastName;
+        if (setClaims) {
+            claimValues = new ClaimValue[3];
 
-        ClaimValue email = new ClaimValue();
-        email.setClaimURI(emailClaimURI);
-        email.setValue(config.getUser().getEmail());
-        claimValues[2] = email;
+            ClaimValue firstName = new ClaimValue();
+            firstName.setClaimURI(firstNameClaimURI);
+            firstName.setValue(config.getUser().getNickname());
+            claimValues[0] = firstName;
+
+            ClaimValue lastName = new ClaimValue();
+            lastName.setClaimURI(lastNameClaimURI);
+            lastName.setValue(config.getUser().getUsername());
+            claimValues[1] = lastName;
+
+            ClaimValue email = new ClaimValue();
+            email.setClaimURI(emailClaimURI);
+            email.setValue(config.getUser().getEmail());
+            claimValues[2] = email;
+        } else {
+            claimValues = new ClaimValue[1];
+
+            ClaimValue lastName = new ClaimValue();
+            lastName.setClaimURI(lastNameClaimURI);
+            lastName.setValue(config.getUser().getUsername());
+            claimValues[0] = lastName;
+        }
 
         return claimValues;
     }
+
+    private boolean requestMissingClaims (HttpResponse response) {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        return redirectUrl.contains("claims.do") ? true : false;
+
+    }
+
 
 }

@@ -15,14 +15,12 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-
 package org.wso2.identity.integration.test.requestPathAuthenticator;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,40 +44,35 @@ import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServic
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
 
-public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
+/**
+ * Base test class for request path authenticator
+ */
+public class RequestPathAuthenticatorBaseTestCase extends ISIntegrationTest {
 
     private static final String SERVICE_PROVIDER_NAME = "RequestPathTest";
     private static final String SERVICE_PROVIDER_Desc = "Service Provider with Request Path Authentication";
-    private static final String DEFAULT_CHARSET = "UTF-8";
-    private static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
-    private static final String SAML_SUCCESS_TAG = "<saml2p:StatusCode Value=\"urn:oasis:names:tc:SAML:2" +
-            ".0:status:Success\"/>";
+    protected static final String DEFAULT_CHARSET = "UTF-8";
+    protected static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
+    private static final String SAML_SUCCESS_TAG =
+            "<saml2p:StatusCode Value=\"urn:oasis:names:tc:SAML:2" + ".0:status:Success\"/>";
 
-    private String adminUsername;
+    protected String adminUsername;
     private String adminPassword;
     private Tomcat tomcat;
     private AuthenticatorClient logManger;
     private ApplicationManagementServiceClient appMgtclient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private ServiceProvider serviceProvider;
-    private DefaultHttpClient client;
-    String isURL;
+    protected DefaultHttpClient client;
+    protected String isURL;
 
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+    @BeforeClass(alwaysRun = true) public void testInit() throws Exception {
         super.init();
 
         logManger = new AuthenticatorClient(backendURL);
@@ -90,16 +83,15 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
                 isServer.getInstance().getHosts().get("default"));
 
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        ssoConfigServiceClient =
-                new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
         client = new DefaultHttpClient();
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
 
         try {
             tomcat = getTomcat();
-            URL resourceUrl = getClass().getResource(File.separator + "samples"
-                    + File.separator + "travelocity.com.war");
+            URL resourceUrl = getClass()
+                    .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
             startTomcat(tomcat, "/travelocity.com", resourceUrl.getPath());
 
         } catch (Exception e) {
@@ -121,24 +113,23 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
         Property attributeConsumerServiceIndexProp = new Property();
         attributeConsumerServiceIndexProp.setName("attrConsumServiceIndex");
         attributeConsumerServiceIndexProp.setValue("1239245949");
-        requestConfig.setProperties(new Property[]{attributeConsumerServiceIndexProp});
+        requestConfig.setProperties(new Property[] { attributeConsumerServiceIndexProp });
 
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                new InboundAuthenticationRequestConfig[]{requestConfig});
+        inboundAuthenticationConfig
+                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[] { requestConfig });
 
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         RequestPathAuthenticatorConfig requestPathAuthenticatorConfig = new RequestPathAuthenticatorConfig();
         requestPathAuthenticatorConfig.setName("BasicAuthRequestPathAuthenticator");
 
-        serviceProvider.setRequestPathAuthenticatorConfigs(new
-                RequestPathAuthenticatorConfig[]{requestPathAuthenticatorConfig});
+        serviceProvider.setRequestPathAuthenticatorConfigs(
+                new RequestPathAuthenticatorConfig[] { requestPathAuthenticatorConfig });
         appMgtclient.updateApplicationData(serviceProvider);
         serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
         appMgtclient.deleteApplication(serviceProvider.getApplicationName());
         if (tomcat != null) {
             tomcat.stop();
@@ -147,7 +138,7 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(alwaysRun = true, description = "Test login success")
+    @Test(alwaysRun = true, description = "Request path authenticator login success")
     public void testLoginSuccess() throws Exception {
         HttpPost request = new HttpPost(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-POST");
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -189,48 +180,8 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
         }
         Base64 base64Decoder = new Base64();
         samlResponse = new String(base64Decoder.decode(samlResponse));
-        Assert.assertTrue(samlResponse.contains(SAML_SUCCESS_TAG), "SAML response did not contained sucess state");
+        Assert.assertTrue(samlResponse.contains(SAML_SUCCESS_TAG), "SAML response did not contained success state");
         EntityUtils.consume(response.getEntity());
-    }
-
-    @Test(alwaysRun = true, description = "Test login success", dependsOnMethods = {"testLoginSuccess"})
-    public void testLoginFail() throws Exception {
-        HttpPost request = new HttpPost(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-POST");
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", adminUsername));
-        urlParameters.add(new BasicNameValuePair("password", "admin123"));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-        String line;
-        String samlRequest = "";
-        String secToken = "";
-
-        while ((line = rd.readLine()) != null) {
-            if (line.contains("name='SAMLRequest'")) {
-                String[] tokens = line.split("'");
-                samlRequest = tokens[5];
-            }
-            if (line.contains("name='sectoken'")) {
-                String[] tokens = line.split("'");
-                secToken = tokens[5];
-            }
-        }
-        EntityUtils.consume(response.getEntity());
-        request = new HttpPost(isURL + "samlsso");
-        urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("sectoken", secToken));
-        urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response2 = client.execute(request);
-        int responseCode = response2.getStatusLine().getStatusCode();
-        Assert.assertEquals(responseCode, 302, "Login failure response returned code " + responseCode);
-        Header location = response2.getFirstHeader("location");
-        String SAMLResponse = location.getValue().split("&SAMLResponse=")[1].split("&")[0];
-        SAMLResponse = decode(java.net.URLDecoder.decode(SAMLResponse, (DEFAULT_CHARSET)));
-        Assert.assertTrue(SAMLResponse.contains("User authentication failed"), "SAML Response does not contained " +
-                "error message at login failure.");
     }
 
     private Tomcat getTomcat() {
@@ -250,8 +201,7 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
         return tomcat;
     }
 
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
+    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
         tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
         tomcat.start();
     }
@@ -259,62 +209,16 @@ public class RequestPathAuthenticatorTestCase extends ISIntegrationTest {
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer("travelocity.com");
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{TRAVELOCITY_SAMPLE_APP_URL + "/home" +
-                ".jsp"});
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[] { TRAVELOCITY_SAMPLE_APP_URL + "/home" +
+                ".jsp" });
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(TRAVELOCITY_SAMPLE_APP_URL + "/home.jsp");
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex("1239245949");
         samlssoServiceProviderDTO.setNameIDFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
-        samlssoServiceProviderDTO.setDoSignAssertions(false);
+        samlssoServiceProviderDTO.setDoSignAssertions(true);
         samlssoServiceProviderDTO.setDoSignResponse(true);
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL("/carbon/admin/login.jsp");
         return samlssoServiceProviderDTO;
     }
 
-    /**
-     * Decoding and deflating the encoded AuthReq
-     *
-     * @param encodedStr encoded AuthReq
-     * @return decoded AuthReq
-     */
-    private static String decode(String encodedStr) {
-        try {
-            Base64 base64Decoder = new Base64();
-            byte[] xmlBytes = encodedStr.getBytes(DEFAULT_CHARSET);
-            byte[] base64DecodedByteArray = base64Decoder.decode(xmlBytes);
-
-            try {
-                Inflater inflater = new Inflater(true);
-                inflater.setInput(base64DecodedByteArray);
-                byte[] xmlMessageBytes = new byte[5000];
-                int resultLength = inflater.inflate(xmlMessageBytes);
-
-                if (!inflater.finished()) {
-                    throw new RuntimeException("End of the compressed data stream has NOT been reached");
-                }
-
-                inflater.end();
-                String decodedString = new String(xmlMessageBytes, 0, resultLength, (DEFAULT_CHARSET));
-                return decodedString;
-
-            } catch (DataFormatException e) {
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(base64DecodedByteArray);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                InflaterInputStream iis = new InflaterInputStream(byteArrayInputStream);
-                byte[] buf = new byte[1024];
-                int count = iis.read(buf);
-                while (count != -1) {
-                    byteArrayOutputStream.write(buf, 0, count);
-                    count = iis.read(buf);
-                }
-                iis.close();
-                String decodedStr = new String(byteArrayOutputStream.toByteArray(), StandardCharsets.UTF_8);
-
-                return decodedStr;
-            }
-        } catch (IOException e) {
-            Assert.fail("Error while decoding SAML response");
-            return "";
-        }
-    }
 }

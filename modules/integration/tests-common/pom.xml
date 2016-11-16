@@ -32,7 +32,7 @@
         <module>admin-clients</module>
         <module>ui-pages</module>
         <module>integration-test-utils</module>
-        <!--<module>extensions</module>-->
+        <module>extensions</module>
     </modules>
 
 </project>
