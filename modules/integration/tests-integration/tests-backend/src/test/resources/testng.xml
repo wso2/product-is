@@ -22,10 +22,10 @@
         </classes>
     </test>
     <!--<test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
-            <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>-->
-        <!--</classes>-->
+    <!--<classes>-->
+    <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
+    <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>-->
+    <!--</classes>-->
     <!--</test>-->
 
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
@@ -119,7 +119,8 @@
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.MetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
 
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
@@ -142,7 +143,7 @@
 
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-			<!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
