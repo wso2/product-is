@@ -18,38 +18,47 @@
 
 package org.wso2.identity.integration.test.saml;
 
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 
-public class MetadataTestCase extends ISIntegrationTest {
+public class SPMetadataTestCase extends ISIntegrationTest {
 
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
 
     private static final String ISSUER = "metadata-sp";
     private static final String[] ACSs = {"https://metadata-sp:8080/federation/Consumer1/metaAlias/sp",
             "https://metadata-sp:8080/federation/Consumer2/metaAlias/sp"};
+    private static String NAMEIDFORMAT = "urn/oasis/names/tc/SAML/2.0/nameid-format/persistent";
+    private static boolean WANTASSERTIONSSIGNED= false;
+    private static boolean ISAAUTHNREQUESTSSIGNED = false;
+    private static String SLOREQUESTURL = "https://metadata-sp:8080/federation/SPSloRedirect/metaAlias/sp";
+    private static String SLORESPONSEURL = "https://metadata-sp:8080/federation/SPSloRedirect/metaAlias/sp";
+    private static String CERTALIAS = "metadata-sp";
 
-    @Test
-    public void addSPMetadata() throws Exception {
+
+    @BeforeClass
+    public void init() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
 
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+    }
+
+    @Test
+    public void addSPMetadata() throws Exception {
 
         String filePath = FrameworkPathUtil.getSystemResourceLocation() +
                 "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
@@ -73,6 +82,13 @@ public class MetadataTestCase extends ISIntegrationTest {
         Assert.assertNotNull(samlssoServiceProviderDTOGet);
         Assert.assertEquals(samlssoServiceProviderDTOGet.getDefaultAssertionConsumerUrl(), ACSs[0]);
         Assert.assertEquals(samlssoServiceProviderDTOGet.getAssertionConsumerUrls(), ACSs);
+        Assert.assertEquals(samlssoServiceProviderDTOGet.getNameIDFormat(), NAMEIDFORMAT);
+        Assert.assertEquals(samlssoServiceProviderDTOGet.getDoSignAssertions(), WANTASSERTIONSSIGNED);
+        Assert.assertEquals(samlssoServiceProviderDTOGet.getDoValidateSignatureInRequests(), ISAAUTHNREQUESTSSIGNED);
+        Assert.assertEquals(samlssoServiceProviderDTOGet.getSloRequestURL(), SLOREQUESTURL);
+        Assert.assertEquals(samlssoServiceProviderDTOGet.getSloResponseURL(), SLORESPONSEURL);
+        Assert.assertEquals(samlssoServiceProviderDTOGet.getCertAlias(), CERTALIAS);
+
     }
 
     @AfterClass
