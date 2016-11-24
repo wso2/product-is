@@ -93,7 +93,7 @@
         "prefs":"{}",
         "wclass":"",
         "url":"/portal/gadgets/login-sessions/gadget.xml",
-        "permissions":["/permission/admin/login"],
+        "permissions":["/permission/admin/manage/identity/authentication/session/view"],
         "authorized":"true",
         "id" : "login_sessions"
     }

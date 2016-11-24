@@ -28,8 +28,13 @@ serverUrl = serverUrl + "/SessionManagementService";
 var ws = require('ws');
 var webService = new ws.WSRequest();
 
-function removeSession(sessionId){
-    var result = callWSReturnJSON(webService, serverUrl, "ser:removeSession", sessionId);
+function removeSession(sessionId) {
+    try {
+        var result = callWSReturnJSON(webService, serverUrl, "ser:removeSession", sessionId);
+    } catch (e) {
+        log.error("Unable to terminate the session.");
+        result = null;
+    }
     return result;
 }
 
