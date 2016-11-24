@@ -420,6 +420,10 @@
                                     org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.authz.server.feature:${carbon.identity.auth.version}
                                 </featureArtifactDef>
 
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${carbon.identity.auth.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -850,6 +854,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
+                                    <version>${carbon.identity.auth.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
                                 </feature>
 
@@ -1292,7 +1300,10 @@
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
+                                    <version>${carbon.identity.auth.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
@@ -1687,6 +1698,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
+                                    <version>${carbon.identity.auth.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
                                 </feature>
 
