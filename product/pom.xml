@@ -81,11 +81,25 @@
             <artifactId>org.wso2.carbon.datasource.core.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
-            <!--<artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>org.wso2.msf4j.feature</artifactId>
@@ -130,13 +144,11 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
-            <version>${carbon.deployment.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-            <version>${carbon.deployment.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -159,11 +171,6 @@
             <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.identity.mgt</groupId>-->
-            <!--<artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
 
         <!-- Sample Simple Authentication Component -->
 
@@ -175,13 +182,39 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-            <version>${carbon.is.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
             <type>zip</type>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <configuration>
+                    <format>{0,date,dd MMM yyyy}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -206,26 +239,50 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-
-                    <!--<execution>-->
-                        <!--<id>2-unpack-samples</id>-->
-                        <!--<phase>test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>unpack</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<artifactItems>-->
-                                <!--<artifactItem>-->
-                                    <!--<groupId>org.wso2.carbon.is</groupId>-->
-                                    <!--<artifactId>org.wso2.is.ui.management</artifactId>-->
-                                    <!--<version>${carbon.is.version}</version>-->
-                                    <!--<type>zip</type>-->
-                                    <!--<overWrite>true</overWrite>-->
-                                    <!--<outputDirectory>${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/deployment/uufapps</outputDirectory>-->
-                                <!--</artifactItem>-->
-                            <!--</artifactItems>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
+                    <execution>
+                        <id>unpack-dbscripts</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.security.userstore</groupId>
+                                    <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.security.userstore</groupId>
+                                    <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.mgt</groupId>
+                                    <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -315,13 +372,18 @@
                                     <version>${carbon.security.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
+                                    <id>org.wso2.carbon.identity.mgt.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.mgt.feature</id>-->
-                                    <!--<version>${carbon.itentity.mgt.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                </feature>
+
                                 <!-- Sample Applications -->
                                 <feature>
                                     <id>org.wso2.carbon.is.user-portal.feature</id>
@@ -329,6 +391,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.Features-app.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                             </features>
@@ -444,13 +510,21 @@
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.caas.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.mgt.feature</id>-->
-                                    <!--<version>${carbon.itentity.mgt.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
                                     <version>${carbon.uuf.version}</version>
@@ -459,10 +533,10 @@
                                     <id>org.wso2.carbon.is.user-portal.feature.group</id>
                                     <version>${carbon.is.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>-->
-                                    <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -487,6 +561,30 @@
                         </goals>
                     </execution>
                     <execution>
+                        <id>create-carbon-database</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <path id="h2.classpath">
+                                    <path refid="maven.compile.classpath"/>
+                                </path>
+                                <echo message="########### Creating Carbon Database ##############"/>
+                                <sql driver="org.h2.Driver"
+                                     url="jdbc:h2:${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/database/WSO2CARBON_DB;MV_STORE=FALSE;create=true"
+                                     userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset file="${basedir}/target/resources/dbscripts/*.sql"/>
+                                </sql>
+                                <echo message="##################### END ########################"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>clean_target</id>
                         <phase>install</phase>
                         <configuration>
@@ -498,6 +596,8 @@
                                 <delete file="target/tmp"/>
                                 <delete dir="target/wso2carbon-kernel-${carbon.kernel.version}"/>
                                 <delete dir="target/antrun"/>
+                                <delete dir="target/resources"/>
+                                <delete dir="target/maven-shared-archive-resources"/>
                             </target>
                         </configuration>
                         <goals>
@@ -520,6 +620,7 @@
                             <goal>attached</goal>
                         </goals>
                         <configuration>
+                            <finalName>wso2is-${project.version}</finalName>
                             <filters>
                                 <filter>${basedir}/src/assembly/filter.properties</filter>
                             </filters>
@@ -530,6 +631,13 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
 
         </plugins>

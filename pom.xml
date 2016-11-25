@@ -209,6 +209,30 @@
                 <version>${carbon.metrics.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
+                <version>1.0.3-SNAPSHOT</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.191</version>
+            </dependency>
+
             <!--End Carbon Dependencies-->
 
             <!--Dependent Features-->
@@ -259,6 +283,18 @@
                 <groupId>org.wso2.carbon.metrics</groupId>
                 <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
                 <version>${carbon.metrics.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
+                <version>${carbon.deployment.version}</version>
                 <type>zip</type>
             </dependency>
             <!--End of Dependent Features-->
@@ -317,15 +353,21 @@
                 <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
-                <!--<artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>-->
-                <!--<version>${carbon.security.version}</version>-->
-                <!--<type>zip</type>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.uuf.sample</groupId>
                 <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
+                <version>${carbon.uuf.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
+                <version>${carbon.is.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.uuf.sample</groupId>
+                <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
                 <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
@@ -409,21 +451,11 @@
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
                 <version>${carbon.security.caas.version}</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
-                <!--<artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>-->
-                <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.container</artifactId>
                 <version>${carbon.container.version}</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon</groupId>-->
-                <!--<artifactId>org.wso2.carbon.commons.collections</artifactId>-->
-                <!--<version>3.1</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-all</artifactId>
@@ -458,12 +490,6 @@
                 <version>${carbon.security.userstore.jdbc.version}</version>
                 <type>zip</type>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.identity.mgt</groupId>-->
-                <!--<artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>-->
-                <!--<version>${carbon.itentity.mgt.version}</version>-->
-                <!--<type>zip</type>-->
-            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
@@ -508,6 +534,7 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
+        <org.wso2.carbon.identity.mgt.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
         <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
 
