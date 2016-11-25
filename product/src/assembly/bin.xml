@@ -43,6 +43,7 @@
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
+<<<<<<< HEAD
                 <exclude>**/identity/domain-config.yaml</exclude>
                 <exclude>**/identity/store-config.yaml</exclude>
                 <exclude>**/identity/claim-mapping.yaml</exclude>
@@ -50,6 +51,12 @@
                 <exclude>**/identity/identity-management.yaml</exclude>
                 <exclude>**/identity/challenge-questions/en-US.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
+=======
+                <exclude>**/identity/claim-store.yml</exclude>
+                <exclude>**/identity/connector-config.yml</exclude>
+                <exclude>**/identity/domain-config.yml</exclude>
+                <exclude>**/identity/store-config.yml</exclude>
+>>>>>>> a695889... update connectors and config changes
             </excludes>
         </fileSet>
 =======
@@ -133,8 +140,8 @@
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>carbon-home/dbscripts</directory>
-            <outputDirectory>dbscripts</outputDirectory>
+            <directory>carbon-home/conf/datasources</directory>
+            <outputDirectory>conf/datasources</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>

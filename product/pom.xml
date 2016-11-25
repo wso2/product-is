@@ -132,11 +132,25 @@
             <artifactId>org.wso2.carbon.datasource.core.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
-            <!--<artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.userstore</groupId>
+            <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>org.wso2.msf4j.feature</artifactId>
@@ -221,14 +235,16 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
+<<<<<<< HEAD
             <version>${carbon.deployment.version}</version>
 >>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
+=======
+>>>>>>> a695889... update connectors and config changes
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-            <version>${carbon.deployment.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -251,11 +267,6 @@
             <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.identity.mgt</groupId>-->
-            <!--<artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
 
         <!-- Sample Simple Authentication Component -->
 
@@ -287,7 +298,11 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-            <version>${carbon.is.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.sample</groupId>
+            <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
             <type>zip</type>
         </dependency>
 >>>>>>> 6906998... Made the UUF app for user portal buildable
@@ -351,7 +366,11 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.security.userstore</groupId>
+<<<<<<< HEAD
                                     <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+=======
+                                    <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+>>>>>>> a695889... update connectors and config changes
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
@@ -382,12 +401,15 @@
                                     </outputDirectory>
                                     <includes>**/h2.sql</includes>
                                 </artifactItem>
+<<<<<<< HEAD
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.mgt</groupId>
                                     <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
+=======
+>>>>>>> a695889... update connectors and config changes
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -537,13 +559,18 @@
                                     <version>${carbon.security.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
+                                    <id>org.wso2.carbon.identity.mgt.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.mgt.feature</id>-->
-                                    <!--<version>${carbon.itentity.mgt.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                </feature>
+
                                 <!-- Sample Applications -->
                                 <feature>
                                     <id>org.wso2.carbon.is.user-portal.feature</id>
@@ -584,7 +611,14 @@
                                     <id>org.wso2.carbon.uuf.Features-app.feature</id>
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
+<<<<<<< HEAD
 >>>>>>> 89611a7... Remove unwanted UUF features.
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+>>>>>>> a695889... update connectors and config changes
                             </features>
                         </configuration>
                     </execution>
@@ -768,6 +802,7 @@
 >>>>>>> 9bd8ee3... Adding structure for new component
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
@@ -800,12 +835,23 @@
 =======
 =======
                                     <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
+=======
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.caas.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.mgt.feature</id>-->
-                                    <!--<version>${carbon.itentity.mgt.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+>>>>>>> a695889... update connectors and config changes
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
+                                </feature>
                                 <feature>
 >>>>>>> f20af8b... Updated MSF4J dependency.
                                     <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
@@ -822,11 +868,18 @@
                                     <id>org.wso2.carbon.is.user-portal.feature.group</id>
                                     <version>${carbon.is.version}</version>
                                 </feature>
+<<<<<<< HEAD
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>-->
                                     <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
                                 <!--</feature>-->
 >>>>>>> 6906998... Made the UUF app for user portal buildable
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
+                                    <version>${carbon.uuf.version}</version>
+                                </feature>
+>>>>>>> a695889... update connectors and config changes
                             </features>
                         </configuration>
                     </execution>
@@ -869,10 +922,14 @@
                                     <classpath>
                                         <path refid="h2.classpath"/>
                                     </classpath>
+<<<<<<< HEAD
                                     <fileset dir="${basedir}/target/resources/dbscripts/">
                                         <include name="**/h2.sql" />
                                     </fileset>
                                     <fileset file="carbon-home/resources/h2-test-data/test-data.sql"/>
+=======
+                                    <fileset file="${basedir}/target/resources/dbscripts/*.sql"/>
+>>>>>>> a695889... update connectors and config changes
                                 </sql>
                                 <echo message="##################### END ########################"/>
                             </target>

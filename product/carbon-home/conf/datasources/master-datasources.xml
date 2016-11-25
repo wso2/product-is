@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a695889... update connectors and config changes
  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
@@ -17,6 +20,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<<<<<<< HEAD
 
 <datasources-configuration>
 
@@ -60,37 +64,38 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+=======
+>>>>>>> a695889... update connectors and config changes
 
 <datasources-configuration>
 
-    <providers>
-        <provider>org.wso2.carbon.datasource.rdbms.hikari.HikariDataSourceReader</provider>
-        <!--<provider>org.wso2.carbon.datasource.rdbms.tomcat.TomcatDataSourceReader</provider>-->
-    </providers>
-
     <datasources>
         <datasource>
-            <name>WSO2CarbonDB</name>
+            <name>WSO2_CARBON_DB</name>
             <description>The datasource used for identity server database</description>
             <jndiConfig>
-                <name>jdbc/WSO2CarbonDB</name>
+                <name>jdbc/WSO2CARBON_DB</name>
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:h2:./database/WSO2IS_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;INIT=runscript from
-                        'dbscripts/identity-store/h2-is.sql'</url>
+                    <url>jdbc:h2:./database/WSO2CARBON_DB;IFEXISTS=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE</url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
-                    <connectionTimeout>30000</connectionTimeout>
-                    <idleTimeout>600000</idleTimeout>
-                    <maxLifetime>1800000</maxLifetime>
-                    <maximumPoolSize>10</maximumPoolSize>
-                    <minimumIdle>10</minimumIdle>
-                    <autoCommit>false</autoCommit>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
                 </configuration>
             </definition>
         </datasource>
+
     </datasources>
+<<<<<<< HEAD
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+
+>>>>>>> a695889... update connectors and config changes
 </datasources-configuration>
