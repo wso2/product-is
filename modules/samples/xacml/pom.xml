@@ -30,7 +30,7 @@
     <name>Identity Server : XACML Samples</name>
 
     <modules>
-        <!--module>kmarket-trading-sample</module-->
+        <module>kmarket-trading-sample</module>
     </modules>
 
 </project>
