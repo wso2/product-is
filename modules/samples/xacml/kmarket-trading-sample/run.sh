@@ -1,5 +1,5 @@
 SAMPLE_CLASSPATH=""
-for f in lib/*.jar
+for f in target/lib/*.jar
 do
   SAMPLE_CLASSPATH=$SAMPLE_CLASSPATH:$f
 done

@@ -231,7 +231,7 @@ public class WSO2IdentityAgent {
              */
             entitlementPolicyServiceStub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, authCookie);
 
-            PolicyDTO policyDTO = entitlementPolicyServiceStub.getPolicy(policyId);
+            PolicyDTO policyDTO = entitlementPolicyServiceStub.getPolicy(policyId, false);
             if(policyDTO != null){
                 System.out.println("Policy is already exist in the PDP : " + policyId);
             } else {
