@@ -18,19 +18,27 @@
 package org.wso2.carbon.identity.samples.entitlement.kmarket.trading;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HttpTransportProperties;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pool.impl.GenericObjectPool;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceStub;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceStub;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
+import org.wso2.carbon.identity.samples.entitlement.kmarket.trading.stub.factory.EntitlementPolicyAdminServiceStubFactory;
+import org.wso2.carbon.identity.samples.entitlement.kmarket.trading.stub.factory.EntitlementServiceStubFactory;
+import org.wso2.carbon.identity.samples.entitlement.kmarket.trading.stub.factory.RemoteUserStoreManagerServiceStubFactory;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceStub;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -38,6 +46,7 @@ import java.util.Properties;
  */
 public class WSO2IdentityAgent {
 
+    private static Log log = LogFactory.getLog(WSO2IdentityAgent.class);
     /**
      * Server url of the WSO2 Identity Server
      */
@@ -53,25 +62,21 @@ public class WSO2IdentityAgent {
      */
     private static String serverPassword = "admin";
 
-    /**
-     * Keeps authenticated session cookie for sub sequences requests
-     */
-    private static String authCookie = null;
+    private ConfigurationContext configurationContext = null;
 
-    /**
-     *
-     */
-    private static EntitlementServiceStub entitlementStub = null;
+    private HttpTransportProperties.Authenticator auth = null;
 
-    /**
-     *
-     */
-    private static EntitlementPolicyAdminServiceStub entitlementPolicyServiceStub = null;
+    private static final String REMOTE_USER_STORE_MANAGER_SERVICE = "RemoteUserStoreManagerService";
 
-    /**
-     *
-     */
-    private static RemoteUserStoreManagerServiceStub adminStub = null;
+    private static final String ENTITLEMENT_SERVICE = "EntitlementService";
+
+    private static final String ENTITLEMENT_POLICY_ADMIN_SERVICE = "EntitlementPolicyAdminService";
+
+    private GenericObjectPool entitlementServiceStubPool;
+
+    private GenericObjectPool entitlementPolicyAdminServiceStubPool;
+
+    private GenericObjectPool remoteUserStoreManagerServiceStubPool;
 
     public WSO2IdentityAgent(Properties properties) {
 
@@ -120,62 +125,23 @@ public class WSO2IdentityAgent {
 
         System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
 
-
         /**
-         * Axis2 configuration context
+         * Create a configuration context. A configuration context contains information for
+         * axis2 environment. This is needed to create an axis2 service client
          */
-        ConfigurationContext configContext;
-
         try {
-
-            /**
-             * Create a configuration context. A configuration context contains information for
-             * axis2 environment. This is needed to create an axis2 service client
-             */
-            configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem( null, null);
-
-            /**
-             * Setting basic auth headers for authentication for carbon server
-             */
-            HttpTransportProperties.Authenticator auth = new HttpTransportProperties.Authenticator();
-            auth.setUsername(serverUserName);
-            auth.setPassword(serverPassword);
-            auth.setPreemptiveAuthentication(true);
-
-            /**
-             * create stub and service client for admin stub.
-             */
-            String serviceEndPoint = serverUrl + "RemoteUserStoreManagerService";
-            adminStub = new RemoteUserStoreManagerServiceStub(configContext, serviceEndPoint);
-            ServiceClient adminClient = adminStub._getServiceClient();
-            Options adminClientOption = adminClient.getOptions();
-            adminClientOption.setProperty(org.apache.axis2.transport.http.HTTPConstants.AUTHENTICATE, auth);
-            adminClientOption.setManageSession(true);
-
-            /**
-             * create stub and service client for entitlement stub.
-             */
-            serviceEndPoint = serverUrl + "EntitlementService";
-            entitlementStub = new EntitlementServiceStub(configContext, serviceEndPoint);
-            ServiceClient entitlementClient = entitlementStub._getServiceClient();
-            Options entitlementClientOption = entitlementClient.getOptions();
-            entitlementClientOption.setProperty(org.apache.axis2.transport.http.HTTPConstants.AUTHENTICATE, auth);
-            entitlementClientOption.setManageSession(true);
-
-
-            /**
-             * create stub and service client for entitlement stub.
-             */
-            serviceEndPoint = serverUrl + "EntitlementPolicyAdminService";
-            entitlementPolicyServiceStub = new EntitlementPolicyAdminServiceStub(configContext, serviceEndPoint);
-            ServiceClient entitlementPolicyClient = entitlementPolicyServiceStub._getServiceClient();
-            Options entitlementPolicyClientOption = entitlementPolicyClient.getOptions();
-            entitlementPolicyClientOption.setProperty(org.apache.axis2.transport.http.HTTPConstants.AUTHENTICATE, auth);
-            entitlementPolicyClientOption.setManageSession(true);
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
+            initConfigurationContext();
+        } catch (AxisFault e) {
+            log.error("Error initializing Axis2 configuration context: " + e.getMessage(), e);
         }
 
+        /**
+         * Setting basic auth headers for authentication for carbon server
+         */
+        auth = new HttpTransportProperties.Authenticator();
+        auth.setUsername(serverUserName);
+        auth.setPassword(serverPassword);
+        auth.setPreemptiveAuthentication(true);
 
     }
 
@@ -189,8 +155,9 @@ public class WSO2IdentityAgent {
              * If you have authenticated with Carbon server earlier, you can use that cookie, if
              * it has not been expired
              */
-            adminStub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, authCookie);
-            return adminStub.authenticate(userName, password);
+            RemoteUserStoreManagerServiceStub stub = getRemoteUserStoreManagerServiceStub();
+            stub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, null);
+            return stub.authenticate(userName, password);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,8 +176,9 @@ public class WSO2IdentityAgent {
              * If you have authenticated with Carbon server earlier, you can use that cookie, if
              * it has not been expired
              */
-            entitlementStub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, authCookie);
-            return entitlementStub.getDecision(xacmlRequest);
+            EntitlementServiceStub stub = getEntitlementServiceStub();
+            stub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, null);
+            return stub.getDecision(xacmlRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,9 +197,10 @@ public class WSO2IdentityAgent {
              * If you have authenticated with Carbon server earlier, you can use that cookie, if
              * it has not been expired
              */
-            entitlementPolicyServiceStub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, authCookie);
+            EntitlementPolicyAdminServiceStub stub = getEntitlementPolicyAdminServiceStub();
+            stub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, null);
 
-            PolicyDTO policyDTO = entitlementPolicyServiceStub.getPolicy(policyId, false);
+            PolicyDTO policyDTO = stub.getPolicy(policyId, false);
             if(policyDTO != null){
                 System.out.println("Policy is already exist in the PDP : " + policyId);
             } else {
@@ -239,7 +208,7 @@ public class WSO2IdentityAgent {
                 policyDTO.setPolicy(policy);
                 policyDTO.setPolicyId(policyId);
                 policyDTO.setPromote(true);
-                entitlementPolicyServiceStub.addPolicy(policyDTO);
+                stub.addPolicy(policyDTO);
                 System.out.println("Policy is added in to PDP successfully : " + policyId);
             }
         } catch (Exception e) {
@@ -259,23 +228,24 @@ public class WSO2IdentityAgent {
              * If you have authenticated with Carbon server earlier, you can use that cookie, if
              * it has not been expired
              */
-            adminStub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, authCookie);
+            RemoteUserStoreManagerServiceStub stub = getRemoteUserStoreManagerServiceStub();
+            stub._getServiceClient().getOptions().setProperty(HTTPConstants.COOKIE_STRING, null);
             String[] users = new String[] {"bob", "alice", "peter"};
             for(String user : users){
-                if(adminStub.isExistingUser(user)){
+                if(stub.isExistingUser(user)){
                     System.out.println("User is already exist in the primary user store : " + user);
                 } else {
-                    adminStub.addUser(user, "wso2123@IS", null, null,null, false);
+                    stub.addUser(user, "wso2123@IS", null, null,null, false);
                     System.out.println("User " + user + " is added in to primary user store with password : wso2123@IS");
                 }
             }
 
             String[] roles = new String[] {"gold", "sliver", "blue"};
             for(int i = 0; i < roles.length; i ++){
-                if(adminStub.isExistingRole(roles[i])){
+                if(stub.isExistingRole(roles[i])){
                     System.out.println("Role is already exist in the primary user store : " + roles[i]);
                 } else {
-                    adminStub.addRole(roles[i], new String[] {users[i]}, null);
+                    stub.addRole(roles[i], new String[] {users[i]}, null);
                     System.out.println("Role " + roles[i] + " is added in to primary user store." +
                             " And " + users[i] + " is assigned");
                 }
@@ -287,6 +257,54 @@ public class WSO2IdentityAgent {
         }
 
         return null;
+    }
+
+    private EntitlementServiceStub getEntitlementServiceStub() throws Exception {
+
+        if (entitlementServiceStubPool == null) {
+            entitlementServiceStubPool = new GenericObjectPool(
+                    new EntitlementServiceStubFactory(configurationContext, serverUrl + ENTITLEMENT_SERVICE, auth));
+        }
+
+        return (EntitlementServiceStub) entitlementServiceStubPool.borrowObject();
+
+    }
+
+    private EntitlementPolicyAdminServiceStub getEntitlementPolicyAdminServiceStub() throws Exception {
+
+        if (entitlementPolicyAdminServiceStubPool == null) {
+            entitlementPolicyAdminServiceStubPool = new GenericObjectPool(
+                    new EntitlementPolicyAdminServiceStubFactory(configurationContext,
+                            serverUrl + ENTITLEMENT_POLICY_ADMIN_SERVICE, auth));
+        }
+
+        return (EntitlementPolicyAdminServiceStub) entitlementPolicyAdminServiceStubPool.borrowObject();
+
+    }
+
+    private RemoteUserStoreManagerServiceStub getRemoteUserStoreManagerServiceStub() throws Exception {
+
+        if (remoteUserStoreManagerServiceStubPool == null) {
+            remoteUserStoreManagerServiceStubPool = new GenericObjectPool(
+                    new RemoteUserStoreManagerServiceStubFactory(configurationContext,
+                            serverUrl + REMOTE_USER_STORE_MANAGER_SERVICE, auth));
+        }
+
+        return (RemoteUserStoreManagerServiceStub) remoteUserStoreManagerServiceStubPool.borrowObject();
+
+    }
+
+    private void initConfigurationContext() throws AxisFault {
+        MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
+        HttpClient httpClient = new HttpClient(multiThreadedHttpConnectionManager);
+        configurationContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        configurationContext.setProperty(HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
+        configurationContext.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, org.apache.axis2.Constants.VALUE_TRUE);
+        HashMap<String, TransportOutDescription> transportsOut = configurationContext.getAxisConfiguration()
+                .getTransportsOut();
+        for (TransportOutDescription transportOutDescription : transportsOut.values()) {
+            transportOutDescription.getSender().init(configurationContext, transportOutDescription);
+        }
     }
 
 }

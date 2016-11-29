@@ -39,7 +39,11 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
 	        <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
-        </dependency>            
+        </dependency>
+        <dependency>
+            <groupId>commons-pool.wso2</groupId>
+            <artifactId>commons-pool</artifactId>
+        </dependency>
     </dependencies>
 
 
