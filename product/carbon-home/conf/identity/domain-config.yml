@@ -14,43 +14,102 @@
 #   limitations under the License.
 ###############################################################################
 domains:
- -
-  name: "PRIMARY"
-  priority: 1
-  uniqueIdResolver:
-   type: "JDBCUniqueIdResolver"
-   properties:
-    dataSource: "WSO2_CARBON_DB"
+  -
+    name: "PRIMARY"
+    priority: 1
+    uniqueIdResolver:
+      type: "JDBCUniqueIdResolver"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
 
-  identityStoreConnectors:
-  -
-   connectorId: "JDBCIS1"
-   connectorType: "JDBCIdentityStore"
-   properties:
-     dataSource: "WSO2_CARBON_DB"
-     hashAlgorithm: "SHA256"
-     databaseType: "MySQL"
-     connectorUserId: "username"
-     connectorGroupId: "groupname"
-   attributeMappings:
-   -
-    attribute: "username"
-    claimUri: "http://wso2.org/claims/username"
-    properties:
-     required: "true"
-   -
-    attribute: "email"
-    claimUri: "http://wso2.org/claims/email"
-   -
-    attribute: "firstname"
-    claimUri: "http://wso2.org/claims/firstName"
-   -
-    attribute: "lastname"
-    claimUri: "http://wso2.org/claims/lastName"
-  credentialStoreConnectors:
-  -
-    connectorId: "JDBCCS1"
-    connectorType: "JDBCCredentialStore"
-    properties:
-      dataSource: "WSO2_CARBON_DB"
-      databaseType: "MySQL"
+    identityStoreConnectors:
+    -
+      connectorId: "JDBCIS1"
+      connectorType: "JDBCIdentityStore"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+        hashAlgorithm: "SHA256"
+        databaseType: "MySQL"
+        connectorUserId: "uid"
+        connectorGroupId: "groupname"
+      attributeMappings:
+      -
+        attribute: "uid"
+        claimUri: "http://wso2.org/claims/username"
+      -
+        attribute: "cn"
+        claimUri: "http://wso2.org/claims/fullname"
+      -
+        attribute: "givenName"
+        claimUri: "http://wso2.org/claims/givenname"
+      -
+        attribute: "sn"
+        claimUri: "http://wso2.org/claims/lastname"
+      -
+        attribute: "middlename"
+        claimUri: "http://wso2.org/claims/middlename"
+      -
+        attribute: "honorificPrefix"
+        claimUri: "http://wso2.org/claims/honorificPrefix"
+      -
+        attribute: "honorificSuffix"
+        claimUri: "http://wso2.org/claims/honorificSuffixclaimUri: "
+      -
+        attribute: "displayName"
+        claimUri: "http://wso2.org/claims/displayName"
+      -
+        attribute: "nickName"
+        claimUri: "http://wso2.org/claims/nickname"
+      -
+        attribute: "email"
+        claimUri: "http://wso2.org/claims/email"
+      -
+        attribute: "title"
+        claimUri: "http://wso2.org/claims/title"
+      -
+        attribute: "gender"
+        claimUri: "http://wso2.org/claims/gender"
+      -
+        attribute: "dateOfBirth"
+        claimUri: "http://wso2.org/claims/dob"
+      -
+        attribute: "telephoneNumber"
+        claimUri: "http://wso2.org/claims/telephone"
+      -
+        attribute: "otherPhone"
+        claimUri: "http://wso2.org/claims/otherphone"
+      -
+        attribute: "mobile"
+        claimUri: "http://wso2.org/claims/mobile"
+      -
+        attribute: "im"
+        claimUri: "http://wso2.org/claims/im"
+      -
+        attribute: "streetAddress"
+        claimUri: "http://wso2.org/claims/streetaddress"
+      -
+        attribute: "localityName"
+        claimUri: "http://wso2.org/claims/locality"
+      -
+        attribute: "region"
+        claimUri: "http://wso2.org/claims/region"
+      -
+        attribute: "postalcode"
+        claimUri: "http://wso2.org/claims/postalcode"
+      -
+        attribute: "country"
+        claimUri: "http://wso2.org/claims/country"
+      -
+        attribute: "role"
+        claimUri: "http://wso2.org/claims/role"
+      -
+        attribute: "organization"
+        claimUri: "http://wso2.org/claims/organization"
+
+    credentialStoreConnectors:
+    -
+      connectorId: "JDBCCS1"
+      connectorType: "JDBCCredentialStore"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+        databaseType: "MySQL"

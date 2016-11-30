@@ -955,13 +955,19 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f76445f... adding configuration changes
                                     <fileset dir="${basedir}/target/resources/dbscripts/">
                                         <include name="**/h2.sql" />
                                     </fileset>
                                     <fileset file="carbon-home/resources/h2-test-data/test-data.sql"/>
+<<<<<<< HEAD
 =======
                                     <fileset file="${basedir}/target/resources/dbscripts/*.sql"/>
 >>>>>>> a695889... update connectors and config changes
+=======
+>>>>>>> f76445f... adding configuration changes
                                 </sql>
                                 <echo message="##################### END ########################"/>
                             </target>

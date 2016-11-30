@@ -311,7 +311,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
-                <version>1.0.3-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -955,7 +955,7 @@
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-all</artifactId>
-                <version>2.1.0-SNAPSHOT</version>
+                <version>2.1.0</version>
             </dependency>
             <dependency>
                 <groupId>apache-collections</groupId>
@@ -1043,6 +1043,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
@@ -1066,6 +1067,12 @@
 =======
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 >>>>>>> 566488f... Adding scim feature
+=======
+        <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
+        <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
+        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
+>>>>>>> f76445f... adding configuration changes
 
         <!--3rd party related properties-->
         <commons-beanutils.wso2.version>1.8.0.wso2v1</commons-beanutils.wso2.version>

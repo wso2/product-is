@@ -22,6 +22,7 @@ VALUES ('uid'),
   ('postalcode'),
   ('country'),
   ('role'),
+<<<<<<< HEAD
   ('organization'),
   ('resourceType'),
   ('createdDate'),
@@ -31,6 +32,9 @@ VALUES ('uid'),
   ('challengeQuestionUris'),
   ('challengeQuestion1'),
   ('challengeQuestion2');
+=======
+  ('organization');
+>>>>>>> f76445f... adding configuration changes
 
 INSERT INTO UM_PASSWORD (PASSWORD, USER_UNIQUE_ID)
 VALUES ('3opCozpRixH6BvSXyr0513v1nyFWpdcQy7F6r6P/LFE=', '5c724592-3506-46ec-9286-f611c2a098dc');
@@ -42,6 +46,7 @@ VALUES ('1ff1188e-f1bf-11e5-9ce9-5e5517507c66', 'SHA256', 4096, 256, (SELECT ID
                                                                             '5c724592-3506-46ec-9286-f611c2a098dc'));
 
 INSERT INTO UM_USER (USER_UNIQUE_ID)
+<<<<<<< HEAD
 VALUES ('12551249-ca7b-4790-bf40-67304dcc7e5f');
 
 INSERT INTO UM_USER_ATTRIBUTES (ATTR_ID, ATTR_VALUE, USER_ID)
@@ -67,3 +72,10 @@ VALUES ((SELECT ID FROM UM_ATTRIBUTES WHERE ATTR_NAME = 'uid'),
 INSERT INTO IDM_USER (USER_ID, DOMAIN_ID, CONNECTOR_TYPE, CONNECTOR_ID, CONNECTOR_USER_ID) VALUES
   ('0a8faaa2-4091-4000-bdd4-9c417798e47c', '1', 'I', 'JDBCIS1', '12551249-ca7b-4790-bf40-67304dcc7e5f'),
   ('0a8faaa2-4091-4000-bdd4-9c417798e47c', '1', 'C', 'JDBCCS1', '5c724592-3506-46ec-9286-f611c2a098dc');
+=======
+VALUES ('admin');
+
+INSERT INTO IDM_ENTITY (USER_UUID, DOMAIN, CONNECTOR_TYPE, CONNECTOR_ID, CONNECTOR_USER_ID) VALUES
+  ('0a8faaa2-4091-4000-bdd4-9c417798e47c', 'PRIMARY', 'I', 'JDBCIS1', 'admin'),
+  ('0a8faaa2-4091-4000-bdd4-9c417798e47c', 'PRIMARY', 'C', 'JDBCCS1', '5c724592-3506-46ec-9286-f611c2a098dc');
+>>>>>>> f76445f... adding configuration changes
