@@ -604,7 +604,10 @@
                                     <classpath>
                                         <path refid="h2.classpath"/>
                                     </classpath>
-                                    <fileset file="${basedir}/target/resources/dbscripts/*.sql"/>
+                                    <fileset dir="${basedir}/target/resources/dbscripts/">
+                                        <include name="**/h2.sql" />
+                                    </fileset>
+                                    <fileset file="carbon-home/resources/h2-test-data/test-data.sql"/>
                                 </sql>
                                 <echo message="##################### END ########################"/>
                             </target>
