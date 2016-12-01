@@ -33,6 +33,10 @@
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
+                <exclude>**/identity/claim-store.yml</exclude>
+                <exclude>**/identity/connector-config.yml</exclude>
+                <exclude>**/identity/domain-config.yml</exclude>
+                <exclude>**/identity/store-config.yml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -64,8 +68,8 @@
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>carbon-home/dbscripts</directory>
-            <outputDirectory>dbscripts</outputDirectory>
+            <directory>carbon-home/conf/datasources</directory>
+            <outputDirectory>conf/datasources</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>

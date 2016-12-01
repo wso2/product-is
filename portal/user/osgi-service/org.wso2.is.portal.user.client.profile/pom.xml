@@ -82,7 +82,7 @@
                         <Private-Package>org.wso2.carbon.user.profile.internal.*</Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.user.profile.internal.*,
-                            org.wso2.carbon.user.profile.*;version="${version}"
+                            org.wso2.carbon.user.profile.*;version="${project.version}"
                         </Export-Package>
                         <Bundle-Activator>
                             org.wso2.carbon.user.profile.internal.Activator
