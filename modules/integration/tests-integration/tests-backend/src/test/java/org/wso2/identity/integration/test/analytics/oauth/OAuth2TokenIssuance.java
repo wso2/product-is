@@ -172,7 +172,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
         Assert.assertEquals("PRIMARY", tokenIssuanceEvent.getPayloadData()[2]);
         Assert.assertEquals(appDto.getOauthConsumerKey(), tokenIssuanceEvent.getPayloadData()[3]);
         Assert.assertEquals("client_credentials", tokenIssuanceEvent.getPayloadData()[4]);
-        Assert.assertEquals("default ", tokenIssuanceEvent.getPayloadData()[6]);
+        Assert.assertEquals("default", tokenIssuanceEvent.getPayloadData()[6]);
 
     }
 
