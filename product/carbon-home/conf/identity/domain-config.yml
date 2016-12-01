@@ -105,6 +105,21 @@ domains:
       -
         attribute: "organization"
         claimUri: "http://wso2.org/claims/organization"
+      -
+        attribute: "resourceType"
+        claimUri: "http://wso2.org/claims/resourceType"
+      -
+        attribute: "createdDate"
+        claimUri: "http://wso2.org/claims/createdDate"
+      -
+        attribute: "lastModifiedDate"
+        claimUri: "http://wso2.org/claims/lastModifiedDate"
+      -
+        attribute: "location"
+        claimUri: "http://wso2.org/claims/location"
+      -
+        attribute: "version"
+        claimUri: "http://wso2.org/claims/version"
 
     credentialStoreConnectors:
     -
