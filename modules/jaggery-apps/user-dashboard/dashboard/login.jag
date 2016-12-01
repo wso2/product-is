@@ -69,13 +69,10 @@ function initAuthenticationProtocol(){
 				if(prop === "SAML.KeyStore"){
 					value = value.replace("{carbon.home}", carbonHome);
 				}
-				if(prop === "SAML.IdPUrl"){
-					if(prop.indexOf("http") > -1){
-						value = value;
-					}else{
+				if (prop === "SAML.IdPUrl") {
+					if (value.indexOf("http") == -1) {
 						value = serverCoreUrl + "/" + (value);
 					}
-
 				}
 				properties[prop] = value;
 			}
