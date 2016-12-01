@@ -68,11 +68,12 @@
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>-->
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
-            <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
-            <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>-->
 
-            <class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase" />-->
+
 
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
@@ -128,8 +129,8 @@
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
 
             <!--Identity Provider Management Test Cases-->
-            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase"/>
-            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />-->
+            <!--<class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />-->
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorBaseTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
