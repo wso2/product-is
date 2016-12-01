@@ -59,6 +59,7 @@
             <groupId>org.wso2.carbon.caching</groupId>
             <artifactId>org.wso2.carbon.caching.feature</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <type>zip</type>
         </dependency>
         <dependency>
@@ -72,12 +73,13 @@
 =======
             <version>${org.wso2.carbon.caching.version}</version>
 >>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
+=======
+>>>>>>> c3168a2... Fix pom warnings and add scim related fixes
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.messaging</groupId>
             <artifactId>org.wso2.carbon.messaging.feature</artifactId>
-            <version>${org.wso2.carbon.messaging.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -245,21 +247,6 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.metrics</groupId>
-            <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>

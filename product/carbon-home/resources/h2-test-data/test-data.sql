@@ -23,11 +23,15 @@ VALUES ('uid'),
   ('country'),
   ('role'),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c3168a2... Fix pom warnings and add scim related fixes
   ('organization'),
   ('resourceType'),
   ('createdDate'),
   ('lastModifiedDate'),
   ('location'),
+<<<<<<< HEAD
   ('version'),
   ('challengeQuestionUris'),
   ('challengeQuestion1'),
@@ -35,6 +39,9 @@ VALUES ('uid'),
 =======
   ('organization');
 >>>>>>> f76445f... adding configuration changes
+=======
+  ('version');
+>>>>>>> c3168a2... Fix pom warnings and add scim related fixes
 
 INSERT INTO UM_PASSWORD (PASSWORD, USER_UNIQUE_ID)
 VALUES ('3opCozpRixH6BvSXyr0513v1nyFWpdcQy7F6r6P/LFE=', '5c724592-3506-46ec-9286-f611c2a098dc');
@@ -75,7 +82,18 @@ INSERT INTO IDM_USER (USER_ID, DOMAIN_ID, CONNECTOR_TYPE, CONNECTOR_ID, CONNECTO
 =======
 VALUES ('admin');
 
-INSERT INTO IDM_ENTITY (USER_UUID, DOMAIN, CONNECTOR_TYPE, CONNECTOR_ID, CONNECTOR_USER_ID) VALUES
+INSERT INTO UM_USER_ATTRIBUTES (ATTR_ID, ATTR_VALUE, USER_ID)
+VALUES ((SELECT ID FROM UM_ATTRIBUTES WHERE ATTR_NAME = 'uid'),
+        'admin',
+        (SELECT ID FROM UM_USER WHERE USER_UNIQUE_ID= 'admin')),
+  ((SELECT ID FROM UM_ATTRIBUTES WHERE ATTR_NAME = 'givenName'),
+   'John',
+   (SELECT ID FROM UM_USER WHERE USER_UNIQUE_ID= 'admin')),
+  ((SELECT ID FROM UM_ATTRIBUTES WHERE ATTR_NAME = 'sn'),
+   'Doe',
+   (SELECT ID FROM UM_USER WHERE USER_UNIQUE_ID= 'admin'));
+
+INSERT INTO IDM_ENTITY (ENTITY_UUID, DOMAIN, CONNECTOR_TYPE, CONNECTOR_ID, CONNECTOR_ENTITY_ID) VALUES
   ('0a8faaa2-4091-4000-bdd4-9c417798e47c', 'PRIMARY', 'I', 'JDBCIS1', 'admin'),
   ('0a8faaa2-4091-4000-bdd4-9c417798e47c', 'PRIMARY', 'C', 'JDBCCS1', '5c724592-3506-46ec-9286-f611c2a098dc');
 >>>>>>> f76445f... adding configuration changes
