@@ -112,7 +112,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.governance.stub</artifactId>
         </dependency>
         <dependency>
