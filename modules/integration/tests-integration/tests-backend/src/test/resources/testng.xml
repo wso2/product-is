@@ -129,8 +129,8 @@
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
 
             <!--Identity Provider Management Test Cases-->
-            <!--<class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />-->
-            <!--<class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />-->
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorBaseTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->

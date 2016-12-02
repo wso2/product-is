@@ -26,6 +26,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
@@ -52,6 +53,8 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     private boolean residentIdpPrimary;
     private String residentIdpName;
     private String residentIDPDefaultRealm;
+    private IdentityProviderProperty[] idpProperties;
+
     private String defaultSamlSSOEntityID = "localhost";
     private final String SAML2SSO_NAME = "samlsso";
     private final String SAML2SSO_IDP_ENTITY_ID = "IdPEntityId";
@@ -80,6 +83,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         identityProvider.setPrimary(residentIdpPrimary);
         identityProvider.setIdentityProviderName(residentIdpName);
         identityProvider.setHomeRealmId(residentIDPDefaultRealm);
+        identityProvider.setIdpProperties(idpProperties);
 
         FederatedAuthenticatorConfig samlFedAuthn = new FederatedAuthenticatorConfig();
         samlFedAuthn.setName(SAML2SSO_NAME);
@@ -480,6 +484,8 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         residentIdpPrimary = residentProvider.getPrimary();
         residentIdpName = residentProvider.getIdentityProviderName();
         residentIDPDefaultRealm = residentProvider.getHomeRealmId();
+
+        idpProperties = residentProvider.getIdpProperties();
 
         IdentityProvider identityProvider = new IdentityProvider();
         identityProvider.setEnable(true);
