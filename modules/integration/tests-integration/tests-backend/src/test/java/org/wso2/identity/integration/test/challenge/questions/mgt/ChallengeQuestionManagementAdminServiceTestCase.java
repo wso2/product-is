@@ -73,18 +73,16 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
         setSystemproperties();
     }
 
-    @Test(groups = "wso2.is", description = "Getting challenge questions of a user")
+    @Test(groups = "wso2.is", description = "Getting challenge questions of a user", priority = 1, sequential = true)
     public void testDefaultChallengeQuestions() throws Exception {
-        ChallengeQuestion[] defaultQuestions =
-                challengeQuestionsBobClient.getChallengeQuestionsForTenant(SUPER_TENANT);
+        ChallengeQuestion[] defaultQuestions = challengeQuestionsBobClient.getChallengeQuestionsForTenant(SUPER_TENANT);
         assertTrue(defaultQuestions != null && defaultQuestions.length > 0,
                 "Default Challenge questions not found for " + SUPER_TENANT + " tenantDomain.");
 
     }
 
 
-    @Test(groups = "wso2.is", description = "Getting challenge questions of a user",
-            dependsOnMethods = {"testDefaultChallengeQuestions"})
+    @Test(groups = "wso2.is", description = "Getting challenge questions of a user", priority = 2, sequential = true)
     public void addChallengeQuestionByTenant() throws Exception {
 
         int countBefore = challengeQuestionsBobClient.getChallengeQuestionsForTenant(SUPER_TENANT).length;
@@ -103,7 +101,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
     }
 
 
-    @Test(groups = "wso2.is", description = "Getting challenge questions of a user")
+    @Test(groups = "wso2.is", description = "Getting challenge questions of a user", priority = 3, sequential = true)
     public void addChallengeQuestionByLocale() throws Exception {
         challengeQuestionsAdminClient = new ChallengeQuestionMgtAdminClient(backendURL, BOB_USERNAME, BOB_PASSWORD);
 
@@ -125,8 +123,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
                 " failed in " + SUPER_TENANT);
     }
 
-    @Test(groups = "wso2.is", description = "Getting challenge questions of a user",
-            dependsOnMethods = {"addChallengeQuestionByLocale"})
+    @Test(groups = "wso2.is", description = "Getting challenge questions of a user", priority = 4, sequential = true)
     public void getChallengeQuestionsByLocale() throws Exception {
         challengeQuestionsAdminClient = new ChallengeQuestionMgtAdminClient(backendURL, BOB_USERNAME, BOB_PASSWORD);
 
@@ -143,8 +140,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
 
     }
 
-    @Test(groups = "wso2.is", description = "Getting challenge questions of a user", dependsOnMethods =
-            {"addChallengeQuestionByLocale"})
+    @Test(groups = "wso2.is", description = "Getting challenge questions of a user", priority = 5, sequential = true)
     public void getChallengeQuestionByUser() throws Exception {
         challengeQuestionsAdminClient = new ChallengeQuestionMgtAdminClient(backendURL, BOB_USERNAME, BOB_PASSWORD);
 
@@ -155,6 +151,53 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
         int count = challengeQuestionsAdminClient.getChallengeQuestionsForUser(bob).length;
         assertTrue(count == 1, "Challenge Questions not retrieved successfully for user : " + bob.toString());
     }
+
+    @Test(groups = "wso2.is", description = "Deleting challenge question in a locale", priority = 6, sequential = true)
+    public void deleteChallengeQuestionsByLocale() throws Exception{
+        challengeQuestionsAdminClient = new ChallengeQuestionMgtAdminClient(backendURL,
+                isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                isServer.getSuperTenant().getTenantAdmin().getUserName());
+
+        // get challenge challenge questions of xx_YY locale
+        ChallengeQuestion[] challengeQuestions =
+                challengeQuestionsAdminClient.getChallengeQuestionsForLocale(SUPER_TENANT, BOB_LOCALE);
+
+        // we should have challenge questions in the locale by now.
+        assertTrue(challengeQuestions != null && challengeQuestions.length > 0);
+
+        // delete all the challenge questions in the xx_YY locale
+        challengeQuestionsAdminClient.deleteChallengeQuestions(challengeQuestions, SUPER_TENANT);
+
+        // retrieve challenge questions once again.
+        challengeQuestions =
+                challengeQuestionsAdminClient.getChallengeQuestionsForLocale(SUPER_TENANT, BOB_LOCALE);
+
+        int numberOfQuestions = challengeQuestions == null ? 0 : challengeQuestions.length;
+        // now we shouldn't have challenge questions.
+        assertTrue(numberOfQuestions == 0);
+
+    }
+
+    @Test(groups = "wso2.is", description = "Get default questions if the locale doesn't have any questions set.",
+            priority = 7, sequential = true)
+    public void getDefaultChallengeQuestionsForUser() throws Exception {
+        challengeQuestionsAdminClient = new ChallengeQuestionMgtAdminClient(backendURL, BOB_USERNAME, BOB_PASSWORD);
+
+        User bob = new User();
+        bob.setUserName(BOB_USERNAME);
+        bob.setTenantDomain(SUPER_TENANT);
+
+        // we need to confirm there are no challenge questions in Bob's locale
+        ChallengeQuestion[] localeQuestions =
+                challengeQuestionsAdminClient.getChallengeQuestionsForLocale(SUPER_TENANT, BOB_LOCALE);
+        int bobLocale = localeQuestions == null ? 0 : localeQuestions.length;
+        assertTrue(bobLocale == 0, "Cannot have challenge questions in " + BOB_LOCALE);
+
+        // this should return us with default questions since Bob's locale doesn't have any challenge questions.
+        int count = challengeQuestionsAdminClient.getChallengeQuestionsForUser(bob).length;
+        assertTrue(count > 1, "Default Challenge Questions not retrieved for user : " + bob.toString());
+    }
+
 
 
     @Test(groups = "wso2.is", description = "Testing cross tenant access.")
