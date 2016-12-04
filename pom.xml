@@ -1329,6 +1329,11 @@
                 <artifactId>org.wso2.carbon.email.mgt.feature</artifactId>
                 <version>${identity.event.handler.notification.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.metadata.saml2</groupId>
+                <artifactId>org.wso2.carbon.identity.idp.metadata.saml2.server.feature</artifactId>
+                <version>${identity.metadata.saml.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.identity.application.authz.xacml</groupId>
