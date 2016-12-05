@@ -28,21 +28,18 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
+import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.ResourceAdminServiceClient;
+import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-
-import java.io.File;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(AccountLockEnabledTestCase.class.getName());
 
-    private ServerConfigurationManager scm;
     private String defaultLocalityClaimUri = "http://wso2.org/claims/locality";
     private String accountLockClaimUri = "http://wso2.org/claims/identity/accountLocked";
     private String defaultLocalityClaimValue = "en_US";
@@ -55,29 +52,22 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private String testLockUser2Password = "TestLockUser2Password";
 
     private String accountLockTemplate = "accountlock";
-    private File identityXmlServerFile;
 
     private AuthenticatorClient authenticatorClient;
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private RemoteUserStoreManagerServiceClient usmClient;
+    private IdentityGovernanceServiceClient identityGovernanceServiceClient;
+
+    private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.enable";
+    private static final String TRUE_STRING = "true";
+    private static final String DEFAULT = "default";
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
         authenticatorClient = new AuthenticatorClient(backendURL);
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        identityXmlServerFile = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "identity.xml");
-        File identityMgtConfigFile = new File(getISResourceLocation()
-                + File.separator + "identityMgt" + File.separator
-                + "identity-accountlock-enabled.xml");
-        scm = new ServerConfigurationManager(isServer);
-        scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityXmlServerFile, true);
-        scm.restartGracefully();
-        super.init();
+        enableAccountLocking(ENABLE_ACCOUNT_LOCK);
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, sessionCookie);
     }
@@ -137,17 +127,29 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-
         usmClient.deleteUser(testLockUser1);
         usmClient.deleteUser(testLockUser2);
-
-        scm.restoreToLastConfiguration();
-        scm.restartGracefully();
 
     }
 
     protected String getISResourceLocation() {
         return TestConfigurationProvider.getResourceLocation("IS");
+    }
+
+    protected void enableAccountLocking(String option) throws Exception {
+        identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
+
+        Thread.sleep(5000);
+        authenticatorClient.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                isServer.getSuperTenant().getTenantAdmin().getPassword(),
+                isServer.getInstance().getHosts().get(DEFAULT));
+
+        Property[] newProperties = new Property[1];
+        Property prop = new Property();
+        prop.setName(option);
+        prop.setValue(TRUE_STRING);
+        newProperties[0] = prop;
+        identityGovernanceServiceClient.updateConfigurations(newProperties);
     }
 
 }

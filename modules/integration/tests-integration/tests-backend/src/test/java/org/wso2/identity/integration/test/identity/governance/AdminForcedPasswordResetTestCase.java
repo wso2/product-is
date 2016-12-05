@@ -83,6 +83,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     private static final String ENABLE_ADMIN_PASSWORD_RESET_OFFLINE = "Recovery.AdminPasswordReset.Offline";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_OTP = "Recovery.AdminPasswordReset.OTP";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_RECOVERY_LINK = "Recovery.AdminPasswordReset.RecoveryLink";
+    private static final String ENABLE_NOTIFICATION_BASED_PASSWORD_RECOVERY = "Recovery.Notification.Password.Enable";
     private static final String ADMIN_FORCED_PASSWORD_RESET_CLAIM = "http://wso2.org/claims/identity/adminForcedPasswordReset";
     private static final String OTP_CLAIM = "http://wso2.org/claims/oneTimePassword";
     private static final String EMAIL_CLAIM = "http://wso2.org/claims/emailaddress";
@@ -238,15 +239,23 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get(DEFAULT));
 
-        Property[] newProperties = new Property[2];
+        Property[] newProperties = new Property[3];
+
         Property prop = new Property();
         prop.setName(option);
         prop.setValue(TRUE_STRING);
+
         Property prop1 = new Property();
         prop1.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_RECOVERY_LINK);
         prop1.setValue("false");
+
+        Property prop2 = new Property();
+        prop2.setName(ENABLE_NOTIFICATION_BASED_PASSWORD_RECOVERY);
+        prop2.setValue(TRUE_STRING);
+
         newProperties[0] = prop;
         newProperties[1] = prop1;
+        newProperties[2] = prop2;
         identityGovernanceServiceClient.updateConfigurations(newProperties);
     }
 
