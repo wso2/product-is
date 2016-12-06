@@ -173,6 +173,23 @@
             <type>zip</type>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.framework.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.resource.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+
         <!-- Sample Simple Authentication Component -->
 
         <dependency>
@@ -410,6 +427,20 @@
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
+
+
+                                <feature>
+                                    <id>org.wso2.carbon.identity.framework.feature</id>
+                                    <version>${org.wso2.carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -562,6 +593,19 @@
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.identity.framework.feature</id>
+                                    <version>${org.wso2.carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -605,7 +649,7 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset dir="${basedir}/target/resources/dbscripts/">
-                                        <include name="**/h2.sql" />
+                                        <include name="**/h2.sql"/>
                                     </fileset>
                                     <fileset file="carbon-home/resources/h2-test-data/test-data.sql"/>
                                 </sql>

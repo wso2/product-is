@@ -484,6 +484,24 @@
                 <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.framework.feature</artifactId>
+                <version>${org.wso2.carbon.identity.framework.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+                <version>${org.wso2.carbon.identity.gateway.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.gateway.resource.feature</artifactId>
+                <version>${org.wso2.carbon.identity.gateway.version}</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -531,7 +549,12 @@
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
         <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
-        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
+        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT
+        </org.wso2.carbon.identity.inbound.provisioning.scim2.version>
+
+        <org.wso2.carbon.identity.framework.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.framework.version>
+        <org.wso2.carbon.identity.gateway.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.gateway.version>
+
 
         <!--3rd party related properties-->
         <commons-beanutils.wso2.version>1.8.0.wso2v1</commons-beanutils.wso2.version>
