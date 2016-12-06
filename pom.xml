@@ -895,6 +895,12 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.claim.metadata.mgt</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.openid</groupId>
                 <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
                 <version>${identity.inbound.auth.openid.version}</version>
