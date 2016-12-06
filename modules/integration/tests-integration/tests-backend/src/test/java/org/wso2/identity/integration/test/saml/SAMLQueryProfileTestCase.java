@@ -124,14 +124,14 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+//                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+//                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+//                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+//                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -189,7 +189,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                 "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testSAMLAssertionIDRequest"})
+    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testClaims"})
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
@@ -233,7 +233,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO Claims", groups = "wso2.is",
-            dependsOnMethods = {"testSAMLSSOLogin"})
+            dependsOnMethods = {"testSAMLAttributeQueryRequest"})
     public void testClaims() {
         String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
 
@@ -271,7 +271,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing Attribute Query Request", groups = "wso2.is",
-            dependsOnMethods = {"testSAMLSSOLogin"})
+            dependsOnMethods = {"testSAMLAssertionIDRequest"})
     public void testSAMLAttributeQueryRequest() throws Exception {
 
         try {
@@ -521,6 +521,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         }
+        samlssoServiceProviderDTO.setCertAlias("wso2carbon");
 
         return samlssoServiceProviderDTO;
     }
