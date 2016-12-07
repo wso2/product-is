@@ -28,10 +28,7 @@ domains:
       connectorType: "JDBCIdentityStore"
       properties:
         dataSource: "WSO2_CARBON_DB"
-        hashAlgorithm: "SHA256"
         databaseType: "MySQL"
-        connectorUserId: "uid"
-        connectorGroupId: "groupname"
       attributeMappings:
       -
         attribute: "uid"
@@ -128,3 +125,6 @@ domains:
       properties:
         dataSource: "WSO2_CARBON_DB"
         databaseType: "MySQL"
+        hashAlgorithm: "SHA256"
+        keyLength: 256
+        iterationCount: 4096
