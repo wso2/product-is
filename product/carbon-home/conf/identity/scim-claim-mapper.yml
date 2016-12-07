@@ -41,3 +41,6 @@ claims:
 -
   scimClaim: "urn:ietf:params:scim:schemas:core:2.0:User:emails.home"
   wso2Claim: "http://wso2.org/claims/email"
+-
+  scimClaim: "urn:ietf:params:scim:schemas:core:2.0:Group:displayName"
+  wso2Claim: "http://wso2.org/claims/organization"
