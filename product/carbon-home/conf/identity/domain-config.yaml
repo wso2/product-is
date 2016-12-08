@@ -34,8 +34,6 @@ domains:
       -
         attribute: "uid"
         claimUri: "http://wso2.org/claims/username"
-        properties:
-          unique: "true"
       -
         attribute: "cn"
         claimUri: "http://wso2.org/claims/fullname"
@@ -61,7 +59,7 @@ domains:
         attribute: "nickName"
         claimUri: "http://wso2.org/claims/nickname"
       -
-        attribute: "mail"
+        attribute: "email"
         claimUri: "http://wso2.org/claims/email"
       -
         attribute: "title"
@@ -120,15 +118,6 @@ domains:
       -
         attribute: "version"
         claimUri: "http://wso2.org/claims/version"
-      -
-        attribute: "challengeQuestionUris"
-        claimUri: "http://wso2.org/claims/challengeQuestionUris"
-      -
-        attribute: "challengeQuestion1"
-        claimUri: "http://wso2.org/claims/challengeQuestion1"
-      -
-        attribute: "challengeQuestion2"
-        claimUri: "http://wso2.org/claims/challengeQuestion2"
 
     credentialStoreConnectors:
     -
