@@ -16,15 +16,17 @@
 
 package org.wso2.carbon.is.migration.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Claim  representation for a claim.
  */
 public class Claim {
-    private String mappedAttribute;
     private String claimURI;
     private String displayTag;
     private String description;
-    private String mappedAttributeDomain;
+    private List<MappedAttribute> attributes;
     private String regEx;
     private boolean supportedByDefault;
     private boolean required;
@@ -33,14 +35,15 @@ public class Claim {
     private int tenantId;
     private String dialectURI;
 
-    public Claim(String mappedAttribute, String claimURI, String displayTag, String description,
-                 String mappedAttributeDomain, String regEx, boolean supportedByDefault, boolean required,
+    public Claim() {
+
+    }
+
+    public Claim(String claimURI, String displayTag, String description, String regEx, boolean supportedByDefault, boolean required,
                  int displayOrder, boolean readOnly, int tenantId, String dialectURI) {
-        this.mappedAttribute = mappedAttribute;
         this.claimURI = claimURI;
         this.displayTag = displayTag;
         this.description = description;
-        this.mappedAttributeDomain = mappedAttributeDomain;
         this.regEx = regEx;
         this.supportedByDefault = supportedByDefault;
         this.required = required;
@@ -50,12 +53,15 @@ public class Claim {
         this.dialectURI = dialectURI;
     }
 
-    public String getMappedAttribute() {
-        return mappedAttribute;
+    public List<MappedAttribute> getAttributes() {
+        if (attributes == null) {
+            return new ArrayList<>();
+        }
+        return attributes;
     }
 
-    public void setMappedAttribute(String mappedAttribute) {
-        this.mappedAttribute = mappedAttribute;
+    public void setAttributes(List<MappedAttribute> attributes) {
+        this.attributes = attributes;
     }
 
     public String getClaimURI() {
@@ -80,14 +86,6 @@ public class Claim {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getMappedAttributeDomain() {
-        return mappedAttributeDomain;
-    }
-
-    public void setMappedAttributeDomain(String mappedAttributeDomain) {
-        this.mappedAttributeDomain = mappedAttributeDomain;
     }
 
     public String getRegEx() {
@@ -144,5 +142,26 @@ public class Claim {
 
     public void setDialectURI(String dialectURI) {
         this.dialectURI = dialectURI;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Claim claim = (Claim) o;
+
+        if (tenantId != claim.tenantId) return false;
+        if (!claimURI.equals(claim.claimURI)) return false;
+        return dialectURI.equals(claim.dialectURI);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = claimURI.hashCode();
+        result = 31 * result + tenantId;
+        result = 31 * result + dialectURI.hashCode();
+        return result;
     }
 }

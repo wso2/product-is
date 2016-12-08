@@ -15,10 +15,12 @@
 */
 package org.wso2.carbon.is.migration.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
+import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
+
+import javax.sql.DataSource;
+import java.sql.*;
 
 public class ResourceUtil {
 
@@ -35,5 +37,27 @@ public class ResourceUtil {
         return name;
     }
 
+
+    public static boolean isSchemaMigrated(DataSource dataSource) throws Exception {
+
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            String databaseType = DatabaseCreator.getDatabaseType(conn);
+            DatabaseMetaData meta = conn.getMetaData();
+            String schema = null;
+            if ("oracle".equals(databaseType)) {
+                schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
+            }
+            ResultSet res = meta.getTables(null, schema, "IDN_CLAIM", new String[]{"TABLE"});
+            boolean schemaMigrated = false;
+            if (res.next()) {
+                schemaMigrated = true;
+            }
+            return schemaMigrated;
+        } finally {
+            IdentityDatabaseUtil.closeConnection(conn);
+        }
+    }
 
 }

@@ -23,9 +23,11 @@ import org.wso2.carbon.identity.claim.metadata.mgt.util.ClaimConstants;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.is.migration.ClaimManager;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.Claim;
+import org.wso2.carbon.is.migration.bean.MappedAttribute;
 import org.wso2.carbon.utils.DBUtils;
 
 import java.sql.Connection;
@@ -33,7 +35,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Claim DAO
@@ -151,10 +155,13 @@ public class ClaimDAO {
                 claimProperties.put("Required", String.valueOf(claim.isRequired()));
                 claimProperties.put("SupportedByDefault", String.valueOf(claim.isSupportedByDefault()));
                 addClaimProperties(connection, localClaimId, claimProperties, claim.getTenantId());
+
+                for (MappedAttribute mappedAttribute : claim.getAttributes()) {
+                    addClaimAttributeMappings(connection, localClaimId, mappedAttribute.getAttribute(), mappedAttribute
+                            .getDomain(), claim.getTenantId());
+                }
             }
 
-            addClaimAttributeMappings(connection, localClaimId, claim.getMappedAttribute(), claim
-                    .getMappedAttributeDomain(), claim.getTenantId());
             // End transaction
             connection.commit();
         } catch (SQLException e) {
@@ -393,11 +400,41 @@ public class ClaimDAO {
                     externalClaimId = getClaimId(connection, externalClaimDialectURI, externalClaimURI, claim.getTenantId());
                 }
 
-                int localClaimId = getClaimIdFromMappedAttribute(connection, claim
-                        .getMappedAttribute(), claim.getMappedAttributeDomain(), claim.getTenantId());
+                //Ge the relevant local claim from mapped attributes.If all mapped attributes are matching to the
+                // same local claim, add that association. If the multiple local claims are matching to remote claim,
+                // we can't add multiple mapping to one remote claim. So, create a new local claim and add mapping to
+                // that claim with mapped attributes
+                int localClaimId = 0;
 
-                if (localClaimId != 0) {
-                    addClaimMapping(connection, externalClaimId, localClaimId, claim.getTenantId());
+                Set<Integer> ids = new HashSet<>();
+                for (MappedAttribute mappedAttribute : claim.getAttributes()) {
+                    localClaimId = getClaimIdFromMappedAttribute(connection, mappedAttribute
+                            .getAttribute(), mappedAttribute.getDomain(), claim.getTenantId());
+                    ids.add(localClaimId);
+                }
+
+                if (ids.size() == 1) {
+                    localClaimId = getClaimIdFromMappedAttribute(connection, claim.getAttributes().get(0).getAttribute(),
+                            claim.getAttributes().get(0).getDomain(), claim.getTenantId());
+                    if (localClaimId != 0) {
+                        addClaimMapping(connection, externalClaimId, localClaimId, claim.getTenantId());
+                    }
+                } else {
+                    //Create a new Local claim for matching the remote claim
+                    int newClaimId = addClaim(connection, ClaimConstants.LOCAL_CLAIM_DIALECT_URI, ClaimConstants
+                            .LOCAL_CLAIM_DIALECT_URI + "/migration__claim__" + claim.getDisplayTag(), claim
+                            .getTenantId());
+
+                    Map<String, String> claimProperties = new HashMap<>();
+                    claimProperties.put("Description", claim.getDescription());
+                    claimProperties.put("DisplayName", "migration__claim__"+claim.getDisplayTag());
+                    addClaimProperties(connection, newClaimId, claimProperties, claim.getTenantId());
+
+                    for (MappedAttribute mappedAttribute : claim.getAttributes()) {
+                        addClaimAttributeMappings(connection, newClaimId, mappedAttribute.getAttribute(), mappedAttribute
+                                .getDomain(), claim.getTenantId());
+                    }
+                    addClaimMapping(connection, externalClaimId, newClaimId, claim.getTenantId());
                 }
             }
             // End transaction
