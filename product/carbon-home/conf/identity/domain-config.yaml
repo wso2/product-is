@@ -15,8 +15,9 @@
 ###############################################################################
 domains:
   -
+    id: 1
     name: "PRIMARY"
-    priority: 1
+    order: 1
     uniqueIdResolver:
       type: "JDBCUniqueIdResolver"
       properties:
