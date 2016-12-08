@@ -35,7 +35,7 @@
                 <exclude>**/*.eclipse</exclude>
                 <exclude>**/identity/claim-store.yml</exclude>
                 <exclude>**/identity/connector-config.yml</exclude>
-                <exclude>**/identity/domain-config.yml</exclude>
+                <exclude>**/identity/domain-config.yaml</exclude>
                 <exclude>**/identity/store-config.yml</exclude>
             </excludes>
         </fileSet>
