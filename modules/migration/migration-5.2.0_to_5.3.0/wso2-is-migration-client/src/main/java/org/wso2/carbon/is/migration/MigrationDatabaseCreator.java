@@ -49,8 +49,6 @@ public class MigrationDatabaseCreator {
     private String delimiter = ";";
 
     public MigrationDatabaseCreator(DataSource dataSource, DataSource umDataSource) {
-
-//        super(dataSource);
         this.dataSource = dataSource;
         this.umDataSource = umDataSource;
     }
@@ -66,23 +64,18 @@ public class MigrationDatabaseCreator {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if ("mysql".equals(databaseType)) {
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
             DatabaseMetaData meta = conn.getMetaData();
             String schema = null;
-            if ("oracle".equals(databaseType)){
+            if ("oracle".equals(databaseType)) {
                 schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
             }
-            ResultSet res = meta.getTables(null, schema, "IDN_AUTH_SESSION_STORE", new String[] {"TABLE"});
-            if (!res.next()) {
-                String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_0_0, Constants
-                        .VERSION_5_0_0_SP1);
-                executeSQLScript(dbscriptName);
-            }
-            String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_0_0_SP1, Constants
-                    .VERSION_5_1_0);
+
+            String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_2_0, Constants
+                    .VERSION_5_3_0);
             executeSQLScript(dbscriptName);
             conn.commit();
             if (log.isTraceEnabled()) {
@@ -109,12 +102,12 @@ public class MigrationDatabaseCreator {
             conn = umDataSource.getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-            if ("mysql".equals(databaseType)){
+            if ("mysql".equals(databaseType)) {
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
 
-            String dbscriptName = getUmDbScriptLocation(databaseType, Constants.VERSION_5_0_0, Constants.VERSION_5_1_0);
+            String dbscriptName = getUmDbScriptLocation(databaseType, Constants.VERSION_5_2_0, Constants.VERSION_5_3_0);
             executeSQLScript(dbscriptName);
             conn.commit();
             if (log.isTraceEnabled()) {
@@ -140,12 +133,9 @@ public class MigrationDatabaseCreator {
         String scriptName = databaseType + ".sql";
         String carbonHome = System.getProperty("carbon.home");
 
-        if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_0_0_SP1.equals(to)) {
+        if (Constants.VERSION_5_2_0.equals(from) && Constants.VERSION_5_3_0.equals(to)) {
             return carbonHome + File.separator + "dbscripts" + File.separator + "identity" + File.separator +
-                    "migration-5.0.0_to_5.0.0SP1" + File.separator + scriptName;
-        } else if (Constants.VERSION_5_0_0_SP1.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
-            return carbonHome + File.separator + "dbscripts" + File.separator + "identity" + File.separator +
-                    "migration-5.0.0SP1_to_5.1.0" + File.separator + scriptName;
+                    "migration-5.2.0_to_5.3.0" + File.separator + scriptName;
         } else {
             throw new IllegalArgumentException("Invalid migration versions provided");
         }
@@ -156,8 +146,8 @@ public class MigrationDatabaseCreator {
         String scriptName = databaseType + ".sql";
         String carbonHome = System.getProperty("carbon.home");
 
-        if (Constants.VERSION_5_0_0.equals(from) && Constants.VERSION_5_1_0.equals(to)) {
-            return carbonHome + File.separator + "dbscripts" + File.separator + "migration-5.0.0_to_5.1.0" + File
+        if (Constants.VERSION_5_2_0.equals(from) && Constants.VERSION_5_3_0.equals(to)) {
+            return carbonHome + File.separator + "dbscripts" + File.separator + "migration-5.2.0_to_5.3.0" + File
                     .separator + scriptName;
         } else {
             throw new IllegalArgumentException("Invalid migration versions provided");
@@ -210,8 +200,8 @@ public class MigrationDatabaseCreator {
                     }
                 }
                 //add the oracle database owner
-                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")){
-                    line = "databasename := '"+ISMigrationServiceDataHolder.getIdentityOracleUser()+"';";
+                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")) {
+                    line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
                     oracleUserChanged = true;
                 }
                 sql.append(keepFormat ? "\n" : " ").append(line);
@@ -236,7 +226,7 @@ public class MigrationDatabaseCreator {
             throw new Exception("Error occurred while executing SQL script for migrating database", e);
 
         } finally {
-            if(reader != null){
+            if (reader != null) {
                 reader.close();
             }
         }

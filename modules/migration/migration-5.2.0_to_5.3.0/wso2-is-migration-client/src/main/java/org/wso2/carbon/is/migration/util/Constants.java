@@ -18,9 +18,8 @@ package org.wso2.carbon.is.migration.util;
 
 public class Constants {
 
-    public static final String VERSION_5_1_0 = "5.1.0";
-    public static final String VERSION_5_0_0 = "5.0.0";
-    public static final String VERSION_5_0_0_SP1 = "5.0.0SP1";
+    public static final String VERSION_5_2_0 = "5.2.0";
+    public static final String VERSION_5_3_0 = "5.3.0";
 
     public enum DatabaseTypes {
         oracle, mssql, mysql, postgresql, h2, db2
