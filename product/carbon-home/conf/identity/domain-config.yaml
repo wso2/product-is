@@ -34,6 +34,8 @@ domains:
       -
         attribute: "uid"
         claimUri: "http://wso2.org/claims/username"
+        properties:
+          unique: "true"
       -
         attribute: "cn"
         claimUri: "http://wso2.org/claims/fullname"
