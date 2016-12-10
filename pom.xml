@@ -304,6 +304,12 @@
             <email>jayangak AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
+        <developer>
+            <name>Farasath Ahamed</name>
+            <id>farasatha</id>
+            <email>farasatha AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
     </developers>
 
 
