@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.extensions.selenium.BrowserManager;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.identity.integration.ui.pages.login.LoginPage;
@@ -17,11 +18,13 @@ public class ISIntegrationUiBaseTest {
     protected String sessionCookie;
     protected String backendURL;
     protected LoginLogoutClient loginLogoutClient;
+    protected User userInfo;
     protected WebDriver driver;
-    private static final String PRODUCT_GROUP_NAME = "IS";
+    private static final String PRODUCT_GROUP_NAME = "IDENTITY";
 
     protected void init() throws Exception {
         isServer = new AutomationContext(PRODUCT_GROUP_NAME, TestUserMode.SUPER_TENANT_ADMIN);
+        this.userInfo = isServer.getContextTenant().getContextUser();
         loginLogoutClient = new LoginLogoutClient(isServer);
         sessionCookie = loginLogoutClient.login();
         backendURL = isServer.getContextUrls().getBackEndUrl();
