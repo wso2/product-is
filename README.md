@@ -53,12 +53,6 @@ New Features
     operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
     added to the group, all the users should be sent in the PUT request.</p>
 
-*   SAML 2.0 Bearer Token Renewal
-
-    In IS 5.0.0, STS feature supports renewing Bearer type SAML 1.1 tokens only;
-    attempts to renew Bearer type SAML 2.0 Tokens get failed. With IS 5.2.0 product will
-    facilitate renewing expired Bearer type SAML 2.0 Tokens.
-
 *   OpenID Connect Core 1.0 Compliance
 
     The IS 5.0.0 had OpenID Support, however there were many points in the spec that were being violated.
