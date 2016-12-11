@@ -125,12 +125,12 @@ Installation and Running
 Known Issues
 ============
 
-All known issues have been recorded at https://wso2.org/jira/issues/?filter=13028
+All known issues have been recorded at https://wso2.org/jira/issues/?filter=13613
 
 Issues Fixed In This Release
 ============================
 
-All the fixed for WSO2 Identity Server 5.2.0-BETA release have been recorded at https://wso2.org/jira/issues/?filter=13027
+All the fixed for WSO2 Identity Server 5.3.0 release have been recorded at https://wso2.org/jira/issues/?filter=13612
 
 WSO2 Identity Server Distribution Directory Structure
 ==============================================

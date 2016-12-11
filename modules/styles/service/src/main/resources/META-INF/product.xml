@@ -17,10 +17,10 @@
  -->
 <product xmlns="http://products.wso2.org/carbon">
     <properties>
-       <property name="userforum">http://wso2.org/forum/308</property>
-       <property name="userguide">http://wso2.org/project/solutions/identity/3.0.1/docs/</property>
+       <property name="userforum">http://stackoverflow.com/questions/tagged/wso2is</property>
+       <property name="userguide">https://docs.wso2.com/display/IS530/WSO2+Identity+Server+Documentation</property>
        <property name="mailinglist">http://wso2.org/mail</property>
-       <property name="issuetracker">https://wso2.org/jira/browse/STRATOS</property>
+       <property name="issuetracker">https://wso2.org/jira/browse/IDENTITY</property>
        <property name="webAdminConsoleTitle">WSO2 Stratos Identity</property>
     </properties>
 </product>
