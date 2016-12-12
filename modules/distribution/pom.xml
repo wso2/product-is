@@ -122,6 +122,8 @@
                                 <property name="hideMenu"
                                           value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;identity_mgt_emailtemplate_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;"/>
 
+                                <property name="captcha-filter-is-token" value="&lt;filter&gt;${line.separator}      &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator}      &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator}    &lt;/filter&gt;${line.separator}${line.separator}    &lt;filter-mapping&gt;${line.separator}      &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator}      &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator}      &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator}      &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator}    &lt;/filter-mapping&gt;${line.separator}${line.separator}    &lt;session-config&gt;" />
+
                                 <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
@@ -168,6 +170,7 @@
 
                                 <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" match="(?s)&lt;filter-mapping&gt;\s+&lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;.*&lt;/filter-mapping&gt;" replace="${security-header-filter-mapping-is-token}" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" token="&lt;session-config&gt;" value="${captcha-filter-is-token}" />
 
                                 <!-- Update Owasp.CsrfGuard.properties file location to fix IBM JDK and DevStudio issue-->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" token="/repository/conf/security/Owasp.CsrfGuard.Carbon.properties" value="repository/conf/security/Owasp.CsrfGuard.Carbon.properties" />
