@@ -54,4 +54,32 @@ public class SQLConstants {
     public static final String ADD_CLAIM_MAPPING = "INSERT INTO IDN_CLAIM_MAPPING (MAPPED_LOCAL_CLAIM_ID, " +
             "EXT_CLAIM_ID, TENANT_ID) VALUES (?, ?, ?)";
 
+    //Select all entries for given permission string
+    public static final String SELECT_PERMISSION = "SELECT UM_ID, UM_RESOURCE_ID, UM_ACTION , UM_TENANT_ID, " +
+            "UM_MODULE_ID FROM UM_PERMISSION WHERE UM_RESOURCE_ID=?";
+
+    //Select permission entry count
+    public static final String SELECT_PERMISSION_COUNT = "SELECT COUNT(1) FROM UM_PERMISSION WHERE UM_RESOURCE_ID=? " +
+            "AND UM_ACTION=? AND UM_TENANT_ID=? AND UM_MODULE_ID=?";
+
+    //Select role count with permission
+    public static final String SELECT_ROLE_PERMISSION_COUNT = "SELECT COUNT(1) FROM UM_ROLE_PERMISSION WHERE " +
+            "UM_PERMISSION_ID=? AND UM_ROLE_NAME=? AND UM_IS_ALLOWED=? AND UM_TENANT_ID=? AND UM_DOMAIN_ID=?";
+
+    //insert permission
+    public static final String INSERT_PERMISSION = "INSERT INTO UM_PERMISSION (UM_RESOURCE_ID, UM_ACTION , " +
+            "UM_TENANT_ID, UM_MODULE_ID) VALUES (?, ?, ?, ?)";
+
+    //Select role entries with permission
+    public static final String SELECT_ROLES_WITH_PERMISSION = "SELECT UM_PERMISSION_ID, UM_ROLE_NAME, UM_IS_ALLOWED, " +
+            "UM_TENANT_ID, UM_DOMAIN_ID FROM UM_ROLE_PERMISSION WHERE UM_PERMISSION_ID=?";
+
+    //Select permission entries with permission string in tenant
+    public static final String SELECT_PERMISSION_IN_TENANT = "SELECT UM_ID, UM_RESOURCE_ID, UM_ACTION , " +
+            "UM_TENANT_ID, UM_MODULE_ID FROM UM_PERMISSION WHERE UM_RESOURCE_ID=? AND UM_TENANT_ID=?";
+
+    //Insert permission for role
+    public static final String INSERT_ROLES_WITH_PERMISSION = "INSERT INTO UM_ROLE_PERMISSION (UM_PERMISSION_ID," +
+            "UM_ROLE_NAME, UM_IS_ALLOWED, UM_TENANT_ID, UM_DOMAIN_ID) VALUES (?, ?, ?,?, ?)";
+
 }
