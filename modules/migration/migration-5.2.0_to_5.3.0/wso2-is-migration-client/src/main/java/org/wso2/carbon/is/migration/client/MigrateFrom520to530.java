@@ -30,6 +30,7 @@ import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.is.migration.ClaimManager;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
+import org.wso2.carbon.is.migration.RegistryDataManager;
 import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.Claim;
 import org.wso2.carbon.is.migration.bean.MappedAttribute;
@@ -170,31 +171,55 @@ public class MigrateFrom520to530 implements MigrationClient {
      * @throws SQLException
      */
     public void databaseMigration() throws Exception {
+        boolean selectiveMigration = false;
         String migrateIdentityDB = System.getProperty("migrateIdentityDB");
         String migrateClaimData = System.getProperty("migrateClaimData");
         String migrateUMDB = System.getProperty("migrateUMDB");
+        String migrateEmailTemplateData = System.getProperty("migrateEmailTemplateData");
         String migratePermissionData = System.getProperty("migratePermissionData");
 
         if (Boolean.parseBoolean(migrateIdentityDB)) {
+            selectiveMigration = true;
             migrateIdentityDB();
             log.info("Migrated the identity database schema");
-        } else if (Boolean.parseBoolean(migrateUMDB)) {
+        }
+        if (Boolean.parseBoolean(migrateUMDB)) {
+            selectiveMigration = true;
             migrateUMDB();
             log.info("Migrated the user management database schema");
-        } else if (Boolean.parseBoolean(migrateClaimData)) {
+        }
+        if (Boolean.parseBoolean(migrateClaimData)) {
+            selectiveMigration = true;
             validateClaimMigration();
             migrateClaimData();
             log.info("Migrated the Claim management data");
-        } else if (Boolean.parseBoolean(migratePermissionData)) {
+        }
+        if (Boolean.parseBoolean(migrateEmailTemplateData)) {
+            selectiveMigration = true;
+            migrateEmailTemplateData();
+            log.info("Migrated the Email template data");
+        }
+
+        if (Boolean.parseBoolean(migratePermissionData)) {
+            selectiveMigration = true;
             migratePermissionData();
             log.info("Migrated the Permission data");
-        } else {
+        }
+
+        if(!selectiveMigration) {
             migrateIdentityDB();
             validateClaimMigration();
             migrateClaimData();
             migratePermissionData();
+            migrateEmailTemplateData();
             log.info("Migrated the identity and user database");
         }
+    }
+
+    public void migrateEmailTemplateData() throws Exception {
+
+        RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
+        registryDataManager.migrateEmailTemplates();
     }
 
     public void migrateIdentityDB() throws Exception {
