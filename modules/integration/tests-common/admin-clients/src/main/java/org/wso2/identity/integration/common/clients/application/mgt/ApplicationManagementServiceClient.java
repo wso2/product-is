@@ -67,6 +67,7 @@ public class ApplicationManagementServiceClient {
         Options option = client.getOptions();
         option.setManageSession(true);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+        AuthenticateStubUtil.authenticateStub("admin", "admin", stub);
 
         ServiceClient userAdminClient = userAdminStub._getServiceClient();
         Options userAdminOptions = userAdminClient.getOptions();

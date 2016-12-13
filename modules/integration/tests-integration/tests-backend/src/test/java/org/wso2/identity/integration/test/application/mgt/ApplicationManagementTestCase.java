@@ -37,6 +37,7 @@ import java.util.List;
 public class ApplicationManagementTestCase extends ISIntegrationTest {
 
     private static final String PERMISSION_ADMIN_LOGIN = "/permission/admin/login";
+    private static final String PERMISSION_ADMIN_MANAGE = "/permission/admin/manage/identity/attributequery";
     private ConfigurationContext configContext;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
 
@@ -522,15 +523,19 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
     public void testRetrieveFederatedIdPsWithLoginPermission() {
         try {
             String loginRole = "loginRole";
+            String manageRole = "manageRole";
             String testAssociationUser1 = "testAssociationUser1";
             String testPassword1 = "testPassword1";
 
             UserManagementClient userMgtClient =
                     new UserManagementClient(backendURL, sessionCookie);
             userMgtClient
-                    .addRole(loginRole, new String[0], new String[] { PERMISSION_ADMIN_LOGIN });
+                    .addRole(loginRole, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
             userMgtClient
-                    .addUser(testAssociationUser1, testPassword1, new String[] { loginRole }, null);
+                    .addRole(manageRole, new String[0], new String[]{PERMISSION_ADMIN_MANAGE});
+
+            userMgtClient
+                    .addUser(testAssociationUser1, testPassword1, new String[]{loginRole, manageRole}, null);
 
             ApplicationManagementServiceClient appManageServiceClient =
                     new ApplicationManagementServiceClient(testAssociationUser1, testPassword1,
