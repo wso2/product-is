@@ -19,14 +19,12 @@ package org.wso2.carbon.is.migration.client.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.identity.claim.metadata.mgt.ClaimMetadataManagementService;
 import org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent;
 import org.wso2.carbon.user.core.service.RealmService;
 
 
 /**
- * @scr.component name="org.wso2.carbon.is.migration.client"
- * immediate="true"
+ * @scr.component name="org.wso2.carbon.is.migration.client" immediate="true"
  * @scr.reference name="realm.service"
  * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
  * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
