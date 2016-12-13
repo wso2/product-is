@@ -54,7 +54,6 @@ import java.util.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
@@ -177,6 +176,7 @@ public class MigrateFrom520to530 implements MigrationClient {
         String migrateUMDB = System.getProperty("migrateUMDB");
         String migrateEmailTemplateData = System.getProperty("migrateEmailTemplateData");
         String migratePermissionData = System.getProperty("migratePermissionData");
+        String migrateChallengeQuestionData = System.getProperty("migrateChallengeQuestionData");
 
         if (Boolean.parseBoolean(migrateIdentityDB)) {
             selectiveMigration = true;
@@ -206,12 +206,19 @@ public class MigrateFrom520to530 implements MigrationClient {
             log.info("Migrated the Permission data");
         }
 
+        if (Boolean.parseBoolean(migrateChallengeQuestionData)) {
+            selectiveMigration = true;
+            migrateChallengeQuestionData();
+            log.info("Migrated the Challenge Question data.");
+        }
+
         if(!selectiveMigration) {
             migrateIdentityDB();
             validateClaimMigration();
             migrateClaimData();
             migratePermissionData();
             migrateEmailTemplateData();
+            migrateChallengeQuestionData();
             log.info("Migrated the identity and user database");
         }
     }
@@ -220,6 +227,12 @@ public class MigrateFrom520to530 implements MigrationClient {
 
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
         registryDataManager.migrateEmailTemplates();
+    }
+
+    public void migrateChallengeQuestionData() throws Exception {
+
+        RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
+        registryDataManager.migrateChallengeQuestions();
     }
 
     public void migrateIdentityDB() throws Exception {
