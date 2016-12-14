@@ -43,6 +43,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
+import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
@@ -50,6 +52,8 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -58,11 +62,14 @@ import org.wso2.identity.integration.common.clients.sso.saml.query.QueryClientUt
 import org.wso2.identity.integration.common.clients.sso.saml.query.SAMLQueryClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +102,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String profileName = "default";
 
+    private ServerConfigurationManager serverConfigurationManager;
+
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
@@ -104,6 +113,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     private String resultPage;
 
     private String samlResponse;
+
+    private File identityXml;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLQueryProfileTestCase(SAMLConfig config) {
@@ -117,7 +128,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     public static SAMLConfig[][] samlConfigProvider() {
         return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)}
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
@@ -137,7 +148,11 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+        super.init();
+        changeIdentityXml();
+
         super.init(config.getUserMode());
+
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null
                         , null);
@@ -171,6 +186,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClient = null;
+        replaceIdentityXml();
         //Stopping tomcat
         tomcatServer.stop();
         tomcatServer.destroy();
@@ -712,6 +728,40 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                     ", app=" + app.getArtifact() +
                     ']';
         }
+    }
+
+
+    public void changeIdentityXml() throws AutomationUtilException, IOException, XPathExpressionException {
+        log.info("Changing identity.xml file to enable assertion query profile");
+
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        identityXml = new File(Utils.getResidentCarbonHome() + File.separator
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
+                ".xml");
+        File identityXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
+                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
+                + "saml-assertion-query-enabled-identity.xml");
+
+        serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy,
+                identityXml, true);
+        serverConfigurationManager.restartGracefully();
+    }
+
+    public void replaceIdentityXml() throws AutomationUtilException, IOException, XPathExpressionException {
+        log.info("Reverting back to original identity.xml");
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        identityXml = new File(Utils.getResidentCarbonHome() + File.separator
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
+                ".xml");
+        File identityXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
+                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
+                + "original-identity.xml");
+
+        serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy,
+                identityXml, true);
+        serverConfigurationManager.restartGracefully();
     }
 
 }
