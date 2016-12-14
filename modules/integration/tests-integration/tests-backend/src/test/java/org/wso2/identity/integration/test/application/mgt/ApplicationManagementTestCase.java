@@ -37,6 +37,7 @@ import java.util.List;
 public class ApplicationManagementTestCase extends ISIntegrationTest {
 
     private static final String PERMISSION_ADMIN_LOGIN = "/permission/admin/login";
+    private static final String PERMISSION_ADMIN_MANAGE = "/permission/admin/manage/identity/attributequery";
     private ConfigurationContext configContext;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
 
@@ -44,7 +45,7 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
-                        , null);
+                , null);
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
 
     }
@@ -60,7 +61,7 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
         try {
             createApplication(applicationName);
             Assert.assertEquals(applicationManagementServiceClient.getApplication(applicationName).getApplicationName(),
-                                applicationName, "Failed to create a Service Provider");
+                    applicationName, "Failed to create a Service Provider");
         } catch (Exception e) {
             Assert.fail("Error while trying to create a Service Provider", e);
         }
@@ -68,7 +69,7 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing delete Service Provider", dependsOnMethods = {
-            "testCreateApplication" })
+            "testCreateApplication"})
     public void testDeleteApplication() {
         String applicationName = "TestServiceProvider1";
         try {
@@ -100,15 +101,15 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
 
             boolean applicationExists = false;
 
-            for (ApplicationBasicInfo applicationBasicInfo: applicationBasicInfos){
-                if (applicationBasicInfo.getApplicationName().equals(applicationName)){
+            for (ApplicationBasicInfo applicationBasicInfo : applicationBasicInfos) {
+                if (applicationBasicInfo.getApplicationName().equals(applicationName)) {
                     Assert.assertEquals(applicationBasicInfo.getDescription(), "This is a test Service Provider",
-                                        "Reading description failed");
+                            "Reading description failed");
                     applicationExists = true;
                 }
             }
 
-            if (!applicationExists){
+            if (!applicationExists) {
                 Assert.fail("Could not find application " + applicationName);
             }
         } catch (Exception e) {
@@ -167,7 +168,7 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
             ServiceProvider updatedServiceProvider = applicationManagementServiceClient
                     .getApplication(applicationName);
             Assert.assertEquals(updatedServiceProvider.getInboundProvisioningConfig()
-                    .getProvisioningUserStore()
+                            .getProvisioningUserStore()
                     , "scim-inbound-userstore", "Failed update provisioning user store");
         } catch (Exception e) {
             Assert.fail("Error while trying to update inbound provisioning data", e);
@@ -217,10 +218,10 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
             Assert.assertEquals(identityProvider.getJustInTimeProvisioningConfig()
                     .getProvisioningEnabled(), true, "Update JIT provisioning config failed");
             Assert.assertEquals(identityProvider.getDefaultProvisioningConnectorConfig()
-                    .getBlocking(), true
+                            .getBlocking(), true
                     , "Set provisioning connector blocking failed");
             Assert.assertEquals(identityProvider.getDefaultProvisioningConnectorConfig().getName
-                    (), connector
+                            (), connector
                     , "Set default provisioning connector failed");
 
         } catch (Exception e) {
@@ -288,11 +289,11 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
             ServiceProvider updatedServiceProvider = applicationManagementServiceClient
                     .getApplication(applicationName);
             Assert.assertEquals(updatedServiceProvider.getInboundAuthenticationConfig()
-                    .getInboundAuthenticationRequestConfigs()[0].getInboundAuthKey(), "samlIssuer"
+                            .getInboundAuthenticationRequestConfigs()[0].getInboundAuthKey(), "samlIssuer"
                     , "Failed update Inbound Auth key");
 
             Assert.assertEquals(updatedServiceProvider.getInboundAuthenticationConfig()
-                    .getInboundAuthenticationRequestConfigs()[0].getInboundAuthType(), "samlsso"
+                            .getInboundAuthenticationRequestConfigs()[0].getInboundAuthType(), "samlsso"
                     , "Failed update Inbound Auth type");
 
             Property[] updatedProperties = updatedServiceProvider.getInboundAuthenticationConfig()
@@ -340,8 +341,8 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
                     .getApplication(applicationName);
 
             Assert.assertEquals(updatedServiceProvider.getLocalAndOutBoundAuthenticationConfig()
-                    .getAuthenticationSteps()[0].getFederatedIdentityProviders()[0]
-                    .getIdentityProviderName(), "fed_idp"
+                            .getAuthenticationSteps()[0].getFederatedIdentityProviders()[0]
+                            .getIdentityProviderName(), "fed_idp"
                     , "Failed update Authentication step");
 
             Assert.assertEquals(updatedServiceProvider.getLocalAndOutBoundAuthenticationConfig()
@@ -522,24 +523,27 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
     public void testRetrieveFederatedIdPsWithLoginPermission() {
         try {
             String loginRole = "loginRole";
+            String manageRole = "manageRole";
             String testAssociationUser1 = "testAssociationUser1";
             String testPassword1 = "testPassword1";
 
             UserManagementClient userMgtClient =
                     new UserManagementClient(backendURL, sessionCookie);
             userMgtClient
-                    .addRole(loginRole, new String[0], new String[] { PERMISSION_ADMIN_LOGIN });
+                    .addRole(loginRole, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
             userMgtClient
-                    .addUser(testAssociationUser1, testPassword1, new String[] { loginRole }, null);
+                    .addRole(manageRole, new String[0], new String[]{PERMISSION_ADMIN_MANAGE});
+            userMgtClient
+                    .addUser(testAssociationUser1, testPassword1, new String[]{loginRole, manageRole}, null);
 
             ApplicationManagementServiceClient appManageServiceClient =
                     new ApplicationManagementServiceClient(testAssociationUser1, testPassword1,
-                                                           backendURL, configContext);
+                            backendURL, configContext);
             IdentityProvider[] idps = appManageServiceClient.getAllFederatedIdentityProvider();
 
             Assert.assertTrue(idps != null && idps.length != 0,
-                              "Federated IdPs have been retrieved by a" +
-                              " user with login permission.");
+                    "Federated IdPs have been retrieved by a" +
+                            " user with login permission.");
         } catch (Exception e) {
             Assert.fail("Error while trying to retrieve federated idps with login permission", e);
         }

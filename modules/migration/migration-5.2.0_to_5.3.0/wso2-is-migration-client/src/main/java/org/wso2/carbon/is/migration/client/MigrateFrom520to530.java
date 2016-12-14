@@ -31,6 +31,7 @@ import org.wso2.carbon.is.migration.ClaimManager;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.RegistryDataManager;
+import org.wso2.carbon.is.migration.ResidentIdpMetadataManager;
 import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.Claim;
 import org.wso2.carbon.is.migration.bean.MappedAttribute;
@@ -54,7 +55,6 @@ import java.util.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
@@ -177,6 +177,8 @@ public class MigrateFrom520to530 implements MigrationClient {
         String migrateUMDB = System.getProperty("migrateUMDB");
         String migrateEmailTemplateData = System.getProperty("migrateEmailTemplateData");
         String migratePermissionData = System.getProperty("migratePermissionData");
+        String migrateChallengeQuestionData = System.getProperty("migrateChallengeQuestionData");
+        String migrateResidentIdpMetadata = System.getProperty("migrateResidentIdpMetaData");
 
         if (Boolean.parseBoolean(migrateIdentityDB)) {
             selectiveMigration = true;
@@ -206,20 +208,45 @@ public class MigrateFrom520to530 implements MigrationClient {
             log.info("Migrated the Permission data");
         }
 
+        if (Boolean.parseBoolean(migrateChallengeQuestionData)) {
+            selectiveMigration = true;
+            migrateChallengeQuestionData();
+            log.info("Migrated the Challenge Question data.");
+        }
+
+        if (Boolean.parseBoolean(migrateResidentIdpMetadata)) {
+            selectiveMigration = true;
+            migrateResidentIdpMetadata();
+            log.info("Migrated the Resident IDP metadata.");
+        }
+
         if(!selectiveMigration) {
             migrateIdentityDB();
             validateClaimMigration();
             migrateClaimData();
             migratePermissionData();
             migrateEmailTemplateData();
+            migrateChallengeQuestionData();
+            migrateResidentIdpMetadata();
             log.info("Migrated the identity and user database");
         }
+    }
+
+    public void migrateResidentIdpMetadata() throws Exception {
+
+        new ResidentIdpMetadataManager().migrateResidentIdpMetaData();
     }
 
     public void migrateEmailTemplateData() throws Exception {
 
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
         registryDataManager.migrateEmailTemplates();
+    }
+
+    public void migrateChallengeQuestionData() throws Exception {
+
+        RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
+        registryDataManager.migrateChallengeQuestions();
     }
 
     public void migrateIdentityDB() throws Exception {
