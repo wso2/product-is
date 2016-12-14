@@ -84,6 +84,8 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String POLICY_ID = "spAuthPolicy";
     private static final String POLICY =
+
+
             "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"spAuthPolicy\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable\" Version=\"1.0\">\n" +
                     "    <Target>\n" +
                     "        <AnyOf>\n" +
@@ -91,7 +93,9 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
                     "                <Match MatchId=\"urn:oasis:names:tc:xacml:1.0:function:string-equal\">\n" +
                     "                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" +
                     APPLICATION_NAME + "</AttributeValue>\n" +
-                    "                    <AttributeDesignator AttributeId=\"http://wso2.org/identity/auth/sp-name\" Category=\"http://wso2.org/identity/auth\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
+                    "                    <AttributeDesignator AttributeId=\"http://wso2" +
+                    ".org/identity/sp/sp-name\" Category=\"http://wso2.org/identity/sp\" " +
+                    "DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
                     "                </Match>\n" +
                     "            </AllOf>\n" +
                     "        </AnyOf>\n" +
