@@ -19,8 +19,10 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
+import org.apache.wink.client.handlers.BasicAuthSecurityHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -70,7 +72,14 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "webfinger test")
     public void testWebFinger() throws IOException {
-        RestClient restClient = new RestClient();
+
+        ClientConfig clientConfig = new ClientConfig();
+        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
+        basicAuth.setUserName(userInfo.getUserName());
+        basicAuth.setPassword(userInfo.getPassword());
+        clientConfig.handlers(basicAuth);
+
+        RestClient restClient = new RestClient(clientConfig);
         Resource userResource = restClient.resource(webfingerEndpoint);
         String response = userResource.accept(SCIMConstants.APPLICATION_JSON).get(String.class);
         Object obj= JSONValue.parse(response);
@@ -87,7 +96,14 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Discovery test", dependsOnMethods = { "testWebFinger" })
     public void testDiscovery() throws IOException {
-        RestClient restClient = new RestClient();
+
+        ClientConfig clientConfig = new ClientConfig();
+        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
+        basicAuth.setUserName(userInfo.getUserName());
+        basicAuth.setPassword(userInfo.getPassword());
+        clientConfig.handlers(basicAuth);
+
+        RestClient restClient = new RestClient(clientConfig);
         String discoveryUrl;
         if(discoveryBasePath.endsWith("/")){
             discoveryUrl = discoveryBasePath + ".well-known/openid-configuration";
