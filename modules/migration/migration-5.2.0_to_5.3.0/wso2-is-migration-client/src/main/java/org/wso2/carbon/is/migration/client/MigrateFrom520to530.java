@@ -57,6 +57,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -70,8 +71,6 @@ public class MigrateFrom520to530 implements MigrationClient {
     private static final String RESOURCES_XML = "/resources.xml";
     private DataSource dataSource;
     private DataSource umDataSource;
-    private static List<Claim> claims = null;
-
 
     public MigrateFrom520to530() throws IdentityException {
         try {
@@ -192,7 +191,6 @@ public class MigrateFrom520to530 implements MigrationClient {
         }
         if (Boolean.parseBoolean(migrateClaimData)) {
             selectiveMigration = true;
-            validateClaimMigration();
             migrateClaimData();
             log.info("Migrated the Claim management data");
         }
@@ -222,7 +220,6 @@ public class MigrateFrom520to530 implements MigrationClient {
 
         if(!selectiveMigration) {
             migrateIdentityDB();
-            validateClaimMigration();
             migrateClaimData();
             migratePermissionData();
             migrateEmailTemplateData();
@@ -264,8 +261,8 @@ public class MigrateFrom520to530 implements MigrationClient {
         migrationDatabaseCreator.executeUmMigrationScript();
     }
 
-    public boolean validateClaimMigration() {
-        claims = new ArrayList<>();
+    public boolean migrateClaimData() {
+        List<Claim> claims = new ArrayList<>();
         Connection umConnection = null;
 
         PreparedStatement loadDialectsStatement = null;
@@ -275,8 +272,11 @@ public class MigrateFrom520to530 implements MigrationClient {
 
         ResultSet dialects = null;
         ResultSet claimResultSet;
-        StringBuilder errors = new StringBuilder();
-        errors.append("----- WSO2 Identity Server 5.3.0 claim Migration Report -----\n \n");
+        StringBuilder report = new StringBuilder();
+        report.append("---------------------------------- WSO2 Identity Server 5.3.0 claim Migration Report -----------------------------------------\n \n");
+
+
+        report.append("\n\n------------------------------------------------- Validating Existing Claims----------------------------------------------\n \n");
 
         //Is validation success. If not success, it will be created additional calims to be success
         boolean isSuccess = true;
@@ -396,13 +396,16 @@ public class MigrateFrom520to530 implements MigrationClient {
                         if (claimEntry.getValue() != null && claimEntry.getValue().size() > 1) {
                             isSuccess = false;
 
-                            errors.append(count + ")  Duplicate Mapped Attribute found for dialect :" + dialect +
+                            report.append(count + ")  Duplicate Mapped Attribute found for dialect :" + dialect +
                                     " | Mapped Attribute :" + mappedAttribute + " | " +
                                     "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :" + tenantDomain);
-                            errors.append("\n\n");
-                            log.warn("Duplicate Mapped Attribute found for dialect :" + dialect +
-                                    " | Mapped Attribute :" + mappedAttribute + " | " +
-                                    "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :" + tenantDomain);
+                            report.append("\n\n");
+                            if (log.isDebugEnabled()) {
+                                log.debug("Duplicate Mapped Attribute found for dialect :" + dialect +
+                                        " | Mapped Attribute :" + mappedAttribute + " | " +
+                                        "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :" + tenantDomain);
+                            }
+
                             count++;
                         }
                     }
@@ -435,12 +438,13 @@ public class MigrateFrom520to530 implements MigrationClient {
                                         if (!localAttributes.contains(remoteClaimAttribute)) {
                                             claimsToAdd.add(remoteClaimAttribute);
                                             isSuccess = false;
-                                            errors.append("\n\n" + count + ")  Mapped Attribute : " +
+                                            report.append("\n\n" + count + ")  Mapped Attribute : " +
                                                     remoteClaimAttribute + " in dialect :" + dialect.getKey() + " is not associated to any of the local claim in tenant domain: " + tenantDomain);
 
-                                            errors.append("\n It will be created a new claim :" + ClaimConstants.LOCAL_CLAIM_DIALECT_URI + "/migration__" + remoteClaimAttribute);
-                                            log.warn("Mapped Attribute : " + remoteClaimAttribute + " in dialect :"
-                                                    + dialect.getKey() + " is not associated to any of the local claim in tenant domain: " + tenantDomain);
+                                            if (log.isDebugEnabled()) {
+                                                log.debug("Mapped Attribute : " + remoteClaimAttribute + " in dialect :"
+                                                        + dialect.getKey() + " is not associated to any of the local claim in tenant domain: " + tenantDomain);
+                                            }
                                             count++;
                                         }
                                     }
@@ -452,36 +456,6 @@ public class MigrateFrom520to530 implements MigrationClient {
                 }
             }
 
-            //Adding new claims to add in each tenant's local dialect to claims object.
-            for (Map.Entry<String, Set<String>> claimsSet : claimsToAddMap.entrySet()) {
-                if (claimsSet.getValue() != null) {
-                    for (String attribute : claimsSet.getValue()) {
-                        Claim claim = new Claim();
-                        claim.setTenantId(IdentityTenantUtil.getTenantId(claimsSet.getKey()));
-                        if (attribute.contains("/")) {
-                            String[] splitAttribute = attribute.split("/");
-                            claim.setClaimURI(ClaimConstants.LOCAL_CLAIM_DIALECT_URI + "/migration__" + splitAttribute[1]);
-                            MappedAttribute mappedAttribute = new MappedAttribute(splitAttribute[1], splitAttribute[0]);
-                            List<MappedAttribute> mappedAttributes = claim.getAttributes();
-                            mappedAttributes.add(mappedAttribute);
-                            claim.setAttributes(mappedAttributes);
-                            claim.setDisplayTag("migration__" + splitAttribute[1]);
-                        } else {
-                            claim.setClaimURI(ClaimConstants.LOCAL_CLAIM_DIALECT_URI + "/migration__" + attribute);
-                            MappedAttribute mappedAttribute = new MappedAttribute(attribute);
-                            List<MappedAttribute> mappedAttributes = claim.getAttributes();
-                            mappedAttributes.add(mappedAttribute);
-                            claim.setAttributes(mappedAttributes);
-                            claim.setDisplayTag("migration__" + attribute);
-                        }
-                        claim.setDescription(attribute);
-                        claim.setDialectURI(ClaimConstants.LOCAL_CLAIM_DIALECT_URI);
-                        claims.add(claim);
-                    }
-                }
-            }
-
-
         } catch (SQLException e) {
             log.error("Error while validating claim management data", e);
         } finally {
@@ -491,11 +465,33 @@ public class MigrateFrom520to530 implements MigrationClient {
             IdentityDatabaseUtil.closeConnection(umConnection);
         }
 
+
+        // Migrating claim Data starts here.
+        ClaimManager claimManager = ClaimManager.getInstance();
+
+        if (claims != null) {
+
+            report.append("\n\n------------------------------------------------------------------------------ Claim " +
+                    "Migration -------------------------------------------------------------------------------\n \n");
+            try {
+                // Add Claim Dialects
+                claimManager.addClaimDialects(claims, report);
+
+                // Add Local Claims.
+                claimManager.addLocalClaims(claims, report);
+
+                // Add External Claims
+                claimManager.addExternalClaim(claims, report);
+            } catch (ISMigrationException e) {
+                log.error("Error while migrating claim data", e);
+            }
+        }
+
         if (!isSuccess) {
             PrintWriter out = null;
             try {
                 out = new PrintWriter("claim-migration.txt");
-                out.println(errors.toString());
+                out.println(report.toString());
             } catch (FileNotFoundException e) {
                 log.error("Error while creating claim Migration Report");
             } finally {
@@ -505,20 +501,6 @@ public class MigrateFrom520to530 implements MigrationClient {
             }
         }
         return isSuccess;
-    }
-
-    public void migrateClaimData() {
-        ClaimManager claimManager = ClaimManager.getInstance();
-
-        if (claims != null) {
-            try {
-                claimManager.addClaimDialects(claims);
-                claimManager.addLocalClaims(claims);
-                claimManager.addExternalClaim(claims);
-            } catch (ISMigrationException e) {
-                log.error("Error while migrating claim data", e);
-            }
-        }
     }
 
     /**
