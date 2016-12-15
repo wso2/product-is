@@ -116,7 +116,7 @@
                                    message({content: resp.message, type: 'error', cbk: function () {
                                    }});
                                } else {
-                                   message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                                   message({content: 'Error occurred while updating password.', type: 'error', cbk: function () {
                                    }});
                                }
                            }
