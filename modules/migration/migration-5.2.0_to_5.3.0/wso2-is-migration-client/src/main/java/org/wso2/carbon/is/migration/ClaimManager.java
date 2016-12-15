@@ -20,7 +20,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.claim.metadata.mgt.dao.ClaimDialectDAO;
 import org.wso2.carbon.identity.claim.metadata.mgt.util.ClaimConstants;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.is.migration.bean.Claim;
+import org.wso2.carbon.is.migration.bean.MappedAttribute;
 import org.wso2.carbon.is.migration.dao.ClaimDAO;
 
 import java.util.List;
@@ -47,16 +50,24 @@ public class ClaimManager {
      * @param claimList
      * @throws ISMigrationException
      */
-    public void addClaimDialects(List<Claim> claimList) throws ISMigrationException {
+    public void addClaimDialects(List<Claim> claimList, StringBuilder report) throws ISMigrationException {
+
         log.info("started adding claim dialects");
 
         for (Claim claim : claimList) {
             int id = claimDAO.getClaimDialect(claim.getDialectURI(), claim.getTenantId());
             if (id == 0) {
                 claimDAO.addClaimDialect(claim.getDialectURI(), claim.getTenantId());
+                report.append("\n\n Added claim Dialect : " + claim.getDialectURI() + " in tenant domain :" +
+                        IdentityTenantUtil.getTenantDomain(claim.getTenantId()));
+
+                if (log.isDebugEnabled()) {
+                    log.debug("\n\n Added claim Dialect : " + claim.getDialectURI() + " in tenant domain :" +
+                            IdentityTenantUtil.getTenantDomain(claim.getTenantId()));
+                }
             }
         }
-
+        report.append("\n\n");
         log.info("end adding claim dialects");
     }
 
@@ -66,15 +77,38 @@ public class ClaimManager {
      * @param claimCList
      * @throws ISMigrationException
      */
-    public void addLocalClaims(List<Claim> claimCList) throws ISMigrationException {
+    public void addLocalClaims(List<Claim> claimCList, StringBuilder report) throws ISMigrationException {
+
         log.info("started adding local claims");
 
         for (Claim claim : claimCList) {
             if (ClaimConstants.LOCAL_CLAIM_DIALECT_URI.equalsIgnoreCase(claim.getDialectURI())) {
                 claimDAO.addLocalClaim(claim);
+                report.append("\n Added Local Claim: " + claim.getDialectURI() + " in tenant domain :" +
+                        IdentityTenantUtil.getTenantDomain(claim.getTenantId()) + ", Mapped Attributes :");
+                for (MappedAttribute mappedAttribute : claim.getAttributes()) {
+                    if (mappedAttribute.getDomain() == null) {
+                        report.append(" " + IdentityUtil.getPrimaryDomainName() + "/" + mappedAttribute.getAttribute() + " ,");
+                    } else {
+                        report.append(" " + mappedAttribute.getDomain() + "/" + mappedAttribute.getAttribute() + " ,");
+                    }
+                }
+                report.append("\n");
+
+                if (log.isDebugEnabled()) {
+                    log.debug("\n Added Local Claim " + claim.getDialectURI() + " in tenant domain :" +
+                            IdentityTenantUtil.getTenantDomain(claim.getTenantId()) + "Mapped Attributes :");
+                    for (MappedAttribute mappedAttribute : claim.getAttributes()) {
+                        if (mappedAttribute.getDomain() == null) {
+                            log.debug(" " + IdentityUtil.getPrimaryDomainName() + "/" + mappedAttribute.getAttribute() + "" + " ,");
+                        } else {
+                            log.debug(" " + mappedAttribute.getDomain() + "/" + mappedAttribute.getAttribute() + " ,");
+                        }
+                    }
+                }
             }
         }
-
+        report.append("\n\n");
         log.info("end adding local claims");
     }
 
@@ -84,12 +118,13 @@ public class ClaimManager {
      * @param claims
      * @throws ISMigrationException
      */
-    public void addExternalClaim(List<Claim> claims) throws ISMigrationException {
+    public void addExternalClaim(List<Claim> claims, StringBuilder report) throws ISMigrationException {
+
         log.info("started adding external claims");
 
         for (Claim claim : claims) {
             if (!ClaimConstants.LOCAL_CLAIM_DIALECT_URI.equalsIgnoreCase(claim.getDialectURI())) {
-                claimDAO.addExternalClaim(claim);
+                claimDAO.addExternalClaim(claim, report);
             }
         }
         log.info("end adding external claims");
