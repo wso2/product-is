@@ -31,11 +31,14 @@ session.put("user",userName);
 	      //  response.sendRedirect("../../index.jag?e=1&error=password_doesnt_match" );
 	       // return;
 	    }
-	}catch(e){
-		log.error(e);
-        print(getErrorMessage(e.message));
-		
-	}
+	} catch (e) {
+        log.error(e);
+        if (e.message) {
+            print(getErrorMessage(e.message));
+        } else {
+            print('{"success":false, "message":"' + e + '"}');
+        }
+    }
 }
 
 edit();

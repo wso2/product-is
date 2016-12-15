@@ -5,6 +5,7 @@ var log = new Log();
 var util = require("../../util/utility.jag");
 var serverUrl = util.getServerUrl() + "/UserAdmin";
 var connectorStub = Packages.org.wso2.carbon.user.mgt.stub.UserAdminStub;
+var UserAdminUserAdminException = Packages.org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 var HTTPConstants = Packages.org.apache.axis2.transport.http.HTTPConstants;
 
 
@@ -18,6 +19,15 @@ function changePasswordByUser(userName, oldPassword, newPassword) {
         option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
         serviceStub.changePasswordByUser(userName, oldPassword, newPassword);
     } catch (e) {
+        var exception = e.javaException;
+        if (exception instanceof UserAdminUserAdminException) {
+            if (exception.getFaultMessage().getUserAdminException() != null) {
+                var errorMsg = exception.getFaultMessage().getUserAdminException().getMessage();
+                log.error(errorMsg);
+                throw errorMsg;
+            }
+        }
+
         throw e;
     }
 }
