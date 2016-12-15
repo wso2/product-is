@@ -49,6 +49,7 @@ public class ApplicationManagementServiceClient {
     boolean debugEnabled = log.isErrorEnabled();
 
     /**
+     *
      * @param cookie
      * @param backendServerURL
      * @param configCtx
@@ -65,7 +66,6 @@ public class ApplicationManagementServiceClient {
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
-        AuthenticateStubUtil.authenticateStub("admin", "admin", stub);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
 
         ServiceClient userAdminClient = userAdminStub._getServiceClient();
@@ -81,6 +81,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @param username
      * @param password
      * @param backendServerURL
@@ -107,6 +108,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @param serviceProvider
      * @throws Exception
      */
@@ -127,6 +129,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @param applicationName
      * @return
      * @throws Exception
@@ -145,6 +148,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @return
      * @throws Exception
      */
@@ -161,6 +165,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @param serviceProvider
      * @throws Exception
      */
@@ -177,6 +182,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @param applicationID
      * @throws Exception
      */
@@ -194,6 +200,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @param identityProviderName
      * @throws Exception
      */
@@ -203,6 +210,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @return
      * @throws Exception
      */
@@ -211,6 +219,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @return
      * @throws Exception
      */
@@ -219,6 +228,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @return
      * @throws Exception
      */
@@ -234,6 +244,7 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     *
      * @return
      * @throws Exception
      */
@@ -243,7 +254,6 @@ public class ApplicationManagementServiceClient {
 
     /**
      * Get User Store Domains
-     *
      * @return
      * @throws Exception
      */
@@ -252,8 +262,8 @@ public class ApplicationManagementServiceClient {
         try {
             List<String> readWriteDomainNames = new ArrayList<String>();
             UserStoreInfo[] storesInfo = userAdminStub.getUserRealmInfo().getUserStoresInfo();
-            for (UserStoreInfo storeInfo : storesInfo) {
-                if (!storeInfo.getReadOnly()) {
+            for(UserStoreInfo storeInfo : storesInfo){
+                if(!storeInfo.getReadOnly()){
                     readWriteDomainNames.add(storeInfo.getDomainName());
                 }
             }
