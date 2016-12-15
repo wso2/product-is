@@ -238,18 +238,12 @@
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.data.publisher.oauth:org.wso2.carbon.identity.data.publisher.oauth.server.feature:${identity.data.publisher.oauth.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.identity.data.publisher.audit:org.wso2.carbon.identity.data.publisher.audit.user.operation.server.feature:${identity.data.publisher.audit.version}
                                 </featureArtifactDef>
 
                                 <!-- Authenticators -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.requestpath.basic:org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature:${identity.outbound.auth.requestpath.basicauth.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.local.auth.requestpath.oauth:org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature:${identity.outbound.auth.requestpath.oauth.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -273,9 +267,6 @@
                                     org.wso2.is:org.wso2.identity.utils.feature:${project.version}
                                 </featureArtifactDef>
 
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth.feature:${identity.inbound.auth.oauth.version}
-                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.carbon.auth.iwa:org.wso2.carbon.identity.authenticator.iwa.feature:${identity.carbon.auth.iwa.version}
                                 </featureArtifactDef>
@@ -413,13 +404,6 @@
                                 </featureArtifactDef>
 
                                 <!--Auth/Authz for Rest API-->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.auth.server.feature:${carbon.identity.auth.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.authz.server.feature:${carbon.identity.auth.version}
-                                </featureArtifactDef>
-
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${carbon.identity.auth.version}
                                 </featureArtifactDef>
@@ -662,10 +646,6 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.oauth.feature.group</id>
-                                    <version>${identity.inbound.auth.oauth.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.authenticator.iwa.feature.group</id>
                                     <version>${identity.carbon.auth.iwa.version}</version>
                                 </feature>
@@ -728,12 +708,6 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.data.publisher.oauth.server.feature.group
-                                    </id>
-                                    <version>${identity.data.publisher.oauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
                                         org.wso2.carbon.identity.data.publisher.audit.user.operation.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.audit.version}</version>
@@ -743,12 +717,6 @@
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
                                     <version>${identity.outbound.auth.requestpath.basicauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.requestpath.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
@@ -848,14 +816,6 @@
                                 </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
-                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
@@ -1141,10 +1101,6 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.oauth.feature.group</id>
-                                    <version>${identity.inbound.auth.oauth.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.authenticator.iwa.feature.group</id>
                                     <version>${identity.carbon.auth.iwa.version}</version>
                                 </feature>
@@ -1207,12 +1163,6 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.data.publisher.oauth.server.feature.group
-                                    </id>
-                                    <version>${identity.data.publisher.oauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
                                         org.wso2.carbon.identity.data.publisher.audit.user.operation.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.audit.version}</version>
@@ -1222,12 +1172,6 @@
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
                                     <version>${identity.outbound.auth.requestpath.basicauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.requestpath.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
@@ -1292,14 +1236,6 @@
                                 </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
-                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
@@ -1552,10 +1488,6 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.oauth.server.feature.group</id>
-                                    <version>${identity.inbound.auth.oauth.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.authenticator.iwa.server.feature.group</id>
                                     <version>${identity.carbon.auth.iwa.version}</version>
                                 </feature>
@@ -1610,12 +1542,6 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.data.publisher.oauth.server.feature.group
-                                    </id>
-                                    <version>${identity.data.publisher.oauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
                                         org.wso2.carbon.identity.data.publisher.audit.user.operation.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.audit.version}</version>
@@ -1625,12 +1551,6 @@
                                         org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature.group
                                     </id>
                                     <version>${identity.outbound.auth.requestpath.basicauth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature.group
-                                    </id>
-                                    <version>${identity.outbound.auth.requestpath.oauth.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
@@ -1692,14 +1612,6 @@
                                 </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
-                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
