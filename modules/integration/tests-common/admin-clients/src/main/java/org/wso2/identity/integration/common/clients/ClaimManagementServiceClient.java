@@ -21,7 +21,7 @@ package org.wso2.identity.integration.common.clients;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceException;
+import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceClaimManagementException;
 import org.wso2.carbon.claim.mgt.stub.ClaimManagementServiceStub;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDialectDTO;
@@ -52,7 +52,7 @@ public class ClaimManagementServiceClient {
     }
 
     public void addNewClaimMapping(String dialectURI, String claimUri, String description, String mappedAttribute)
-            throws ClaimManagementServiceException, RemoteException {
+            throws ClaimManagementServiceClaimManagementException, RemoteException {
         ClaimMappingDTO claimMappingDTO = new ClaimMappingDTO();
 
         ClaimDTO claimDTO = new ClaimDTO();
