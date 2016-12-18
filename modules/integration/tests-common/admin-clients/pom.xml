@@ -219,6 +219,10 @@
             <artifactId>java-support</artifactId>
             <version>${java-support.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
+        </dependency>
     </dependencies>
 
     <properties>

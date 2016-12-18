@@ -39,10 +39,12 @@ import org.opensaml.xml.util.Base64;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -55,6 +57,7 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.KeyStoreAdminClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.query.ClientSignKeyDataHolder;
@@ -71,6 +74,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +95,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
     private static final String WSO2IS_URL = "https://localhost:9853/";
+    private static final String WSO2IS_TENANT_URL = WSO2IS_URL + "t/wso2.com";
     private static final String SAML_SSO_URL = WSO2IS_URL + "samlsso";
     private static final String COMMON_AUTH_URL = WSO2IS_URL + "/commonauth";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -124,6 +130,17 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         this.config = config;
     }
 
+    @BeforeTest
+    public void initiateTenant() throws Exception {
+        // Since all the requests sign with default wso2 key, upload that public key to tenants
+        super.init(TestUserMode.TENANT_ADMIN);
+        KeyStoreAdminClient keyStoreAdminClient = new KeyStoreAdminClient(backendURL, sessionCookie);
+        String filePath = FrameworkPathUtil.getSystemResourceLocation() +
+                "keystores" + File.separator + "products" + File.separator + "wso2.pem";
+        byte[] crt = Files.readAllBytes(Paths.get(filePath));
+        keyStoreAdminClient.importCertToStore("wso2local.pem", crt, "wso2-com.jks");
+    }
+
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
         return new SAMLConfig[][]{
@@ -135,14 +152,14 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-//                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-//                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-//                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-//                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -278,7 +295,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
             } catch (Exception e) {
                 Assert.fail("Unable to initiate client sign key data holder"+config, e);
             }
-            SAMLQueryClient queryClient = new SAMLQueryClient(WSO2IS_URL, signKeyDataHolder);
+            String serverURL = TestUserMode.TENANT_ADMIN.equals(config.getUserMode()) ? WSO2IS_TENANT_URL : WSO2IS_URL;
+            SAMLQueryClient queryClient = new SAMLQueryClient(serverURL, signKeyDataHolder);
             String response = queryClient.executeIDRequest(config.getApp().getArtifact(), id);
             Assert.assertTrue(response.contains(id));
         } catch (Exception e) {
@@ -295,7 +313,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                     + "products" + File.separator + "wso2carbon.jks");
             ClientSignKeyDataHolder signKeyDataHolder = new ClientSignKeyDataHolder(resourceUrl.getPath(),
                     "wso2carbon", "wso2carbon");
-            SAMLQueryClient queryClient = new SAMLQueryClient(WSO2IS_URL, signKeyDataHolder);
+            String serverURL = TestUserMode.TENANT_ADMIN.equals(config.getUserMode()) ? WSO2IS_TENANT_URL : WSO2IS_URL;
+            SAMLQueryClient queryClient = new SAMLQueryClient(serverURL, signKeyDataHolder);
 
             List<String> attributes = new ArrayList<String>();
             attributes.add(firstNameClaimURI);
@@ -351,7 +370,6 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         setSystemProperties();
         return tomcat;
     }
-
 
 
     private void setSystemProperties() {
@@ -537,7 +555,11 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         }
-        samlssoServiceProviderDTO.setCertAlias("wso2carbon");
+        if (TestUserMode.TENANT_ADMIN.equals(config.getUserMode())) {
+            samlssoServiceProviderDTO.setCertAlias("wso2local.pem");
+        } else {
+            samlssoServiceProviderDTO.setCertAlias("wso2carbon");
+        }
 
         return samlssoServiceProviderDTO;
     }
