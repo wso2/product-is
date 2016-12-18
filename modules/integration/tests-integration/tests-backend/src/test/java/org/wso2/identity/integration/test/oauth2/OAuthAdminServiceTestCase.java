@@ -4,9 +4,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceException;
+import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceIdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.oauth.xsd.IdentityOAuthAdminException;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -125,7 +124,7 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         Assert.assertTrue(updated);
     }
 
-    private void createOauthApp() throws RemoteException, OAuthAdminServiceException {
+    private void createOauthApp() throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
         appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
