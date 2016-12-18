@@ -57,7 +57,7 @@ public class RegistryDataManager {
     private static final Log log = LogFactory.getLog(RegistryDataManager.class);
 
     private static final String EMAIL_TEMPLATE_OLD_REG_LOCATION = "/identity/config/emailTemplate";
-    private static final String EMAIL_TEMPLATE_NEW_REG_LOCATION_ROOT = "/identity/Email/";
+    private static final String EMAIL_TEMPLATE_NEW_REG_LOCATION_ROOT = "/identity/email/";
     private static final Set<String> TEMPLATE_NAMES = new HashSet<String>() {{
         add("accountConfirmation");
         add("accountDisable");
