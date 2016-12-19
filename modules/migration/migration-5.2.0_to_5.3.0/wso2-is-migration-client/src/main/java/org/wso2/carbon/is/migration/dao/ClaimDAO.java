@@ -144,13 +144,35 @@ public class ClaimDAO {
                 }
 
                 Map<String, String> claimProperties = new HashMap<>();
-                claimProperties.put("Description", claim.getDescription());
-                claimProperties.put("DisplayName", claim.getDisplayTag());
-                claimProperties.put("RegEx", claim.getRegEx());
-                claimProperties.put("DisplayOrder", String.valueOf(claim.getDisplayOrder()));
-                claimProperties.put("ReadOnly", String.valueOf(claim.isReadOnly()));
-                claimProperties.put("Required", String.valueOf(claim.isRequired()));
-                claimProperties.put("SupportedByDefault", String.valueOf(claim.isSupportedByDefault()));
+                //Reason for null check, Oracle db not allows to insert null values
+                if (StringUtils.isNotBlank(claim.getDescription())) {
+                    claimProperties.put("Description", claim.getDescription());
+                }
+
+                if (StringUtils.isNotBlank(claim.getDisplayTag())) {
+                    claimProperties.put("DisplayName", claim.getDisplayTag());
+                }
+
+                if (StringUtils.isNotBlank(claim.getRegEx())) {
+                    claimProperties.put("RegEx", claim.getRegEx());
+                }
+
+                if (StringUtils.isNotBlank(String.valueOf(claim.getDisplayOrder()))) {
+                    claimProperties.put("DisplayOrder", String.valueOf(claim.getDisplayOrder()));
+                }
+
+                if (StringUtils.isNotBlank(String.valueOf(claim.isReadOnly()))) {
+                    claimProperties.put("ReadOnly", String.valueOf(claim.isReadOnly()));
+                }
+
+                if (StringUtils.isNotBlank(String.valueOf(claim.isRequired()))) {
+                    claimProperties.put("Required", String.valueOf(claim.isRequired()));
+                }
+
+                if (StringUtils.isNotBlank(String.valueOf(claim.isSupportedByDefault()))) {
+                    claimProperties.put("SupportedByDefault", String.valueOf(claim.isSupportedByDefault()));
+                }
+
                 addClaimProperties(connection, localClaimId, claimProperties, claim.getTenantId());
 
                 for (MappedAttribute mappedAttribute : claim.getAttributes()) {
