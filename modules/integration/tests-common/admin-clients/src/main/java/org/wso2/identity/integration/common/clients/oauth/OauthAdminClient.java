@@ -21,9 +21,8 @@ import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceException;
+import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceIdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
-import org.wso2.carbon.identity.oauth.stub.types.IdentityOAuthAdminException;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class OauthAdminClient {
@@ -46,18 +45,18 @@ public class OauthAdminClient {
         AuthenticateStub.authenticateStub(userName, password, oauthAdminStub);        
     }
     
-    public void registerOAuthApplicationData(OAuthConsumerAppDTO application) throws RemoteException, OAuthAdminServiceException {
+    public void registerOAuthApplicationData(OAuthConsumerAppDTO application) throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
     	oauthAdminStub.registerOAuthApplicationData(application);
     }
     
-    public OAuthConsumerAppDTO[] getAllOAuthApplicationData() throws RemoteException, OAuthAdminServiceException {
+    public OAuthConsumerAppDTO[] getAllOAuthApplicationData() throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
     	
     	OAuthConsumerAppDTO[] appDtos = null;
     	appDtos = oauthAdminStub.getAllOAuthApplicationData();
     	return appDtos;
     }
     
-    public void removeOAuthApplicationData(String consumerKey) throws RemoteException, OAuthAdminServiceException{
+    public void removeOAuthApplicationData(String consumerKey) throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException{
     	oauthAdminStub.removeOAuthApplicationData(consumerKey);
     }
 
