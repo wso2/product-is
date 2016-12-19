@@ -63,7 +63,7 @@
 
     <Content type="html" view="home">
         <![CDATA[
-    <script type="text/javascript" src="js/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/portal/csrf.js"></script>
     <script type="text/javascript" src="js/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="js/main.js" type="text/javascript"></script>
     <script type="text/javascript" src="js/modal.js" type="text/javascript"></script>
