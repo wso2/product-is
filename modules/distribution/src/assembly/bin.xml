@@ -332,7 +332,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>conf/policies</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/policies/xacml/default</directory>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
             </outputDirectory>
         </fileSet>
