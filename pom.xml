@@ -1432,7 +1432,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.6.71</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.6.77</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.1.6</identity.carbon.auth.saml2.version>
@@ -1459,11 +1459,11 @@
         <identity.data.publisher.audit.version>0.1.1</identity.data.publisher.audit.version>
         <!--<identity.carbon.auth.thrift.version>5.5.0-SNAPSHOT</identity.carbon.auth.thrift.version>-->
         <!--<identity.application.auth.oidc.version>5.1.2-SNAPSHOT</identity.application.auth.oidc.version>-->
-        <identity.governance.version>0.1.28</identity.governance.version>
+        <identity.governance.version>0.1.30</identity.governance.version>
         <carbon.identity.auth.version>0.1.12</carbon.identity.auth.version>
-        <identity.event.handler.account.lock.version>1.0.3</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.0.7</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>0.1.5</identity.event.handler.notification.version>
-        <identity.app.authz.xacml.version>0.1.3</identity.app.authz.xacml.version>
+        <identity.app.authz.xacml.version>0.1.4</identity.app.authz.xacml.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
@@ -1599,7 +1599,7 @@
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.9</carbon.business-process.version>
-        <carbon.analytics-common.version>5.1.3</carbon.analytics-common.version>
+        <carbon.analytics-common.version>5.1.7</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
