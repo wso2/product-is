@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+    <packaging>carbon-feature</packaging>
+    <name>WSO2 IAM Portal - User Portal App</name>
+
+    <description>IAM User Portal</description>
+    <url>http://wso2.org</url>
+
+    <dependencies>
+        <!--UUF Components-->
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.common</groupId>
+            <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
+            <version>${carbon.uuf.common.version}</version>
+            <type>zip</type>
+            <classifier>uuf-component</classifier>
+        </dependency>
+        <!--UUF Themes-->
+        <dependency>
+            <groupId>org.wso2.carbon.uuf.common</groupId>
+            <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
+            <version>${carbon.uuf.common.version}</version>
+            <type>zip</type>
+            <classifier>uuf-theme</classifier>
+        </dependency>
+        <!--Backend dependencies-->
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.carbon.uuf.maven</groupId>
+                <artifactId>carbon-uuf-maven-plugin</artifactId>
+                <version>${carbon-uuf-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>create</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>create-app</goal>
+                        </goals>
+                        <configuration>
+                            <!--<instructions>-->
+                                <!--<Import-Package>org.wso2.carbon.uuf.sample.simpleauth.bundle</Import-Package>-->
+                            <!--</instructions>-->
+                            <!--&lt;!&ndash;All backend dependencies should be specified here&ndash;&gt;-->
+                            <!--<bundles>-->
+                                <!--<bundle>-->
+                                    <!--<symbolicName>org.wso2.carbon.uuf.sample.pets-store.bundle</symbolicName>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</bundle>-->
+                                <!--<bundle>-->
+                                    <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</bundle>-->
+                            <!--</bundles>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

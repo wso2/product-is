@@ -48,7 +48,7 @@
 
     <modules>
         <module>product</module>
-        <module>portal/user</module>
+        <module>portal</module>
     </modules>
 
     <dependencyManagement>
@@ -298,26 +298,7 @@
                 <type>zip</type>
             </dependency>
             <!--End of Dependent Features-->
-
-            <!--Identity Server Dependent Features-->
-            <dependency>
-                <groupId>org.wso2.carbon.transport</groupId>
-                <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
-                <version>${carbon.transport.http.netty.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.messaging</groupId>
-                <artifactId>org.wso2.carbon.messaging.feature</artifactId>
-                <version>${carbon.messaging.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.msf4j</groupId>
-                <artifactId>org.wso2.msf4j.feature</artifactId>
-                <version>${msf4j.version}</version>
-                <type>zip</type>
-            </dependency>
+            <!-- UUF Dependent Features -->
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.core.feature</artifactId>
@@ -340,6 +321,50 @@
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
                 <version>${uuf.version}</version>
+                <type>zip</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+                <version>${carbon.iam.portal.version}</version>
+                <type>zip</type>
+            </dependency>
+            <!-- End of Dependent Features -->
+
+
+            <!--UUF Components-->
+            <dependency>
+                <groupId>org.wso2.carbon.uuf.common</groupId>
+                <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
+                <version>${carbon.uuf.common.version}</version>
+            </dependency>
+            <!--End of UUF Components-->
+            <!--UUF Themes-->
+            <dependency>
+                <groupId>org.wso2.carbon.uuf.common</groupId>
+                <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
+                <version>${carbon.uuf.common.version}</version>
+            </dependency>
+            <!--End of UUF Themes-->
+
+            <!--Identity Server Dependent Features-->
+            <dependency>
+                <groupId>org.wso2.carbon.transport</groupId>
+                <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
+                <version>${carbon.transport.http.netty.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.messaging</groupId>
+                <artifactId>org.wso2.carbon.messaging.feature</artifactId>
+                <version>${carbon.messaging.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>org.wso2.msf4j.feature</artifactId>
+                <version>${msf4j.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -587,6 +612,8 @@
         <uuf.version>1.0.0-SNAPSHOT</uuf.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
+        <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
+        <carbon.iam.portal.version>1.0.0-SNAPSHOT</carbon.iam.portal.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -609,6 +636,9 @@
         <mockito.version>1.9.5</mockito.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <testng.version>6.9.4</testng.version>
+
+        <!-- Maven Plugins -->
+        <carbon-uuf-maven-plugin.version>1.0.0-m8</carbon-uuf-maven-plugin.version>
 
         <!--<org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>-->
 
