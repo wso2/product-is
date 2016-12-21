@@ -41,6 +41,7 @@ import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceUserProfi
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
@@ -132,7 +133,9 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         setUserClaim(ADMIN_FORCED_PASSWORD_RESET_CLAIM, "true");
 
-        String accountLockClaim = usmClient.getUserClaimValue(TEST_USER_USERNAME, ACCOUNT_LOCKED_CLAIM, PROFILE_NAME);
+        ClaimValue[] values = usmClient.getUserClaimValuesForClaims(TEST_USER_USERNAME, new String[]{
+                ACCOUNT_LOCKED_CLAIM}, null);
+        String accountLockClaim = values[0].getValue();
         Assert.assertTrue(Boolean.valueOf(accountLockClaim), "Account is not locked after admin " +
                 "forced password reset for user.");
 
