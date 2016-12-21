@@ -212,6 +212,11 @@
 >>>>>>> e3ae06a... Fixing few of the pom.xml errors.
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+            <type>zip</type>
+        </dependency>
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -286,6 +291,7 @@
 >>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
         </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         <!-- Sample Simple Authentication Component -->
 
@@ -305,6 +311,13 @@
             <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
             <type>zip</type>
         </dependency>
+=======
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.is</groupId>-->
+            <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
+            <!--<type>zip</type>-->
+        <!--</dependency>-->
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
@@ -516,6 +529,7 @@
                                 </feature>
                                 <feature>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.datasource.core.feature</id>
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
@@ -540,6 +554,12 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
 =======
+=======
+                                    <id>org.wso2.carbon.iam.user-portal.feature</id>
+                                    <version>${carbon.iam.portal.version}</version>
+                                </feature>
+                                <feature>
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                     <id>org.wso2.carbon.jndi.feature</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -581,6 +601,7 @@
                                 </feature>
 
                                 <!-- Sample Applications -->
+<<<<<<< HEAD
                                 <feature>
                                     <id>org.wso2.carbon.is.user-portal.feature</id>
                                     <version>${carbon.is.version}</version>
@@ -593,6 +614,12 @@
                                     <id>org.wso2.carbon.identity.common.feature</id>
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
                                 </feature>
+=======
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--</feature>-->
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
@@ -801,6 +828,10 @@
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.iam.user-portal.feature.group</id>
+                                    <version>${carbon.iam.portal.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.jndi.feature.group</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -881,6 +912,7 @@
                                     <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
+<<<<<<< HEAD
                                 <feature>
 <<<<<<< HEAD
 >>>>>>> 89611a7... Remove unwanted UUF features.
@@ -899,6 +931,12 @@
                                 <!--</feature>-->
 >>>>>>> 6906998... Made the UUF app for user portal buildable
 =======
+=======
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--</feature>-->
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                 <feature>
                                     <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
                                     <version>${carbon.uuf.version}</version>

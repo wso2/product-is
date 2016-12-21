@@ -56,6 +56,7 @@
                 <exclude>**/identity/connector-config.yml</exclude>
                 <exclude>**/identity/domain-config.yaml</exclude>
                 <exclude>**/identity/store-config.yml</exclude>
+<<<<<<< HEAD
 >>>>>>> a695889... update connectors and config changes
             </excludes>
         </fileSet>
@@ -66,6 +67,9 @@
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
+=======
+                <exclude>**/transports/netty-transports.yml</exclude>
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
             </excludes>
         </fileSet>
 <<<<<<< HEAD
@@ -93,6 +97,11 @@
 >>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
 =======
 >>>>>>> b84e760... Refactoring c5 product-is branch
+        <fileSet>
+            <directory>carbon-home/conf/transports</directory>
+            <outputDirectory>conf/transports</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
         <fileSet>
             <directory>carbon-home/conf/osgi</directory>
             <outputDirectory>conf/osgi</outputDirectory>

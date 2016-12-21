@@ -2,9 +2,13 @@
 # example entry:
 #    - className: "org.wso2.carbon.uuf.sample.pets-store.PetsStoreMicroservice"
 #      uri: "/pets/"
+<<<<<<< HEAD
 apis:
   - className: "org.wso2.is.portal.user.client.api.ProfileImageDownloaderService"
     uri: "/profile-image-service/"
+=======
+apis: []
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
 
 # Binding fragments into zones.
 # Modes:
@@ -21,6 +25,7 @@ bindings:
       mode: "append"
       fragments:
         - "org.wso2.carbon.uuf.common.foundation.menubar"
+<<<<<<< HEAD
     - zoneName: "org.wso2.carbon.iam.user-portal.feature.usermenu"
       mode: "append"
       fragments:
@@ -33,3 +38,5 @@ config:
   loginPageUri: "/login"
   isDomainInLogin: true
 
+=======
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is

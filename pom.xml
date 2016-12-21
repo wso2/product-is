@@ -74,8 +74,12 @@
 =======
 >>>>>>> ec8cd2b... Removing the code that is moved to new repo https://github.com/wso2/carbon-identity-providers
         <module>product</module>
+<<<<<<< HEAD
         <module>portal/user</module>
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+        <module>portal</module>
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
     </modules>
 
     <dependencyManagement>
@@ -399,6 +403,7 @@
                 <type>zip</type>
             </dependency>
             <!--End of Dependent Features-->
+<<<<<<< HEAD
 
             <!--Identity Server Dependent Features-->
 >>>>>>> 6906998... Made the UUF app for user portal buildable
@@ -433,6 +438,8 @@
                 <type>zip</type>
             </dependency>
             <!--End of Dependent Features-->
+=======
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
             <!-- UUF Dependent Features -->
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
@@ -627,6 +634,50 @@
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
                 <version>${uuf.version}</version>
+                <type>zip</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+                <version>${carbon.iam.portal.version}</version>
+                <type>zip</type>
+            </dependency>
+            <!-- End of Dependent Features -->
+
+
+            <!--UUF Components-->
+            <dependency>
+                <groupId>org.wso2.carbon.uuf.common</groupId>
+                <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
+                <version>${carbon.uuf.common.version}</version>
+            </dependency>
+            <!--End of UUF Components-->
+            <!--UUF Themes-->
+            <dependency>
+                <groupId>org.wso2.carbon.uuf.common</groupId>
+                <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
+                <version>${carbon.uuf.common.version}</version>
+            </dependency>
+            <!--End of UUF Themes-->
+
+            <!--Identity Server Dependent Features-->
+            <dependency>
+                <groupId>org.wso2.carbon.transport</groupId>
+                <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
+                <version>${carbon.transport.http.netty.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.messaging</groupId>
+                <artifactId>org.wso2.carbon.messaging.feature</artifactId>
+                <version>${carbon.messaging.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>org.wso2.msf4j.feature</artifactId>
+                <version>${msf4j.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -1139,7 +1190,12 @@
         <uuf.version>1.0.0-SNAPSHOT</uuf.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
+<<<<<<< HEAD
 >>>>>>> cf65c8a... Adding the API and restructure...
+=======
+        <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
+        <carbon.iam.portal.version>1.0.0-SNAPSHOT</carbon.iam.portal.version>
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -1192,6 +1248,9 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
+
+        <!-- Maven Plugins -->
+        <carbon-uuf-maven-plugin.version>1.0.0-m8</carbon-uuf-maven-plugin.version>
 
         <!--<org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>-->
 

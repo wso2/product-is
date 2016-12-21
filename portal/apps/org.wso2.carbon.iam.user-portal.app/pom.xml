@@ -23,7 +23,11 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
+<<<<<<< HEAD
         <version>6.0.0-SNAPSHOT</version>
+=======
+        <version>1.0.0-SNAPSHOT</version>
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -52,6 +56,7 @@
             <classifier>uuf-theme</classifier>
         </dependency>
         <!--Backend dependencies-->
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
@@ -62,12 +67,15 @@
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
             <version>${org.wso2.carbon.identity.mgt.version}</version>
         </dependency>
+=======
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
     </dependencies>
 
 
     <build>
         <plugins>
             <plugin>
+<<<<<<< HEAD
                 <groupId>com.cj.jshintmojo</groupId>
                 <artifactId>jshint-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -89,6 +97,8 @@
                 </configuration>
             </plugin>
             <plugin>
+=======
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
                 <version>${carbon-uuf-maven-plugin.version}</version>
@@ -101,6 +111,7 @@
                             <goal>create-app</goal>
                         </goals>
                         <configuration>
+<<<<<<< HEAD
                             <instructions>
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
@@ -117,11 +128,26 @@
                                     <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </bundle>
+=======
+                            <!--<instructions>-->
+                                <!--<Import-Package>org.wso2.carbon.uuf.sample.simpleauth.bundle</Import-Package>-->
+                            <!--</instructions>-->
+                            <!--&lt;!&ndash;All backend dependencies should be specified here&ndash;&gt;-->
+                            <!--<bundles>-->
+                                <!--<bundle>-->
+                                    <!--<symbolicName>org.wso2.carbon.uuf.sample.pets-store.bundle</symbolicName>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</bundle>-->
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                 <!--<bundle>-->
                                     <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</bundle>-->
+<<<<<<< HEAD
                             </bundles>
+=======
+                            <!--</bundles>-->
+>>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                         </configuration>
                     </execution>
                 </executions>
