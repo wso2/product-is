@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -14,6 +15,8 @@
  * limitations under the License.
  */
 
+=======
+>>>>>>> 7fa08ef... adding the login page to user portal
 $(window).load(function(){
 
     var animating = false;
@@ -58,7 +61,11 @@ $(window).load(function(){
                 },{
                     duration:700,
                     step:function(now,fx){
+<<<<<<< HEAD
                         if(now === 0){
+=======
+                        if(now == 0){
+>>>>>>> 7fa08ef... adding the login page to user portal
                             fx.end = -($(fx.elem).offset().top  - $(".navigation").offset().top);
                         }
                     }
@@ -80,7 +87,11 @@ $(window).load(function(){
 
                 setTimeout(function(){
                     //location.replace(el.attr('href'));
+<<<<<<< HEAD
                 },500);
+=======
+                },500)
+>>>>>>> 7fa08ef... adding the login page to user portal
 
             });
         }

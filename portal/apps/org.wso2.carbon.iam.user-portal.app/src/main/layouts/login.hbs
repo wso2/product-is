@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{#placeholder "favicon"}}
+        <link rel="shortcut icon" href="{{public "images/default-favicon.png"}}" type="image/png" />
+    {{/placeholder}}
+    <title>{{#placeholder "title"}}Simple Auth{{/placeholder}}</title>
+    {{placeholder "css"}}
+    {{placeholder "headJs"}}
+    {{placeholder "headOther"}}
+</head>
+
+<body class="sticky-footer">
+<header class="header header-default">
+    <div class="container-fluid">
+        <div class="pull-left brand">
+            <a href="{{@contextPath}}/">
+                <img src="{{public "images/logo.png"}}" class="logo" alt="wso2" title="wso2"/>
+                <span>{{@config.appName}}</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="body-wrapper">
+            {{defineZone "alert"}}
+            {{defineZone "message"}}
+            {{defineZone "content"}}
+        </div>
+    </div>
+</div>
+<!-- footer -->
+<footer class="footer">
+    <div class="container-fluid">
+        {{defineZone "footer"}}
+    </div>
+</footer>
+<!-- /footer -->
+{{defineZone "modal"}}
+{{placeholder "js"}}
+</body>
+</html>

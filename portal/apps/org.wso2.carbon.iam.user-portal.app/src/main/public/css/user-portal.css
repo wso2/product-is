@@ -239,6 +239,7 @@
         background-color: #232323;
         border-bottom:1px solid #3F3F3F;
     }
+<<<<<<< HEAD
 }
 
 .user-name-icon {
@@ -517,4 +518,6 @@ label.error {
 
 .edit-icon {
     color: #bfbfbf;
+=======
+>>>>>>> 7fa08ef... adding the login page to user portal
 }
