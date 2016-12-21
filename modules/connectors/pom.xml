@@ -88,7 +88,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.smsotp</groupId>
                                     <artifactId>org.wso2.carbon.extension.identity.authenticator.smsotp.connector
                                     </artifactId>
                                     <version>${authenticator.smsotp.version}</version>
@@ -111,7 +111,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
                                     <artifactId>org.wso2.carbon.extension.identity.authenticator.emailotp.connector
                                     </artifactId>
                                     <version>${authenticator.emailotp.version}</version>
@@ -180,7 +180,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
                                     <artifactId>
                                         org.wso2.carbon.extension.identity.authenticator.emailotp.endpoint
                                     </artifactId>
@@ -205,7 +205,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.smsotp</groupId>
                                     <artifactId>
                                         org.wso2.carbon.extension.identity.authenticator.smsotp.endpoint
                                     </artifactId>
@@ -252,8 +252,8 @@
     <properties>
         <authenticator.totp.version>2.0.1</authenticator.totp.version>
         <authenticator.office365.version>1.0.0</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.4</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.2</authenticator.emailotp.version>
+        <authenticator.smsotp.version>2.0.6</authenticator.smsotp.version>
+        <authenticator.emailotp.version>2.0.3</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.5</authenticator.twitter.version>
         <authenticator.x509.version>2.0.1</authenticator.x509.version>
     </properties>
