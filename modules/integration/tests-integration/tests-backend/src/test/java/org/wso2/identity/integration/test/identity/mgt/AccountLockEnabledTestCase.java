@@ -19,6 +19,7 @@ package org.wso2.identity.integration.test.identity.mgt;
 
 
 import junit.framework.Assert;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -78,18 +79,24 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         try {
             usmClient.addUser(testLockUser1, testLockUser1Password, new String[]{"admin"}, new ClaimValue[0], null, false);
 
-            try {
-                authenticatorClient.login(testLockUser1, testLockUser1WrongPassword, "localhost");
-            } catch (Exception e) {
-                log.info("1 st unsuccessful Login attempt by " + testLockUser1);
+            int maximumAllowedFailedLogins = 5;
+            for (int i = 0; i < maximumAllowedFailedLogins; i++) {
+                try {
+                    authenticatorClient.login(testLockUser1, testLockUser1WrongPassword, "localhost");
+                } catch (Exception e) {
+                    log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
+                }
             }
-            try {
-                authenticatorClient.login(testLockUser1, testLockUser1WrongPassword, "localhost");
-            } catch (Exception e) {
-                log.info("2 nd unsuccessful Login attempt by " + testLockUser1);
+
+            ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(testLockUser1, new String[]
+                    {accountLockClaimUri}, "default");
+
+            String userAccountLockClaimValue = null;
+
+            if (ArrayUtils.isNotEmpty(claimValues)) {
+                userAccountLockClaimValue = claimValues[0].getValue();
             }
-            String userAccountLockClaimValue =
-                    usmClient.getUserClaimValue(testLockUser1, accountLockClaimUri, "default");
+
             Assert.assertTrue
                     ("Test Failure : User Account Didn't Locked Properly", Boolean.valueOf(userAccountLockClaimValue));
 
