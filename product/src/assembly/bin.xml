@@ -37,6 +37,7 @@
                 <exclude>**/identity/connector-config.yml</exclude>
                 <exclude>**/identity/domain-config.yaml</exclude>
                 <exclude>**/identity/store-config.yml</exclude>
+                <exclude>**/transports/netty-transports.yml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -46,6 +47,11 @@
                 <include>README.md</include>
                 <include>LICENSE</include>
             </includes>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/conf/transports</directory>
+            <outputDirectory>conf/transports</outputDirectory>
+            <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
             <directory>carbon-home/conf/osgi</directory>

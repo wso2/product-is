@@ -146,6 +146,11 @@
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+            <type>zip</type>
+        </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
@@ -180,11 +185,11 @@
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-            <type>zip</type>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.is</groupId>-->
+            <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
+            <!--<type>zip</type>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
@@ -349,6 +354,10 @@
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.iam.user-portal.feature</id>
+                                    <version>${carbon.iam.portal.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.jndi.feature</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -390,10 +399,10 @@
                                 </feature>
 
                                 <!-- Sample Applications -->
-                                <feature>
-                                    <id>org.wso2.carbon.is.user-portal.feature</id>
-                                    <version>${carbon.is.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.uuf.Features-app.feature</id>
                                     <version>${carbon.uuf.version}</version>
@@ -503,6 +512,10 @@
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.iam.user-portal.feature.group</id>
+                                    <version>${carbon.iam.portal.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.jndi.feature.group</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -546,10 +559,10 @@
                                     <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.is.user-portal.feature.group</id>
-                                    <version>${carbon.is.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
+                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
                                     <version>${carbon.uuf.version}</version>
