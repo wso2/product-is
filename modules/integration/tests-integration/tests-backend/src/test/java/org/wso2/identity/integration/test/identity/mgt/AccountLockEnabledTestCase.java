@@ -136,7 +136,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     public void atEnd() throws Exception {
         usmClient.deleteUser(testLockUser1);
         usmClient.deleteUser(testLockUser2);
-
+        disableAccountLocking(ENABLE_ACCOUNT_LOCK);
     }
 
     protected String getISResourceLocation() {
@@ -155,6 +155,16 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         Property prop = new Property();
         prop.setName(option);
         prop.setValue(TRUE_STRING);
+        newProperties[0] = prop;
+        identityGovernanceServiceClient.updateConfigurations(newProperties);
+    }
+
+    protected void disableAccountLocking(String option) throws Exception {
+
+        Property[] newProperties = new Property[1];
+        Property prop = new Property();
+        prop.setName(option);
+        prop.setValue("false");
         newProperties[0] = prop;
         identityGovernanceServiceClient.updateConfigurations(newProperties);
     }
