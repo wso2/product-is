@@ -51,6 +51,14 @@
             <type>zip</type>
             <classifier>uuf-theme</classifier>
         </dependency>
+        <!--UUF Themes-->
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.user-portal.theme.default</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>zip</type>
+            <classifier>uuf-theme</classifier>
+        </dependency>
         <!--Backend dependencies-->
     </dependencies>
 

@@ -1,0 +1,6 @@
+.navbar-menu-toggle,.navbar-menu-toggle:hover, .navbar-menu-toggle:focus, .navbar-menu-toggle:active{
+    background:#222;
+}
+.navbar-menu-toggle[aria-expanded=true]{
+    background:#242932;
+}
