@@ -101,7 +101,6 @@ function onRequest(env) {
     if (env.request.method == "POST") {
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
-        // calling dummy authentication service
         var result = authenticate(username, password);
 >>>>>>> 7fa08ef... adding the login page to user portal
         if (result.success) {
@@ -117,13 +116,25 @@ function onRequest(env) {
 =======
 function authenticate(username, password) {
     try {
-        // Calling dummy osgi authentication service
-        var SimpleAuthHandler = Java.type("org.wso2.carbon.uuf.sample.simpleauth.bundle.SimpleAuthHandler");
-        var user = SimpleAuthHandler.authenticate(username, password);
-        createSession(user);
+        var passwordChar = Java.to(password.split(''), 'char[]');
+        var authenticationContext = callOSGiService("org.wso2.is.portal.user.client.realmservice.RealmClientService",
+            "authenticate", [username, passwordChar]);
+
+        //var realmClientService = Java.type("org.wso2.is.portal.user.client.realmservice.RealmClientServiceImpl");
+        //var authenticationContext = realmClientService.authenticate(username, password);
+        createSession(authenticationContext.user);
         return {success: true, message: "success"}
     } catch (e) {
-        return {success: false, message: e.message};
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause != null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+
+        return {success: false, message: message};
     }
 }
 >>>>>>> 7fa08ef... adding the login page to user portal

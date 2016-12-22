@@ -132,19 +132,19 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" method="post">
                                 <h3>Sign in to your account</h3>
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <div class="input-group input-wrap">
-                                            <input type="text" class="form-control" placeholder="Username">
+                                            <input type="text" name="username" class="form-control" placeholder="Username">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <div class="input-group input-wrap">
-                                            <input type="password" class="form-control" placeholder="Password">
+                                            <input type="password" name="password" class="form-control" placeholder="Password">
                                         </div>
                                     </div>
                                 </div>
@@ -162,8 +162,8 @@
                                         <button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>
                                     </div>
                                 </div>
-                                <a href="#" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>
-                                <p class="hidden-xs hidden-sm">Don't have an account? <a href="#">Register Now</a></p>
+                                <a href="{{@contextPath}}/password-reset" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>
+                                <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/register">Register Now</a></p>
                             </form>
                         </div>
                         <div class="social-container visible-sm visible-xs">

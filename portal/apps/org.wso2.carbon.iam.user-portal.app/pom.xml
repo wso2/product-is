@@ -24,10 +24,14 @@
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <version>6.0.0-SNAPSHOT</version>
 =======
         <version>1.0.0-SNAPSHOT</version>
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+        <version>6.0.0-SNAPSHOT</version>
+>>>>>>> 8ae54da... Adding user portal login page..
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -57,6 +61,7 @@
         </dependency>
         <!--Backend dependencies-->
 <<<<<<< HEAD
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
@@ -69,6 +74,13 @@
         </dependency>
 =======
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.is.portal.user.client.realmservice</artifactId>
+            <version>${carbon.is.version}</version>
+        </dependency>
+>>>>>>> 8ae54da... Adding user portal login page..
     </dependencies>
 
 
@@ -112,15 +124,21 @@
                         </goals>
                         <configuration>
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <instructions>
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.carbon.identity.recovery.*
                                 </Import-Package>
+=======
+                            <instructions>
+                                <Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>
+>>>>>>> 8ae54da... Adding user portal login page..
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
                                 <bundle>
+<<<<<<< HEAD
                                     <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
                                     <version>${carbon.is.version}</version>
                                 </bundle>
@@ -139,15 +157,24 @@
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</bundle>-->
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+                                    <symbolicName>org.wso2.is.portal.user.client.realmservice</symbolicName>
+                                    <version>${carbon.is.version}</version>
+                                </bundle>
+>>>>>>> 8ae54da... Adding user portal login page..
                                 <!--<bundle>-->
                                     <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</bundle>-->
 <<<<<<< HEAD
+<<<<<<< HEAD
                             </bundles>
 =======
                             <!--</bundles>-->
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+                            </bundles>
+>>>>>>> 8ae54da... Adding user portal login page..
                         </configuration>
                     </execution>
                 </executions>

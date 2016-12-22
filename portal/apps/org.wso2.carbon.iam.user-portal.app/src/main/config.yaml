@@ -7,4 +7,7 @@ menu :
       Self sign up : {link: "users/self-signup", icon: "fw fw-add"}
 errorPages:
   "404": /foundation/error/404
+  "401": /login
   default: /foundation/error/default
+loginPageUri: "/login"
+loginRedirectUri: "/"
