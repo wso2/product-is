@@ -1432,7 +1432,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.6.88</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.6.89</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.1.6</identity.carbon.auth.saml2.version>
@@ -1462,7 +1462,7 @@
         <identity.governance.version>0.1.35</identity.governance.version>
         <carbon.identity.auth.version>0.1.12</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.0.7</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>0.1.5</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>0.1.6</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>0.1.5</identity.app.authz.xacml.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
