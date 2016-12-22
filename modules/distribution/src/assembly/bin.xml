@@ -225,6 +225,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
         </fileSet>
 
+        <!--copy requestpath-authenticator jars.-->
+        <fileSet>
+            <directory>../requestpath-authenticators/target/requestpathauthenticatorCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
         <!--Copy the inbound authenticator jars.-->
         <fileSet>
             <directory>../inbound-authenticators/target/authenticatorinboundCopied/jar</directory>

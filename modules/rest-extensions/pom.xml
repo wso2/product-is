@@ -46,7 +46,7 @@
                                     <version>${identity.auth.service.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authserviceCopied/jar
+                                    <outputDirectory>${basedir}/target/restextensionsCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
@@ -68,7 +68,7 @@
                                     <version>${identity.auth.service.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authserviceCopied/jar
+                                    <outputDirectory>${basedir}/target/restextensionsCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
@@ -90,7 +90,7 @@
                                     <version>${identity.auth.service.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authserviceCopied/jar
+                                    <outputDirectory>${basedir}/target/restextensionsCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
@@ -112,7 +112,7 @@
                                     <version>${identity.auth.service.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authserviceCopied/jar
+                                    <outputDirectory>${basedir}/target/restextensionsCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
