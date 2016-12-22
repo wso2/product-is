@@ -29,13 +29,14 @@
 
     <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
     <name>WSO2 IAM Portal - Parent</name>
 
     <description>IAM Portal</description>
     <url>http://wso2.org</url>
 
     <modules>
+        <module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>
+
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>
         <!--<module>osgi-services/org.wso2.carbon.uuf.sample.pets-store.bundle</module>-->
         <!--<module>osgi-services/org.wso2.carbon.uuf.sample.simple-auth.bundle</module>-->
