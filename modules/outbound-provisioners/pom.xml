@@ -23,9 +23,9 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2is-identity-provisioning-connectors</artifactId>
+    <artifactId>wso2is-identity-outbound-provisioners</artifactId>
     <packaging>pom</packaging>
-    <name>Identity Server : Provisioning Connectors</name>
+    <name>Identity Server : Outbound Provisioners</name>
     <build>
         <plugins>
             <plugin>
@@ -47,7 +47,7 @@
                                     <version>${provisioning.connector.spml.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/outboundprovisionersCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
@@ -71,7 +71,7 @@
                                     <version>${provisioning.connector.google.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/outboundprovisionersCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
@@ -94,7 +94,7 @@
                                     <version>${provisioning.connector.salesforce.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/outboundprovisionersCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
@@ -117,7 +117,7 @@
                                     <version>${provisioning.connector.scim.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
+                                    <outputDirectory>${basedir}/target/outboundprovisionersCopied/jar
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>

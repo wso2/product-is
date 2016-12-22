@@ -152,7 +152,7 @@
         </fileSet>
 
         <!--copy jaxrs web app for SCIM feature-->
-        <fileSet>
+        <!--fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
             </directory>
@@ -160,10 +160,10 @@
             <includes>
                 <include>wso2.war</include>
             </includes>
-        </fileSet>
+        </fileSet-->
 
         <!--copy jaxrs web app for OAuth feature-->
-        <fileSet>
+        <!--fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
             </directory>
@@ -171,7 +171,7 @@
             <includes>
                 <include>oauth2.war</include>
             </includes>
-        </fileSet>
+        </fileSet-->
 
 
         <!--copy jaxrs web app for Mex feature-->
@@ -207,25 +207,6 @@
             </includes>
         </fileSet>
 
-
-        <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
-        <fileSet>
-            <directory>../social-authenticators/target/socialauthenticatorCopied/jar</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
-        </fileSet>
-
-        <!--Copy the outbound authenticator jars OIDC, Passive-STS.-->
-        <fileSet>
-            <directory>../authenticators/target/authenticatoroutboundCopied/jar</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
-        </fileSet>
-
-        <!--copy provisioning-connector jars SPML,Google,Salesforce,SCIM .-->
-        <fileSet>
-            <directory>../provisioning-connectors/target/provisioningconnectorCopied/jar</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
-        </fileSet>
-
         <!--copy local-authenticator jars BaiscAuth,IWA,FIDO .-->
         <fileSet>
             <directory>../local-authenticators/target/localauthenticatorCopied/jar</directory>
@@ -242,6 +223,66 @@
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+        </fileSet>
+
+        <!--copy requestpath-authenticator jars.-->
+        <fileSet>
+            <directory>../requestpath-authenticators/target/requestpathauthenticatorCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--Copy the inbound authenticator jars.-->
+        <fileSet>
+            <directory>../inbound-authenticators/target/authenticatorinboundCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--Copy the inbound authenticator wars.-->
+        <fileSet>
+            <directory>../inbound-authenticators/target/authenticatorinboundCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+        </fileSet>
+
+        <!--Copy the outbound authenticator jars OIDC, Passive-STS.-->
+        <fileSet>
+            <directory>../outbound-authenticators/target/authenticatoroutboundCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
+        <fileSet>
+            <directory>../social-authenticators/target/socialauthenticatorCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--copy jars for inbound provisioning -->
+        <fileSet>
+            <directory>../inbound-provisioners/target/inboundProvisionersCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--copy wars for inbound provisioning -->
+        <fileSet>
+            <directory>../inbound-provisioners/target/inboundprovisionersCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+        </fileSet>
+
+        <!--copy jars for outbound provisioning -->
+        <fileSet>
+            <directory>../outbound-provisioners/target/outboundProvisionersCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--Copy the rest-extensions jars.-->
+        <fileSet>
+            <directory>../rest-extensions/target/restextensionsCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
+        <!--Copy the jaggery-extensions jars.-->
+        <fileSet>
+            <directory>../jaggery-extensions/target/jaggeryextensionsCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
         <!--copy web app for identity management feature -->
@@ -371,18 +412,14 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/eventpublishers
-            </directory>
+            <directory>src/repository/resources/eventpublishers</directory>
             <outputDirectory>wso2is-${pom.version}/repository/deployment/server/eventpublishers</outputDirectory>
             <includes>
                 <include>**/**.xml</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/eventstreams
-            </directory>
+            <directory>src/repository/resources/eventstreams</directory>
             <outputDirectory>wso2is-${pom.version}/repository/deployment/server/eventstreams</outputDirectory>
             <includes>
                 <include>**/**.json</include>
@@ -575,11 +612,15 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/samlsso_response.html
-            </source>
+            <source>src/repository/resources/pages/samlsso_response.html</source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
+            <destName>samlsso_response.html</destName>
             <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/sso-idp-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+            <destName>sso-idp-config.xml.html</destName>
         </file>
         <file>
             <source>src/repository/resources/pages/samlsso_federate.html</source>
@@ -668,17 +709,12 @@
             </outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!--copy scim-consumer-config.xml-->
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/provisioning-config.xml
-            </source>
+            <source>src/repository/resources/conf/provisioning-config.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/scim-schema-extension.config
-            </source>
+            <source>src/repository/resources/conf/scim-schema-extension.config</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
         <file>
@@ -716,12 +752,6 @@
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/EndpointConfig.properties
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
@@ -795,7 +825,7 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/oidc-scope-config.xml</source>
+            <source>src/repository/resources/conf/oidc-scope-config.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>

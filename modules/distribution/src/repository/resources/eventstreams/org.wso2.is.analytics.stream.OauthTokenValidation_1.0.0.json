@@ -1,0 +1,54 @@
+{
+  "name": "org.wso2.is.analytics.stream.OauthTokenValidation",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "tenantId",
+      "type": "INT"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "tokenId",
+      "type": "STRING"
+    },
+    {
+      "name": "clientId",
+      "type": "STRING"
+    },
+    {
+      "name": "username",
+      "type": "STRING"
+    },
+    {
+      "name": "tenantDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "userstoreDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "grantType",
+      "type": "STRING"
+    },
+    {
+      "name": "scope",
+      "type": "STRING"
+    },
+    {
+      "name": "isActive",
+      "type": "BOOL"
+    },
+    {
+      "name": "accessTokenValidityMillis",
+      "type": "LONG"
+    },
+    {
+      "name": "issuedTime",
+      "type": "LONG"
+    }
+  ]
+}
