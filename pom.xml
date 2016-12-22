@@ -1756,7 +1756,7 @@
         <axis2.client.version>1.6.1.wso2v12</axis2.client.version>
         <axis2.wso2.version>1.6.1.wso2v12</axis2.wso2.version>
         <axis2-transports.version>1.1.0-wso2v13</axis2-transports.version>
-        <nimbusds.version>2.26.1</nimbusds.version>
+        <nimbusds.version>2.26.1.wso2v3</nimbusds.version>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <h2database.wso2.version>1.2.140.wso2v3</h2database.wso2.version>
         <felix.framework.version>1.0.3</felix.framework.version>

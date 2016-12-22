@@ -339,6 +339,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!-- Download nimbusds.jose.jwt jar from nexus and copy to the authenticatorinbound/jar folder-->
+                    <execution>
+                        <id>download_nimbus_jose_jwt_jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.orbit.com.nimbusds</groupId>
+                                    <artifactId>nimbus-jose-jwt</artifactId>
+                                    <version>${nimbusds.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorinboundCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <!-- Download oauth2.common jar from nexus and copy to the authenticatorinbound/jar folder-->
                     <execution>
                         <id>download_oauth_common_jar</id>
