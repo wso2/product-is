@@ -941,6 +941,11 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
                 <version>${carbon.security.version}</version>
@@ -1105,6 +1110,7 @@
 >>>>>>> 566488f... Adding scim feature
 =======
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
         <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
@@ -1146,7 +1152,10 @@
         <HikariCP.version>2.4.1</HikariCP.version>
 
         <!--WSO2 related properties-->
+<<<<<<< HEAD
         <carbon.core.version>5.1.0</carbon.core.version>
+=======
+>>>>>>> d78d543... fixing poms
         <org.wso2.carbon.identity.mgt.version.range>[1.0.0,2.0.0)</org.wso2.carbon.identity.mgt.version.range>
         <andes.dependency.version>3.5.0-SNAPSHOT</andes.dependency.version>
         <andes.package.export.version.range>3.5.0</andes.package.export.version.range>
@@ -1175,6 +1184,7 @@
         <carbon.container.version>5.2.0-m2</carbon.container.version>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.messaging.version>1.0.11</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
@@ -1183,6 +1193,8 @@
 =======
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.itentity.mgt.version>1.0.0-SNAPSHOT</carbon.itentity.mgt.version>
+=======
+>>>>>>> d78d543... fixing poms
         <carbon.messaging.version>1.0.6</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
