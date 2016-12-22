@@ -1,0 +1,29 @@
+css:
+ - lib/theme-wso2_1.0/css/theme-wso2.css
+ - lib/font-wso2_1.0.2/css/font-wso2.min.css
+ - lib/jasny-bootstrap/dist/css/jasny-bootstrap.min.css
+ - lib/data-tables_1.10.7/extensions/Bootstrap/css/dataTables.bootstrap.css
+ - lib/data-tables_1.10.7/extensions/Responsive/css/dataTables.responsive.css
+ - lib/select2_4.0.0/css/select2.min.css
+headJs:
+ - lib/jquery_1.11.0/jquery-1.11.3.min.js
+ - lib/i18n/i18next-1.5.9.js
+# - lib/jquery-csrf.js
+ - lib/handlebars.min.js
+ - lib/jquery-validation/jquery.validate.min.js
+ - lib/select2_4.0.0/js/select2.full.min.js
+js:
+# - lib/main.js
+ - lib/bootstrap_3.3.5/js/bootstrap.min.js
+ - lib/theme-wso2_1.0/js/theme-wso2.js
+ - lib/jquery.form.js
+ - lib/jquery.cookie.js
+ - lib/typeahead.jquery.min.js
+ - lib/bootstrap3-editable/js/bootstrap-editable.min.js
+ - lib/jasny-bootstrap/dist/js/jasny-bootstrap.min.js
+ - lib/data-tables_1.10.7/media/js/jquery.dataTables.min.js
+ - lib/data-tables_1.10.7/extensions/Bootstrap/js/dataTables.bootstrap.js
+ - lib/data-tables_1.10.7/extensions/Responsive/js/dataTables.responsive.js
+ - lib/theme-wso2_1.0/js/noty-theme-wso2.js
+ - lib/jquery.cookie.js
+# - lib/button-loader/jquery.buttonLoader.js
