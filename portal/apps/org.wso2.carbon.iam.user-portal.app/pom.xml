@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -52,6 +52,11 @@
             <classifier>uuf-theme</classifier>
         </dependency>
         <!--Backend dependencies-->
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.is.portal.user.client.realmservice</artifactId>
+            <version>${carbon.is.version}</version>
+        </dependency>
     </dependencies>
 
 
@@ -70,20 +75,20 @@
                             <goal>create-app</goal>
                         </goals>
                         <configuration>
-                            <!--<instructions>-->
-                                <!--<Import-Package>org.wso2.carbon.uuf.sample.simpleauth.bundle</Import-Package>-->
-                            <!--</instructions>-->
-                            <!--&lt;!&ndash;All backend dependencies should be specified here&ndash;&gt;-->
-                            <!--<bundles>-->
-                                <!--<bundle>-->
-                                    <!--<symbolicName>org.wso2.carbon.uuf.sample.pets-store.bundle</symbolicName>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
-                                <!--</bundle>-->
+                            <instructions>
+                                <Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>
+                            </instructions>
+                            <!--All backend dependencies should be specified here-->
+                            <bundles>
+                                <bundle>
+                                    <symbolicName>org.wso2.is.portal.user.client.realmservice</symbolicName>
+                                    <version>${carbon.is.version}</version>
+                                </bundle>
                                 <!--<bundle>-->
                                     <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</bundle>-->
-                            <!--</bundles>-->
+                            </bundles>
                         </configuration>
                     </execution>
                 </executions>
