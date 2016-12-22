@@ -1,0 +1,20 @@
+<!-- 
+Variables $acUrl, $response, $relayState and $additionalParams will be replaced by the corrosponding values  
+-->
+<html>
+	<body>
+        	<p>You are now redirected back to $acUrl 
+        	If the redirection fails, please click the post button.</p>
+
+        	<form method='post' action='$acUrl'>
+       			<p>
+					<!--$params-->
+                    <!--$additionalParams-->
+        			<button type='submit'>POST</button>
+       			</p>
+       		</form>
+       		<script type='text/javascript'>
+        		document.forms[0].submit();
+        	</script>
+        </body>
+</html>
