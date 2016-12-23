@@ -4,7 +4,9 @@ menu :
   main :
     Home : {link: "", icon: "fw-home"}
     Users :
-      Self sign up : {link: "users/self-signup", icon: "fw fw-add"}
+      Login : {link: "login", icon: "fw fw-add"}
+      Sign up : {link: "users/signup", icon: "fw fw-add"}
+      Reset Password : {link: "users/reset-password", icon: "fw fw-add"}
 errorPages:
   "404": /foundation/error/404
   "401": /login
