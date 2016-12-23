@@ -51,6 +51,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <module>portal</module>
 =======
         <!--Components-->
@@ -80,6 +81,10 @@
 =======
         <module>portal</module>
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+        <module>portal</module>
+        <module>product</module>
+>>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
     </modules>
 
     <dependencyManagement>
@@ -640,7 +645,7 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
-                <version>${carbon.iam.portal.version}</version>
+                <version>${carbon.is.version}</version>
                 <type>zip</type>
             </dependency>
             <!-- End of Dependent Features -->
@@ -698,6 +703,7 @@
                 <type>zip</type>
             </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b0095c3... Fixing few of the pom.xml errors.
 =======
             <dependency>
@@ -706,6 +712,14 @@
                 <version>${carbon.is.version}</version>
                 <type>zip</type>
             </dependency>
+=======
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.is</groupId>-->
+                <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
+                <!--<version>${carbon.is.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
+>>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
             <dependency>
                 <groupId>org.wso2.carbon.uuf.sample</groupId>
                 <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
@@ -1206,8 +1220,11 @@
 >>>>>>> cf65c8a... Adding the API and restructure...
 =======
         <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
+<<<<<<< HEAD
         <carbon.iam.portal.version>1.0.0-SNAPSHOT</carbon.iam.portal.version>
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+>>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>

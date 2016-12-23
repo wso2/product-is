@@ -307,6 +307,7 @@
         <!--</dependency>-->
 =======
         <dependency>
+<<<<<<< HEAD
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
             <type>zip</type>
@@ -327,6 +328,8 @@
         </dependency>
 >>>>>>> d78d543... fixing poms
         <dependency>
+=======
+>>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
             <type>zip</type>
@@ -564,7 +567,7 @@
 =======
 =======
                                     <id>org.wso2.carbon.iam.user-portal.feature</id>
-                                    <version>${carbon.iam.portal.version}</version>
+                                    <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
@@ -837,7 +840,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.iam.user-portal.feature.group</id>
-                                    <version>${carbon.iam.portal.version}</version>
+                                    <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.jndi.feature.group</id>
