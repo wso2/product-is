@@ -1,170 +1,224 @@
 <!--
-  ~  Licensed to the Apache Software Foundation (ASF) under one
-  ~  or more contributor license agreements.  See the NOTICE file
-  ~  distributed with this work for additional information
-  ~  regarding copyright ownership.  The ASF licenses this file
-  ~  to you under the Apache License, Version 2.0 (the
-  ~  "License"); you may not use this file except in compliance
-  ~  with the License.  You may obtain a copy of the License at
-  ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~  Unless required by applicable law or agreed to in writing,
-  ~  software distributed under the License is distributed on an
-  ~   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~  KIND, either express or implied.  See the License for the
-  ~  specific language governing permissions and limitations
-  ~  under the License.
-  -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+~ Copyright 2016 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
 <html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
-    <title>Welcome to WSO2 Identity Server v5.3.0!</title>
-    <link href="css/is-docs.css" rel="stylesheet"/>
-</head>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>Welcome to @product.name@ v@product.version@!</title>
+        <link href="css/is-docs.css" rel="stylesheet"/>
+    </head>
 
-<body>
-<h1>WSO2 Identity Server : An Open Source Identity and Entitlement Management Server</h1>
+    <body>
+        <h1>@product.name@ : An Open Source Identity and Entitlement Management Server</h1>
 
-<h3>WSO2 Identity Server v5.3.0 Release Note</h3>
+        <h3>@product.name@ v@product.version@ Released !</h3>
 
-<h3>10 December 2015</h3>
+        <h3>December 2016</h3>
 
-<p>
-    The WSO2 Identity Server team is pleased to announce the release of version 5.3.0 of
-    the WSO2 Identity Server (IS).
-</p>
+        <p>
+            @product.name@ team is pleased to announce the release of version @product.version@ of
+            the @product.name@ (IS).
+        </p>
 
-<p>WSO2 Identity Server is an open source Identity and Entitlement management server having support
-    for XACML, SAML, OAuth, OpenID, OpenID Connect, SCIM and heterogeneous user stores.</p>
+        <p>@product.name@ is an open source Identity and Entitlement Management server. It supports a wide array of
+            authentication protocols such as SAML 2.0 Web SSO, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive.
+            It supports role based authorization and fine grained authorization with XACML 2.0/3.0 while
+            inbound/outbound provisioning is supported through SCIM and SPML.
+        </p>
 
-<p>
-    WSO2 Identity Server is developed on top of the revolutionary
-    <a href="http://wso2.com/products/carbon">WSO2 Carbon platform</a>,
-    an OSGi based framework that provides seamless modularity to your SOA via
-    componentization.</p>
+        <p>
+            @product.name@ is developed on top of the revolutionary
+            <a href="http://wso2.com/products/carbon">WSO2 Carbon platform</a>,
+            an OSGi based framework that provides seamless modularity to your SOA solution via componentization.
+        </p>
 
-<p>All the major features have been developed as pluggable Carbon components.</p>
+        <p>All the major features have been developed as pluggable Carbon components.</p>
 
-<p>
-    You can download this distribution from <a href="http://wso2.com/products/identity-server/">
-    http://wso2.com/products/identity-server/</a>.</p>
+        <p>
+            You can download this distribution from <a href="http://wso2.com/products/identity-server/">
+            http://wso2.com/products/identity-server/</a>.</p>
 
-<p>The online documentation is available at
-    <a href="http://docs.wso2.org/wiki/display/IS510/WSO2+Identity+Server+Documentation">
-        http://docs.wso2.org/wiki/display/IS510/WSO2+Identity+Server+Documentation.</a></p>
+        <p>Online documentation is available at
+            <a href="http://docs.wso2.org/wiki/display/IS530/WSO2+Identity+Server+Documentation">
+                http://docs.wso2.org/wiki/display/IS530/WSO2+Identity+Server+Documentation</a>.</p>
 
-<h2>How to Run </h2>
-<ol>
-    <li>Extract the downloaded zip</li>
-    <li>Go to the bin directory in the extracted folder</li>
-    <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
-    <li>If you need to start the OSGi console with the server use the property
-        -DosgiConsole when starting the server.</li>
-</ol>
-<h2>New Features In This Release</h2>
-<ul>
-<li>Comprehensive support for multiple user stores.</li>
-<li>User Store Management user interface.</li>
-<li>Per tenant/organization user stores.</li>
-<li>OAuth 2.0 based authentication for SCIM.</li>
-<li>OpenID Connect Basic Client Profile</li>
-<li>SAML2 grant type for OAuth 2.0.</li>
-<li>Trusted SAML2 Identity Provider Management user interface.</li>
-<li>Multiple trusted Identity Providers per tenant/organization.</li>
-<li>Ability customize login pages for SAML2, OAuth, OpenID Connect, Passive STS and OpenID outside IS.</li>
-<li>User account locking.</li>
-<li>User name/password validation policies.</li>
-<li>Account recovery with email address or secret questions.</li>
-<li>SAML2 Web SSSO HTTP POST binding (Authentication Request).</li>
-<li>Seamless integration with Google Apps and Salesforce.</li>
-<li>Improved XACML editor.</li>
-<li>Ability to define grant types per OAuth 2.0 applications.</li>
-</ul>
+        <h2>How to Run </h2>
+        <ol>
+            <li>Extract the downloaded zip</li>
+            <li>Go to the bin directory in the extracted folder</li>
+            <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
+            <li>If you need to start the OSGi console with the server use the property
+                -DosgiConsole when starting the server.
+            </li>
+        </ol>
+        <h2>New Features In This Release</h2>
+        <ul>
+            <li>Improved Identity Management Capabilities : Identity management features in @product.name@ @product.version@,
+                has been re-designed to provide strong out-of-the-box support for key identity management use cases, including password policies, login policies and account management policies. </li>
+            <ul>
+                <li>Password policies</li>
+                <ul>
+                    <li>Password history validation (ability to keep track of user's old passwords). See
+                        <a href="https://docs.wso2.com/display/IS530/Password+History+Validation">Password History Validation</a>.
+                    </li>
+                    <li>Password Patterns Configuration, See
+                        <a href="https://docs.wso2.com/display/IS530/Password+Patterns">Password Patterns</a>
+                    </li>
+                </ul>
+                <li>Login policies</li>
+                <ul>
+                    <li>Google ReCaptcha support for single sign on. See
+                        <a href="https://docs.wso2.com/display/IS530/Setting+Up+ReCaptcha">Setting Up ReCaptcha</a>.
+                    </li>
+                    <li>Account locking in single and multi-tenant environments. See
+                        <a href="https://docs.wso2.com/display/IS530/User+Account+Locking+and+Account+Disabling">User Account Locking and Account Disabling</a>.
+                    </li>
+                </ul>
+                <li>Account management policies. </li>
+                <ul>
+                    <li>Account suspension reminders and locking idle accounts. See
+                        <a href="https://docs.wso2.com/display/IS530/User+Account+Suspension">User Account Suspension</a>.
+                    </li>
+                    <li>Password and username recovery with challenge questions or notifications. We also support challenge questions internalization. See
+                        <a href="https://docs.wso2.com/display/IS530/Password+Recovery">Password Recovery</a>.
+                    </li>
+                    <li>Password reset via admin. For more information, See
+                        <a href="https://docs.wso2.com/display/IS530/Forced+Password+Reset">Forced Password Reset</a>.
+                    </li>
+                    <li>Google ReCaptcha support for password recovery flow and self sign up. See
+                        <a href="https://docs.wso2.com/display/IS530/Setting+Up+ReCaptcha">Setting Up ReCaptcha</a>.
+                    </li>
+                </ul>
+            </ul>
+        </ul>
+        <ul>
+            <ul>
+                <li>HTML support for email templates, template internalization and dynamic properties for email templates. See
+                    <a href="https://docs.wso2.com/display/IS530/Customizing+Automated+Emails">Customizing Automated Emails</a>.
+                </li>
+                <li>Brute force attack prevention. See
+                    <a href="https://docs.wso2.com/display/IS530/Mitigating+Brute+Force+Attacks">Mitigating Brute Force Attacks</a>.
+                </li>
+            </ul>
+            <li>Login session monitoring and termination: WSO2 IS now supports monitoring user sessions and authentication activities via alerts, and manual termination of user sessions for better security. See
+                <a href="https://docs.wso2.com/display/IS530/Terminating+User+Sessions">Terminating User Sessions</a>.
+            </li>
+            <li>Rule based provisioning: WSO2 IS @product.version@ has the ability to adopt provision flows based on rules. These rules can be based on entities related to an event such as user, idp, sp &nbsp;as well as environmental factors like time and region.</li>
+            <li>Prompt for missing predefined required attributes in the authentication flow: The user will be prompted to fill the missing attributes or claim values, in the event of &nbsp;a missing mandatory claim &nbsp;at the point of login. See
+                <a href="https://docs.wso2.com/display/IS530/Configuring+Claims+for+a+Service+Provider">Configuring Claims for a Service Provider</a>.
+            </li>
+            <li>OAuth 2.0/OpenID Connect Enhancements: Following OpenID Connect specifications were implemented to enrich the OpenID connect support in Identity Server.</li>
+            <ul>
+                <li>OpenID Connect Dynamic Client Registration. See
+                    <a href="https://docs.wso2.com/display/IS530/OpenID+Connect+Dynamic+Client+Registration">OpenID Connect Dynamic Client Registration</a>.
+                </li>
+                <li>Token Introspection. See
+                    <a href="https://docs.wso2.com/display/IS530/Invoke+the+OAuth+Introspection+Endpoint">Invoke the OAuth Introspection Endpoint</a>.
+                </li>
+                <li>OpenID Connect Discovery support. See the
+                    <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#IssuerDiscovery">OpenID Connect specification</a>.
+                </li>
+            </ul>
+            <li>OAuth 2.0 client secret revocation and regeneration : See
+                <a href="https://docs.wso2.com/display/IS530/Configuring+OAuth2-OpenID+Connect+Single-Sign-On">OAuth2 /OpenID connect configurations</a>
+            </li>
+            <li>REST profile of XACML. With IS @product.version@, we have added a REST layer on top of the Balana entitlement engine. See
+                <a href="https://docs.wso2.com/display/IS530/Entitlement+with+APIs">Entitlement with APIs</a>.
+            </li>
+            <li>SAML 2.0 Enhancements: Identity server @product.version@ added following specification support to its SAML feature list.</li>
+            <ul>
+                <li>SAML 2.0 Metadata Profile. </li>
+                <li>SAML 2.0 Assertion Query/Request Profile &nbsp;</li>
+            </ul>
+            <li>Security Analytics: WSO2 IS now detects and provides alerting capability for abnormal and suspicious login sessions. See
+                <a href="https://docs.wso2.com/display/IS530/Managing+Alerts">Managing Alerts</a>.
+            </li>
+        </ul>
+        <ul>
+            <li>SCIM 1.0 Enhancements : SCIM provisioning API improved to support attribute query.</li>
+            <li>Engage access control policies in authentication flow : With WSO2 IS @product.version@ it's possible to evaluate access control policies against an authenticated user in authentication flow.</li>
+            <li>Integrated Windows Authentication (IWA) for IS deployed on Linux servers : With this improvement we enable IS deployed on Linux servers to achieve IWA with external Kerberos/NTLM Servers. See
+                <a href="https://docs.wso2.com/display/IS530/Configuring+IWA+on+Linux">Configure IWA on Linux</a>
+            </li>
+            <li>Claim Management Improvement: With this release we relieve the user from the painstaking task of having map claims from one dialect to another indirectly by manipulating mapped attributes. From IS @product.version@, users can easily map claims from two dialects directly without worrying about mapped attributes.</li>
+            <li>Identity Management REST APIs : New RESTful interfaces to connect with account registration and recovery flows have been introduced with IS @product.version@.</li>
+        </ul>
 
-<h2>Key Features of WSO2 Identity Server</h2>
-<ul>
-	<li>Entitlement Engine with XACML 3.0/2.0 and WS-XACML support.</li>
-	<li>OAuth Authorization Server with OAuth 2.0/1.0a support.</li>
-	<li>Identity Provisioning with SCIM 1.1.</li>
-	<li>SAML 2.0 Web Browser SSO Identity Provider.</li> 
-	<li>OpenID 2.0 OpenID Provider.</li>
-	<li>Claim based Security Token Service(STS) with SAML 2.0/1.1 support.</li>
-	<li>Support for various types of User Stores such as JDBC, Cassandra, LDAP, Active Directory in Read/Write mode.</li>
-	<li>Integrated Windows Authentication and webSEAL authentication.</li>
-	<li>XMPP based multi-factor authentication.</li>
-	<li>Improved User Management.</li>
-	<li>Claim Management.</li>
-	<li>User Profiles and Profile Management.</li>
-	<li>XKMS.</li>
-    <li>Separable front-end and back-end - a single front-end server can be used to administer
-        several back-end servers.
-    </li>
-</ul>
-<h2>Issues Fixed in This Release</h2>
-<p>
-    This release of WSO2 Identity Server comes with a number of bug fixes, both in the base Carbon
-    framework and in the Identity Server specific components. All the issues which have been
-    fixed in this release can be found at:
-</p>
-<ul>
-        <li><a href="https://wso2.org/jira/issues/?filter=13612">Fixed Issues for WSO2 Identity Server 5.3.0</a></li>
-</ul>
-<h2>Known Issues</h2>
-<p>
-    All the known issues in WSO2 Identity Server 5.3.0 are reported at:
-</p>
-<ul>
-        <li><a href="https://wso2.org/jira/issues/?filter=13613">Known issues in WSO2 Identity Server 5.3.0</a></li>
-</ul>
-<h2>How You Can Contribute</h2>
-<h3>
-    Mailing Lists
-</h3>
-<p>
-    Join our mailing list and correspond with the developers directly.
-</p>
-<ul>
-    <li>
-        Developer list : <a href="mailto:dev@wso2.org">dev@wso2.org</a>
-        | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
-        | <a href="http://wso2.org/mailarchive/dev/">Mail Archive</a>
-    </li>
-    <li>
-        User forum   : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
-    </li>
-</ul>
-<h3>
-    Reporting Issues
-</h3>
-<p>
-    We encourage you to report issues, documentation faults and feature requests regarding
-    WSO2 Identity Server or in the Carbon base framework through the public
-    <a href="https://wso2.org/jira/browse/IDENTITY">WSO2 Identity Server JIRA</a> or <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
-</p>
-<h2>Support</h2>
+        <h2>Known Issues</h2>
+        <p>All the open issues pertaining to @product.name@ are reported at the following locations:</p>
 
-<p>
-    We are committed to ensuring that your enterprise middleware deployment is completely supported
-    from evaluation to
-    production. Our unique approach ensures that all support leverages our open development
-    methodology and is provided by
-    the very same engineers who build the technology.
+        <ul>
+            <li>
+                <a href="https://wso2.org/jira/issues/?filter=13613">IS Runtime</a>
+            </li>
+            <li>
+                <a href="https://wso2.org/jira/issues/?filter=13615">IS Analytics</a>
+            </li>
+        </ul>
 
-    For more details and to take advantage of this unique opportunity
-    <a target="_blank" href="http://wso2.com/support/">
-        http://wso2.com/support/</a>
-</p>
+        <h2>How You Can Contribute</h2>
 
-<p>For more information about WSO2 Identity Server, please see <a
-        href="http://wso2.com/products/identity-server">http://wso2.com/products/identity-server</a> or visit
-    the <a href="http://wso2.org/library">WSO2 Oxygen Tank</a> developer portal for addition
-    resources.</p>
+        <h3>
+            Mailing Lists
+        </h3>
 
-<p>Thank you for your interest in WSO2 Identity Server.</p>
+        <p>
+            Join our mailing list and correspond with the developers directly.
+        </p>
+        <ul>
+            <li>
+                Developer list : <a href="mailto:dev@wso2.org">dev@wso2.org</a>
+                | <a href="mailto:dev-request@wso2.org?subject=subscribe">Subscribe</a>
+                | <a href="http://wso2.org/mailarchive/dev/">Mail Archive</a>
+            </li>
+            <li>
+                User forum : <a href="http://stackoverflow.com/questions/tagged/wso2">StackOverflow</a>
+            </li>
+        </ul>
 
-<p>Copyright WSO2 Inc.</p>
-</body>
+        <h3>
+            Reporting Issues
+        </h3>
+
+        <p>
+            We encourage you to report issues, documentation faults and feature requests regarding @product.name@ or in
+            the Carbon base framework through the public
+            <a href="https://wso2.org/jira/browse/IDENTITY">@product.name@ JIRA</a> or <a
+                href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
+        </p>
+
+        <h2>Support</h2>
+
+        <p>
+            We are committed to ensure your enterprise middleware deployment is completely supported from evaluation
+            to production. Our unique approach ensures that all support leverages our open development methodology and is
+            provided by the very same engineers who build the technology.
+
+            For more details and to take advantage of this unique opportunity
+            <a target="_blank" href="http://wso2.com/support/">
+                http://wso2.com/support/</a>
+        </p>
+
+        <p>For more information about @product.name@, please see <a
+                href="http://wso2.com/products/identity-server">http://wso2.com/products/identity-server</a> or visit
+            the <a href="http://wso2.org/library">WSO2 Oxygen Tank</a> developer portal for additional resources.</p>
+
+        <p>Thank you for your interest in @product.name@.</p>
+
+        <p>Copyright WSO2 Inc.</p>
+
+        <h4>The @product.name@ Team</h4>
+    </body>
 </html>
