@@ -39,8 +39,6 @@ function authenticate(username, password) {
         var authenticationContext = callOSGiService("org.wso2.is.portal.user.client.realmservice.RealmClientService",
             "authenticate", [username, passwordChar]);
 
-        //var realmClientService = Java.type("org.wso2.is.portal.user.client.realmservice.RealmClientServiceImpl");
-        //var authenticationContext = realmClientService.authenticate(username, password);
         createSession(authenticationContext.user);
         return {success: true, message: "success"}
     } catch (e) {
