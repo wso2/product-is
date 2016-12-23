@@ -185,11 +185,11 @@
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.is</groupId>-->
-            <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>

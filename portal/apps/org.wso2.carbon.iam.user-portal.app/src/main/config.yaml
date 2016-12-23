@@ -1,5 +1,5 @@
 appName : IAM User Portal
-theme : org.wso2.carbon.iam.user-portal.theme.default
+theme : org.wso2.carbon.uuf.common.theme.default
 menu :
   main :
     Home : {link: "", icon: "fw-home"}
@@ -8,4 +8,7 @@ menu :
       Account Settings : {link: "user/account/account-setting", icon: "fw fw-add"}
 errorPages:
   "404": /foundation/error/404
+  "401": /login
   default: /foundation/error/default
+loginPageUri: "/login"
+loginRedirectUri: "/"
