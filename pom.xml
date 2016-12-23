@@ -47,8 +47,8 @@
     </scm>
 
     <modules>
-        <module>product</module>
         <module>portal</module>
+        <module>product</module>
     </modules>
 
     <dependencyManagement>
@@ -327,7 +327,7 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
-                <version>${carbon.iam.portal.version}</version>
+                <version>${carbon.is.version}</version>
                 <type>zip</type>
             </dependency>
             <!-- End of Dependent Features -->
@@ -384,12 +384,12 @@
                 <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-                <version>${carbon.is.version}</version>
-                <type>zip</type>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.is</groupId>-->
+                <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
+                <!--<version>${carbon.is.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.uuf.sample</groupId>
                 <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
@@ -618,7 +618,6 @@
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
-        <carbon.iam.portal.version>1.0.0-SNAPSHOT</carbon.iam.portal.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>

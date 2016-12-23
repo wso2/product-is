@@ -186,11 +186,6 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
             <type>zip</type>
@@ -355,7 +350,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.iam.user-portal.feature</id>
-                                    <version>${carbon.iam.portal.version}</version>
+                                    <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.jndi.feature</id>
@@ -513,7 +508,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.iam.user-portal.feature.group</id>
-                                    <version>${carbon.iam.portal.version}</version>
+                                    <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.jndi.feature.group</id>
