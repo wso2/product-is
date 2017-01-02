@@ -1,0 +1,32 @@
+{{layout "account-setting"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{title "Home | " @config.appName}}
+{{js "js/user-account.js"}}
+{{css "css/custom.css"}}
+
+{{#fillZone "content"}}
+    <div class="page-content">
+        <div class="row" id="account-content">
+            <div style="margin: 80px; font:18px verdana, sans-serif;">
+                <h1>Default Profile</h1><br><br><br>
+                <img id="profile-image" src="images/default-favicon.png"/><br><br>
+
+                <div id="defaultProfile-body">
+                    <form>
+                        Username:<br>
+                        <input type="text" name="username" value="Wso2User1"><br><br>
+                        First name:<br>
+                        <input type="text" name="firstname" value="Wso2User1"><br><br>
+                        Last name:<br>
+                        <input type="text" name="lastname" value="Wso2User1"><br><br>
+                        Email Address:<br>
+                        <input type="text" name="emailadd" value="wso2User1@wso2.com"><br><br>
+                        Telephone:<br>
+                        <input type="text" name="telephone" value="0712345678"><br><br>
+                        <button type="button">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/fillZone}}
