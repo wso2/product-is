@@ -240,6 +240,9 @@
         border-bottom:1px solid #3F3F3F;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> da0e33c... Adding image for user-profile
 }
 
 .user-name-icon {
@@ -270,6 +273,7 @@
 .square-element .sub-icon:hover {
     opacity: 0.5;
     text-decoration: none;
+<<<<<<< HEAD
 }
 /* Account setting template styling */
 .sidebar-nav {
@@ -520,4 +524,6 @@ label.error {
     color: #bfbfbf;
 =======
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+>>>>>>> da0e33c... Adding image for user-profile
 }
