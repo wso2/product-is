@@ -240,3 +240,33 @@
         border-bottom:1px solid #3F3F3F;
     }
 }
+
+.user-name-icon {
+    color: #fff;
+    width: 100%;
+    font-size: 9em;
+    text-align: center;
+    font-weight: 200;
+    text-transform: capitalize;
+}
+.square-element .sub-icon i {
+    font-size: 1.5em;
+    padding: 12px 2px;
+}
+.square-element .sub-icon {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    opacity: 1;
+    display: block;
+    background: rgba(0, 0, 0, .3);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    z-index: 999;
+}
+.square-element .sub-icon:hover {
+    opacity: 0.5;
+    text-decoration: none;
+}
