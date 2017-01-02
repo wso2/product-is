@@ -656,6 +656,7 @@
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
                 <version>${carbon.uuf.common.version}</version>
+                <type>zip</type>
             </dependency>
             <!--End of UUF Components-->
             <!--UUF Themes-->
@@ -663,6 +664,7 @@
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
                 <version>${carbon.uuf.common.version}</version>
+                <type>zip</type>
             </dependency>
             <!--End of UUF Themes-->
 
