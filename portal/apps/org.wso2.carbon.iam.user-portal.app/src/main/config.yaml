@@ -7,7 +7,11 @@ menu :
       Login : {link: "login", icon: "fw fw-add"}
       Sign up : {link: "user/signup", icon: "fw fw-add"}
       Reset Password : {link: "user/reset-password", icon: "fw fw-add"}
+<<<<<<< HEAD
       User Profile: {link: "profile", icon: "fw fw-user"}
+=======
+      Account Settings : {link: "users/account/account-setting", icon: "fw fw-add"}
+>>>>>>> 2db65e8... Added tab view to the user portal
 errorPages:
   "404": /foundation/error/404
   "401": /login
