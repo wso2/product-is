@@ -270,3 +270,77 @@
     opacity: 0.5;
     text-decoration: none;
 }
+/* Account setting template styling */
+.sidebar-nav {
+    width:auto;
+}
+.settings-nav{
+    background:#eff1f3;
+}
+.settings-nav li a, .sidebar-nav li a:focus {
+    color: #333;
+}
+.settings-nav li {
+    border-color: #a5a5a5;
+}
+.settings-nav li.active > a {
+    background-color: #fff;
+    border-left: 3px solid #f47a1e;
+    color:#333;
+}
+
+.settings-nav li.active > a:hover, .settings-nav li.active > a:focus {
+    background-color: #fff;
+    border-left: 3px solid #f47a1e;
+    color:#333;
+}
+
+.settings-nav li ul.sub-menu li.active a, .sidebar-nav li ul.sub-menu li a:hover, .settings-nav li ul.sub-menu li.active:hover {
+    color: #333;
+}
+.settings-nav li ul.sub-menu li.active a{
+    border-left-color:#f47a1e;
+}
+
+.settings-nav li ul.sub-menu li a:focus {
+    background-color: #fff;
+}
+.settings-nav{
+    width:200px;
+}
+.acc-settings .tab-content {
+    float: right;
+    padding-left: 20px;
+    width: calc(100% - 200px);
+}
+.acc-settings .tab-content h3 {
+    color: #888;
+}
+.settings-nav li:first-child{
+    border-top:1px solid #a5a5a5;
+}
+.acc-settings .tab-content {
+    border: 1px solid #a5a5a5;
+    min-height: 400px;
+}
+.settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
+    margin-right: -1px;
+}
+
+@media (max-width: 600px) {
+    .settings-nav{
+        width:100%;
+        margin-bottom: 10px;
+    }
+    .acc-settings .tab-content {
+        float: none;
+        width: 100%;
+    }
+    .sidebar-nav {
+        position: relative;
+    }
+    .settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
+        border-right: 1px solid #a5a5a5;
+        margin-right: 0;
+    }
+}
