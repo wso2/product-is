@@ -19,6 +19,7 @@ package org.wso2.is.portal.user.client.realmservice;
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
+import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 
 /**
  * Perform operations related to password handling
@@ -30,4 +31,8 @@ public interface RealmClientService {
      */
     AuthenticationContext authenticate(String username, char[] newPassword)
             throws IdentityStoreException, AuthenticationFailure;
+
+    void updatePassword(String username, char[] oldPassword, char[] newPassword)
+            throws IdentityStoreException, AuthenticationFailure, UserNotFoundException;
+
 }

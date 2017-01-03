@@ -29,10 +29,12 @@ import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
+import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
+import java.util.Collections;
 
 /**
  * Default implementation of Realm Client Service.
@@ -77,6 +79,25 @@ public class RealmClientServiceImpl implements RealmClientService {
         if (realmService != null) {
             return realmService.getIdentityStore()
                     .authenticate(usernameClaim, new Callback[] { passwordCallback }, null);
+        } else {
+            throw new RuntimeException("RealmService is not available");
+        }
+
+    }
+
+    @Override
+    public void updatePassword(String username, char[] oldPassword, char[] newPassword)
+            throws UserNotFoundException, AuthenticationFailure, IdentityStoreException {
+
+        //validate the old password
+        authenticate(username, oldPassword);
+
+        PasswordCallback passwordCallback = new PasswordCallback("password", false);
+        passwordCallback.setPassword(newPassword);
+
+        if (realmService != null) {
+            realmService.getIdentityStore()
+                    .updateUserCredentials(username, Collections.singletonList(passwordCallback));
         } else {
             throw new RuntimeException("RealmService is not available");
         }
