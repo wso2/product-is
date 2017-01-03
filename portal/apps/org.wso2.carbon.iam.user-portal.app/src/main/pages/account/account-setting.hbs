@@ -18,26 +18,37 @@
                 <div class="col-md-12">
                     <div class="settings-nav sidebar-nav">
                         <ul class="nav nav-pills nav-stacked nav-filter" id="acc-settings-menu">
-                            <li class="active">
-                                <a href="#profile" class="" data-toggle="tab">Profile</a>
-                            </li>
-                            <li>
-                                <a href="#password" class="" data-toggle="tab">Password</a>
-                            </li>
-                            <li>
-                                <a href="#authentication" class="" data-toggle="tab">Multi-Factor Authentication</a>
-                            </li>
-                            <li>
-                                <a href="#security-questions" class="" data-toggle="tab">Security Question(s)</a>
-                            </li>
                             <li class="collapse-li">
-                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">Associations<span class="arrow"></span></a>
-                                <ul class="sub-menu collapse" id="asscciations-menu">
+                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#profile-menu" class="collapsed">{{t "user-portal.user.account.profile"}}<span class="arrow"></span></a>
+                                <ul class="sub-menu collapse" id="profile-menu">
                                     <li>
-                                        <a href="#local" class="" data-toggle="tab">Local</a>
+                                        <a href="#default" class="" data-toggle="tab">{{t "user-portal.user.account.profile.default"}}</a>
                                     </li>
                                     <li>
-                                        <a href="#federated" class="" data-toggle="tab">Federated</a>
+                                        <a href="#salesforce" class="" data-toggle="tab">{{t "user-portal.user.account.profile.salesforce"}}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#twitter" class="" data-toggle="tab">{{t "user-portal.user.account.profile.twitter"}}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#password" class="" data-toggle="tab">{{t "user-portal.user.account.password"}}</a>
+                            </li>
+                            <li>
+                                <a href="#authentication" class="" data-toggle="tab">{{t "user-portal.user.account.multiFactor"}}</a>
+                            </li>
+                            <li>
+                                <a href="#security-questions" class="" data-toggle="tab">{{t "user-portal.user.account.securityQ"}}</a>
+                            </li>
+                            <li class="collapse-li">
+                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">{{t "user-portal.user.account.association"}}<span class="arrow"></span></a>
+                                <ul class="sub-menu collapse" id="asscciations-menu">
+                                    <li>
+                                        <a href="#local" class="" data-toggle="tab">{{t "user-portal.user.account.association.local"}}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#federated" class="" data-toggle="tab">{{t "user-portal.user.account.association.federated"}}</a>
                                     </li>
                                 </ul>
                             </li>
@@ -46,9 +57,21 @@
 
                     <!-- page content -->
                     <div class="tab-content">
-                        <div class="tab-pane active" id="profile">
+                        <div class="tab-pane" id="default">
                             <div class="col-md-12">
                                 {{fragment "org.wso2.carbon.iam.user-portal.feature.profile"}}
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="salesforce">
+                            <h3>Salesforce</h3>
+                            <div class="col-md-12">
+
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="twitter">
+                            <h3>Twitter</h3>
+                            <div class="col-md-12">
+
                             </div>
                         </div>
                         <div class="tab-pane" id="password">
