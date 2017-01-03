@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -186,3 +187,14 @@ function onRequest(env) {
 
     return {success: false, message: "Invalid profile name."};
 }
+=======
+function onRequest() {
+    return {
+        "username": "admin",
+        "firstName": "Lucifer",
+        "lastName": "Morningstar",
+        "email": "lucifer@wso2.com",
+        "telephone": "+94715979891"
+    };
+}
+>>>>>>> c06d2f5... Adding Account settings template

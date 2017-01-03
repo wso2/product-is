@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -63,5 +64,13 @@ $(window).load(function(){
         $(this).parent().find('.edit-icon').find('i').remove();
     });
 
+=======
+$(window).load(function(){
+    var selector = '.settings-nav li';
+
+    $(selector).click(function () {
+        $(selector).not(".collapse-li").removeClass('active');
+    });
+>>>>>>> c06d2f5... Adding Account settings template
 });
 

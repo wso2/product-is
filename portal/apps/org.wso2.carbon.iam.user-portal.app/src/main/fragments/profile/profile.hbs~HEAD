@@ -1,0 +1,59 @@
+{{fragment "org.wso2.carbon.uuf.common.foundation.jquery-validation"}}
+{{js "js/profile.js"}}
+<h3 class="text-capitalize">{{profile}} {{t "profile"}}</h3>
+<hr/>
+{{#if success}}
+    {{#if message}}
+        <div class="alert alert-success" role="alert">
+            <i class="icon fw fw-success"></i><strong>{{t "profile.success"}}</strong>
+            {{message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{else}}
+    {{#if message}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>{{t "profile.failure"}}</strong>
+            {{message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{/if}}
+<form method="post" id="image-uploader" class="form-horizontal" action="?image" enctype="multipart/form-data">
+    <div class="form-group">
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="thumbnail icon">
+                <div class="square-element setbgcolor">
+                    <a id="image-edit" class="sub-icon" title="Edit"><i class="fw fw-camera fw-lg"></i></a>
+                    {{#if profileImage}}
+                        <img class="profile-thumb" src="/user-portal/root/apis/profile-image-service/image?userid={{userId}}" alt="profileimage">
+                    {{else}}
+                        <div class="user-name-icon">{{usernameChar}}</div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="file" id="image" name="image" style="visibility: hidden; width: 1px; height: 1px" accept="image/*"/>
+</form>
+<form method="post" class="form-horizontal profile-form" action="?{{profile}}#{{profile}}" id="{{profile}}-form">
+    {{#each uiEntries}}
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                <label for="{{claimURI}}">{{displayName}}<span>{{requiredIcon}}</span></label>
+                <input type="{{dataType}}" name="{{claimURI}}" id="{{claimLabel}}" class="form-control"
+                       maxlength="250" value="{{value}}" {{readonly}} {{required}}
+                       pattern="{{regex}}"  />
+            </div>
+        </div>
+    {{/each}}
+    <input class="btn btn-primary add-margin-bottom-3x" type="submit" value="Update"/>
+</form>

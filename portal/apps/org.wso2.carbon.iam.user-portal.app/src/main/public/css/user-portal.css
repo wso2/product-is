@@ -274,6 +274,9 @@
     opacity: 0.5;
     text-decoration: none;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c06d2f5... Adding Account settings template
 }
 /* Account setting template styling */
 .sidebar-nav {
@@ -305,7 +308,10 @@
 }
 .settings-nav li ul.sub-menu li.active a{
     border-left-color:#f47a1e;
+<<<<<<< HEAD
     background-color: #fff;
+=======
+>>>>>>> c06d2f5... Adding Account settings template
 }
 
 .settings-nav li ul.sub-menu li a:focus {
@@ -327,14 +333,22 @@
 }
 .acc-settings .tab-content {
     border: 1px solid #a5a5a5;
+<<<<<<< HEAD
     min-height: 413px;
+=======
+    min-height: 400px;
+>>>>>>> c06d2f5... Adding Account settings template
 }
 .settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
     margin-right: -1px;
 }
+<<<<<<< HEAD
 .nav>li>a:focus {
     background-color: rgba(102,102,102,.25);
 }
+=======
+
+>>>>>>> c06d2f5... Adding Account settings template
 @media (max-width: 600px) {
     .settings-nav{
         width:100%;
@@ -351,6 +365,7 @@
         border-right: 1px solid #a5a5a5;
         margin-right: 0;
     }
+<<<<<<< HEAD
 }
 
 .page-header {
@@ -526,4 +541,6 @@ label.error {
 >>>>>>> 7fa08ef... adding the login page to user portal
 =======
 >>>>>>> da0e33c... Adding image for user-profile
+=======
+>>>>>>> c06d2f5... Adding Account settings template
 }
