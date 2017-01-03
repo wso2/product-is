@@ -1432,12 +1432,12 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.7.0</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.7.5</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.0</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.3.0</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.3.1</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.3.2</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.1</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.3</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.1</identity.inbound.auth.sts.version>
@@ -1448,7 +1448,7 @@
         <identity.user.ws.version>5.1.4</identity.user.ws.version>
         <identity.userstore.ldap.version>5.1.2</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.1.2</identity.userstore.remote.version>
-        <identity.workflow.impl.bps.version>5.1.5</identity.workflow.impl.bps.version>
+        <identity.workflow.impl.bps.version>5.1.7</identity.workflow.impl.bps.version>
         <identity.carbon.auth.iwa.version>5.1.4</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.3</identity.workflow.template.multisteps.version>
         <identity.outbound.auth.requestpath.oauth.version>5.1.3</identity.outbound.auth.requestpath.oauth.version>
@@ -1492,7 +1492,7 @@
         <identity.local.auth.iwa.version>5.3.0</identity.local.auth.iwa.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.0.0</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.0.1</identity.metadata.saml.version>
 
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
