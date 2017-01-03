@@ -238,7 +238,14 @@ function drawForm(xml, id, state) {
             "            <tbody>\n" +
             "                <tr>\n" +
             "                    <td>" + xml.getElementsByTagName("xsd-complex-type-wrapper")[i].getAttributeNS("http://ht.bpel.mgt.workflow.identity.carbon.wso2.org/wsdl/schema", "itemName") + "</td>" +
-            "                    <td>" + xml.getElementsByTagName("xsd-complex-type-wrapper")[i].textContent.split(",")[0] + "</td>" +
+            "                    <td>";
+
+        var itemValues = xml.getElementsByTagName("xsd-complex-type-wrapper")[i].textContent.split(",");
+        for (var j = 0; j < itemValues.length - 1; j++) {
+            middle = middle + itemValues[j] + "</br>";
+        }
+        middle = middle +
+            "</td>" +
             "                </tr>\n";
     }
 
@@ -480,6 +487,5 @@ function start(requestType, id) {
         }
     });
 }
-
 
 
