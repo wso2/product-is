@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>feature-categories</artifactId>
+        <version>5.2.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.identity.keystore.mgt.category.feature</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon Identity - Keystore Management Feature Category</name>
+    <url>http://wso2.org</url>
+    <description>This feature contains keystore management related features.</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>1-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.identity.keystore.mgt.category</id>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.eclipse.equinox.p2.type.category:true</propertyDef>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:composite</propertyDef>
+                                    <propertyDef>org.wso2.carbon.p2.category.property:true</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <importFeatures>
+                                <importFeatureDef>
+                                    org.wso2.carbon.security.mgt:${carbon.identity.framework.version}
+                                </importFeatureDef>
+                            </importFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
