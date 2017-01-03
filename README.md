@@ -62,6 +62,7 @@ missing attributes or claim values, in the event of  a missing mandatory claim a
     * OpenID Connect Dynamic Client Registration.
     * Token Introspection.
     * OpenID Connect Discovery support.
+    * OAuth 2.0 Form Post Response Mode.
 
 * OAuth 2.0 client secret revocation and regeneration
 
