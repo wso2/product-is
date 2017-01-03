@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -308,6 +309,72 @@
             <name>Farasath Ahamed</name>
             <id>farasatha</id>
             <email>farasatha AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Dharshana Kasun Warusavitharana</name>
+            <id>dharshanaw</id>
+            <email>dharshanaw AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Ayesha Dissanayaka</name>
+            <id>ayesha</id>
+            <email>ayesha AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Ashen Weerathunga</name>
+            <id>ashen</id>
+            <email>ashen AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Dimuthu De Lanerolle</name>
+            <id>dimuthud</id>
+            <email>dimuthud AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Ruwan Abeykoon</name>
+            <id>ruwana</id>
+            <email>ruwana AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Kasun Gajasinghe</name>
+            <id>kasung</id>
+            <email>kasung AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Dinusha Senanayaka</name>
+            <id>dinusha</id>
+            <email>dinusha AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Lahiru Manohara</name>
+            <id>lahiruma</id>
+            <email>lahiruma AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Rushmin Fernando</name>
+            <id>rushmin</id>
+            <email>rushmin AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Lahiru Ekanayake</name>
+            <id>lahirue</id>
+            <email>lahirue AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Lahiru Cooray</name>
+            <id>lahiruc</id>
+            <email>lahiruc AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
     </developers>
@@ -1056,7 +1123,7 @@
                 <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
-	    <dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
                 <version>${identity.workflow.impl.bps.version}</version>
@@ -1273,7 +1340,8 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.local.auth.requestpath.basic</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.requestpath.basicauth.server.feature
+                </artifactId>
                 <version>${identity.outbound.auth.requestpath.basicauth.version}</version>
             </dependency>
             <dependency>
@@ -1318,7 +1386,8 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.local.auth.requestpath.oauth</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.requestpath.oauth.server.feature
+                </artifactId>
                 <version>${identity.outbound.auth.requestpath.oauth.version}</version>
             </dependency>
             <dependency>
@@ -1328,7 +1397,8 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.datapublisher.authentication</groupId>
-                <artifactId>org.wso2.carbon.identity.data.publisher.application.authentication.server.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.data.publisher.application.authentication.server.feature
+                </artifactId>
                 <version>${identity.data.publisher.authentication.version}</version>
             </dependency>
             <dependency>
@@ -1440,6 +1510,8 @@
         <identity.inbound.auth.oauth.version>5.3.1</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.1</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.3</identity.agent.sso.version>
+        <identity.outbound.auth.requestpath.basicauth.version>5.1.3
+        </identity.outbound.auth.requestpath.basicauth.version>
         <identity.inbound.auth.sts.version>5.2.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.3</identity.outbound.auth.requestpath.basicauth.version>
         <identity.carbon.auth.mutual.ssl.version>5.1.2</identity.carbon.auth.mutual.ssl.version>
@@ -1619,7 +1691,7 @@
 	by default) and nothing else. We had troubles with other repositories in
 	the past. Therefore configuring additional repositories here should be
 	considered very carefully. -->
-	    <repository>
+        <repository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
             <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
