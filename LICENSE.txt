@@ -68,6 +68,7 @@ axis2_1.6.1.wso2v20.jar                                                         
 backport-util-concurrent_3.1.0.wso2v1.jar                                       bundle         apache2   1007
 bcel_5.2.0.wso2v1.jar                                                           bundle         apache2   1466
 bcprov-jdk14-138.jar                                                            jarinbundle    bouncy    451
+bcprov-jdk15-132.jar                                                            jar            bouncy    285
 bcprov-jdk15on-1.52.jar                                                         jarinbundle    bouncy    1819
 bcprov-jdk15on_1.52.0.wso2v1.jar                                                bundle         bouncy    8485
 cassandra-thrift_1.2.13.wso2v4.jar                                              bundle         apache2   4379
@@ -124,6 +125,7 @@ google-http-client-1.17.0-rc.jar                                                
 google-http-client-jackson2-1.17.0-rc.jar                                       jarinbundle    apache2   886
 google-oauth-client-1.17.0-rc.jar                                               jarinbundle    apache2   885
 groovy-all_2.3.9.jar                                                            bundle         apache2   1338
+guava_12.0.0.wso2v1                                                             jarinbundle    apache2
 guava-15.0.jar                                                                  jarinbundle    apache2   1553
 guice_3.0.0.wso2v1.jar                                                          bundle         apache2   1505
 h2-1.3.175.jar                                                                  jarinbundle    epl1      1999
@@ -380,7 +382,7 @@ org.wso2.carbon.humantask.deployer_4.4.9.jar                                    
 org.wso2.carbon.humantask.skeleton_4.4.9.jar                                    bundle         apache2   8408
 org.wso2.carbon.humantask_4.4.9.jar                                             bundle         apache2   8407
 org.wso2.carbon.i18n_4.4.11.jar                                                 bundle         apache2   10370
-org.wso2.carbon.identity.account.suspension.notification.task_1.0.0.jar         bundle         apache2   10556
+org.wso2.carbon.identity.account.suspension.notification.task_1.0.1.jar         bundle         apache2   10795
 org.wso2.carbon.identity.application.authentication.endpoint.util_5.7.5.jar     bundle         apache2   10766
 org.wso2.carbon.identity.application.authentication.framework_5.7.5.jar         bundle         apache2   10765
 org.wso2.carbon.identity.application.authenticator.basicauth-5.3.0.jar          bundle         apache2   10403
@@ -392,15 +394,15 @@ org.wso2.carbon.identity.application.authenticator.live-5.1.3.jar               
 org.wso2.carbon.identity.application.authenticator.oidc-5.1.3.jar               bundle         apache2   10397
 org.wso2.carbon.identity.application.authenticator.passive.sts-5.2.0.jar        bundle         apache2   10396
 org.wso2.carbon.identity.application.authenticator.requestpath.oauth_5.1.3.jar  bundle         apache2   10553
-org.wso2.carbon.identity.application.authenticator.samlsso-5.1.4.jar            bundle         apache2   10395
+org.wso2.carbon.identity.application.authenticator.samlsso-5.1.5.jar            bundle         apache2   10796
 org.wso2.carbon.identity.application.authenticator.yahoo-5.1.3.jar              bundle         apache2   10394
 org.wso2.carbon.identity.application.authz.xacml_1.0.0.jar                      bundle         apache2   10552
 org.wso2.carbon.identity.application.common_5.7.5.jar                           bundle         apache2   10764
 org.wso2.carbon.identity.application.mgt.stub_5.7.5.jar                         bundle         apache2   10763
 org.wso2.carbon.identity.application.mgt.ui_5.7.5.jar                           bundle         apache2   10762
 org.wso2.carbon.identity.application.mgt_5.7.5.jar                              bundle         apache2   10761
-org.wso2.carbon.identity.auth.service_1.1.0.jar                                 bundle         apache2   10547
-org.wso2.carbon.identity.auth.valve_1.1.0.jar                                   bundle         apache2   10546
+org.wso2.carbon.identity.auth.service_1.1.1.jar                                 bundle         apache2   10794
+org.wso2.carbon.identity.auth.valve_1.1.1.jar                                   bundle         apache2   10793
 org.wso2.carbon.identity.authenticator.iwa.stub_5.1.4.jar                       bundle         apache2   10545
 org.wso2.carbon.identity.authenticator.iwa.ui_5.1.4.jar                         bundle         apache2   10544
 org.wso2.carbon.identity.authenticator.iwa_5.1.4.jar                            bundle         apache2   10543
@@ -410,21 +412,21 @@ org.wso2.carbon.identity.authenticator.saml2.sso.stub_5.2.0.jar                 
 org.wso2.carbon.identity.authenticator.saml2.sso.ui_5.2.0.jar                   bundle         apache2   10539
 org.wso2.carbon.identity.authenticator.saml2.sso_5.2.0.jar                      bundle         apache2   10538
 org.wso2.carbon.identity.authenticator.thrift_5.7.5.jar                         bundle         apache2   10760
-org.wso2.carbon.identity.authz.service_1.1.0.jar                                bundle         apache2   10536
-org.wso2.carbon.identity.authz.valve_1.1.0.jar                                  bundle         apache2   10535
+org.wso2.carbon.identity.authz.service_1.1.1.jar                                bundle         apache2   10792
+org.wso2.carbon.identity.authz.valve_1.1.1.jar                                  bundle         apache2   10791
 org.wso2.carbon.identity.base_5.7.5.jar                                         bundle         apache2   10759
-org.wso2.carbon.identity.captcha_1.0.0.jar                                      bundle         apache2   10533
+org.wso2.carbon.identity.captcha_1.0.1.jar                                      bundle         apache2   10790
 org.wso2.carbon.identity.claim.metadata.mgt.stub_5.7.5.jar                      bundle         apache2   10758
 org.wso2.carbon.identity.claim.metadata.mgt.ui_5.7.5.jar                        bundle         apache2   10757
 org.wso2.carbon.identity.claim.metadata.mgt_5.7.5.jar                           bundle         apache2   10756
-org.wso2.carbon.identity.context.rewrite.valve_1.1.0.jar                        bundle         apache2   10529
+org.wso2.carbon.identity.context.rewrite.valve_1.1.1.jar                        bundle         apache2   10789
 org.wso2.carbon.identity.core.ui_5.7.5.jar                                      bundle         apache2   10755
 org.wso2.carbon.identity.core_5.7.5.jar                                         bundle         apache2   10754
 org.wso2.carbon.identity.data.publisher.application.authentication_5.1.4.jar    bundle         apache2   10526
 org.wso2.carbon.identity.data.publisher.audit.common_1.0.0.jar                  bundle         apache2   10525
 org.wso2.carbon.identity.data.publisher.audit.user.operation_1.0.0.jar          bundle         apache2   10524
 org.wso2.carbon.identity.data.publisher.oauth_1.0.0.jar                         bundle         apache2   10523
-org.wso2.carbon.identity.discovery_5.3.2.jar                                    bundle         apache2   10753
+org.wso2.carbon.identity.discovery_5.3.3.jar                                    bundle         apache2   10788
 org.wso2.carbon.identity.entitlement.common_5.7.5.jar                           bundle         apache2   10752
 org.wso2.carbon.identity.entitlement.stub_5.7.5.jar                             bundle         apache2   10751
 org.wso2.carbon.identity.entitlement.ui_5.7.5.jar                               bundle         apache2   10750
@@ -432,7 +434,7 @@ org.wso2.carbon.identity.entitlement_5.7.5.jar                                  
 org.wso2.carbon.identity.event.handler.notification_1.0.0.jar                   bundle         apache2   10517
 org.wso2.carbon.identity.event_5.7.5.jar                                        bundle         apache2   10748
 org.wso2.carbon.identity.governance.stub_5.7.5.jar                              bundle         apache2   10747
-org.wso2.carbon.identity.governance_1.0.0.jar                                   bundle         apache2   10514
+org.wso2.carbon.identity.governance_1.0.1.jar                                   bundle         apache2   10787
 org.wso2.carbon.identity.handler.event.account.lock_1.1.0.jar                   bundle         apache2   10513
 org.wso2.carbon.identity.idp.metadata.saml2_1.0.1.jar                           bundle         apache2   10746
 org.wso2.carbon.identity.mgt.stub_5.7.5.jar                                     bundle         apache2   10745
@@ -441,15 +443,15 @@ org.wso2.carbon.identity.mgt_5.7.5.jar                                          
 org.wso2.carbon.identity.notification.mgt.email_5.1.1.jar                       bundle         apache2   8368
 org.wso2.carbon.identity.notification.mgt.json_5.1.1.jar                        bundle         apache2   8367
 org.wso2.carbon.identity.notification.mgt_5.7.5.jar                             bundle         apache2   10742
-org.wso2.carbon.identity.oauth.common_5.3.2.jar                                 bundle         apache2   10741
-org.wso2.carbon.identity.oauth.dcr_5.3.2.jar                                    bundle         apache2   10740
-org.wso2.carbon.identity.oauth.stub_5.3.2.jar                                   bundle         apache2   10739
-org.wso2.carbon.identity.oauth.ui_5.3.2.jar                                     bundle         apache2   10738
-org.wso2.carbon.identity.oauth_5.3.2.jar                                        bundle         apache2   10737
-org.wso2.carbon.identity.oidc.dcr_5.3.2.jar                                     bundle         apache2   10736
-org.wso2.carbon.identity.oidc.session_5.3.2.jar                                 bundle         apache2   10735
-org.wso2.carbon.identity.password.history_1.0.0.jar                             bundle         apache2   10500
-org.wso2.carbon.identity.password.policy_1.0.0.jar                              bundle         apache2   10499
+org.wso2.carbon.identity.oauth.common_5.3.3.jar                                 bundle         apache2   10786
+org.wso2.carbon.identity.oauth.dcr_5.3.3.jar                                    bundle         apache2   10785
+org.wso2.carbon.identity.oauth.stub_5.3.3.jar                                   bundle         apache2   10784
+org.wso2.carbon.identity.oauth.ui_5.3.3.jar                                     bundle         apache2   10783
+org.wso2.carbon.identity.oauth_5.3.3.jar                                        bundle         apache2   10782
+org.wso2.carbon.identity.oidc.dcr_5.3.3.jar                                     bundle         apache2   10781
+org.wso2.carbon.identity.oidc.session_5.3.3.jar                                 bundle         apache2   10780
+org.wso2.carbon.identity.password.history_1.0.1.jar                             bundle         apache2   10779
+org.wso2.carbon.identity.password.policy_1.0.1.jar                              bundle         apache2   10778
 org.wso2.carbon.identity.provider_5.2.1.jar                                     bundle         apache2   10498
 org.wso2.carbon.identity.provisioning.connector.google-5.1.2.jar                bundle         apache2   10393
 org.wso2.carbon.identity.provisioning.connector.salesforce-5.1.2.jar            bundle         apache2   10392
@@ -457,9 +459,9 @@ org.wso2.carbon.identity.provisioning.connector.scim-5.1.2.jar                  
 org.wso2.carbon.identity.provisioning.connector.spml-5.1.2.jar                  bundle         apache2   10390
 org.wso2.carbon.identity.provisioning_5.7.5.jar                                 bundle         apache2   10734
 org.wso2.carbon.identity.query.saml_5.3.0.jar                                   bundle         apache2   10496
-org.wso2.carbon.identity.recovery.stub_1.0.0.jar                                bundle         apache2   10495
-org.wso2.carbon.identity.recovery.ui_1.0.0.jar                                  bundle         apache2   10494
-org.wso2.carbon.identity.recovery_1.0.0.jar                                     bundle         apache2   10493
+org.wso2.carbon.identity.recovery.stub_1.0.1.jar                                bundle         apache2   10777
+org.wso2.carbon.identity.recovery.ui_1.0.1.jar                                  bundle         apache2   10776
+org.wso2.carbon.identity.recovery_1.0.1.jar                                     bundle         apache2   10775
 org.wso2.carbon.identity.scim.common_5.2.0.jar                                  bundle         apache2   10492
 org.wso2.carbon.identity.sp.metadata.saml2_1.0.1.jar                            bundle         apache2   10733
 org.wso2.carbon.identity.sso.agent_5.1.0.jar                                    bundle         apache2   8353
@@ -491,7 +493,7 @@ org.wso2.carbon.identity.user.store.configuration_5.7.5.jar                     
 org.wso2.carbon.identity.user.store.count.stub_5.7.5.jar                        bundle         apache2   10723
 org.wso2.carbon.identity.user.store.count_5.7.5.jar                             bundle         apache2   10722
 org.wso2.carbon.identity.user.store.remote_5.1.2.jar                            bundle         apache2   10463
-org.wso2.carbon.identity.webfinger_5.3.2.jar                                    bundle         apache2   10721
+org.wso2.carbon.identity.webfinger_5.3.3.jar                                    bundle         apache2   10774
 org.wso2.carbon.identity.workflow.impl.stub_5.1.7.jar                           bundle         apache2   10720
 org.wso2.carbon.identity.workflow.impl.ui_5.1.7.jar                             bundle         apache2   10719
 org.wso2.carbon.identity.workflow.impl_5.1.7.jar                                bundle         apache2   10718
@@ -728,4 +730,3 @@ cddl+gpl       CDDL + GPLv2
                https://glassfish.dev.java.net/public/CDDL+GPL.html
 epl1           Eclipse Public License
                http://www.eclipse.org/legal/epl-v10.html
-
