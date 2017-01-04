@@ -33,10 +33,10 @@
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
-                <exclude>**/identity/claim-store.yml</exclude>
-                <exclude>**/identity/connector-config.yml</exclude>
                 <exclude>**/identity/domain-config.yaml</exclude>
-                <exclude>**/identity/store-config.yml</exclude>
+                <exclude>**/identity/store-config.yaml</exclude>
+                <exclude>**/identity/claim-mapping.yaml</exclude>
+                <exclude>**/identity/profile-mapping.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
             </excludes>
         </fileSet>

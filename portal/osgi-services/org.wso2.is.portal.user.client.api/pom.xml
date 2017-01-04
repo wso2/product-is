@@ -27,11 +27,11 @@
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>org.wso2.is.portal.user.client.realmservice</artifactId>
+    <artifactId>org.wso2.is.portal.user.client.api</artifactId>
     <packaging>bundle</packaging>
 
-    <name>WSO2 User RealmService - Client Bundle</name>
-    <description>This feature contains the OSGi service for RealmService</description>
+    <name>WSO2 User Client API - Client Bundle</name>
+    <description>This feature contains the OSGi service for Client APIs</description>
     <url>http://wso2.org</url>
 
     <dependencies>
@@ -64,7 +64,7 @@
     </dependencies>
 
     <properties>
-        <private.package>org.wso2.is.portal.user.client.realmservice.internal.*</private.package>
+        <private.package>org.wso2.is.portal.user.client.api.internal.*</private.package>
         <import.package>
             org.osgi.framework,
             javax.security.*,
@@ -72,11 +72,11 @@
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
         </import.package>
         <export.package>
-            !org.wso2.is.portal.user.client.realmservice.internal.*,
-            org.wso2.is.portal.user.client.realmservice.*;version="${project.version}"
+            !org.wso2.is.portal.user.client.api.internal.*,
+            org.wso2.is.portal.user.client.api.*;version="${project.version}"
         </export.package>
         <bundle.activator>
-            org.wso2.is.portal.user.client.realmservice.internal.Activator
+            org.wso2.is.portal.user.client.api.internal.Activator
         </bundle.activator>
 
         <checkstyle.skip>true</checkstyle.skip>

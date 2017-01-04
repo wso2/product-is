@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.realmservice;
+package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
@@ -24,14 +24,31 @@ import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 /**
  * Perform operations related to password handling
  */
-public interface RealmClientService {
+public interface IdentityStoreClientService {
+
 
     /**
-     * Update the password to a new one
+     * Authenticate.
+     *
+     * @param username username
+     * @param password password
+     * @return authentication context
+     * @throws IdentityStoreException Identity Store Exception
+     * @throws AuthenticationFailure Authentication Failure
      */
-    AuthenticationContext authenticate(String username, char[] newPassword)
+    AuthenticationContext authenticate(String username, char[] password)
             throws IdentityStoreException, AuthenticationFailure;
 
+    /**
+     * Update user password.
+     *
+     * @param username username
+     * @param oldPassword old password
+     * @param newPassword new password
+     * @throws IdentityStoreException Identity Store Exception
+     * @throws AuthenticationFailure Authentication Failure
+     * @throws UserNotFoundException User Not Found Exception
+     */
     void updatePassword(String username, char[] oldPassword, char[] newPassword)
             throws IdentityStoreException, AuthenticationFailure, UserNotFoundException;
 

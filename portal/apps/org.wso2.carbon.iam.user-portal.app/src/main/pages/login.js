@@ -36,7 +36,7 @@ function onRequest(env) {
 function authenticate(username, password) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
-        var authenticationContext = callOSGiService("org.wso2.is.portal.user.client.realmservice.RealmClientService",
+        var authenticationContext = callOSGiService("org.wso2.is.portal.user.client.api.RealmClientService",
             "authenticate", [username, passwordChar]);
 
         createSession(authenticationContext.user);
