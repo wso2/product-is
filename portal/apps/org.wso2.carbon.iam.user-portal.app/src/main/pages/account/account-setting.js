@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -53,3 +54,8 @@ function onRequest(env) {
         return {errorMessage: result.message};
     }
 }
+=======
+function onRequest(env) {
+
+}
+>>>>>>> 995fdb8... adding account-setting.js
