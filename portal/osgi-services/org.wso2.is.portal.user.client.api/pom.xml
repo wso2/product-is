@@ -75,9 +75,6 @@
             !org.wso2.is.portal.user.client.api.internal.*,
             org.wso2.is.portal.user.client.api.*;version="${project.version}"
         </export.package>
-        <bundle.activator>
-            org.wso2.is.portal.user.client.api.internal.Activator
-        </bundle.activator>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
