@@ -309,9 +309,13 @@
 .settings-nav li ul.sub-menu li.active a{
     border-left-color:#f47a1e;
 <<<<<<< HEAD
+<<<<<<< HEAD
     background-color: #fff;
 =======
 >>>>>>> c06d2f5... Adding Account settings template
+=======
+    background-color: #fff;
+>>>>>>> e4b1725... Account settings - Append selected tab to the url
 }
 
 .settings-nav li ul.sub-menu li a:focus {
@@ -334,10 +338,14 @@
 .acc-settings .tab-content {
     border: 1px solid #a5a5a5;
 <<<<<<< HEAD
+<<<<<<< HEAD
     min-height: 413px;
 =======
     min-height: 400px;
 >>>>>>> c06d2f5... Adding Account settings template
+=======
+    min-height: 413px;
+>>>>>>> e4b1725... Account settings - Append selected tab to the url
 }
 .settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
     margin-right: -1px;
