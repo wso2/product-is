@@ -16,8 +16,10 @@
 
 package org.wso2.is.portal.user.client.api.internal;
 
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -27,29 +29,31 @@ import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl;
 
-/**
- * Activation class for the bundle
- */
-public class Activator implements BundleActivator {
+@Component(
+        name = "org.wso2.is.portal.user.client.api.internal.UserPortalClientApiComponent",
+        immediate = true,
+        property = {
+                "componentName=wso2-identity-user-portal-api"
+        }
+)
+public class UserPortalClientApiComponent {
 
-    private static final Logger log = LoggerFactory.getLogger(Activator.class);
+    private static final Logger log = LoggerFactory.getLogger(UserPortalClientApiComponent.class);
 
-    @Override
-    public void start(BundleContext bundleContext) throws Exception {
+    @Activate
+    public void registerCarbonIdentityMgtProvider(BundleContext bundleContext) {
 
-        IdentityStoreClientService identityStoreClientService = new IdentityStoreClientServiceImpl();
-        bundleContext.registerService(IdentityStoreClientService.class, identityStoreClientService, null);
-
+        initializeClientServices(bundleContext);
         if (log.isDebugEnabled()) {
-            log.debug("User profile UUF support Bundle Started.");
+            log.debug("User portal UUF support Bundle Started.");
         }
     }
 
-    @Override
-    public void stop(BundleContext bundleContext) throws Exception {
+    @Deactivate
+    public void unregisterCarbonIdentityMgtProvider(BundleContext bundleContext) {
 
         if (log.isDebugEnabled()) {
-            log.debug("User profile UUF support Bundle Stopped.");
+            log.debug("User portal UUF support Bundle Started.");
         }
     }
 
@@ -61,11 +65,17 @@ public class Activator implements BundleActivator {
             unbind = "unsetRealmService")
     protected void setRealmService(RealmService realmService) {
 
-        DataHolder.getInstance().setRealmService(realmService);
+        UserPortalClientApiDataHolder.getInstance().setRealmService(realmService);
     }
 
     protected void unsetRealmService(RealmService realmService) {
 
-        DataHolder.getInstance().setRealmService(null);
+        UserPortalClientApiDataHolder.getInstance().setRealmService(null);
+    }
+
+    private void initializeClientServices(BundleContext bundleContext) {
+
+        IdentityStoreClientService identityStoreClientService = new IdentityStoreClientServiceImpl();
+        bundleContext.registerService(IdentityStoreClientService.class, identityStoreClientService, null);
     }
 }

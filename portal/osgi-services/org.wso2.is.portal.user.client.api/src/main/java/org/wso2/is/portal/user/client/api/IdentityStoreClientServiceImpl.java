@@ -19,14 +19,19 @@ package org.wso2.is.portal.user.client.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
+import org.wso2.carbon.identity.mgt.User;
+import org.wso2.carbon.identity.mgt.bean.UserBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
-import org.wso2.is.portal.user.client.api.internal.DataHolder;
+import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
 
@@ -34,6 +39,10 @@ import javax.security.auth.callback.PasswordCallback;
  * Identity store client service implementation.
  */
 public class IdentityStoreClientServiceImpl implements IdentityStoreClientService {
+
+    public IdentityStoreClientServiceImpl() {
+        addTestUsers();
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
 
@@ -46,7 +55,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         PasswordCallback passwordCallback = new PasswordCallback("password", false);
         passwordCallback.setPassword(password);
 
-        return DataHolder.getInstance().getRealmService().getIdentityStore().authenticate(usernameClaim,
+        return UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().authenticate(usernameClaim,
                 new Callback[]{passwordCallback}, null);
 
     }
@@ -61,8 +70,57 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         PasswordCallback passwordCallback = new PasswordCallback("password", false);
         passwordCallback.setPassword(newPassword);
 
-        DataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
+        UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
                 .singletonList(passwordCallback));
 
+    }
+
+    private void addTestUsers() {
+
+        try {
+            User testUser = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().getUser(new Claim
+                    ("http://wso2.org/claims", "http://wso2.org/claims/username", "lucifer"));
+            if (testUser != null) {
+                return;
+            }
+        } catch (IdentityStoreException | UserNotFoundException e) {
+
+        }
+
+        UserBean userBean1 = new UserBean();
+        List<Claim> claims1 = Arrays
+                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "lucifer"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/givenname", "Lucifer"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastname", "Morningstar"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "lucifer@wso2.com"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/telephone", "+94715979891"));
+        userBean1.setClaims(claims1);
+
+        PasswordCallback passwordCallback1 = new PasswordCallback("password", false);
+        passwordCallback1.setPassword("admin".toCharArray());
+        userBean1.setCredentials(Collections.singletonList(passwordCallback1));
+
+        UserBean userBean2 = new UserBean();
+        List<Claim> claims2 = Arrays
+                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "chloe"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/firstName", "Chloe"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastName", "Decker"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "chloe@wso2.com"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/telephone", "+94715979891"));
+        userBean2.setClaims(claims2);
+
+        PasswordCallback passwordCallback2 = new PasswordCallback("password", false);
+        passwordCallback2.setPassword("admin".toCharArray());
+        userBean2.setCredentials(Collections.singletonList(passwordCallback2));
+
+        try {
+            List<User> users = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUsers(Arrays.asList
+                    (userBean1, userBean2));
+
+            UserPortalClientApiDataHolder.getInstance().setTempUsers(users.stream().map(User::getUniqueUserId)
+                    .collect(Collectors.toList()));
+        } catch (IdentityStoreException e) {
+            throw new RuntimeException("Failed to add test users.", e);
+        }
     }
 }
