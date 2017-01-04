@@ -216,6 +216,12 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
@@ -476,6 +482,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
