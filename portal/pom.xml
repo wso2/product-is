@@ -51,6 +51,7 @@
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
 =======
         <module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>
+        <module>osgi-services/org.wso2.is.portal.user.client.profile</module>
 
 >>>>>>> d78d543... fixing poms
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>

@@ -139,6 +139,11 @@
             <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+            <type>zip</type>
+        </dependency>
 
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -431,6 +436,7 @@
                                     <includes>**/h2.sql</includes>
                                 </artifactItem>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.mgt</groupId>
                                     <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
@@ -439,6 +445,14 @@
                                 </artifactItem>
 =======
 >>>>>>> a695889... update connectors and config changes
+=======
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.mgt</groupId>
+                                    <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+>>>>>>> f889153... Added osgi service for calling ProfileMgtService
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -596,6 +610,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.meta.claim.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
@@ -903,6 +921,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.meta.claim.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
