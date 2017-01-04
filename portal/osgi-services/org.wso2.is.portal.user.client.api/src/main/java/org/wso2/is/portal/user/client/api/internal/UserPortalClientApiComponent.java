@@ -41,7 +41,7 @@ public class UserPortalClientApiComponent {
     private static final Logger log = LoggerFactory.getLogger(UserPortalClientApiComponent.class);
 
     @Activate
-    public void registerCarbonIdentityMgtProvider(BundleContext bundleContext) {
+    public void registerUserPortalClientApi(BundleContext bundleContext) {
 
         initializeClientServices(bundleContext);
         if (log.isDebugEnabled()) {
@@ -50,7 +50,7 @@ public class UserPortalClientApiComponent {
     }
 
     @Deactivate
-    public void unregisterCarbonIdentityMgtProvider(BundleContext bundleContext) {
+    public void unregisterUserPortalClientApi(BundleContext bundleContext) {
 
         if (log.isDebugEnabled()) {
             log.debug("User portal UUF support Bundle Started.");
