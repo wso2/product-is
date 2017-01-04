@@ -18,20 +18,25 @@ package org.wso2.is.portal.user.client.api.internal;
 
 import org.wso2.carbon.identity.mgt.RealmService;
 
+import java.util.List;
+
 /**
  * Data Holder.
  */
-public class DataHolder {
+public class UserPortalClientApiDataHolder {
 
-    private static DataHolder instance = new DataHolder();
+    private static UserPortalClientApiDataHolder instance = new UserPortalClientApiDataHolder();
 
     private RealmService realmService;
 
-    private DataHolder() {
+    //TODO remove
+    private List<String> tempUsers;
+
+    private UserPortalClientApiDataHolder() {
 
     }
 
-    public static DataHolder getInstance() {
+    public static UserPortalClientApiDataHolder getInstance() {
         return instance;
     }
 
@@ -44,5 +49,17 @@ public class DataHolder {
 
     public void setRealmService(RealmService realmService) {
         this.realmService = realmService;
+    }
+
+    public static void setInstance(UserPortalClientApiDataHolder instance) {
+        UserPortalClientApiDataHolder.instance = instance;
+    }
+
+    public List<String> getTempUsers() {
+        return tempUsers;
+    }
+
+    public void setTempUsers(List<String> tempUsers) {
+        this.tempUsers = tempUsers;
     }
 }
