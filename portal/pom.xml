@@ -44,6 +44,7 @@
     <modules>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <!--<module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>-->
         <module>osgi-services/org.wso2.is.portal.user.client.api</module>
         <!--<module>osgi-services/org.wso2.is.portal.user.client.profile</module>-->
@@ -52,6 +53,9 @@
 =======
         <module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>
         <module>osgi-services/org.wso2.is.portal.user.client.profile</module>
+=======
+        <module>osgi-services/org.wso2.is.portal.user.client.api</module>
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
 
 >>>>>>> d78d543... fixing poms
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.realmservice.internal;
+package org.wso2.is.portal.user.client.api.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.is.portal.user.client.realmservice.RealmClientService;
-import org.wso2.is.portal.user.client.realmservice.RealmClientServiceImpl;
 
 /**
- * Activation class for the bundle
+ * activator for user client api bundle.
  */
 public class Activator implements BundleActivator {
 
@@ -32,15 +30,15 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-//        bundleContext.registerService(RealmClientService.class.getName(),
-//                                      new RealmClientServiceImpl(), null);
+
         if (log.isDebugEnabled()) {
-            log.debug("User profile UUF support Bundle Started.");
+            log.debug("User portal UUF support Bundle Started.");
         }
     }
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
+
         if (log.isDebugEnabled()) {
             log.debug("User profile UUF support Bundle Stopped.");
         }

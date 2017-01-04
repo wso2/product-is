@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+=======
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +20,7 @@
 
 package org.wso2.is.portal.user.client.api;
 
+<<<<<<< HEAD
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -30,10 +35,17 @@ import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.bean.UserBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
+=======
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.mgt.AuthenticationContext;
+import org.wso2.carbon.identity.mgt.claim.Claim;
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
+<<<<<<< HEAD
 import org.wso2.carbon.kernel.utils.StringUtils;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -44,20 +56,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+=======
+import org.wso2.is.portal.user.client.api.internal.DataHolder;
+
+import java.util.Collections;
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
 
 /**
  * Identity store client service implementation.
  */
+<<<<<<< HEAD
 @Component(
         name = "org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl",
         service = IdentityStoreClientService.class,
         immediate = true)
+=======
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
 public class IdentityStoreClientServiceImpl implements IdentityStoreClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
 
+<<<<<<< HEAD
     private RealmService realmService;
 
     @Activate
@@ -264,5 +285,34 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             throw new IllegalStateException("Realm Service is null.");
         }
         return this.realmService;
+=======
+    @Override
+    public AuthenticationContext authenticate(String username, char[] password) throws IdentityStoreException,
+            AuthenticationFailure {
+
+        Claim usernameClaim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, IdentityMgtConstants.USERNAME_CLAIM,
+                username);
+        PasswordCallback passwordCallback = new PasswordCallback("password", false);
+        passwordCallback.setPassword(password);
+
+        return DataHolder.getInstance().getRealmService().getIdentityStore().authenticate(usernameClaim,
+                new Callback[]{passwordCallback}, null);
+
+    }
+
+    @Override
+    public void updatePassword(String username, char[] oldPassword, char[] newPassword) throws UserNotFoundException,
+            AuthenticationFailure, IdentityStoreException {
+
+        //validate the old password
+        authenticate(username, oldPassword);
+
+        PasswordCallback passwordCallback = new PasswordCallback("password", false);
+        passwordCallback.setPassword(newPassword);
+
+        DataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
+                .singletonList(passwordCallback));
+
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
     }
 }

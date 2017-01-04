@@ -18,22 +18,34 @@
 profiles:
  -
   profileName: "default"
+<<<<<<< HEAD
   isAdminProfile: false
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
    displayName: "Username"
+=======
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "User Name"
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
    required: true
    readonly: true
    verifier: "claim verifying extension"
    validator: "claim validating extension"
    transformer: "transform extension"
+<<<<<<< HEAD
    regex: ".*"
+=======
+   regex: "*"
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
    defaultValue: "user1"
    dataType: "text"
    properties:
     customproperty: "custom value"
   -
+<<<<<<< HEAD
    claimURI: "http://wso2.org/claims/givenname"
    displayName: "First Name"
    required: true
@@ -124,3 +136,33 @@ profiles:
    dataType: "email"
    regex: "*"
    defaultValue: "user@example.com"
+=======
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: true
+   regex: "*"
+  -
+   claimURI: "http://wso2.org/claims/mobile"
+   displayName: "Mobile"
+   required: true
+   readonly: true
+   regex: "*"
+  -
+   claimURI: "http://wso2.org/claims/organization"
+   displayName: "Organization"
+   required: true
+   readonly: true
+   regex: "*"
+ -
+  profileName: "employee"
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/employeeNumber"
+   displayName: "Employee Number"
+   required: true
+   readonly: true
+   regex: "*"
+   properties:
+    customproperty: "custom value"
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api

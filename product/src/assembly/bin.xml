@@ -44,6 +44,7 @@
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <exclude>**/identity/domain-config.yaml</exclude>
                 <exclude>**/identity/store-config.yaml</exclude>
                 <exclude>**/identity/claim-mapping.yaml</exclude>
@@ -68,6 +69,12 @@
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
 =======
+=======
+                <exclude>**/identity/domain-config.yaml</exclude>
+                <exclude>**/identity/store-config.yaml</exclude>
+                <exclude>**/identity/claim-mapping.yaml</exclude>
+                <exclude>**/identity/profile-mapping.yaml</exclude>
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
                 <exclude>**/transports/netty-transports.yml</exclude>
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
             </excludes>

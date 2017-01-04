@@ -77,7 +77,7 @@
 =======
         <dependency>
             <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.is.portal.user.client.realmservice</artifactId>
+            <artifactId>org.wso2.is.portal.user.client.api</artifactId>
             <version>${carbon.is.version}</version>
         </dependency>
 <<<<<<< HEAD
@@ -140,16 +140,21 @@
                                 </Import-Package>
 =======
                             <instructions>
+<<<<<<< HEAD
                                 <Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>
 <<<<<<< HEAD
 >>>>>>> 8ae54da... Adding user portal login page..
 =======
                                 <Import-Package>org.wso2.is.portal.user.client.profile</Import-Package>
 >>>>>>> f889153... Added osgi service for calling ProfileMgtService
+=======
+                                <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
                                 <bundle>
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
                                     <version>${carbon.is.version}</version>
@@ -171,6 +176,9 @@
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
 =======
                                     <symbolicName>org.wso2.is.portal.user.client.realmservice</symbolicName>
+=======
+                                    <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
+>>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
                                     <version>${carbon.is.version}</version>
                                     <symbolicName>org.wso2.is.portal.user.client.profile</symbolicName>
                                     <version>${carbon.is.version}</version>

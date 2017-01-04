@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,17 @@ package org.wso2.is.portal.user.client.api.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.mgt.RealmService;
+import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
+import org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl;
 
 /**
- * activator for user client api bundle.
+ * Activation class for the bundle
  */
 public class Activator implements BundleActivator {
 
@@ -31,8 +37,11 @@ public class Activator implements BundleActivator {
     @Override
     public void start(BundleContext bundleContext) throws Exception {
 
+        IdentityStoreClientService identityStoreClientService = new IdentityStoreClientServiceImpl();
+        bundleContext.registerService(IdentityStoreClientService.class, identityStoreClientService, null);
+
         if (log.isDebugEnabled()) {
-            log.debug("User portal UUF support Bundle Started.");
+            log.debug("User profile UUF support Bundle Started.");
         }
     }
 
@@ -42,5 +51,21 @@ public class Activator implements BundleActivator {
         if (log.isDebugEnabled()) {
             log.debug("User profile UUF support Bundle Stopped.");
         }
+    }
+
+    @Reference(
+            name = "realmService",
+            service = RealmService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService")
+    protected void setRealmService(RealmService realmService) {
+
+        DataHolder.getInstance().setRealmService(realmService);
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+
+        DataHolder.getInstance().setRealmService(null);
     }
 }
