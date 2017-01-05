@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+=======
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> c9a9414... Adding ProfileMgtClientService
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +18,7 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 package org.wso2.is.portal.user.client.api;
 
 import org.osgi.framework.BundleContext;
@@ -42,10 +47,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+=======
+
+package org.wso2.is.portal.user.client.api;
+>>>>>>> c9a9414... Adding ProfileMgtClientService
 
 /**
  * Profile Mgt Client Service Implementation.
  */
+<<<<<<< HEAD
 @Component(
         name = "org.wso2.is.portal.user.client.api.ProfileMgtClientServiceImpl",
         service = ProfileMgtClientService.class,
@@ -196,4 +206,8 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         }
         return profileMgtService;
     }
+=======
+public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
+
+>>>>>>> c9a9414... Adding ProfileMgtClientService
 }

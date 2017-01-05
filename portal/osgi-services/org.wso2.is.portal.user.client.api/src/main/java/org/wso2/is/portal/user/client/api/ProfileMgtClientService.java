@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+=======
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> c9a9414... Adding ProfileMgtClientService
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +20,7 @@
 
 package org.wso2.is.portal.user.client.api;
 
+<<<<<<< HEAD
 import org.wso2.carbon.identity.claim.mapping.profile.ProfileEntry;
 import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -23,11 +28,14 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import java.util.List;
 import java.util.Set;
 
+=======
+>>>>>>> c9a9414... Adding ProfileMgtClientService
 /**
  * Profile Mgt Client Service.
  */
 public interface ProfileMgtClientService {
 
+<<<<<<< HEAD
     /**
      * Get the names of available profiles
      *
@@ -54,5 +62,7 @@ public interface ProfileMgtClientService {
      * @throws UserPortalUIException User portal ui exception
      */
     List<ProfileUIEntry> getProfileEntries(String profileName, String uniqueUserId) throws UserPortalUIException;
+=======
+>>>>>>> c9a9414... Adding ProfileMgtClientService
 
 }
