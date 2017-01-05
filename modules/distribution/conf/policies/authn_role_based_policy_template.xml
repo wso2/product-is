@@ -1,7 +1,6 @@
 <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="authn_role_based_policy_template"
         RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
-    <Description>This policy template provides ability to authorize users to a given service provider(denoted by 'SP_NAME' in the template) in the authentication flow based on the Roles of the user (denoted by 'ROLE_1' and 'ROLE_2' in the template). Users who have allmentioned roles, be allowed and any others will be denied.
-    </Description>
+    <Description>This policy template provides ability to authorize users to a given service provider(defined by SP_NAME) in the authentication flow based on the roles of the user (defined by ROLE_1 and ROLE_2). Users who have at least one of the given roles, will be allowed and any others will be denied.</Description>
     <Target>
         <AnyOf>
             <AllOf>
@@ -16,7 +15,7 @@
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule Effect="Permit" RuleId="permit_by_role">
+    <Rule Effect="Permit" RuleId="permit_by_roles">
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
