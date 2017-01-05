@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.api;
-
-import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
-
-import java.util.Set;
+package org.wso2.is.portal.user.client.api.exception;
 
 /**
- * Profile Mgt Client Service.
+ * Profile Mgt Client Exception.
  */
-public interface ProfileMgtClientService {
+public class ProfileMgtClientException extends Exception {
 
-    /**
-     * Get the names of available profiles.
-     * @return a set with all the available profile names.
-     * @throws ProfileMgtClientException Profile Mgt Client Exception
-     */
-    Set<String> getProfileNames() throws ProfileMgtClientException;
+    public ProfileMgtClientException() {
+        super();
+    }
 
+    public ProfileMgtClientException(String message) {
+        super(message);
+    }
+
+    public ProfileMgtClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
+

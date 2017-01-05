@@ -17,9 +17,27 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
+import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
+import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
+
+import java.util.Set;
+
 /**
  * Profile Mgt Client Service Implementation.
  */
 public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
+    @Override
+    public Set<String> getProfileNames() throws ProfileMgtClientException {
+
+        Set<String> profileNames;
+        try {
+            profileNames = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfileNames();
+        } catch (ProfileMgtServiceException e) {
+            throw new ProfileMgtClientException("Failed to retrieve profile names.");
+        }
+
+        return profileNames;
+    }
 }
