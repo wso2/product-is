@@ -40,13 +40,15 @@ import java.util.Set;
 >>>>>>> c2d029b... Adding profile view dynamically.
 =======
 import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
-import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ClaimConfigEntry;
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
 
+<<<<<<< HEAD
 import java.util.List;
 import java.util.Map;
 
 >>>>>>> d702044...  Added backend services for user self sign-up
+=======
+>>>>>>> b1950fd... Removed unused functions in profile mgt service
 /**
  * Profile Mgt Client Service.
  */
@@ -93,15 +95,6 @@ public interface ProfileMgtClientService {
 >>>>>>> c2d029b... Adding profile view dynamically.
 =======
     /**
-     * Get the claims set of profiles.
-     *
-     * @return Map(ProfileName, List of claim entries of the profile) with the set of claims and their
-     * properties.
-     * @throws ProfileMgtServiceException : Error in getting the profiles.
-     */
-    Map<String, ProfileEntry> getProfiles() throws ProfileMgtServiceException;
-
-    /**
      * Get the claims set of a profile.
      *
      * @param profileName : Uniquely identifying name of the profile.
@@ -109,6 +102,7 @@ public interface ProfileMgtClientService {
      * @throws ProfileMgtServiceException : Error in getting the profile.
      */
     ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException;
+<<<<<<< HEAD
 
     /**
      * Get the properties of a particular claim of a profile.
@@ -174,5 +168,7 @@ public interface ProfileMgtClientService {
      * @throws ProfileMgtServiceException : Error in getting the claims with regex validations.
      */
     List<String> getTransformingClaims(String profileName) throws ProfileMgtServiceException;
+=======
+>>>>>>> b1950fd... Removed unused functions in profile mgt service
 }
 

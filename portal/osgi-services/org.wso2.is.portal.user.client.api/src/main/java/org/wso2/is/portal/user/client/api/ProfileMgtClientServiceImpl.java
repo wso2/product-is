@@ -59,14 +59,8 @@ import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder
 import java.util.Set;
 
 import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
-import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ClaimConfigEntry;
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Profile Mgt Client Service Implementation.
@@ -244,18 +238,6 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 >>>>>>> c2d029b... Adding profile view dynamically.
 =======
     /**
-     * Get the claims set of profiles.
-     *
-     * @return Map(profileName,(Map(claim, Map(Property Key: Property Value))) with the set of claims and their
-     * properties.
-     * @throws ProfileMgtServiceException : Error in getting the profile.
-     */
-    @Override
-    public Map<String, ProfileEntry> getProfiles() throws ProfileMgtServiceException {
-        return new HashMap<String, ProfileEntry>();
-    }
-
-    /**
      * Get the claims set of a profile.
      *
      * @param profileName : Uniquely identifying name of the profile.
@@ -266,6 +248,7 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
     public ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException {
         return UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
     }
+<<<<<<< HEAD
 
     /**
      * Get the properties of a particular claim of a profile.
@@ -352,4 +335,6 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         return new ArrayList<String>();
     }
 >>>>>>> d702044...  Added backend services for user self sign-up
+=======
+>>>>>>> b1950fd... Removed unused functions in profile mgt service
 }
