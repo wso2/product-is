@@ -1,38 +1,3 @@
-{{layout "org.wso2.carbon.uuf.common.foundation.main"}}
+{{layout "main"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{title "Home | " @config.appName}}
-{{#fillZone "content"}}
-    <div class="page-header">
-        <h1>{{t "user-portal.welcome"}}</h1>
-        <p class="lead">{{t "user-portal.welcome.msg"}}</p>
-    </div>
-    <div class="row">
-        <div class="media tab-responsive">
-            <div class="media-left col-xs-1 col-sm-1 col-md-2 col-lg-2 hidden-xs">
-                <ul class="list-group nav nav-pills nav-stacked" role="tablist">
-                    <li class="list-group-item"><a href="{{@contextPath}}/login"><i class="fw fw-add
-                    fw-2x"></i>Login</a></li>
-                </ul>
-                <ul class="list-group nav nav-pills nav-stacked" role="tablist">
-                    <li class="list-group-item"><a href="{{@contextPath}}/account/signup"><i class="fw fw-add
-                    fw-2x"></i>
-                        {{t "user-portal.user.add"}}</a></li>
-                </ul>
-                <ul class="list-group nav nav-pills nav-stacked" role="tablist">
-                    <li class="list-group-item"><a href="{{@contextPath}}/account/reset-password"><i class="fw fw-add
-                    fw-2x"></i>
-                        {{t "user-portal.user.password.reset"}}</a></li>
-                </ul>
-                <ul class="list-group nav nav-pills nav-stacked" role="tablist">
-                    <li class="list-group-item"><a href="{{@contextPath}}/profile"><i class="fw fw-user fw-2x"></i>
-                        {{t "user-portal.user.profile"}}</a></li>
-                </ul>
-                <ul class="list-group nav nav-pills nav-stacked" role="tablist">
-                    <li class="list-group-item"><a href="{{@contextPath}}/account/account-setting"><i class="fw fw-add
-                    fw-2x"></i>
-                        {{t "user-portal.user.account.setting"}}</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-{{/fillZone}}

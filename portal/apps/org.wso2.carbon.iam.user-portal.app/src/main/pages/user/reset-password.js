@@ -37,7 +37,7 @@ function updatePassword(username, oldPassword, newPassword) {
     try {
         var oldPasswordChar = Java.to(oldPassword.split(''), 'char[]');
         var newPasswordChar = Java.to(newPassword.split(''), 'char[]');
-        callOSGiService("org.wso2.is.portal.user.client.realmservice.RealmClientService",
+        callOSGiService("org.wso2.is.portal.user.client.api.RealmClientService",
             "updatePassword", [username, oldPasswordChar, newPasswordChar]);
 
         return {success: true, message: "success"}
