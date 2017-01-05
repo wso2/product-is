@@ -16,10 +16,98 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ClaimConfigEntry;
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * Profile Mgt Client Service.
  */
 public interface ProfileMgtClientService {
 
+    /**
+     * Get the claims set of profiles.
+     *
+     * @return Map(ProfileName, List of claim entries of the profile) with the set of claims and their
+     * properties.
+     * @throws ProfileMgtServiceException : Error in getting the profiles.
+     */
+    Map<String, ProfileEntry> getProfiles() throws ProfileMgtServiceException;
 
+    /**
+     * Get the claims set of a profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return ProfileEntry with the set of claims and their properties.
+     * @throws ProfileMgtServiceException : Error in getting the profile.
+     */
+    ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException;
+
+    /**
+     * Get the properties of a particular claim of a profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @param claim       : Root claim URI for the properties to be retrieved.
+     * @return Map(Property Key : Property Value)
+     * @throws ProfileMgtServiceException : Error in getting the properties of a claim.
+     */
+    ClaimConfigEntry getClaimAttributes(String profileName, String claim) throws ProfileMgtServiceException;
+
+    /**
+     * Get the claims marked as required for a particular profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return List(Root claim URIs)
+     * @throws ProfileMgtServiceException : Error in getting the claims with required property.
+     */
+    List<String> getRequiredClaims(String profileName) throws ProfileMgtServiceException;
+
+    /**
+     * Get the claims marked as read-only for a particular profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return List(Root claim URIs)
+     * @throws ProfileMgtServiceException : Error in getting the claims with read-only property.
+     */
+    List<String> getReadOnlyClaims(String profileName) throws ProfileMgtServiceException;
+
+    /**
+     * Get the claims marked as unique for a particular profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return List(Root claim URIs)
+     * @throws ProfileMgtServiceException : Error in getting the claims with unique property.
+     */
+    List<String> getUniqueClaims(String profileName) throws ProfileMgtServiceException;
+
+    /**
+     * Get the claims marked as verify for a particular profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return List(Root claim URIs)
+     * @throws ProfileMgtServiceException : Error in getting the claims with 'verify' property.
+     */
+    List<String> getVerifyingClaims(String profileName) throws ProfileMgtServiceException;
+
+    /**
+     * Get the claims marked as verify with the verifying mechanism for a particular profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return Map(Claim : Verifying mechanism)
+     * @throws ProfileMgtServiceException : Error in getting the claims with verifying mechanism.
+     */
+    List<String> getValidatingClaims(String profileName) throws ProfileMgtServiceException;
+
+    /**
+     * Get the claims marked for regex validations.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return Map(Claim : Regex)
+     * @throws ProfileMgtServiceException : Error in getting the claims with regex validations.
+     */
+    List<String> getTransformingClaims(String profileName) throws ProfileMgtServiceException;
 }
+

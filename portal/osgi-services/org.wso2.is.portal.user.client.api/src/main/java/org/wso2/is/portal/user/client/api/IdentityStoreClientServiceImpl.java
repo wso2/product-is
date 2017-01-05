@@ -29,8 +29,10 @@ import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
@@ -73,6 +75,29 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
                 .singletonList(passwordCallback));
 
+    }
+
+    @Override
+    public User addUser(Map<String, String> userClaims) throws IdentityStoreException {
+        UserBean userBean = new UserBean();
+        List<Claim> claimsList = new ArrayList();
+
+        for (Map.Entry<String, String> entry : userClaims.entrySet())
+        {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        userBean.setClaims(claimsList);
+
+        if (UserPortalClientApiDataHolder.getInstance().getRealmService() != null) {
+            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean);
+        } else {
+            throw new RuntimeException("RealmService is not available");
+        }
+        return null;
     }
 
     private void addTestUsers() {
