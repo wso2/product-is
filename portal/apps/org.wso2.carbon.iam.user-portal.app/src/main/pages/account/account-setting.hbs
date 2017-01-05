@@ -21,15 +21,11 @@
                             <li class="collapse-li">
                                 <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#profile-menu" class="collapsed">{{t "user-portal.user.account.profile"}}<span class="arrow"></span></a>
                                 <ul class="sub-menu collapse" id="profile-menu">
-                                    <li>
-                                        <a href="#default" class="" data-toggle="tab">{{t "user-portal.user.account.profile.default"}}</a>
-                                    </li>
-                                    <li>
-                                        <a href="#salesforce" class="" data-toggle="tab">{{t "user-portal.user.account.profile.salesforce"}}</a>
-                                    </li>
-                                    <li>
-                                        <a href="#twitter" class="" data-toggle="tab">{{t "user-portal.user.account.profile.twitter"}}</a>
-                                    </li>
+                                    {{#each profiles}}
+                                        <li>
+                                            <a href="#{{this}}" class="" data-toggle="tab">{{this}}</a>
+                                        </li>
+                                    {{/each}}
                                 </ul>
                             </li>
                             <li>
@@ -57,23 +53,13 @@
 
                     <!-- page content -->
                     <div class="tab-content settings-content">
-                        <div class="tab-pane" id="default">
-                            <div class="col-md-12">
-                                {{fragment "org.wso2.carbon.iam.user-portal.feature.profile"}}
+                        {{#each profiles}}
+                            <div class="tab-pane" id="{{this}}">
+                                <div class="col-md-12">
+                                    {{fragment "org.wso2.carbon.iam.user-portal.feature.profile" profileName=this}}
+                                </div>
                             </div>
-                        </div>
-                        <div class="tab-pane" id="salesforce">
-                            <h3>Salesforce</h3>
-                            <div class="col-md-12">
-
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="twitter">
-                            <h3>Twitter</h3>
-                            <div class="col-md-12">
-
-                            </div>
-                        </div>
+                        {{/each}}
                         <div class="tab-pane" id="password">
                             <h3>Password</h3>
                             <div class="col-md-12">

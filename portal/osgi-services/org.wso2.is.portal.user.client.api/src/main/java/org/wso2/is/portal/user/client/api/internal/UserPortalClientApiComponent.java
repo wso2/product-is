@@ -83,10 +83,12 @@ public class UserPortalClientApiComponent {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetProfileMgtService")
     protected void setProfileMgtService(ProfileMgtService profileMgtService) {
+
         UserPortalClientApiDataHolder.getInstance().setProfileMgtService(profileMgtService);
     }
 
     protected void unsetProfileMgtService(ProfileMgtService profileMgtService) {
+
         UserPortalClientApiDataHolder.getInstance().setProfileMgtService(null);
     }
 

@@ -8,7 +8,7 @@ menu :
       Sign up : {link: "user/signup", icon: "fw fw-add"}
       Reset Password : {link: "user/reset-password", icon: "fw fw-add"}
       User Profile: {link: "user/profile", icon: "fw fw-user"}
-      Account Settings : {link: "user/account/account-setting", icon: "fw fw-add"}
+      Account Settings : {link: "account/account-setting", icon: "fw fw-add"}
 errorPages:
   "404": /foundation/error/404
   "401": /login
