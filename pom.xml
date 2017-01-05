@@ -1530,7 +1530,7 @@
         <identity.data.publisher.audit.version>1.0.0</identity.data.publisher.audit.version>
         <!--<identity.carbon.auth.thrift.version>5.5.0-SNAPSHOT</identity.carbon.auth.thrift.version>-->
         <!--<identity.application.auth.oidc.version>5.1.2-SNAPSHOT</identity.application.auth.oidc.version>-->
-        <identity.governance.version>1.0.1</identity.governance.version>
+        <identity.governance.version>1.0.2</identity.governance.version>
         <carbon.identity.auth.version>1.1.1</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.0</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.0</identity.event.handler.notification.version>
