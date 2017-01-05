@@ -64,6 +64,11 @@
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.core</artifactId>
+            <version>1.0.0-m7</version>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>org.apache.felix</groupId>-->
@@ -87,8 +92,13 @@
 >>>>>>> d702044...  Added backend services for user self sign-up
 =======
             org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+<<<<<<< HEAD
 >>>>>>> 951ade6... Adding profile loading js
+=======
+            org.wso2.carbon.uuf.spi.auth.*
+>>>>>>> 7444e2a... getting user login to work..
         </import.package>
+        <!--//todo set versions-->
         <export.package>
             !org.wso2.is.portal.user.client.api.internal.*,
             org.wso2.is.portal.user.client.api.*;version="${project.version}"

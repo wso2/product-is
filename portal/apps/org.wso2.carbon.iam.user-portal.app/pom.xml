@@ -134,6 +134,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
                             <instructions>
+<<<<<<< HEAD
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.carbon.identity.recovery.*
@@ -150,6 +151,9 @@
 =======
                                 <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
+=======
+                                <Import-Package>org.wso2.is.portal.user.client.api.*</Import-Package>
+>>>>>>> 7444e2a... getting user login to work..
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
