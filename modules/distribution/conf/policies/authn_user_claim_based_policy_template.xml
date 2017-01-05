@@ -1,5 +1,5 @@
 <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"  PolicyId="authn_user_claim_based_policy_template" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
-    <Description>This template policy provides ability to authorize users to a given service provider(defined by SP_NAME) in the authentication flow based on the user's attribute values (ATTRIBUTE_NAME_1=ATTRIBUTE_VALUE_1 and ATTRIBUTE_NAME_2=ATTRIBUTE_VALUE_2). Users with the given claim values will be allowed and any other users will be denied.</Description>
+    <Description>This template policy provides ability to authorize users to a given service provider(defined by SP_NAME) in the authentication flow based on the user's attribute values (CLAIM_URI_1=CLAIM_VALUE_1 and CLAIM_URI_2=CLAIM_VALUE_2). Users with the given claim values will be allowed and any other users will be denied.</Description>
     <Target>
         <AnyOf>
             <AllOf>
@@ -19,15 +19,15 @@
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
-                        <AttributeDesignator AttributeId="http://wso2.org/claims/ATTRIBUTE_NAME_1" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                        <AttributeDesignator AttributeId="CLAIM_URI_1" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
                     </Apply>
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ATTRIBUTE_VALUE_1</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">CLAIM_VALUE_1</AttributeValue>
                 </Apply>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
-                        <AttributeDesignator AttributeId="http://wso2.org/claims/ATTRIBUTE_NAME_2" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                        <AttributeDesignator AttributeId="CLAIM_URI_2" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
                     </Apply>
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ATTRIBUTE_VALUE_2</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">CLAIM_VALUE_2</AttributeValue>
                 </Apply>
             </Apply>
         </Condition>
