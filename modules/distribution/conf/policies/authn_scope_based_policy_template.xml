@@ -14,7 +14,7 @@
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule Effect="Permit" RuleId="permit_scopes">
+    <Rule Effect="Permit" RuleId="permit_by_scopes">
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
