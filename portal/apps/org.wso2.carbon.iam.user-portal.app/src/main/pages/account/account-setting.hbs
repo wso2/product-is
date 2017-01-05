@@ -56,7 +56,7 @@
                         {{#each profiles}}
                             <div class="tab-pane" id="{{this}}">
                                 <div class="col-md-12">
-                                    {{fragment "org.wso2.carbon.iam.user-portal.feature.profile" profile="{{this}}"}}
+                                    {{fragment "org.wso2.carbon.iam.user-portal.feature.profile" profileName=this}}
                                 </div>
                             </div>
                         {{/each}}

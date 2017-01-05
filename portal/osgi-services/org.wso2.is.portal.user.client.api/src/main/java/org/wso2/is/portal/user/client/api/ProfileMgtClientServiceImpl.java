@@ -17,8 +17,11 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
-import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
 import java.util.Set;
@@ -28,16 +31,35 @@ import java.util.Set;
  */
 public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProfileMgtClientServiceImpl.class);
+
     @Override
-    public Set<String> getProfileNames() throws ProfileMgtClientException {
+    public Set<String> getProfileNames() throws UserPortalUIException {
 
         Set<String> profileNames;
         try {
             profileNames = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfileNames();
         } catch (ProfileMgtServiceException e) {
-            throw new ProfileMgtClientException("Failed to retrieve profile names.");
+            String error = "Failed to retrieve profile names.";
+            log.error(error, e);
+            throw new UserPortalUIException(error);
         }
 
         return profileNames;
+    }
+
+    @Override
+    public ProfileEntry getProfile(String profileName) throws UserPortalUIException {
+
+        ProfileEntry profileEntry;
+        try {
+            profileEntry = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
+        } catch (ProfileMgtServiceException e) {
+            String error = String.format("Failed to retrieve profile - %s", profileName);
+            log.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+
+        return profileEntry;
     }
 }

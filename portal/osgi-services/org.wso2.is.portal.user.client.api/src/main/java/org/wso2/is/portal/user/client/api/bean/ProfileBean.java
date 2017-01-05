@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.api.exception;
+package org.wso2.is.portal.user.client.api.bean;
 
 /**
- * Profile Mgt Client Exception.
+ * Profile Bean.
  */
-public class ProfileMgtClientException extends Exception {
+public class ProfileBean {
 
-    public ProfileMgtClientException() {
-        super();
-    }
+    private String name;
 
-    public ProfileMgtClientException(String message) {
-        super(message);
-    }
-
-    public ProfileMgtClientException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }
-
