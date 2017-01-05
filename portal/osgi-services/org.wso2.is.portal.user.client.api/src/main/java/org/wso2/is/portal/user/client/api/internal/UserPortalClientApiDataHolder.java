@@ -45,7 +45,7 @@ public class UserPortalClientApiDataHolder {
     }
 
     public RealmService getRealmService() {
-        if(realmService == null) {
+        if (realmService == null) {
             throw new IllegalStateException("Realm Service is null.");
         }
         return realmService;
@@ -66,10 +66,13 @@ public class UserPortalClientApiDataHolder {
 
     public ProfileMgtService getProfileMgtService() {
         if (profileMgtService == null) {
+<<<<<<< HEAD
 >>>>>>> d702044...  Added backend services for user self sign-up
 =======
         if(profileMgtService == null) {
 >>>>>>> 09866aa... Resolving conflicts.
+=======
+>>>>>>> 2ba3916... Resolving conflicts.
             throw new IllegalStateException("Profile Mgt Service is null.");
         }
         return profileMgtService;
