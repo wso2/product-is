@@ -46,6 +46,7 @@ profiles:
     customproperty: "custom value"
   -
 <<<<<<< HEAD
+<<<<<<< HEAD
    claimURI: "http://wso2.org/claims/givenname"
    displayName: "First Name"
    required: true
@@ -139,18 +140,28 @@ profiles:
 =======
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
+=======
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "First Name"
+>>>>>>> 951ade6... Adding profile loading js
    required: true
    readonly: true
    regex: "*"
   -
-   claimURI: "http://wso2.org/claims/mobile"
-   displayName: "Mobile"
+   claimURI: "http://wso2.org/claims/lastname"
+   displayName: "Last Name"
    required: true
    readonly: true
    regex: "*"
   -
-   claimURI: "http://wso2.org/claims/organization"
-   displayName: "Organization"
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: true
+   regex: "*"
+  -
+   claimURI: "http://wso2.org/claims/telephone"
+   displayName: "Telephone"
    required: true
    readonly: true
    regex: "*"
@@ -158,11 +169,28 @@ profiles:
   profileName: "employee"
   claims:
   -
-   claimURI: "http://wso2.org/claims/employeeNumber"
-   displayName: "Employee Number"
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "User Name"
    required: true
    readonly: true
    regex: "*"
+   defaultValue: "user1"
+   dataType: "text"
    properties:
     customproperty: "custom value"
+<<<<<<< HEAD
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
+=======
+  -
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "Name"
+   required: true
+   readonly: true
+   regex: "*"
+  -
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: true
+   regex: "*"
+>>>>>>> 951ade6... Adding profile loading js

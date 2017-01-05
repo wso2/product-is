@@ -23,6 +23,7 @@ package org.wso2.is.portal.user.client.api;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.wso2.carbon.identity.claim.mapping.profile.ProfileEntry;
 import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -34,6 +35,10 @@ import java.util.Set;
 >>>>>>> c9a9414... Adding ProfileMgtClientService
 =======
 import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
+=======
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+>>>>>>> 951ade6... Adding profile loading js
 
 import java.util.Set;
 
@@ -87,10 +92,12 @@ public interface ProfileMgtClientService {
 >>>>>>> c9a9414... Adding ProfileMgtClientService
 =======
     /**
-     * Get the names of available profiles.
-     * @return a set with all the available profile names.
-     * @throws ProfileMgtClientException Profile Mgt Client Exception
+     * Get the names of available profiles
+     *
+     * @return a set with all the available profile names
+     * @throws UserPortalUIException User portal ui exception
      */
+<<<<<<< HEAD
     Set<String> getProfileNames() throws ProfileMgtClientException;
 >>>>>>> c2d029b... Adding profile view dynamically.
 =======
@@ -113,6 +120,18 @@ public interface ProfileMgtClientService {
      * @throws ProfileMgtServiceException : Error in getting the properties of a claim.
      */
     ClaimConfigEntry getClaimAttributes(String profileName, String claim) throws ProfileMgtServiceException;
+=======
+    Set<String> getProfileNames() throws UserPortalUIException;
+
+    /**
+     * Get the claims set of a profile
+     *
+     * @param profileName : Uniquely identifying name of the profile
+     * @return ProfileEntry with the set of claims and their properties
+     * @throws UserPortalUIException User portal ui exception
+     */
+    ProfileEntry getProfile(String profileName) throws UserPortalUIException;
+>>>>>>> 951ade6... Adding profile loading js
 
     /**
      * Get the claims marked as required for a particular profile.
