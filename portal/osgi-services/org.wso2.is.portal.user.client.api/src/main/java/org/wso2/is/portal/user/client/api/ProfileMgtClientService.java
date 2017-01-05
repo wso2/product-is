@@ -40,6 +40,7 @@ import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 >>>>>>> 951ade6... Adding profile loading js
 
+import java.util.List;
 import java.util.Set;
 
 >>>>>>> c2d029b... Adding profile view dynamically.
@@ -126,7 +127,7 @@ public interface ProfileMgtClientService {
     /**
      * Get the claims set of a profile
      *
-     * @param profileName : Uniquely identifying name of the profile
+     * @param profileName Uniquely identifying name of the profile
      * @return ProfileEntry with the set of claims and their properties
      * @throws UserPortalUIException User portal ui exception
      */
@@ -171,6 +172,7 @@ public interface ProfileMgtClientService {
     List<String> getVerifyingClaims(String profileName) throws ProfileMgtServiceException;
 
     /**
+<<<<<<< HEAD
      * Get the claims marked as verify with the verifying mechanism for a particular profile.
      *
      * @param profileName : Uniquely identifying name of the profile.
@@ -189,5 +191,16 @@ public interface ProfileMgtClientService {
     List<String> getTransformingClaims(String profileName) throws ProfileMgtServiceException;
 =======
 >>>>>>> b1950fd... Removed unused functions in profile mgt service
+=======
+     * Get the claims set of a profile
+     *
+     * @param profileName  Uniquely identifying name of the profile
+     * @param uniqueUserId Unique user id
+     * @return ProfileEntry with the set of claims and their properties
+     * @throws UserPortalUIException User portal ui exception
+     */
+    List<ProfileUIEntry> getProfileEntries(String profileName, String uniqueUserId) throws UserPortalUIException;
+
+>>>>>>> 6c5f9c0... Fixing login issue.
 }
 

@@ -393,10 +393,10 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         UserBean userBean1 = new UserBean();
         List<Claim> claims1 = Arrays
-                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "lucifer"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/givenname", "Lucifer"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastname", "Morningstar"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "lucifer@wso2.com"),
+                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "jon"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/givenname", "Jon"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastname", "Snow"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "jon@wso2.com"),
                         new Claim("http://wso2.org/claims", "http://wso2.org/claims/telephone", "+94715979891"));
         userBean1.setClaims(claims1);
 
@@ -406,10 +406,10 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         UserBean userBean2 = new UserBean();
         List<Claim> claims2 = Arrays
-                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "chloe"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/firstName", "Chloe"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastName", "Decker"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "chloe@wso2.com"),
+                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "sansa"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/givenname", "Sansa"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastname", "Stark"),
+                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "sansa@wso2.com"),
                         new Claim("http://wso2.org/claims", "http://wso2.org/claims/telephone", "+94715979891"));
         userBean2.setClaims(claims2);
 
@@ -418,8 +418,12 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         userBean2.setCredentials(Collections.singletonList(passwordCallback2));
 
         try {
-            List<User> users = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUsers(Arrays.asList
-                    (userBean1, userBean2));
+
+            User user1 =UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
+                    (userBean1);
+            User user2 = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
+                    (userBean2);
+            List<User> users = Arrays.asList(user1,user2);
 
             UserPortalClientApiDataHolder.getInstance().setTempUsers(users.stream().map(User::getUniqueUserId)
                     .collect(Collectors.toList()));

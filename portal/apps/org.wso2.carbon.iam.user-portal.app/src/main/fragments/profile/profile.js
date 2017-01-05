@@ -110,15 +110,17 @@ function uploadFile(env, session) {
 function onRequest(env) {
 
     if (env.params.profileName) {
-        var result = getProfile(env.params.profileName);
+        var result = getProfileUIEntries(env.params.profileName, "test-user-id");
         if (result.success) {
-            if (result.profileEntry && result.profileEntry.claims) {
-                var claims = result.profileEntry.claims;
-                for(var i = 0; i < claims.length; i++) {
-                    Log.info(claims[i].claimURI);
+            var uiEntries = [];
+            if (result.profileUIEntries) {
+                var profileUIEntries = result.profileUIEntries;
+                for(var i = 0; i < profileUIEntries.length > 0; i++) {
+                    var entry = {}
+                    Log.info(profileUIEntries[i].value);
                 }
             }
-            return {"profileEntry": result.profileEntry}
+            return {"profileUIEntries": result.profileUIEntries}
         } else {
             return {errorMessage: result.message};
         }
@@ -127,12 +129,12 @@ function onRequest(env) {
     return {errorMessage: result.message};
 }
 
-function getProfile(profileName) {
+function getProfileUIEntries(profileName, userId) {
 
     try {
-        var profileEntry = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService", "getProfile",
-            [profileName]);
-        return {success: true, profileEntry: profileEntry}
+        var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfileEntries", [profileName, userId]);
+        return {success: true, profileUIEntries: profileUIEntries}
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
