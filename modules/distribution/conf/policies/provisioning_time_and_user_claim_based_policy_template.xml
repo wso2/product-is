@@ -21,16 +21,11 @@
     <Rule Effect="Permit" RuleId="permit_by_claims_and_time">
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
                         <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" DataType="http://www.w3.org/2001/XMLSchema#time" MustBePresent="true"></AttributeDesignator>
                     </Apply>
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">09:00:00</AttributeValue>
-                </Apply>
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal">
-                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
-                        <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" DataType="http://www.w3.org/2001/XMLSchema#time" MustBePresent="true"></AttributeDesignator>
-                    </Apply>
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">17:00:00</AttributeValue>
                 </Apply>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
