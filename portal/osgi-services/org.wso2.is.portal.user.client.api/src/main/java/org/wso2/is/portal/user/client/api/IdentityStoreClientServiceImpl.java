@@ -67,11 +67,13 @@ import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder
 >>>>>>> 6e65079... Adding test users.
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 <<<<<<< HEAD
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
 =======
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 >>>>>>> 6e65079... Adding test users.
 import javax.security.auth.callback.Callback;
@@ -331,6 +333,29 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
                 .singletonList(passwordCallback));
 
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
+    }
+
+    @Override
+    public User addUser(Map<String, String> userClaims) throws IdentityStoreException {
+        UserBean userBean = new UserBean();
+        List<Claim> claimsList = new ArrayList();
+
+        for (Map.Entry<String, String> entry : userClaims.entrySet())
+        {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        userBean.setClaims(claimsList);
+
+        if (UserPortalClientApiDataHolder.getInstance().getRealmService() != null) {
+            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean);
+        } else {
+            throw new RuntimeException("RealmService is not available");
+        }
+        return null;
     }
 
     private void addTestUsers() {

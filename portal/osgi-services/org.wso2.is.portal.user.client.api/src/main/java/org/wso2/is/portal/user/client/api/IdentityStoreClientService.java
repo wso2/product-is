@@ -17,9 +17,12 @@
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
+import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+
+import java.util.Map;
 
 /**
  * Perform operations related to password handling
@@ -34,7 +37,7 @@ public interface IdentityStoreClientService {
      * @param password password
      * @return authentication context
      * @throws IdentityStoreException Identity Store Exception
-     * @throws AuthenticationFailure Authentication Failure
+     * @throws AuthenticationFailure  Authentication Failure
      */
     AuthenticationContext authenticate(String username, char[] password)
             throws IdentityStoreException, AuthenticationFailure;
@@ -42,14 +45,24 @@ public interface IdentityStoreClientService {
     /**
      * Update user password.
      *
-     * @param username username
+     * @param username    username
      * @param oldPassword old password
      * @param newPassword new password
      * @throws IdentityStoreException Identity Store Exception
-     * @throws AuthenticationFailure Authentication Failure
-     * @throws UserNotFoundException User Not Found Exception
+     * @throws AuthenticationFailure  Authentication Failure
+     * @throws UserNotFoundException  User Not Found Exception
      */
     void updatePassword(String username, char[] oldPassword, char[] newPassword)
             throws IdentityStoreException, AuthenticationFailure, UserNotFoundException;
+
+
+    /**
+     * Add new user to the default domain.
+     *
+     * @param userClaims claims of the user
+     * @return Created user.
+     * @throws IdentityStoreException Identity store exception.
+     */
+    User addUser(Map<String, String> userClaims) throws IdentityStoreException;
 
 }

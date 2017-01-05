@@ -29,6 +29,7 @@ public class UserPortalClientApiDataHolder {
     private static UserPortalClientApiDataHolder instance = new UserPortalClientApiDataHolder();
 
     private RealmService realmService;
+    private ProfileMgtService profileMgtService;
 
     private ProfileMgtService profileMgtService;
 
@@ -54,15 +55,29 @@ public class UserPortalClientApiDataHolder {
         this.realmService = realmService;
     }
 
+<<<<<<< HEAD
     public ProfileMgtService getProfileMgtService() {
         if(realmService == null) {
+=======
+    public void setProfileMgtService(ProfileMgtService profileMgtService) {
+        this.profileMgtService = profileMgtService;
+    }
+
+    public ProfileMgtService getProfileMgtService() {
+        if (profileMgtService == null) {
+>>>>>>> d702044...  Added backend services for user self sign-up
             throw new IllegalStateException("Profile Mgt Service is null.");
         }
         return profileMgtService;
     }
 
+<<<<<<< HEAD
     public void setProfileMgtService(ProfileMgtService profileMgtService) {
         this.profileMgtService = profileMgtService;
+=======
+    public static void setInstance(UserPortalClientApiDataHolder instance) {
+        UserPortalClientApiDataHolder.instance = instance;
+>>>>>>> d702044...  Added backend services for user self sign-up
     }
 
     public List<String> getTempUsers() {

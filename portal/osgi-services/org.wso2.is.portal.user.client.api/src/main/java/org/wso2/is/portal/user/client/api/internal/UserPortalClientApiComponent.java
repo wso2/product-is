@@ -83,12 +83,18 @@ public class UserPortalClientApiComponent {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetProfileMgtService")
     protected void setProfileMgtService(ProfileMgtService profileMgtService) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> d702044...  Added backend services for user self sign-up
         UserPortalClientApiDataHolder.getInstance().setProfileMgtService(profileMgtService);
     }
 
     protected void unsetProfileMgtService(ProfileMgtService profileMgtService) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> d702044...  Added backend services for user self sign-up
         UserPortalClientApiDataHolder.getInstance().setProfileMgtService(null);
     }
 
