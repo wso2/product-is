@@ -36,10 +36,10 @@ function onRequest(env) {
 function authenticate(username, password) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
-        var authenticationContext = callOSGiService("org.wso2.is.portal.user.client.api.RealmClientService",
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "authenticate", [username, passwordChar]);
 
-        createSession(authenticationContext.user);
+        createSession(uufUser);
         return {success: true, message: "success"}
     } catch (e) {
         var message = e.message;

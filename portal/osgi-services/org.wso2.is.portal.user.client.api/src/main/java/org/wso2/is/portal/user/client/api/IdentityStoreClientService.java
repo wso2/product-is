@@ -16,11 +16,12 @@
 
 package org.wso2.is.portal.user.client.api;
 
-import org.wso2.carbon.identity.mgt.AuthenticationContext;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.Map;
 
@@ -36,11 +37,10 @@ public interface IdentityStoreClientService {
      * @param username username
      * @param password password
      * @return authentication context
-     * @throws IdentityStoreException Identity Store Exception
-     * @throws AuthenticationFailure  Authentication Failure
+     * @throws UserPortalUIException  Authentication Failure
      */
-    AuthenticationContext authenticate(String username, char[] password)
-            throws IdentityStoreException, AuthenticationFailure;
+    UUFUser authenticate(String username, char[] password)
+            throws UserPortalUIException;
 
     /**
      * Update user password.
@@ -53,8 +53,7 @@ public interface IdentityStoreClientService {
      * @throws UserNotFoundException  User Not Found Exception
      */
     void updatePassword(String username, char[] oldPassword, char[] newPassword)
-            throws IdentityStoreException, AuthenticationFailure, UserNotFoundException;
-
+            throws UserNotFoundException, UserPortalUIException;
 
     /**
      * Add new user to the default domain.

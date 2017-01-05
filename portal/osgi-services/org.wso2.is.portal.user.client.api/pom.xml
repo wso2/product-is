@@ -59,6 +59,11 @@
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.core</artifactId>
+            <version>1.0.0-m7</version>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>org.apache.felix</groupId>-->
@@ -76,7 +81,9 @@
             org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.uuf.spi.auth.*
         </import.package>
+        <!--//todo set versions-->
         <export.package>
             !org.wso2.is.portal.user.client.api.internal.*,
             org.wso2.is.portal.user.client.api.*;version="${project.version}"
