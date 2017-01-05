@@ -26,16 +26,18 @@ import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
+import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
-import java.util.Arrays;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.PasswordCallback;
 
 /**
  * Identity store client service implementation.
@@ -49,31 +51,42 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
 
     @Override
-    public AuthenticationContext authenticate(String username, char[] password) throws IdentityStoreException,
-            AuthenticationFailure {
+    public UUFUser authenticate(String username, char[] password) throws UserPortalUIException {
 
-        Claim usernameClaim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, IdentityMgtConstants.USERNAME_CLAIM,
-                username);
-        PasswordCallback passwordCallback = new PasswordCallback("password", false);
-        passwordCallback.setPassword(password);
+        try {
+            Claim usernameClaim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, IdentityMgtConstants.USERNAME_CLAIM,
+                    username);
+            PasswordCallback passwordCallback = new PasswordCallback("password", false);
+            passwordCallback.setPassword(password);
+            //todo
+            AuthenticationContext authenticationContext = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().authenticate(usernameClaim,
+                    new Callback[]{passwordCallback}, null);
+            User identityUser = authenticationContext.getUser();
 
-        return UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().authenticate(usernameClaim,
-                new Callback[]{passwordCallback}, null);
-
+            return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
+        } catch (AuthenticationFailure | IdentityStoreException e) {
+            //todo
+            e.printStackTrace();
+            throw new UserPortalUIException(e.getMessage());
+        }
     }
 
     @Override
-    public void updatePassword(String username, char[] oldPassword, char[] newPassword) throws UserNotFoundException,
-            AuthenticationFailure, IdentityStoreException {
+    public void updatePassword(String username, char[] oldPassword, char[] newPassword)
+            throws UserNotFoundException, UserPortalUIException {
 
-        //validate the old password
-        authenticate(username, oldPassword);
+        try {
+            //validate the old password
+            authenticate(username, oldPassword);
 
-        PasswordCallback passwordCallback = new PasswordCallback("password", false);
-        passwordCallback.setPassword(newPassword);
+            PasswordCallback passwordCallback = new PasswordCallback("password", false);
+            passwordCallback.setPassword(newPassword);
 
-        UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
-                .singletonList(passwordCallback));
+            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
+                    .singletonList(passwordCallback));
+        } catch (IdentityStoreException e) {
+            throw new UserPortalUIException(e.getMessage());
+        }
 
     }
 
