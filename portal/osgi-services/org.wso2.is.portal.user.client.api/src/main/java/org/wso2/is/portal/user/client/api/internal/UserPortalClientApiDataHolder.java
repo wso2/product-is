@@ -29,6 +29,7 @@ public class UserPortalClientApiDataHolder {
     private static UserPortalClientApiDataHolder instance = new UserPortalClientApiDataHolder();
 
     private RealmService realmService;
+
     private ProfileMgtService profileMgtService;
 
     //TODO remove
@@ -43,7 +44,7 @@ public class UserPortalClientApiDataHolder {
     }
 
     public RealmService getRealmService() {
-        if(realmService == null) {
+        if (realmService == null) {
             throw new IllegalStateException("Realm Service is null.");
         }
         return realmService;
@@ -53,10 +54,6 @@ public class UserPortalClientApiDataHolder {
         this.realmService = realmService;
     }
 
-    public void setProfileMgtService(ProfileMgtService profileMgtService) {
-        this.profileMgtService = profileMgtService;
-    }
-
     public ProfileMgtService getProfileMgtService() {
         if (profileMgtService == null) {
             throw new IllegalStateException("Profile Mgt Service is null.");
@@ -64,8 +61,8 @@ public class UserPortalClientApiDataHolder {
         return profileMgtService;
     }
 
-    public static void setInstance(UserPortalClientApiDataHolder instance) {
-        UserPortalClientApiDataHolder.instance = instance;
+    public void setProfileMgtService(ProfileMgtService profileMgtService) {
+        this.profileMgtService = profileMgtService;
     }
 
     public List<String> getTempUsers() {

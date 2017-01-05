@@ -17,24 +17,49 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
+
+import java.util.Set;
 
 /**
  * Profile Mgt Client Service Implementation.
  */
 public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
-    /**
-     * Get the claims set of a profile.
-     *
-     * @param profileName : Uniquely identifying name of the profile.
-     * @return Map(claim, Map(Property Key: Property Value)) with the set of claims and their properties.
-     * @throws ProfileMgtServiceException : Error in getting the profile.
-     */
+    private static final Logger log = LoggerFactory.getLogger(ProfileMgtClientServiceImpl.class);
+
     @Override
-    public ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException {
-        return UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
+    public Set<String> getProfileNames() throws UserPortalUIException {
+
+        Set<String> profileNames;
+        try {
+            profileNames = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfileNames();
+        } catch (ProfileMgtServiceException e) {
+            String error = "Failed to retrieve profile names.";
+            log.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+
+        return profileNames;
+    }
+
+    @Override
+    public ProfileEntry getProfile(String profileName) throws UserPortalUIException {
+
+        ProfileEntry profileEntry;
+        try {
+            profileEntry = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
+        } catch (ProfileMgtServiceException e) {
+            String error = String.format("Failed to retrieve profile - %s", profileName);
+            log.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+
+        return profileEntry;
     }
 }

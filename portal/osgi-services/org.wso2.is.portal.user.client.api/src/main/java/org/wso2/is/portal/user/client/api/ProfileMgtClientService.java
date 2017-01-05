@@ -16,8 +16,10 @@
 
 package org.wso2.is.portal.user.client.api;
 
-import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+
+import java.util.Set;
 
 /**
  * Profile Mgt Client Service.
@@ -25,12 +27,20 @@ import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
 public interface ProfileMgtClientService {
 
     /**
-     * Get the claims set of a profile.
+     * Get the names of available profiles
      *
-     * @param profileName : Uniquely identifying name of the profile.
-     * @return ProfileEntry with the set of claims and their properties.
-     * @throws ProfileMgtServiceException : Error in getting the profile.
+     * @return a set with all the available profile names
+     * @throws UserPortalUIException User portal ui exception
      */
-    ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException;
-}
+    Set<String> getProfileNames() throws UserPortalUIException;
 
+    /**
+     * Get the claims set of a profile
+     *
+     * @param profileName : Uniquely identifying name of the profile
+     * @return ProfileEntry with the set of claims and their properties
+     * @throws UserPortalUIException User portal ui exception
+     */
+    ProfileEntry getProfile(String profileName) throws UserPortalUIException;
+
+}
