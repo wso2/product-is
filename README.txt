@@ -4,47 +4,93 @@ WSO2 Identity Server ${product.version}
 
 Welcome to the WSO2 Identity Server ${product.version} release.
 
-WSO2 Identity Server is an open source Identity and Entitlement management server. It supports a wide array of authentication 
-protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
-It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
-supported through SCIM and SPML.
+WSO2 Identity Server is an open source Identity and Entitlement Management server. It supports a wide array of
+authentication protocols such as SAML 2.0 Web SSO, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. It supports
+role based authorization and fine grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is supported
+through SCIM and SPML.
 
-This is based on the revolutionary WSO2 Carbon framework. All the major features have been developed as pluggable Carbon components.
+WSO2 Identity Server is developed on top of the revolutionary WSO2 Carbon platform, an OSGi based framework that provides
+seamless modularity to your SOA solution via componentization.
+
 
 New Features
 ============
 
-*  In cases where users will have multiple entries in their respective user stores, to avoid requiring multiple
+*   Improved Identity Management Capabilities : Identity management features in WSO2 Identity Server 5.3.0, has been
+    re-designed to provide strong out-of-the-box support for key identity management use cases, including password policies,
+    login policies and account management policies.
+        + Password policies
+            Password history validation (ability to keep track of user's old passwords).
+            Password Patterns Configuration.
 
-     logins to an application to obtain a fully privileged view for a single user's details, we now support merging
-     of multiple user profiles.
+        + Login policies
+            Google ReCaptcha support for single sign on.
+            Account locking in single and multi-tenant environments.
 
-*  Workflow Support for Identity Server
+        + Account management policies.
+            Account suspension reminders and locking idle accounts.
+            Password and username recovery with challenge questions or notifications.
+                We also support challenge questions internalization.
+            Password reset via admin. For more information.
+            Google ReCaptcha support for password recovery flow and self sign up.
 
-     WSO2 IS ${product.version} now supports user store operations to engage with workflows. Administrators will be able select
-     at which levels each operation should be approved before they get executed. This will be available as a
-     optional feature where administrator will be able to select if to use them on their user store operations or not.
+        + HTML support for email templates, template internalization and dynamic properties for email templates.
 
-* FIDO Authentication
-
-     FIDO(Fast IDentity Online) will provide an extra layer of security to your account.  FIDO protocols use standard
-     public key cryptography techniques to provide stronger authentication. WSO2 IS ${product.version} now supports FIDO
-     authentication.
+        + Brute force attack prevention.
 
 
-*  XACML cache invalidation notification when changes are made to Identities
+*   Login session monitoring and termination: WSO2 IS now supports monitoring user sessions and authentication
+    activities via alerts, and manual termination of user sessions for better security.
 
-     WSO2 IS ${product.version} is now able to send invalidation notifications to external endpoints when there is a change in user
-     roles, permissions or attributes as well as clear the internal cache when user roles, permissions or attributes
-     been updated
 
-*  PATCH operation support for SCIM 1.1
+*   Rule based provisioning: WSO2 IS 5.3.0 has the ability to adopt provision flows based on rules. These rules can be
+    based on entities related to an event such as user, idp, sp  as well as environmental factors like time and region.
 
-     PUT supports the replace operation but not the update operation. Since group is a heavy resource, the
-     operation that alters without replacement (PATCH) needs to be implemented. If not each time a new user is
-     added to the group, all the users should be sent in the PUT request.
 
-*  Renewed support for bearer type SAML 2.0 token
+*   Prompt for missing predefined required attributes in the authentication flow: The user will be prompted to fill the
+    missing attributes or claim values, in the event of  a missing mandatory claim  at the point of login.
+
+
+*   OAuth 2.0/OpenID Connect Enhancements: Following OpenID Connect specifications were implemented to enrich the OpenID
+    connect support in Identity Server.
+        + OpenID Connect Dynamic Client Registration.
+        + Token Introspection.
+        + OpenID Connect Discovery support.
+
+
+*   OAuth 2.0 client secret revocation and regeneration.
+
+
+*   REST profile of XACML. With IS 5.3.0, we have added a REST layer on top of the Balana entitlement engine.
+
+
+*   SAML 2.0 Enhancements: Identity server 5.3.0 added following specification support to its SAML feature list.
+        + SAML 2.0 Metadata Profile.
+        + SAML 2.0 Assertion Query/Request Profile
+
+
+*   Security Analytics: WSO2 IS now detects and provides alerting capability for abnormal and suspicious login sessions.
+
+
+*   SCIM 1.0 Enhancements : SCIM provisioning API improved to support attribute query.
+
+
+*   Engage access control policies in authentication flow : With WSO2 IS 5.3.0 it's possible to evaluate access control
+    policies against an authenticated user in authentication flow.
+
+
+*   Integrated Windows Authentication (IWA) for IS deployed on Linux servers : With this improvement we enable IS
+    deployed on Linux servers to achieve IWA with external Kerberos/NTLM Servers.
+
+
+*   Claim Management Improvement: With this release we relieve the user from the painstaking task of having map claims
+    from one dialect to another indirectly by manipulating mapped attributes. From IS 5.3.0, users can easily map claims
+    from two dialects directly without worrying about mapped attributes.
+
+
+*  Identity Management REST APIs : New RESTful interfaces to connect with account registration and recovery flows have
+    been introduced with IS 5.3.0.
+
 
 Other Key Features
 =============
@@ -99,7 +145,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   http://docs.wso2.org/wiki/display/IS520/Installation+Prerequisites
+   http://docs.wso2.org/wiki/display/IS530/Installation+Prerequisites
 
 
 Project Resources
@@ -107,7 +153,7 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : http://docs.wso2.org/wiki/display/IS520/WSO2+Identity+Server+Documentation
+* Wiki               : http://docs.wso2.org/wiki/display/IS530/WSO2+Identity+Server+Documentation
 * JIRA-Issue Tracker : https://wso2.org/jira/browse/IDENTITY      
 * Forums             : http://stackoverflow.com/questions/tagged/wso2/
 * WSO2 Developer List: dev@wso2.org
@@ -300,7 +346,7 @@ For more information about WSO2 Identity Server please see http://wso2.org/proje
 WSO2 Oxygen Tank developer portal for addition resources.
 
 For further details, see the WSO2 Identity Server documentation at
-https://docs.wso2.com/display/IS520/WSO2+Identity+Server+Documentation
+https://docs.wso2.com/display/IS530/WSO2+Identity+Server+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2016 WSO2 Inc.
+(c) Copyright 2017 WSO2 Inc.
