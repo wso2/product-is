@@ -55,7 +55,7 @@ public class UserPortalClientApiDataHolder {
     }
 
     public ProfileMgtService getProfileMgtService() {
-        if(realmService == null) {
+        if(profileMgtService == null) {
             throw new IllegalStateException("Profile Mgt Service is null.");
         }
         return profileMgtService;
