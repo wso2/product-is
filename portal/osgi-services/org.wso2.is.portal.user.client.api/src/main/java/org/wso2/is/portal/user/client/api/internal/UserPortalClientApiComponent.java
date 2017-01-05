@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl;
+import org.wso2.is.portal.user.client.api.ProfileMgtClientService;
+import org.wso2.is.portal.user.client.api.ProfileMgtClientServiceImpl;
 
 @Component(
         name = "org.wso2.is.portal.user.client.api.internal.UserPortalClientApiComponent",
@@ -77,5 +79,8 @@ public class UserPortalClientApiComponent {
 
         IdentityStoreClientService identityStoreClientService = new IdentityStoreClientServiceImpl();
         bundleContext.registerService(IdentityStoreClientService.class, identityStoreClientService, null);
+
+        ProfileMgtClientService profileMgtClientService = new ProfileMgtClientServiceImpl();
+        bundleContext.registerService(ProfileMgtClientService.class, profileMgtClientService, null);
     }
 }
