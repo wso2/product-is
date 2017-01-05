@@ -1,4 +1,4 @@
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"  PolicyId="authn_user_claim_and_time_based_policy_template" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"  PolicyId="authn_time_and_user_claim_based_policy_template" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
     <Description>This template policy provides ability to authorize users to a given service provider(defined by SP_NAME) in the authentication flow based on the user's attribute values (CLAIM_URI_1=CLAIM_VALUE_1 and CLAIM_URI_2=CLAIM_VALUE_2) and the login time. Users with the given claim values and who are logged in within the given time range (09:00:00 to 17:00:00) will be allowed and any other users will be denied.</Description>
     <Target>
         <AnyOf>
