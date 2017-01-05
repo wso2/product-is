@@ -16,10 +16,21 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+
 /**
  * Profile Mgt Client Service.
  */
 public interface ProfileMgtClientService {
 
-
+    /**
+     * Get the claims set of a profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return ProfileEntry with the set of claims and their properties.
+     * @throws ProfileMgtServiceException : Error in getting the profile.
+     */
+    ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException;
 }
+

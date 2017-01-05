@@ -17,9 +17,24 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
+
 /**
  * Profile Mgt Client Service Implementation.
  */
 public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
+    /**
+     * Get the claims set of a profile.
+     *
+     * @param profileName : Uniquely identifying name of the profile.
+     * @return Map(claim, Map(Property Key: Property Value)) with the set of claims and their properties.
+     * @throws ProfileMgtServiceException : Error in getting the profile.
+     */
+    @Override
+    public ProfileEntry getProfile(String profileName) throws ProfileMgtServiceException {
+        return UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
+    }
 }
