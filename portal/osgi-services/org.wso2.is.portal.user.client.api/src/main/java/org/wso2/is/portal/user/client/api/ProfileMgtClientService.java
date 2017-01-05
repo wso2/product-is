@@ -21,6 +21,7 @@
 package org.wso2.is.portal.user.client.api;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.wso2.carbon.identity.claim.mapping.profile.ProfileEntry;
 import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -30,11 +31,18 @@ import java.util.Set;
 
 =======
 >>>>>>> c9a9414... Adding ProfileMgtClientService
+=======
+import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
+
+import java.util.Set;
+
+>>>>>>> c2d029b... Adding profile view dynamically.
 /**
  * Profile Mgt Client Service.
  */
 public interface ProfileMgtClientService {
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     /**
      * Get the names of available profiles
@@ -64,5 +72,13 @@ public interface ProfileMgtClientService {
     List<ProfileUIEntry> getProfileEntries(String profileName, String uniqueUserId) throws UserPortalUIException;
 =======
 >>>>>>> c9a9414... Adding ProfileMgtClientService
+=======
+    /**
+     * Get the names of available profiles.
+     * @return a set with all the available profile names.
+     * @throws ProfileMgtClientException Profile Mgt Client Exception
+     */
+    Set<String> getProfileNames() throws ProfileMgtClientException;
+>>>>>>> c2d029b... Adding profile view dynamically.
 
 }

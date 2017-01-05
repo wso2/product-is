@@ -50,7 +50,10 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-            <version>${org.wso2.carbon.identity.mgt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
@@ -70,6 +73,8 @@
             javax.security.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
         </import.package>
         <export.package>
             !org.wso2.is.portal.user.client.api.internal.*,

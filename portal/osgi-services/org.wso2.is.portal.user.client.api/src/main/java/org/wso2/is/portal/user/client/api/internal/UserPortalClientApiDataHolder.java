@@ -16,6 +16,7 @@
 
 package org.wso2.is.portal.user.client.api.internal;
 
+import org.wso2.carbon.identity.meta.claim.mgt.service.ProfileMgtService;
 import org.wso2.carbon.identity.mgt.RealmService;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class UserPortalClientApiDataHolder {
     private static UserPortalClientApiDataHolder instance = new UserPortalClientApiDataHolder();
 
     private RealmService realmService;
+
+    private ProfileMgtService profileMgtService;
 
     //TODO remove
     private List<String> tempUsers;
@@ -51,8 +54,15 @@ public class UserPortalClientApiDataHolder {
         this.realmService = realmService;
     }
 
-    public static void setInstance(UserPortalClientApiDataHolder instance) {
-        UserPortalClientApiDataHolder.instance = instance;
+    public ProfileMgtService getProfileMgtService() {
+        if(realmService == null) {
+            throw new IllegalStateException("Profile Mgt Service is null.");
+        }
+        return profileMgtService;
+    }
+
+    public void setProfileMgtService(ProfileMgtService profileMgtService) {
+        this.profileMgtService = profileMgtService;
     }
 
     public List<String> getTempUsers() {

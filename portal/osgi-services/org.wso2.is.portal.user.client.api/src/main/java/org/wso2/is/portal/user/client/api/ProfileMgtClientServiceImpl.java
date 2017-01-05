@@ -52,6 +52,12 @@ import java.util.stream.Collectors;
 package org.wso2.is.portal.user.client.api;
 >>>>>>> c9a9414... Adding ProfileMgtClientService
 
+import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
+import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
+import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
+
+import java.util.Set;
+
 /**
  * Profile Mgt Client Service Implementation.
  */
@@ -209,5 +215,20 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 =======
 public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
+<<<<<<< HEAD
 >>>>>>> c9a9414... Adding ProfileMgtClientService
+=======
+    @Override
+    public Set<String> getProfileNames() throws ProfileMgtClientException {
+
+        Set<String> profileNames;
+        try {
+            profileNames = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfileNames();
+        } catch (ProfileMgtServiceException e) {
+            throw new ProfileMgtClientException("Failed to retrieve profile names.");
+        }
+
+        return profileNames;
+    }
+>>>>>>> c2d029b... Adding profile view dynamically.
 }
