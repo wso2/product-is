@@ -644,7 +644,7 @@
 >>>>>>> 7a96980... Making the required changes to compile new code.
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
-                <version>${uuf.version}</version>
+                <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
 
@@ -704,6 +704,7 @@
                 <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
+<<<<<<< HEAD
             <dependency>
                 <groupId>org.wso2.carbon.uuf.sample</groupId>
                 <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
@@ -721,12 +722,21 @@
                 <type>zip</type>
             </dependency>
 =======
+=======
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
+                <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
+                <!--<version>${carbon.uuf.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
             <!--<dependency>-->
                 <!--<groupId>org.wso2.is</groupId>-->
                 <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
                 <!--<version>${carbon.is.version}</version>-->
                 <!--<type>zip</type>-->
             <!--</dependency>-->
+<<<<<<< HEAD
 >>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
             <dependency>
                 <groupId>org.wso2.carbon.uuf.sample</groupId>
@@ -735,6 +745,14 @@
                 <type>zip</type>
             </dependency>
 >>>>>>> a695889... update connectors and config changes
+=======
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
+                <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
+                <!--<version>${carbon.uuf.version}</version>-->
+                <!--<type>zip</type>-->
+            <!--</dependency>-->
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
             <!--End of Dependent Features-->
 
             <!--Identity Server Dependencies-->
@@ -1138,10 +1156,15 @@
 =======
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
         <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 >>>>>>> f76445f... adding configuration changes
+
+        <carbon.uuf.version>1.0.0-m7</carbon.uuf.version>
+        <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
+        <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
+        <carbon.metrics.version>2.0.0</carbon.metrics.version>
+        <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
 
         <!--3rd party related properties-->
         <commons-beanutils.wso2.version>1.8.0.wso2v1</commons-beanutils.wso2.version>
@@ -1193,6 +1216,7 @@
         <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <carbon-uuf-maven-plugin.version>1.0.0-SNAPSHOT</carbon-uuf-maven-plugin.version>
 =======
@@ -1205,11 +1229,14 @@
 >>>>>>> 960354e... added uuf maven plugin version property to pom.xml
 =======
 >>>>>>> f20af8b... Updated MSF4J dependency.
+=======
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
         <carbon.jndi.version>1.0.0</carbon.jndi.version>
         <carbon.kernel.package.import.version.range>[5.1.0, 6.0.0)</carbon.kernel.package.import.version.range>
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.container.version>5.2.0-m2</carbon.container.version>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         <carbon.messaging.version>1.0.11</carbon.messaging.version>
@@ -1238,6 +1265,12 @@
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
 =======
 >>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
+=======
+        <carbon.messaging.version>1.0.11</carbon.messaging.version>
+        <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
+        <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
+        <msf4j.version>2.1.0</msf4j.version>
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -1290,11 +1323,6 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
-
-        <!-- Maven Plugins -->
-        <carbon-uuf-maven-plugin.version>1.0.0-m8</carbon-uuf-maven-plugin.version>
-
-        <!--<org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>-->
 
     </properties>
 =======

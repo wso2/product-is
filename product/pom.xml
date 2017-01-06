@@ -285,6 +285,7 @@
 
         <!-- Sample Simple Authentication Component -->
 
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.uuf.sample</groupId>
             <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
@@ -300,6 +301,8 @@
 
         <!-- Sample Simple Authentication Component -->
 
+=======
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
         <!--<dependency>-->
             <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
             <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
@@ -310,6 +313,7 @@
             <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
             <!--<type>zip</type>-->
         <!--</dependency>-->
+<<<<<<< HEAD
 =======
         <dependency>
 <<<<<<< HEAD
@@ -340,6 +344,8 @@
             <type>zip</type>
         </dependency>
 >>>>>>> 6906998... Made the UUF app for user portal buildable
+=======
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
     </dependencies>
 
     <build>
@@ -648,6 +654,7 @@
                                     <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
+<<<<<<< HEAD
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
@@ -664,6 +671,8 @@
                                     <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
+=======
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
@@ -672,6 +681,7 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+<<<<<<< HEAD
 =======
                                     <id>org.wso2.carbon.uuf.Features-app.feature</id>
                                     <version>${carbon.uuf.version}</version>
@@ -686,6 +696,8 @@
 <<<<<<< HEAD
 >>>>>>> a695889... update connectors and config changes
 =======
+=======
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <feature>
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
@@ -940,6 +952,7 @@
 >>>>>>> a695889... update connectors and config changes
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
+<<<<<<< HEAD
                                 <feature>
 >>>>>>> f20af8b... Updated MSF4J dependency.
                                     <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
@@ -965,10 +978,17 @@
 >>>>>>> 6906998... Made the UUF app for user portal buildable
 =======
 =======
+=======
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</feature>-->
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
+<<<<<<< HEAD
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                 <feature>
                                     <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
@@ -977,6 +997,12 @@
 <<<<<<< HEAD
 >>>>>>> a695889... update connectors and config changes
 =======
+=======
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</feature>-->
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <feature>
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>

@@ -19,6 +19,7 @@ theme : "org.wso2.carbon.uuf.common.theme.default"
 #         submenus:
 #           - text: "See all our amazing pets"
 #             link: "/pets"
+<<<<<<< HEAD
 menus :
   - name: "main"
     items:
@@ -43,6 +44,9 @@ menus :
            - text: "Account Settings"
              link: "account/account-setting"
              icon:  "fw fw-add"
+=======
+
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
 
 errorPages:
   404: "/foundation/error/404"
@@ -60,4 +64,7 @@ security:
     accept: []
     reject: []
   responseHeaders: null
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..

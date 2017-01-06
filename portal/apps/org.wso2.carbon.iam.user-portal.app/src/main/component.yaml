@@ -26,6 +26,7 @@ bindings:
       fragments:
         - "org.wso2.carbon.uuf.common.foundation.menubar"
 <<<<<<< HEAD
+<<<<<<< HEAD
     - zoneName: "org.wso2.carbon.iam.user-portal.feature.usermenu"
       mode: "append"
       fragments:
@@ -40,3 +41,10 @@ config:
 
 =======
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+
+config:
+  appName: "Pet Store"
+  pageSize: 10
+  loginRedirectUri: "/pets"
+>>>>>>> 8053620... making user portal compatible with latest uuf changes..
