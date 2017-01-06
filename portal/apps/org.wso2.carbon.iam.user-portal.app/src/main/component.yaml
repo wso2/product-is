@@ -44,7 +44,11 @@ config:
 =======
 
 config:
-  appName: "Pet Store"
+  appName: "IAM User Portal"
   pageSize: 10
+<<<<<<< HEAD
   loginRedirectUri: "/pets"
 >>>>>>> 8053620... making user portal compatible with latest uuf changes..
+=======
+  loginRedirectUri: "/"
+>>>>>>> e7b5042... Update the yaml files with new menu structure
