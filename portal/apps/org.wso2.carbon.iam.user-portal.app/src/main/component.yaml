@@ -19,3 +19,8 @@ bindings:
       mode: "append"
       fragments:
         - "org.wso2.carbon.uuf.common.foundation.menubar"
+
+config:
+  appName: "Pet Store"
+  pageSize: 10
+  loginRedirectUri: "/pets"
