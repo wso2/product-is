@@ -284,6 +284,18 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return response;
 	}
 
+	public HttpResponse sendApproveAlwaysPost(HttpClient client, String sessionDataKeyConsent)
+			throws ClientProtocolException,
+			IOException {
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("consent", "approveAlways"));
+		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+
+		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+
+		return response;
+	}
+
 	/**
 	 * Send approval post request
 	 *
