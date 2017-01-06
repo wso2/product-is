@@ -115,12 +115,18 @@ function onRequest(env) {
             var uiEntries = [];
             if (result.profileUIEntries) {
                 var profileUIEntries = result.profileUIEntries;
-                for(var i = 0; i < profileUIEntries.length > 0; i++) {
-                    var entry = {}
-                    Log.info(profileUIEntries[i].value);
+                for (var i = 0; i < profileUIEntries.length > 0; i++) {
+                    var entry = {
+                        "claimURI": profileUIEntries[i].claimConfigEntry.claimURI,
+                        "displayName": profileUIEntries[i].claimConfigEntry.displayName,
+                        "value": (profileUIEntries[i].value ? profileUIEntries[i].value : "")
+                    };
+                    uiEntries.push(entry);
+                    Log.info(entry);
                 }
             }
-            return {"profileUIEntries": result.profileUIEntries}
+            Log.info(uiEntries);
+            return {"uiEntries": uiEntries}
         } else {
             return {errorMessage: result.message};
         }
