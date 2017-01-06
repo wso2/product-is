@@ -31,19 +31,29 @@ public class UserIdentityManagementAdminServiceClient {
     private UserIdentityManagementAdminServiceStub userIdentityManagementAdminServicestub;
     private final String serviceName = "UserIdentityManagementAdminService";
 
-    public UserIdentityManagementAdminServiceClient(String backEndUrl, String sessionCookie)
-            throws AxisFault {
+    public UserIdentityManagementAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         userIdentityManagementAdminServicestub = new UserIdentityManagementAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, userIdentityManagementAdminServicestub);
     }
 
-    public UserChallengesDTO[] getChallengeQuestionsOfUser(String userName) throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
+    public UserChallengesDTO[] getChallengeQuestionsOfUser(String userName)
+            throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
         return userIdentityManagementAdminServicestub.getChallengeQuestionsOfUser(userName);
     }
 
-    public void setChallengeQuestionsOfUser(String userName, UserChallengesDTO[] challengesDTOs) throws
-            UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
+    public void setChallengeQuestionsOfUser(String userName, UserChallengesDTO[] challengesDTOs)
+            throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
         userIdentityManagementAdminServicestub.setChallengeQuestionsOfUser(userName, challengesDTOs);
+    }
+
+    public void disableUserAccount(String userName, String notificationType)
+            throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
+        userIdentityManagementAdminServicestub.disableUserAccount(userName, notificationType);
+    }
+
+    public void enableUserAccount(String userName, String notificationType)
+            throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
+        userIdentityManagementAdminServicestub.enableUserAccount(userName, notificationType);
     }
 }
