@@ -21,6 +21,6 @@ bindings:
         - "org.wso2.carbon.uuf.common.foundation.menubar"
 
 config:
-  appName: "Pet Store"
+  appName: "IAM User Portal"
   pageSize: 10
-  loginRedirectUri: "/pets"
+  loginRedirectUri: "/"
