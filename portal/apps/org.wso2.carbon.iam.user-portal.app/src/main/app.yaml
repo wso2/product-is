@@ -19,7 +19,30 @@ theme : "org.wso2.carbon.uuf.common.theme.default"
 #         submenus:
 #           - text: "See all our amazing pets"
 #             link: "/pets"
-
+menus :
+  - name: "main"
+    items:
+      - text: "Home"
+        link: ""
+        icon: "fw-home"
+      - text: "Users"
+        link: ""
+        submenus:
+           - text: "Login"
+             link: "login"
+             icon: "fw fw-add"
+           - text: "Sign up"
+             link: "user/signup"
+             icon:  "fw fw-add"
+           - text: "Reset Password"
+             link: "user/reset-password"
+             icon:  "fw fw-add"
+           - text: "User Profile"
+             link: "user/profile"
+             icon:  "fw fw-user"
+           - text: "Account Settings"
+             link: "account/account-setting"
+             icon:  "fw fw-add"
 
 errorPages:
   404: "/foundation/error/404"
@@ -37,3 +60,4 @@ security:
     accept: []
     reject: []
   responseHeaders: null
+
