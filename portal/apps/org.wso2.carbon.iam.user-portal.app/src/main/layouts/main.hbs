@@ -24,21 +24,7 @@
             </a>
         </div>
 
-        <ul class="nav navbar-right">
-            <li class="visible-inline-block">
-                <a class="dropdown" data-toggle="dropdown" aria-expanded="false">
-                       <span class="icon fw-stack">
-                          <i class="fw fw-circle fw-stack-2x"></i>
-                          <i class="fw fw-user fw-stack-1x fw-inverse"></i>
-                       </span>
-                    <span class="hidden-xs add-margin-left-1x">John Doe <span class="caret"></span></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right slideInDown" role="menu">
-                    <li><a href="{{@contextPath}}/account/account-setting">Account Settings</a></li>
-                    <li><a href="#">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
+        {{defineZone "usermenu"}}
     </div>
 </header>
 <!-- /header -->

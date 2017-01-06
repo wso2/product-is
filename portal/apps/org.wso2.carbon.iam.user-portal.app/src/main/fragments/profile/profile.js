@@ -111,6 +111,10 @@ function onRequest(env) {
 
     if (env.params.profileName) {
         var session = getSession();
+        //TODO
+        if(!session) {
+            sendRedirect(env.contextPath + env.config['loginPageUri']);
+        }
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
             var uiEntries = [];

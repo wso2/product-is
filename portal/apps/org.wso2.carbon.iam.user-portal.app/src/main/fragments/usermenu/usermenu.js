@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -39,10 +40,13 @@ function isProfileImageAvailbale(session) {
     return {profileImage: false};
 }
 
+=======
+>>>>>>> 43350c9... Adding Login/Logout functionality.
 function onRequest(env) {
     
     var session = getSession();
     if (!session) {
+<<<<<<< HEAD
         sendRedirect(env.contextPath + env.config.loginPageUri);
     }
     var profileImageResult = isProfileImageAvailbale(session);
@@ -50,4 +54,9 @@ function onRequest(env) {
         username: session.getUser().getUsername(), profileImage: profileImageResult.profileImage,
         userId: profileImageResult.userId
     };
+=======
+        sendRedirect(env.contextPath + env.config['loginPageUri']);
+    }
+    return {username: session.getUser().getUsername()};
+>>>>>>> 43350c9... Adding Login/Logout functionality.
 }

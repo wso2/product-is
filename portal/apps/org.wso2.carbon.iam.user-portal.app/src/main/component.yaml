@@ -27,10 +27,14 @@ bindings:
         - "org.wso2.carbon.uuf.common.foundation.menubar"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 43350c9... Adding Login/Logout functionality.
     - zoneName: "org.wso2.carbon.iam.user-portal.feature.usermenu"
       mode: "append"
       fragments:
        - "org.wso2.carbon.iam.user-portal.feature.usermenu"
+<<<<<<< HEAD
 
 config:
   appName: "Identity Server User Portal"
@@ -42,6 +46,8 @@ config:
 =======
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
 =======
+=======
+>>>>>>> 43350c9... Adding Login/Logout functionality.
 
 config:
   appName: "IAM User Portal"
@@ -51,4 +57,8 @@ config:
 >>>>>>> 8053620... making user portal compatible with latest uuf changes..
 =======
   loginRedirectUri: "/"
+<<<<<<< HEAD
 >>>>>>> e7b5042... Update the yaml files with new menu structure
+=======
+  loginPageUri: "/login"
+>>>>>>> 43350c9... Adding Login/Logout functionality.
