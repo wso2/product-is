@@ -17,6 +17,7 @@
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.List;

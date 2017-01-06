@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
@@ -99,7 +100,7 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         try {
             //TODO remove test users
             claims = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore()
-                    .getClaimsOfUser(UserPortalClientApiDataHolder.getInstance().getTempUsers().get(0), metaClaims);
+                    .getClaimsOfUser(uniqueUserId, metaClaims);
         } catch (IdentityStoreException e) {
             log.error(String.format("Failed to get the user claims for user - %s", uniqueUserId), e);
             throw new UserPortalUIException(String.format("Failed to get the user claims for the profile - %s",

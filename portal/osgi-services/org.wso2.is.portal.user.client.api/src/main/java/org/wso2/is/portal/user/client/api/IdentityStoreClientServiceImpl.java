@@ -30,14 +30,14 @@ import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.PasswordCallback;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
 
 /**
  * Identity store client service implementation.
@@ -54,6 +54,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     public UUFUser authenticate(String username, char[] password) throws UserPortalUIException {
 
         try {
+            //TODO if different claim is used, need identify that claim.
             Claim usernameClaim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, IdentityMgtConstants.USERNAME_CLAIM,
                     username);
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
@@ -63,7 +64,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
                     new Callback[]{passwordCallback}, null);
             User identityUser = authenticationContext.getUser();
 
-            return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
+            //TODO if another claim used, need to load username claim
+
+            return new UUFUser(username, identityUser.getUniqueUserId(), identityUser.getDomainName());
         } catch (AuthenticationFailure | IdentityStoreException e) {
             //todo
             e.printStackTrace();
