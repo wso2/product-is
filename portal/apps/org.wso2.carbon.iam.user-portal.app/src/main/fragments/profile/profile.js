@@ -110,7 +110,8 @@ function uploadFile(env, session) {
 function onRequest(env) {
 
     if (env.params.profileName) {
-        var result = getProfileUIEntries(env.params.profileName, "test-user-id");
+        var session = getSession();
+        var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
             var uiEntries = [];
             if (result.profileUIEntries) {
@@ -122,10 +123,8 @@ function onRequest(env) {
                         "value": (profileUIEntries[i].value ? profileUIEntries[i].value : "")
                     };
                     uiEntries.push(entry);
-                    Log.info(entry);
                 }
             }
-            Log.info(uiEntries);
             return {"uiEntries": uiEntries}
         } else {
             return {errorMessage: result.message};
