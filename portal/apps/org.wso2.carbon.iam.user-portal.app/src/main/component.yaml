@@ -19,8 +19,13 @@ bindings:
       mode: "append"
       fragments:
         - "org.wso2.carbon.uuf.common.foundation.menubar"
+    - zoneName: "org.wso2.carbon.iam.user-portal.feature.usermenu"
+      mode: "append"
+      fragments:
+       - "org.wso2.carbon.iam.user-portal.feature.usermenu"
 
 config:
   appName: "IAM User Portal"
   pageSize: 10
   loginRedirectUri: "/"
+  loginPageUri: "/login"
