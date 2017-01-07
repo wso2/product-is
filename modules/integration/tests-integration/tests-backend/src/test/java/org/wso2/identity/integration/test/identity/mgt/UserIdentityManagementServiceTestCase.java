@@ -52,6 +52,7 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
     private static final String TEST_ROLE = "testRole";
     private static final String lastLoginClaimURI = "http://wso2.org/claims/identity/lastLoginTime";
     private static final String lastPasswordUpdateURI = "http://wso2.org/claims/identity/lastPasswordUpdateTime";
+    private static final String accountDisabledClaim = "http://wso2.org/claims/identity/accountDisabled ";
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
@@ -130,6 +131,18 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
         Assert.assertNotNull(lastPasswordUpdatedTime);
         Assert.assertTrue(timeBeforeUpdatePassword < Long.parseLong(lastPasswordUpdatedTime) && Long.parseLong
                 (lastPasswordUpdatedTime) < timeAfterUpdatePassword);
+    }
+
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Disable user account")
+    public void testDisableAccount() throws Exception {
+        userIdentityManagementAdminServiceClient.disableUserAccount(TEST_USER_USERNAME, null);
+        Assert.assertTrue(Boolean.parseBoolean(
+                remoteUSMServiceClient.getUserClaimValue(TEST_USER_USERNAME, accountDisabledClaim, null)));
+        userIdentityManagementAdminServiceClient.enableUserAccount(TEST_USER_USERNAME, null);
+        Assert.assertFalse(Boolean.parseBoolean(
+                remoteUSMServiceClient.getUserClaimValue(TEST_USER_USERNAME, accountDisabledClaim, null)));
     }
 
     /**
