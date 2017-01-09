@@ -16,7 +16,7 @@
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
             <label for="{{this.claimURI}}">{{this.displayName}}</label>
             <input type="text" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
-                   value="{{this.value}}" />
+                   value="{{this.value}}" {{this.readonly}}/>
         </div>
     </div>
     {{/each}}

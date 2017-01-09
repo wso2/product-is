@@ -81,7 +81,8 @@
             org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.uuf.spi.auth.*
+            org.wso2.carbon.uuf.spi.auth.*,
+            org.wso2.carbon.kernel.utils.*
         </import.package>
         <!--//todo set versions-->
         <export.package>
