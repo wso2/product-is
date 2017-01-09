@@ -76,7 +76,9 @@
                         </goals>
                         <configuration>
                             <instructions>
-                                <Import-Package>org.wso2.is.portal.user.client.api.*</Import-Package>
+                                <Import-Package>
+                                    org.wso2.is.portal.user.client.api.util, org.wso2.is.portal.user.client.api.*
+                                </Import-Package>
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
