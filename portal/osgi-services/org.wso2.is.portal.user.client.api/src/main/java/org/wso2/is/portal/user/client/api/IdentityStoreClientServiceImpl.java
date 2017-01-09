@@ -26,6 +26,7 @@ import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
+import org.wso2.carbon.kernel.utils.StringUtils;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
@@ -98,8 +99,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         UserBean userBean = new UserBean();
         List<Claim> claimsList = new ArrayList();
 
-        for (Map.Entry<String, String> entry : userClaims.entrySet())
-        {
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
             Claim claim = new Claim();
             claim.setClaimUri(entry.getKey());
             claim.setValue(entry.getValue());
@@ -114,6 +114,29 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             throw new RuntimeException("RealmService is not available");
         }
         return null;
+    }
+
+    @Override
+    public void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws
+            UserPortalUIException {
+
+        if (updatedClaimsMap == null || updatedClaimsMap.isEmpty()) {
+            return;
+        }
+
+        List<Claim> updatedClaims = updatedClaimsMap.entrySet().stream()
+                .filter(entry -> !StringUtils.isNullOrEmpty(entry.getKey()))
+                .map(entry -> new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        try {
+            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserClaims
+                    (uniqueUserId, updatedClaims, null);
+        } catch (IdentityStoreException | UserNotFoundException e) {
+            String error = "Failed to updated user profile.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
     }
 
     private void addTestUsers() {
@@ -156,11 +179,11 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
 
-            User user1 =UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
+            User user1 = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
                     (userBean1);
             User user2 = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
                     (userBean2);
-            List<User> users = Arrays.asList(user1,user2);
+            List<User> users = Arrays.asList(user1, user2);
 
             UserPortalClientApiDataHolder.getInstance().setTempUsers(users.stream().map(User::getUniqueUserId)
                     .collect(Collectors.toList()));

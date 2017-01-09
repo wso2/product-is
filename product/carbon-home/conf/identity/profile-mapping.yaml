@@ -36,25 +36,25 @@ profiles:
    claimURI: "http://wso2.org/claims/givenname"
    displayName: "First Name"
    required: true
-   readonly: true
+   readonly: false
    regex: "*"
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
    required: true
-   readonly: true
+   readonly: false
    regex: "*"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
    required: true
-   readonly: true
+   readonly: false
    regex: "*"
   -
    claimURI: "http://wso2.org/claims/telephone"
    displayName: "Telephone"
    required: true
-   readonly: true
+   readonly: false
    regex: "*"
  -
   profileName: "employee"
@@ -71,13 +71,13 @@ profiles:
     customproperty: "custom value"
   -
    claimURI: "http://wso2.org/claims/givenname"
-   displayName: "Name"
+   displayName: "Employee Name"
    required: true
-   readonly: true
+   readonly: false
    regex: "*"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
    required: true
-   readonly: true
+   readonly: false
    regex: "*"
