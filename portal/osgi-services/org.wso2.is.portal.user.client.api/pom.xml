@@ -93,10 +93,15 @@
 =======
             org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 951ade6... Adding profile loading js
 =======
             org.wso2.carbon.uuf.spi.auth.*
 >>>>>>> 7444e2a... getting user login to work..
+=======
+            org.wso2.carbon.uuf.spi.auth.*,
+            org.wso2.carbon.kernel.utils.*
+>>>>>>> abbd84e... Adding update profile logic.
         </import.package>
         <!--//todo set versions-->
         <export.package>

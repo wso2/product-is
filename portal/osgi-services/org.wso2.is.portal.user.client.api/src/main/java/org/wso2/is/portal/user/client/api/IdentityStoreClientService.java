@@ -17,12 +17,14 @@
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.mgt.User;
+import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +39,7 @@ public interface IdentityStoreClientService {
      * @param username username
      * @param password password
      * @return authentication context
-     * @throws UserPortalUIException  Authentication Failure
+     * @throws UserPortalUIException Authentication Failure
      */
     UUFUser authenticate(String username, char[] password)
             throws UserPortalUIException;
@@ -64,4 +66,12 @@ public interface IdentityStoreClientService {
      */
     User addUser(Map<String, String> userClaims) throws IdentityStoreException;
 
+    /**
+     * Update user claims by user id
+     *
+     * @param uniqueUserId  User unique id
+     * @param updatedClaimsMap Updated user claims map
+     * @throws UserPortalUIException User portal ui exception
+     */
+    void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
 }
