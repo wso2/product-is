@@ -1160,7 +1160,7 @@
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 >>>>>>> f76445f... adding configuration changes
 
-        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
+        <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
 <<<<<<< HEAD
         <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
