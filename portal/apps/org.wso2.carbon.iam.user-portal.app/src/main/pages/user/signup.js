@@ -47,7 +47,7 @@ function onRequest(env) {
             "getProfile", ["self-signUp"]);
         var claimForProfile = claimProfile.claims;
 
-        var profileMgtUtil = Java.type("org.wso2.is.portal.user.client.api.util.ProfileMgtUtil");
+        var ProfileMgtUtil = Java.type("org.wso2.is.portal.user.client.api.util.ProfileMgtUtil");
         var profileMgt = new ProfileMgtUtil();
 
         var claimArray = [];
