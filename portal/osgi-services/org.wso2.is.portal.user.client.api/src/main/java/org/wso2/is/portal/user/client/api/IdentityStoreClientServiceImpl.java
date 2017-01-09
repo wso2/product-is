@@ -366,9 +366,17 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public User addUser(Map<String, String> userClaims) throws IdentityStoreException {
+    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException {
         UserBean userBean = new UserBean();
         List<Claim> claimsList = new ArrayList();
+        List<Callback> credentialsList = new ArrayList();
+        User identityUser;
+
+        for (Map.Entry<String, String> credential: credentials.entrySet()) {
+            PasswordCallback passwordCallback = new PasswordCallback("password", false);
+            passwordCallback.setPassword(credential.getValue().toCharArray());
+            credentialsList.add(passwordCallback);
+        }
 
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
             Claim claim = new Claim();
@@ -378,13 +386,45 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         }
 
         userBean.setClaims(claimsList);
+        userBean.setCredentials(credentialsList);
 
-        if (UserPortalClientApiDataHolder.getInstance().getRealmService() != null) {
-            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean);
-        } else {
-            throw new RuntimeException("RealmService is not available");
+        try {
+            identityUser = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean);
+        } catch (IdentityStoreException e) {
+            throw new UserPortalUIException("Error while adding user.");
         }
-        return null;
+        return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
+    }
+
+    @Override
+    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName) throws UserPortalUIException {
+        UserBean userBean = new UserBean();
+        List<Claim> claimsList = new ArrayList();
+        List<Callback> credentialsList = new ArrayList();
+        User identityUser;
+
+        for (Map.Entry<String, String> credential: credentials.entrySet()) {
+            PasswordCallback passwordCallback = new PasswordCallback("password", false);
+            passwordCallback.setPassword(credential.getValue().toCharArray());
+            credentialsList.add(passwordCallback);
+        }
+
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        userBean.setClaims(claimsList);
+        userBean.setCredentials(credentialsList);
+
+        try {
+            identityUser = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean, domainName);
+        } catch (IdentityStoreException e) {
+            throw new UserPortalUIException("Error while adding user.");
+        }
+        return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
     }
 
     @Override

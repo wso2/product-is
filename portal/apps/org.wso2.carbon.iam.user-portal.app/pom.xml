@@ -135,6 +135,7 @@
 <<<<<<< HEAD
                             <instructions>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.carbon.identity.recovery.*
@@ -154,6 +155,11 @@
 =======
                                 <Import-Package>org.wso2.is.portal.user.client.api.*</Import-Package>
 >>>>>>> 7444e2a... getting user login to work..
+=======
+                                <Import-Package>
+                                    org.wso2.is.portal.user.client.api.util, org.wso2.is.portal.user.client.api.*
+                                </Import-Package>
+>>>>>>> dcba92c... Added user portal self sign-up feature
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>

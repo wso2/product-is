@@ -2,14 +2,31 @@
 {{favicon "images/favicon.png" type="image/png"}}
 {{title "Home | " @config.appName}}
 {{#fillZone "content"}}
-    <!--<h3>{{t "user-portal.user.add"}}</h3></br>
+    <h3>{{t "user-portal.user.add"}}</h3></br>
     <form method="post" class="form-horizontal">
-    {{#each signupClaims}}
-        <div class="form-group">
-        <label for={{this.displayLabel}}>{{this.displayName}}</label>
-        <input type="text" name={{this.claimURI}} id={{this.displayLabel}} class="form-control" placeholder={{this.displayLabel}} />
-        </div>
-    {{/each}}
+        {{#each signupClaims}}
+            <div class="form-group">
+                <label for={{this.displayLabel}}>{{this.displayName}}</label>
+                {{#if this.required}}
+                    <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
+                            name={{this.claimURI}} id={{this.displayLabel}} class="form-control"
+                            placeholder={{this.displayLabel}}
+                                    data-pattern={{#if this.regex}}{{this.regex}}{{/if}} required/>
+                {{else}}
+                    <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
+                            name={{this.claimURI}} id={{this.displayLabel}} class="form-control"
+                            placeholder={{this.displayLabel}}
+                                    data-pattern={{#if this.regex}}{{this.regex}}{{/if}}/>
+                {{/if}}
+            </div>
+        {{else}}
+            {{log "No Defined Claims for the user self sign-up!" level="error"}}
+            <p class="empty">No content</p>
+        {{/each}}
+        </br>
+        <label for=password>Password</label>
+        <input type="text" name="password" id="password" class="form-control" placeholder="password" required/>
         </br><input id="register" type="submit" value="Register"/>
-    </form>-->
+    </form>
 {{/fillZone}}
+
