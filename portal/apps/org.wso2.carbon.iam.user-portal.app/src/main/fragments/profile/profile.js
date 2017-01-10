@@ -135,7 +135,7 @@ function onRequest(env) {
             message = result.message;
         }
 
-        return{success: success, uiEntries: uiEntries, message: message};
+        return {success: success, uiEntries: uiEntries, message: message};
     }
 
     return {success: false, message: "Invalid profile name."};
@@ -150,7 +150,14 @@ function buildUIEntries(profileUIEntries) {
                 claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
                 displayName: profileUIEntries[i].claimConfigEntry.displayName,
                 value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
-                readonly: ((profileUIEntries[i].claimConfigEntry.readonly && profileUIEntries[i].claimConfigEntry.readonly == true) ? "readonly" : "")
+                readonly: ((profileUIEntries[i].claimConfigEntry.readonly
+                && profileUIEntries[i].claimConfigEntry.readonly == true) ? "readonly" : ""),
+                required: ((profileUIEntries[i].claimConfigEntry.required
+                && profileUIEntries[i].claimConfigEntry.required == true) ? "required" : ""),
+                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required
+                && profileUIEntries[i].claimConfigEntry.required == true) ? "*" : ""),
+                dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
+                    profileUIEntries[i].claimConfigEntry.dataType : "text")
             };
             uiEntries.push(entry);
         }
