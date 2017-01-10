@@ -499,3 +499,8 @@
     margin-bottom: 10px;
     transition: all 0.4s ease;
 }
+/* form error message */
+label.error {
+    color: #d9534f;
+    font-weight: 500;
+}

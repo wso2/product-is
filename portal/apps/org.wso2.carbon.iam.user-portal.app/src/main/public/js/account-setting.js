@@ -97,6 +97,14 @@ $(window).load(function(){
     $("#newPassword").blur(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
-    
+
+    //confirm password validation
+    $( "#password-update-form" ).validate({
+        rules: {
+            confirmPassword: {
+                equalTo: "#newPassword"
+            }
+        }
+    });
 });
 
