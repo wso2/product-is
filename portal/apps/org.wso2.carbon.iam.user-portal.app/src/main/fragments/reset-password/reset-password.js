@@ -24,7 +24,7 @@ function onRequest(env) {
     if (env.request.method == "POST") {
         var oldPassword = env.request.formParams['oldPassword'];
         var newPassword = env.request.formParams['newPassword'];
-        var result = updatePassword("admin", oldPassword, newPassword);
+        var result = updatePassword(username, oldPassword, newPassword);
         if (result.success) {
             return {success: true, message: result.message}
         } else {
