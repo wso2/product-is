@@ -32,17 +32,30 @@ function onRequest(env) {
             }
         }
 
-        var userRegistration = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "addUser", [claimMap, credentialMap]);
-        if (userRegistration != null && userRegistration.userId != null) {
+        var registrationResult = userRegistration(claimMap, credentialMap);
+        if(registrationResult.errorMessage != null){
+            return {errorMessage: registrationResult.message};
+        }
+        else if (registrationResult.userRegistration != null && registrationResult.userRegistration.userId != null) {
             /*sendRedirect(env.contextPath + env.config['loginPageUri'] + "?method=POST&username=" + claimMap["http://wso2.org/claims/username"]
              + "&password=" + credentialMap["password"] + "&domain=" + domain);*/
-            authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"]);
-            sendRedirect(env.contextPath + env.config['loginPageUri']);
+            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"]);
+            if (authenticationResult.success) {
+                //configure login redirect uri
+                sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+            } else {
+                sendRedirect(env.contextPath + env.config['loginPageUri']);
+            }
         }
     }
 
     if (env.request.method == "GET") {
+        return getprofile();
+    }
+}
+
+function getprofile() {
+    try {
         var claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["self-signUp"]);
         var claimForProfile = claimProfile.claims;
@@ -56,6 +69,27 @@ function onRequest(env) {
         }
         sendToClient("signupClaims", claimArray);
         return {"signupClaims": claimArray};
+    } catch (e) {
+        var message = e.instMessage;
+        return {errorMessage: "Error in retrieving claims of the claim profile for self sign-up."};
+    }
+}
+
+function userRegistration(claimMap, credentialMap) {
+    try {
+        var userRegistration = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "addUser", [claimMap, credentialMap]);
+        return {userRegistration: userRegistration};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause != null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+        return {errorMessage: message};
     }
 }
 
