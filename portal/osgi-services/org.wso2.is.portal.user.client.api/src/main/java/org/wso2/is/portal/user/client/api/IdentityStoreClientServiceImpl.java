@@ -81,12 +81,12 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
             //validate the old password
-            authenticate(username, oldPassword);
+            UUFUser uufUser = authenticate(username, oldPassword);
 
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(newPassword);
 
-            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(username, Collections
+            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(uufUser.getUserId(), Collections
                     .singletonList(passwordCallback));
         } catch (IdentityStoreException e) {
             throw new UserPortalUIException(e.getMessage());
