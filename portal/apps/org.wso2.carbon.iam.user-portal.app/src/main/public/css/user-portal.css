@@ -564,11 +564,15 @@
     margin-bottom: 10px;
     transition: all 0.4s ease;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> bb876d9... Adding confirm password validation
 }
 /* form error message */
 label.error {
     color: #d9534f;
     font-weight: 500;
+<<<<<<< HEAD
 }
 
 .well {
@@ -600,4 +604,6 @@ label.error {
 >>>>>>> 194081f... Clearing userportal landing page
 =======
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> bb876d9... Adding confirm password validation
 }

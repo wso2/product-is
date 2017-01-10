@@ -170,7 +170,19 @@ $(window).load(function(){
     $("#newPassword").blur(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
+<<<<<<< HEAD
     
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+
+    //confirm password validation
+    $( "#password-update-form" ).validate({
+        rules: {
+            confirmPassword: {
+                equalTo: "#newPassword"
+            }
+        }
+    });
+>>>>>>> bb876d9... Adding confirm password validation
 });
 
