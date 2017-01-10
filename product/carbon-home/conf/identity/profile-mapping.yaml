@@ -41,7 +41,7 @@ profiles:
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
-   required: true
+   required: false
    readonly: false
    regex: "*"
   -
@@ -49,13 +49,15 @@ profiles:
    displayName: "Email"
    required: true
    readonly: false
+   dataType: "email"
    regex: "*"
   -
    claimURI: "http://wso2.org/claims/telephone"
    displayName: "Telephone"
-   required: true
+   required: false
    readonly: false
    regex: "*"
+   dataType: "text"
  -
   profileName: "employee"
   claims:
@@ -80,4 +82,5 @@ profiles:
    displayName: "Email"
    required: true
    readonly: false
+   dataType: "email"
    regex: "*"
