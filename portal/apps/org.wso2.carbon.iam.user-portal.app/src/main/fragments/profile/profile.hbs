@@ -14,9 +14,9 @@
     {{#each uiEntries}}
     <div class="form-group">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-            <label for="{{this.claimURI}}">{{this.displayName}}</label>
-            <input type="text" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
-                   value="{{this.value}}" {{this.readonly}}/>
+            <label for="{{this.claimURI}}">{{this.displayName}}<span>{{requiredIcon}}</span></label>
+            <input type="{{this.dataType}}" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
+                   value="{{this.value}}" {{this.readonly}} {{this.required}}/>
         </div>
     </div>
     {{/each}}
