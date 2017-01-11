@@ -180,6 +180,7 @@
     .login-form-wrapper, .redirection-container, .error-container, .signup-form-wrapper, .recover-form-wrapper{
         padding-top: 10%;
         padding-bottom: 5%;
+        font
     }
     .error-details-container h3{
         font-weight: 400;
@@ -383,10 +384,13 @@
     margin: 20px 0 20px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 .body-wrapper {
     padding: 20px;
+=======
+>>>>>>> 14a9363... Code Improvement
 }
 
 .signup-header {
@@ -395,6 +399,7 @@
     font-weight: bold;
     color: #F27B21;
 }
+<<<<<<< HEAD
 
 =======
 }
@@ -607,3 +612,5 @@ label.error {
 =======
 >>>>>>> bb876d9... Adding confirm password validation
 }
+=======
+>>>>>>> 14a9363... Code Improvement
