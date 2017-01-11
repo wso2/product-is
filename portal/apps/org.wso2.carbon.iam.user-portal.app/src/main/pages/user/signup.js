@@ -20,20 +20,17 @@ function onRequest(env) {
         var formParams = {};
         var claimMap = {};
         var credentialMap = {};
-        var domain;
         formParams = env.request.formParams;
         for (var i in formParams) {
             if (i == "password") {
                 credentialMap["password"] = formParams[i];
-            } else if (i == "domain") {
-                domain = i;
             } else {
                 claimMap[i] = formParams[i];
             }
         }
 
         var registrationResult = userRegistration(claimMap, credentialMap);
-        if(registrationResult.errorMessage != null){
+        if (registrationResult.errorMessage != null) {
             return {errorMessage: registrationResult.message};
         }
         else if (registrationResult.userRegistration != null && registrationResult.userRegistration.userId != null) {
@@ -96,10 +93,10 @@ function userRegistration(claimMap, credentialMap) {
 function authenticate(username, password) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
-        var authenticationContext = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "authenticate", [username, passwordChar]);
 
-        createSession(authenticationContext.user);
+        createSession(uufUser);
         return {success: true, message: "success"}
     } catch (e) {
         var message = e.message;

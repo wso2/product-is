@@ -180,6 +180,7 @@
     .login-form-wrapper, .redirection-container, .error-container, .signup-form-wrapper, .recover-form-wrapper{
         padding-top: 10%;
         padding-bottom: 5%;
+        font
     }
     .error-details-container h3{
         font-weight: 400;
@@ -348,4 +349,11 @@
 
 .page-header {
     margin: 20px 0 20px;
+}
+
+.signup-header {
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #F27B21;
 }
