@@ -76,13 +76,6 @@
             } else {
                 accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
                 idToken = (String) session.getAttribute(OAuth2Constants.ID_TOKEN);
-            }
-        } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS.equals(grantType)) {
-            accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
-        } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_RESOURCE_OWNER.equals(grantType)) {
-            accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
-        }
-
         scope = (String) session.getAttribute(OAuth2Constants.SCOPE);
         if (StringUtils.isNotBlank(scope) && scope.contains(OAuth2Constants.SCOPE_OPENID)) {
             if (StringUtils.isNotBlank((String) session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT))) {
@@ -145,6 +138,7 @@
                 document.getElementById("accessep").style.display = "none";
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
+                document.getElementById("formPost").style.display = "";
             } else if ('password' == grantType) {
                 document.getElementById("clientsecret").style.display = "";
                 document.getElementById("callbackurltr").style.display = "none";
@@ -324,6 +318,13 @@
                             <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
                             <td><label><%=code_verifier%>
                             </label></td>
+                        </tr>
+
+                        <tr id="formPost" style="display:none">
+                            <td>Enable Form Post</td>
+                            <td><input type="radio" name="form_post" value="yes">Yes &nbsp;
+                                <input type="radio" name="form_post" value="no" checked>No
+                            </td>
                         </tr>
 
                         <tr>

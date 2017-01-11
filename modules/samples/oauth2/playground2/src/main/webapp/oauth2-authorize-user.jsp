@@ -19,6 +19,7 @@
         String PKCECodeChallenge = request.getParameter(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE);
         String PKCECodeChallengeMethod = request.getParameter(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE_METHOD);
         String usePKCEParameter = request.getParameter(OAuth2Constants.OAUTH2_USE_PKCE);
+        String formPostParameter = request.getParameter(OAuth2Constants.OAUTH2_FORM_POST);
         String logoutEndpoint = request.getParameter(OAuth2Constants.OIDC_LOGOUT_ENDPOINT);
         String sessionIFrameEndpoint = request.getParameter(OAuth2Constants.OIDC_SESSION_IFRAME_ENDPOINT);
 
@@ -32,6 +33,10 @@
         boolean usePKCE = usePKCEParameter != null && "yes".equals(usePKCEParameter);
         if(usePKCE) {
             session.setAttribute(OAuth2Constants.OAUTH2_USE_PKCE, usePKCE);
+        }
+        boolean formPostMode = formPostParameter != null && "yes".equals(formPostParameter);
+        if (formPostMode) {
+            session.setAttribute(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
         }
 
 
@@ -66,7 +71,7 @@
     }
 
     OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
-    if(authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE) {
+    if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE) {
         oAuthPKCEAuthenticationRequestBuilder = oAuthPKCEAuthenticationRequestBuilder.setPKCECodeChallenge(PKCECodeChallenge, PKCECodeChallengeMethod);
     }
 
@@ -76,6 +81,12 @@
             .setResponseType(authzGrantType)
             .setScope(scope);
 
+    if (formPostMode) {
+        oAuthPKCEAuthenticationRequestBuilder.setParameter(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
+    }
+
+
+//build the new response mode with form post
     OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildQueryMessage();
     response.sendRedirect(authzRequest.getLocationUri());
     return;
