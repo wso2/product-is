@@ -33,13 +33,11 @@ function updatePassword(username, oldPassword, newPassword, domain) {
  */
 
 function onRequest(env) {
+
     var session = getSession();
-    if (!session) {
-        return {errorMessage: "not-logged-in"};
-    }
     var username = session.getUser().getUsername();
 
-    if (env.request.method == "POST") {
+    if (env.request.method == "POST" && "reset-password" == env.params.actionId) {
         var oldPassword = env.request.formParams['oldPassword'];
         var newPassword = env.request.formParams['newPassword'];
         var result = updatePassword(username, oldPassword, newPassword);

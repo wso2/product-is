@@ -110,15 +110,11 @@ function uploadFile(env, session) {
 function onRequest(env) {
 
     var session = getSession();
-    if (!session) {
-        sendRedirect(env.contextPath + env.config['loginPageUri']);
-    }
-
     var success = false;
     var message = "";
-    var uiEntries = [];
-
-    if (env.request.method == "POST") {
+    
+    if (env.request.method == "POST" && env.params.profileName && env.params.profileName == env.params.actionId) {
+        
         var updatedClaims = env.request.formParams;
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
@@ -126,6 +122,8 @@ function onRequest(env) {
     }
 
     if (env.params.profileName) {
+        
+        var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
             success = true;
@@ -135,7 +133,7 @@ function onRequest(env) {
             message = result.message;
         }
 
-        return {success: success, uiEntries: uiEntries, message: message};
+        return {success: success, profile: env.params.profileName, uiEntries: uiEntries, message: message};
     }
 
     return {success: false, message: "Invalid profile name."};
