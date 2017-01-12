@@ -62,9 +62,11 @@ public interface IdentityStoreClientService {
      *
      * @param userClaims claims of the user
      * @return Created user.
-     * @throws IdentityStoreException Identity store exception.
+     * @throws UserPortalUIException
      */
-    User addUser(Map<String, String> userClaims) throws IdentityStoreException;
+    UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException;
+
+    UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName) throws UserPortalUIException;
 
     /**
      * Update user claims by user id

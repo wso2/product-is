@@ -180,6 +180,7 @@
     .login-form-wrapper, .redirection-container, .error-container, .signup-form-wrapper, .recover-form-wrapper{
         padding-top: 10%;
         padding-bottom: 5%;
+        font
     }
     .error-details-container h3{
         font-weight: 400;
@@ -353,3 +354,167 @@
 .breadcrumb {
     padding: 3px 0 0 15px;
 }
+
+.signup-header {
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #F27B21;
+}
+
+/* password show hide */
+.hide-pass{
+    float: right;
+    margin-top: -27px;
+    margin-right: 7px;
+    cursor: pointer;
+    color: rgb(40, 40, 40);
+}
+
+.hide-pass>i{
+    font-size: 1.5em;
+}
+/* password strength meter */
+.progress{
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+.progress-bar-label{
+    padding: 3px 0px;
+}
+.stage-progress-container .progress{
+    height: 25px;
+}
+
+.modal-title{color: #000;}
+.modal-content, .btn{border-radius: 0px;}
+
+#password-modal{
+    margin-top: 4em;
+}
+.password-meter {
+    width: 214px;
+    color: #000;
+    border-radius: 0px;
+}
+.strength0 {
+    background: none; /* too short */
+    width: 0%;
+}
+.strength1 {
+    background: none repeat scroll 0 0 #FF4545;/* weak */
+    width: 25%;
+}
+.strength2 {
+    background: none repeat scroll 0 0 #FFC824;/* good */
+    width: 50%;
+}
+.strength3 {
+    background: none repeat scroll 0 0 #6699CC;/* strong */
+    width: 75%;
+}
+
+.strength4 {
+    background: none repeat scroll 0 0 #27ae60;/* best */
+    width: 100%;
+}
+
+.password_strength_meter .popover {
+    color:#fff;
+    width:340px;
+    max-width:340px;
+    background-color:#eee;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    border:none;
+}
+.password_strength_meter .popover .popover-content{
+    padding:0px;
+}
+.password_strength_meter .popover .popover-title{
+    color:#fff;
+    font-weight:bold;
+    background-color:#999;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+.password_strength_meter .pwd_str{
+    /*border-top:1px solid #898989;*/
+    padding:10px 15px;
+    background-color:#dcdfe0;
+}
+.password_strength_meter #pswd_info{
+    padding:10px 15px;
+    color:#888;
+}
+.password_strength_meter #passwordDescription{
+    color:#666;
+}
+.password_strength_meter .popover.right>.arrow:after{
+    border-right-color:#eee;
+}
+.password_strength_meter .popover.top>.arrow:after{
+    border-top-color:#eee;
+}
+#password_strength_wrap {
+    /*border: 1px solid #D5CEC8;*/
+    display: none;
+    float: left;
+    padding: 10px;
+    position: relative;
+    max-width: 320px;
+}
+#password_strength_wrap:before, #password_strength_wrap:after{
+    content: ' ';
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 10px solid transparent; /* arrow size */
+}
+#password_strength_wrap:before{
+    /*border-bottom: 7px solid rgba(0, 0, 0, 0);*/
+    /*border-right: 7px solid rgba(0, 0, 0, 0.1);*/
+    /*border-top: 7px solid rgba(0, 0, 0, 0);*/
+    content: "";
+    display: inline-block;
+    left: -18px;
+    position: absolute;
+    top: 10px;
+}
+#password_strength_wrap:after{
+    /*border-bottom: 6px solid rgba(0, 0, 0, 0);*/
+    /*border-right: 6px solid #fff;*/
+    /*border-top: 6px solid rgba(0, 0, 0, 0);*/
+    content: "";
+    display: inline-block;
+    left: -16px;
+    position: absolute;
+    top: 11px;
+}
+#pswd_info ul {
+    list-style-type: none;
+    margin: 5px 0 0;
+    padding: 0;
+}
+#pswd_info .status_icon{
+    margin-right:5px;
+}
+#pswd_info ul li.valid {
+    color: #27ae60;
+}
+#passwordStrength {
+    display: block;
+    height: 5px;
+    margin-bottom: 10px;
+    transition: all 0.4s ease;
+}
+/* form error message */
+label.error {
+    color: #d9534f;
+    font-weight: 500;
+}
+
