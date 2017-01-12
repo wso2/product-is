@@ -3,9 +3,9 @@ function onRequest(env) {
     var session = getSession();
     var success = false;
     var message = "";
-    
+
     if (env.request.method == "POST" && env.params.profileName && env.params.profileName == env.params.actionId) {
-        
+
         var updatedClaims = env.request.formParams;
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
@@ -13,11 +13,13 @@ function onRequest(env) {
     }
 
     if (env.params.profileName) {
-        
+
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
-            success = true;
+            if (env.request.method != "POST") {
+                success = true;
+            }
             uiEntries = buildUIEntries(result.profileUIEntries);
         } else {
             success = false;
@@ -78,7 +80,7 @@ function updateUserProfile(userId, updatedClaims) {
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updateUserProfile", [userId, updatedClaims]);
-        return {success: true}
+        return {success: true, message: "Profile is updated."}
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
