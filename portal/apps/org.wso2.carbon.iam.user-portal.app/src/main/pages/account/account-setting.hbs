@@ -1,6 +1,7 @@
 {{layout "main"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{title "Home | " @config.appName}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.jquery-validation" }}
 {{js "js/account-setting.js"}}
 {{js "js/profile.js"}}
 {{css "css/user-portal.css"}}
@@ -63,7 +64,6 @@
                             </div>
                         {{/each}}
                         <div class="tab-pane" id="password">
-                            <h3>Password</h3>
                             <div class="col-md-12">
                                 {{fragment "org.wso2.carbon.iam.user-portal.feature.reset-password" actionId=actionId}}
                             </div>
