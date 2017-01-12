@@ -119,6 +119,11 @@ function onRequest(env) {
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
         message = result.message;
+    } else if (env.request.method == "POST" && "image" == env.params.actionId) {
+        
+        var result = uploadFile(env, session);
+        success = result.success;
+        message = result.message;
     }
 
     if (env.params.profileName) {
@@ -158,7 +163,7 @@ function buildUIEntries(profileUIEntries) {
                 && profileUIEntries[i].claimConfigEntry.required == true) ? "*" : ""),
                 dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
                     profileUIEntries[i].claimConfigEntry.dataType : "text"),
-                regex:  (profileUIEntries[i].claimConfigEntry.regex ?
+                regex: (profileUIEntries[i].claimConfigEntry.regex ?
                     profileUIEntries[i].claimConfigEntry.regex : ".*")
             };
             uiEntries.push(entry);
@@ -297,4 +302,42 @@ function updateUserProfile(userId, updatedClaims) {
     }
     return {success: false, message: message};
 }
+<<<<<<< HEAD
 >>>>>>> abbd84e... Adding update profile logic.
+=======
+
+function uploadFile(env, session) {
+
+    try {
+        var Paths = Java.type('java.nio.file.Paths');
+        var System = Java.type('java.lang.System');
+        var Files = Java.type('java.nio.file.Files');
+        var StandardCopyOption = Java.type('java.nio.file.StandardCopyOption');
+
+        var uploadedFile = env.request.files["image"];
+        var imageDirPath = Paths.get(System.getProperty('user.dir'), "images");
+        if (!Files.exists(imageDirPath)) {
+            Files.createDirectories(imageDirPath);
+        }
+
+        var fileName = session.getUser().getUserId() + '.'
+            + uploadedFile.name.substring(uploadedFile.name.lastIndexOf(".") + 1, uploadedFile.name.length);
+        var destination = Paths.get(imageDirPath).resolve(fileName);
+        var sourcePath = Paths.get(uploadedFile.path);
+        var destinationPath = Paths.get(destination);
+
+        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+        return {success: true, message: "Profile image successfully updated"}
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause != null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
+}
+>>>>>>> 7de3682... Adding file uploading capability
