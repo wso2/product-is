@@ -1,6 +1,5 @@
 package org.wso2.is.portal.user.client.api;
 
-import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.ChallengeQuestionManager;
@@ -24,16 +23,16 @@ public class ChallengeQuestionManagerServiceImpl implements ChallengeQuestionMan
 
     @Override
     public List<ChallengeQuestion> getChallengeQuestionList() throws IdentityRecoveryServerException {
-        return challengeQuestionManager.getAllChallengeQuestions();
+        return challengeQuestionManager.getAllChallengeQuestions(null);
     }
 
     @Override
     public List<ChallengeQuestion> getAllChallengeQuestionsForUser(String userUniqueId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException {
 
-        User user = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore()
-                .getUser(userUniqueId);
-        return challengeQuestionManager.getAllChallengeQuestionsForUser(user);
+//        User user = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore()
+//                .getUser(userUniqueId);
+        return challengeQuestionManager.getAllChallengeQuestionsForUser(null, null);
     }
 
 }

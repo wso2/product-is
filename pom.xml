@@ -1172,7 +1172,12 @@
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
+<<<<<<< HEAD
 >>>>>>> f76445f... adding configuration changes
+=======
+        <org.wso2.carbon.identity.governance.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.governance.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+>>>>>>> 1f19211... temporarily fixing challenge question page issues..
 
         <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
@@ -1265,6 +1270,7 @@
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
 =======
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
@@ -1297,6 +1303,8 @@
         <org.wso2.carbon.identity.governance.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.governance.version>
         <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
+=======
+>>>>>>> 1f19211... temporarily fixing challenge question page issues..
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
