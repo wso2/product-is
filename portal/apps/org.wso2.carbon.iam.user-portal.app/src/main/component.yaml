@@ -50,7 +50,7 @@ config:
 >>>>>>> 43350c9... Adding Login/Logout functionality.
 
 config:
-  appName: "IAM User Portal"
+  appName: "IS User Portal"
   pageSize: 10
 <<<<<<< HEAD
   loginRedirectUri: "/pets"
