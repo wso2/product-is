@@ -61,7 +61,7 @@ domains:
         attribute: "nickName"
         claimUri: "http://wso2.org/claims/nickname"
       -
-        attribute: "email"
+        attribute: "mail"
         claimUri: "http://wso2.org/claims/email"
       -
         attribute: "title"

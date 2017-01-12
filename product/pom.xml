@@ -185,16 +185,16 @@
 
         <!-- Sample Simple Authentication Component -->
 
-        <dependency>
-            <groupId>org.wso2.carbon.uuf.sample</groupId>
-            <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf.sample</groupId>
-            <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
-            <type>zip</type>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
+            <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
+            <!--<type>zip</type>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
+            <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
+            <!--<type>zip</type>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -413,14 +413,14 @@
                                     <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.Features-app.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</feature>-->
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
@@ -569,18 +569,18 @@
                                     <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</feature>-->
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
+                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>

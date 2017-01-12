@@ -27,11 +27,11 @@
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>org.wso2.is.portal.user.client.realmservice</artifactId>
+    <artifactId>org.wso2.is.portal.user.client.api</artifactId>
     <packaging>bundle</packaging>
 
-    <name>WSO2 User RealmService - Client Bundle</name>
-    <description>This feature contains the OSGi service for RealmService</description>
+    <name>WSO2 User Client API - Client Bundle</name>
+    <description>This feature contains the OSGi service for Client APIs</description>
     <url>http://wso2.org</url>
 
     <dependencies>
@@ -50,11 +50,19 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-            <version>${org.wso2.carbon.identity.mgt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.core</artifactId>
+            <version>1.0.0-m7</version>
         </dependency>
 
         <!--<dependency>-->
@@ -64,20 +72,23 @@
     </dependencies>
 
     <properties>
-        <private.package>org.wso2.is.portal.user.client.realmservice.internal.*</private.package>
+        <private.package>org.wso2.is.portal.user.client.api.internal.*</private.package>
         <import.package>
             org.osgi.framework,
             javax.security.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.uuf.spi.auth.*,
+            org.wso2.carbon.kernel.utils.*
         </import.package>
+        <!--//todo set versions-->
         <export.package>
-            !org.wso2.is.portal.user.client.realmservice.internal.*,
-            org.wso2.is.portal.user.client.realmservice.*;version="${project.version}"
+            !org.wso2.is.portal.user.client.api.internal.*,
+            org.wso2.is.portal.user.client.api.*;version="${project.version}"
         </export.package>
-        <bundle.activator>
-            org.wso2.is.portal.user.client.realmservice.internal.Activator
-        </bundle.activator>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>

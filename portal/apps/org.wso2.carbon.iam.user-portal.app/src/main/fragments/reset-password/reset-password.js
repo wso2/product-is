@@ -15,20 +15,18 @@
  */
 
 function onRequest(env) {
+
     var session = getSession();
-    if (!session) {
-        return {errorMessage: "not-logged-in"};
-    }
     var username = session.getUser().getUsername();
 
-    if (env.request.method == "POST") {
+    if (env.request.method == "POST" && "reset-password" == env.params.actionId) {
         var oldPassword = env.request.formParams['oldPassword'];
         var newPassword = env.request.formParams['newPassword'];
         var result = updatePassword(username, oldPassword, newPassword);
         if (result.success) {
-            return {message: result.message}
+            return {success: true, message: result.message}
         } else {
-            return {errorMessage: result.message};
+            return {success: false, message: result.message};
         }
     }
 }
@@ -37,10 +35,10 @@ function updatePassword(username, oldPassword, newPassword) {
     try {
         var oldPasswordChar = Java.to(oldPassword.split(''), 'char[]');
         var newPasswordChar = Java.to(newPassword.split(''), 'char[]');
-        callOSGiService("org.wso2.is.portal.user.client.realmservice.RealmClientService",
+        callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updatePassword", [username, oldPasswordChar, newPasswordChar]);
 
-        return {success: true, message: "success"}
+        return {success: true, message: "successfully updated the password"}
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();

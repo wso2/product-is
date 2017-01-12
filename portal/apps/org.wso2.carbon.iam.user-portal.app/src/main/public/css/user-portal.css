@@ -300,6 +300,7 @@
 }
 .settings-nav li ul.sub-menu li.active a{
     border-left-color:#f47a1e;
+    background-color: #fff;
 }
 
 .settings-nav li ul.sub-menu li a:focus {
@@ -321,7 +322,7 @@
 }
 .acc-settings .tab-content {
     border: 1px solid #a5a5a5;
-    min-height: 400px;
+    min-height: 413px;
 }
 .settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
     margin-right: -1px;
@@ -343,4 +344,8 @@
         border-right: 1px solid #a5a5a5;
         margin-right: 0;
     }
+}
+
+.page-header {
+    margin: 20px 0 20px;
 }

@@ -16,30 +16,30 @@
 
 function onRequest(env) {
     var session = getSession();
-    if (session) {
-        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    if (!session) {
+        return {errorMessage: "not-logged-in"};
     }
+    var username = session.getUser().getUsername();
 
     if (env.request.method == "POST") {
-        var username = env.request.formParams['username'];
-        var password = env.request.formParams['password'];
-        var result = authenticate(username, password);
+        var oldPassword = env.request.formParams['oldPassword'];
+        var newPassword = env.request.formParams['newPassword'];
+        var result = updatePassword(username, oldPassword, newPassword);
         if (result.success) {
-            //configure login redirect uri
-            sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+            return {message: result.message}
         } else {
             return {errorMessage: result.message};
         }
     }
 }
 
-function authenticate(username, password) {
+function updatePassword(username, oldPassword, newPassword) {
     try {
-        var passwordChar = Java.to(password.split(''), 'char[]');
-        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar]);
+        var oldPasswordChar = Java.to(oldPassword.split(''), 'char[]');
+        var newPasswordChar = Java.to(newPassword.split(''), 'char[]');
+        callOSGiService("org.wso2.is.portal.user.client.api.RealmClientService",
+            "updatePassword", [username, oldPasswordChar, newPasswordChar]);
 
-        createSession(uufUser);
         return {success: true, message: "success"}
     } catch (e) {
         var message = e.message;
