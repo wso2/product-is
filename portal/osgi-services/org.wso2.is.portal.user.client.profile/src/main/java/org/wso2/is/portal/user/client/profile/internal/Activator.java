@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.user.profile.internal;
+package org.wso2.is.portal.user.client.profile.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.user.profile.impl.UserProfileClientServiceProxyImpl;
-import org.wso2.carbon.user.profile.UserProfileClientService;
 
 /**
  * Activation class for the bundle
@@ -32,8 +30,8 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        bundleContext.registerService(UserProfileClientService.class.getName(),
-                new UserProfileClientServiceProxyImpl(), null);
+        /*bundleContext.registerService(ProfileMgtClientService.class.getName(),
+                new UserProfileClientServiceProxyImpl(), null);*/
         if (log.isDebugEnabled()) {
             log.debug("User profile BE Bundle Started.");
         }
