@@ -267,6 +267,7 @@
                 <version>${carbon.metrics.version}</version>
             </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <dependency>
 <<<<<<< HEAD
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -316,6 +317,13 @@
             </dependency>
 =======
 >>>>>>> 6906998... Made the UUF app for user portal buildable
+=======
+            <dependency>
+                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <artifactId>org.wso2.carbon.identity.recovery</artifactId>
+                <version>${org.wso2.carbon.identity.governance.version}</version>
+            </dependency>
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -339,6 +347,12 @@
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
+                <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -1250,6 +1264,7 @@
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
+<<<<<<< HEAD
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
 =======
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
@@ -1278,6 +1293,10 @@
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
 >>>>>>> 8053620... making user portal compatible with latest uuf changes..
+=======
+        <org.wso2.carbon.identity.governance.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.governance.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>

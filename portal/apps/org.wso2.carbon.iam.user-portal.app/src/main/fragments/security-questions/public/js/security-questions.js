@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -22,15 +23,24 @@ $(document).ready(function () {
 });
 
 function editQuestion(questionId, questionSetId, questionText) {
+=======
+$(document).ready(function () {
+});
+
+function editQuestion() {
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 
     $("#add-question").hide();
     $("#list-questions").hide();
     $("#edit-question").show();
+<<<<<<< HEAD
 
     $("#question-id").val(questionId);
     $("#question-set-id").val(questionSetId);
 
     $("#current-question").html(questionText);
+=======
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 }
 
 function updateQuestion() {
@@ -39,6 +49,7 @@ function updateQuestion() {
     $("#edit-question").hide();
 }
 
+<<<<<<< HEAD
 function deleteQuestion(questionId, questionSetId) {
 
     var deleteModal = $('#deleteModal');
@@ -72,6 +83,10 @@ function deleteQuestion(questionId, questionSetId) {
         document.body.appendChild(formElement);
         formElement.submit();
     });
+=======
+function deleteQuestion() {
+    // TODO:
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 }
 
 function addQuestion() {
@@ -79,6 +94,7 @@ function addQuestion() {
     $("#create-question").hide();
 }
 
+<<<<<<< HEAD
 function goBack() {
 
     if ($("#list-questions").length === 0) {
@@ -88,4 +104,11 @@ function goBack() {
     }
 
     $("#edit-question").hide();
+=======
+function saveQuestion() {
+    $("#add-question").hide();
+    $("#list-questions").show();
+    $("#edit-question").hide();
+    $("#create-question").show();
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 }

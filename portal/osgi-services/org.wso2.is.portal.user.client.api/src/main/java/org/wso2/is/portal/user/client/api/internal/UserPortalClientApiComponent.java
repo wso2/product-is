@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.meta.claim.mgt.service.ProfileMgtService;
 import org.wso2.carbon.identity.mgt.RealmService;
+import org.wso2.carbon.identity.recovery.ChallengeQuestionManager;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl;
 import org.wso2.is.portal.user.client.api.ProfileMgtClientService;
@@ -98,6 +99,20 @@ public class UserPortalClientApiComponent {
         UserPortalClientApiDataHolder.getInstance().setProfileMgtService(null);
     }
 
+//    @Reference(
+//            name = "challengeQuestionManager",
+//            service = ChallengeQuestionManager.class,
+//            cardinality = ReferenceCardinality.OPTIONAL,
+//            policy = ReferencePolicy.DYNAMIC,
+//            unbind = "unSetChallangeQuestionManager")
+//    protected void setChallangeQuestionManager(ChallengeQuestionManager challangeQuestionManager) {
+//
+//        UserPortalClientApiDataHolder.getInstance().setChallengeQuestionManager(challangeQuestionManager);
+//    }
+//
+//    protected void unSetChallangeQuestionManager(ChallengeQuestionManager challangeQuestionManager) {
+//    }
+
     private void initializeClientServices(BundleContext bundleContext) {
 
         IdentityStoreClientService identityStoreClientService = new IdentityStoreClientServiceImpl();
@@ -105,5 +120,8 @@ public class UserPortalClientApiComponent {
 
         ProfileMgtClientService profileMgtClientService = new ProfileMgtClientServiceImpl();
         bundleContext.registerService(ProfileMgtClientService.class, profileMgtClientService, null);
+
+//        ChallengeQuestionManagerService challengeQuestionManagerService = new ChallengeQuestionManagerServiceImpl();
+//        bundleContext.registerService(ChallengeQuestionManagerService.class, challengeQuestionManagerService, null);
     }
 }

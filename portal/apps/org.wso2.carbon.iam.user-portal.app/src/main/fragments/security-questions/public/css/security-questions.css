@@ -4,6 +4,7 @@
 
 #edit-question {
     display: none;
+<<<<<<< HEAD
 }
 
 /* security question listing */
@@ -17,4 +18,6 @@
 }
 .question a:focus, .question a:hover{
     text-decoration: none;
+=======
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 }

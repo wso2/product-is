@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -162,4 +163,31 @@ function authenticate(username, password, domain) {
         }
         return {success: false, message: message};
     }
+=======
+function onRequest(env) {
+
+    return {
+        "user_questions": [
+            {"question_text": "Security question one ?"},
+            {"question_text": "Security question two ?"}
+        ],
+
+        "question_list": [
+            {"question_text": "Security question one ?", "question_value": "q1"},
+            {"question_text": "Security question two ?", "question_value": "q1"}
+        ]
+    };
+}
+
+function getChallangeQuestions() {
+
+    var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.UserPortalClientApiComponent",
+        "getChallengeQuestionList", []);
+
+    if (challengeQuestions.length == 0) {
+        // TODO: Handle any errors here.
+    }
+
+    return challengeQuestions;
+>>>>>>> 966974f... Added the front end functionality for the security questions page.
 }
