@@ -1,0 +1,63 @@
+{{css "css/security-questions.css"}}
+{{js "js/security-questions.js"}}
+
+<div id="add-question">
+    <form>
+        <div id="new-security-question" class="form-group">
+            <label for="question-list">Security Question</label>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="questions-dropdown"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true">Select a question
+                    <span class="caret"></span>
+                </button>
+                <ul id="question-list" class="dropdown-menu" aria-labelledby="questions-dropdown">
+                    {{#each question_list}}
+                        <li value="{{ question_value }}"><a href="#">{{ question_text }}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="button" class="btn btn-default" value="Add" onclick="saveQuestion()">
+        </div>
+    </form>
+</div>
+<div id="list-questions" class="row">
+    <div id="create-question" class="col-md-offset-11 col-md-4">
+        <button class="btn btn-default btn-lg" onclick="addQuestion()"><span class="fw fw-add fw-2x"></span> Create
+        </button>
+    </div>
+    <div id="question-list" class="panel-group panel-extended">
+        {{#each user_questions}}
+            <div class="question panel panel-default">
+                <div class="panel-body">
+                    <span class="question-text">{{ question_text }}</span>
+                    <button class="btn btn-default" aria-label="Edit" onclick="editQuestion()">
+                        <span class="fw fw-edit" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-default" aria-label="Delete" onclick="deleteQuestion()">
+                        <span class="fw fw-delete" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+<div id="edit-question" class="row">
+    <div id="info" class="alert alert-info" role="alert">
+        <p>{{t "user-portal.user.account.security.question.info"}}</p>
+    </div>
+    <form>
+    <div id="password" class="form-group">
+        <label for="old-password">Password</label>
+        <input type="password" id="old-password"/>
+    </div>
+    <div id="security-question" class="form-group">
+        <!-- TODO: Remove the hardcoded values-->
+        <div id="current-question">Security question one ?</div>
+        <div id="answer">Answer for one</div>
+        <input type="button" class="btn btn-default" value="Update" onclick="updateQuestion()"/>
+    </div>
+    </form>
+</div>

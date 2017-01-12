@@ -18,6 +18,7 @@ package org.wso2.is.portal.user.client.api.internal;
 
 import org.wso2.carbon.identity.meta.claim.mgt.service.ProfileMgtService;
 import org.wso2.carbon.identity.mgt.RealmService;
+import org.wso2.carbon.identity.recovery.ChallengeQuestionManager;
 
 import java.util.List;
 
@@ -29,14 +30,13 @@ public class UserPortalClientApiDataHolder {
     private static UserPortalClientApiDataHolder instance = new UserPortalClientApiDataHolder();
 
     private RealmService realmService;
-
     private ProfileMgtService profileMgtService;
+    private ChallengeQuestionManager challengeQuestionManager;
 
     //TODO remove
     private List<String> tempUsers;
 
     private UserPortalClientApiDataHolder() {
-
     }
 
     public static UserPortalClientApiDataHolder getInstance() {
@@ -71,5 +71,13 @@ public class UserPortalClientApiDataHolder {
 
     public void setTempUsers(List<String> tempUsers) {
         this.tempUsers = tempUsers;
+    }
+
+    public ChallengeQuestionManager getChallengeQuestionManager() {
+        return challengeQuestionManager;
+    }
+
+    public void setChallengeQuestionManager(ChallengeQuestionManager challengeQuestionManager) {
+        this.challengeQuestionManager = challengeQuestionManager;
     }
 }

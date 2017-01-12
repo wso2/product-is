@@ -208,6 +208,11 @@
                 <artifactId>org.wso2.carbon.metrics.core</artifactId>
                 <version>${carbon.metrics.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <artifactId>org.wso2.carbon.identity.recovery</artifactId>
+                <version>${org.wso2.carbon.identity.governance.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -231,6 +236,12 @@
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
+                <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -632,6 +643,8 @@
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
+        <org.wso2.carbon.identity.governance.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.governance.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
