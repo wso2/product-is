@@ -36,10 +36,14 @@ profiles:
    validator: "claim validating extension"
    transformer: "transform extension"
 <<<<<<< HEAD
+<<<<<<< HEAD
    regex: ".*"
 =======
    regex: "*"
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
+=======
+   regex: ".*"
+>>>>>>> 9d1f91f... Adding regex validations.
    defaultValue: "user1"
    dataType: "text"
    properties:
@@ -146,26 +150,26 @@ profiles:
 >>>>>>> 951ade6... Adding profile loading js
    required: true
    readonly: false
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
    required: false
    readonly: false
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
    required: true
    readonly: false
    dataType: "email"
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/telephone"
    displayName: "Telephone"
    required: false
    readonly: false
-   regex: "*"
+   regex: ".*"
    dataType: "text"
  -
   profileName: "employee"
@@ -175,7 +179,7 @@ profiles:
    displayName: "User Name"
    required: true
    readonly: true
-   regex: "*"
+   regex: ".*"
    defaultValue: "user1"
    dataType: "text"
    properties:
@@ -188,12 +192,16 @@ profiles:
    displayName: "Employee Name"
    required: true
    readonly: false
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
    required: true
    readonly: false
    dataType: "email"
+<<<<<<< HEAD
    regex: "*"
 >>>>>>> 951ade6... Adding profile loading js
+=======
+   regex: ".*"
+>>>>>>> 9d1f91f... Adding regex validations.
