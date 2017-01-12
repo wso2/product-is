@@ -25,7 +25,7 @@ bindings:
        - "org.wso2.carbon.iam.user-portal.feature.usermenu"
 
 config:
-  appName: "IAM User Portal"
+  appName: "IS User Portal"
   pageSize: 10
   loginRedirectUri: "/"
   loginPageUri: "/login"

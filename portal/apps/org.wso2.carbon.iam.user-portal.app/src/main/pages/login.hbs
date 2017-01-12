@@ -31,12 +31,13 @@
                             </div>
                             <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
                         </div>
-                        <div class="social-container hidden-sm hidden-xs">
-                            <p>Also sign in with</p>
-                            <a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>
-                            <a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>
-                            <a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>
-                        </div>
+                        <!--not yet implemented-->
+                        <!--<div class="social-container hidden-sm hidden-xs">-->
+                            <!--<p>Also sign in with</p>-->
+                            <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
+                            <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
+                            <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
+                        <!--</div>-->
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
@@ -70,17 +71,10 @@
                                         <button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>
                                     </div>
                                 </div>
-                                <a href="{{@contextPath}}/account/reset-password" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>
-                                <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/account/signup">Register Now</a></p>
+                                <a href="{{@contextPath}}/recover-password" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>
+                                <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/user/signup">Register Now</a></p>
                             </form>
                         </div>
-                        <div class="social-container visible-sm visible-xs">
-                            <p>Also sign in with</p>
-                            <a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>
-                            <a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>
-                            <a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>
-                        </div>
-                        <p class="visible-xs visible-sm add-margin-2x text-center">Don't have an account? <a href="#">Register Now</a></p>
                     </div>
                 </div>
             </div>
