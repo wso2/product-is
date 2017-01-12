@@ -67,6 +67,7 @@
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
             <version>${carbon.is.version}</version>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
@@ -89,6 +90,8 @@
             <version>${carbon.is.version}</version>
         </dependency>
 >>>>>>> f889153... Added osgi service for calling ProfileMgtService
+=======
+>>>>>>> 1ab2f27... fixing maven module structure
     </dependencies>
 
 
@@ -143,6 +146,7 @@
 =======
                             <instructions>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>
 <<<<<<< HEAD
 >>>>>>> 8ae54da... Adding user portal login page..
@@ -153,6 +157,10 @@
                                 <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
 =======
+=======
+                                <!--<Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>-->
+                                <!--<Import-Package>org.wso2.is.portal.user.client.profile</Import-Package>-->
+>>>>>>> 1ab2f27... fixing maven module structure
                                 <Import-Package>org.wso2.is.portal.user.client.api.*</Import-Package>
 >>>>>>> 7444e2a... getting user login to work..
 =======
@@ -168,6 +176,7 @@
 <<<<<<< HEAD
                                     <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
                                     <version>${carbon.is.version}</version>
+<<<<<<< HEAD
                                 </bundle>
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
@@ -192,6 +201,8 @@
                                     <version>${carbon.is.version}</version>
                                     <symbolicName>org.wso2.is.portal.user.client.profile</symbolicName>
                                     <version>${carbon.is.version}</version>
+=======
+>>>>>>> 1ab2f27... fixing maven module structure
                                 </bundle>
 >>>>>>> 8ae54da... Adding user portal login page..
                                 <!--<bundle>-->
