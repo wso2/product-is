@@ -22,22 +22,17 @@
 
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>org.wso2.is.portal.user</artifactId>
+        <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
         <relativePath>../../pom.xml</relativePath>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>org.wso2.is.portal.user.client.profile</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>WSO2 User Profile Bundle - User Profile</name>
     <description>This feature contains the OSGi service for User profile</description>
     <url>http://wso2.org</url>
-
-    <properties>
-        <checkstyle.skip>true</checkstyle.skip>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -60,6 +55,16 @@
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+            <version>${org.wso2.carbon.identity.mgt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+            <version>${org.wso2.carbon.identity.mgt.version}</version>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>org.apache.felix</groupId>-->
@@ -67,7 +72,7 @@
         <!--</dependency>-->
     </dependencies>
 
-    <build>
+    <!--<build>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -77,20 +82,41 @@
                         <Import-Package>
                             org.osgi.framework,
                             org.slf4j.*;version="${slf4j.import.version.range}",
-                            org.wso2.carbon.security.caas.user.core.*;version="${carbon.security.caas.version}"
+                            org.wso2.carbon.security.caas.user.core.*;version="${carbon.security.caas.version}",
+                            org.wso2.carbon.identity.meta.claim.mgt.*;version="${org.wso2.carbon.identity.mgt.version}"
                         </Import-Package>
-                        <Private-Package>org.wso2.carbon.user.profile.internal.*</Private-Package>
+                        <Private-Package>org.wso2.is.portal.user.client.profile.internal.*</Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.user.profile.internal.*,
-                            org.wso2.carbon.user.profile.*;version="${project.version}"
+                            !org.wso2.is.portal.user.client.profile.internal.*,
+                            org.wso2.is.portal.user.client.profile.*;version="${project.version}"
                         </Export-Package>
                         <Bundle-Activator>
-                            org.wso2.carbon.user.profile.internal.Activator
+                            org.wso2.is.portal.user.client.profile.internal.Activator
                         </Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
+
+    <properties>
+        <private.package>org.wso2.is.portal.user.client.profile.internal.*</private.package>
+        <import.package>
+            org.osgi.framework,
+            javax.security.*,
+            org.slf4j.*;version="${slf4j.import.version.range}",
+            org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.meta.claim.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}"
+        </import.package>
+        <export.package>
+            !org.wso2.is.portal.user.client.profile.internal.*,
+            org.wso2.is.portal.user.client.profile.*;version="${project.version}"
+        </export.package>
+        <bundle.activator>
+            org.wso2.is.portal.user.client.profile.internal.Activator
+        </bundle.activator>
+
+        <checkstyle.skip>true</checkstyle.skip>
+    </properties>
 
 </project>

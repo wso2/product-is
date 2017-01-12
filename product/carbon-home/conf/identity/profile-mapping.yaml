@@ -27,7 +27,7 @@ profiles:
    verifier: "claim verifying extension"
    validator: "claim validating extension"
    transformer: "transform extension"
-   regex: "*"
+   regex: ".*"
    defaultValue: "user1"
    dataType: "text"
    properties:
@@ -37,26 +37,26 @@ profiles:
    displayName: "First Name"
    required: true
    readonly: false
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
    required: false
    readonly: false
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
    required: true
    readonly: false
    dataType: "email"
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/telephone"
    displayName: "Telephone"
    required: false
    readonly: false
-   regex: "*"
+   regex: ".*"
    dataType: "text"
  -
   profileName: "employee"
@@ -66,7 +66,7 @@ profiles:
    displayName: "User Name"
    required: true
    readonly: true
-   regex: "*"
+   regex: ".*"
    defaultValue: "user1"
    dataType: "text"
    properties:
@@ -76,11 +76,11 @@ profiles:
    displayName: "Employee Name"
    required: true
    readonly: false
-   regex: "*"
+   regex: ".*"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
    required: true
    readonly: false
    dataType: "email"
-   regex: "*"
+   regex: ".*"
