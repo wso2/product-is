@@ -351,6 +351,10 @@
     margin: 20px 0 20px;
 }
 
+.breadcrumb {
+    padding: 3px 0 0 15px;
+}
+
 .signup-header {
     font-size: 40px;
     font-family: Arial, Helvetica, sans-serif;
@@ -513,3 +517,4 @@ label.error {
     color: #d9534f;
     font-weight: 500;
 }
+

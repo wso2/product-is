@@ -29,12 +29,8 @@
 </header>
 <!-- /header -->
 
-<!-- breadcrumb -->
-<div class="breadcrumb-wrapper">
-    <ol class="breadcrumb">
-        <li><a href="/"></a></li>
-        <li class="active"><a href="header"></a></li>
-    </ol>
+<div class="breadcrumb">
+    {{defineZone "breadcrumbs"}}
 </div>
 
 <div class="page-content-wrapper">
@@ -42,7 +38,7 @@
     <!-- left-sidebar -->
     <div class="sidebar-wrapper sidebar-nav" data-side="left" data-width="260" data-container=".page-content-wrapper" data-container-divide="true" data-fixed-offset-top="0" data-spy="affix" data-offset-top="80" id="sidebar-theme">
         <ul class="nav nav-pills nav-stacked pages">
-            <li><a href="/Applications">Applications</a></li>
+            <li><a href="{{@contextPath}}/Applications">Applications</a></li>
         </ul>
     </div>
 
