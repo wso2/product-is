@@ -1,24 +1,53 @@
 <h3>{{t "user-portal.user.profile"}}</h3>
 <hr/>
-<form method="post" class="form-horizontal">
+{{#if success}}
+    {{#if message}}
+        <div class="alert alert-success" role="alert">
+            <i class="icon fw fw-success"></i><strong>{{t "user-portal.user.profile.success"}}</strong>
+            {{message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{else}}
+    {{#if message}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.profile.failure"}}</strong>
+            {{message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{/if}}
+<form method="post" id="image-uploader" class="form-horizontal" action="?image" enctype="multipart/form-data">
     <div class="form-group">
         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
             <div class="thumbnail icon">
                 <div class="square-element setbgcolor">
-                    <a class="sub-icon" title="Edit"><i class="fw fw-camera fw-lg"></i></a>
+                    <a id="image-edit" class="sub-icon" title="Edit"><i class="fw fw-camera fw-lg"></i></a>
                     <div class="user-name-icon">D</div>
                 </div>
             </div>
         </div>
     </div>
+    <input type="file" id="image" name="image" style="visibility: hidden; width: 1px; height: 1px" accept="image/*"/>
+</form>
+<form method="post" class="form-horizontal" action="?{{profile}}">
     {{#each uiEntries}}
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-            <label for="{{this.claimURI}}">{{this.displayName}}<span>{{requiredIcon}}</span></label>
-            <input type="{{this.dataType}}" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
-                   value="{{this.value}}" {{this.readonly}} {{this.required}}/>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                <label for="{{this.claimURI}}">{{this.displayName}}<span>{{requiredIcon}}</span></label>
+                <input type="{{this.dataType}}" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
+                       maxlength="250" value="{{this.value}}" {{this.readonly}} {{this.required}}
+                       pattern="{{this.regex}}" title="{{this.regex}}"/>
+            </div>
         </div>
-    </div>
     {{/each}}
     <input class="btn btn-primary add-margin-bottom-3x" type="submit" value="Update"/>
 </form>
