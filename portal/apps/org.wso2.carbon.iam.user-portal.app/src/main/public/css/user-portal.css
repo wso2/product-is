@@ -385,6 +385,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 .body-wrapper {
@@ -614,3 +615,10 @@ label.error {
 }
 =======
 >>>>>>> 14a9363... Code Improvement
+=======
+}
+
+.breadcrumb {
+    padding: 3px 0 0 15px;
+}
+>>>>>>> cc7af35... using main layout in all the pages, and adding breadcrumbs
