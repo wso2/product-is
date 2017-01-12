@@ -56,14 +56,15 @@
                         {{#each profiles}}
                             <div class="tab-pane" id="{{this}}">
                                 <div class="col-md-12">
-                                    {{fragment "org.wso2.carbon.iam.user-portal.feature.profile" profileName=this}}
+                                    {{fragment "org.wso2.carbon.iam.user-portal.feature.profile" profileName=this
+                                    actionId=actionId}}
                                 </div>
                             </div>
                         {{/each}}
                         <div class="tab-pane" id="password">
                             <h3>Password</h3>
                             <div class="col-md-12">
-                                {{fragment "org.wso2.carbon.iam.user-portal.feature.reset-password"}}
+                                {{fragment "org.wso2.carbon.iam.user-portal.feature.reset-password" actionId=actionId}}
                             </div>
                         </div>
                         <div class="tab-pane" id="authentication">
