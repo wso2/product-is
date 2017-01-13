@@ -22,7 +22,7 @@ public class ChallengeQuestionManagerServiceImpl implements ChallengeQuestionMan
     }
 
     @Override
-    public List<ChallengeQuestion> getChallengeQuestionList() throws IdentityRecoveryServerException {
+    public List<ChallengeQuestion> getChallengeQuestionList() throws IdentityRecoveryServerException, IdentityRecoveryException {
         return challengeQuestionManager.getAllChallengeQuestions(null);
     }
 
@@ -32,7 +32,7 @@ public class ChallengeQuestionManagerServiceImpl implements ChallengeQuestionMan
 
 //        User user = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore()
 //                .getUser(userUniqueId);
-        return challengeQuestionManager.getAllChallengeQuestionsForUser(null, null);
+        return challengeQuestionManager.getAllChallengeQuestionsForUser(null);
     }
 
 }
