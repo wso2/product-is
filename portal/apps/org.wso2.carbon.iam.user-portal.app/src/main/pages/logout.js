@@ -43,5 +43,7 @@ function onRequest(env) {
     if (destroySession()) {
 >>>>>>> 43350c9... Adding Login/Logout functionality.
         sendRedirect(env.contextPath + env.config['loginPageUri']);
+    } else {
+        LOG.info("Error while logging out.");
     }
 }

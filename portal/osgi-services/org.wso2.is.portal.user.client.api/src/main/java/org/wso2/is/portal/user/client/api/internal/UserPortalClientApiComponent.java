@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.meta.claim.mgt.service.ProfileMgtService;
 import org.wso2.carbon.identity.mgt.RealmService;
-import org.wso2.carbon.identity.recovery.ChallengeQuestionManager;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl;
 import org.wso2.is.portal.user.client.api.ProfileMgtClientService;
@@ -48,6 +47,7 @@ public class UserPortalClientApiComponent {
     public void registerUserPortalClientApi(BundleContext bundleContext) {
 
         initializeClientServices(bundleContext);
+        log.info("User Portal - " + "https://localhost:9292/user-portal"); //todo set the url properly.
         if (log.isDebugEnabled()) {
             log.debug("User portal UUF support Bundle Started.");
         }
