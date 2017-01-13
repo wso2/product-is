@@ -30,15 +30,12 @@ function onRequest(env) {
         }
 
         var registrationResult = userRegistration(claimMap, credentialMap);
-        if (registrationResult.errorMessage != null) {
+        if (registrationResult.errorMessage) {
             return {errorMessage: registrationResult.message};
         }
-        else if (registrationResult.userRegistration != null && registrationResult.userRegistration.userId != null) {
-            /*sendRedirect(env.contextPath + env.config['loginPageUri'] + "?method=POST&username=" + claimMap["http://wso2.org/claims/username"]
-             + "&password=" + credentialMap["password"] + "&domain=" + domain);*/
+        else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
             var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"]);
             if (authenticationResult.success) {
-                //configure login redirect uri
                 sendRedirect(env.contextPath + env.config['loginRedirectUri']);
             } else {
                 sendRedirect(env.contextPath + env.config['loginPageUri']);
@@ -47,28 +44,38 @@ function onRequest(env) {
     }
 
     if (env.request.method == "GET") {
-        return getprofile();
+        return getProfile();
     }
 }
 
-function getprofile() {
+function getProfile() {
     try {
         var claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["self-signUp"]);
+        if (claimProfile == null) {
+            return {errorMessage: "Failed to retrieve the claim profile."};
+        }
         var claimForProfile = claimProfile.claims;
 
-        var ProfileMgtUtil = Java.type("org.wso2.is.portal.user.client.api.util.ProfileMgtUtil");
-        var profileMgt = new ProfileMgtUtil();
-
-        var claimArray = [];
+        var claimProfileArray = [];
         for (var i = 0; i < claimForProfile.length; i++) {
-            claimArray[i] = profileMgt.getClaimProfile(claimForProfile[i]);
+            var claimProfileMap = {};
+            claimProfileMap["displayName"] = claimForProfile[i].getDisplayName();
+            claimProfileMap["claimURI"] = claimForProfile[i].getClaimURI();
+            if (claimForProfile[i].getDefaultValue()) {
+                claimProfileMap["defaultValue"] = claimForProfile[i].getDefaultValue();
+            }
+            claimProfileMap["displayLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
+            claimProfileMap["required"] = Boolean.toString(claimForProfile[i].getRequired());
+            claimProfileMap["regex"] = claimForProfile[i].getRegex();
+            claimProfileMap["readonly"] = Boolean.toString(claimForProfile[i].getReadonly());
+            claimProfileMap["dataType"] = claimForProfile[i].getDataType();
+            claimProfileArray[i] = claimProfileMap;
         }
-        sendToClient("signupClaims", claimArray);
-        return {"signupClaims": claimArray};
+        sendToClient("signupClaims", claimProfileArray);
+        return {"signupClaims": claimProfileArray};
     } catch (e) {
-        var message = e.instMessage;
-        return {errorMessage: "Error in retrieving claims of the claim profile for self sign-up."};
+        return {errorMessage: e.instMessage};
     }
 }
 
