@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -14,19 +15,31 @@
  * limitations under the License.
  */
 
+=======
+>>>>>>> 2d76d75... Added UI validations in user self sign-up
 $(window).load(function () {
     //password strength meter logic
     $("#password").on("focus keyup", function () {
         var score = 0;
         var a = $(this).val();
+<<<<<<< HEAD
         var desc = [];
+=======
+        var desc = new Array();
+>>>>>>> 2d76d75... Added UI validations in user self sign-up
 
         // strength desc
         desc[0] = "Too short";
         desc[1] = "Weak";
+<<<<<<< HEAD
         desc[2] = "Fair";
         desc[3] = "Good";
         desc[4] = "Strong";
+=======
+        desc[2] = "Good";
+        desc[3] = "Strong";
+        desc[4] = "Best";
+>>>>>>> 2d76d75... Added UI validations in user self sign-up
 
         // password length
         var valid = '<i class="fw fw-success"></i>';
@@ -92,6 +105,7 @@ $(window).load(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
 
+<<<<<<< HEAD
     jQuery.validator.addMethod("notEqual", function (value, element, param) {
         return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
@@ -153,4 +167,14 @@ $('#domainSelector').change(function () {
     if (domain != "default") {
         document.getElementById("domain").value = domain;
     }
+=======
+    //confirm password validation
+    $("#self-signUp-form").validate({
+        rules: {
+            confirmPassword: {
+                equalTo: "#password"
+            }
+        }
+    });
+>>>>>>> 2d76d75... Added UI validations in user self sign-up
 });
