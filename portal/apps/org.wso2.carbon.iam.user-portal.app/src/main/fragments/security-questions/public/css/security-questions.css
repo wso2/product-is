@@ -5,6 +5,9 @@
 #edit-question {
     display: none;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0d51879... Security Question section markup improvements
 }
 
 /* security question listing */
@@ -18,6 +21,9 @@
 }
 .question a:focus, .question a:hover{
     text-decoration: none;
+<<<<<<< HEAD
 =======
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
+=======
+>>>>>>> 0d51879... Security Question section markup improvements
 }
