@@ -370,7 +370,7 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         try {
             return UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
         } catch (ProfileMgtServiceException e) {
-            String error = String.format("Failed to retrieve the claim profile.");
+            String error = "Failed to retrieve the claim profile.";
             log.error(error, e);
             throw new UserPortalUIException(error);
         }
