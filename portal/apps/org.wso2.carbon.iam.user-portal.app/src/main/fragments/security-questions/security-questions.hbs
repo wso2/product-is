@@ -1,63 +1,86 @@
 {{css "css/security-questions.css"}}
 {{js "js/security-questions.js"}}
 
-<div id="add-question">
-    <form>
-        <div id="new-security-question" class="form-group">
-            <label for="question-list">Security Question</label>
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="questions-dropdown"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">Select a question
-                    <span class="caret"></span>
-                </button>
-                <ul id="question-list" class="dropdown-menu" aria-labelledby="questions-dropdown">
-                    {{#each question_list}}
-                        <li value="{{ question_value }}"><a href="#">{{ question_text }}</a></li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="button" class="btn btn-default" value="Add" onclick="saveQuestion()">
-        </div>
-    </form>
-</div>
-<div id="list-questions" class="row">
-    <div id="create-question" class="col-md-offset-11 col-md-4">
-        <button class="btn btn-default btn-lg" onclick="addQuestion()"><span class="fw fw-add fw-2x"></span> Create
-        </button>
-    </div>
-    <div id="question-list" class="panel-group panel-extended">
-        {{#each user_questions}}
-            <div class="question panel panel-default">
-                <div class="panel-body">
-                    <span class="question-text">{{ question_text }}</span>
-                    <button class="btn btn-default" aria-label="Edit" onclick="editQuestion()">
-                        <span class="fw fw-edit" aria-hidden="true"></span>
-                    </button>
-                    <button class="btn btn-default" aria-label="Delete" onclick="deleteQuestion()">
-                        <span class="fw fw-delete" aria-hidden="true"></span>
-                    </button>
+<h3>{{t "user-portal.user.account.securityQ"}}</h3>
+<hr/>
+<div id="add-question" class="well">
+    <form class="form-horizontal">
+        <div id="new-security-question">
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <label for="question-list">Security Question</label>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="questions-dropdown"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="true">Select a question
+                            <span class="caret"></span>
+                        </button>
+                        <ul id="question-list" class="dropdown-menu" aria-labelledby="questions-dropdown">
+                            {{#each question_list}}
+                                <li value="{{ question_value }}"><a href="#">{{ question_text }}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
                 </div>
             </div>
-        {{/each}}
+        </div>
+        <input type="button" class="btn btn-primary" value="Add" onclick="saveQuestion()">
+    </form>
+</div>
+<div id="list-questions">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div id="create-question" class="pull-right add-margin-bottom-4x">
+                <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span class="fw fw-add fw-1x"></span> Create
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
+            <div id="question-list">
+                {{#each user_questions}}
+                    <div class="question">
+                        <span class="question-text">{{ question_text }}</span>
+                        <div class="pull-right">
+                            <a aria-label="Edit" onclick="editQuestion()">
+                                <span class="fw fw-edit" aria-hidden="true"></span>
+                            </a>
+                            <a aria-label="Delete" onclick="deleteQuestion()"\>
+                                <span class="fw fw-delete" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
     </div>
 </div>
-<div id="edit-question" class="row">
-    <div id="info" class="alert alert-info" role="alert">
-        <p>{{t "user-portal.user.account.security.question.info"}}</p>
+<div id="edit-question">
+    <div id="info">
+        <div class="alert alert-info" role="alert">
+            <i class="icon fw fw-info"></i>
+            {{t "user-portal.user.account.security.question.info"}}
+        </div>
     </div>
-    <form>
-    <div id="password" class="form-group">
-        <label for="old-password">Password</label>
-        <input type="password" id="old-password"/>
-    </div>
-    <div id="security-question" class="form-group">
-        <!-- TODO: Remove the hardcoded values-->
-        <div id="current-question">Security question one ?</div>
-        <div id="answer">Answer for one</div>
-        <input type="button" class="btn btn-default" value="Update" onclick="updateQuestion()"/>
-    </div>
+    <form class="form-horizontal">
+        <div id="password">
+            <div class="form-group">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label for="old-password">Password</label>
+                    <input type="password" class="form-control" id="old-password"/>
+                </div>
+            </div>
+        </div>
+        <div id="security-question">
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <!-- TODO: Remove the hardcoded values-->
+                    <div id="current-question">Security question one ?</div>
+                    <div id="answer">Answer for one</div>
+                </div>
+            </div>
+        </div>
+        <input type="button" class="btn btn-primary" value="Update" onclick="updateQuestion()"/>
     </form>
 </div>
