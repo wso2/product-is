@@ -91,7 +91,6 @@
         <!--//todo set versions-->
         <export.package>
             !org.wso2.is.portal.user.client.api.internal.*,
-            org.wso2.is.portal.user.client.api.util;version="${project.version}",
             org.wso2.is.portal.user.client.api.*;version="${project.version}"
         </export.package>
 

@@ -5,7 +5,7 @@
 {{#fillZone "content"}}
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>Error in user self sign-up!</strong>
+            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.signup.error.default"}}</strong>
             {{errorMessage}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -37,12 +37,11 @@
                             {{else}}
                                 {{log "No Defined Claims for the user self sign-up!" level="error"}}
                                 <p class="empty">No content</p>
-
                             {{/each}}
 
                             </br>
                             <label for=password>Password<span>*</span></label></br>
-                            <input type="text" name="password" id="password" class="form-control" placeholder="password" pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})" required/>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="password" pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})" required/>
                             </br></br><input id="register" class="btn btn-default btn-primary add-margin-right-2x"
                                              type="submit" value="Register"/></div>
                     </form>

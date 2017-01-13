@@ -62,16 +62,13 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
     @Override
     public ProfileEntry getProfile(String profileName) throws UserPortalUIException {
 
-        ProfileEntry profileEntry;
         try {
-            profileEntry = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
+            return UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
         } catch (ProfileMgtServiceException e) {
-            String error = String.format("Failed to retrieve profile - %s", profileName);
+            String error = String.format("Failed to retrieve the claim profile.");
             log.error(error, e);
             throw new UserPortalUIException(error);
         }
-
-        return profileEntry;
     }
 
     @Override
