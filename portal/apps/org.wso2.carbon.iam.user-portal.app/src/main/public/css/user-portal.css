@@ -180,7 +180,6 @@
     .login-form-wrapper, .redirection-container, .error-container, .signup-form-wrapper, .recover-form-wrapper{
         padding-top: 10%;
         padding-bottom: 5%;
-        font
     }
     .error-details-container h3{
         font-weight: 400;
@@ -516,5 +515,9 @@
 label.error {
     color: #d9534f;
     font-weight: 500;
+}
+
+.well {
+    border:none;
 }
 
