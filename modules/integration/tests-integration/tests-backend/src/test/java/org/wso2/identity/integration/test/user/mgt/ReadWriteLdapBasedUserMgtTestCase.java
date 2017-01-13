@@ -62,7 +62,7 @@ public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTes
 		ClaimValue claimValue = new ClaimValue();
 		claimValue.setClaimURI("http://wso2.org/claims/displayName");
 		claimValue.setValue("displayName5");
-		userMgtClient.addUserWithClaims("user5", "passWord@", null, new ClaimValue[]{}, "default");
+		userMgtClient.addUserWithClaims("user5", "passWord@", null, new ClaimValue[]{claimValue}, "default");
         
 		userMgtClient.addRole("umRole1", null, new String[] { "/permission/admin/login" }, false);
 		userMgtClient.addRole("umRole3", new String[]{"user1"}, new String[]{"login"}, false);
