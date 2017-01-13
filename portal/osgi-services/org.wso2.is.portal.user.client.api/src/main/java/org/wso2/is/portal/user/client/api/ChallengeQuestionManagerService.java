@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface ChallengeQuestionManagerService {
 
-    List<ChallengeQuestion> getChallengeQuestionList() throws IdentityRecoveryServerException;
+    List<ChallengeQuestion> getChallengeQuestionList() throws IdentityRecoveryServerException, IdentityRecoveryException;
 
     List<ChallengeQuestion> getAllChallengeQuestionsForUser(String userUniqueId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
