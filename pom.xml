@@ -1176,8 +1176,12 @@
 >>>>>>> f76445f... adding configuration changes
 =======
         <org.wso2.carbon.identity.governance.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.governance.version>
+<<<<<<< HEAD
         <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
 >>>>>>> 1f19211... temporarily fixing challenge question page issues..
+=======
+        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+>>>>>>> 8bc6552... Fixed issue in rendering signup page due to redirection to login everytime
 
         <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
