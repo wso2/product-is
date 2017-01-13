@@ -289,7 +289,7 @@ function updateUserProfile(userId, updatedClaims) {
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updateUserProfile", [userId, updatedClaims]);
-        return {success: true, message: "Profile is updated."}
+        return {success: true, message: "Your profile is updated."}
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
