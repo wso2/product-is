@@ -587,7 +587,7 @@
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
         <org.wso2.carbon.identity.governance.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.governance.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
 
         <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
