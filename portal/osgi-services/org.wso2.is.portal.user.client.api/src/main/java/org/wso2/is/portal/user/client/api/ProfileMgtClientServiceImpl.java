@@ -52,17 +52,25 @@ import java.util.stream.Collectors;
 package org.wso2.is.portal.user.client.api;
 >>>>>>> c9a9414... Adding ProfileMgtClientService
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.meta.claim.mgt.exception.ProfileMgtServiceException;
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+import org.wso2.carbon.identity.meta.claim.mgt.service.ProfileMgtService;
+import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
-import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,10 +86,14 @@ import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder
  * Profile Mgt Client Service Implementation.
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cf181b2... Removing DataHolder from the component.
 @Component(
         name = "org.wso2.is.portal.user.client.api.ProfileMgtClientServiceImpl",
         service = ProfileMgtClientService.class,
         immediate = true)
+<<<<<<< HEAD
 public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
 <<<<<<< HEAD
@@ -243,6 +255,52 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 >>>>>>> 951ade6... Adding profile loading js
 =======
     private static final String CLAIM_ROOT_DIALECT = "http://wso2.org/claims";
+=======
+public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileMgtClientServiceImpl.class);
+
+    private RealmService realmService;
+
+    private ProfileMgtService profileMgtService;
+
+    @Activate
+    protected void start(final BundleContext bundleContext) {
+
+    }
+
+    @Reference(
+            name = "realmService",
+            service = RealmService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService")
+    protected void setRealmService(RealmService realmService) {
+
+        this.realmService = realmService;
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+
+        this.realmService = null;
+    }
+
+    @Reference(
+            name = "profileMgtService",
+            service = ProfileMgtService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetProfileMgtService")
+    protected void setProfileMgtService(ProfileMgtService profileMgtService) {
+
+        this.profileMgtService = profileMgtService;
+    }
+
+    protected void unsetProfileMgtService(ProfileMgtService profileMgtService) {
+
+        this.profileMgtService = null;
+    }
+>>>>>>> cf181b2... Removing DataHolder from the component.
 
 >>>>>>> 6c5f9c0... Fixing login issue.
     @Override
@@ -250,10 +308,10 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
         Set<String> profileNames;
         try {
-            profileNames = UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfileNames();
+            profileNames = getProfileMgtService().getProfileNames();
         } catch (ProfileMgtServiceException e) {
             String error = "Failed to retrieve profile names.";
-            log.error(error, e);
+            LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
 
@@ -368,10 +426,10 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
     public ProfileEntry getProfile(String profileName) throws UserPortalUIException {
 
         try {
-            return UserPortalClientApiDataHolder.getInstance().getProfileMgtService().getProfile(profileName);
+            return getProfileMgtService().getProfile(profileName);
         } catch (ProfileMgtServiceException e) {
             String error = "Failed to retrieve the claim profile.";
-            log.error(error, e);
+            LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
     }
@@ -387,8 +445,8 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
         if (profileEntry == null) {
             String error = String.format("Invalid profile - %s", profileName);
-            if (log.isDebugEnabled()) {
-                log.debug(error);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(error);
             }
             throw new UserPortalUIException(error);
         }
@@ -398,22 +456,21 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         }
 
         List<MetaClaim> metaClaims = profileEntry.getClaims().stream()
-                .map(claimConfigEntry -> new MetaClaim(CLAIM_ROOT_DIALECT, claimConfigEntry.getClaimURI()))
+                .map(claimConfigEntry -> new MetaClaim(IdentityMgtConstants.CLAIM_ROOT_DIALECT,
+                        claimConfigEntry.getClaimURI()))
                 .collect(Collectors.toList());
 
         List<Claim> claims;
         try {
-            //TODO remove test users
-            claims = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore()
-                    .getClaimsOfUser(uniqueUserId, metaClaims);
+            claims = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
         } catch (IdentityStoreException e) {
-            log.error(String.format("Failed to get the user claims for user - %s", uniqueUserId), e);
+            LOGGER.error(String.format("Failed to get the user claims for user - %s", uniqueUserId), e);
             throw new UserPortalUIException(String.format("Failed to get the user claims for the profile - %s",
                     profileName));
         } catch (UserNotFoundException e) {
             String error = String.format("Invalid user - %s", uniqueUserId);
-            if (log.isDebugEnabled()) {
-                log.debug(error);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(error, e);
             }
             throw new UserPortalUIException(error);
         }
@@ -436,6 +493,21 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
                 }).collect(Collectors.toList());
     }
 
+    private RealmService getRealmService() {
+        if (this.realmService == null) {
+            throw new IllegalStateException("Realm Service is null.");
+        }
+        return this.realmService;
+    }
 
+<<<<<<< HEAD
 >>>>>>> 6c5f9c0... Fixing login issue.
+=======
+    private ProfileMgtService getProfileMgtService() {
+        if (profileMgtService == null) {
+            throw new IllegalStateException("Profile Mgt Service is null.");
+        }
+        return profileMgtService;
+    }
+>>>>>>> cf181b2... Removing DataHolder from the component.
 }

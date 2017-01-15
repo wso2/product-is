@@ -21,6 +21,9 @@
 package org.wso2.is.portal.user.client.api;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cf181b2... Removing DataHolder from the component.
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -31,9 +34,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.wso2.carbon.identity.mgt.RealmService;
 =======
 >>>>>>> 6e65079... Adding test users.
+=======
+import org.wso2.carbon.identity.mgt.RealmService;
+>>>>>>> cf181b2... Removing DataHolder from the component.
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.bean.UserBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
@@ -57,6 +64,7 @@ import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.kernel.utils.StringUtils;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+<<<<<<< HEAD
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,9 +81,10 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 >>>>>>> 7444e2a... getting user login to work..
 import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder;
 >>>>>>> 6e65079... Adding test users.
+=======
+>>>>>>> cf181b2... Removing DataHolder from the component.
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 <<<<<<< HEAD
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
@@ -99,19 +108,44 @@ import javax.security.auth.callback.PasswordCallback;
  * Identity store client service implementation.
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cf181b2... Removing DataHolder from the component.
 @Component(
         name = "org.wso2.is.portal.user.client.api.IdentityStoreClientServiceImpl",
         service = IdentityStoreClientService.class,
         immediate = true)
+<<<<<<< HEAD
 =======
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
+=======
+>>>>>>> cf181b2... Removing DataHolder from the component.
 public class IdentityStoreClientServiceImpl implements IdentityStoreClientService {
 
-    public IdentityStoreClientServiceImpl() {
-        addTestUsers();
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
+
+    private RealmService realmService;
+
+    @Activate
+    protected void start(final BundleContext bundleContext) {
+
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
+    @Reference(
+            name = "realmService",
+            service = RealmService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService")
+    protected void setRealmService(RealmService realmService) {
+
+        this.realmService = realmService;
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+
+        this.realmService = null;
+    }
 
 <<<<<<< HEAD
     private RealmService realmService;
@@ -326,22 +360,28 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
             //TODO if different claim is used, need identify that claim.
-            Claim usernameClaim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, IdentityMgtConstants.USERNAME_CLAIM,
-                    username);
+            Claim usernameClaim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT,
+                    IdentityMgtConstants.USERNAME_CLAIM, username);
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(password);
             //todo
-            AuthenticationContext authenticationContext = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().authenticate(usernameClaim,
-                    new Callback[]{passwordCallback}, null);
+            AuthenticationContext authenticationContext = getRealmService().getIdentityStore()
+                    .authenticate(usernameClaim, new Callback[]{passwordCallback}, null);
             User identityUser = authenticationContext.getUser();
 
             //TODO if another claim used, need to load username claim
 
             return new UUFUser(username, identityUser.getUniqueUserId(), identityUser.getDomainName());
-        } catch (AuthenticationFailure | IdentityStoreException e) {
-            //todo
-            e.printStackTrace();
-            throw new UserPortalUIException(e.getMessage());
+        } catch (AuthenticationFailure e) {
+            String error = "Invalid credentials.";
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(error, e);
+            }
+            throw new UserPortalUIException("Invalid credentials.");
+        } catch (IdentityStoreException e) {
+            String error = "Failed to authenticate user.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
         }
     }
 
@@ -356,23 +396,27 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(newPassword);
 
-            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserCredentials(uufUser.getUserId(), Collections
-                    .singletonList(passwordCallback));
+            getRealmService().getIdentityStore().updateUserCredentials(uufUser.getUserId(),
+                    Collections.singletonList(passwordCallback));
         } catch (IdentityStoreException e) {
-            throw new UserPortalUIException(e.getMessage());
+            String error = "Failed to update user password.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
         }
 
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
     }
 
     @Override
-    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException {
+    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws
+            UserPortalUIException {
+
         UserBean userBean = new UserBean();
-        List<Claim> claimsList = new ArrayList();
-        List<Callback> credentialsList = new ArrayList();
+        List<Claim> claimsList = new ArrayList<>();
+        List<Callback> credentialsList = new ArrayList<>();
         User identityUser;
 
-        for (Map.Entry<String, String> credential: credentials.entrySet()) {
+        for (Map.Entry<String, String> credential : credentials.entrySet()) {
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(credential.getValue().toCharArray());
             credentialsList.add(passwordCallback);
@@ -389,21 +433,25 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         userBean.setCredentials(credentialsList);
 
         try {
-            identityUser = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean);
+            identityUser = getRealmService().getIdentityStore().addUser(userBean);
         } catch (IdentityStoreException e) {
-            throw new UserPortalUIException("Error while adding user.");
+            String error = "Error while adding user.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
         }
         return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
     }
 
     @Override
-    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName) throws UserPortalUIException {
+    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName)
+            throws UserPortalUIException {
+
         UserBean userBean = new UserBean();
-        List<Claim> claimsList = new ArrayList();
-        List<Callback> credentialsList = new ArrayList();
+        List<Claim> claimsList = new ArrayList<>();
+        List<Callback> credentialsList = new ArrayList<>();
         User identityUser;
 
-        for (Map.Entry<String, String> credential: credentials.entrySet()) {
+        for (Map.Entry<String, String> credential : credentials.entrySet()) {
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(credential.getValue().toCharArray());
             credentialsList.add(passwordCallback);
@@ -420,9 +468,11 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         userBean.setCredentials(credentialsList);
 
         try {
-            identityUser = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser(userBean, domainName);
+            identityUser = getRealmService().getIdentityStore().addUser(userBean, domainName);
         } catch (IdentityStoreException e) {
-            throw new UserPortalUIException("Error while adding user.");
+            String error = "Error while adding user.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
         }
         return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
     }
@@ -441,8 +491,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
                 .collect(Collectors.toList());
 
         try {
-            UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().updateUserClaims
-                    (uniqueUserId, updatedClaims, null);
+            getRealmService().getIdentityStore().updateUserClaims(uniqueUserId, updatedClaims, null);
         } catch (IdentityStoreException | UserNotFoundException e) {
             String error = "Failed to updated user profile.";
             LOGGER.error(error, e);
@@ -450,56 +499,10 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         }
     }
 
-    private void addTestUsers() {
-
-        try {
-            User testUser = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().getUser(new Claim
-                    ("http://wso2.org/claims", "http://wso2.org/claims/username", "lucifer"));
-            if (testUser != null) {
-                return;
-            }
-        } catch (IdentityStoreException | UserNotFoundException e) {
-
+    private RealmService getRealmService() {
+        if (this.realmService == null) {
+            throw new IllegalStateException("Realm Service is null.");
         }
-
-        UserBean userBean1 = new UserBean();
-        List<Claim> claims1 = Arrays
-                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "jon"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/givenname", "Jon"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastname", "Snow"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "jon@wso2.com"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/telephone", "+94715979891"));
-        userBean1.setClaims(claims1);
-
-        PasswordCallback passwordCallback1 = new PasswordCallback("password", false);
-        passwordCallback1.setPassword("admin".toCharArray());
-        userBean1.setCredentials(Collections.singletonList(passwordCallback1));
-
-        UserBean userBean2 = new UserBean();
-        List<Claim> claims2 = Arrays
-                .asList(new Claim("http://wso2.org/claims", "http://wso2.org/claims/username", "sansa"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/givenname", "Sansa"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/lastname", "Stark"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/email", "sansa@wso2.com"),
-                        new Claim("http://wso2.org/claims", "http://wso2.org/claims/telephone", "+94715979891"));
-        userBean2.setClaims(claims2);
-
-        PasswordCallback passwordCallback2 = new PasswordCallback("password", false);
-        passwordCallback2.setPassword("admin".toCharArray());
-        userBean2.setCredentials(Collections.singletonList(passwordCallback2));
-
-        try {
-
-            User user1 = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
-                    (userBean1);
-            User user2 = UserPortalClientApiDataHolder.getInstance().getRealmService().getIdentityStore().addUser
-                    (userBean2);
-            List<User> users = Arrays.asList(user1, user2);
-
-            UserPortalClientApiDataHolder.getInstance().setTempUsers(users.stream().map(User::getUniqueUserId)
-                    .collect(Collectors.toList()));
-        } catch (IdentityStoreException e) {
-            throw new RuntimeException("Failed to add test users.", e);
-        }
+        return this.realmService;
     }
 }
