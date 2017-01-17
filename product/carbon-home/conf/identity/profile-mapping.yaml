@@ -19,12 +19,16 @@ profiles:
  -
   profileName: "default"
 <<<<<<< HEAD
+<<<<<<< HEAD
   isAdminProfile: false
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
    displayName: "Username"
 =======
+=======
+  isAdminProfile: false
+>>>>>>> 6e1fe1a... Fixing IDENTITY-5585
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
@@ -173,6 +177,7 @@ profiles:
    dataType: "text"
  -
   profileName: "employee"
+  isAdminProfile: false
   claims:
   -
    claimURI: "http://wso2.org/claims/username"

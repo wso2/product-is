@@ -74,6 +74,7 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -308,7 +309,10 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
         Set<String> profileNames;
         try {
-            profileNames = getProfileMgtService().getProfileNames();
+            profileNames = getProfileMgtService().getProfiles().entrySet().stream()
+                                                 .filter(profile -> !profile.getValue().isAdminProfile())
+                                                 .map(Map.Entry::getKey)
+                                                 .collect(Collectors.toSet());
         } catch (ProfileMgtServiceException e) {
             String error = "Failed to retrieve profile names.";
             LOGGER.error(error, e);
@@ -426,7 +430,20 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
     public ProfileEntry getProfile(String profileName) throws UserPortalUIException {
 
         try {
-            return getProfileMgtService().getProfile(profileName);
+            ProfileEntry profileEntry = getProfileMgtService().getProfile(profileName);
+            if (profileEntry == null) {
+                String error = String.format("Invalid profile - %s", profileName);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(error);
+                }
+                throw new UserPortalUIException(error);
+            }
+            if (profileEntry.isAdminProfile()) {
+                String error = "Requested profile is an admin profile.";
+                LOGGER.error(error);
+                throw new UserPortalUIException(error);
+            }
+            return profileEntry;
         } catch (ProfileMgtServiceException e) {
             String error = "Failed to retrieve the claim profile.";
             LOGGER.error(error, e);
@@ -442,14 +459,6 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
             throws UserPortalUIException {
 
         ProfileEntry profileEntry = getProfile(profileName);
-
-        if (profileEntry == null) {
-            String error = String.format("Invalid profile - %s", profileName);
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug(error);
-            }
-            throw new UserPortalUIException(error);
-        }
 
         if (profileEntry.getClaims().isEmpty()) {
             return Collections.emptyList();
