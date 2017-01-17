@@ -42,8 +42,12 @@ public class UserPortalOSGiTestUtils {
         List<Option> defaultOptionList = new ArrayList<>();
 
         defaultOptionList.add(mavenBundle()
-                .groupId("org.slf4j")
-                .artifactId("slf4j-api")
+                .groupId("org.ops4j.pax.logging")
+                .artifactId("pax-logging-api")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.ops4j.pax.logging")
+                .artifactId("pax-logging-log4j2")
                 .versionAsInProject());
         defaultOptionList.add(mavenBundle()
                 .groupId("net.minidev.wso2")
@@ -72,6 +76,46 @@ public class UserPortalOSGiTestUtils {
         defaultOptionList.add(mavenBundle()
                 .groupId("org.wso2.carbon.caching")
                 .artifactId("org.wso2.carbon.caching")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("net.minidev.wso2")
+                .artifactId("json-smart")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.security.caas")
+                .artifactId("org.wso2.carbon.security.caas.boot")
+                .versionAsInProject().noStart());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.security.caas")
+                .artifactId("org.wso2.carbon.security.caas")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.identity.mgt")
+                .artifactId("org.wso2.carbon.identity.mgt")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.identity.mgt")
+                .artifactId("org.wso2.carbon.identity.meta.claim.mgt")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.uuf")
+                .artifactId("org.wso2.carbon.uuf.core")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.ow2.asm")
+                .artifactId("asm")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("com.google.guava")
+                .artifactId("guava")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("com.google.code.gson")
+                .artifactId("gson")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.apache.commons")
+                .artifactId("commons-lang3")
                 .versionAsInProject());
         defaultOptionList.add(mavenBundle()
                 .groupId("org.wso2.carbon.security.caas")
@@ -109,6 +153,15 @@ public class UserPortalOSGiTestUtils {
                 .groupId("org.wso2.is")
                 .artifactId("org.wso2.is.portal.user.client.api")
                 .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.deployment")
+                .artifactId("org.wso2.carbon.deployment.engine")
+                .versionAsInProject());
+        defaultOptionList.add(mavenBundle()
+                .groupId("org.wso2.orbit.org.yaml")
+                .artifactId("snakeyaml")
+                .versionAsInProject());
+
 
         CarbonSysPropConfiguration sysPropConfiguration = new CarbonSysPropConfiguration();
         sysPropConfiguration.setCarbonHome(getCarbonHome());

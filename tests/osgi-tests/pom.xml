@@ -49,6 +49,7 @@
                 </configuration>
             </plugin>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -60,6 +61,8 @@
                 </configuration>
             </plugin>
 >>>>>>> 8527b67... Added test framework for user portal
+=======
+>>>>>>> b2c630f... Added necessary transitive dependency bundles
         </plugins>
     </build>
 
@@ -86,6 +89,35 @@
 =======
         <!-- Carbon Dependencies -->
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.datasources</groupId>
+            <artifactId>org.wso2.carbon.datasource.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>osgi-test-util</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.caching</groupId>
+            <artifactId>org.wso2.carbon.caching</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.messaging</groupId>
+            <artifactId>org.wso2.carbon.messaging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt</artifactId>
         </dependency>
@@ -94,13 +126,105 @@
             <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso.is</groupId>
+            <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
         </dependency>
 
+        <!-- Dependencies for UUF -->
+        <dependency>
+            <groupId>org.wso2.carbon.jndi</groupId>
+            <artifactId>org.wso2.carbon.jndi</artifactId>
+        </dependency>
+        <!--JavaX-->
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+        </dependency>
+        <!--Orbit-->
+        <dependency>
+            <groupId>org.wso2.orbit.org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <!--Other-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>${pax.logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-log4j2</artifactId>
+            <version>${pax.logging.log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.eclipse.osgi</groupId>
+            <artifactId>org.eclipse.osgi.services</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.core</artifactId>
+            <version>1.0.0-m7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <artifactId>org.wso2.carbon.identity.recovery</artifactId>
+        </dependency>
 
+<<<<<<< HEAD
         <!-- Pax Exam Dependencies-->
 >>>>>>> 8527b67... Added test framework for user portal
+=======
+        <!-- Dependencies for Testing -->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>osgi-test-util</artifactId>
+            <scope>test</scope>
+        </dependency>
+>>>>>>> b2c630f... Added necessary transitive dependency bundles
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -127,6 +251,7 @@
             <artifactId>pax-exam-link-mvn</artifactId>
         </dependency>
         <dependency>
+<<<<<<< HEAD
 <<<<<<< HEAD
             <groupId>org.ops4j.pax.url</groupId>
             <artifactId>pax-url-aether</artifactId>
@@ -420,6 +545,10 @@
     </dependencies>
 
 =======
+=======
+            <groupId>org.ops4j.pax.url</groupId>
+            <artifactId>pax-url-aether</artifactId>
+>>>>>>> b2c630f... Added necessary transitive dependency bundles
         </dependency>
         <dependency>
             <groupId>org.ow2.spec.ee</groupId>
@@ -432,8 +561,20 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>net.minidev.wso2</groupId>
+            <artifactId>json-smart</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.jndi</groupId>
             <artifactId>org.wso2.carbon.jndi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -441,8 +582,11 @@
         </dependency>
     </dependencies>
 
+<<<<<<< HEAD
 
 >>>>>>> 8527b67... Added test framework for user portal
+=======
+>>>>>>> b2c630f... Added necessary transitive dependency bundles
     <profiles>
         <profile>
             <id>with-tests</id>
@@ -491,11 +635,11 @@
                             <systemProperties>
                                 <property>
                                     <name>carbon.home</name>
-                                    <value>src/test/resources/carbon-home</value>
+                                    <value>${project.basedir}/src/test/resources/carbon-home</value>
                                 </property>
                             </systemProperties>
                             <suiteXmlFiles>
-                                <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                                <suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
 >>>>>>> 8527b67... Added test framework for user portal
                         </configuration>
@@ -713,5 +857,9 @@
             </build>
         </profile>
     </profiles>
+
+    <properties>
+        <checkstyle.skip>true</checkstyle.skip>
+    </properties>
 
 </project>

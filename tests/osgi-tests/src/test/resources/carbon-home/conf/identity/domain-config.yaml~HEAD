@@ -1,0 +1,133 @@
+###############################################################################
+#   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+###############################################################################
+domains:
+  -
+    id: 1
+    name: "PRIMARY"
+    order: 1
+    uniqueIdResolver:
+      type: "JDBCUniqueIdResolver"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+
+    identityStoreConnectors:
+    -
+      connectorId: "JDBCIS1"
+      connectorType: "JDBCIdentityStore"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+        databaseType: "MySQL"
+      attributeMappings:
+      -
+        attribute: "uid"
+        claimUri: "http://wso2.org/claims/username"
+        properties:
+          unique: "true"
+      -
+        attribute: "cn"
+        claimUri: "http://wso2.org/claims/fullname"
+      -
+        attribute: "givenName"
+        claimUri: "http://wso2.org/claims/givenname"
+      -
+        attribute: "sn"
+        claimUri: "http://wso2.org/claims/lastname"
+      -
+        attribute: "middlename"
+        claimUri: "http://wso2.org/claims/middlename"
+      -
+        attribute: "honorificPrefix"
+        claimUri: "http://wso2.org/claims/honorificPrefix"
+      -
+        attribute: "honorificSuffix"
+        claimUri: "http://wso2.org/claims/honorificSuffixclaimUri: "
+      -
+        attribute: "displayName"
+        claimUri: "http://wso2.org/claims/displayName"
+      -
+        attribute: "nickName"
+        claimUri: "http://wso2.org/claims/nickname"
+      -
+        attribute: "mail"
+        claimUri: "http://wso2.org/claims/email"
+      -
+        attribute: "title"
+        claimUri: "http://wso2.org/claims/title"
+      -
+        attribute: "gender"
+        claimUri: "http://wso2.org/claims/gender"
+      -
+        attribute: "dateOfBirth"
+        claimUri: "http://wso2.org/claims/dob"
+      -
+        attribute: "telephoneNumber"
+        claimUri: "http://wso2.org/claims/telephone"
+      -
+        attribute: "otherPhone"
+        claimUri: "http://wso2.org/claims/otherphone"
+      -
+        attribute: "mobile"
+        claimUri: "http://wso2.org/claims/mobile"
+      -
+        attribute: "im"
+        claimUri: "http://wso2.org/claims/im"
+      -
+        attribute: "streetAddress"
+        claimUri: "http://wso2.org/claims/streetaddress"
+      -
+        attribute: "localityName"
+        claimUri: "http://wso2.org/claims/locality"
+      -
+        attribute: "region"
+        claimUri: "http://wso2.org/claims/region"
+      -
+        attribute: "postalcode"
+        claimUri: "http://wso2.org/claims/postalcode"
+      -
+        attribute: "country"
+        claimUri: "http://wso2.org/claims/country"
+      -
+        attribute: "role"
+        claimUri: "http://wso2.org/claims/role"
+      -
+        attribute: "organization"
+        claimUri: "http://wso2.org/claims/organization"
+      -
+        attribute: "resourceType"
+        claimUri: "http://wso2.org/claims/resourceType"
+      -
+        attribute: "createdDate"
+        claimUri: "http://wso2.org/claims/createdDate"
+      -
+        attribute: "lastModifiedDate"
+        claimUri: "http://wso2.org/claims/lastModifiedDate"
+      -
+        attribute: "location"
+        claimUri: "http://wso2.org/claims/location"
+      -
+        attribute: "version"
+        claimUri: "http://wso2.org/claims/version"
+
+    credentialStoreConnectors:
+    -
+      connectorId: "JDBCCS1"
+      connectorType: "JDBCCredentialStore"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+        databaseType: "MySQL"
+        hashAlgorithm: "SHA256"
+        keyLength: 256
+        iterationCount: 4096
