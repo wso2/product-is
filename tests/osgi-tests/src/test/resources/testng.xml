@@ -14,6 +14,7 @@ limitations under the License.
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
+<<<<<<< HEAD
 <suite name="WSO2-Identity-Server-Test-Suite">
     <test name="wso2-identity-server-user-portal-tests" preserve-order="true" parallel="false">
         <classes>
@@ -21,6 +22,12 @@ limitations under the License.
             <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileMgtClientServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerClientServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileImageDownloaderServiceTest"/>
+=======
+<suite name="Carbon-Security-Test-Suite">
+    <test name="carbon-security-tests" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.UserPortalClientServiceTest"/>
+>>>>>>> 8527b67... Added test framework for user portal
         </classes>
     </test>
 </suite>

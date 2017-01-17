@@ -84,7 +84,11 @@
 =======
         <module>portal</module>
         <module>product</module>
+<<<<<<< HEAD
 >>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
+=======
+        <module>tests</module>
+>>>>>>> 8527b67... Added test framework for user portal
     </modules>
 
     <dependencyManagement>
@@ -1005,6 +1009,11 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso.is</groupId>
+                <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+                <version>${org.wso2.is.portal.user.client.api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
                 <version>${carbon.security.version}</version>
@@ -1169,6 +1178,7 @@
 >>>>>>> 566488f... Adding scim feature
 =======
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.is.portal.user.client.api.version>6.0.0-SNAPSHOT</org.wso2.is.portal.user.client.api.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>

@@ -48,11 +48,24 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+<<<<<<< HEAD
+=======
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+>>>>>>> 8527b67... Added test framework for user portal
         </plugins>
     </build>
 
 
     <dependencies>
+<<<<<<< HEAD
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -70,6 +83,24 @@
             <artifactId>osgi-test-util</artifactId>
             <scope>test</scope>
         </dependency>
+=======
+        <!-- Carbon Dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso.is</groupId>
+            <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+        </dependency>
+
+
+        <!-- Pax Exam Dependencies-->
+>>>>>>> 8527b67... Added test framework for user portal
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -82,7 +113,10 @@
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-container-native</artifactId>
+<<<<<<< HEAD
             <version>${pax.exam.version}</version>
+=======
+>>>>>>> 8527b67... Added test framework for user portal
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
@@ -93,6 +127,7 @@
             <artifactId>pax-exam-link-mvn</artifactId>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.ops4j.pax.url</groupId>
             <artifactId>pax-url-aether</artifactId>
         </dependency>
@@ -312,10 +347,15 @@
             <groupId>org.ops4j.pax.logging</groupId>
             <artifactId>pax-logging-api</artifactId>
             <version>${pax.logging.version}</version>
+=======
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+>>>>>>> 8527b67... Added test framework for user portal
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.logging</groupId>
             <artifactId>pax-logging-log4j2</artifactId>
+<<<<<<< HEAD
             <version>${pax.logging.log4j2.version}</version>
         </dependency>
         <dependency>
@@ -379,6 +419,30 @@
         </dependency>
     </dependencies>
 
+=======
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.spec.ee</groupId>
+            <artifactId>ow2-jta-1.1-spec</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.ant</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.jndi</groupId>
+            <artifactId>org.wso2.carbon.jndi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+    </dependencies>
+
+
+>>>>>>> 8527b67... Added test framework for user portal
     <profiles>
         <profile>
             <id>with-tests</id>
@@ -391,6 +455,7 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+<<<<<<< HEAD
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
 
@@ -415,19 +480,45 @@
                         <configuration>
                             <source>1.8</source>
                             <target>1.8</target>
+=======
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
+                                </org.ops4j.pax.url.mvn.localRepository>
+                                <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
+                            </systemPropertyVariables>
+                            <systemProperties>
+                                <property>
+                                    <name>carbon.home</name>
+                                    <value>src/test/resources/carbon-home</value>
+                                </property>
+                            </systemProperties>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+>>>>>>> 8527b67... Added test framework for user portal
                         </configuration>
                     </plugin>
 
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
+<<<<<<< HEAD
                         <executions>
                             <execution>
                                 <id>pre-unit-test</id>
+=======
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default-prepare-agent</id>
+>>>>>>> 8527b67... Added test framework for user portal
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
+<<<<<<< HEAD
                                     <propertyName>surefireArgLine</propertyName>
                                     <destFile>${project.build.directory}/jacoco.exec</destFile>
                                     <includes>
@@ -491,6 +582,27 @@
 
 
 
+=======
+                                    <includes>
+                                        <include>org.wso2.carbon*</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>default-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <rule>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+>>>>>>> 8527b67... Added test framework for user portal
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
@@ -507,6 +619,7 @@
                                             <executiondata>
                                                 <file file="${project.build.directory}/jacoco.exec"/>
                                             </executiondata>
+<<<<<<< HEAD
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
                                                     <fileset
@@ -514,6 +627,15 @@
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
                                                     <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src"/>
+=======
+                                            <structure name="Carbon Security OSGi Tests">
+                                                <classfiles>
+                                                    <fileset
+                                                            dir="org.wso2.is.portal.user.client.api/target/classes"/>
+                                                </classfiles>
+                                                <sourcefiles encoding="UTF-8">
+                                                    <fileset dir="org.wso2.is.portal.user.client.api/src"/>
+>>>>>>> 8527b67... Added test framework for user portal
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco"/>
@@ -546,6 +668,47 @@
                             </execution>
                         </executions>
                     </plugin>
+<<<<<<< HEAD
+=======
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <version>1.4.191</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <url>
+                                jdbc:h2:file:${basedir}/target/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE
+                            </url>
+                            <username>wso2carbon</username>
+                            <password>wso2carbon</password>
+                            <driver>org.h2.Driver</driver>
+                        </configuration>
+                        <executions>
+                            <!--Create the database-->
+                            <execution>
+                                <id>create-database</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <srcFiles>
+                                        <srcFile>
+                                            src/test/resources/dbscripts/identity-mgt/h2.sql
+                                        </srcFile>
+                                    </srcFiles>
+                                    <onError>abort</onError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+>>>>>>> 8527b67... Added test framework for user portal
                 </plugins>
             </build>
         </profile>
