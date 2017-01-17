@@ -17,5 +17,7 @@
 function onRequest(env) {
     if (destroySession()) {
         sendRedirect(env.contextPath + env.config['loginPageUri']);
+    } else {
+        LOG.info("Error while logging out.");
     }
 }

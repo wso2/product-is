@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.password.internal;
+package org.wso2.is.portal.user.client.api.internal;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.is.portal.user.client.password.PasswordClientService;
-import org.wso2.is.portal.user.client.password.PasswordClientServiceImpl;
 
-/**
- * Activation class for the bundle
- */
 public class Activator implements BundleActivator {
 
     private static final Logger log = LoggerFactory.getLogger(Activator.class);
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
-        bundleContext.registerService(PasswordClientService.class.getName(),
-                                      new PasswordClientServiceImpl(), null);
+
+        log.info("User Portal - " + "https://localhost:9292/user-portal"); //todo set the url properly.
         if (log.isDebugEnabled()) {
-            log.debug("User profile UUF support Bundle Started.");
+            log.debug("User portal UUF support Bundle Started.");
         }
     }
 
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
+
         if (log.isDebugEnabled()) {
             log.debug("User profile UUF support Bundle Stopped.");
         }

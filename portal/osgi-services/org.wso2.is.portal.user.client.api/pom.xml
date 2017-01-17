@@ -19,6 +19,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <parent>
         <groupId>org.wso2.is</groupId>
@@ -70,8 +82,8 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.apache.felix</groupId>-->
-            <!--<artifactId>org.apache.felix.scr.ds-annotations</artifactId>-->
+        <!--<groupId>org.apache.felix</groupId>-->
+        <!--<artifactId>org.apache.felix.scr.ds-annotations</artifactId>-->
         <!--</dependency>-->
     </dependencies>
 
@@ -93,6 +105,9 @@
             !org.wso2.is.portal.user.client.api.internal.*,
             org.wso2.is.portal.user.client.api.*;version="${project.version}"
         </export.package>
+        <bundle.activator>
+            org.wso2.is.portal.user.client.api.internal.Activator
+        </bundle.activator>
 
         <checkstyle.skip>true</checkstyle.skip>
     </properties>

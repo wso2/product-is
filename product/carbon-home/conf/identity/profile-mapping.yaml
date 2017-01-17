@@ -18,6 +18,7 @@
 profiles:
  -
   profileName: "default"
+  isAdminProfile: false
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
@@ -60,6 +61,7 @@ profiles:
    dataType: "text"
  -
   profileName: "employee"
+  isAdminProfile: false
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
