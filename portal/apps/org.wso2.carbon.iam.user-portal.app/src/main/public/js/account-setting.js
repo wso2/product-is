@@ -95,6 +95,7 @@ $(window).load(function(){
     $('.settings-nav a, .sub-menu a').on('shown.bs.tab', function (e) {
         window.location.hash = e.target.hash;
     });
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 >>>>>>> e4b1725... Account settings - Append selected tab to the url
@@ -184,5 +185,7 @@ $(window).load(function(){
         }
     });
 >>>>>>> bb876d9... Adding confirm password validation
+=======
+>>>>>>> 4520c3c... Reset password code structuring
 });
 

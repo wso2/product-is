@@ -404,6 +404,7 @@
 }
 <<<<<<< HEAD
 
+<<<<<<< HEAD
 =======
 }
 /* password show hide */
@@ -419,6 +420,8 @@
     font-size: 1.5em;
 }
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> 4520c3c... Reset password code structuring
 /* password strength meter */
 .progress{
     border-radius: 0px;
@@ -492,9 +495,12 @@
 }
 .password_strength_meter .pwd_str{
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     /*border-top:1px solid #898989;*/
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> 4520c3c... Reset password code structuring
     padding:10px 15px;
     background-color:#dcdfe0;
 }
@@ -513,9 +519,12 @@
 }
 #password_strength_wrap {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     /*border: 1px solid #D5CEC8;*/
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> 4520c3c... Reset password code structuring
     display: none;
     float: left;
     padding: 10px;
@@ -531,11 +540,14 @@
 }
 #password_strength_wrap:before{
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     /*border-bottom: 7px solid rgba(0, 0, 0, 0);*/
     /*border-right: 7px solid rgba(0, 0, 0, 0.1);*/
     /*border-top: 7px solid rgba(0, 0, 0, 0);*/
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> 4520c3c... Reset password code structuring
     content: "";
     display: inline-block;
     left: -18px;
@@ -544,11 +556,14 @@
 }
 #password_strength_wrap:after{
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     /*border-bottom: 6px solid rgba(0, 0, 0, 0);*/
     /*border-right: 6px solid #fff;*/
     /*border-top: 6px solid rgba(0, 0, 0, 0);*/
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> 4520c3c... Reset password code structuring
     content: "";
     display: inline-block;
     left: -16px;
