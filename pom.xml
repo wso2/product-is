@@ -49,6 +49,7 @@
     <modules>
         <module>portal</module>
         <module>product</module>
+        <module>tests</module>
     </modules>
 
     <dependencyManagement>
@@ -118,6 +119,11 @@
                 <groupId>org.ops4j.pax.logging</groupId>
                 <artifactId>pax-logging-api</artifactId>
                 <version>${pax.logging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.logging</groupId>
+                <artifactId>pax-logging-log4j2</artifactId>
+                <version>${pax.logging.log4j2.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
@@ -501,6 +507,11 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso.is</groupId>
+                <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+                <version>${org.wso2.is.portal.user.client.api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
                 <version>${carbon.security.caas.version}</version>
@@ -583,6 +594,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.is.portal.user.client.api.version>6.0.0-SNAPSHOT</org.wso2.is.portal.user.client.api.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
@@ -655,6 +667,7 @@
         <!--Pax Exam Versions-->
         <javax.inject.version>1</javax.inject.version>
         <ow2.jta.spec.version>1.0.12</ow2.jta.spec.version>
+        <pax.logging.log4j2.version>1.8.5</pax.logging.log4j2.version>
         <pax.exam.version>4.6.0</pax.exam.version>
         <pax.url.version>2.4.7</pax.url.version>
         <pax.url.aether.version>1.6.0</pax.url.aether.version>
