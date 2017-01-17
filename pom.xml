@@ -616,8 +616,6 @@
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.is.portal.user.client.api</artifactId>
                 <version>${org.wso2.is.portal.user.client.api.version}</version>
-                <scope>system</scope>
-                <systemPath>/home/upeksha/Upeksha/r_and_d/user_portal/is_with_uuf/8/product-is/org.wso2.is.portal.user.client.api-6.0.0-SNAPSHOT.jar</systemPath>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
