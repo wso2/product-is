@@ -74,7 +74,10 @@ $("#newPassword").blur(function () {
 $( "#password-update-form" ).validate({
     rules: {
         confirmPassword: {
-            equalTo: "#newPassword"
+            equalTo: "#newPassword",
         }
+    },
+    messages: {
+        confirmPassword: "Passwords do not match"
     }
 });
