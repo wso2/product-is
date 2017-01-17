@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>user-portal-tests</artifactId>
+        <version>6.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <version>6.0.0-SNAPSHOT</version>
+    <artifactId>user-portal-osgi-tests</artifactId>
+    <name>WSO2 User Portal - OSGi Tests</name>
+    <description>OSGi Tests for WSO2 User Portal</description>
+    <url>http://wso2.com</url>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>${maven.wagon.ssh.version}</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <!-- Carbon Dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso.is</groupId>
+            <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+        </dependency>
+
+
+        <!-- Pax Exam Dependencies-->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-container-native</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-link-mvn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.spec.ee</groupId>
+            <artifactId>ow2-jta-1.1-spec</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.ant</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.jndi</groupId>
+            <artifactId>org.wso2.carbon.jndi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>with-tests</id>
+            <activation>
+                <property>
+                    <name>!maven.test.skip</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
+                                </org.ops4j.pax.url.mvn.localRepository>
+                                <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
+                            </systemPropertyVariables>
+                            <systemProperties>
+                                <property>
+                                    <name>carbon.home</name>
+                                    <value>src/test/resources/carbon-home</value>
+                                </property>
+                            </systemProperties>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>org.wso2.carbon*</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>default-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <rule>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <target xmlns:jacoco="antlib:org.jacoco.ant">
+                                        //this task is to provide class/src files locations for jacoco report generation
+                                        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+                                            <classpath path="${project.build.directory}"/>
+                                        </taskdef>
+                                        <jacoco:report>
+                                            <executiondata>
+                                                <file file="${project.build.directory}/jacoco.exec"/>
+                                            </executiondata>
+                                            <structure name="Carbon Security OSGi Tests">
+                                                <classfiles>
+                                                    <fileset
+                                                            dir="org.wso2.is.portal.user.client.api/target/classes"/>
+                                                </classfiles>
+                                                <sourcefiles encoding="UTF-8">
+                                                    <fileset dir="org.wso2.is.portal.user.client.api/src"/>
+                                                </sourcefiles>
+                                            </structure>
+                                            <html destdir="${project.build.directory}/site/jacoco"/>
+                                        </jacoco:report>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.jacoco</groupId>
+                                <artifactId>org.jacoco.ant</artifactId>
+                                <version>${org.jacoco.ant.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.ops4j.pax.exam</groupId>
+                        <artifactId>maven-paxexam-plugin</artifactId>
+                        <version>${maven.paxexam.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>generate-config</id>
+                                <goals>
+                                    <goal>generate-depends-file</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <version>1.4.191</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <url>
+                                jdbc:h2:file:${basedir}/target/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE
+                            </url>
+                            <username>wso2carbon</username>
+                            <password>wso2carbon</password>
+                            <driver>org.h2.Driver</driver>
+                        </configuration>
+                        <executions>
+                            <!--Create the database-->
+                            <execution>
+                                <id>create-database</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <srcFiles>
+                                        <srcFile>
+                                            src/test/resources/dbscripts/identity-mgt/h2.sql
+                                        </srcFile>
+                                    </srcFiles>
+                                    <onError>abort</onError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
