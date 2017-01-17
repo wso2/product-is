@@ -76,6 +76,12 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-io.wso2</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -175,6 +181,11 @@
                 <groupId>net.jpountz.lz4</groupId>
                 <artifactId>lz4</artifactId>
                 <version>${lz4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
             </dependency>
             <!--End 3rd Party Dependencies-->
 
@@ -373,6 +384,58 @@
             </dependency>
             <!--End of UUF Themes-->
 
+            <!-- UUF Dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon.jndi</groupId>
+                <artifactId>org.wso2.carbon.jndi</artifactId>
+                <version>${carbon.jndi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.cache</groupId>
+                <artifactId>cache-api</artifactId>
+                <version>${javax.cache-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${orbit.org.yaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${org.apache.commons.commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${org.objectweb.asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-core</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.deployment.engine</artifactId>
+                <version>5.1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.deployment</groupId>
+                <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
+                <version>5.1.0-SNAPSHOT</version>
+            </dependency>
+
             <!--Identity Server Dependent Features-->
             <dependency>
                 <groupId>org.wso2.carbon.transport</groupId>
@@ -428,6 +491,23 @@
             <!-- END of Identity Server Dependencies-->
 
             <!--Dependencies for Testing-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>osgi-test-util</artifactId>
+                <version>${carbon.osgi.test.util.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>osgi-test-util</artifactId>
+                <version>${carbon.osgi.test.util.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.minidev.wso2</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>${json.smart.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -493,9 +573,35 @@
                 <version>${ow2.jta.spec.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${javax.inject.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!--End of Dependencies for Testing-->
 
-            <!-- Authentication and Authorization -->
+            <!-- Carbon Dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core</artifactId>
+                <version>${carbon.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.caching</groupId>
+                <artifactId>org.wso2.carbon.caching</artifactId>
+                <version>${org.wso2.carbon.caching.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas</artifactId>
+                <version>${org.wso2.carbon.security.caas.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
+                <version>${org.wso2.carbon.security.caas.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt</artifactId>
@@ -507,9 +613,11 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso.is</groupId>
+                <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.is.portal.user.client.api</artifactId>
                 <version>${org.wso2.is.portal.user.client.api.version}</version>
+                <scope>system</scope>
+                <systemPath>/home/upeksha/Upeksha/r_and_d/user_portal/is_with_uuf/8/product-is/org.wso2.is.portal.user.client.api-6.0.0-SNAPSHOT.jar</systemPath>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
@@ -594,6 +702,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <org.wso2.is.portal.user.client.api.version>6.0.0-SNAPSHOT</org.wso2.is.portal.user.client.api.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
@@ -618,9 +727,9 @@
         <equinox.osgi.services.version>3.4.0.v20140312-2051</equinox.osgi.services.version>
         <equinox.osgi.version>3.10.2.v20150203-1939</equinox.osgi.version>
         <gs-collections.version>7.0.3</gs-collections.version>
-        <gson.version>2.2.4</gson.version>
+        <gson.version>2.6.2</gson.version>
         <guava.bundle.version>19.0.0</guava.bundle.version>
-        <guava.version>19.0</guava.version>
+        <guava.version>18.0</guava.version>
         <libthrift.version>0.9.2.wso2v1</libthrift.version>
         <lz4.version>1.3.0</lz4.version>
         <netty.version.range>[4.0,5)</netty.version.range>
@@ -634,12 +743,16 @@
         <rs-api.version>2.0</rs-api.version>
         <slf4j.import.version.range>[1.7.1, 2.0.0)</slf4j.import.version.range>
         <slf4j.version>1.7.5</slf4j.version>
+        <commons-io.version>2.4.0.wso2v1</commons-io.version>
         <io.swagger.annotations.version>1.5.8</io.swagger.annotations.version>
         <io.swagger.jaxrs.version>1.5.8</io.swagger.jaxrs.version>
         <commons-lang.version>2.1</commons-lang.version>
         <org.snakeyaml.version>1.16.0.wso2v1</org.snakeyaml.version>
+        <json.smart.version>2.1.0.wso2v1</json.smart.version>
+        <HikariCP.version>2.4.1</HikariCP.version>
 
         <!--WSO2 related properties-->
+        <carbon.core.version>5.1.0</carbon.core.version>
         <org.wso2.carbon.identity.mgt.version.range>[1.0.0,2.0.0)</org.wso2.carbon.identity.mgt.version.range>
         <andes.dependency.version>3.5.0-SNAPSHOT</andes.dependency.version>
         <andes.package.export.version.range>3.5.0</andes.package.export.version.range>
@@ -657,6 +770,8 @@
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
+        <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
+        <org.wso2.carbon.security.caas.version>1.0.0-m2</org.wso2.carbon.security.caas.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -671,7 +786,6 @@
         <pax.exam.version>4.6.0</pax.exam.version>
         <pax.url.version>2.4.7</pax.url.version>
         <pax.url.aether.version>1.6.0</pax.url.aether.version>
-        <slf4j.api.version>1.7.12</slf4j.api.version>
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
 
         <!-- Unit Test dependency versions-->
@@ -680,6 +794,12 @@
         <mockito.version>1.9.5</mockito.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
         <testng.version>6.9.4</testng.version>
+
+        <!-- UUF-->
+        <javax.cache-api.version>1.0.0</javax.cache-api.version>
+        <orbit.org.yaml.version>1.16.0.wso2v1</orbit.org.yaml.version>
+        <org.apache.commons.commons-lang3.version>3.1</org.apache.commons.commons-lang3.version>
+        <org.objectweb.asm.version>5.1</org.objectweb.asm.version>
 
     </properties>
 

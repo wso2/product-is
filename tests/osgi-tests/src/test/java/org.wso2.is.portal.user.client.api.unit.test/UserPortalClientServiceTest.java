@@ -27,17 +27,19 @@ import org.osgi.framework.BundleContext;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
-import javax.inject.Inject;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
@@ -74,30 +76,41 @@ public class UserPortalClientServiceTest {
     }
 
     @Test(groups = "addUsers")
-    public void testAddUser() {
+    public void testAddUser() throws UserPortalUIException {
 
-        //IdentityStoreClientService identityStoreClientService = bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
-        Assert.assertNotNull(identityStoreClientService, "Failed to get realm service instance");
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
         Map<String, String> userClaims = new HashMap<>();
         Map<String, String> credentials = new HashMap<>();
-        userClaims.put("http://wso2.org/claims/username", "lucifer");
-        userClaims.put("http://wso2.org/claims/firstName", "Lucifer");
-        userClaims.put("http://wso2.org/claims/lastName", "Morningstar");
-        userClaims.put("http://wso2.org/claims/email", "lucifer@wso2.com");
+        userClaims.put("http://wso2.org/claims/username", "user1");
+        userClaims.put("http://wso2.org/claims/firstName", "user1_firstName");
+        userClaims.put("http://wso2.org/claims/lastName", "user1_lastName");
+        userClaims.put("http://wso2.org/claims/email", "user1@wso2.com");
 
         credentials.put("password", "admin");
 
         UUFUser user = null;
-        /*try {
-            user = identityStoreClientService.addUser(userClaims, credentials);
-        } catch (UserPortalUIException e) {
-            e.printStackTrace();
-        }
+        user = identityStoreClientService.addUser(userClaims, credentials);
 
-        Assert.assertNotNull(user, "Failed to receive the user.");
+        Assert.assertNotNull(user, "Failed to add the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
 
-        users.add(user);*/
+        users.add(user);
+    }
+
+    @Test(dependsOnGroups = {"addUsers"})
+    public void authenticate() throws UserPortalUIException {
+
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        UUFUser user = null;
+        user = identityStoreClientService.authenticate("user1", "password".toCharArray());
+
+        Assert.assertNotNull(user, "Failed to authenticate the user.");
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
 }
