@@ -17,6 +17,7 @@ listenerConfigurations:
  -
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   id: "netty-gw-https"
   host: "0.0.0.0"
   port: 9292
@@ -57,6 +58,8 @@ senderConfigurations:
      value: 20
 
  -
+=======
+>>>>>>> 084c5d0... IDENTITY-5589 remove http transport
   id: "netty-gw-https"
   host: "0.0.0.0"
   port: 9292
