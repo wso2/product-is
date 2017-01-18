@@ -93,8 +93,9 @@ function getProfile() {
         sendToClient("signupClaims", claimProfileArray);
 
         // Get Challenge Questions
-        var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerService",
-            "getChallengeQuestionList", null);
+        var challengeQuestions;
+        /*callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerService",
+            "getChallengeQuestionList", null);*/
         return {
             "usernameClaim": userName,
             "signupClaims": claimProfileArray,
