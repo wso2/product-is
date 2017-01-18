@@ -50,6 +50,7 @@ function onRequest(env) {
 
 function getProfile() {
     try {
+        // Get Claim Profile
         var claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["self-signUp"]);
         if (claimProfile == null) {
@@ -58,23 +59,50 @@ function getProfile() {
         var claimForProfile = claimProfile.claims;
 
         var claimProfileArray = [];
+        var userName = [];
+
         for (var i = 0; i < claimForProfile.length; i++) {
-            var claimProfileMap = {};
-            claimProfileMap["displayName"] = claimForProfile[i].getDisplayName();
-            claimProfileMap["claimURI"] = claimForProfile[i].getClaimURI();
-            if (claimForProfile[i].getDefaultValue()) {
-                claimProfileMap["defaultValue"] = claimForProfile[i].getDefaultValue();
+            if (claimForProfile[i].claimURI == "http://wso2.org/claims/username") {
+                var usernameClaim = {};
+                usernameClaim["displayName"] = claimForProfile[i].getDisplayName();
+                usernameClaim["claimURI"] = claimForProfile[i].getClaimURI();
+                if (claimForProfile[i].getDefaultValue()) {
+                    usernameClaim["defaultValue"] = claimForProfile[i].getDefaultValue();
+                }
+                usernameClaim["displayLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
+                usernameClaim["required"] = Boolean.toString(claimForProfile[i].getRequired());
+                usernameClaim["regex"] = claimForProfile[i].getRegex();
+                usernameClaim["readonly"] = Boolean.toString(claimForProfile[i].getReadonly());
+                usernameClaim["dataType"] = claimForProfile[i].getDataType();
+                userName[i] = usernameClaim;
+            } else {
+                var claimProfileMap = {};
+                claimProfileMap["displayName"] = claimForProfile[i].getDisplayName();
+                claimProfileMap["claimURI"] = claimForProfile[i].getClaimURI();
+                if (claimForProfile[i].getDefaultValue()) {
+                    claimProfileMap["defaultValue"] = claimForProfile[i].getDefaultValue();
+                }
+                claimProfileMap["displayLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
+                claimProfileMap["required"] = Boolean.toString(claimForProfile[i].getRequired());
+                claimProfileMap["regex"] = claimForProfile[i].getRegex();
+                claimProfileMap["readonly"] = Boolean.toString(claimForProfile[i].getReadonly());
+                claimProfileMap["dataType"] = claimForProfile[i].getDataType();
+                claimProfileArray[i] = claimProfileMap;
             }
-            claimProfileMap["displayLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            claimProfileMap["required"] = Boolean.toString(claimForProfile[i].getRequired());
-            claimProfileMap["regex"] = claimForProfile[i].getRegex();
-            claimProfileMap["readonly"] = Boolean.toString(claimForProfile[i].getReadonly());
-            claimProfileMap["dataType"] = claimForProfile[i].getDataType();
-            claimProfileArray[i] = claimProfileMap;
         }
         sendToClient("signupClaims", claimProfileArray);
-        return {"signupClaims": claimProfileArray};
-    } catch (e) {
+
+        // Get Challenge Questions
+        var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerService",
+            "getChallengeQuestionList", null);
+        return {
+            "usernameClaim": userName,
+            "signupClaims": claimProfileArray,
+            "challengeQuestions": challengeQuestions
+        };
+    }
+    catch
+        (e) {
         return {errorMessage: e.instMessage};
     }
 }
