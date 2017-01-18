@@ -5,6 +5,7 @@
 {{layout "privilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{title "Home | " @config.appName}}
+<<<<<<< HEAD
 {{css "css/user-portal.css"}}
 
 {{#fillZone "breadcrumbs"}}
@@ -87,3 +88,23 @@
 {{favicon "images/favicon.png" type="image/png"}}
 {{title "Home | " @config.appName}}
 >>>>>>> 194081f... Clearing userportal landing page
+=======
+{{#fillZone "breadcrumbs"}}
+    <div class="breadcrumb-wrapper">
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="icon fw fw-home"></i> <span class="hidden-xs">{{t "user-portal.applications.breadcumb"}}</span></a></li>
+        </ol>
+    </div>
+{{/fillZone}}
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        <div class="message message-info">
+            <h4><i class="icon fw fw-info"></i>{{t "user-portal.no-applications.header"}}</h4>
+
+            <div style="padding-left: 25px;">
+                <p style="white-space: pre-wrap;">{{t "user-portal.no-applications.body"}}</p>
+            </div>
+        </div>
+    </div>
+{{/fillZone}}
+>>>>>>> ce660f6... Fixing Home page ux reviews
