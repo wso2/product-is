@@ -438,11 +438,6 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
                 }
                 throw new UserPortalUIException(error);
             }
-            if (profileEntry.isAdminProfile()) {
-                String error = "Requested profile is an admin profile.";
-                LOGGER.error(error);
-                throw new UserPortalUIException(error);
-            }
             return profileEntry;
         } catch (ProfileMgtServiceException e) {
             String error = "Failed to retrieve the claim profile.";

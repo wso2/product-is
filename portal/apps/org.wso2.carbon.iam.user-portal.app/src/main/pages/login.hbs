@@ -118,27 +118,18 @@
         </div>
     {{/if}}
 
-    <div class="page-content-wrapper">
-        <div class="container">
-            <div class="login-form-wrapper">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                        <div class="brand-container add-margin-bottom-5x">
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
-                                    <img class="img-responsive brand-spacer" src="{{public "images/logo-white.png"}}" alt="wso2-logo">
-                                </div>
-                            </div>
-                            <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
+        <div class="data-container">
+            <form class="form-horizontal" method="post">
+                <h3>{{t "user-portal.user.login"}}</h3>
+
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                        <div class="input-group input-wrap">
+                            <input type="text" name="username" class="form-control" placeholder="Username">
                         </div>
-                        <!--not yet implemented-->
-                        <!--<div class="social-container hidden-sm hidden-xs">-->
-                            <!--<p>Also sign in with</p>-->
-                            <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
-                            <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
-                            <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
-                        <!--</div>-->
                     </div>
+<<<<<<< HEAD
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
                             <form class="form-horizontal" method="post">
@@ -181,6 +172,13 @@
                                 <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/signup">Register Now</a></p>
 >>>>>>> f7c91de... Remove unnecessary pages from user portal
                             </form>
+=======
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                        <div class="input-group input-wrap">
+                            <input type="password" name="password" class="form-control" placeholder="Password">
+>>>>>>> 386c9d5... Added UI improvements
                         </div>
 <<<<<<< HEAD
                         <div class="social-container visible-sm visible-xs">
@@ -195,7 +193,26 @@
 >>>>>>> deb1474... removing the federated login icons
                     </div>
                 </div>
-            </div>
+                <div class="form-group hidden-xs hidden-sm add-margin-bottom-5x" style="margin-left:5px;">
+                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                        <label class="checkbox">
+                            <input type="checkbox" checked="">
+                            <span class="helper">Keep me signed in</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                        <button type="submit" class="btn btn-default btn-primary add-margin-right-2x">Sign In</button>
+                        <!--not yet implemented-->
+                        <!--<button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>-->
+                    </div>
+                </div>
+                <!--not yet implemented-->
+                <!--<a href="{{@contextPath}}/recover-password" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>-->
+                <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/signup">Register Now</a>
+                </p>
+            </form>
         </div>
     </div>
 <<<<<<< HEAD

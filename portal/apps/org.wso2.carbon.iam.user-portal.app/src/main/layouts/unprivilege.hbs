@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{#placeholder "favicon"}}
-        <link rel="shortcut icon" href="{{public "images/default-favicon.png"}}" type="image/png" />
+        <link rel="shortcut icon" href="{{public "images/default-favicon.png"}}" type="image/png"/>
     {{/placeholder}}
     <title>{{#placeholder "title"}}Simple Auth{{/placeholder}}</title>
     {{placeholder "css"}}
@@ -30,7 +30,33 @@
         <div class="body-wrapper">
             {{defineZone "alert"}}
             {{defineZone "message"}}
-            {{defineZone "content"}}
+            <div class="page-content-wrapper">
+                <div class="container">
+                    <div class="login-form-wrapper">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="brand-container add-margin-bottom-5x">
+                                    <div class="row">
+                                        <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
+                                            <img class="img-responsive brand-spacer"
+                                                 src="{{public "images/logo-white.png"}}" alt="wso2-logo">
+                                        </div>
+                                    </div>
+                                    <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
+                                </div>
+                                <!--not yet implemented-->
+                                <!--<div class="social-container hidden-sm hidden-xs">-->
+                                <!--<p>Also sign in with</p>-->
+                                <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
+                                <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
+                                <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
+                                <!--</div>-->
+                            </div>
+                            {{defineZone "content"}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
