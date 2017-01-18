@@ -21,31 +21,63 @@ challengeQuestions:
     question: "City where you were born ?"
     questionId: 1
     questionSetId: 1
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Father's middle name ?"
     questionId: 2
     questionSetId: 1
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Favorite food ?"
     questionId: 3
     questionSetId: 1
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Favorite vacation location ?"
     questionId: 4
     questionSetId: 1
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Model of your first car ?"
     questionId: 5
     questionSetId: 2
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Name of the hospital where you were born ?"
     questionId: 6
     questionSetId: 2
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Name of your first pet ?"
     questionId: 7
     questionSetId: 2
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
   -
     question: "Favorite sport ?"
     questionId: 8
     questionSetId: 2
+<<<<<<< HEAD
+=======
+    locale: "en-US"
+>>>>>>> 41fec61... Adding en-US challange question yaml and fixing a spelling mistake
