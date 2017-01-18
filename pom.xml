@@ -1295,8 +1295,12 @@
 >>>>>>> 8bc6552... Fixed issue in rendering signup page due to redirection to login everytime
 
         <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
+<<<<<<< HEAD
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
 <<<<<<< HEAD
+=======
+        <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
+>>>>>>> 61dae9a... upgrading uuf maven tool
         <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
         <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
