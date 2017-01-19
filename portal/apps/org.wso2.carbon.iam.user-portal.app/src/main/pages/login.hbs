@@ -9,7 +9,7 @@
 {{#fillZone "content"}}
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>Login Error!</strong>
+            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.login.error.default"}}</strong>
             {{errorMessage}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -26,23 +26,25 @@
                     <div class="brand-container add-margin-bottom-5x">
                         <div class="row">
                             <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
-                                <img class="img-responsive brand-spacer" src="{{public "images/logo-white.png"}}" alt="wso2-logo">
+                                <img class="img-responsive brand-spacer" src="{{public "images/logo-white.png"}}"
+                                     alt="wso2-logo">
                             </div>
                         </div>
                         <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
                     </div>
                     <!--not yet implemented-->
                     <!--<div class="social-container hidden-sm hidden-xs">-->
-                        <!--<p>Also sign in with</p>-->
-                        <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
-                        <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
-                        <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
+                    <!--<p>Also sign in with</p>-->
+                    <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
                     <!--</div>-->
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                     <div class="data-container">
                         <form class="form-horizontal" method="post">
                             <h3>{{t "user-portal.user.login"}}</h3>
+
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <div class="input-group input-wrap">
@@ -53,28 +55,25 @@
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <div class="input-group input-wrap">
-                                        <input type="password" name="password" class="form-control" placeholder="Password">
+                                        <input type="password" name="password" class="form-control"
+                                               placeholder="Password">
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group hidden-xs hidden-sm add-margin-bottom-5x" style="margin-left:5px;">
-                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    <label class="checkbox">
-                                        <input type="checkbox" checked="">
-                                        <span class="helper">Keep me signed in</span>
-                                    </label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    <button type="submit" class="btn btn-default btn-primary add-margin-right-2x">Sign In</button>
+                                    <button type="submit"
+                                            class="btn btn-default btn-primary add-margin-right-2x">{{t "user-portal.user.login.title"}}</button>
                                     <!--not yet implemented-->
                                     <!--<button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>-->
                                 </div>
                             </div>
                             <!--not yet implemented-->
                             <!--<a href="{{@contextPath}}/recover-password" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>-->
-                            <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/signup">Register Now</a></p>
+                            <p class="hidden-xs hidden-sm">{{t "user-portal.user.signup.message"}}<a
+                                    href="{{@contextPath}}/signup">
+                                &nbsp;{{t "user-portal.user.signup.title"}}</a>
+                            </p>
                         </form>
                     </div>
                 </div>
