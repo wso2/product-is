@@ -76,12 +76,45 @@ $(window).load(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
 
+    jQuery.validator.addMethod("notEqual", function (value, element, param) {
+        return this.optional(element) || value != param;
+    }, "Please specify a different (non-default) value");
+
     //confirm password validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
                 equalTo: "#password"
             }
+        },
+        messages: {
+            confirmPassword: "Passwords do not match"
         }
     });
 });
+/*
+ $('#register').on('click', function() {
+ $("#self-signUp-form").validate({
+ rules: {
+ passwordDescription: {notEqual: "Weak"},
+ passwordDescription: {notEqual: "Too short"}
+ },
+ messages: {
+ passwordDescription: "Password strength is low. Please add more strngthen password."
+ }
+ });
+ });*/
+
+/*$('#register').click( function() {
+ $("#self-signUp-form").validate({
+ rules: {
+ passwordDescription: {notEqual: "Weak"},
+ passwordDescription: {notEqual: "Too short"}
+ },
+ messages: {
+ passwordDescription: "Password strength is low. Please add more strngthen password."
+ }
+ }).form();
+ });*/
+
+
