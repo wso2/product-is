@@ -17,12 +17,14 @@
 */
 package org.wso2.is.portal.user.client.api.bean;
 
+import org.wso2.carbon.uuf.spi.auth.User;
+
 /**
  * Temporary UUFUser to login to user portal.
  *
  * //todo enable cs
  */
-public class UUFUser implements org.wso2.carbon.uuf.spi.auth.User {
+public class UUFUser implements User {
 
     private static final long serialVersionUID = 34114512424L;
 

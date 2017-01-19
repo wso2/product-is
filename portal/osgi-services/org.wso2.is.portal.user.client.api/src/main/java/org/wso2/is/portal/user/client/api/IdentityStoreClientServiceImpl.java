@@ -37,13 +37,13 @@ import org.wso2.carbon.kernel.utils.StringUtils;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.PasswordCallback;
 
 /**
  * Identity store client service implementation.
@@ -60,7 +60,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-
+        LOGGER.info("Registered service implementation" + IdentityStoreClientServiceImpl.class); //todo
     }
 
     @Reference(
