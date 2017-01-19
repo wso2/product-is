@@ -139,8 +139,10 @@ function onRequest(env) {
             success = false;
             message = result.message;
         }
+        var profileImageResult = isProfileImageAvailbale(session);
 
-        return {success: success, profile: env.params.profileName, uiEntries: uiEntries, message: message};
+        return {success: success, profile: env.params.profileName, uiEntries: uiEntries,
+            message: message, profileImage: profileImageResult.profileImage, userId: profileImageResult.userId};
     }
 
     return {success: false, message: "Invalid profile name."};
@@ -340,4 +342,32 @@ function uploadFile(env, session) {
     }
     return {success: false, message: message};
 }
+<<<<<<< HEAD
 >>>>>>> 7de3682... Adding file uploading capability
+=======
+
+function isProfileImageAvailbale(session) {
+    var Paths = Java.type('java.nio.file.Paths');
+    var System = Java.type('java.lang.System');
+    var Files = Java.type('java.nio.file.Files');
+    var File = Java.type('java.io.File');
+    var imageDirPath = Paths.get(System.getProperty('user.dir'), "images");
+    if (!Files.exists(imageDirPath)) {
+        return {profileImage: false};
+    }
+    else {
+        var file = new File(imageDirPath.toString());
+        var names = file.list();
+        if (names) {
+            for (var i = 0; i < names.length; i++) {
+                var imageName = names[i].toString();
+                if (imageName.indexOf(session.getUser().getUserId()) !== -1) {
+                    return {profileImage: true, userId: session.getUser().getUserId()};
+                }
+            }
+        }
+
+    }
+    return {profileImage: false};
+}
+>>>>>>> 4f94f5f... Add profile image download

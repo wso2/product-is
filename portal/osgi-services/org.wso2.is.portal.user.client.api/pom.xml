@@ -86,7 +86,10 @@
             <groupId>org.wso2.carbon.identity.governance</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
+        </dependency>
         <!--<dependency>-->
         <!--<groupId>org.apache.felix</groupId>-->
         <!--<artifactId>org.apache.felix.scr.ds-annotations</artifactId>-->
@@ -117,8 +120,14 @@
 >>>>>>> 7444e2a... getting user login to work..
 =======
             org.wso2.carbon.uuf.spi.auth.*,
+<<<<<<< HEAD
             org.wso2.carbon.kernel.utils.*
 >>>>>>> abbd84e... Adding update profile logic.
+=======
+            org.wso2.carbon.kernel.utils.*,
+            org.wso2.msf4j;version="${msf4j.import.version.range}",
+            javax.ws.rs.*;version="${javax.ws.rs.import.version.range}",
+>>>>>>> 4f94f5f... Add profile image download
         </import.package>
         <!--//todo set versions-->
         <export.package>

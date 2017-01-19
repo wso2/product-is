@@ -160,6 +160,7 @@
 =======
                                 <!--<Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>-->
                                 <!--<Import-Package>org.wso2.is.portal.user.client.profile</Import-Package>-->
+<<<<<<< HEAD
 >>>>>>> 1ab2f27... fixing maven module structure
                                 <Import-Package>org.wso2.is.portal.user.client.api.*</Import-Package>
 >>>>>>> 7444e2a... getting user login to work..
@@ -168,6 +169,9 @@
                                     org.wso2.is.portal.user.client.api.util, org.wso2.is.portal.user.client.api.*
                                 </Import-Package>
 >>>>>>> dcba92c... Added user portal self sign-up feature
+=======
+                                <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
+>>>>>>> 4f94f5f... Add profile image download
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
