@@ -2,7 +2,9 @@
 # example entry:
 #    - className: "org.wso2.carbon.uuf.sample.pets-store.PetsStoreMicroservice"
 #      uri: "/pets/"
-apis: []
+apis:
+  - className: "org.wso2.is.portal.user.client.api.ProfileImageDownloaderService"
+    uri: "/profile-image-service/"
 
 # Binding fragments into zones.
 # Modes:
