@@ -603,6 +603,7 @@ label.error {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .background-grey {
     background-color: #efefef;
 }
@@ -642,3 +643,9 @@ label.error {
 >>>>>>> cc7af35... using main layout in all the pages, and adding breadcrumbs
 =======
 >>>>>>> 0d51879... Security Question section markup improvements
+=======
+.background-grey {
+    background-color: #efefef;
+}
+
+>>>>>>> c317e55... login signup pages UI fixes

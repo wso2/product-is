@@ -186,6 +186,7 @@ $('#domainSelector').change(function () {
         }
     });
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 2d76d75... Added UI validations in user self sign-up
 });
 =======
@@ -217,3 +218,8 @@ $('#domainSelector').change(function () {
 
 
 >>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
+=======
+
+    $('.signup-form-wrapper').parents('body').addClass('background-grey');
+});
+>>>>>>> c317e55... login signup pages UI fixes

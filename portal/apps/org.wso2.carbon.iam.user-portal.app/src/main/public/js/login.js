@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -24,3 +25,8 @@ $('#domainSelector').change(function () {
         document.getElementById("domain").value = domain;
     }
 });
+=======
+$(window).load(function () {
+    $('.login-form-wrapper').parents('body').addClass('background-grey');
+});
+>>>>>>> c317e55... login signup pages UI fixes
