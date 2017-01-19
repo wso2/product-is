@@ -51,7 +51,7 @@
                                     <div class="form-group">
                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                             {{#each usernameClaim}}
-                                                </br><label for={{this.claimLabel}}>{{t this.claimLabel}}:
+                                                </br><label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
                                                 <span>*</span></label>
                                                 <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
                                                         name={{this.claimURI}} id={{this.claimLabel}}
@@ -116,7 +116,7 @@
                                         {{#each signupClaims}}
                                             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                                 {{#if this.required}}
-                                                    <label for={{this.claimLabel}}>{{t this.claimLabel}}:
+                                                    <label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
                                                         <span>*</span></label>
                                                     <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
                                                             name={{this.claimURI}} id={{this.claimLabel}}
@@ -125,7 +125,7 @@
                                                             placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
                                                             required/></br>
                                                 {{else}}
-                                                    <label for={{this.claimLabel}}>{{t this.claimLabel}}:</label>
+                                                    <label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:</label>
                                                     <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
                                                             name={{this.claimURI}} id={{this.claimLabel}}
                                                             class="form-control"
