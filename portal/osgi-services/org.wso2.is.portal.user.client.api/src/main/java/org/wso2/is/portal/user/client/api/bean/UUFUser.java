@@ -38,17 +38,26 @@ import org.wso2.carbon.uuf.spi.auth.User;
 */
 package org.wso2.is.portal.user.client.api.bean;
 
+<<<<<<< HEAD
 >>>>>>> ea073eb... Adding UUF based user to work with User Portal login
+=======
+import org.wso2.carbon.uuf.spi.auth.User;
+
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
 /**
  * Temporary UUFUser to login to user portal.
  *
  * //todo enable cs
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 public class UUFUser implements User {
 =======
 public class UUFUser implements org.wso2.carbon.uuf.spi.auth.User {
 >>>>>>> ea073eb... Adding UUF based user to work with User Portal login
+=======
+public class UUFUser implements User {
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
 
     private static final long serialVersionUID = 34114512424L;
 

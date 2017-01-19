@@ -84,6 +84,8 @@ import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder
 =======
 >>>>>>> cf181b2... Removing DataHolder from the component.
 
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 <<<<<<< HEAD
@@ -92,6 +94,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 6e65079... Adding test users.
@@ -103,6 +106,8 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
 >>>>>>> 1cc6099... Loading profile values.
+=======
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
 
 /**
  * Identity store client service implementation.
@@ -128,7 +133,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-
+        LOGGER.info("Registered service implementation" + IdentityStoreClientServiceImpl.class); //todo
     }
 
     @Reference(

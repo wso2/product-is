@@ -122,14 +122,20 @@
             </dependency>
             <dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
                 <groupId>commons-pool.wso2</groupId>
                 <artifactId>commons-pool</artifactId>
                 <version>${commons-pool.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
+<<<<<<< HEAD
 =======
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
+=======
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -353,6 +359,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
                 <type>zip</type>
             </dependency>
@@ -680,6 +692,11 @@
 
             <!--UUF Components-->
             <dependency>
+                <groupId>org.wso2.carbon.uuf</groupId>
+                <artifactId>org.wso2.carbon.uuf.core</artifactId>
+                <version>${carbon.uuf.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
                 <version>${carbon.uuf.common.version}</version>
@@ -696,6 +713,7 @@
             <!--End of UUF Themes-->
 
             <!-- UUF Dependencies -->
+
             <dependency>
                 <groupId>org.wso2.carbon.jndi</groupId>
                 <artifactId>org.wso2.carbon.jndi</artifactId>
@@ -736,6 +754,55 @@
                 <artifactId>msf4j-core</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${test.javax.ws.rs-api.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.transport</groupId>
+                <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
+                <version>${carbon.transport.http.netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-buffer</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler</artifactId>
+                <version>${netty.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.deployment.engine</artifactId>
@@ -834,6 +901,7 @@
 
             <!--Dependencies for Testing-->
 
+<<<<<<< HEAD
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j</artifactId>
@@ -874,12 +942,28 @@
                 <artifactId>json-smart</artifactId>
                 <version>${json.smart.version}</version>
             </dependency>
+=======
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>osgi-test-util</artifactId>
-                <version>${carbon.osgi.test.util.version}</version>
+                <groupId>org.wso2.carbon.uuf</groupId>
+                <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j</artifactId>
+                <version>${carbon.uuf.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.uuf</groupId>
+                <artifactId>org.wso2.carbon.uuf.renderablecreator.hbs</artifactId>
+                <version>${carbon.uuf.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.uuf</groupId>
+                <artifactId>org.wso2.carbon.uuf.renderablecreator.html</artifactId>
+                <version>${carbon.uuf.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>osgi-test-util</artifactId>
@@ -1047,7 +1131,96 @@
                 <version>${javax.inject.version}</version>
                 <scope>test</scope>
             </dependency>
+<<<<<<< HEAD
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
+=======
+
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.simpleconfigurator</artifactId>
+                <version>${equinox.simpleconfigurator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.gogo.command</artifactId>
+                <version>${apache.felix.gogo.command.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.gogo.runtime</artifactId>
+                <version>${apache.felix.gogo.runtime.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.gogo.shell</artifactId>
+                <version>${apache.felix.gogo.shell.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.app</artifactId>
+                <version>${equinox.app.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.common</artifactId>
+                <version>${equinox.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.concurrent</artifactId>
+                <version>${equinox.concurrent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.console</artifactId>
+                <version>${equinox.console.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.ds</artifactId>
+                <version>${equinox.ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.frameworkadmin</artifactId>
+                <version>${equinox.frameworkadmin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.frameworkadmin.equinox</artifactId>
+                <version>${equinox.frameworkadmin.equinox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.launcher</artifactId>
+                <version>${equinox.launcher.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.preferences</artifactId>
+                <version>${equinox.preferences.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.registry</artifactId>
+                <version>${equinox.registry.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.simpleconfigurator.manipulator</artifactId>
+                <version>${equinox.simpleconfigurator.manipulator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.util</artifactId>
+                <version>${equinox.util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.cm</artifactId>
+                <version>${org.eclipse.equinox.cm.version}</version>
+            </dependency>
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
             <!--End of Dependencies for Testing-->
 
             <!-- Carbon Dependencies -->
@@ -1099,6 +1272,18 @@
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.security.store.connector.jdbc</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.userstore</groupId>
+                <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc</artifactId>
+                <version>${carbon.security.userstore.jdbc.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
@@ -1111,6 +1296,7 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+<<<<<<< HEAD
                 <version>${org.wso2.is.portal.user.client.api.version}</version>
             </dependency>
             <dependency>
@@ -1133,6 +1319,8 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+=======
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
                 <version>${carbon.is.version}</version>
             </dependency>
             <dependency>
@@ -1188,12 +1376,6 @@
                 <groupId>apache-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-                <version>${carbon.security.userstore.jdbc.version}</version>
-                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
@@ -1279,7 +1461,6 @@
 =======
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.is.portal.user.client.api.version>6.0.0-SNAPSHOT</org.wso2.is.portal.user.client.api.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
@@ -1295,8 +1476,12 @@
 >>>>>>> 8bc6552... Fixed issue in rendering signup page due to redirection to login everytime
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
 <<<<<<< HEAD
+=======
+        <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
 <<<<<<< HEAD
 =======
@@ -1343,9 +1528,13 @@
         <slf4j.version>1.7.5</slf4j.version>
         <commons-io.version>2.4.0.wso2v1</commons-io.version>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <commons-pool.version>1.5.6.wso2v1</commons-pool.version>
 =======
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
+=======
+        <commons-pool.version>1.5.6.wso2v1</commons-pool.version>
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
         <io.swagger.annotations.version>1.5.8</io.swagger.annotations.version>
         <io.swagger.jaxrs.version>1.5.8</io.swagger.jaxrs.version>
         <commons-lang.version>2.1</commons-lang.version>
@@ -1482,6 +1671,7 @@
         <equinox.util.version>1.0.500.v20130404-1337</equinox.util.version>
         <org.eclipse.equinox.cm.version>1.1.0.v20131021-1936</org.eclipse.equinox.cm.version>
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1492,6 +1682,8 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
+=======
+>>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
 
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
