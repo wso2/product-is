@@ -404,19 +404,9 @@
             <!-- UUF Dependencies -->
 
             <dependency>
-                <groupId>org.wso2.carbon.jndi</groupId>
-                <artifactId>org.wso2.carbon.jndi</artifactId>
-                <version>${carbon.jndi.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.cache</groupId>
                 <artifactId>cache-api</artifactId>
                 <version>${javax.cache-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${orbit.org.yaml.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -427,11 +417,6 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
@@ -632,12 +617,6 @@
                 <version>${mockito.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>osgi-test-util</artifactId>
-                <version>${carbon.kernel.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.ops4j.pax.exam</groupId>
                 <artifactId>pax-exam-link-mvn</artifactId>
                 <version>${pax.exam.version}</version>
@@ -653,12 +632,6 @@
                 <groupId>org.ow2.spec.ee</groupId>
                 <artifactId>ow2-jta-1.1-spec</artifactId>
                 <version>${ow2.jta.spec.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -750,11 +723,6 @@
             <!--End of Dependencies for Testing-->
 
             <!-- Carbon Dependencies -->
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.core</artifactId>
-                <version>${carbon.core.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.caching</groupId>
                 <artifactId>org.wso2.carbon.caching</artifactId>
@@ -956,7 +924,7 @@
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
 
         <!-- Unit Test dependency versions-->
-        <jacoco.version>0.7.6.201602180812</jacoco.version>
+        <jacoco.version>0.7.7.201606060606</jacoco.version>
         <maven.paxexam.plugin.version>1.2.4</maven.paxexam.plugin.version>
         <mockito.version>1.9.5</mockito.version>
         <org.jacoco.ant.version>0.7.5.201505241946</org.jacoco.ant.version>
@@ -984,7 +952,6 @@
 
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
-        <orbit.org.yaml.version>1.16.0.wso2v1</orbit.org.yaml.version>
         <org.apache.commons.commons-lang3.version>3.1</org.apache.commons.commons-lang3.version>
         <org.objectweb.asm.version>5.1</org.objectweb.asm.version>
 
