@@ -25,18 +25,18 @@ domains:
 
   identityStoreConnectors:
   -
-   connectorId: "INMEM_ISC"
-   connectorType: "InMemoryIdentityStore"
-   readOnly: false
+   connectorId: "JDBCIS1"
+   connectorType: "JDBCIdentityStore"
    properties:
-    dataSource: "WSO2_CARBON_DB"
-    hashAlgorithm: "SHA256"
-    databaseType: "MySQL"
+     dataSource: "WSO2_CARBON_DB"
+     databaseType: "MySQL"
+     maxRowLimit: 1000
    attributeMappings:
    -
     attribute: "username"
     claimUri: "http://wso2.org/claims/username"
     properties:
+     required: "true"
      unique: "true"
    -
     attribute: "email"
@@ -65,9 +65,11 @@ domains:
 
   credentialStoreConnectors:
   -
-   connectorId: "INMEM_CSC"
-   connectorType: "InMemoryCredentialStore"
-   properties:
-    dataSource: "WSO2_CARBON_DB"
-    databaseType: "MySQL"
-
+    connectorId: "JDBCCS1"
+    connectorType: "JDBCCredentialStore"
+    properties:
+      dataSource: "WSO2_CARBON_DB"
+      databaseType: "MySQL"
+      hashAlgorithm: "SHA256"
+      keyLength: 256
+      iterationCount: 4096
