@@ -106,10 +106,14 @@ $(window).load(function () {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
     jQuery.validator.addMethod("notEqual", function (value, element, param) {
         return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
 
+<<<<<<< HEAD
     jQuery.validator.addMethod("username", function (value, element) {
         return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
     }, "Invalid username.");
@@ -168,13 +172,48 @@ $('#domainSelector').change(function () {
         document.getElementById("domain").value = domain;
     }
 =======
+=======
+>>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
     //confirm password validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
                 equalTo: "#password"
             }
+        },
+        messages: {
+            confirmPassword: "Passwords do not match"
         }
     });
+<<<<<<< HEAD
 >>>>>>> 2d76d75... Added UI validations in user self sign-up
 });
+=======
+});
+/*
+ $('#register').on('click', function() {
+ $("#self-signUp-form").validate({
+ rules: {
+ passwordDescription: {notEqual: "Weak"},
+ passwordDescription: {notEqual: "Too short"}
+ },
+ messages: {
+ passwordDescription: "Password strength is low. Please add more strngthen password."
+ }
+ });
+ });*/
+
+/*$('#register').click( function() {
+ $("#self-signUp-form").validate({
+ rules: {
+ passwordDescription: {notEqual: "Weak"},
+ passwordDescription: {notEqual: "Too short"}
+ },
+ messages: {
+ passwordDescription: "Password strength is low. Please add more strngthen password."
+ }
+ }).form();
+ });*/
+
+
+>>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
