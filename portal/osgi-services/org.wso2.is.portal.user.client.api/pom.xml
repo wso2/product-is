@@ -52,12 +52,14 @@
             <artifactId>org.osgi.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>${pax.logging.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-log4j2</artifactId>
+            <version>${pax.logging.log4j2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -74,7 +76,6 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.core</artifactId>
-            <version>1.0.0-m7</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.governance</groupId>
