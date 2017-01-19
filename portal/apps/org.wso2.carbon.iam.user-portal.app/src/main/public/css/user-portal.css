@@ -357,18 +357,6 @@
     color: #F27B21;
 }
 
-/* password show hide */
-.hide-pass{
-    float: right;
-    margin-top: -27px;
-    margin-right: 7px;
-    cursor: pointer;
-    color: rgb(40, 40, 40);
-}
-
-.hide-pass>i{
-    font-size: 1.5em;
-}
 /* password strength meter */
 .progress{
     border-radius: 0px;
@@ -438,7 +426,6 @@
     border-radius: 0px;
 }
 .password_strength_meter .pwd_str{
-    /*border-top:1px solid #898989;*/
     padding:10px 15px;
     background-color:#dcdfe0;
 }
@@ -456,7 +443,6 @@
     border-top-color:#eee;
 }
 #password_strength_wrap {
-    /*border: 1px solid #D5CEC8;*/
     display: none;
     float: left;
     padding: 10px;
@@ -471,9 +457,6 @@
     border: 10px solid transparent; /* arrow size */
 }
 #password_strength_wrap:before{
-    /*border-bottom: 7px solid rgba(0, 0, 0, 0);*/
-    /*border-right: 7px solid rgba(0, 0, 0, 0.1);*/
-    /*border-top: 7px solid rgba(0, 0, 0, 0);*/
     content: "";
     display: inline-block;
     left: -18px;
@@ -481,9 +464,6 @@
     top: 10px;
 }
 #password_strength_wrap:after{
-    /*border-bottom: 6px solid rgba(0, 0, 0, 0);*/
-    /*border-right: 6px solid #fff;*/
-    /*border-top: 6px solid rgba(0, 0, 0, 0);*/
     content: "";
     display: inline-block;
     left: -16px;

@@ -1,3 +1,21 @@
 {{layout "privilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{title "Home | " @config.appName}}
+{{#fillZone "breadcrumbs"}}
+    <div class="breadcrumb-wrapper">
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="icon fw fw-home"></i> <span class="hidden-xs">{{t "user-portal.applications.breadcrumb"}}</span></a></li>
+        </ol>
+    </div>
+{{/fillZone}}
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        <div class="message message-info">
+            <h4><i class="icon fw fw-info"></i>{{t "user-portal.no-applications.header"}}</h4>
+
+            <div style="padding-left: 25px;">
+                <p style="white-space: pre-wrap;">{{t "user-portal.no-applications.body"}}</p>
+            </div>
+        </div>
+    </div>
+{{/fillZone}}
