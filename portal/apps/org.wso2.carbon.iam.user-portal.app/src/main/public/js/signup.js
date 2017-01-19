@@ -84,4 +84,6 @@ $(window).load(function () {
             }
         }
     });
+
+    $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
