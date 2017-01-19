@@ -1294,11 +1294,15 @@
         <org.wso2.carbon.identity.recovery.server.feature.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
 >>>>>>> 8bc6552... Fixed issue in rendering signup page due to redirection to login everytime
 
+<<<<<<< HEAD
         <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
 <<<<<<< HEAD
         <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
 <<<<<<< HEAD
 =======
+=======
+        <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
+>>>>>>> 0ca51ea... Fixing IDENTITY-5598
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
 >>>>>>> 61dae9a... upgrading uuf maven tool
         <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
