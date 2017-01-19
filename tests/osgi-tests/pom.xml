@@ -340,10 +340,6 @@
             <artifactId>javax.inject</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.orbit.org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
@@ -759,7 +755,11 @@
             <!--<artifactId>org.wso2.carbon.identity.recovery</artifactId>-->
         <!--</dependency>-->
 
-
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.ant</artifactId>
+            <version>${org.jacoco.ant.version}</version>
+        </dependency>
     </dependencies>
 
 <<<<<<< HEAD
@@ -781,6 +781,9 @@
                         <groupId>org.apache.maven.plugins</groupId>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dd53edd... Adding Jacoco integration
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
 
@@ -801,8 +804,11 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+<<<<<<< HEAD
 =======
 >>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
+=======
+>>>>>>> dd53edd... Adding Jacoco integration
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
                             <source>1.8</source>
@@ -826,7 +832,7 @@
                             <systemProperties>
                                 <property>
                                     <name>carbon.home</name>
-                                    <value>${project.basedir}/src/test/resources/carbon-home</value>
+                                    <value>${project.build.directory}/test-classes/carbon-home</value>
                                 </property>
                             </systemProperties>
                             <suiteXmlFiles>
@@ -916,9 +922,22 @@
                         </configuration>
                     </plugin>
 
+<<<<<<< HEAD
 
 
 =======
+=======
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+>>>>>>> dd53edd... Adding Jacoco integration
                                     <includes>
                                         <include>org.wso2.carbon*</include>
                                     </includes>
@@ -938,6 +957,7 @@
                             </execution>
                         </executions>
                     </plugin>
+<<<<<<< HEAD
 >>>>>>> 8527b67... Added test framework for user portal
                     <plugin>
 =======
@@ -973,6 +993,10 @@
                     <!--</plugin>-->
                    <!-- <plugin>
 >>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
+=======
+
+                    <plugin>
+>>>>>>> dd53edd... Adding Jacoco integration
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
@@ -989,6 +1013,7 @@
                                                 <file file="${project.build.directory}/jacoco.exec"/>
                                             </executiondata>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
                                                     <fileset
@@ -998,13 +1023,20 @@
                                                     <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src"/>
 =======
                                             <structure name="Carbon Security OSGi Tests">
+=======
+                                            <structure name="Identity Server Tests">
+>>>>>>> dd53edd... Adding Jacoco integration
                                                 <classfiles>
                                                     <fileset
-                                                            dir="org.wso2.is.portal.user.client.api/target/classes"/>
+                                                            dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/target/classes"/>
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
+<<<<<<< HEAD
                                                     <fileset dir="org.wso2.is.portal.user.client.api/src"/>
 >>>>>>> 8527b67... Added test framework for user portal
+=======
+                                                    <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src"/>
+>>>>>>> dd53edd... Adding Jacoco integration
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco"/>
@@ -1023,7 +1055,7 @@
                                 <version>${org.jacoco.ant.version}</version>
                             </dependency>
                         </dependencies>
-                    </plugin>-->
+                    </plugin>
                     <plugin>
                         <groupId>org.ops4j.pax.exam</groupId>
                         <artifactId>maven-paxexam-plugin</artifactId>
@@ -1037,6 +1069,7 @@
                             </execution>
                         </executions>
                     </plugin>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                     <plugin>
@@ -1078,6 +1111,8 @@
                         </executions>
                     </plugin>
 >>>>>>> 8527b67... Added test framework for user portal
+=======
+>>>>>>> dd53edd... Adding Jacoco integration
                 </plugins>
             </build>
         </profile>

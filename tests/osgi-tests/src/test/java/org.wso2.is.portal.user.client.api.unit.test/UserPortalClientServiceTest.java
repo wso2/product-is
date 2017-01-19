@@ -97,12 +97,13 @@ public class UserPortalClientServiceTest {
 
         UUFUser user = null;
 //        TODO FIX
-//        user = identityStoreClientService.addUser(userClaims, credentials);
+        user = identityStoreClientService.addUser(userClaims, credentials);
 
-//        Assert.assertNotNull(user, "Failed to add the user.");
-//        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
-//
-//        users.add(user);
+        Assert.assertNotNull(user, "Failed to add the user.");
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+
+        users.add(user);
+
     }
 
     @Test(dependsOnGroups = {"addUsers"})
@@ -114,9 +115,10 @@ public class UserPortalClientServiceTest {
 
         UUFUser user = null;
 //        TODO FIX
+        user = identityStoreClientService.authenticate("admin", "admin".toCharArray());
 //        user = identityStoreClientService.authenticate("user1", "password".toCharArray());
 
-//        Assert.assertNotNull(user, "Failed to authenticate the user.");
-//        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+        Assert.assertNotNull(user, "Failed to authenticate the user.");
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
 }

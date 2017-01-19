@@ -715,19 +715,9 @@
             <!-- UUF Dependencies -->
 
             <dependency>
-                <groupId>org.wso2.carbon.jndi</groupId>
-                <artifactId>org.wso2.carbon.jndi</artifactId>
-                <version>${carbon.jndi.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.cache</groupId>
                 <artifactId>cache-api</artifactId>
                 <version>${javax.cache-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${orbit.org.yaml.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -738,11 +728,6 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
@@ -1036,6 +1021,7 @@
             </dependency>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
             <dependency>
                 <groupId>org.wso2.eclipse.equinox</groupId>
@@ -1134,6 +1120,8 @@
 <<<<<<< HEAD
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
 =======
+=======
+>>>>>>> dd53edd... Adding Jacoco integration
 
             <dependency>
                 <groupId>org.wso2.eclipse.equinox</groupId>
@@ -1226,6 +1214,7 @@
             <!-- Carbon Dependencies -->
             <dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
@@ -1233,6 +1222,8 @@
             </dependency>
             <dependency>
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
+=======
+>>>>>>> dd53edd... Adding Jacoco integration
                 <groupId>org.wso2.carbon.caching</groupId>
                 <artifactId>org.wso2.carbon.caching</artifactId>
                 <version>${org.wso2.carbon.caching.version}</version>
@@ -1687,7 +1678,6 @@
 
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
-        <orbit.org.yaml.version>1.16.0.wso2v1</orbit.org.yaml.version>
         <org.apache.commons.commons-lang3.version>3.1</org.apache.commons.commons-lang3.version>
         <org.objectweb.asm.version>5.1</org.objectweb.asm.version>
 

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 /**
  * This class contains the utility methods for carbon-security-caas OSGI tests.
@@ -40,8 +39,10 @@ public class UserPortalOSGiTestUtils {
      */
     public static List<Option> getDefaultSecurityPAXOptions() {
 
-
         List<Option> optionList = new ArrayList<>();
+
+        //Enable osgi console for testing - telnet localhost 9211
+        //optionList.add(systemProperty("osgi.console").value("9211"));
 
         optionList.add(mavenBundle()
                 .groupId("org.ops4j.pax.logging")
@@ -220,8 +221,6 @@ public class UserPortalOSGiTestUtils {
         sysPropConfiguration.setServerKey("carbon-security");
         sysPropConfiguration.setServerName("WSO2 Carbon Security Server");
         sysPropConfiguration.setServerVersion("1.0.0");
-
-        optionList.add(systemProperty("osgi.console").value("9211"));
 
         optionList = OSGiTestConfigurationUtils.getConfiguration(optionList, sysPropConfiguration);
 
