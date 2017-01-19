@@ -28,7 +28,6 @@ public class Activator implements BundleActivator {
     @Override
     public void start(BundleContext bundleContext) throws Exception {
 
-        log.info("User Portal - " + "https://localhost:9292/user-portal"); //todo set the url properly.
         if (log.isDebugEnabled()) {
             log.debug("User portal UUF support Bundle Started.");
         }
