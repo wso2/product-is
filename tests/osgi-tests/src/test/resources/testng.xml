@@ -19,7 +19,7 @@ limitations under the License.
         <classes>
             <class name="org.wso2.is.portal.user.client.api.unit.test.IdentityStoreClientServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileMgtClientServiceTest"/>
-            <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerClientServiceTest"/>
         </classes>
     </test>
 </suite>

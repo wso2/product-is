@@ -41,7 +41,7 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 @Listeners(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
-public class ChallengeQuestionManagerServiceTest {
+public class ChallengeQuestionManagerClientServiceTest {
 
     @Inject
     private BundleContext bundleContext;
