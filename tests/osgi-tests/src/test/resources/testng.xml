@@ -15,6 +15,7 @@ limitations under the License.
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <suite name="WSO2-Identity-Server-Test-Suite">
     <test name="wso2-identity-server-user-portal-tests" preserve-order="true" parallel="false">
         <classes>
@@ -25,6 +26,10 @@ limitations under the License.
 =======
 <suite name="Carbon-Security-Test-Suite">
     <test name="carbon-security-tests" preserve-order="true" parallel="false">
+=======
+<suite name="WSO2-Identity-Server-Test-Suite">
+    <test name="wso2-identity-server-user-portal-tests" preserve-order="true" parallel="false">
+>>>>>>> 51d9eea... fixing test coverage generation
         <classes>
 <<<<<<< HEAD
             <class name="org.wso2.is.portal.user.client.api.unit.test.UserPortalClientServiceTest"/>
