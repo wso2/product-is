@@ -1,11 +1,14 @@
 $(document).ready(function () {
 });
 
-function editQuestion() {
+function editQuestion(question) {
 
     $("#add-question").hide();
     $("#list-questions").hide();
     $("#edit-question").show();
+
+    $("#current-question").html(question.question_text);
+    $("#answer").html(question.answer);
 }
 
 function updateQuestion() {
@@ -21,11 +24,4 @@ function deleteQuestion() {
 function addQuestion() {
     $("#add-question").show();
     $("#create-question").hide();
-}
-
-function saveQuestion() {
-    $("#add-question").hide();
-    $("#list-questions").show();
-    $("#edit-question").hide();
-    $("#create-question").show();
 }

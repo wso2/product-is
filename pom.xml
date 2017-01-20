@@ -232,9 +232,9 @@
                 <version>${carbon.metrics.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.recovery</artifactId>
-                <version>${org.wso2.carbon.identity.governance.version}</version>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
 
             <dependency>
@@ -262,13 +262,13 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-                <version>${carbon.security.userstore.jdbc.version}</version>
+                <groupId>org.wso2.carbon.identity.commons</groupId>
+                <artifactId>org.wso2.carbon.identity.common.feature</artifactId>
+                <version>${org.wso2.carbon.identity.commons.feature.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
                 <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                 <type>zip</type>
@@ -562,7 +562,21 @@
                 <version>${carbon.uuf.version}</version>
                 <scope>test</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.carbon.identity.commons</groupId>
+                <artifactId>org.wso2.carbon.identity.commons</artifactId>
+                <version>${org.wso2.carbon.identity.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.commons</groupId>
+                <artifactId>org.wso2.carbon.identity.event</artifactId>
+                <version>${org.wso2.carbon.identity.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                <artifactId>axiom</artifactId>
+                <version>${axiom.wso2.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -841,8 +855,9 @@
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
-        <org.wso2.carbon.identity.governance.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.governance.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.commons.feature.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
 
         <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
@@ -952,8 +967,9 @@
 
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
-        <org.apache.commons.commons-lang3.version>3.1</org.apache.commons.commons-lang3.version>
+        <org.apache.commons.commons-lang3.version>3.4</org.apache.commons.commons-lang3.version>
         <org.objectweb.asm.version>5.1</org.objectweb.asm.version>
+        <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
 

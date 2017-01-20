@@ -10,8 +10,11 @@ import java.util.List;
  */
 public interface ChallengeQuestionManagerClientService {
 
-    List<ChallengeQuestion> getChallengeQuestionList() throws UserPortalUIException;
+    List<ChallengeQuestion> getChallengeQuestionList() throws IdentityRecoveryException;
 
     List<ChallengeQuestion> getAllChallengeQuestionsForUser(String userUniqueId)
-            throws UserPortalUIException;
+            throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
+
+    void setChallengeQuestionForUser(String userUniqueId, ChallengeQuestion challengeQuestion, String answer)
+            throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
 }
