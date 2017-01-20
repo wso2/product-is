@@ -38,13 +38,13 @@ import org.wso2.carbon.kernel.utils.StringUtils;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.PasswordCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
 
 /**
  * Identity store client service implementation.
@@ -225,10 +225,10 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     public List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException {
         List<Claim> claimList = null;
 
-        if(StringUtils.isNullOrEmpty(uniqueUserId)) {
+        if (StringUtils.isNullOrEmpty(uniqueUserId)) {
             throw new UserPortalUIException("Invalid unique user id.");
         }
-        if(metaClaims != null && !metaClaims.isEmpty()) {
+        if (metaClaims != null && !metaClaims.isEmpty()) {
             try {
                 claimList = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
             } catch (IdentityStoreException | UserNotFoundException e) {

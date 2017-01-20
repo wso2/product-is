@@ -102,11 +102,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.ant</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>net.minidev.wso2</groupId>
             <artifactId>json-smart</artifactId>
         </dependency>
@@ -300,10 +295,6 @@
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -556,9 +547,5 @@
             </build>
         </profile>
     </profiles>
-
-    <properties>
-        <checkstyle.skip>true</checkstyle.skip>
-    </properties>
 
 </project>

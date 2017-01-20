@@ -27,7 +27,6 @@ import org.osgi.framework.BundleContext;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -127,7 +126,8 @@ public class IdentityStoreClientServiceTest {
 
         userClaims = identityStoreClientService.getClaimsOfUser(users.get(0).getUserId(), metaClaims);
         Assert.assertNotNull(userClaims, "Failed to get the user claims.");
-        Assert.assertNotEquals(userClaims.get(0).getValue(),"user1_firstNameUpdated", "Fail to update the user profile");*/
+        Assert.assertNotEquals(userClaims.get(0).getValue(),"user1_firstNameUpdated",
+        "Fail to update the user profile");*/
     }
 
     @Test(dependsOnGroups = {"addUsers", "update", "authentication"})
