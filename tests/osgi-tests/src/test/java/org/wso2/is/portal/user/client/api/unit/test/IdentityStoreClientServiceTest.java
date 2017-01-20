@@ -27,6 +27,8 @@ import org.osgi.framework.BundleContext;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.mgt.claim.Claim;
+import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
@@ -42,13 +44,9 @@ import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
-/**
- * JAAS OSGI Tests.
- */
-
 @Listeners(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
-public class UserPortalClientServiceTest {
+public class IdentityStoreClientServiceTest {
 
     private static List<UUFUser> users = new ArrayList<>();
 
@@ -76,12 +74,6 @@ public class UserPortalClientServiceTest {
 
     @Test(groups = "addUsers")
     public void testAddUser() throws UserPortalUIException {
-
-        //        while (true) {
-        //            System.out.printf("Test");
-        //            Thread.sleep(20000);
-        //        }
-
         IdentityStoreClientService identityStoreClientService =
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
@@ -95,30 +87,60 @@ public class UserPortalClientServiceTest {
 
         credentials.put("password", "admin");
 
-        UUFUser user = null;
-//        TODO FIX
-        user = identityStoreClientService.addUser(userClaims, credentials);
+        UUFUser user = identityStoreClientService.addUser(userClaims, credentials);
 
         Assert.assertNotNull(user, "Failed to add the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
 
         users.add(user);
-
     }
 
-    @Test(dependsOnGroups = {"addUsers"})
-    public void authenticate() throws UserPortalUIException {
+    @Test(groups = "authentication", dependsOnGroups = {"addUsers"})
+    public void testAuthenticate() throws UserPortalUIException {
 
         IdentityStoreClientService identityStoreClientService =
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        UUFUser user = null;
-//        TODO FIX
-        user = identityStoreClientService.authenticate("admin", "admin".toCharArray());
-//        user = identityStoreClientService.authenticate("user1", "password".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray());
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+    }
+
+    @Test(groups = "update", dependsOnGroups = {"addUsers"})
+    public void testUpdateUserProfile() throws UserPortalUIException {
+
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        Map<String, String> updatedClaims = new HashMap<>();
+        updatedClaims.put("http://wso2.org/claims/firstName", "user1_firstNameUpdated");
+
+        //identityStoreClientService.updateUserProfile(users.get(0).getUserId(), updatedClaims);
+
+        /*List<MetaClaim> metaClaims = new ArrayList<>();
+        List<Claim> userClaims;
+        MetaClaim metaClaim1 = new MetaClaim("http://wso2.org/claims", "http://wso2.org/claims/firstName");
+        metaClaims.add(metaClaim1);
+
+        userClaims = identityStoreClientService.getClaimsOfUser(users.get(0).getUserId(), metaClaims);
+        Assert.assertNotNull(userClaims, "Failed to get the user claims.");
+        Assert.assertNotEquals(userClaims.get(0).getValue(),"user1_firstNameUpdated", "Fail to update the user profile");*/
+    }
+
+    @Test(dependsOnGroups = {"addUsers", "update", "authentication"})
+    public void testUpdatePassword() throws UserPortalUIException, UserNotFoundException {
+
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray());
+
+        Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
 }

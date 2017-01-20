@@ -29,6 +29,7 @@ import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.bean.UserBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
+import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
@@ -219,6 +220,26 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
+    }
+
+    public List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException {
+        List<Claim> claimList = null;
+
+        if(StringUtils.isNullOrEmpty(uniqueUserId)) {
+            throw new UserPortalUIException("Invalid unique user id.");
+        }
+        if(metaClaims != null && !metaClaims.isEmpty()) {
+            try {
+                claimList = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
+            } catch (IdentityStoreException | UserNotFoundException e) {
+                String error = "Failed to get claims of the user.";
+                LOGGER.error(error, e);
+                throw new UserPortalUIException(error);
+            }
+        } else {
+            claimList = Collections.emptyList();
+        }
+        return claimList;
     }
 
     private RealmService getRealmService() {
