@@ -116,7 +116,6 @@
             org.wso2.is.portal.user.client.api.internal.Activator
         </bundle.activator>
 
-        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
 </project>
