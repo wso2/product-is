@@ -49,7 +49,11 @@
                 <exclude>**/identity/store-config.yaml</exclude>
                 <exclude>**/identity/claim-mapping.yaml</exclude>
                 <exclude>**/identity/profile-mapping.yaml</exclude>
+<<<<<<< HEAD
                 <exclude>**/identity/identity-management.yaml</exclude>
+=======
+                <exclude>**/identity/recovery.yaml</exclude>
+>>>>>>> 6232657... excluding recovery.yaml and challagne questions for feature and add from product
                 <exclude>**/identity/challenge-questions/en-US.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
 =======
