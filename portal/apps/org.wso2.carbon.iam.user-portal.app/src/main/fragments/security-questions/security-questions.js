@@ -15,7 +15,7 @@ function onRequest(env) {
 
 function getChallangeQuestions() {
 
-    var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.UserPortalClientApiComponent",
+    var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
         "getChallengeQuestionList", []);
 
     if (challengeQuestions.length == 0) {
