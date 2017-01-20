@@ -24,12 +24,9 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
 import org.osgi.framework.BundleContext;
-import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
-import org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
