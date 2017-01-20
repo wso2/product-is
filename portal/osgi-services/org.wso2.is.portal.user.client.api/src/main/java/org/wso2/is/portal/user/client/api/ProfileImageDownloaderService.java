@@ -38,12 +38,12 @@ public class ProfileImageDownloaderService implements Microservice {
     public Response getProfileImage(@QueryParam("userid") String userId) {
         File imageFile = null;
         String mimeType = null;
-        File imageDirectory = new File(Paths.get(System.getProperty("user.dir"), "images").toString());
+        File imageDirectory = new File(Paths.get(System.getProperty("carbon.home"), "images").toString());
         String[] imageNames = imageDirectory.list();
         if (imageNames != null) {
             for (int i = 0; i < imageNames.length; i++) {
                 if (imageNames[i].contains(userId)) {
-                    imageFile = new File(Paths.get(System.getProperty("user.dir"), "images").toString() + File.separator
+                    imageFile = new File(Paths.get(System.getProperty("carbon.home"), "images").toString() + File.separator
                             + imageNames[i]);
                     mimeType = new MimetypesFileTypeMap().getContentType(imageFile);
                 }
