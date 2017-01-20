@@ -94,6 +94,10 @@ public class UserPortalOSGiTestUtils {
         optionList.add(mavenBundle().
                 groupId("commons-pool.wso2").
                 artifactId("commons-pool").versionAsInProject());
+        optionList.add(mavenBundle()
+                .groupId("org.apache.commons")
+                .artifactId("commons-lang3")
+                .versionAsInProject());
         optionList.add(mavenBundle().
                 groupId("org.apache.servicemix.bundles").
                 artifactId("org.apache.servicemix.bundles.commons-beanutils").versionAsInProject());
@@ -203,12 +207,24 @@ public class UserPortalOSGiTestUtils {
 
 
         optionList.add(mavenBundle().
+                groupId("org.wso2.carbon.identity.commons").
+                artifactId("org.wso2.carbon.identity.commons")
+                .versionAsInProject());
+        optionList.add(mavenBundle().
+                groupId("org.wso2.carbon.identity.commons").
+                artifactId("org.wso2.carbon.identity.event")
+                .versionAsInProject());
+        optionList.add(mavenBundle().
                 groupId("org.wso2.carbon.identity.mgt").
                 artifactId("org.wso2.carbon.identity.mgt")
                 .versionAsInProject());
         optionList.add(mavenBundle().
                 groupId("org.wso2.carbon.identity.mgt").
                 artifactId("org.wso2.carbon.identity.meta.claim.mgt")
+                .versionAsInProject());
+        optionList.add(mavenBundle().
+                groupId("org.wso2.carbon.identity.mgt").
+                artifactId("org.wso2.carbon.identity.recovery")
                 .versionAsInProject());
 
         optionList.add(mavenBundle().
