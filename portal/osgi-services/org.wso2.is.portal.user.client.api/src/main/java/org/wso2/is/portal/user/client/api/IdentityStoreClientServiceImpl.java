@@ -87,8 +87,6 @@ import org.wso2.is.portal.user.client.api.internal.UserPortalClientApiDataHolder
 =======
 >>>>>>> cf181b2... Removing DataHolder from the component.
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.PasswordCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 <<<<<<< HEAD
@@ -97,6 +95,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -111,6 +110,10 @@ import javax.security.auth.callback.PasswordCallback;
 >>>>>>> 1cc6099... Loading profile values.
 =======
 >>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
+=======
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
+>>>>>>> 296fb47... enabling checkstyle
 
 /**
  * Identity store client service implementation.
@@ -509,10 +512,10 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     public List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException {
         List<Claim> claimList = null;
 
-        if(StringUtils.isNullOrEmpty(uniqueUserId)) {
+        if (StringUtils.isNullOrEmpty(uniqueUserId)) {
             throw new UserPortalUIException("Invalid unique user id.");
         }
-        if(metaClaims != null && !metaClaims.isEmpty()) {
+        if (metaClaims != null && !metaClaims.isEmpty()) {
             try {
                 claimList = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
             } catch (IdentityStoreException | UserNotFoundException e) {

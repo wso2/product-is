@@ -16,11 +16,8 @@
 
 package org.wso2.is.portal.user.client.api;
 
-import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
-import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
-import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -29,10 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Perform operations related to password handling
+ * Perform operations related to password handling.
  */
 public interface IdentityStoreClientService {
-
 
     /**
      * Authenticate.
@@ -51,8 +47,6 @@ public interface IdentityStoreClientService {
      * @param username    username
      * @param oldPassword old password
      * @param newPassword new password
-     * @throws IdentityStoreException Identity Store Exception
-     * @throws AuthenticationFailure  Authentication Failure
      * @throws UserNotFoundException  User Not Found Exception
      */
     void updatePassword(String username, char[] oldPassword, char[] newPassword)
@@ -63,11 +57,12 @@ public interface IdentityStoreClientService {
      *
      * @param userClaims claims of the user
      * @return Created user.
-     * @throws UserPortalUIException
+     * @throws UserPortalUIException User Not Found Exception
      */
     UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException;
 
-    UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName) throws UserPortalUIException;
+    UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName)
+            throws UserPortalUIException;
 
     /**
      * Update user claims by user id

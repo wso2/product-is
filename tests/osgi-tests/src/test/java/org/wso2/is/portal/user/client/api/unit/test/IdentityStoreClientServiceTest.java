@@ -27,8 +27,11 @@ import org.osgi.framework.BundleContext;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+<<<<<<< HEAD
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
+=======
+>>>>>>> 296fb47... enabling checkstyle
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -171,11 +174,16 @@ public class IdentityStoreClientServiceTest {
         userClaims = identityStoreClientService.getClaimsOfUser(users.get(0).getUserId(), metaClaims);
         Assert.assertNotNull(userClaims, "Failed to get the user claims.");
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.assertNotEquals(userClaims.get(0).getValue(),"user1_firstNameUpdated", "Fail to update the user profile");*/
 >>>>>>> 59b7147... Added test cases for all osgi client services in user portal:tests/osgi-tests/src/test/java/org.wso2.is.portal.user.client.api.unit.test/IdentityStoreClientServiceTest.java
 =======
         Assert.assertEquals(userClaims.get(0).getValue(), "user1_firstNameUpdated", "Fail to update the user profile");
 >>>>>>> 9780254... Add more osgi test cases for user portal
+=======
+        Assert.assertNotEquals(userClaims.get(0).getValue(),"user1_firstNameUpdated",
+        "Fail to update the user profile");*/
+>>>>>>> 296fb47... enabling checkstyle
     }
 
     @Test(dependsOnGroups = {"addUsers", "update", "authentication"})
