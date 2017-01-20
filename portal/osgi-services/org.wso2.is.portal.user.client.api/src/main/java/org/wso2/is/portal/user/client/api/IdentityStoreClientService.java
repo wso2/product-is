@@ -18,6 +18,7 @@ package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
+import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
@@ -71,9 +72,19 @@ public interface IdentityStoreClientService {
     /**
      * Update user claims by user id
      *
-     * @param uniqueUserId  User unique id
+     * @param uniqueUserId     User unique id
      * @param updatedClaimsMap Updated user claims map
      * @throws UserPortalUIException User portal ui exception
      */
     void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
+
+    /**
+     * Get list of user claims by user id
+     *
+     * @param uniqueUserId User unique id
+     * @param metaClaims   Meta claim map
+     * @return List of user claims
+     * @throws UserPortalUIException
+     */
+    List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 }
