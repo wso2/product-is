@@ -49,8 +49,8 @@ public class ChallengeQuestionManagerServiceTest {
     @Inject
     private CarbonServerInfo carbonServerInfo;
 
-    @Inject
-    private ChallengeQuestionManagerClientService challengeQuestionManagerService;
+/*    @Inject
+    private ChallengeQuestionManagerClientService challengeQuestionManagerService;*/
 
 
     @Configuration
@@ -67,9 +67,9 @@ public class ChallengeQuestionManagerServiceTest {
 
     @Test(groups = "getChallengeQuestion")
     public void testGetChallengeQuestionList() throws UserPortalUIException {
-        ChallengeQuestionManagerClientService challengeQuestionManagerService =
+        /*ChallengeQuestionManagerClientService challengeQuestionManagerService =
                 bundleContext.getService(bundleContext.getServiceReference(ChallengeQuestionManagerClientService.class));
-        Assert.assertNotNull(challengeQuestionManagerService, "Failed to get ChallengeQuestionManagerClientService instance");
+        Assert.assertNotNull(challengeQuestionManagerService, "Failed to get ChallengeQuestionManagerClientService instance");*/
 
         /*List<ChallengeQuestion> challengeQuestions = challengeQuestionManagerService.getChallengeQuestionList();
         Assert.assertNotNull(challengeQuestions, "Failed to retrieve the challenge question list.");*/
