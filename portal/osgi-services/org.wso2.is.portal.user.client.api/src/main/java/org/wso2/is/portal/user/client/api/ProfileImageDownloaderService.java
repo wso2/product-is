@@ -15,17 +15,17 @@
  */
 package org.wso2.is.portal.user.client.api;
 
-
 import org.wso2.msf4j.Microservice;
 
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.nio.file.Paths;
 
 /**
  * This the API implemetation for profile image download.
@@ -36,21 +36,26 @@ public class ProfileImageDownloaderService implements Microservice {
     @Path("/image")
     @Produces("image/*")
     public Response getProfileImage(@QueryParam("userid") String userId) {
-        File imageFile = null;
-        String mimeType = null;
         File imageDirectory = new File(Paths.get(System.getProperty("user.dir"), "images").toString());
+
         String[] imageNames = imageDirectory.list();
-        if (imageNames != null) {
-            for (int i = 0; i < imageNames.length; i++) {
-                if (imageNames[i].contains(userId)) {
-                    imageFile = new File(Paths.get(System.getProperty("user.dir"), "images").toString() + File.separator
-                            + imageNames[i]);
-                    mimeType = new MimetypesFileTypeMap().getContentType(imageFile);
-                }
-            }
+
+        if (imageNames == null) {
+            return Response.ok().build();
         }
 
-        return Response.ok(imageFile, mimeType).build();
+        return Arrays.stream(imageNames).
+                filter(imageName -> imageName.contains(userId)).
+                map(imageName -> {
+                    File imageFile = new File(
+                            Paths.get(System.getProperty("user.dir"), "images").toString() + File.separator
+                                    + imageName);
+                    String mimeType = new MimetypesFileTypeMap().getContentType(imageFile);
+
+                    return Response.ok(imageFile, mimeType).build();
+                }).
+                findAny().
+                orElse(Response.ok().build());
 
     }
 

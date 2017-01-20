@@ -27,30 +27,29 @@ import org.osgi.framework.BundleContext;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
+import org.wso2.is.portal.user.client.api.ProfileMgtClientService;
+import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
-/**
- * JAAS OSGI Tests.
- */
-
 @Listeners(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
-public class UserPortalClientServiceTest {
+public class ProfileMgtClientServiceTest {
 
-    private static List<UUFUser> users = new ArrayList<>();
+    private static final String DEFAULT = "default";
 
     @Inject
     private BundleContext bundleContext;
@@ -59,8 +58,7 @@ public class UserPortalClientServiceTest {
     private CarbonServerInfo carbonServerInfo;
 
     @Inject
-    private IdentityStoreClientService identityStoreClientService;
-
+    private ProfileMgtClientService profileMgtClientService;
 
     @Configuration
     public Option[] createConfiguration() {
@@ -74,14 +72,28 @@ public class UserPortalClientServiceTest {
         return optionList.toArray(new Option[optionList.size()]);
     }
 
-    @Test(groups = "addUsers")
-    public void testAddUser() throws UserPortalUIException {
+    @Test(groups = "getProfile")
+    public void testGetProfileNames() throws UserPortalUIException {
+        ProfileMgtClientService profileMgtClientService =
+                bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
+        Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
 
-        //        while (true) {
-        //            System.out.printf("Test");
-        //            Thread.sleep(20000);
-        //        }
+        Set<String> profileNames = profileMgtClientService.getProfileNames();
+        Assert.assertNotNull(profileNames, "Failed to retrieve the profile names.");
+    }
 
+    @Test(groups = "getProfile")
+    public void testGetProfile() throws UserPortalUIException {
+        ProfileMgtClientService profileMgtClientService =
+                bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
+        Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
+
+        ProfileEntry profileEntry = profileMgtClientService.getProfile(DEFAULT);
+        Assert.assertNotNull(profileEntry, "Failed to retrieve the default profile.");
+    }
+
+    @Test(groups = "getProfile")
+    public void testGetProfileEntries() throws UserPortalUIException {
         IdentityStoreClientService identityStoreClientService =
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
@@ -89,36 +101,22 @@ public class UserPortalClientServiceTest {
         Map<String, String> userClaims = new HashMap<>();
         Map<String, String> credentials = new HashMap<>();
         userClaims.put("http://wso2.org/claims/username", "user1");
-        userClaims.put("http://wso2.org/claims/firstName", "user1_firstName");
+        userClaims.put("http://wso2.org/claims/givenname", "user1_firstName");
         userClaims.put("http://wso2.org/claims/lastName", "user1_lastName");
         userClaims.put("http://wso2.org/claims/email", "user1@wso2.com");
 
         credentials.put("password", "admin");
 
-        UUFUser user = null;
-//        TODO FIX
-        user = identityStoreClientService.addUser(userClaims, credentials);
+        UUFUser user = identityStoreClientService.addUser(userClaims, credentials);
 
         Assert.assertNotNull(user, "Failed to add the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
 
-        users.add(user);
+        ProfileMgtClientService profileMgtClientService =
+                bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
+        Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
 
-    }
-
-    @Test(dependsOnGroups = {"addUsers"})
-    public void authenticate() throws UserPortalUIException {
-
-        IdentityStoreClientService identityStoreClientService =
-                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
-        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
-
-        UUFUser user = null;
-//        TODO FIX
-        user = identityStoreClientService.authenticate("admin", "admin".toCharArray());
-//        user = identityStoreClientService.authenticate("user1", "password".toCharArray());
-
-        Assert.assertNotNull(user, "Failed to authenticate the user.");
-        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+        List<ProfileUIEntry> profileEntries = profileMgtClientService.getProfileEntries(DEFAULT, user.getUserId());
+        Assert.assertNotNull(profileEntries, "Failed to retrieve the profile entries.");
     }
 }

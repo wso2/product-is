@@ -31,9 +31,13 @@ function onRequest(env) {
             message = result.message;
         }
         var profileImageResult = isProfileImageAvailbale(session);
+        Log.debug(profileImageResult);
 
         return {success: success, profile: env.params.profileName, uiEntries: uiEntries,
-            message: message, profileImage: profileImageResult.profileImage, userId: profileImageResult.userId};
+            message: message,
+            profileImage: profileImageResult.profileImage,
+            userId: profileImageResult.userId,
+            usernameChar: profileImageResult.usernameChar};
     }
 
     return {success: false, message: "Invalid profile name."};
@@ -139,13 +143,15 @@ function uploadFile(env, session) {
 }
 
 function isProfileImageAvailbale(session) {
+    var usernameChar = session.getUser().getUsername().charAt(0);
+
     var Paths = Java.type('java.nio.file.Paths');
     var System = Java.type('java.lang.System');
     var Files = Java.type('java.nio.file.Files');
     var File = Java.type('java.io.File');
     var imageDirPath = Paths.get(System.getProperty('user.dir'), "images");
     if (!Files.exists(imageDirPath)) {
-        return {profileImage: false};
+        return {profileImage: false, usernameChar: usernameChar};
     }
     else {
         var file = new File(imageDirPath.toString());
@@ -154,11 +160,13 @@ function isProfileImageAvailbale(session) {
             for (var i = 0; i < names.length; i++) {
                 var imageName = names[i].toString();
                 if (imageName.indexOf(session.getUser().getUserId()) !== -1) {
-                    return {profileImage: true, userId: session.getUser().getUserId()};
+                    return {profileImage: true,
+                        userId: session.getUser().getUserId(),
+                        usernameChar: usernameChar};
                 }
             }
         }
 
     }
-    return {profileImage: false};
+    return {profileImage: false, usernameChar: usernameChar};
 }

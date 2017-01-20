@@ -91,6 +91,8 @@ $(window).load(function () {
             confirmPassword: "Passwords do not match"
         }
     });
+
+    $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
 /*
  $('#register').on('click', function() {
@@ -116,5 +118,3 @@ $(window).load(function () {
  }
  }).form();
  });*/
-
-

@@ -17,7 +17,9 @@ limitations under the License.
 <suite name="WSO2-Identity-Server-Test-Suite">
     <test name="wso2-identity-server-user-portal-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.is.portal.user.client.api.unit.test.UserPortalClientServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.IdentityStoreClientServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileMgtClientServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerClientServiceTest"/>
         </classes>
     </test>
 </suite>

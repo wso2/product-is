@@ -4,34 +4,31 @@
 <h3>{{t "user-portal.user.account.securityQ"}}</h3>
 <hr/>
 <div id="add-question" class="well">
-    <form class="form-horizontal">
+    <form class="form-horizontal" method="post">
         <div id="new-security-question">
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <label for="question-list">Security Question</label>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="questions-dropdown"
-                                data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="true">Select a question
-                            <span class="caret"></span>
-                        </button>
-                        <ul id="question-list" class="dropdown-menu" aria-labelledby="questions-dropdown">
-                            {{#each question_list}}
-                                <li value="{{ question_value }}"><a href="#">{{ question_text }}</a></li>
-                            {{/each}}
-                        </ul>
-                    </div>
+                    <select id="question-list" name="question_list" aria-labelledby="questions-dropdown">
+                        {{#each questionList}}
+                            <option value="{{ questionId }}">{{ question }}</option>
+                        {{/each}}
+                    </select>
                 </div>
             </div>
         </div>
-        <input type="button" class="btn btn-primary" value="Add" onclick="saveQuestion()">
+        <label for="question-answer">Answer</label>
+        <input id="question-answer" name="question-answer" type="text">
+        <input type="submit" class="btn btn-primary" value="Add">
+        <input type="hidden" name="action" value="add-question">
     </form>
 </div>
 <div id="list-questions">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="row">
             <div id="create-question" class="pull-right add-margin-bottom-4x">
-                <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span class="fw fw-add fw-1x"></span> Create
+                <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
+                        class="fw fw-add fw-1x"></span> Create
                 </button>
             </div>
         </div>
@@ -39,14 +36,14 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="row">
             <div id="question-list">
-                {{#each user_questions}}
+                {{#each userQuestions}}
                     <div class="question">
-                        <span class="question-text">{{ question_text }}</span>
+                        <span class="question-text">{{ this.question }}</span>
                         <div class="pull-right">
-                            <a aria-label="Edit" onclick="editQuestion()">
+                            <a aria-label="Edit" onclick="editQuestion({{ this.questionId }})">
                                 <span class="fw fw-edit" aria-hidden="true"></span>
                             </a>
-                            <a aria-label="Delete" onclick="deleteQuestion()"\>
+                            <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }})">
                                 <span class="fw fw-delete" aria-hidden="true"></span>
                             </a>
                         </div>
@@ -75,12 +72,14 @@
         <div id="security-question">
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <!-- TODO: Remove the hardcoded values-->
-                    <div id="current-question">Security question one ?</div>
-                    <div id="answer">Answer for one</div>
+                    <div id="current-question"></div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input type="text" id="answer">
                 </div>
             </div>
         </div>
         <input type="button" class="btn btn-primary" value="Update" onclick="updateQuestion()"/>
+        <input type="hidden" name="action" value="update-question">
     </form>
 </div>
