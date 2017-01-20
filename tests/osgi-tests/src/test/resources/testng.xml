@@ -32,8 +32,12 @@ limitations under the License.
 =======
             <class name="org.wso2.is.portal.user.client.api.unit.test.IdentityStoreClientServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileMgtClientServiceTest"/>
+<<<<<<< HEAD
             <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerServiceTest"/>
 >>>>>>> 59b7147... Added test cases for all osgi client services in user portal
+=======
+            <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerClientServiceTest"/>
+>>>>>>> d9fef20... Change test case name for ChallengeQuestionManagerClientService
         </classes>
     </test>
 </suite>
