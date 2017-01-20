@@ -37,6 +37,8 @@
                 <exclude>**/identity/store-config.yaml</exclude>
                 <exclude>**/identity/claim-mapping.yaml</exclude>
                 <exclude>**/identity/profile-mapping.yaml</exclude>
+                <exclude>**/identity/recovery.yaml</exclude>
+                <exclude>**/identity/challenge-questions/en-US.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
             </excludes>
         </fileSet>
