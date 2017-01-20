@@ -27,6 +27,7 @@ import org.osgi.framework.BundleContext;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -86,13 +87,12 @@ public class IdentityStoreClientServiceTest {
 
         credentials.put("password", "admin");
 
-        UUFUser user = null;
-        /*user = identityStoreClientService.addUser(userClaims, credentials);
+        UUFUser user = identityStoreClientService.addUser(userClaims, credentials);
 
         Assert.assertNotNull(user, "Failed to add the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
 
-        users.add(user);*/
+        users.add(user);
     }
 
     @Test(groups = "authentication", dependsOnGroups = {"addUsers"})
@@ -102,11 +102,10 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        UUFUser user = null;
-        /*user = identityStoreClientService.authenticate("user1", "password".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray());
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
-        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");*/
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
 
     @Test(groups = "update", dependsOnGroups = {"addUsers"})
@@ -138,11 +137,10 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        /*identityStoreClientService.updatePassword(users.get(0).getUsername(), "admin".toCharArray(), "password_updated".toCharArray());
-        UUFUser user = null;
-        user = identityStoreClientService.authenticate(users.get(0).getUsername(), "password_updated".toCharArray());
+        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray());
 
         Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
-        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");*/
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
 }

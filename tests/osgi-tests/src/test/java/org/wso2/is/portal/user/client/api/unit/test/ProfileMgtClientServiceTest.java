@@ -73,8 +73,8 @@ public class ProfileMgtClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
         Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
 
-        /*Set<String> profileNames = profileMgtClientService.getProfileNames();
-        Assert.assertNotNull(profileNames, "Failed to retrieve the default profile.");*/
+        Set<String> profileNames = profileMgtClientService.getProfileNames();
+        Assert.assertNotNull(profileNames, "Failed to retrieve the profile names.");
     }
 
     @Test(groups = "getProfile")
@@ -83,9 +83,7 @@ public class ProfileMgtClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
         Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
 
-        /*ProfileEntry profileEntry = profileMgtClientService.getProfile(DEFAULT);
-
+        ProfileEntry profileEntry = profileMgtClientService.getProfile(DEFAULT);
         Assert.assertNotNull(profileEntry, "Failed to retrieve the default profile.");
-        Assert.assertNotEquals(profileEntry.getProfileName(), DEFAULT, "Retrived profile is an invalid profile.");*/
     }
 }
