@@ -423,14 +423,64 @@
                             <target>1.8</target>
                         </configuration>
                     </plugin>
+
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>pre-unit-test</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                                <configuration>
+                                    <propertyName>surefireArgLine</propertyName>
+                                    <destFile>${project.build.directory}/jacoco.exec</destFile>
+                                    <includes>
+                                        <include>org.wso2.*</include>
+                                    </includes>
+                                    <append>true</append>
+                                    <sessionId>user-portal-tests</sessionId>
+                                </configuration>
+                            </execution>
+                            <!--<execution>-->
+                                <!--<id>default-check</id>-->
+                                <!--<goals>-->
+                                    <!--<goal>check</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<rules>-->
+                                        <!--<rule>-->
+                                        <!--</rule>-->
+                                    <!--</rules>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                            <!-- report phase setup -->
+                            <!--<execution>-->
+                                <!--<id>post-unit-test</id>-->
+                                <!--<phase>test</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>report</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--&lt;!&ndash; output file with report data. &ndash;&gt;-->
+                                    <!--<dataFile>${project.build.directory}/jacoco.exec</dataFile>-->
+                                    <!--&lt;!&ndash; output directory for the reports. &ndash;&gt;-->
+                                    <!--<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                    </executions>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
+                            <argLine>${surefireArgLine}</argLine>
                             <systemPropertyVariables>
                                 <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
                                 </org.ops4j.pax.url.mvn.localRepository>
-                                <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
+                                <!--<jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>-->
                                 <org.ops4j.pax.logging.DefaultServiceLog.level>INFO</org.ops4j.pax.logging.DefaultServiceLog.level>
                             </systemPropertyVariables>
                             <systemProperties>
@@ -445,35 +495,7 @@
                         </configuration>
                     </plugin>
 
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
-                                    <includes>
-                                        <include>org.wso2.carbon*</include>
-                                    </includes>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>default-check</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <rule>
-                                        </rule>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+
 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
