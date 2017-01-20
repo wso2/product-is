@@ -17,7 +17,9 @@ limitations under the License.
 <suite name="Carbon-Security-Test-Suite">
     <test name="carbon-security-tests" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.is.portal.user.client.api.unit.test.UserPortalClientServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.IdentityStoreClientServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileMgtClientServiceTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerServiceTest"/>
         </classes>
     </test>
 </suite>
