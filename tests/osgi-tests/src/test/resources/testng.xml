@@ -23,6 +23,7 @@ limitations under the License.
             <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileMgtClientServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerClientServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.ProfileImageDownloaderServiceTest"/>
+<<<<<<< HEAD
 =======
 <suite name="Carbon-Security-Test-Suite">
     <test name="carbon-security-tests" preserve-order="true" parallel="false">
@@ -43,6 +44,8 @@ limitations under the License.
 =======
             <class name="org.wso2.is.portal.user.client.api.unit.test.ChallengeQuestionManagerClientServiceTest"/>
 >>>>>>> d9fef20... Change test case name for ChallengeQuestionManagerClientService
+=======
+>>>>>>> f61b1d5... Add initial test case for profile downloader microservice
         </classes>
     </test>
 </suite>
