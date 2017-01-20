@@ -89,7 +89,6 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
                     IdentityMgtConstants.USERNAME_CLAIM, username);
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(password);
-            //todo
             AuthenticationContext authenticationContext = getRealmService().getIdentityStore()
                     .authenticate(usernameClaim, new Callback[]{passwordCallback}, null);
             User identityUser = authenticationContext.getUser();
