@@ -27,12 +27,17 @@ function editQuestion(questionId, questionSetId, questionText) {
 $(document).ready(function () {
 });
 
+<<<<<<< HEAD
 function editQuestion() {
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
+=======
+function editQuestion(question) {
+>>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
 
     $("#add-question").hide();
     $("#list-questions").hide();
     $("#edit-question").show();
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     $("#question-id").val(questionId);
@@ -41,6 +46,11 @@ function editQuestion() {
     $("#current-question").html(questionText);
 =======
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
+=======
+
+    $("#current-question").html(question.question_text);
+    $("#answer").html(question.answer);
+>>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
 }
 
 function updateQuestion() {
@@ -92,6 +102,7 @@ function deleteQuestion() {
 function addQuestion() {
     $("#add-question").show();
     $("#create-question").hide();
+<<<<<<< HEAD
 }
 
 <<<<<<< HEAD
@@ -111,4 +122,6 @@ function saveQuestion() {
     $("#edit-question").hide();
     $("#create-question").show();
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
+=======
+>>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
 }

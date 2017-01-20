@@ -268,11 +268,6 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
             <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
             <type>zip</type>
@@ -282,11 +277,16 @@
             <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.identity.governance</groupId>-->
-            <!--<artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.commons</groupId>
+            <artifactId>org.wso2.carbon.identity.common.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
 
         <!-- Sample Simple Authentication Component -->
 
@@ -639,11 +639,14 @@
                                     <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.recovery.server.feature</id>-->
-                                    <!--<version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>-->
-                                <!--</feature>-->
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.common.feature</id>
+                                    <version>${org.wso2.carbon.identity.commons.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
+                                </feature>
                                 <!-- Sample Applications -->
 <<<<<<< HEAD
                                 <feature>
@@ -974,6 +977,7 @@
                                     <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
+<<<<<<< HEAD
 >>>>>>> 9bd8ee3... Adding structure for new component
 =======
                                     <id>org.wso2.carbon.is.user-portal.feature.group</id>
@@ -992,6 +996,16 @@
                                     <!--<id>org.wso2.carbon.identity.recovery.server.feature</id>-->
                                     <!--<version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>-->
                                 <!--</feature>-->
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.identity.common.feature</id>
+                                    <version>${org.wso2.carbon.identity.commons.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
+                                </feature>
+>>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->

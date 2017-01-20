@@ -83,7 +83,7 @@
             <artifactId>org.wso2.carbon.uuf.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
         </dependency>
         <dependency>
@@ -127,7 +127,11 @@
             org.wso2.carbon.kernel.utils.*,
             org.wso2.msf4j;version="${msf4j.import.version.range}",
             javax.ws.rs.*;version="${javax.ws.rs.import.version.range}",
+<<<<<<< HEAD
 >>>>>>> 4f94f5f... Add profile image download
+=======
+            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version}"
+>>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
         </import.package>
         <!--//todo set versions-->
         <export.package>
