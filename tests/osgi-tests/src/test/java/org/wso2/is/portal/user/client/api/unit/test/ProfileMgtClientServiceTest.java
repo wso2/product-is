@@ -24,6 +24,8 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -37,6 +39,7 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +53,9 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 public class ProfileMgtClientServiceTest {
 
     private static final String DEFAULT = "default";
+    private static final String PROFILE_INVALID = "invalid";
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceTest.class);
+    private static List<UUFUser> users = new ArrayList<>();
 
     @Inject
     private BundleContext bundleContext;
@@ -93,6 +99,22 @@ public class ProfileMgtClientServiceTest {
     }
 
     @Test(groups = "getProfile")
+    public void testGetProfileForInvalidProfileName() {
+        ProfileMgtClientService profileMgtClientService =
+                bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
+        Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
+
+        ProfileEntry profileEntry = null;
+        try {
+            profileEntry = profileMgtClientService.getProfile(PROFILE_INVALID);
+        } catch (UserPortalUIException e) {
+            LOGGER.info("Test passed. Get profile failed with invalid profile name.");
+            return;
+        }
+        Assert.assertNull(profileEntry, "Test Failed. Get profile successfully with invalid profile name.");
+    }
+
+    @Test(groups = "getProfile")
     public void testGetProfileEntries() throws UserPortalUIException {
         IdentityStoreClientService identityStoreClientService =
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
@@ -112,6 +134,8 @@ public class ProfileMgtClientServiceTest {
         Assert.assertNotNull(user, "Failed to add the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
 
+        users.add(user);
+
         ProfileMgtClientService profileMgtClientService =
                 bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
         Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
@@ -119,4 +143,45 @@ public class ProfileMgtClientServiceTest {
         List<ProfileUIEntry> profileEntries = profileMgtClientService.getProfileEntries(DEFAULT, user.getUserId());
         Assert.assertNotNull(profileEntries, "Failed to retrieve the profile entries.");
     }
+
+    @Test(groups = "getProfile")
+    public void testGetProfileEntriesForInvalidUserId() {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        ProfileMgtClientService profileMgtClientService =
+                bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
+        Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
+
+        List<ProfileUIEntry> profileEntries = null;
+        try {
+            profileEntries = profileMgtClientService.getProfileEntries(DEFAULT, "9088383");
+        } catch (UserPortalUIException e) {
+            LOGGER.info("Test passed. Get profile entries failed with invalid user id.");
+            return;
+        }
+        Assert.assertNull(profileEntries, "Test Failed. successfully get profile entries with invalid user id.");
+    }
+
+    @Test(groups = "getProfile")
+    public void testGetProfileEntriesForInvalidProfile() {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        ProfileMgtClientService profileMgtClientService =
+                bundleContext.getService(bundleContext.getServiceReference(ProfileMgtClientService.class));
+        Assert.assertNotNull(profileMgtClientService, "Failed to get ProfileMgtClientService instance");
+
+        List<ProfileUIEntry> profileEntries = null;
+        try {
+            profileEntries = profileMgtClientService.getProfileEntries(PROFILE_INVALID, users.get(0).getUserId());
+        } catch (UserPortalUIException e) {
+            LOGGER.info("Test passed. Get profile entries failed with invalid profile name.");
+            return;
+        }
+        Assert.assertNull(profileEntries, "Test Failed. successfully get profile entries with invalid profile name.");
+    }
+
 }
