@@ -191,19 +191,8 @@ $('#domainSelector').change(function () {
 });
 =======
 });
-/*
- $('#register').on('click', function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- });
- });*/
 
+<<<<<<< HEAD
 /*$('#register').click( function() {
  $("#self-signUp-form").validate({
  rules: {
@@ -234,3 +223,11 @@ $('#domainSelector').change( function() {
 
 });
 >>>>>>> 4f4c7d8... Added domain in UI for self sign-up
+=======
+$('#domainSelector').change(function () {
+    var domain = document.getElementById('domainSelector').value;
+    if (domain != "default") {
+        document.getElementById("domainValue").value = domain;
+    }
+});
+>>>>>>> be786bb... Added code improvement
