@@ -512,12 +512,6 @@
                 <artifactId>org.wso2.carbon.tools.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-                <version>${carbon.security.version}</version>
-                <type>zip</type>
-            </dependency>
             <!--<dependency>-->
                 <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
                 <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
@@ -743,18 +737,8 @@
                 <version>${org.wso2.carbon.caching.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas</artifactId>
-                <version>${org.wso2.carbon.security.caas.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
-                <version>${org.wso2.carbon.security.caas.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.security.store.connector.jdbc</artifactId>
+                <artifactId>org.wso2.carbon.identity.connector.jdbc</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -853,11 +837,10 @@
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
         <org.wso2.carbon.identity.recovery.server.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
-        <org.wso2.carbon.identity.commons.feature.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.commons.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
 
         <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
@@ -921,7 +904,6 @@
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
-        <org.wso2.carbon.security.caas.version>1.0.0-m2</org.wso2.carbon.security.caas.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
