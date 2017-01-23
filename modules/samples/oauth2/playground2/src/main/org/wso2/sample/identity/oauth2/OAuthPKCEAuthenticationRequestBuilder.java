@@ -34,5 +34,4 @@ public class OAuthPKCEAuthenticationRequestBuilder extends OAuthClientRequest.Au
         this.parameters.put(OAuth2Constants.OAUTH2_PKCE_CODE_CHALLENGE_METHOD, method);
         return this;
     }
-
 }
