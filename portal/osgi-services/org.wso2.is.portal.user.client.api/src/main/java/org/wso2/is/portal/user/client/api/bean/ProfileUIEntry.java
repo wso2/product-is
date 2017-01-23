@@ -16,7 +16,7 @@
 
 package org.wso2.is.portal.user.client.api.bean;
 
-import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ClaimConfigEntry;
+import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
 
 /**
  * Profile UI Entry.
