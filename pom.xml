@@ -302,6 +302,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
+<<<<<<< HEAD
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
             </dependency>
@@ -347,6 +348,8 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+=======
+>>>>>>> 7303600... Adapt package name changing in meta.claim.mgt package.
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
             </dependency>
@@ -1295,7 +1298,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+                <artifactId>org.wso2.carbon.identity.claim</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>

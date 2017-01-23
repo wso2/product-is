@@ -24,6 +24,7 @@ package org.wso2.is.portal.user.client.api;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.wso2.carbon.identity.claim.mapping.profile.ProfileEntry;
 import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -37,6 +38,9 @@ import java.util.Set;
 import org.wso2.is.portal.user.client.api.exception.ProfileMgtClientException;
 =======
 import org.wso2.carbon.identity.meta.claim.mgt.mapping.profile.ProfileEntry;
+=======
+import org.wso2.carbon.identity.claim.mapping.profile.ProfileEntry;
+>>>>>>> 7303600... Adapt package name changing in meta.claim.mgt package.
 import org.wso2.is.portal.user.client.api.bean.ProfileUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 >>>>>>> 951ade6... Adding profile loading js

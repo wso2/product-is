@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+            <artifactId>org.wso2.carbon.identity.claim</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -104,6 +104,7 @@
             org.slf4j.*;version="${slf4j.import.version.range}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
 <<<<<<< HEAD
+<<<<<<< HEAD
             org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
 <<<<<<< HEAD
@@ -119,6 +120,11 @@
             org.wso2.carbon.uuf.spi.auth.*
 >>>>>>> 7444e2a... getting user login to work..
 =======
+=======
+            org.wso2.carbon.identity.claim.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+>>>>>>> 7303600... Adapt package name changing in meta.claim.mgt package.
             org.wso2.carbon.uuf.spi.auth.*,
 <<<<<<< HEAD
             org.wso2.carbon.kernel.utils.*
