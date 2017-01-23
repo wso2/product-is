@@ -31,7 +31,7 @@ function onRequest(env) {
                 domain = splitedValue[0];
                 usernameWithoutDomain = splitedValue[1];
             } else {
-                return {errorMessage: "You have provided an invalid username."};
+                return {errorMessage: 'user-portal.user.login.error.invalid.username'};
             }
         }
         var result = authenticate(usernameWithoutDomain, password, domain);
@@ -62,6 +62,6 @@ function authenticate(username, password, domain) {
             }
         }
 
-        return {success: false, message: message};
+        return {success: false, message: 'user-portal.user.login.error.authentication'};
     }
 }

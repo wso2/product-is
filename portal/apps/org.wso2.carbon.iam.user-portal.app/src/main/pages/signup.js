@@ -63,7 +63,7 @@ function getProfile() {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["self-signUp"]);
     } catch (e) {
-        return {errorMessage: "Failed to retrieve the claim profile."};
+        return {errorMessage: 'user-portal.user.signup.error.retrieve.claim'};
     }
     var claimForProfile = claimProfile.claims;
 
@@ -110,7 +110,7 @@ function getProfile() {
         domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "getDomainNames", []);
     } catch (e) {
-        return {errorMessage: "Failed to retrieve the domain names."};
+        return {errorMessage: 'user-portal.user.signup.error.retrieve.domain'};
     }
 
     sendToClient("signupClaims", claimProfileArray);
@@ -135,7 +135,7 @@ function userRegistration(claimMap, credentialMap, domain) {
                 message = cause.getTargetException().message;
             }
         }
-        return {errorMessage: message};
+        return {errorMessage: 'user-portal.user.signup.error.registration'};
     }
 }
 
@@ -157,6 +157,6 @@ function authenticate(username, password, domain) {
             }
         }
 
-        return {success: false, message: message};
+        return {success: false, message: 'user-portal.user.login.error.authentication'};
     }
 }
