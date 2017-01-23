@@ -84,6 +84,7 @@ function onRequest(env) {
         var domain = env.request.formParams['domain'];
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
+<<<<<<< HEAD
 
         if (!env.config.isDomainInLogin) {
             if (username.indexOf("/") != -1) {
@@ -107,6 +108,20 @@ function onRequest(env) {
 =======
         var result = authenticate(username, password, null);
 >>>>>>> 4f4c7d8... Added domain in UI for self sign-up
+=======
+        var domain = null;
+        var usernameWithoutDomain = username;
+        if(username.indexOf("/") != -1) {
+            var splitedValue = username.split("/");
+            if(splitedValue.length == 2) {
+                domain = splitedValue[0];
+                usernameWithoutDomain = splitedValue[1];
+            } else {
+                return {errorMessage: "You have provided an invalid username."};
+            }
+        }
+        var result = authenticate(usernameWithoutDomain, password, domain);
+>>>>>>> 759b7c7... add user store domain support in login and update password
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);

@@ -36,11 +36,12 @@ function onRequest(env) {
 
     var session = getSession();
     var username = session.getUser().getUsername();
+    var domain = session.getUser().getDomainName();
 
     if (env.request.method == "POST" && "reset-password" == env.params.actionId) {
         var oldPassword = env.request.formParams['oldPassword'];
         var newPassword = env.request.formParams['newPassword'];
-        var result = updatePassword(username, oldPassword, newPassword);
+        var result = updatePassword(username, oldPassword, newPassword, domain);
         if (result.success) {
             return {success: true, message: result.message}
         } else {
@@ -49,12 +50,17 @@ function onRequest(env) {
     }
 }
 
+<<<<<<< HEAD
 function updatePassword(username, oldPassword, newPassword) {
 >>>>>>> 0413463... update user portal update password feature
+=======
+function updatePassword(username, oldPassword, newPassword, domain) {
+>>>>>>> 759b7c7... add user store domain support in login and update password
     try {
         var oldPasswordChar = Java.to(oldPassword.split(''), 'char[]');
         var newPasswordChar = Java.to(newPassword.split(''), 'char[]');
         callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+<<<<<<< HEAD
 <<<<<<< HEAD
             "updatePassword", [username, oldPasswordChar, newPasswordChar, domain]);
 
@@ -65,6 +71,9 @@ function updatePassword(username, oldPassword, newPassword) {
         if (cause !== null) {
 =======
             "updatePassword", [username, oldPasswordChar, newPasswordChar]);
+=======
+            "updatePassword", [username, oldPasswordChar, newPasswordChar, domain]);
+>>>>>>> 759b7c7... add user store domain support in login and update password
 
         return {success: true, message: "You have successfully updated the password"}
     } catch (e) {

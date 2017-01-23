@@ -397,12 +397,12 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public void updatePassword(String username, char[] oldPassword, char[] newPassword)
+    public void updatePassword(String username, char[] oldPassword, char[] newPassword, String domain)
             throws UserNotFoundException, UserPortalUIException {
 
         try {
             //validate the old password
-            UUFUser uufUser = authenticate(username, oldPassword, null);
+            UUFUser uufUser = authenticate(username, oldPassword, domain);
 
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(newPassword);
