@@ -36,17 +36,12 @@ import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
-
+import javax.inject.Inject;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
-
-
-
-
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
@@ -167,7 +162,7 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
+        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray(), PRIMARY_DOMAIN);
         UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray(), null);
 
         Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
