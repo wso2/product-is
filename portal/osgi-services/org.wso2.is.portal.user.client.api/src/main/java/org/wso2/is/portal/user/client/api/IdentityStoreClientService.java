@@ -50,7 +50,7 @@ public interface IdentityStoreClientService {
      * @param newPassword new password
      * @throws UserNotFoundException User Not Found Exception
      */
-    void updatePassword(String username, char[] oldPassword, char[] newPassword)
+    void updatePassword(String username, char[] oldPassword, char[] newPassword, String domain)
             throws UserNotFoundException, UserPortalUIException;
 
     /**
