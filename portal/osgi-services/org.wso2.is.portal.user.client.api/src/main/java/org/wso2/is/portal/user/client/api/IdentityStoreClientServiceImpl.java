@@ -25,7 +25,11 @@ package org.wso2.is.portal.user.client.api;
 =======
 >>>>>>> cf181b2... Removing DataHolder from the component.
 import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.*;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
@@ -71,6 +75,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+<<<<<<< HEAD
 =======
 import org.wso2.is.portal.user.client.api.internal.DataHolder;
 =======
@@ -118,6 +123,10 @@ import javax.security.auth.callback.PasswordCallback;
 import java.util.*;
 import java.util.stream.Collectors;
 >>>>>>> 17d88ce... code reformatting
+=======
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.PasswordCallback;
+>>>>>>> 00f4d54... Fixed checkstyle issues
 
 /**
  * Identity store client service implementation.
