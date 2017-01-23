@@ -66,10 +66,10 @@
                                     <div class="form-group">
 =======
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <label for="domain">{{t "user-portal.user.signup.domain"}}:</label></br>
+                                        </br><label for="domain">{{t "user-portal.user.signup.domain"}}:</label></br>
                                         <input type="hidden" name="domainValue" id="domainValue"
                                                class="form-control"/>
-                                        <select class="dropdown" id="domainSelector">
+                                        <select class="form-control" id="domainSelector">
                                             <option value="default">{{t "user-portal.user.signup.domain.placeholder"}}</option>
                                             {{#each domainNames}}
                                                 <option value={{this}}>{{this}}</option>
