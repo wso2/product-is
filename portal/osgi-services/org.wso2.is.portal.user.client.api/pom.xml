@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+            <artifactId>org.wso2.carbon.identity.claim</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
@@ -98,9 +98,9 @@
             javax.security.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.uuf.spi.auth.*,
             org.wso2.carbon.kernel.utils.*,
             org.wso2.msf4j;version="${msf4j.import.version.range}",

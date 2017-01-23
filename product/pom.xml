@@ -86,7 +86,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
             <type>zip</type>
         </dependency>
 
@@ -293,7 +293,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.mgt</groupId>
-                                    <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+                                    <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
@@ -397,7 +397,7 @@
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.meta.claim.mgt.feature</id>
+                                    <id>org.wso2.carbon.identity.claim.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
@@ -566,7 +566,7 @@
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.meta.claim.mgt.feature</id>
+                                    <id>org.wso2.carbon.identity.claim.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
