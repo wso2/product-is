@@ -8,7 +8,7 @@
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
             <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.signup.error.default"}}</strong>&nbsp;
-            {{errorMessage}}
+            {{t errorMessage}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -59,6 +59,17 @@
                                                     placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
                                                     required/>
                                         {{/each}}
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        </br><label for="domain">{{t "user-portal.user.signup.domain"}}:</label></br>
+                                        <input type="hidden" name="domainValue" id="domainValue"
+                                               class="form-control"/>
+                                        <select class="form-control" id="domainSelector">
+                                            <option value="default">{{t "user-portal.user.signup.domain.placeholder"}}</option>
+                                            {{#each domainNames}}
+                                                <option value={{this}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -153,4 +164,3 @@
         </div>
     {{/if}}
 {{/fillZone}}
-

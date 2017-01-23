@@ -20,21 +20,25 @@ function onRequest(env) {
         var formParams = {};
         var claimMap = {};
         var credentialMap = {};
+        var domain;
         formParams = env.request.formParams;
         for (var i in formParams) {
             if (i == "password") {
                 credentialMap["password"] = formParams[i];
-            } else {
+            } else if (i == "domainValue") {
+                domain = formParams[i];
+            }
+            else {
                 claimMap[i] = formParams[i];
             }
         }
 
-        var registrationResult = userRegistration(claimMap, credentialMap);
+        var registrationResult = userRegistration(claimMap, credentialMap, domain);
         if (registrationResult.errorMessage) {
             return {errorMessage: registrationResult.message};
         }
         else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
-            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"]);
+            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
             if (authenticationResult.success) {
                 sendRedirect(env.contextPath + env.config['loginRedirectUri']);
             } else {
@@ -49,14 +53,17 @@ function onRequest(env) {
 }
 
 function getProfile() {
+
+    /**
+     * Get the Claim Profile
+     */
+
     var claimProfile;
     try {
-        // Get Claim Profile
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["self-signUp"]);
-    } catch
-        (e) {
-        return {errorMessage: "Failed to retrieve the claim profile."};
+    } catch (e) {
+        return {errorMessage: 'user-portal.user.signup.error.retrieve.claim'};
     }
     var claimForProfile = claimProfile.claims;
 
@@ -72,9 +79,9 @@ function getProfile() {
                 usernameClaim["defaultValue"] = claimForProfile[i].getDefaultValue();
             }
             usernameClaim["claimLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            usernameClaim["required"] = Boolean.toString(claimForProfile[i].getRequired());
+            usernameClaim["required"] = claimForProfile[i].getRequired();
             usernameClaim["regex"] = claimForProfile[i].getRegex();
-            usernameClaim["readonly"] = Boolean.toString(claimForProfile[i].getReadonly());
+            usernameClaim["readonly"] = claimForProfile[i].getReadonly();
             usernameClaim["dataType"] = claimForProfile[i].getDataType();
             userName[i] = usernameClaim;
         } else {
@@ -85,24 +92,39 @@ function getProfile() {
                 claimProfileMap["defaultValue"] = claimForProfile[i].getDefaultValue();
             }
             claimProfileMap["claimLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            claimProfileMap["required"] = Boolean.toString(claimForProfile[i].getRequired());
+            claimProfileMap["required"] = claimForProfile[i].getRequired();
             claimProfileMap["regex"] = claimForProfile[i].getRegex();
-            claimProfileMap["readonly"] = Boolean.toString(claimForProfile[i].getReadonly());
+            claimProfileMap["readonly"] = claimForProfile[i].getReadonly();
             claimProfileMap["dataType"] = claimForProfile[i].getDataType();
             claimProfileArray[i] = claimProfileMap;
         }
     }
+
+
+    /**
+     * Get the set of domain names
+     */
+
+    var domainNames;
+    try {
+        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getDomainNames", []);
+    } catch (e) {
+        return {errorMessage: 'user-portal.user.signup.error.retrieve.domain'};
+    }
+
     sendToClient("signupClaims", claimProfileArray);
     return {
         "usernameClaim": userName,
-        "signupClaims": claimProfileArray
+        "signupClaims": claimProfileArray,
+        "domainNames": domainNames
     };
 }
 
-function userRegistration(claimMap, credentialMap) {
+function userRegistration(claimMap, credentialMap, domain) {
     try {
         var userRegistration = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "addUser", [claimMap, credentialMap]);
+            "addUser", [claimMap, credentialMap, domain]);
         return {userRegistration: userRegistration};
     } catch (e) {
         var message = e.message;
@@ -113,15 +135,15 @@ function userRegistration(claimMap, credentialMap) {
                 message = cause.getTargetException().message;
             }
         }
-        return {errorMessage: message};
+        return {errorMessage: 'user-portal.user.signup.error.registration'};
     }
 }
 
-function authenticate(username, password) {
+function authenticate(username, password, domain) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar]);
+            "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
         return {success: true, message: "success"}
@@ -135,6 +157,6 @@ function authenticate(username, password) {
             }
         }
 
-        return {success: false, message: message};
+        return {success: false, message: 'user-portal.user.login.error.authentication'};
     }
 }

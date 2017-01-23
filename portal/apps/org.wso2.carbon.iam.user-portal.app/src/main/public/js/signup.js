@@ -94,27 +94,10 @@ $(window).load(function () {
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
-/*
- $('#register').on('click', function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- });
- });*/
 
-/*$('#register').click( function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- }).form();
- });*/
+$('#domainSelector').change(function () {
+    var domain = document.getElementById('domainSelector').value;
+    if (domain != "default") {
+        document.getElementById("domainValue").value = domain;
+    }
+});

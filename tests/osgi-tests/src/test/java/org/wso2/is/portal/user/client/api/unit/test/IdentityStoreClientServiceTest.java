@@ -36,17 +36,13 @@ import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
-
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
-
-
-
-
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
@@ -55,6 +51,7 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 public class IdentityStoreClientServiceTest {
 
     private static List<UUFUser> users = new ArrayList<>();
+    private static Set<String> domainNames;
     private static final String PRIMARY_DOMAIN = "PRIMARY";
 
     @Inject
@@ -132,7 +129,7 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray(), PRIMARY_DOMAIN);
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
@@ -167,10 +164,26 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
-        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray());
+        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray(),
+                PRIMARY_DOMAIN);
+        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray(),
+                PRIMARY_DOMAIN);
 
         Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
+
+    @Test(groups = "domainList")
+    public void testGetDomainNames() throws UserPortalUIException, UserNotFoundException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        Set<String> domainNames = identityStoreClientService.getDomainNames();
+
+        Assert.assertNotNull(domainNames, "Failed to retrieve the domain name list.");
+
+        this.domainNames = domainNames;
+    }
+
 }
