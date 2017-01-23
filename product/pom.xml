@@ -84,6 +84,7 @@
         </dependency>
         <dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
             <type>zip</type>
@@ -124,6 +125,8 @@
             <type>zip</type>
         </dependency>
         <dependency>
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
             <groupId>org.wso2.carbon.jndi</groupId>
             <artifactId>org.wso2.carbon.jndi.feature</artifactId>
 >>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
@@ -159,7 +162,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -265,16 +268,6 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -412,10 +405,14 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.security.userstore</groupId>
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
 =======
                                     <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
 >>>>>>> a695889... update connectors and config changes
+=======
+                                    <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
@@ -616,10 +613,6 @@
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -636,7 +629,7 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
@@ -694,6 +687,7 @@
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                     <id>org.wso2.carbon.uuf.Features-app.feature</id>
                                     <version>${carbon.uuf.version}</version>
@@ -719,6 +713,8 @@
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
 >>>>>>> 566488f... Adding scim feature
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                             </features>
                         </configuration>
                     </execution>
@@ -915,6 +911,7 @@
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
@@ -944,6 +941,8 @@
                                     <version>${carbon.security.caas.version}</version>
                                 </feature>
                                 <feature>
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -960,8 +959,12 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
+<<<<<<< HEAD
                                     <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
 >>>>>>> a695889... update connectors and config changes
+=======
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
 <<<<<<< HEAD
@@ -1029,6 +1032,7 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+<<<<<<< HEAD
 >>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <feature>
                                     <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
@@ -1039,6 +1043,8 @@
                                     <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
 >>>>>>> 566488f... Adding scim feature
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                             </features>
                         </configuration>
                     </execution>

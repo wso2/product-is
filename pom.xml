@@ -826,6 +826,7 @@
                 <artifactId>org.wso2.carbon.tools.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
+<<<<<<< HEAD
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
@@ -851,6 +852,8 @@
             </dependency>
 =======
 =======
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
             <!--<dependency>-->
                 <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
                 <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
@@ -1247,6 +1250,7 @@
             </dependency>
             <dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.identity.connector.jdbc</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
@@ -1280,8 +1284,10 @@
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
             </dependency>
             <dependency>
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                 <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.security.store.connector.jdbc</artifactId>
+                <artifactId>org.wso2.carbon.identity.connector.jdbc</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -1470,7 +1476,6 @@
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <carbon.security.caas.version>1.0.0-m2</carbon.security.caas.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1485,9 +1490,14 @@
 >>>>>>> 8bc6552... Fixed issue in rendering signup page due to redirection to login everytime
 =======
         <org.wso2.carbon.identity.recovery.server.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+<<<<<<< HEAD
         <org.wso2.carbon.identity.commons.feature.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
 >>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
+=======
+        <org.wso2.carbon.identity.commons.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1641,8 +1651,11 @@
 >>>>>>> 1f19211... temporarily fixing challenge question page issues..
 =======
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
+<<<<<<< HEAD
         <org.wso2.carbon.security.caas.version>1.0.0-m2</org.wso2.carbon.security.caas.version>
 >>>>>>> b2c630f... Added necessary transitive dependency bundles
+=======
+>>>>>>> 7891fb3... Changing commons versions + renaming recovery config
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
