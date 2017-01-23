@@ -23,6 +23,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -40,6 +41,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,7 +122,25 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone")
+    @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
+    public void testAuthzRequestWithoutValidSessionForIDENTITY5581() throws Exception {
+
+        //When accessing the below endpoint from with invalid session it should provide a message with login_required
+        OIDCApplication application = applications.get(playgroundAppOneAppName);
+        URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
+                .addParameter("client_id", application.getClientId())
+                .addParameter("scope", "openid")
+                .addParameter("response_type", "code")
+                .addParameter("prompt", "none")
+                .addParameter("redirect_uri", application.getCallBackURL()).build();
+        HttpResponse httpResponse = sendGetRequest(client, uri.toString());
+        String contentData = DataExtractUtil.getContentData(httpResponse);
+        Assert.assertTrue(contentData.contains("login_required"));
+        EntityUtils.consume(httpResponse.getEntity());
+    }
+
+
+    @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone",dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
     public void testSendAuthenticationRequestFromRP1() throws Exception {
 
         testSendAuthenticationRequest(applications.get(playgroundAppOneAppName), true);
