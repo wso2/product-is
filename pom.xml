@@ -245,7 +245,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
             </dependency>
@@ -755,7 +755,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+                <artifactId>org.wso2.carbon.identity.claim</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
