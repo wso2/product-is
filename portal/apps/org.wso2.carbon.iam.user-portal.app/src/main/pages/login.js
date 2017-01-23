@@ -101,8 +101,12 @@ function onRequest(env) {
     if (env.request.method == "POST") {
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
+<<<<<<< HEAD
         var result = authenticate(username, password);
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+        var result = authenticate(username, password, null);
+>>>>>>> 4f4c7d8... Added domain in UI for self sign-up
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
@@ -113,12 +117,16 @@ function onRequest(env) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 function authenticate(username, password) {
+=======
+function authenticate(username, password, domain) {
+>>>>>>> 4f4c7d8... Added domain in UI for self sign-up
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar]);
+            "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
         return {success: true, message: "success"}

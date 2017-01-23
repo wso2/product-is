@@ -153,7 +153,7 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray(), null);
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
@@ -216,7 +216,7 @@ public class IdentityStoreClientServiceTest {
 >>>>>>> 59b7147... Added test cases for all osgi client services in user portal:tests/osgi-tests/src/test/java/org.wso2.is.portal.user.client.api.unit.test/IdentityStoreClientServiceTest.java
 =======
         identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
-        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray(), null);
 
         Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");

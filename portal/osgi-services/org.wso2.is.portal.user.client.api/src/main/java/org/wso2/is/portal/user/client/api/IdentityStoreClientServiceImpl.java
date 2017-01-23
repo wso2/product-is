@@ -94,6 +94,7 @@ import java.util.Collections;
 =======
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -367,7 +368,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         return this.realmService;
 =======
     @Override
-    public UUFUser authenticate(String username, char[] password) throws UserPortalUIException {
+    public UUFUser authenticate(String username, char[] password, String domain) throws UserPortalUIException {
 
         try {
             //TODO if different claim is used, need identify that claim.
@@ -376,7 +377,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(password);
             AuthenticationContext authenticationContext = getRealmService().getIdentityStore()
-                    .authenticate(usernameClaim, new Callback[]{passwordCallback}, null);
+                    .authenticate(usernameClaim, new Callback[]{passwordCallback}, domain);
             User identityUser = authenticationContext.getUser();
 
             //TODO if another claim used, need to load username claim
@@ -401,7 +402,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
             //validate the old password
-            UUFUser uufUser = authenticate(username, oldPassword);
+            UUFUser uufUser = authenticate(username, oldPassword, null);
 
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(newPassword);
@@ -509,6 +510,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         }
     }
 
+    @Override
     public List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException {
         List<Claim> claimList = null;
 
@@ -527,6 +529,19 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             claimList = Collections.emptyList();
         }
         return claimList;
+    }
+
+    @Override
+    public Set<String> getDomainNames() throws UserPortalUIException {
+        Set<String> domainSet;
+        try {
+            domainSet = getRealmService().getIdentityStore().getDomainNames();
+        } catch (IdentityStoreException e) {
+            String error = "Failed to get the domain names.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return domainSet;
     }
 
     private RealmService getRealmService() {

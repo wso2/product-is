@@ -61,8 +61,25 @@
                                             <h3><b>{{t "user-portal.user.signup.title"}}</b></h3>
                                             <h4>{{t "user-portal.user.signup.sub.title"}}</h4></div>
                                     </div>
+<<<<<<< HEAD
 
                                     <div class="form-group">
+=======
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <label for="domain">{{t "user-portal.user.signup.domain"}}:</label></br>
+                                        <input type="hidden" name="domainValue" id="domainValue"
+                                               class="form-control"/>
+                                        <select class="dropdown" id="domainSelector">
+                                            <option value="default">{{t "user-portal.user.signup.domain.placeholder"}}</option>
+                                            {{#each domainNames}}
+                                                <option value={{this}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="password_strength_meter ">
+>>>>>>> 4f4c7d8... Added domain in UI for self sign-up
                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                             {{#each usernameClaim}}
                                                 </br><label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
@@ -240,4 +257,3 @@
         </div>
     {{/if}}
 {{/fillZone}}
-

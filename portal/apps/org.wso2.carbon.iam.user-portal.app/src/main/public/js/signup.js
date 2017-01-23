@@ -216,6 +216,7 @@ $('#domainSelector').change(function () {
  }).form();
  });*/
 
+<<<<<<< HEAD
 
 >>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
 =======
@@ -223,3 +224,13 @@ $('#domainSelector').change(function () {
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
 >>>>>>> c317e55... login signup pages UI fixes
+=======
+$('#domainSelector').change( function() {
+
+    if(this.val() != "select a user store domain"){
+        var element = document.getElementById("domainValue");
+        element.value = domain;
+    }
+
+});
+>>>>>>> 4f4c7d8... Added domain in UI for self sign-up
