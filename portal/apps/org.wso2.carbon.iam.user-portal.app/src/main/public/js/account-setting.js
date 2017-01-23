@@ -94,6 +94,7 @@ $(window).load(function(){
     // Change hash for select tab
     $('.settings-nav a, .sub-menu a').on('shown.bs.tab', function (e) {
         window.location.hash = e.target.hash;
+        $(window).scrollTop(0);
     });
 <<<<<<< HEAD
 
