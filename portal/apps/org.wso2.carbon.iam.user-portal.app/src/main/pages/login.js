@@ -23,7 +23,7 @@ function onRequest(env) {
     if (env.request.method == "POST") {
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
-        var result = authenticate(username, password);
+        var result = authenticate(username, password, null);
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
@@ -33,11 +33,11 @@ function onRequest(env) {
     }
 }
 
-function authenticate(username, password) {
+function authenticate(username, password, domain) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar]);
+            "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
         return {success: true, message: "success"}

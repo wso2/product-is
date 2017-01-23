@@ -118,3 +118,12 @@ $(window).load(function () {
  }
  }).form();
  });*/
+
+$('#domainSelector').change( function() {
+
+    if(this.val() != "select a user store domain"){
+        var element = document.getElementById("domainValue");
+        element.value = domain;
+    }
+
+});

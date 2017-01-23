@@ -132,7 +132,7 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray(), null);
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
@@ -168,7 +168,7 @@ public class IdentityStoreClientServiceTest {
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
         identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
-        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray(), null);
 
         Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
