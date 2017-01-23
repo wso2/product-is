@@ -23,7 +23,18 @@ function onRequest(env) {
     if (env.request.method == "POST") {
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
-        var result = authenticate(username, password, null);
+        var domain = null;
+        var usernameWithoutDomain = username;
+        if(username.indexOf("/") != -1) {
+            var splitedValue = username.split("/");
+            if(splitedValue.length == 2) {
+                domain = splitedValue[0];
+                usernameWithoutDomain = splitedValue[1];
+            } else {
+                return {errorMessage: "You have provided an invalid username."};
+            }
+        }
+        var result = authenticate(usernameWithoutDomain, password, domain);
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
