@@ -7,20 +7,24 @@
     <form class="form-horizontal" method="post">
         <div id="new-security-question">
             <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <label for="question-list">Security Question</label>
-                    <select id="question-list" name="question_list" aria-labelledby="questions-dropdown">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                    <label class="control-label" for="question-list">Security Question</label>
+                    <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
                         {{#each questionList}}
                             <option value="{{ questionId }}">{{ question }}</option>
                         {{/each}}
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                    <label class="control-label" for="question-answer">Answer</label>
+                    <input id="question-answer" name="question-answer" type="text" class="form-control">
+                    <input type="hidden" name="action" value="add-question">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
         </div>
-        <label for="question-answer">Answer</label>
-        <input id="question-answer" name="question-answer" type="text">
-        <input type="submit" class="btn btn-primary" value="Add">
-        <input type="hidden" name="action" value="add-question">
     </form>
 </div>
 <div id="list-questions">
@@ -55,31 +59,35 @@
 </div>
 <div id="edit-question">
     <div id="info">
-        <div class="alert alert-info" role="alert">
-            <i class="icon fw fw-info"></i>
-            {{t "user-portal.user.account.security.question.info"}}
+        <div class="message message-info">
+            <h4><i class="icon fw fw-info"></i>{{t "user-portal.user.password.info.header"}}</h4>
+            <p>{{t "user-portal.user.security.question.info.body"}}</p>
         </div>
     </div>
     <form class="form-horizontal">
         <div id="password">
             <div class="form-group">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                    <label for="old-password">Password</label>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                    <label class="control-label" for="old-password">Password</label>
                     <input type="password" class="form-control" id="old-password"/>
                 </div>
             </div>
         </div>
         <div id="security-question">
+            <label class="control-label">{{t "user-portal.user.signup.security.question"}}</label>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div id="current-question"></div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <input type="text" id="answer">
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                    <label class="control-label">{{t "user-portal.user.signup.security.question.answer"}}</label>
+                    <input class="form-control" type="text" id="answer">
                 </div>
             </div>
         </div>
-        <input type="button" class="btn btn-primary" value="Update" onclick="updateQuestion()"/>
+        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
         <input type="hidden" name="action" value="update-question">
     </form>
 </div>
