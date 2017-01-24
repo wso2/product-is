@@ -1,0 +1,55 @@
+{{layout "unprivilege"}}
+{{title (t "user-portal.user.password.recovery") " | " @config.appName}}
+{{css "css/user-portal.css"}}
+{{js "js/script.js"}}
+{{js "js/left-navigation.js"}}
+{{js "js/recover-password-options.js"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+
+{{#fillZone "content"}}
+    {{#if errorMessage}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.password.recovery.error"}}</strong>
+            {{errorMessage}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+            <span aria-hidden="true">
+                <i class="fw fw-cancel"></i>
+            </span>
+            </button>
+        </div>
+    {{/if}}
+
+    <div class="page-content-wrapper">
+        <div class="container">
+            <div class="recover-form-wrapper">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <div class="brand-container add-margin-bottom-5x">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
+                                    <img class="img-responsive brand-spacer" src="{{public "images/logo-white.png"}}"
+                                         alt="wso2-logo">
+                                </div>
+                            </div>
+                            <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
+                        <div class="data-container">
+                            <h3>{{t "user-portal.user.password.recovery"}}</h3>
+
+                            <h4>{{t "user-portal.user.page.under.construction"}}</h4>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <a href="{{@contextPath}}/" class="add-margin-top-2x">{{t
+                                    "user-portal.applications.breadcrumb"}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/fillZone}}

@@ -861,7 +861,7 @@
 
         <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
-        <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
+        <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
         <carbon.security.version>1.0.0-m2</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
