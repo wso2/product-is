@@ -500,4 +500,12 @@ label.error {
 .background-grey {
     background-color: #efefef;
 }
+/* Profile thumbnail image */
+.profile-thumb {
+    width: 100%;
+}
 
+.profile-thumb-sm {
+    height: 30px;
+    width: 30px;
+}
