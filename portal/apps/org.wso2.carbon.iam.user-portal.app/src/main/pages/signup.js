@@ -15,6 +15,10 @@
  */
 
 function onRequest(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
 
     if (env.request.method == "POST") {
         var formParams = {};

@@ -80,23 +80,37 @@ $(window).load(function () {
         return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
 
-    jQuery.validator.addMethod("username", function(value, element) {
+    jQuery.validator.addMethod("username", function (value, element) {
         return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
     }, "Invalid username.");
+
+    jQuery.validator.addMethod("pwcheck", function (value) {
+        return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+            && /[a-z]/.test(value) // has a lowercase letter
+            && /[A-Z]/.test(value) // has a uppercase letter
+            && /[^A-Za-z0-9]/.test(value) // has a special character
+            && /\d/.test(value); // has a digit
+    });
 
     //confirm password validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
                 equalTo: "#password"
+            },
+            password: {
+                required: true,
+                pwcheck: true,
+                minlength: 6
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match."
+            confirmPassword: "Passwords do not match.",
+            password: "Password strength is low. Please use the guidelines and select a different password."
         }
     });
     //username validation
-    $("#username").rules("add", { username: true });
+    $("#username").rules("add", {username: true});
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
