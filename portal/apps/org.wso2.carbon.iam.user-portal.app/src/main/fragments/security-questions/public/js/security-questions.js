@@ -25,14 +25,21 @@ $(document).ready(function () {
 function editQuestion(questionId, questionSetId, questionText) {
 =======
 $(document).ready(function () {
+    if ($("#list-questions").length === 0) {
+        $("#add-question").show();
+    }
 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 function editQuestion() {
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
 =======
 function editQuestion(question) {
 >>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
+=======
+function editQuestion(questionId, questionSetId, questionText) {
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
 
     $("#add-question").hide();
     $("#list-questions").hide();
@@ -48,9 +55,16 @@ function editQuestion(question) {
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
 =======
 
+<<<<<<< HEAD
     $("#current-question").html(question.question_text);
     $("#answer").html(question.answer);
 >>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
+=======
+    $("#question-id").val(questionId);
+    $("#question-set-id").val(questionSetId);
+
+    $("#current-question").html(questionText);
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
 }
 
 function updateQuestion() {
@@ -59,6 +73,7 @@ function updateQuestion() {
     $("#edit-question").hide();
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 function deleteQuestion(questionId, questionSetId) {
 
@@ -97,6 +112,23 @@ function deleteQuestion(questionId, questionSetId) {
 function deleteQuestion() {
     // TODO:
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
+=======
+function deleteQuestion(questionId) {
+
+    var data = {};
+
+    data.action = "delete-question";
+    data.questionId = questionId;
+
+    $.ajax({
+        type: "POST",
+        url: window.location.href,
+        data: data,
+        success: function () {
+
+        }
+    });
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
 }
 
 function addQuestion() {

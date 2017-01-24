@@ -82,6 +82,7 @@
             <version>${carbon.is.version}</version>
         </dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 8ae54da... Adding user portal login page..
 =======
         <dependency>
@@ -92,6 +93,13 @@
 >>>>>>> f889153... Added osgi service for calling ProfileMgtService
 =======
 >>>>>>> 1ab2f27... fixing maven module structure
+=======
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.recovery</artifactId>
+            <version>${org.wso2.carbon.identity.mgt.version}</version>
+        </dependency>
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
     </dependencies>
 
 
@@ -145,10 +153,14 @@
                             <instructions>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.carbon.identity.recovery.*
                                 </Import-Package>
+<<<<<<< HEAD
 =======
                             <instructions>
 <<<<<<< HEAD
@@ -178,6 +190,8 @@
 =======
                                 <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
 >>>>>>> 4f94f5f... Add profile image download
+=======
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
@@ -214,7 +228,14 @@
 =======
 >>>>>>> 1ab2f27... fixing maven module structure
                                 </bundle>
+<<<<<<< HEAD
 >>>>>>> 8ae54da... Adding user portal login page..
+=======
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </bundle>
+>>>>>>> 80c8492... Added the front end functions for the challenge questions.
                                 <!--<bundle>-->
                                     <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
