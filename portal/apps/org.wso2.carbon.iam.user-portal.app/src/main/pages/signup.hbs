@@ -56,7 +56,7 @@
                                                     name={{this.claimURI}} id={{this.claimLabel}}
                                                     class="form-control"
                                                     pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                    placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
+                                                    placeholder={{t "user-portal.placeholder.username"}}
                                                     required/>
                                         {{/each}}
                                     </div>
@@ -132,7 +132,7 @@
                                                         name={{this.claimURI}} id={{this.claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                        placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
+                                                        placeholder={{t (stringFormat "%s%s" "user-portal.user.placeholder." this.claimLabel)}}
                                                         required/></br>
                                             {{else}}
                                                 <label class="control-label" for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}</label>
@@ -140,7 +140,7 @@
                                                         name={{this.claimURI}} id={{this.claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                        placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}} /></br>
+                                                        placeholder={{t (stringFormat "%s%s" "user-portal.user.placeholder." this.claimLabel)}} /></br>
                                             {{/if}}
                                         </div>
                                     {{else}}

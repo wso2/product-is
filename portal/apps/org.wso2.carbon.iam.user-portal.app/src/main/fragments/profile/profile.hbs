@@ -50,7 +50,7 @@
                 <label for="{{this.claimURI}}">{{this.displayName}}<span>{{requiredIcon}}</span></label>
                 <input type="{{this.dataType}}" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
                        maxlength="250" value="{{this.value}}" {{this.readonly}} {{this.required}}
-                       pattern="{{this.regex}}" title="{{this.regex}}"/>
+                       pattern="{{this.regex}}" title="{{this.displayName}}" />
             </div>
         </div>
     {{/each}}
