@@ -647,5 +647,16 @@ label.error {
 .background-grey {
     background-color: #efefef;
 }
+/* Profile thumbnail image */
+.profile-thumb {
+    width: 100%;
+}
 
+<<<<<<< HEAD
 >>>>>>> c317e55... login signup pages UI fixes
+=======
+.profile-thumb-sm {
+    height: 30px;
+    width: 30px;
+}
+>>>>>>> 70fef6a... Fixing https://wso2.org/jira/browse/IDENTITY-5615
