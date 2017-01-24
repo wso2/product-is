@@ -181,7 +181,7 @@ profiles:
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
+   displayName: "Username"
    required: true
    readonly: true
    regex: ".*"
@@ -218,7 +218,7 @@ profiles:
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
+   displayName: "Username"
    required: true
    readonly: true
    verifier: "claim verifying extension"
@@ -249,5 +249,9 @@ profiles:
    readonly: false
    dataType: "email"
    regex: "*"
+<<<<<<< HEAD
    defaultValue: "user1@example.com"
 >>>>>>> fbac98b... Added a claim profile for self sign up
+=======
+   defaultValue: "user@example.com"
+>>>>>>> a70ea91... Fixing https://wso2.org/jira/browse/IDENTITY-5621
