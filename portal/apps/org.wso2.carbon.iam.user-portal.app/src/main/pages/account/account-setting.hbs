@@ -8,8 +8,8 @@
 {{#fillZone "breadcrumbs"}}
     <div class="breadcrumb-wrapper">
         <ol class="breadcrumb">
-            <li><a href="#"><i class="icon fw fw-home"></i> <span class="hidden-xs">Home</span></a></li>
-            <li class="active"><a href="#">Account Settings</a></li>
+            <li><a href="/user-portal"><i class="icon fw fw-home"></i> <span class="hidden-xs">{{t "user-portal.applications.breadcrumb"}} </span></a></li>
+            <li class="active"><a href="/user-portal/account/account-setting">{{t "user-portal.user.account.setting"}}</a></li>
         </ol>
     </div>
 {{/fillZone}}
@@ -47,7 +47,7 @@
                             <li>
                                 <a href="#security-questions" class="" data-toggle="tab">{{t "user-portal.user.account.securityQ"}}</a>
                             </li>
-                            <li class="collapse-li">
+                            <li class="collapse-li hide">
                                 <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">{{t "user-portal.user.account.association"}}<span class="arrow"></span></a>
                                 <ul class="sub-menu collapse" id="asscciations-menu">
                                     <li>

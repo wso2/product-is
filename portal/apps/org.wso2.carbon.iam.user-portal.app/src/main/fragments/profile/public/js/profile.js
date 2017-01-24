@@ -7,4 +7,6 @@ $(window).load(function () {
     $('#image').change(function(){
         $('#image-uploader').submit();
     });
+
+    $('#profile-form').validate();
 });
