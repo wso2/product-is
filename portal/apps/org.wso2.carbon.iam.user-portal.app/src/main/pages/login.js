@@ -68,7 +68,32 @@ function authenticate(username, password, domain) {
  *  limitations under the License.
  */
 
+<<<<<<< HEAD
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+function authenticate(username, password, domain) {
+    try {
+        var passwordChar = Java.to(password.split(''), 'char[]');
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "authenticate", [username, passwordChar, domain]);
+
+        createSession(uufUser);
+        return {success: true, message: "success"};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+
+        return {success: false, message: 'user-portal.user.login.error.authentication'};
+    }
+}
+
+>>>>>>> 8aeb445... Fixing jshint issues
 function onRequest(env) {
     var session = getSession();
     if (session) {
@@ -130,6 +155,7 @@ function onRequest(env) {
         }
     }
 }
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -159,3 +185,5 @@ function authenticate(username, password, domain) {
     }
 }
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+>>>>>>> 8aeb445... Fixing jshint issues

@@ -32,6 +32,7 @@ function updatePassword(username, oldPassword, newPassword, domain) {
  *  limitations under the License.
  */
 
+<<<<<<< HEAD
 function onRequest(env) {
 
     var session = getSession();
@@ -54,6 +55,8 @@ function onRequest(env) {
 function updatePassword(username, oldPassword, newPassword) {
 >>>>>>> 0413463... update user portal update password feature
 =======
+=======
+>>>>>>> 8aeb445... Fixing jshint issues
 function updatePassword(username, oldPassword, newPassword, domain) {
 >>>>>>> 759b7c7... add user store domain support in login and update password
     try {
@@ -75,12 +78,16 @@ function updatePassword(username, oldPassword, newPassword, domain) {
             "updatePassword", [username, oldPasswordChar, newPasswordChar, domain]);
 >>>>>>> 759b7c7... add user store domain support in login and update password
 
-        return {success: true, message: "You have successfully updated the password"}
+        return {success: true, message: "You have successfully updated the password"};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
+<<<<<<< HEAD
         if (cause != null) {
 >>>>>>> 0413463... update user portal update password feature
+=======
+        if (cause !== null) {
+>>>>>>> 8aeb445... Fixing jshint issues
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
@@ -91,6 +98,9 @@ function updatePassword(username, oldPassword, newPassword, domain) {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8aeb445... Fixing jshint issues
 
 function onRequest(env) {
 
@@ -109,5 +119,8 @@ function onRequest(env) {
         }
     }
 }
+<<<<<<< HEAD
 =======
 >>>>>>> 0413463... update user portal update password feature
+=======
+>>>>>>> 8aeb445... Fixing jshint issues

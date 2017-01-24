@@ -62,10 +62,14 @@ $(window).load(function(){
                     duration:700,
                     step:function(now,fx){
 <<<<<<< HEAD
+<<<<<<< HEAD
                         if(now === 0){
 =======
                         if(now == 0){
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+                        if(now === 0){
+>>>>>>> 8aeb445... Fixing jshint issues
                             fx.end = -($(fx.elem).offset().top  - $(".navigation").offset().top);
                         }
                     }
@@ -88,10 +92,14 @@ $(window).load(function(){
                 setTimeout(function(){
                     //location.replace(el.attr('href'));
 <<<<<<< HEAD
+<<<<<<< HEAD
                 },500);
 =======
                 },500)
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+                },500);
+>>>>>>> 8aeb445... Fixing jshint issues
 
             });
         }

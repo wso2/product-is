@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -151,6 +152,23 @@ function onRequest(env) {
 
     return {success: false, message: "Invalid profile name."};
 }
+=======
+/*
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+>>>>>>> 8aeb445... Fixing jshint issues
 
 function buildUIEntries(profileUIEntries) {
 
@@ -161,16 +179,16 @@ function buildUIEntries(profileUIEntries) {
                 claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
                 displayName: profileUIEntries[i].claimConfigEntry.displayName,
                 value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
-                readonly: ((profileUIEntries[i].claimConfigEntry.readonly
-                && profileUIEntries[i].claimConfigEntry.readonly == true) ? "readonly" : ""),
-                required: ((profileUIEntries[i].claimConfigEntry.required
-                && profileUIEntries[i].claimConfigEntry.required == true) ? "required" : ""),
-                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required
-                && profileUIEntries[i].claimConfigEntry.required == true) ? "*" : ""),
+                readonly: ((profileUIEntries[i].claimConfigEntry.readonly &&
+                profileUIEntries[i].claimConfigEntry.readonly) ? "readonly" : ""),
+                required: ((profileUIEntries[i].claimConfigEntry.required &&
+                profileUIEntries[i].claimConfigEntry.required) ? "required" : ""),
+                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required &&
+                profileUIEntries[i].claimConfigEntry.required) ? "*" : ""),
                 dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
-                    profileUIEntries[i].claimConfigEntry.dataType : "text"),
+                profileUIEntries[i].claimConfigEntry.dataType : "text"),
                 regex: (profileUIEntries[i].claimConfigEntry.regex ?
-                    profileUIEntries[i].claimConfigEntry.regex : ".*")
+                profileUIEntries[i].claimConfigEntry.regex : ".*")
             };
             uiEntries.push(entry);
         }
@@ -183,12 +201,16 @@ function getProfileUIEntries(profileName, userId) {
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfileEntries", [profileName, userId]);
-        return {success: true, profileUIEntries: profileUIEntries}
+        return {success: true, profileUIEntries: profileUIEntries};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
+<<<<<<< HEAD
         if (cause != null) {
 >>>>>>> 951ade6... Adding profile loading js
+=======
+        if (cause !== null) {
+>>>>>>> 8aeb445... Fixing jshint issues
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
@@ -295,11 +317,11 @@ function updateUserProfile(userId, updatedClaims) {
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updateUserProfile", [userId, updatedClaims]);
-        return {success: true, message: "Your profile is updated."}
+        return {success: true, message: "Your profile is updated."};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
-        if (cause != null) {
+        if (cause !== null) {
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
@@ -332,11 +354,11 @@ function uploadFile(env, session) {
         var destinationPath = Paths.get(destination);
 
         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-        return {success: true, message: "Profile image successfully updated"}
+        return {success: true, message: "Profile image successfully updated"};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
-        if (cause != null) {
+        if (cause !== null) {
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
@@ -382,4 +404,54 @@ function isProfileImageAvailbale(session) {
 =======
     return {profileImage: false, usernameChar: usernameChar};
 }
+<<<<<<< HEAD
 >>>>>>> 296fb47... enabling checkstyle
+=======
+
+function onRequest(env) {
+
+    var session = getSession();
+    var success = false;
+    var message = "";
+
+    if (env.request.method == "POST" && env.params.profileName && env.params.profileName == env.params.actionId) {
+
+        var updatedClaims = env.request.formParams;
+        var updateProfileResult = updateUserProfile(session.getUser().getUserId(), updatedClaims);
+        success = updateProfileResult.success;
+        message = updateProfileResult.message;
+
+    } else if (env.request.method == "POST" && "image" == env.params.actionId) {
+
+        var uploadFileResult = uploadFile(env, session);
+        success = uploadFileResult.success;
+        message = uploadFileResult.message;
+
+    }
+
+    if (env.params.profileName) {
+
+        var uiEntries = [];
+        var getProfileUIEntriesResult = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
+        if (getProfileUIEntriesResult.success) {
+            if (env.request.method != "POST") {
+                success = true;
+            }
+            uiEntries = buildUIEntries(getProfileUIEntriesResult.profileUIEntries);
+        } else {
+            success = false;
+            message = getProfileUIEntriesResult.message;
+        }
+        var profileImageResult = isProfileImageAvailbale(session);
+        Log.debug(profileImageResult);
+
+        return {success: success, profile: env.params.profileName, uiEntries: uiEntries,
+            message: message,
+            profileImage: profileImageResult.profileImage,
+            userId: profileImageResult.userId,
+            usernameChar: profileImageResult.usernameChar};
+    }
+
+    return {success: false, message: "Invalid profile name."};
+}
+>>>>>>> 8aeb445... Fixing jshint issues

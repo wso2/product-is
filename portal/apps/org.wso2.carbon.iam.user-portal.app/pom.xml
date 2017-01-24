@@ -99,6 +99,9 @@
         <plugins>
             <plugin>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8aeb445... Fixing jshint issues
                 <groupId>com.cj.jshintmojo</groupId>
                 <artifactId>jshint-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -120,8 +123,11 @@
                 </configuration>
             </plugin>
             <plugin>
+<<<<<<< HEAD
 =======
 >>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
+=======
+>>>>>>> 8aeb445... Fixing jshint issues
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
                 <version>${carbon-uuf-maven-plugin.version}</version>

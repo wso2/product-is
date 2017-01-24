@@ -23,10 +23,14 @@ $(window).load(function () {
         var score = 0;
         var a = $(this).val();
 <<<<<<< HEAD
+<<<<<<< HEAD
         var desc = [];
 =======
         var desc = new Array();
 >>>>>>> 2d76d75... Added UI validations in user self sign-up
+=======
+        var desc = [];
+>>>>>>> 8aeb445... Fixing jshint issues
 
         // strength desc
         desc[0] = "Too short";

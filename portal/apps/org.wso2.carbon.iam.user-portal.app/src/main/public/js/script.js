@@ -28,10 +28,14 @@ $(window).load(function(){
 	},function(){
 		$(this).parent().find('.image-container .after').hide();
 <<<<<<< HEAD
+<<<<<<< HEAD
 	});
 =======
 	})
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+	});
+>>>>>>> 8aeb445... Fixing jshint issues
 
     $('input[name=recover-option]').click(function(){
         if($(this).parent().parent().find('.recover-option-container').is(':hidden')){
@@ -39,10 +43,14 @@ $(window).load(function(){
             $(this).parent().parent().find('.recover-option-container').slideDown();
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
     });
 =======
     })
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+    });
+>>>>>>> 8aeb445... Fixing jshint issues
 
 
 	$('.rating:not(.half) .icon').click(function(){
@@ -88,6 +96,7 @@ $(window).load(function(){
      */
     $('.sidebar-wrapper').on('affix.bs.affix',function(){
 <<<<<<< HEAD
+<<<<<<< HEAD
         $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>');
     }).on('affixed-top.bs.affix',function(){
         $('.affix-spacer').remove();
@@ -98,6 +107,12 @@ $(window).load(function(){
         $('.affix-spacer').remove();
     })
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>');
+    }).on('affixed-top.bs.affix',function(){
+        $('.affix-spacer').remove();
+    });
+>>>>>>> 8aeb445... Fixing jshint issues
 
     $('.sign-up-additional').click(function(){
         var el = $('.extended-form'),
@@ -110,6 +125,7 @@ $(window).load(function(){
             el.slideUp(function(){
                 triggerEl.text('Show Additional Details');
 <<<<<<< HEAD
+<<<<<<< HEAD
             });
         }
     });
@@ -118,5 +134,10 @@ $(window).load(function(){
         }
     })
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+            });
+        }
+    });
+>>>>>>> 8aeb445... Fixing jshint issues
 
 });
