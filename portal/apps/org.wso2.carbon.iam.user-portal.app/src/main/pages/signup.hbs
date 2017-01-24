@@ -43,25 +43,25 @@
                             <form method="post" class="form-horizontal" id="self-signUp-form">
                                 <div class="form-group">
                                     <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
-                                        <h3><b>{{t "user-portal.user.signup.title"}}</b></h3>
-                                        <h4>{{t "user-portal.user.signup.sub.title"}}</h4></div>
+                                        <h3>{{t "user-portal.user.signup.title"}}</h3>
+                                        <p>{{t "user-portal.user.signup.sub.title"}}</p></div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#each usernameClaim}}
-                                            </br><label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
+                                            </br><label class="control-label" for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}
                                             <span>*</span></label>
                                             <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
                                                     name={{this.claimURI}} id={{this.claimLabel}}
                                                     class="form-control"
                                                     pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                    placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
+                                                    placeholder={{t "user-portal.placeholder.username"}}
                                                     required/>
                                         {{/each}}
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        </br><label for="domain">{{t "user-portal.user.signup.domain"}}:</label></br>
+                                        </br><label class="control-label" for="domain">{{t "user-portal.user.signup.domain"}}</label></br>
                                         <input type="hidden" name="domainValue" id="domainValue"
                                                class="form-control"/>
                                         <select class="form-control" id="domainSelector">
@@ -75,8 +75,8 @@
                                 <div class="form-group">
                                     <div class="password_strength_meter ">
                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                            <label for="password">{{t "user-portal.user.signup.password"}}
-                                                :<span>*</span></label></br>
+                                            <label class="control-label" for="password">{{t "user-portal.user.signup.password"}}
+                                                <span>*</span></label></br>
                                             <input type="password" name="password" id="password"
                                                    class="form-control"
                                                    data-schemaformat="password" required/>
@@ -87,7 +87,7 @@
                                                     <div id="passwordStrength" class="strength0"></div>
                                                 </div>
                                                 <div id="pswd_info">
-                                                    <i>{{t "user-portal.user.password.validation.info1"}}:</i>
+                                                    <i>{{t "user-portal.user.password.validation.info1"}}</i>
                                                     <ul>
                                                         <li class="invalid" id="length"><span
                                                                 class="status_icon"></span>
@@ -115,8 +115,8 @@
                                     </div>
 
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <label for="confirmPassword">{{t "user-portal.user.password.reset.new.confirm"}}
-                                            :<span>*</span></label>
+                                        <label class="control-label" for="confirmPassword">{{t "user-portal.user.password.reset.new.confirm"}}
+                                            <span>*</span></label>
                                         <input type="password" name="confirmPassword" id="confirmPassword"
                                                class="form-control" required/>
                                     </div>
@@ -126,21 +126,21 @@
                                     {{#each signupClaims}}
                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                             {{#if this.required}}
-                                                <label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
+                                                <label class="control-label" for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}
                                                     <span>*</span></label>
                                                 <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
                                                         name={{this.claimURI}} id={{this.claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                        placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
+                                                        placeholder={{t (stringFormat "%s%s" "user-portal.user.placeholder." this.claimLabel)}}
                                                         required/></br>
                                             {{else}}
-                                                <label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:</label>
+                                                <label class="control-label" for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}</label>
                                                 <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
                                                         name={{this.claimURI}} id={{this.claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                        placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}} /></br>
+                                                        placeholder={{t (stringFormat "%s%s" "user-portal.user.placeholder." this.claimLabel)}} /></br>
                                             {{/if}}
                                         </div>
                                     {{else}}
@@ -151,8 +151,8 @@
 
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <input id="register" class="btn btn-default btn-primary add-margin-right-2x"
-                                               type="submit" value="Sign Up"/></div>
+                                        <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
+                                               type="submit">{{t "user-portal.user.signup.title"}}</button></div>
                                 </div>
                                 <h5>{{t "user-portal.user.login.message"}}<a href="{{@contextPath}}/login">
                                     &nbsp;{{t "user-portal.user.login.title"}}</a></h5>
