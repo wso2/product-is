@@ -3,6 +3,31 @@
 
 <h3>{{t "user-portal.user.account.securityQ"}}</h3>
 <hr/>
+{{#if success}}
+    {{#if message}}
+        <div class="alert alert-success" role="alert">
+            <i class="icon fw fw-success"></i><strong>{{t "user-portal.user.profile.success"}}</strong>
+            {{message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{else}}
+    {{#if message}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.profile.failure"}}</strong>
+            {{message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{/if}}
 <div id="add-question" class="well">
     <form class="form-horizontal" method="post">
         <div id="new-security-question">
@@ -11,7 +36,7 @@
                     <label class="control-label" for="question-list">Security Question</label>
                     <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
                         {{#each questionList}}
-                            <option value="{{ questionId }}">{{ question }}</option>
+                            <option value="{{ questionSetId }}:{{ questionId }}">{{ question }}</option>
                         {{/each}}
                     </select>
                 </div>
@@ -27,36 +52,39 @@
         </div>
     </form>
 </div>
-<div id="list-questions">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="row">
-            <div id="create-question" class="pull-right add-margin-bottom-4x">
-                <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
-                        class="fw fw-add fw-1x"></span> Create
-                </button>
+{{#if isUserHasQuestions }}
+    <div id="list-questions">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row">
+                <div id="create-question" class="pull-right add-margin-bottom-4x">
+                    <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
+                            class="fw fw-add fw-1x"></span> Create
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="row">
-            <div id="question-list">
-                {{#each userQuestions}}
-                    <div class="question">
-                        <span class="question-text">{{ this.question }}</span>
-                        <div class="pull-right">
-                            <a aria-label="Edit" onclick="editQuestion({{ this.questionId }})">
-                                <span class="fw fw-edit" aria-hidden="true"></span>
-                            </a>
-                            <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }})">
-                                <span class="fw fw-delete" aria-hidden="true"></span>
-                            </a>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row">
+                <div id="question-list">
+                    {{#each userQuestions}}
+                        <div class="question">
+                            <span class="question-text">{{ this.question }}</span>
+                            <div class="pull-right">
+                                <a aria-label="Edit"
+                                   onclick="editQuestion('{{ this.questionId }}', '{{ this.questionSetId }}', '{{ this.question}}')">
+                                    <span class="fw fw-edit" aria-hidden="true"></span>
+                                </a>
+                                <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }})">
+                                    <span class="fw fw-delete" aria-hidden="true"></span>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                {{/each}}
+                    {{/each}}
+                </div>
             </div>
         </div>
     </div>
-</div>
+{{/if}}
 <div id="edit-question">
     <div id="info">
         <div class="message message-info">
@@ -64,12 +92,12 @@
             <p>{{t "user-portal.user.security.question.info.body"}}</p>
         </div>
     </div>
-    <form class="form-horizontal">
+    <form class="form-horizontal" method="post">
         <div id="password">
             <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-                    <label class="control-label" for="old-password">Password</label>
-                    <input type="password" class="form-control" id="old-password"/>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label for="old-password">Password</label>
+                    <input type="password" class="form-control" id="old-password" name="old-password"/>
                 </div>
             </div>
         </div>
@@ -87,7 +115,9 @@
                 </div>
             </div>
         </div>
-        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
+        <input type="submit" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
+        <input type="hidden" id="question-id" name="question-id" value="">
+        <input type="hidden" id="question-set-id" name="question-set-id" value="">
         <input type="hidden" name="action" value="update-question">
     </form>
 </div>

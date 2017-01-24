@@ -17,6 +17,9 @@ public interface ChallengeQuestionManagerClientService {
     List<ChallengeQuestion> getAllChallengeQuestionsForUser(String userUniqueId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
 
-    void setChallengeQuestionForUser(String userUniqueId, ChallengeQuestion challengeQuestion, String answer)
+    void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
+
+    void deleteChallengeQuestionForUser(String userUniqueId, String questionId)
+            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException;
 }
