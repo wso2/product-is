@@ -14,6 +14,28 @@
  *  limitations under the License.
  */
 
+function authenticate(username, password, domain) {
+    try {
+        var passwordChar = Java.to(password.split(''), 'char[]');
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "authenticate", [username, passwordChar, domain]);
+
+        createSession(uufUser);
+        return {success: true, message: "success"};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+
+        return {success: false, message: 'user-portal.user.login.error.authentication'};
+    }
+}
+
 function onRequest(env) {
     var session = getSession();
     if (session) {
@@ -41,27 +63,5 @@ function onRequest(env) {
         } else {
             return {errorMessage: result.message};
         }
-    }
-}
-
-function authenticate(username, password, domain) {
-    try {
-        var passwordChar = Java.to(password.split(''), 'char[]');
-        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar, domain]);
-
-        createSession(uufUser);
-        return {success: true, message: "success"}
-    } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause != null) {
-            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-
-        return {success: false, message: 'user-portal.user.login.error.authentication'};
     }
 }

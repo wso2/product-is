@@ -2,7 +2,7 @@
 $("#newPassword").on("focus keyup", function () {
     var score = 0;
     var a = $(this).val();
-    var desc = new Array();
+    var desc = [];
 
     // strength desc
     desc[0] = "Too short";

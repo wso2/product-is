@@ -42,7 +42,7 @@ $(window).load(function(){
                 },{
                     duration:700,
                     step:function(now,fx){
-                        if(now == 0){
+                        if(now === 0){
                             fx.end = -($(fx.elem).offset().top  - $(".navigation").offset().top);
                         }
                     }
@@ -64,7 +64,7 @@ $(window).load(function(){
 
                 setTimeout(function(){
                     //location.replace(el.attr('href'));
-                },500)
+                },500);
 
             });
         }

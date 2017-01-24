@@ -63,6 +63,27 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.cj.jshintmojo</groupId>
+                <artifactId>jshint-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>src/main/resources/jshint.conf.json</configFile>
+                    <directories>
+                        <directory>src/main/</directory>
+                    </directories>
+                    <reporter>html</reporter>
+                    <reportFile>target/jshint.html</reportFile>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
                 <version>${carbon-uuf-maven-plugin.version}</version>
