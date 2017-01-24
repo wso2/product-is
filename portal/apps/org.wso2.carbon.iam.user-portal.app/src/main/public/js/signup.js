@@ -80,6 +80,10 @@ $(window).load(function () {
         return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
 
+    jQuery.validator.addMethod("username", function(value, element) {
+        return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
+    }, "Invalid username.");
+
     //confirm password validation
     $("#self-signUp-form").validate({
         rules: {
@@ -88,33 +92,18 @@ $(window).load(function () {
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match"
+            confirmPassword: "Passwords do not match."
         }
     });
+    //username validation
+    $("#username").rules("add", { username: true });
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
-/*
- $('#register').on('click', function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- });
- });*/
 
-/*$('#register').click( function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- }).form();
- });*/
+$('#domainSelector').change(function () {
+    var domain = document.getElementById('domainSelector').value;
+    if (domain != "default") {
+        document.getElementById("domainValue").value = domain;
+    }
+});

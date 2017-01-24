@@ -24,6 +24,7 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Perform operations related to password handling.
@@ -38,7 +39,7 @@ public interface IdentityStoreClientService {
      * @return authentication context
      * @throws UserPortalUIException Authentication Failure
      */
-    UUFUser authenticate(String username, char[] password)
+    UUFUser authenticate(String username, char[] password, String domain)
             throws UserPortalUIException;
 
     /**
@@ -47,9 +48,9 @@ public interface IdentityStoreClientService {
      * @param username    username
      * @param oldPassword old password
      * @param newPassword new password
-     * @throws UserNotFoundException  User Not Found Exception
+     * @throws UserNotFoundException User Not Found Exception
      */
-    void updatePassword(String username, char[] oldPassword, char[] newPassword)
+    void updatePassword(String username, char[] oldPassword, char[] newPassword, String domain)
             throws UserNotFoundException, UserPortalUIException;
 
     /**
@@ -82,4 +83,6 @@ public interface IdentityStoreClientService {
      * @throws UserPortalUIException
      */
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
+
+    Set<String> getDomainNames() throws UserPortalUIException;
 }

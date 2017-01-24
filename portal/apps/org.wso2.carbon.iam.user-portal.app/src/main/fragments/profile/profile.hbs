@@ -1,3 +1,4 @@
+{{js "js/profile.js"}}
 <h3>{{t "user-portal.user.profile"}}</h3>
 <hr/>
 {{#if success}}
@@ -32,7 +33,7 @@
                 <div class="square-element setbgcolor">
                     <a id="image-edit" class="sub-icon" title="Edit"><i class="fw fw-camera fw-lg"></i></a>
                     {{#if profileImage}}
-                        <img src="/user-portal/root/apis/profile-image-service/image?userid={{userId}}" alt="profileimage">
+                        <img class="profile-thumb" src="/user-portal/root/apis/profile-image-service/image?userid={{userId}}" alt="profileimage">
                     {{else}}
                         <div class="user-name-icon">{{usernameChar}}</div>
                     {{/if}}
@@ -49,7 +50,7 @@
                 <label for="{{this.claimURI}}">{{this.displayName}}<span>{{requiredIcon}}</span></label>
                 <input type="{{this.dataType}}" name="{{this.claimURI}}" id="{{this.claimURI}}" class="form-control"
                        maxlength="250" value="{{this.value}}" {{this.readonly}} {{this.required}}
-                       pattern="{{this.regex}}" title="{{this.regex}}"/>
+                       pattern="{{this.regex}}" title="{{this.displayName}}" />
             </div>
         </div>
     {{/each}}

@@ -23,7 +23,18 @@ function onRequest(env) {
     if (env.request.method == "POST") {
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
-        var result = authenticate(username, password);
+        var domain = null;
+        var usernameWithoutDomain = username;
+        if(username.indexOf("/") != -1) {
+            var splitedValue = username.split("/");
+            if(splitedValue.length == 2) {
+                domain = splitedValue[0];
+                usernameWithoutDomain = splitedValue[1];
+            } else {
+                return {errorMessage: 'user-portal.user.login.error.invalid.username'};
+            }
+        }
+        var result = authenticate(usernameWithoutDomain, password, domain);
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
@@ -33,11 +44,11 @@ function onRequest(env) {
     }
 }
 
-function authenticate(username, password) {
+function authenticate(username, password, domain) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar]);
+            "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
         return {success: true, message: "success"}
@@ -51,6 +62,6 @@ function authenticate(username, password) {
             }
         }
 
-        return {success: false, message: message};
+        return {success: false, message: 'user-portal.user.login.error.authentication'};
     }
 }
