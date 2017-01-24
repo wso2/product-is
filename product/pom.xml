@@ -44,6 +44,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tools.core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.kernel.feature</artifactId>

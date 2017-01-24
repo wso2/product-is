@@ -57,6 +57,11 @@
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
             <version>${carbon.is.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.recovery</artifactId>
+            <version>${org.wso2.carbon.identity.mgt.version}</version>
+        </dependency>
     </dependencies>
 
 
@@ -76,15 +81,20 @@
                         </goals>
                         <configuration>
                             <instructions>
-                                <!--<Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>-->
-                                <!--<Import-Package>org.wso2.is.portal.user.client.profile</Import-Package>-->
-                                <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
+                                <Import-Package>
+                                    org.wso2.is.portal.user.client.api,
+                                    org.wso2.carbon.identity.recovery.*
+                                </Import-Package>
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
                                 <bundle>
                                     <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
                                     <version>${carbon.is.version}</version>
+                                </bundle>
+                                <bundle>
+                                    <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </bundle>
                                 <!--<bundle>-->
                                     <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
