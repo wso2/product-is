@@ -70,40 +70,18 @@ function getProfile() {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["self-signUp"]);
     } catch (e) {
-        return {errorMessage: 'user-portal.user.signup.error.retrieve.claim'};
+        return {errorMessage: 'signup.error.retrieve.claim'};
     }
-    var claimForProfile = claimProfile.claims;
+    var claimForProfileEntry = claimProfile.claims;
 
     var claimProfileArray = [];
     var userName = [];
 
-    for (var i = 0; i < claimForProfile.length; i++) {
-        if (claimForProfile[i].claimURI == "http://wso2.org/claims/username") {
-            var usernameClaim = {};
-            usernameClaim["displayName"] = claimForProfile[i].getDisplayName();
-            usernameClaim["claimURI"] = claimForProfile[i].getClaimURI();
-            if (claimForProfile[i].getDefaultValue()) {
-                usernameClaim["defaultValue"] = claimForProfile[i].getDefaultValue();
-            }
-            usernameClaim["claimLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            usernameClaim["required"] = claimForProfile[i].getRequired();
-            usernameClaim["regex"] = claimForProfile[i].getRegex();
-            usernameClaim["readonly"] = claimForProfile[i].getReadonly();
-            usernameClaim["dataType"] = claimForProfile[i].getDataType();
-            userName[i] = usernameClaim;
+    for (var i = 0; i < claimForProfileEntry.length; i++) {
+        if (claimForProfileEntry[i].claimURI == "http://wso2.org/claims/username") {
+            userName[i] = generateClaimProfileMap(claimForProfileEntry[i]);
         } else {
-            var claimProfileMap = {};
-            claimProfileMap["displayName"] = claimForProfile[i].getDisplayName();
-            claimProfileMap["claimURI"] = claimForProfile[i].getClaimURI();
-            if (claimForProfile[i].getDefaultValue()) {
-                claimProfileMap["defaultValue"] = claimForProfile[i].getDefaultValue();
-            }
-            claimProfileMap["claimLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            claimProfileMap["required"] = claimForProfile[i].getRequired();
-            claimProfileMap["regex"] = claimForProfile[i].getRegex();
-            claimProfileMap["readonly"] = claimForProfile[i].getReadonly();
-            claimProfileMap["dataType"] = claimForProfile[i].getDataType();
-            claimProfileArray[i] = claimProfileMap;
+            claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
         }
     }
 
@@ -117,7 +95,7 @@ function getProfile() {
         domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "getDomainNames", []);
     } catch (e) {
-        return {errorMessage: 'user-portal.user.signup.error.retrieve.domain'};
+        return {errorMessage: 'signup.error.retrieve.domain'};
     }
 
     sendToClient("signupClaims", claimProfileArray);
@@ -126,6 +104,21 @@ function getProfile() {
         "signupClaims": claimProfileArray,
         "domainNames": domainNames
     };
+}
+
+function generateClaimProfileMap(claimProfileEntry){
+    var claimProfileMap = {};
+    claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
+    claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
+    if (claimProfileEntry.getDefaultValue()) {
+        claimProfileMap["defaultValue"] = claimProfileEntry.getDefaultValue();
+    }
+    claimProfileMap["claimLabel"] = claimProfileEntry.getClaimURI().replace("http://wso2.org/claims/", "");
+    claimProfileMap["required"] = claimProfileEntry.getRequired();
+    claimProfileMap["regex"] = claimProfileEntry.getRegex();
+    claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
+    claimProfileMap["dataType"] = claimProfileEntry.getDataType();
+    return claimProfileMap;
 }
 
 function userRegistration(claimMap, credentialMap, domain) {
@@ -142,7 +135,7 @@ function userRegistration(claimMap, credentialMap, domain) {
                 message = cause.getTargetException().message;
             }
         }
-        return {errorMessage: 'user-portal.user.signup.error.registration'};
+        return {errorMessage: 'signup.error.registration'};
     }
 }
 
@@ -164,7 +157,7 @@ function authenticate(username, password, domain) {
             }
         }
 
-        return {success: false, message: 'user-portal.user.login.error.authentication'};
+        return {success: false, message: 'login.error.authentication'};
     }
 }
 

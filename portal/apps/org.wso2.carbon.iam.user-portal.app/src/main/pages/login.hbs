@@ -109,7 +109,7 @@
 {{#fillZone "content"}}
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.login.error.default"}}</strong>&nbsp;
+            <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
             {{t errorMessage}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -262,7 +262,12 @@
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                     <div class="data-container">
                         <form class="form-horizontal" method="post">
+<<<<<<< HEAD
                             <h3>{{t "user-portal.user.login"}}</h3>
+=======
+                            <h3>{{t "login"}}</h3>
+
+>>>>>>> 30540af... Code refactoring in user portal app
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <div class="input-group input-wrap">
@@ -287,14 +292,26 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+<<<<<<< HEAD
                                     <button type="submit" class="btn btn-default btn-primary add-margin-right-2x">Sign In</button>
+=======
+                                    <button type="submit"
+                                            class="btn btn-default btn-primary add-margin-right-2x">{{t "login.title"}}</button>
+>>>>>>> 30540af... Code refactoring in user portal app
                                     <!--not yet implemented-->
                                     <!--<button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>-->
                                 </div>
                             </div>
                             <!--not yet implemented-->
                             <!--<a href="{{@contextPath}}/recover-password" class="add-margin-bottom-5x remove-margin-lg remove-margin-md">Forgot Password</a>-->
+<<<<<<< HEAD
                             <p class="hidden-xs hidden-sm">Don't have an account? <a href="{{@contextPath}}/signup">Register Now</a></p>
+=======
+                            <p class="hidden-xs hidden-sm">{{t "signup.message"}}<a
+                                    href="{{@contextPath}}/signup">
+                                &nbsp;{{t "signup.title"}}</a>
+                            </p>
+>>>>>>> 30540af... Code refactoring in user portal app
                         </form>
 >>>>>>> c317e55... login signup pages UI fixes
                     </div>
