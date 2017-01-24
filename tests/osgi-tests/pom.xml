@@ -278,10 +278,6 @@
             <artifactId>org.wso2.carbon.identity.commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.commons</groupId>
-            <artifactId>org.wso2.carbon.identity.event</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
         </dependency>
@@ -698,6 +694,7 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.ant</artifactId>
@@ -750,6 +747,8 @@
             <!--<artifactId>org.wso2.carbon.identity.recovery</artifactId>-->
         <!--</dependency>-->
 
+=======
+>>>>>>> fef37cc... Removing caas dependencies and fixing test cases
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.ant</artifactId>
