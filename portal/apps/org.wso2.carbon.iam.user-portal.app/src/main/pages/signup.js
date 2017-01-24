@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
+ 
 function getProfile() {
 
     /**
@@ -124,6 +124,10 @@ function authenticate(username, password, domain) {
 }
 
 function onRequest(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
 
     if (env.request.method == "POST") {
         var formParams = {};
