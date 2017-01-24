@@ -1,12 +1,12 @@
 {{css "css/security-questions.css"}}
 {{js "js/security-questions.js"}}
 
-<h3>{{t "user-portal.user.account.securityQ"}}</h3>
+<h3>{{t "account.securityQ"}}</h3>
 <hr/>
 {{#if success}}
     {{#if message}}
         <div class="alert alert-success" role="alert">
-            <i class="icon fw fw-success"></i><strong>{{t "user-portal.user.profile.success"}}</strong>
+            <i class="icon fw fw-success"></i><strong>{{t "profile.success"}}</strong>
             {{message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -18,7 +18,7 @@
 {{else}}
     {{#if message}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.profile.failure"}}</strong>
+            <i class="icon fw fw-error"></i><strong>{{t "profile.failure"}}</strong>
             {{message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -36,7 +36,7 @@
                     <label class="control-label" for="question-list">Security Question</label>
                     <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
                         {{#each questionList}}
-                            <option value="{{ questionSetId }}:{{ questionId }}">{{ question }}</option>
+                            <option value="{{questionSetId}}:{{questionId}}">{{question}}</option>
                         {{/each}}
                     </select>
                 </div>
@@ -68,13 +68,13 @@
                 <div id="question-list">
                     {{#each userQuestions}}
                         <div class="question">
-                            <span class="question-text">{{ this.question }}</span>
+                            <span class="question-text">{{question}}</span>
                             <div class="pull-right">
                                 <a aria-label="Edit"
-                                   onclick="editQuestion('{{ this.questionId }}', '{{ this.questionSetId }}', '{{ this.question}}')">
+                                   onclick="editQuestion('{{questionId}}', '{{questionSetId}}', '{{question}}')">
                                     <span class="fw fw-edit" aria-hidden="true"></span>
                                 </a>
-                                <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }})">
+                                <a aria-label="Delete" onclick="deleteQuestion({{questionId}})">
                                     <span class="fw fw-delete" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -88,8 +88,8 @@
 <div id="edit-question">
     <div id="info">
         <div class="message message-info">
-            <h4><i class="icon fw fw-info"></i>{{t "user-portal.user.password.info.header"}}</h4>
-            <p>{{t "user-portal.user.security.question.info.body"}}</p>
+            <h4><i class="icon fw fw-info"></i>{{t "password.info.header"}}</h4>
+            <p>{{t "security.question.info.body"}}</p>
         </div>
     </div>
     <form class="form-horizontal" method="post">
@@ -102,7 +102,7 @@
             </div>
         </div>
         <div id="security-question">
-            <label class="control-label">{{t "user-portal.user.signup.security.question"}}</label>
+            <label class="control-label">{{t "signup.security.question"}}</label>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div id="current-question"></div>
@@ -110,7 +110,7 @@
             </div>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-                    <label class="control-label">{{t "user-portal.user.signup.security.question.answer"}}</label>
+                    <label class="control-label">{{t "signup.security.question.answer"}}</label>
                     <input class="form-control" type="text" id="answer">
                 </div>
             </div>
