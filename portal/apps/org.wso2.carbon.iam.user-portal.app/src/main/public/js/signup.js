@@ -114,6 +114,7 @@ $(window).load(function () {
     }, "Please specify a different (non-default) value");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     jQuery.validator.addMethod("username", function (value, element) {
         return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
     }, "Invalid username.");
@@ -174,6 +175,12 @@ $('#domainSelector').change(function () {
 =======
 =======
 >>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
+=======
+    jQuery.validator.addMethod("username", function(value, element) {
+        return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
+    }, "Invalid username.");
+
+>>>>>>> b0b053f... Fixing https://wso2.org/jira/browse/IDENTITY-5622
     //confirm password validation
     $("#self-signUp-form").validate({
         rules: {
@@ -182,9 +189,10 @@ $('#domainSelector').change(function () {
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match"
+            confirmPassword: "Passwords do not match."
         }
     });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 2d76d75... Added UI validations in user self sign-up
@@ -209,6 +217,10 @@ $('#domainSelector').change(function () {
 
 >>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
 =======
+=======
+    //username validation
+    $("#username").rules("add", { username: true });
+>>>>>>> b0b053f... Fixing https://wso2.org/jira/browse/IDENTITY-5622
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
