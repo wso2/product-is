@@ -1,0 +1,51 @@
+###############################################################################
+#   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+###############################################################################
+---
+# Challange questions for en-US
+
+challengeQuestions:
+  -
+    question: "City where you were born ?"
+    questionId: 1
+    questionSetId: 1
+  -
+    question: "Father's middle name ?"
+    questionId: 2
+    questionSetId: 1
+  -
+    question: "Favorite food ?"
+    questionId: 3
+    questionSetId: 1
+  -
+    question: "Favorite vacation location ?"
+    questionId: 4
+    questionSetId: 1
+  -
+    question: "Model of your first car ?"
+    questionId: 5
+    questionSetId: 2
+  -
+    question: "Name of the hospital where you were born ?"
+    questionId: 6
+    questionSetId: 2
+  -
+    question: "Name of your first pet ?"
+    questionId: 7
+    questionSetId: 2
+  -
+    question: "Favorite sport ?"
+    questionId: 8
+    questionSetId: 2
