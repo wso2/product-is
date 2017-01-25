@@ -101,8 +101,13 @@ function onRequest(env) {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (env.request.method == "GET") {
         return getDomainNames(env);
+=======
+    if (env.request.method == "GET") {
+        return getDomainNames();
+>>>>>>> d30cce6... Add domain selector configurations in app
     }
 
     if (env.request.method == "POST") {
@@ -110,6 +115,9 @@ function onRequest(env) {
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d30cce6... Add domain selector configurations in app
 
         if (!env.config.isDomainInLogin) {
             if (username.indexOf("/") != -1) {
@@ -120,6 +128,7 @@ function onRequest(env) {
                 } else {
                     return {errorMessage: 'login.error.invalid.username'};
                 }
+<<<<<<< HEAD
             }
         }
         var result = authenticate(username, password, domain);
@@ -147,6 +156,11 @@ function onRequest(env) {
         }
         var result = authenticate(usernameWithoutDomain, password, domain);
 >>>>>>> 759b7c7... add user store domain support in login and update password
+=======
+            }
+        }
+        var result = authenticate(username, password, domain);
+>>>>>>> d30cce6... Add domain selector configurations in app
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
@@ -159,9 +173,25 @@ function onRequest(env) {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 function authenticate(username, password) {
 =======
+=======
+function getDomainNames() {
+    var domainNames;
+    try {
+        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getDomainNames", []);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
+    }
+    return {
+        "domainNames": domainNames
+    };
+}
+
+>>>>>>> d30cce6... Add domain selector configurations in app
 function authenticate(username, password, domain) {
 >>>>>>> 4f4c7d8... Added domain in UI for self sign-up
     try {
