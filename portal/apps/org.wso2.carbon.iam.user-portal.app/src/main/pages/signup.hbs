@@ -76,19 +76,21 @@
                                 <div class="form-group">
                                     <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
                                         <h3>{{t "signup.title"}}</h3>
+
                                         <p>{{t "signup.sub.title"}}</p></div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#each usernameClaim}}
-                                            </br><label class="control-label" for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
+                                            </br><label class="control-label"
+                                                        for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
                                             <span>*</span></label>
                                             <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                     name={{claimURI}} id={{claimLabel}}
                                                     class="form-control"
                                                     pattern={{#if regex}}{{regex}}{{/if}}
-                                                    placeholder={{t "placeholder.username"}}
+                                                            placeholder={{t "placeholder.username"}}
                                                     required/>
                                         {{/each}}
 >>>>>>> cf9728b... Sign in, Sign up pages UI fixes
@@ -98,15 +100,18 @@
                                     <div class="form-group">
 =======
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        </br><label class="control-label" for="domain">{{t "signup.domain"}}</label></br>
+                                        {{#if domainNames}}
+                                        </br><label class="control-label"
+                                                    for="domain">{{t "signup.domain"}}</label></br>
                                         <input type="hidden" name="domainValue" id="domainValue"
                                                class="form-control"/>
                                         <select class="form-control" id="domainSelector">
-                                            <option value="default">{{t "signup.domain.placeholder"}}</option>
-                                            {{#each domainNames}}
-                                                <option value={{this}}>{{this}}</option>
-                                            {{/each}}
+                                                <option value="default">{{t "signup.domain.placeholder"}}</option>
+                                                {{#each domainNames}}
+                                                    <option value={{this}}>{{this}}</option>
+                                                {{/each}}
                                         </select>
+                                        {{/if}}
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -242,7 +247,8 @@
                                         {{/each}}
 =======
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <label class="control-label" for="confirmPassword">{{t "password.reset.new.confirm"}}
+                                        <label class="control-label"
+                                               for="confirmPassword">{{t "password.reset.new.confirm"}}
                                             <span>*</span></label>
                                         <input type="password" name="confirmPassword" id="confirmPassword"
                                                class="form-control" required/>
@@ -319,22 +325,28 @@
                                                 <label class="control-label" for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}
 =======
                                             {{#if required}}
+<<<<<<< HEAD
                                                 <label class="control-label" for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
 >>>>>>> 30540af... Code refactoring in user portal app
+=======
+                                                <label class="control-label"
+                                                       for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
+>>>>>>> a20160f... show domain dropdown in UI when there is multiple domains only
                                                     <span>*</span></label>
                                                 <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                         name={{claimURI}} id={{claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if regex}}{{regex}}{{/if}}
-                                                        placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}}
+                                                                placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}}
                                                         required/></br>
                                             {{else}}
-                                                <label class="control-label" for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}</label>
+                                                <label class="control-label"
+                                                       for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}</label>
                                                 <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                         name={{claimURI}} id={{claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if regex}}{{regex}}{{/if}}
-                                                        placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
+                                                                placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
                                             {{/if}}
                                         </div>
                                     {{else}}
@@ -347,6 +359,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                type="submit">{{t "user-portal.user.signup.title"}}</button></div>
 >>>>>>> cf9728b... Sign in, Sign up pages UI fixes
                                 </div>
@@ -356,6 +369,10 @@
                             <!-- END pwd_strength_wrap -->
 =======
                                                type="submit">{{t "signup.title"}}</button></div>
+=======
+                                                type="submit">{{t "signup.title"}}</button>
+                                    </div>
+>>>>>>> a20160f... show domain dropdown in UI when there is multiple domains only
                                 </div>
                                 <h5>{{t "login.message"}}<a href="{{@contextPath}}/login">
                                     &nbsp;{{t "login.title"}}</a></h5>
