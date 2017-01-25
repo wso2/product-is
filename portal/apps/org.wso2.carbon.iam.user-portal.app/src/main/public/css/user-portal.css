@@ -659,4 +659,11 @@ label.error {
     height: 30px;
     width: 30px;
 }
+<<<<<<< HEAD
 >>>>>>> 70fef6a... Fixing https://wso2.org/jira/browse/IDENTITY-5615
+=======
+
+.edit-icon {
+    color: #bfbfbf;
+}
+>>>>>>> 05d9900... Fixing https://wso2.org/jira/browse/IDENTITY-5634

@@ -193,6 +193,22 @@ $(window).load(function(){
     $('input[readonly]').on('focus', function () {
         this.blur();
     });
+<<<<<<< HEAD
 >>>>>>> 13d383b... Remove focus effect on readonly fields
+=======
+
+    var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
+    editField.closest('.form-group').addClass('has-feedback')
+    editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
+    editField.hover(function(){
+        $(this).parent().find('.edit-icon').append('<i class="fw fw-edit"></i>')
+    }, function(){
+        $(this).parent().find('.edit-icon').find('i').remove();
+    });
+    editField.focus(function(){
+        $(this).parent().find('.edit-icon').find('i').remove();
+    });
+
+>>>>>>> 05d9900... Fixing https://wso2.org/jira/browse/IDENTITY-5634
 });
 
