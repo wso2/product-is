@@ -351,12 +351,18 @@
     margin-right: -1px;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .nav>li>a:focus {
     background-color: rgba(102,102,102,.25);
 }
 =======
 
 >>>>>>> c06d2f5... Adding Account settings template
+=======
+.nav>li>a:focus {
+    background-color: rgba(102,102,102,.25);
+}
+>>>>>>> 2db840f... Sidebar collapsed tab color change
 @media (max-width: 600px) {
     .settings-nav{
         width:100%;
