@@ -43,8 +43,7 @@
                                     </button>
                                 </div>
                             {{/if}}
-                            {{log @config}}
-                            {{#if @config.isDomainInLogin}}
+                            {{#if domainNames}}
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <input type="hidden" name="domain" id="domain"

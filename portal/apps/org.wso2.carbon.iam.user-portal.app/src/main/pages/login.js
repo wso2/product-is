@@ -21,7 +21,7 @@ function onRequest(env) {
     }
 
     if (env.request.method == "GET") {
-        return getDomainNames();
+        return getDomainNames(env);
     }
 
     if (env.request.method == "POST") {
@@ -50,13 +50,15 @@ function onRequest(env) {
     }
 }
 
-function getDomainNames() {
+function getDomainNames(env) {
     var domainNames;
-    try {
-        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getDomainNames", []);
-    } catch (e) {
-        return {errorMessage: 'signup.error.retrieve.domain'};
+    if (env.config.isDomainInLogin) {
+        try {
+            domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getDomainNames", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
     }
     return {
         "domainNames": domainNames
