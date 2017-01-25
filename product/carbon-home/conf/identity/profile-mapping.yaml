@@ -25,6 +25,7 @@ profiles:
   -
    claimURI: "http://wso2.org/claims/username"
    displayName: "Username"
+<<<<<<< HEAD
 =======
 =======
   isAdminProfile: false
@@ -34,6 +35,8 @@ profiles:
    claimURI: "http://wso2.org/claims/username"
    displayName: "User Name"
 >>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
+=======
+>>>>>>> 27c1b81... Changing Profile Username display name
    required: true
    readonly: true
    verifier: "claim verifying extension"
