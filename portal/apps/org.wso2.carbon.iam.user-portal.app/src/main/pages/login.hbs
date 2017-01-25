@@ -107,6 +107,7 @@
 {{js "js/login.js"}}
 
 {{#fillZone "content"}}
+<<<<<<< HEAD
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
             <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
@@ -132,6 +133,8 @@
                                          alt="wso2-logo">
                                 </div>
 =======
+=======
+>>>>>>> 547df85... Change login error position
     <div class="container">
         <div class="login-form-wrapper">
             <div class="row">
@@ -266,8 +269,22 @@
                             <h3>{{t "user-portal.user.login"}}</h3>
 =======
                             <h3>{{t "login"}}</h3>
+<<<<<<< HEAD
 
 >>>>>>> 30540af... Code refactoring in user portal app
+=======
+                            {{#if errorMessage}}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
+                                    {{t errorMessage}}
+                                    <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            {{/if}}
+>>>>>>> 547df85... Change login error position
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <div class="input-group input-wrap">
