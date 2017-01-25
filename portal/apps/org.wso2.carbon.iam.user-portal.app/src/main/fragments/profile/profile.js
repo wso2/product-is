@@ -121,9 +121,7 @@ function uploadFile(env, session) {
             Files.createDirectories(imageDirPath);
         }
 
-        var fileName = getUser().getUserId();
-            //session.user.id;
-            //getUser().getUserId();
+        var fileName = session.getUser().getUserId();
         var destination = Paths.get(imageDirPath).resolve(fileName);
         var sourcePath = Paths.get(uploadedFile.path);
         var destinationPath = Paths.get(destination);
