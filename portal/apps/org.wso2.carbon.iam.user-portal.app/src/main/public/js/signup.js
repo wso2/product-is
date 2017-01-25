@@ -192,8 +192,7 @@ $('#domainSelector').change(function () {
     }, "Invalid username.");
 
     jQuery.validator.addMethod("pwcheck", function (value) {
-        return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
-            && /[a-z]/.test(value) // has a lowercase letter
+        return /[a-z]/.test(value) // has a lowercase letter
             && /[A-Z]/.test(value) // has a uppercase letter
             && /[^A-Za-z0-9]/.test(value) // has a special character
             && /\d/.test(value); // has a digit
@@ -218,6 +217,7 @@ $('#domainSelector').change(function () {
             }
         },
         messages: {
+<<<<<<< HEAD
             confirmPassword: {
                 equalTo: "These passwords do not match.",
                 required: "Please confirm the password."
@@ -227,6 +227,10 @@ $('#domainSelector').change(function () {
                 pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
                 required: "Require to provide a password."
             }
+=======
+            confirmPassword: "These Passwords do not match.",
+            password: "Password must have a minimum strength of Strong."
+>>>>>>> ad09462... Fixing https://wso2.org/jira/browse/IDENTITY-5633
         }
     });
 <<<<<<< HEAD
