@@ -20,3 +20,10 @@ recovery:
    notifyStart: false
    separator: "!"
    minAnswers: 2
+
+# Username recovery
+ username:
+  notification:
+   enable: false
+   internalyManage:
+    enable: true
