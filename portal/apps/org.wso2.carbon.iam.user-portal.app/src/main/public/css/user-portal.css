@@ -394,8 +394,15 @@
 >>>>>>> 14a9363... Code Improvement
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 149a1a8... Breadcrumb alignment fix
+=======
+.body-wrapper {
+    padding: 20px;
+}
+
+>>>>>>> 7442015... Reducing body wrapper padding
 .signup-header {
     font-size: 40px;
     font-family: Arial, Helvetica, sans-serif;
