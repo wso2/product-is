@@ -76,7 +76,6 @@
                                 <div class="form-group">
                                     <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
                                         <h3>{{t "signup.title"}}</h3>
-
                                         <p>{{t "signup.sub.title"}}</p></div>
                                 </div>
 
@@ -91,7 +90,7 @@
                                                     class="form-control"
                                                     id="username"
                                                     pattern={{#if regex}}{{regex}}{{/if}}
-                                                            placeholder={{t "placeholder.username"}}
+                                                    placeholder={{t "placeholder.username"}}
                                                     required/>
                                         {{/each}}
 >>>>>>> cf9728b... Sign in, Sign up pages UI fixes
@@ -102,16 +101,16 @@
 =======
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#if domainNames}}
-                                        </br><label class="control-label"
-                                                    for="domain">{{t "signup.domain"}}</label></br>
-                                        <input type="hidden" name="domainValue" id="domainValue"
-                                               class="form-control"/>
-                                        <select class="form-control" id="domainSelector">
+                                            </br><label class="control-label"
+                                                        for="domain">{{t "signup.domain"}}</label></br>
+                                            <input type="hidden" name="domainValue" id="domainValue"
+                                                   class="form-control"/>
+                                            <select class="form-control" id="domainSelector">
                                                 <option value="default">{{t "signup.domain.placeholder"}}</option>
                                                 {{#each domainNames}}
                                                     <option value={{this}}>{{this}}</option>
                                                 {{/each}}
-                                        </select>
+                                            </select>
                                         {{/if}}
                                     </div>
                                 </div>
@@ -188,21 +187,21 @@
                                                 <div id="pswd_info">
                                                     <i>{{t "password.validation.info1"}}</i>
                                                     <ul>
-                                                        <li class="invalid" id="length"><span
-                                                                class="status_icon"></span>
+                                                        <li class="invalid" id="length">
+                                                            <span class="status_icon"></span>
                                                             {{t "password.validation.info2"}}
                                                         </li>
-                                                        <li class="invalid" id="pnum"><span
-                                                                class="status_icon"></span>
+                                                        <li class="invalid" id="pnum">
+                                                            <span class="status_icon"></span>
                                                             {{t "password.validation.info3"}}
                                                         </li>
-                                                        <li class="invalid" id="capital"><span
-                                                                class="status_icon"></span>
+                                                        <li class="invalid" id="capital">
+                                                            <span class="status_icon"></span>
                                                             {{t "password.validation.info4"}}&amp;
                                                             {{t "password.validation.info5"}}
                                                         </li>
-                                                        <li class="invalid" id="spchar"><span
-                                                                class="status_icon"></span>
+                                                        <li class="invalid" id="spchar">
+                                                            <span class="status_icon"></span>
                                                             {{t "password.validation.info6"}}
                                                         </li>
                                                     </ul>
@@ -338,7 +337,7 @@
                                                         name={{claimURI}} id={{claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if regex}}{{regex}}{{/if}}
-                                                                placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}}
+                                                        placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}}
                                                         required/></br>
                                             {{else}}
                                                 <label class="control-label"
@@ -347,7 +346,7 @@
                                                         name={{claimURI}} id={{claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if regex}}{{regex}}{{/if}}
-                                                                placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
+                                                        placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
                                             {{/if}}
                                         </div>
                                     {{else}}
