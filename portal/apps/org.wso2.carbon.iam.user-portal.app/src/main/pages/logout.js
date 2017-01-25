@@ -40,10 +40,19 @@ function onRequest(env) {
  */
 
 function onRequest(env) {
+<<<<<<< HEAD
     if (destroySession()) {
 >>>>>>> 43350c9... Adding Login/Logout functionality.
+=======
+    var session = getSession();
+    if (session) {
+        if (destroySession()) {
+            sendRedirect(env.contextPath + env.config['loginPageUri']);
+        } else {
+            LOG.info("Error while logging out.");
+        }
+    } else if (!session || !session.getUser()) {
+>>>>>>> cbdd792... Fixed issue in logout page when there is no session
         sendRedirect(env.contextPath + env.config['loginPageUri']);
-    } else {
-        LOG.info("Error while logging out.");
     }
 }
