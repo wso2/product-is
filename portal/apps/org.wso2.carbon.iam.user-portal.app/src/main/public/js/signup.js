@@ -85,8 +85,7 @@ $(window).load(function () {
     }, "Invalid username.");
 
     jQuery.validator.addMethod("pwcheck", function (value) {
-        return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
-            && /[a-z]/.test(value) // has a lowercase letter
+        return /[a-z]/.test(value) // has a lowercase letter
             && /[A-Z]/.test(value) // has a uppercase letter
             && /[^A-Za-z0-9]/.test(value) // has a special character
             && /\d/.test(value); // has a digit
@@ -105,8 +104,8 @@ $(window).load(function () {
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match.",
-            password: "Password strength is low. Please use the guidelines and select a different password."
+            confirmPassword: "These Passwords do not match.",
+            password: "Password must have a minimum strength of Strong."
         }
     });
     //username validation
