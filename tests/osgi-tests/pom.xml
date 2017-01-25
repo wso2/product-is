@@ -240,6 +240,14 @@
             <artifactId>org.wso2.carbon.identity.commons</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
         </dependency>

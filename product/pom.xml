@@ -99,8 +99,8 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -402,6 +402,10 @@
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
@@ -558,6 +562,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
                                 </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
