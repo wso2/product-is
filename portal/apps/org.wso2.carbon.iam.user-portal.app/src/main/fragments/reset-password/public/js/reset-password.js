@@ -107,7 +107,7 @@ $(window).load(function () {
         messages: {
             confirmPassword: {
                 equalTo: "These passwords do not match.",
-                required: "Please confirm the password."
+                required: "Please re-enter the new password."
             },
             newPassword: {
                 minlength: "Password should be at least {0} characters long.",
