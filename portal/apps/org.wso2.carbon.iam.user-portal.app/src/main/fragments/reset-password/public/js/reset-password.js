@@ -84,26 +84,39 @@ $(window).load(function () {
             && /\d/.test(value); // has a digit
     });
 
-    //password validation
+    //password update form validation
     $("#password-update-form").validate({
         rules: {
             confirmPassword: {
-                required: true,
                 equalTo: "#newPassword",
+                required: {
+                    depends: function (element) {
+                        return $("#newPassword").is(":not(:blank)");
+                    }
+                }
             },
             newPassword: {
-                required: true,
                 pwcheck: true,
-                minlength: 6
+                minlength: 6,
+                required: true
+            },
+            oldPassword: {
+                required: true
             }
         },
         messages: {
             confirmPassword: {
-                equalTo: "These passwords do not match."
+                equalTo: "These passwords do not match.",
+                required: "Please re-enter the new password."
             },
             newPassword: {
-                pwcheck: "Password must have a minimum strength of Strong."
+                minlength: "Password should be at least {0} characters long.",
+                pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+                required: "Required to provide a new password."
+            },
+            oldPassword: {
+                required: "Required to provide the old password."
             }
         }
     });
-})
+});
