@@ -29,7 +29,7 @@ function onRequest(env) {
         for (var i in formParams) {
             if (i == "password") {
                 credentialMap["password"] = formParams[i];
-            } else if (i == "domainValue") {
+            } else if (i == "domain") {
                 domain = formParams[i];
             }
             else {

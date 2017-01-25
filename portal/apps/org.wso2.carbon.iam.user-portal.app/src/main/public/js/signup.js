@@ -118,6 +118,6 @@ $(window).load(function () {
 $('#domainSelector').change(function () {
     var domain = document.getElementById('domainSelector').value;
     if (domain != "default") {
-        document.getElementById("domainValue").value = domain;
+        document.getElementById("domain").value = domain;
     }
 });

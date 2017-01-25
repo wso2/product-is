@@ -44,6 +44,21 @@
                     <div class="data-container">
                         <form class="form-horizontal" method="post">
                             <h3>{{t "login"}}</h3>
+                            {{log @config}}
+                            {{#if @config.isDomainInLogin}}
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <input type="hidden" name="domain" id="domain"
+                                               class="form-control"/>
+                                        <select class="form-control" id="domainSelector">
+                                            <option value="default">{{t "signup.domain.placeholder"}}</option>
+                                            {{#each domainNames}}
+                                                <option value={{this}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                            {{/if}}
 
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
