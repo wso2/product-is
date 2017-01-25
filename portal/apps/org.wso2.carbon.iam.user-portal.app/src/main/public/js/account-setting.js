@@ -26,5 +26,9 @@ $(window).load(function(){
         window.location.hash = e.target.hash;
         $(window).scrollTop(0);
     });
+
+    $('input[readonly]').on('focus', function () {
+        this.blur();
+    });
 });
 

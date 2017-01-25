@@ -1,24 +1,12 @@
 {{layout "unprivilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
-{{title "Login | " @config.appName}}
+{{title "Sign in | " @config.appName}}
 {{css "css/user-portal.css"}}
 {{js "js/script.js"}}
 {{js "js/left-navigation.js"}}
 {{js "js/login.js"}}
 
 {{#fillZone "content"}}
-    {{#if errorMessage}}
-        <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
-            {{t errorMessage}}
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
-                <span aria-hidden="true">
-                    <i class="fw fw-cancel"></i>
-                </span>
-            </button>
-        </div>
-    {{/if}}
-
     <div class="container">
         <div class="login-form-wrapper">
             <div class="row">
@@ -44,7 +32,17 @@
                     <div class="data-container">
                         <form class="form-horizontal" method="post">
                             <h3>{{t "login"}}</h3>
-
+                            {{#if errorMessage}}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
+                                    {{t errorMessage}}
+                                    <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            {{/if}}
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <div class="input-group input-wrap">
