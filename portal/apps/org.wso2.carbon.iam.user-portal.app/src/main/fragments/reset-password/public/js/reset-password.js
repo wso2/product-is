@@ -111,11 +111,11 @@ $(window).load(function () {
             },
             newPassword: {
                 minlength: "Password should be at least {0} characters long.",
-                pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+                pwcheck: "Password must have a minimum strength of Strong.",
                 required: "Required to provide a new password."
             },
             oldPassword: {
-                required: "Required to provide the old password."
+                required: "Required to provide the current password."
             }
         }
     });

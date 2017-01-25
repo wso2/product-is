@@ -118,7 +118,7 @@ $(window).load(function () {
             },
             password: {
                 minlength: "Password should be at least {0} characters long.",
-                pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+                pwcheck: "Password must have a minimum strength of Strong.",
                 required: "Required to provide a password."
             },
             username: {
@@ -127,6 +127,8 @@ $(window).load(function () {
         }
     });
 
+    $("#username").rules("add", { username: true });
+    
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
 
