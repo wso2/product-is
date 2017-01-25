@@ -1297,6 +1297,25 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas</artifactId>
+                <version>1.0.1-SNAPSHOT</version>
+                <!--<version>${carbon.security.version}</version>-->
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
+                <version>1.0.1-SNAPSHOT</version>
+                <!--<version>${carbon.security.version}</version>-->
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.security.caas</groupId>
+                <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
+                <version>1.0.1-SNAPSHOT</version>
+                <!--<version>${carbon.security.version}</version>-->
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.is.portal.user.client.api</artifactId>
 <<<<<<< HEAD

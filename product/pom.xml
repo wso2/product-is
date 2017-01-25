@@ -161,8 +161,8 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -640,6 +640,10 @@
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
                                 <!-- Sample Applications -->
 <<<<<<< HEAD
                                 <feature>
@@ -1008,7 +1012,14 @@
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
+<<<<<<< HEAD
 >>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
+=======
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
+                                </feature>
+>>>>>>> f02c66a... readding caas to product
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
