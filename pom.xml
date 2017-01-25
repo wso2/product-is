@@ -750,20 +750,17 @@
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
-                <version>1.0.1-SNAPSHOT</version>
-                <!--<version>${carbon.security.version}</version>-->
+                <version>${carbon.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
-                <version>1.0.1-SNAPSHOT</version>
-                <!--<version>${carbon.security.version}</version>-->
+                <version>${carbon.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-                <version>1.0.1-SNAPSHOT</version>
-                <!--<version>${carbon.security.version}</version>-->
+                <version>${carbon.security.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -853,7 +850,7 @@
         <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
         <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
-        <carbon.security.version>1.0.0-m2</carbon.security.version>
+        <carbon.security.version>1.0.1-SNAPSHOT</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
 
