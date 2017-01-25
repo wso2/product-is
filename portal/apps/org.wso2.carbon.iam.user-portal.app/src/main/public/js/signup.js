@@ -36,6 +36,7 @@ $(window).load(function () {
         desc[0] = "Too short";
         desc[1] = "Weak";
 <<<<<<< HEAD
+<<<<<<< HEAD
         desc[2] = "Fair";
         desc[3] = "Good";
         desc[4] = "Strong";
@@ -44,6 +45,11 @@ $(window).load(function () {
         desc[3] = "Strong";
         desc[4] = "Best";
 >>>>>>> 2d76d75... Added UI validations in user self sign-up
+=======
+        desc[2] = "Fair";
+        desc[3] = "Good";
+        desc[4] = "Strong";
+>>>>>>> 3a985d1... Changing password catagories
 
         // password length
         var valid = '<i class="fw fw-success"></i>';
