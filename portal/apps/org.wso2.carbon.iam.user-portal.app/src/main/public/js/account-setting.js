@@ -46,6 +46,7 @@ $(window).load(function(){
         $(window).scrollTop(0);
     });
 
+<<<<<<< HEAD
     //remove readonly input focus 
     $('input[readonly]').on('focus', function () {
         this.blur();
@@ -188,5 +189,10 @@ $(window).load(function(){
 >>>>>>> bb876d9... Adding confirm password validation
 =======
 >>>>>>> 4520c3c... Reset password code structuring
+=======
+    $('input[readonly]').on('focus', function () {
+        this.blur();
+    });
+>>>>>>> 13d383b... Remove focus effect on readonly fields
 });
 
