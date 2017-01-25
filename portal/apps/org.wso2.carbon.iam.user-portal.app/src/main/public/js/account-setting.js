@@ -30,5 +30,18 @@ $(window).load(function(){
     $('input[readonly]').on('focus', function () {
         this.blur();
     });
+
+    var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
+    editField.closest('.form-group').addClass('has-feedback')
+    editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
+    editField.hover(function(){
+        $(this).parent().find('.edit-icon').append('<i class="fw fw-edit"></i>')
+    }, function(){
+        $(this).parent().find('.edit-icon').find('i').remove();
+    });
+    editField.focus(function(){
+        $(this).parent().find('.edit-icon').find('i').remove();
+    });
+
 });
 

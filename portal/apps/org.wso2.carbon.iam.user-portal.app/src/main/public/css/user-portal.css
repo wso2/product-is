@@ -509,3 +509,7 @@ label.error {
     height: 30px;
     width: 30px;
 }
+
+.edit-icon {
+    color: #bfbfbf;
+}
