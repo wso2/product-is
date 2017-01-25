@@ -46,4 +46,9 @@ public final class OAuth2Constants {
     public static final String OAUTH2_PKCE_CODE_CHALLENGE = "code_challenge";
     public static final String OAUTH2_PKCE_CODE_CHALLENGE_METHOD = "code_challenge_method";
     public static final String OAUTH2_USE_PKCE = "use_pkce";
+
+    // Form post constants
+    public static final String OAUTH2_FORM_POST = "form_post";
+    public static final String OAUTH2_RESPONSE_MODE = "response_mode";
+
 }

@@ -133,6 +133,7 @@
                 document.getElementById("accessep").style.display = "none";
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
+                document.getElementById("formPost").style.display = "none";
 
                 if (scope.indexOf("openid") > -1) {
                     document.getElementById("logutep").style.display = "";
@@ -145,6 +146,7 @@
                 document.getElementById("accessep").style.display = "none";
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
+                document.getElementById("formPost").style.display = "";
             } else if ('password' == grantType) {
                 document.getElementById("clientsecret").style.display = "";
                 document.getElementById("callbackurltr").style.display = "none";
@@ -152,6 +154,7 @@
                 document.getElementById("accessep").style.display = "";
                 document.getElementById("recownertr").style.display = "";
                 document.getElementById("recpasswordtr").style.display = "";
+                document.getElementById("formPost").style.display = "none";
             } else if ('client_credentials' == grantType) {
                 document.getElementById("clientsecret").style.display = "";
                 document.getElementById("callbackurltr").style.display = "none";
@@ -159,6 +162,7 @@
                 document.getElementById("accessep").style.display = "";
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
+                document.getElementById("formPost").style.display = "none";
             }
 
             return true;
@@ -324,6 +328,13 @@
                             <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
                             <td><label><%=code_verifier%>
                             </label></td>
+                        </tr>
+
+                        <tr id="formPost" style="display:none">
+                            <td>Enable Form Post</td>
+                            <td><input type="radio" name="form_post" value="yes">Yes &nbsp;
+                                <input type="radio" name="form_post" value="no" checked>No
+                            </td>
                         </tr>
 
                         <tr>
