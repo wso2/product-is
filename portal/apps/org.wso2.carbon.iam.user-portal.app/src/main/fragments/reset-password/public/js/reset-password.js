@@ -210,15 +210,41 @@ $("#newPassword").blur(function () {
     $(".password_strength_meter .popover").popover("hide");
 });
 
+jQuery.validator.addMethod("pwcheck", function (value) {
+    return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+        && /[a-z]/.test(value) // has a lowercase letter
+        && /[A-Z]/.test(value) // has a uppercase letter
+        && /[^A-Za-z0-9]/.test(value) // has a special character
+        && /\d/.test(value); // has a digit
+});
+
 //confirm password validation
 $( "#password-update-form" ).validate({
     rules: {
         confirmPassword: {
-            equalTo: "#newPassword",
+            equalTo: "#password",
+            required: {
+                depends: function (element) {
+                    return $("#password").is(":not(:blank)");
+                }
+            }
+        },
+        password: {
+            pwcheck: true,
+            minlength: 6,
+            empty: true
         }
     },
     messages: {
-        confirmPassword: "These passwords do not match."
+        confirmPassword: {
+            equalTo: "These passwords do not match.",
+            required: "Please confirm the password."
+        },
+        password: {
+            minlength: "Password should be at least {0} characters long.",
+            pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+            required: "Require to provide a password."
+        }
     }
 >>>>>>> 4520c3c... Reset password code structuring
 });

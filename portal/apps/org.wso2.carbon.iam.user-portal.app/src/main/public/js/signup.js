@@ -204,17 +204,29 @@ $('#domainSelector').change(function () {
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
-                equalTo: "#password"
+                equalTo: "#password",
+                required: {
+                    depends: function (element) {
+                        return $("#password").is(":not(:blank)");
+                    }
+                }
             },
             password: {
-                required: true,
                 pwcheck: true,
-                minlength: 6
+                minlength: 6,
+                empty: true
             }
         },
         messages: {
-            confirmPassword: "These passwords do not match.",
-            password: "Password strength is low. Please use the guidelines and select a different password."
+            confirmPassword: {
+                equalTo: "These passwords do not match.",
+                required: "Please confirm the password."
+            },
+            password: {
+                minlength: "Password should be at least {0} characters long.",
+                pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+                required: "Require to provide a password."
+            }
         }
     });
 <<<<<<< HEAD
