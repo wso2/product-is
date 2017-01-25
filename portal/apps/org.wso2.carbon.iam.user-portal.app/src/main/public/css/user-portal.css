@@ -327,7 +327,9 @@
 .settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
     margin-right: -1px;
 }
-
+.nav>li>a:focus {
+    background-color: rgba(102,102,102,.25);
+}
 @media (max-width: 600px) {
     .settings-nav{
         width:100%;
