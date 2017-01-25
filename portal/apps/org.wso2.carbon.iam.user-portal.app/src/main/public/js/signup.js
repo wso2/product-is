@@ -161,6 +161,7 @@ $(window).load(function () {
             confirmPassword: {
                 equalTo: "These passwords do not match.",
                 required: "Please re-enter the password."
+<<<<<<< HEAD
             },
             password: {
                 minlength: "Password should be at least {0} characters long.",
@@ -234,6 +235,8 @@ $('#domainSelector').change(function () {
             confirmPassword: {
                 equalTo: "These passwords do not match.",
                 required: "Please confirm the password."
+=======
+>>>>>>> f1c2e4e... Chnaged error messages
             },
             password: {
                 minlength: "Password should be at least {0} characters long.",
