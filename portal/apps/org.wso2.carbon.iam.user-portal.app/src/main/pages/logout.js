@@ -15,9 +15,14 @@
  */
 
 function onRequest(env) {
-    if (destroySession()) {
+    var session = getSession();
+    if (session) {
+        if (destroySession()) {
+            sendRedirect(env.contextPath + env.config['loginPageUri']);
+        } else {
+            LOG.info("Error while logging out.");
+        }
+    } else if (!session || !session.getUser()) {
         sendRedirect(env.contextPath + env.config['loginPageUri']);
-    } else {
-        LOG.info("Error while logging out.");
     }
 }
