@@ -136,7 +136,18 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
                 .findFirst()
                 .get();
 
-        challengeQuestionManager.deleteChallengeQuestions(new ChallengeQuestion[] { challengeQuestion });
+        challengeQuestionManager.deleteChallengeQuestions(new ChallengeQuestion[]{challengeQuestion});
+    }
+
+    @Override
+    public UserChallengeAnswer[] getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException {
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+
+        return challengeQuestionManager.getChallengeAnswersOfUser
+                (realmService.getIdentityStore().getUser(userUniqueId));
     }
 }
 

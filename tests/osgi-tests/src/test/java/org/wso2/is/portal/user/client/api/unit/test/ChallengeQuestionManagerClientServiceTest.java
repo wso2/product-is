@@ -29,16 +29,22 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
+import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService;
+import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
@@ -48,6 +54,7 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 public class ChallengeQuestionManagerClientServiceTest {
 
     private static List<UUFUser> users = new ArrayList<>();
+    private static List<ChallengeQuestion> challengeQuestions = new ArrayList<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceTest.class);
 
     @Inject
@@ -74,22 +81,25 @@ public class ChallengeQuestionManagerClientServiceTest {
 
     @Test(groups = "getChallengeQuestion")
     public void testGetChallengeQuestionList() throws IdentityRecoveryException {
-        ChallengeQuestionManagerClientService challengeQuestionManagerService =
+        ChallengeQuestionManagerClientService challengeQuestionManagerClientService =
                 bundleContext.getService(bundleContext.getServiceReference
                         (ChallengeQuestionManagerClientService.class));
-        Assert.assertNotNull(challengeQuestionManagerService,
+        Assert.assertNotNull(challengeQuestionManagerClientService,
                 "Failed to get ChallengeQuestionManagerClientService instance");
 
-        List<ChallengeQuestion> challengeQuestions = challengeQuestionManagerService.getChallengeQuestionList();
+        List<ChallengeQuestion> challengeQuestions = challengeQuestionManagerClientService.getChallengeQuestionList();
         Assert.assertNotNull(challengeQuestions, "Failed to retrieve the challenge question list.");
+
+        this.challengeQuestions = challengeQuestions;
     }
 
-  /*  @Test(groups = "setChallengeQuestion")
-    public void testSetChallengeQuestionForUser() throws UserPortalUIException {
-        ChallengeQuestionManagerClientService challengeQuestionManagerService =
+    @Test(groups = "setChallengeQuestion", dependsOnGroups = {"getChallengeQuestion"})
+    public void testSetChallengeQuestionForUser() throws UserPortalUIException, UserNotFoundException,
+            IdentityStoreException, IdentityRecoveryException {
+        ChallengeQuestionManagerClientService challengeQuestionManagerClientService =
                 bundleContext.getService(bundleContext.getServiceReference
                         (ChallengeQuestionManagerClientService.class));
-        Assert.assertNotNull(challengeQuestionManagerService,
+        Assert.assertNotNull(challengeQuestionManagerClientService,
                 "Failed to get ChallengeQuestionManagerClientService instance");
 
         IdentityStoreClientService identityStoreClientService =
@@ -112,30 +122,56 @@ public class ChallengeQuestionManagerClientServiceTest {
 
         users.add(user);
 
-        ChallengeQuestion challengeQuestion = new ChallengeQuestion(null, "What is your pet's name");
-
         try {
-            challengeQuestionManagerService.setChallengeQuestionForUser(user.getUserId(), challengeQuestion, "kitty");
+            challengeQuestionManagerClientService.setChallengeQuestionForUser(users.get(0).getUserId(),
+                    challengeQuestions.get(0).getQuestionId(),
+                    challengeQuestions.get(0).getQuestionSetId(), "Answer1");
         } catch (IdentityStoreException | UserNotFoundException | IdentityRecoveryException e) {
             throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
         }
         LOGGER.info("Test Passed. Successfully set challenge questions for the user.");
+        /*UserChallengeAnswer[] userChallengeAnswers = challengeQuestionManagerClientService
+                .getChallengeAnswersOfUser(users.get(0).getUserId());
+
+        Assert.assertNotNull(userChallengeAnswers, "Failed to set challenge questions for the user.");
+
+        boolean isAdded = false;
+        for (UserChallengeAnswer challengeAnswer : userChallengeAnswers) {
+            if (challengeAnswer.getQuestion().equals(challengeQuestions.get(0).getQuestion())) {
+                Assert.assertEquals(challengeAnswer.getAnswer(), "Answer1",
+                        "Failed to set challenge questions for the user.");
+                isAdded = true;
+            }
+        }
+        if (!isAdded) {
+            throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
+        }*/
     }
 
-    @Test(dependsOnGroups = {"setChallengeQuestion"})
+   /* @Test(dependsOnGroups = {"setChallengeQuestion"})
     public void testGetAllChallengeQuestionsForUser() throws UserPortalUIException, UserNotFoundException,
             IdentityStoreException, IdentityRecoveryException {
-        ChallengeQuestionManagerClientService challengeQuestionManagerService =
+        ChallengeQuestionManagerClientService challengeQuestionManagerClientService =
                 bundleContext.getService(bundleContext.getServiceReference
                         (ChallengeQuestionManagerClientService.class));
-        Assert.assertNotNull(challengeQuestionManagerService,
+        Assert.assertNotNull(challengeQuestionManagerClientService,
                 "Failed to get ChallengeQuestionManagerClientService instance");
 
-        List<ChallengeQuestion>  challengeQuestions = challengeQuestionManagerService.getAllChallengeQuestionsForUser
-                (users.get(0).getUserId());
+        List<ChallengeQuestion> challengeQuestions = challengeQuestionManagerClientService
+                .getAllChallengeQuestionsForUser(users.get(0).getUserId());
         Assert.assertNotNull(challengeQuestions, "Failed to retrieve the challenge questions of the user.");
-        Assert.assertEquals(challengeQuestions.get(0).getQuestion(),"What is your pet's name",
-                "Failed to retrieve the challenge questions of the user.");
+
+        boolean addedAvailable = false;
+        for (ChallengeQuestion challengeQuestion : challengeQuestions) {
+            if (challengeQuestions.get(0).getQuestion().equals(challengeQuestion.getQuestion())) {
+                addedAvailable = true;
+            }
+        }
+        if (!addedAvailable) {
+            throw new UserPortalUIException("Test Failure. " +
+                    "Error when getting all the challenge questions for the user.");
+        }
     }
 */
+
 }

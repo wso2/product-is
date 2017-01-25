@@ -4,6 +4,7 @@ import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
+import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 
 import java.util.List;
 
@@ -22,4 +23,7 @@ public interface ChallengeQuestionManagerClientService {
 
     void deleteChallengeQuestionForUser(String userUniqueId, String questionId)
             throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException;
+
+    UserChallengeAnswer[] getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException;
 }
