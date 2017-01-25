@@ -21,18 +21,18 @@ function authenticate(username, password, domain) {
             "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
-        return {success: true, message: "success"};
+        return {success: true, message: "success"}
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
-        if (cause !== null) {
+        if (cause != null) {
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
             }
         }
 
-        return {success: false, message: 'user-portal.user.login.error.authentication'};
+        return {success: false, message: 'login.error.authentication'};
     }
 }
 
@@ -53,7 +53,7 @@ function onRequest(env) {
                 domain = splitedValue[0];
                 usernameWithoutDomain = splitedValue[1];
             } else {
-                return {errorMessage: 'user-portal.user.login.error.invalid.username'};
+                return {errorMessage: 'login.error.invalid.username'};
             }
         }
         var result = authenticate(usernameWithoutDomain, password, domain);
