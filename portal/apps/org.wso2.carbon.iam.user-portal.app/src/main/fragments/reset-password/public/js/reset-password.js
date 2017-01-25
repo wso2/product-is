@@ -161,6 +161,7 @@ $(window).load(function () {
         desc[3] = "Good";
         desc[4] = "Strong";
 
+<<<<<<< HEAD
         // password length
         var valid = '<i class="fw fw-success"></i>';
         var invalid = '<i class="fw fw-error"></i>';
@@ -193,6 +194,38 @@ $(window).load(function () {
             $("#capital").removeClass("valid").addClass("invalid");
             $("#capital .status_icon").html(invalid);
         }
+=======
+    // at least 1 special character in password {
+    if (a.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/)) {
+        $("#spchar").removeClass("invalid").addClass("valid");
+        $("#spchar .status_icon").html(valid);
+        score++;
+    } else {
+        $("#spchar").removeClass("valid").addClass("invalid");
+        $("#spchar .status_icon").html(invalid);
+    }
+
+    if (a.length > 0) {
+        //show strength text
+        $("#passwordDescription").text(desc[score]);
+        // show indicator
+        $("#passwordStrength").removeClass().addClass("strength" + score);
+    } else {
+        $("#passwordDescription").text("Password not entered");
+        $("#passwordStrength").removeClass().addClass("strength" + score);
+    }
+});
+
+$("#newPassword").popover({
+    html: true,
+    content: $("#password_strength_wrap").html(),
+    placement: 'top',
+    trigger: 'focus keypress'
+});
+$("#newPassword").blur(function () {
+    $(".password_strength_meter .popover").popover("hide");
+});
+>>>>>>> 3d7e7e5... Change validation error message for blank inputs for passwords when resetting
 
         // at least 1 special character in password {
         if (a.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/)) {
@@ -241,21 +274,24 @@ jQuery.validator.addMethod("pwcheck", function (value) {
         && /\d/.test(value); // has a digit
 });
 
-//confirm password validation
-$( "#password-update-form" ).validate({
+//signup form validation
+$("#password-update-form").validate({
     rules: {
         confirmPassword: {
             equalTo: "#password",
             required: {
                 depends: function (element) {
-                    return $("#password").is(":not(:blank)");
+                    return $("#newPassword").is(":not(:blank)");
                 }
             }
         },
-        password: {
+        newPassword: {
             pwcheck: true,
             minlength: 6,
-            empty: true
+            required: true
+        },
+        oldPassword: {
+            required: true
         }
     },
     messages: {
@@ -263,10 +299,13 @@ $( "#password-update-form" ).validate({
             equalTo: "These passwords do not match.",
             required: "Please confirm the password."
         },
-        password: {
+        newPassword: {
             minlength: "Password should be at least {0} characters long.",
             pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
-            required: "Require to provide a password."
+            required: "Required to provide a new password."
+        },
+        oldPassword: {
+            required: "Required to provide the old password."
         }
     }
 >>>>>>> 4520c3c... Reset password code structuring

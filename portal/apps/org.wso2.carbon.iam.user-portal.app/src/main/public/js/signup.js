@@ -204,8 +204,12 @@ $('#domainSelector').change(function () {
             && /\d/.test(value); // has a digit
     });
 
+<<<<<<< HEAD
 >>>>>>> c98269e... Add validation for user self signup in user portal
     //confirm password validation
+=======
+    //signup form validation
+>>>>>>> 3d7e7e5... Change validation error message for blank inputs for passwords when resetting
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
@@ -219,7 +223,10 @@ $('#domainSelector').change(function () {
             password: {
                 pwcheck: true,
                 minlength: 6,
-                empty: true
+                required: true
+            },
+            username: {
+                required: true
             }
         },
         messages: {
@@ -231,7 +238,10 @@ $('#domainSelector').change(function () {
             password: {
                 minlength: "Password should be at least {0} characters long.",
                 pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
-                required: "Require to provide a password."
+                required: "Required to provide a password."
+            },
+            username: {
+                required: "Required to provide a username."
             }
 =======
             confirmPassword: "These Passwords do not match.",
@@ -239,6 +249,7 @@ $('#domainSelector').change(function () {
 >>>>>>> ad09462... Fixing https://wso2.org/jira/browse/IDENTITY-5633
         }
     });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -272,6 +283,8 @@ $('#domainSelector').change(function () {
 =======
     $("#username").rules("add", {username: true});
 >>>>>>> c98269e... Add validation for user self signup in user portal
+=======
+>>>>>>> 3d7e7e5... Change validation error message for blank inputs for passwords when resetting
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
