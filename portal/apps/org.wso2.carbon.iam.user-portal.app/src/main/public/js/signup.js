@@ -8,9 +8,9 @@ $(window).load(function () {
         // strength desc
         desc[0] = "Too short";
         desc[1] = "Weak";
-        desc[2] = "Good";
-        desc[3] = "Strong";
-        desc[4] = "Best";
+        desc[2] = "Fair";
+        desc[3] = "Good";
+        desc[4] = "Strong";
 
         // password length
         var valid = '<i class="fw fw-success"></i>';
@@ -85,32 +85,47 @@ $(window).load(function () {
     }, "Invalid username.");
 
     jQuery.validator.addMethod("pwcheck", function (value) {
-        return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
-            && /[a-z]/.test(value) // has a lowercase letter
+        return /[a-z]/.test(value) // has a lowercase letter
             && /[A-Z]/.test(value) // has a uppercase letter
             && /[^A-Za-z0-9]/.test(value) // has a special character
             && /\d/.test(value); // has a digit
     });
 
-    //confirm password validation
+    //signup form validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
-                equalTo: "#password"
+                equalTo: "#password",
+                required: {
+                    depends: function (element) {
+                        return $("#password").is(":not(:blank)");
+                    }
+                }
             },
             password: {
-                required: true,
                 pwcheck: true,
-                minlength: 6
+                minlength: 6,
+                required: true
+            },
+            username: {
+                required: true
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match.",
-            password: "Password strength is low. Please use the guidelines and select a different password."
+            confirmPassword: {
+                equalTo: "These passwords do not match.",
+                required: "Please re-enter the password."
+            },
+            password: {
+                minlength: "Password should be at least {0} characters long.",
+                pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+                required: "Required to provide a password."
+            },
+            username: {
+                required: "Required to provide a username."
+            }
         }
     });
-    //username validation
-    $("#username").rules("add", {username: true});
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
@@ -118,6 +133,6 @@ $(window).load(function () {
 $('#domainSelector').change(function () {
     var domain = document.getElementById('domainSelector').value;
     if (domain != "default") {
-        document.getElementById("domainValue").value = domain;
+        document.getElementById("domain").value = domain;
     }
 });

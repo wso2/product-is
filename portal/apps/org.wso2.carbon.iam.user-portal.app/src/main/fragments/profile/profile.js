@@ -10,7 +10,7 @@ function onRequest(env) {
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
         message = result.message;
-    } else if (env.request.method == "POST" && "image" == env.params.actionId) {
+    } else if (env.request.method === "POST" && "image" === env.params.actionId) {
 
         var result = uploadFile(env, session);
         success = result.success;
