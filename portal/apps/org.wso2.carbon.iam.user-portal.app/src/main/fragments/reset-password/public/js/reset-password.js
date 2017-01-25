@@ -84,11 +84,11 @@ $(window).load(function () {
             && /\d/.test(value); // has a digit
     });
 
-    //signup form validation
+    //password update form validation
     $("#password-update-form").validate({
         rules: {
             confirmPassword: {
-                equalTo: "#password",
+                equalTo: "#newPassword",
                 required: {
                     depends: function (element) {
                         return $("#newPassword").is(":not(:blank)");
