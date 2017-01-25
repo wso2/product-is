@@ -240,7 +240,7 @@ $('#domainSelector').change(function () {
             },
             password: {
                 minlength: "Password should be at least {0} characters long.",
-                pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
+                pwcheck: "Password must have a minimum strength of Strong.",
                 required: "Required to provide a password."
             },
             username: {
@@ -289,6 +289,8 @@ $('#domainSelector').change(function () {
 =======
 >>>>>>> 3d7e7e5... Change validation error message for blank inputs for passwords when resetting
 
+    $("#username").rules("add", { username: true });
+    
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
 >>>>>>> c317e55... login signup pages UI fixes

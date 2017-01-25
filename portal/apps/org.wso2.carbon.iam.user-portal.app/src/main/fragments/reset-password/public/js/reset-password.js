@@ -135,6 +135,7 @@ $(window).load(function () {
             },
             oldPassword: {
                 required: "Required to provide the current password."
+<<<<<<< HEAD
             }
         }
     });
@@ -330,6 +331,8 @@ $("#password-update-form").validate({
             },
             newPassword: {
                 pwcheck: "Password must have a minimum strength of Strong."
+=======
+>>>>>>> 24d57ae... Password strength message change
             }
         }
     });
