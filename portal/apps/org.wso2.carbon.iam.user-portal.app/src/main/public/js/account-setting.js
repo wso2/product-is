@@ -47,6 +47,7 @@ $(window).load(function(){
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     //remove readonly input focus 
     $('input[readonly]').on('focus', function () {
         this.blur();
@@ -190,6 +191,9 @@ $(window).load(function(){
 =======
 >>>>>>> 4520c3c... Reset password code structuring
 =======
+=======
+    //remove readonly input focus 
+>>>>>>> 8793924... Fixing hash value appending to url issue
     $('input[readonly]').on('focus', function () {
         this.blur();
     });
@@ -197,6 +201,7 @@ $(window).load(function(){
 >>>>>>> 13d383b... Remove focus effect on readonly fields
 =======
 
+    // add edit indication on input fields
     var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
     editField.closest('.form-group').addClass('has-feedback')
     editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
