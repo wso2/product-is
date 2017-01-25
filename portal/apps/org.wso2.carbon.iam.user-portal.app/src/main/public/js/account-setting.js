@@ -1,5 +1,7 @@
 $(window).load(function(){
 
+    window.location.hash = '';
+
     var selector = '.settings-nav li';
     $(selector).not(".collapse-li").click(function () {
         $(selector).not(".collapse-li").removeClass('active');
@@ -27,10 +29,12 @@ $(window).load(function(){
         $(window).scrollTop(0);
     });
 
+    //remove readonly input focus 
     $('input[readonly]').on('focus', function () {
         this.blur();
     });
 
+    // add edit indication on input fields
     var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
     editField.closest('.form-group').addClass('has-feedback')
     editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
