@@ -106,8 +106,12 @@ function onRequest(env) {
         return getDomainNames(env);
 =======
     if (env.request.method == "GET") {
+<<<<<<< HEAD
         return getDomainNames();
 >>>>>>> d30cce6... Add domain selector configurations in app
+=======
+        return getDomainNames(env);
+>>>>>>> c7b5de7... Code Improvement
     }
 
     if (env.request.method == "POST") {
@@ -174,17 +178,23 @@ function onRequest(env) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 function authenticate(username, password) {
 =======
 =======
 function getDomainNames() {
+=======
+function getDomainNames(env) {
+>>>>>>> c7b5de7... Code Improvement
     var domainNames;
-    try {
-        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getDomainNames", []);
-    } catch (e) {
-        return {errorMessage: 'signup.error.retrieve.domain'};
+    if (env.config.isDomainInLogin) {
+        try {
+            domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getDomainNames", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
     }
     return {
         "domainNames": domainNames
