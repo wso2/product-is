@@ -45,7 +45,7 @@ $("#newPassword").on("focus keyup", function () {
     }
 
     // at least 1 special character in password {
-    if ( a.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/) ) {
+    if (a.match(/.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/)) {
         $("#spchar").removeClass("invalid").addClass("valid");
         $("#spchar .status_icon").html(valid);
         score++;
@@ -54,18 +54,23 @@ $("#newPassword").on("focus keyup", function () {
         $("#spchar .status_icon").html(invalid);
     }
 
-    if(a.length > 0) {
+    if (a.length > 0) {
         //show strength text
         $("#passwordDescription").text(desc[score]);
         // show indicator
-        $("#passwordStrength").removeClass().addClass("strength"+score);
+        $("#passwordStrength").removeClass().addClass("strength" + score);
     } else {
         $("#passwordDescription").text("Password not entered");
-        $("#passwordStrength").removeClass().addClass("strength"+score);
+        $("#passwordStrength").removeClass().addClass("strength" + score);
     }
 });
 
-$("#newPassword").popover({ html:true, content: $("#password_strength_wrap").html(), placement: 'top', trigger:'focus keypress' });
+$("#newPassword").popover({
+    html: true,
+    content: $("#password_strength_wrap").html(),
+    placement: 'top',
+    trigger: 'focus keypress'
+});
 $("#newPassword").blur(function () {
     $(".password_strength_meter .popover").popover("hide");
 });
@@ -78,21 +83,24 @@ jQuery.validator.addMethod("pwcheck", function (value) {
         && /\d/.test(value); // has a digit
 });
 
-//confirm password validation
-$( "#password-update-form" ).validate({
+//signup form validation
+$("#password-update-form").validate({
     rules: {
         confirmPassword: {
             equalTo: "#password",
             required: {
                 depends: function (element) {
-                    return $("#password").is(":not(:blank)");
+                    return $("#newPassword").is(":not(:blank)");
                 }
             }
         },
-        password: {
+        newPassword: {
             pwcheck: true,
             minlength: 6,
-            empty: true
+            required: true
+        },
+        oldPassword: {
+            required: true
         }
     },
     messages: {
@@ -100,10 +108,13 @@ $( "#password-update-form" ).validate({
             equalTo: "These passwords do not match.",
             required: "Please confirm the password."
         },
-        password: {
+        newPassword: {
             minlength: "Password should be at least {0} characters long.",
             pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
-            required: "Require to provide a password."
+            required: "Required to provide a new password."
+        },
+        oldPassword: {
+            required: "Required to provide the old password."
         }
     }
 });

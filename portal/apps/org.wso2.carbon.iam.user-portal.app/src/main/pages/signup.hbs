@@ -55,8 +55,9 @@
                                                         for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
                                             <span>*</span></label>
                                             <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
-                                                    name={{claimURI}} id={{claimLabel}}
+                                                    name={{claimURI}}
                                                     class="form-control"
+                                                    id="username"
                                                     pattern={{#if regex}}{{regex}}{{/if}}
                                                             placeholder={{t "placeholder.username"}}
                                                     required/>

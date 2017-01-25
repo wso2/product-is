@@ -92,7 +92,7 @@ $(window).load(function () {
             && /\d/.test(value); // has a digit
     });
 
-    //confirm password validation
+    //signup form validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
@@ -106,7 +106,10 @@ $(window).load(function () {
             password: {
                 pwcheck: true,
                 minlength: 6,
-                empty: true
+                required: true
+            },
+            username: {
+                required: true
             }
         },
         messages: {
@@ -117,12 +120,13 @@ $(window).load(function () {
             password: {
                 minlength: "Password should be at least {0} characters long.",
                 pwcheck: "Password strength is low. Please use the guidelines and select a different password.",
-                required: "Require to provide a password."
+                required: "Required to provide a password."
+            },
+            username: {
+                required: "Required to provide a username."
             }
         }
     });
-    //username validation
-    $("#username").rules("add", {username: true});
 
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
