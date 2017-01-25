@@ -218,7 +218,7 @@ $( "#password-update-form" ).validate({
         }
     },
     messages: {
-        confirmPassword: "Passwords do not match"
+        confirmPassword: "These passwords do not match."
     }
 >>>>>>> 4520c3c... Reset password code structuring
 });
