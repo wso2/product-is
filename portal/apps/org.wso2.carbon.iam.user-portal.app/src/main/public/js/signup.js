@@ -8,9 +8,9 @@ $(window).load(function () {
         // strength desc
         desc[0] = "Too short";
         desc[1] = "Weak";
-        desc[2] = "Good";
-        desc[3] = "Strong";
-        desc[4] = "Best";
+        desc[2] = "Fair";
+        desc[3] = "Good";
+        desc[4] = "Strong";
 
         // password length
         var valid = '<i class="fw fw-success"></i>';
@@ -85,8 +85,7 @@ $(window).load(function () {
     }, "Invalid username.");
 
     jQuery.validator.addMethod("pwcheck", function (value) {
-        return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
-            && /[a-z]/.test(value) // has a lowercase letter
+        return /[a-z]/.test(value) // has a lowercase letter
             && /[A-Z]/.test(value) // has a uppercase letter
             && /[^A-Za-z0-9]/.test(value) // has a special character
             && /\d/.test(value); // has a digit

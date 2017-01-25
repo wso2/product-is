@@ -1,24 +1,12 @@
 {{layout "unprivilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
-{{title "Login | " @config.appName}}
+{{title "Sign in | " @config.appName}}
 {{css "css/user-portal.css"}}
 {{js "js/script.js"}}
 {{js "js/left-navigation.js"}}
 {{js "js/login.js"}}
 
 {{#fillZone "content"}}
-    {{#if errorMessage}}
-        <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
-            {{t errorMessage}}
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
-                <span aria-hidden="true">
-                    <i class="fw fw-cancel"></i>
-                </span>
-            </button>
-        </div>
-    {{/if}}
-
     <div class="container">
         <div class="login-form-wrapper">
             <div class="row">
@@ -35,15 +23,26 @@
                     <!--not yet implemented-->
                     <!--<div class="social-container hidden-sm hidden-xs">-->
                     <!--<p>Also sign in with</p>-->
-                    <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
-                    <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
-                    <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="\{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="{{!public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="{{!public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
                     <!--</div>-->
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                     <div class="data-container">
                         <form class="form-horizontal" method="post">
                             <h3>{{t "login"}}</h3>
+                            {{#if errorMessage}}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
+                                    {{t errorMessage}}
+                                    <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                            {{/if}}
                             {{log @config}}
                             {{#if @config.isDomainInLogin}}
                                 <div class="form-group">

@@ -10,7 +10,7 @@ function onRequest(env) {
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
         message = result.message;
-    } else if (env.request.method == "POST" && "image" == env.params.actionId) {
+    } else if (env.request.method === "POST" && "image" === env.params.actionId) {
 
         var result = uploadFile(env, session);
         success = result.success;
@@ -121,7 +121,9 @@ function uploadFile(env, session) {
             Files.createDirectories(imageDirPath);
         }
 
-        var fileName = session.getUser().getUserId();
+        var fileName = getUser().getUserId();
+            //session.user.id;
+            //getUser().getUserId();
         var destination = Paths.get(imageDirPath).resolve(fileName);
         var sourcePath = Paths.get(uploadedFile.path);
         var destinationPath = Paths.get(destination);
