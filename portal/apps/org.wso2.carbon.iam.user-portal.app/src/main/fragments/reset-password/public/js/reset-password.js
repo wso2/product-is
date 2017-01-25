@@ -78,6 +78,6 @@ $( "#password-update-form" ).validate({
         }
     },
     messages: {
-        confirmPassword: "Passwords do not match"
+        confirmPassword: "These passwords do not match."
     }
 });

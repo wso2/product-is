@@ -105,7 +105,7 @@ $(window).load(function () {
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match.",
+            confirmPassword: "These passwords do not match.",
             password: "Password strength is low. Please use the guidelines and select a different password."
         }
     });
