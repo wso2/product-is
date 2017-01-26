@@ -14,42 +14,6 @@
  *  limitations under the License.
  */
 
-function onRequest(env) {
-    var session = getSession();
-    if (session) {
-        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-    }
-
-    if (env.request.method == "GET") {
-        return getDomainNames(env);
-    }
-
-    if (env.request.method == "POST") {
-        var domain = env.request.formParams['domain'];
-        var username = env.request.formParams['username'];
-        var password = env.request.formParams['password'];
-
-        if (!env.config.isDomainInLogin) {
-            if (username.indexOf("/") != -1) {
-                var splitedValue = username.split("/");
-                if (splitedValue.length == 2) {
-                    domain = splitedValue[0];
-                    username = splitedValue[1];
-                } else {
-                    return {errorMessage: 'login.error.invalid.username'};
-                }
-            }
-        }
-        var result = authenticate(username, password, domain);
-        if (result.success) {
-            //configure login redirect uri
-            sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-        } else {
-            return {errorMessage: result.message};
-        }
-    }
-}
-
 function getDomainNames(env) {
     var domainNames;
     if (env.config.isDomainInLogin) {
@@ -86,3 +50,40 @@ function authenticate(username, password, domain) {
         return {success: false, message: 'login.error.authentication'};
     }
 }
+
+function onRequest(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
+
+    if (env.request.method == "GET") {
+        return getDomainNames(env);
+    }
+
+    if (env.request.method == "POST") {
+        var domain = env.request.formParams['domain'];
+        var username = env.request.formParams['username'];
+        var password = env.request.formParams['password'];
+
+        if (!env.config.isDomainInLogin) {
+            if (username.indexOf("/") != -1) {
+                var splitedValue = username.split("/");
+                if (splitedValue.length == 2) {
+                    domain = splitedValue[0];
+                    username = splitedValue[1];
+                } else {
+                    return {errorMessage: 'login.error.invalid.username'};
+                }
+            }
+        }
+        var result = authenticate(username, password, domain);
+        if (result.success) {
+            //configure login redirect uri
+            sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+        } else {
+            return {errorMessage: result.message};
+        }
+    }
+}
+

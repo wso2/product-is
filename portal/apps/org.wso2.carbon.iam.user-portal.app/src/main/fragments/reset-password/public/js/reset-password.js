@@ -1,3 +1,4 @@
+//password strength meter logic
 $(window).load(function () {
 
     //password strength meter logic

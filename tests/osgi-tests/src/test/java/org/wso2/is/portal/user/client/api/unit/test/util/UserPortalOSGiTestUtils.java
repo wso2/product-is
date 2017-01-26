@@ -76,14 +76,6 @@ public class UserPortalOSGiTestUtils {
                 .artifactId("org.wso2.carbon.identity.mgt.store.connector.jdbc")
                 .versionAsInProject());
         optionList.add(mavenBundle()
-                .groupId("org.wso2.carbon.security.userstore")
-                .artifactId("org.wso2.carbon.security.store.connector.jdbc")
-                .versionAsInProject());
-        optionList.add(mavenBundle()
-                .groupId("org.wso2.carbon.security.caas")
-                .artifactId("org.wso2.carbon.security.caas")
-                .versionAsInProject());
-        optionList.add(mavenBundle()
                 .groupId("org.wso2.carbon.identity.mgt")
                 .artifactId("org.wso2.carbon.identity.mgt")
                 .versionAsInProject());
@@ -200,19 +192,12 @@ public class UserPortalOSGiTestUtils {
 
         optionList.add(mavenBundle().
                 groupId("org.wso2.carbon.security.userstore").
-                artifactId("org.wso2.carbon.security.store.connector.jdbc").versionAsInProject());
-        optionList.add(mavenBundle().
-                groupId("org.wso2.carbon.security.userstore").
                 artifactId("org.wso2.carbon.identity.mgt.store.connector.jdbc").versionAsInProject());
 
 
         optionList.add(mavenBundle().
                 groupId("org.wso2.carbon.identity.commons").
                 artifactId("org.wso2.carbon.identity.commons")
-                .versionAsInProject());
-        optionList.add(mavenBundle().
-                groupId("org.wso2.carbon.identity.commons").
-                artifactId("org.wso2.carbon.identity.event")
                 .versionAsInProject());
         optionList.add(mavenBundle().
                 groupId("org.wso2.carbon.identity.mgt").
