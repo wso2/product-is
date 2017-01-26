@@ -102,11 +102,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.ant</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>net.minidev.wso2</groupId>
             <artifactId>json-smart</artifactId>
         </dependency>
@@ -133,6 +128,10 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.gogo.shell</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>
@@ -246,7 +245,19 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+            <artifactId>org.wso2.carbon.identity.claim</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.commons</groupId>
+            <artifactId>org.wso2.carbon.identity.commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.commons</groupId>
+            <artifactId>org.wso2.carbon.identity.event</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.is</groupId>
@@ -300,10 +311,6 @@
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -556,9 +563,5 @@
             </build>
         </profile>
     </profiles>
-
-    <properties>
-        <checkstyle.skip>true</checkstyle.skip>
-    </properties>
 
 </project>

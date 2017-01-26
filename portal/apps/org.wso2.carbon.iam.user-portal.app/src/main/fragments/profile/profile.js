@@ -10,8 +10,8 @@ function onRequest(env) {
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
         message = result.message;
-    } else if (env.request.method == "POST" && "image" == env.params.actionId) {
-        
+    } else if (env.request.method === "POST" && "image" === env.params.actionId) {
+
         var result = uploadFile(env, session);
         success = result.success;
         message = result.message;
@@ -31,9 +31,13 @@ function onRequest(env) {
             message = result.message;
         }
         var profileImageResult = isProfileImageAvailbale(session);
+        Log.debug(profileImageResult);
 
         return {success: success, profile: env.params.profileName, uiEntries: uiEntries,
-            message: message, profileImage: profileImageResult.profileImage, userId: profileImageResult.userId};
+            message: message,
+            profileImage: profileImageResult.profileImage,
+            userId: profileImageResult.userId,
+            usernameChar: profileImageResult.usernameChar};
     }
 
     return {success: false, message: "Invalid profile name."};
@@ -117,8 +121,7 @@ function uploadFile(env, session) {
             Files.createDirectories(imageDirPath);
         }
 
-        var fileName = session.getUser().getUserId() + '.'
-            + uploadedFile.name.substring(uploadedFile.name.lastIndexOf(".") + 1, uploadedFile.name.length);
+        var fileName = session.getUser().getUserId();
         var destination = Paths.get(imageDirPath).resolve(fileName);
         var sourcePath = Paths.get(uploadedFile.path);
         var destinationPath = Paths.get(destination);
@@ -139,13 +142,15 @@ function uploadFile(env, session) {
 }
 
 function isProfileImageAvailbale(session) {
+    var usernameChar = session.getUser().getUsername().charAt(0);
+
     var Paths = Java.type('java.nio.file.Paths');
     var System = Java.type('java.lang.System');
     var Files = Java.type('java.nio.file.Files');
     var File = Java.type('java.io.File');
     var imageDirPath = Paths.get(System.getProperty('user.dir'), "images");
     if (!Files.exists(imageDirPath)) {
-        return {profileImage: false};
+        return {profileImage: false, usernameChar: usernameChar};
     }
     else {
         var file = new File(imageDirPath.toString());
@@ -154,11 +159,13 @@ function isProfileImageAvailbale(session) {
             for (var i = 0; i < names.length; i++) {
                 var imageName = names[i].toString();
                 if (imageName.indexOf(session.getUser().getUserId()) !== -1) {
-                    return {profileImage: true, userId: session.getUser().getUserId()};
+                    return {profileImage: true,
+                        userId: session.getUser().getUserId(),
+                        usernameChar: usernameChar};
                 }
             }
         }
 
     }
-    return {profileImage: false};
+    return {profileImage: false, usernameChar: usernameChar};
 }

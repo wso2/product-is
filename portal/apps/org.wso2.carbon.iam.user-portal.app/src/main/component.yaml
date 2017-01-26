@@ -31,3 +31,5 @@ config:
   pageSize: 10
   loginRedirectUri: "/"
   loginPageUri: "/login"
+  isDomainInLogin: true
+

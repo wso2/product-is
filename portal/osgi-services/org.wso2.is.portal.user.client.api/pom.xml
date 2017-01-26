@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.meta.claim.mgt</artifactId>
+            <artifactId>org.wso2.carbon.identity.claim</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
@@ -78,12 +78,16 @@
             <artifactId>org.wso2.carbon.uuf.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>org.apache.felix</groupId>-->
@@ -96,15 +100,17 @@
         <import.package>
             org.osgi.framework,
             javax.security.*,
+            org.apache.commons.lang3.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.identity.meta.claim.mgt.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.identity.meta.claim.mgt.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
-            org.wso2.carbon.identity.meta.claim.mgt.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.claim.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.uuf.spi.auth.*,
             org.wso2.carbon.kernel.utils.*,
             org.wso2.msf4j;version="${msf4j.import.version.range}",
             javax.ws.rs.*;version="${javax.ws.rs.import.version.range}",
+            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version}"
         </import.package>
         <!--//todo set versions-->
         <export.package>
@@ -115,7 +121,6 @@
             org.wso2.is.portal.user.client.api.internal.Activator
         </bundle.activator>
 
-        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
 </project>

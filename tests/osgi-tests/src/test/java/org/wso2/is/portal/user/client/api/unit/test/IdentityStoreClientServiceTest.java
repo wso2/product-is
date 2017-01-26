@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.mgt.claim.Claim;
+import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
@@ -49,6 +51,8 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 public class IdentityStoreClientServiceTest {
 
     private static List<UUFUser> users = new ArrayList<>();
+    private static Set<String> domainNames;
+    private static final String PRIMARY_DOMAIN = "PRIMARY";
 
     @Inject
     private BundleContext bundleContext;
@@ -81,13 +85,36 @@ public class IdentityStoreClientServiceTest {
         Map<String, String> userClaims = new HashMap<>();
         Map<String, String> credentials = new HashMap<>();
         userClaims.put("http://wso2.org/claims/username", "user1");
-        userClaims.put("http://wso2.org/claims/firstName", "user1_firstName");
+        userClaims.put("http://wso2.org/claims/givenname", "user1_firstName");
         userClaims.put("http://wso2.org/claims/lastName", "user1_lastName");
         userClaims.put("http://wso2.org/claims/email", "user1@wso2.com");
 
         credentials.put("password", "admin");
 
         UUFUser user = identityStoreClientService.addUser(userClaims, credentials);
+
+        Assert.assertNotNull(user, "Failed to add the user.");
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+
+        users.add(user);
+    }
+
+    @Test(groups = "addUsers")
+    public void testAddUserToDomain() throws UserPortalUIException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        Map<String, String> userClaims = new HashMap<>();
+        Map<String, String> credentials = new HashMap<>();
+        userClaims.put("http://wso2.org/claims/username", "user2");
+        userClaims.put("http://wso2.org/claims/givenname", "user2_firstName");
+        userClaims.put("http://wso2.org/claims/lastName", "user2_lastName");
+        userClaims.put("http://wso2.org/claims/email", "user2@wso2.com");
+
+        credentials.put("password", "admin");
+
+        UUFUser user = identityStoreClientService.addUser(userClaims, credentials, PRIMARY_DOMAIN);
 
         Assert.assertNotNull(user, "Failed to add the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
@@ -102,7 +129,7 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray());
+        UUFUser user = identityStoreClientService.authenticate("user1", "admin".toCharArray(), PRIMARY_DOMAIN);
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
@@ -116,18 +143,18 @@ public class IdentityStoreClientServiceTest {
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
         Map<String, String> updatedClaims = new HashMap<>();
-        updatedClaims.put("http://wso2.org/claims/firstName", "user1_firstNameUpdated");
+        updatedClaims.put("http://wso2.org/claims/givenname", "user1_firstNameUpdated");
 
-        //identityStoreClientService.updateUserProfile(users.get(0).getUserId(), updatedClaims);
+        identityStoreClientService.updateUserProfile(users.get(0).getUserId(), updatedClaims);
 
-        /*List<MetaClaim> metaClaims = new ArrayList<>();
+        List<MetaClaim> metaClaims = new ArrayList<>();
         List<Claim> userClaims;
-        MetaClaim metaClaim1 = new MetaClaim("http://wso2.org/claims", "http://wso2.org/claims/firstName");
+        MetaClaim metaClaim1 = new MetaClaim("http://wso2.org/claims", "http://wso2.org/claims/givenname");
         metaClaims.add(metaClaim1);
 
         userClaims = identityStoreClientService.getClaimsOfUser(users.get(0).getUserId(), metaClaims);
         Assert.assertNotNull(userClaims, "Failed to get the user claims.");
-        Assert.assertNotEquals(userClaims.get(0).getValue(),"user1_firstNameUpdated", "Fail to update the user profile");*/
+        Assert.assertEquals(userClaims.get(0).getValue(), "user1_firstNameUpdated", "Fail to update the user profile");
     }
 
     @Test(dependsOnGroups = {"addUsers", "update", "authentication"})
@@ -137,10 +164,26 @@ public class IdentityStoreClientServiceTest {
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
 
-        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray());
-        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray());
+        identityStoreClientService.updatePassword("user1", "admin".toCharArray(), "password_updated".toCharArray(),
+                PRIMARY_DOMAIN);
+        UUFUser user = identityStoreClientService.authenticate("user1", "password_updated".toCharArray(),
+                PRIMARY_DOMAIN);
 
         Assert.assertNotNull(user, "Failed to authenticate the user after updating the password.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
     }
+
+    @Test(groups = "domainList")
+    public void testGetDomainNames() throws UserPortalUIException, UserNotFoundException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        Set<String> domainNames = identityStoreClientService.getDomainNames();
+
+        Assert.assertNotNull(domainNames, "Failed to retrieve the domain name list.");
+
+        this.domainNames = domainNames;
+    }
+
 }

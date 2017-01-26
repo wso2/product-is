@@ -14,16 +14,6 @@
 </head>
 
 <body class="sticky-footer">
-<header class="header header-default">
-    <div class="container-fluid">
-        <div class="pull-left brand">
-            <a href="{{@contextPath}}/">
-                <img src="{{public "images/logo.png"}}" class="logo" alt="wso2" title="wso2"/>
-                <span>{{@config.appName}}</span>
-            </a>
-        </div>
-    </div>
-</header>
 
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -37,13 +27,11 @@
 <!-- footer -->
 <footer class="footer">
     <div class="container-fluid">
-        <div class="container-fluid">
-            <p>
-                {{t "user-portal.footer.content"}} | &copy;
-                <script>document.write((new Date().getFullYear()).toString());</script>
-                <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>.
-            </p>
-        </div>
+        <p>
+            {{t "footer.content"}} | &copy;
+            <script>document.write((new Date().getFullYear()).toString());</script>
+            <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>.
+        </p>
     </div>
 </footer>
 <!-- /footer -->

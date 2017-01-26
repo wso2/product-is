@@ -8,9 +8,9 @@ $(window).load(function () {
         // strength desc
         desc[0] = "Too short";
         desc[1] = "Weak";
-        desc[2] = "Good";
-        desc[3] = "Strong";
-        desc[4] = "Best";
+        desc[2] = "Fair";
+        desc[3] = "Good";
+        desc[4] = "Strong";
 
         // password length
         var valid = '<i class="fw fw-success"></i>';
@@ -80,41 +80,61 @@ $(window).load(function () {
         return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
 
-    //confirm password validation
+    jQuery.validator.addMethod("username", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
+    }, "Invalid username.");
+
+    jQuery.validator.addMethod("pwcheck", function (value) {
+        return /[a-z]/.test(value) // has a lowercase letter
+            && /[A-Z]/.test(value) // has a uppercase letter
+            && /[^A-Za-z0-9]/.test(value) // has a special character
+            && /\d/.test(value); // has a digit
+    });
+
+    //signup form validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
-                equalTo: "#password"
+                equalTo: "#password",
+                required: {
+                    depends: function (element) {
+                        return $("#password").is(":not(:blank)");
+                    }
+                }
+            },
+            password: {
+                pwcheck: true,
+                minlength: 6,
+                required: true
+            },
+            username: {
+                required: true
             }
         },
         messages: {
-            confirmPassword: "Passwords do not match"
+            confirmPassword: {
+                equalTo: "These passwords do not match.",
+                required: "Please re-enter the password."
+            },
+            password: {
+                minlength: "Password should be at least {0} characters long.",
+                pwcheck: "Password must have a minimum strength of Strong.",
+                required: "Required to provide a password."
+            },
+            username: {
+                required: "Required to provide a username."
+            }
         }
     });
+
+    $("#username").rules("add", { username: true });
+    
+    $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
-/*
- $('#register').on('click', function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- });
- });*/
 
-/*$('#register').click( function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- }).form();
- });*/
-
-
+$('#domainSelector').change(function () {
+    var domain = document.getElementById('domainSelector').value;
+    if (domain != "default") {
+        document.getElementById("domain").value = domain;
+    }
+});

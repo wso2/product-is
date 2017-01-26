@@ -1,16 +1,15 @@
 {{layout "privilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
-{{title "Home | " @config.appName}}
+{{title "Account Settings | " @config.appName}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.jquery-validation" }}
 {{js "js/account-setting.js"}}
-{{js "js/profile.js"}}
 {{css "css/user-portal.css"}}
 
 {{#fillZone "breadcrumbs"}}
     <div class="breadcrumb-wrapper">
         <ol class="breadcrumb">
-            <li><a href="#"><i class="icon fw fw-home"></i> <span class="hidden-xs">Home</span></a></li>
-            <li class="active"><a href="#">Account Settings</a></li>
+            <li><a href="/user-portal"><i class="icon fw fw-home"></i> <span class="hidden-xs">{{t "applications.breadcrumb"}} </span></a></li>
+            <li class="active"><a href="/user-portal/account/account-setting">{{t "account.setting"}}</a></li>
         </ol>
     </div>
 {{/fillZone}}
@@ -30,7 +29,7 @@
                     <div class="settings-nav sidebar-nav">
                         <ul class="nav nav-pills nav-stacked nav-filter" id="acc-settings-menu">
                             <li class="collapse-li">
-                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#profile-menu" class="collapsed">{{t "user-portal.user.account.profile"}}<span class="arrow"></span></a>
+                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#profile-menu" class="collapsed">{{t "account.profile"}}<span class="arrow"></span></a>
                                 <ul class="sub-menu collapse" id="profile-menu">
                                     {{#each profiles}}
                                         <li>
@@ -40,22 +39,22 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#password" class="" data-toggle="tab">{{t "user-portal.user.account.password"}}</a>
+                                <a href="#password" class="" data-toggle="tab">{{t "account.password"}}</a>
                             </li>
                             <!--<li>-->
-                                <!--<a href="#authentication" class="" data-toggle="tab">{{t "user-portal.user.account.multiFactor"}}</a>-->
+                                <!--<a href="#authentication" class="" data-toggle="tab">{{t "account.multiFactor"}}</a>-->
                             <!--</li>-->
                             <li>
-                                <a href="#security-questions" class="" data-toggle="tab">{{t "user-portal.user.account.securityQ"}}</a>
+                                <a href="#security-questions" class="" data-toggle="tab">{{t "account.securityQ"}}</a>
                             </li>
-                            <li class="collapse-li">
-                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">{{t "user-portal.user.account.association"}}<span class="arrow"></span></a>
+                            <li class="collapse-li hide">
+                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">{{t "account.association"}}<span class="arrow"></span></a>
                                 <ul class="sub-menu collapse" id="asscciations-menu">
                                     <li>
-                                        <a href="#local" class="" data-toggle="tab">{{t "user-portal.user.account.association.local"}}</a>
+                                        <a href="#local" class="" data-toggle="tab">{{t "account.association.local"}}</a>
                                     </li>
                                     <li>
-                                        <a href="#federated" class="" data-toggle="tab">{{t "user-portal.user.account.association.federated"}}</a>
+                                        <a href="#federated" class="" data-toggle="tab">{{t "account.association.federated"}}</a>
                                     </li>
                                 </ul>
                             </li>

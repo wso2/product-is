@@ -20,10 +20,27 @@ function onRequest(env) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
 
+    if (env.request.method == "GET") {
+        return getDomainNames(env);
+    }
+
     if (env.request.method == "POST") {
+        var domain = env.request.formParams['domain'];
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
-        var result = authenticate(username, password);
+
+        if (!env.config.isDomainInLogin) {
+            if (username.indexOf("/") != -1) {
+                var splitedValue = username.split("/");
+                if (splitedValue.length == 2) {
+                    domain = splitedValue[0];
+                    username = splitedValue[1];
+                } else {
+                    return {errorMessage: 'login.error.invalid.username'};
+                }
+            }
+        }
+        var result = authenticate(username, password, domain);
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
@@ -33,11 +50,26 @@ function onRequest(env) {
     }
 }
 
-function authenticate(username, password) {
+function getDomainNames(env) {
+    var domainNames;
+    if (env.config.isDomainInLogin) {
+        try {
+            domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getDomainNames", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
+    }
+    return {
+        "domainNames": domainNames
+    };
+}
+
+function authenticate(username, password, domain) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar]);
+            "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
         return {success: true, message: "success"}
@@ -51,6 +83,6 @@ function authenticate(username, password) {
             }
         }
 
-        return {success: false, message: message};
+        return {success: false, message: 'login.error.authentication'};
     }
 }

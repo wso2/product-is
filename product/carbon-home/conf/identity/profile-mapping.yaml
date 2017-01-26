@@ -22,7 +22,7 @@ profiles:
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
+   displayName: "Username"
    required: true
    readonly: true
    verifier: "claim verifying extension"
@@ -65,7 +65,7 @@ profiles:
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
+   displayName: "Username"
    required: true
    readonly: true
    regex: ".*"
@@ -92,7 +92,7 @@ profiles:
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
+   displayName: "Username"
    required: true
    readonly: true
    verifier: "claim verifying extension"
@@ -123,4 +123,4 @@ profiles:
    readonly: false
    dataType: "email"
    regex: "*"
-   defaultValue: "user1@example.com"
+   defaultValue: "user@example.com"

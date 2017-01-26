@@ -30,9 +30,9 @@ import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
-import javax.inject.Inject;
 import java.nio.file.Paths;
 import java.util.List;
+import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
@@ -65,8 +65,11 @@ public class ChallengeQuestionManagerClientServiceTest {
     @Test(groups = "getChallengeQuestion")
     public void testGetChallengeQuestionList() throws UserPortalUIException {
         /*ChallengeQuestionManagerClientService challengeQuestionManagerService =
-                bundleContext.getService(bundleContext.getServiceReference(ChallengeQuestionManagerClientService.class));
-        Assert.assertNotNull(challengeQuestionManagerService, "Failed to get ChallengeQuestionManagerClientService instance");*/
+                bundleContext.getService(bundleContext.getServiceReference
+                (ChallengeQuestionManagerClientService.class));
+        Assert.assertNotNull(challengeQuestionManagerService,
+        "Failed to get ChallengeQuestionManagerClientService instance");*/
+
 
         /*List<ChallengeQuestion> challengeQuestions = challengeQuestionManagerService.getChallengeQuestionList();
         Assert.assertNotNull(challengeQuestions, "Failed to retrieve the challenge question list.");*/
