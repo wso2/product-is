@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
+<<<<<<< HEAD
 <<<<<<< HEAD
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,16 +10,24 @@
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
 >>>>>>> f61b1d5... Add initial test case for profile downloader microservice
+=======
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+>>>>>>> b8255cb... Added license headers
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b8255cb... Added license headers
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+<<<<<<< HEAD
  */
 
 package org.wso2.is.portal.user.client.api.unit.test;
@@ -30,7 +39,10 @@ package org.wso2.is.portal.user.client.api.unit.test;
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
+=======
+>>>>>>> b8255cb... Added license headers
  */
+
 package org.wso2.is.portal.user.client.api.unit.test;
 
 <<<<<<< HEAD

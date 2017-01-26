@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 package org.wso2.is.portal.user.client.api;
 
@@ -23,6 +24,9 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
 =======
+=======
+
+>>>>>>> b8255cb... Added license headers
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.msf4j.Microservice;

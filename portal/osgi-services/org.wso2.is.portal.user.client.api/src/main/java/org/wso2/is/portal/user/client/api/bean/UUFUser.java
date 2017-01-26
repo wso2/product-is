@@ -1,6 +1,10 @@
 /*
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+=======
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> b8255cb... Added license headers
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +19,7 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 package org.wso2.is.portal.user.client.api.bean;
 
 import org.wso2.carbon.uuf.spi.auth.User;
@@ -36,6 +41,8 @@ import org.wso2.carbon.uuf.spi.auth.User;
 *  specific language governing permissions and limitations
 *  under the License.
 */
+=======
+>>>>>>> b8255cb... Added license headers
 package org.wso2.is.portal.user.client.api.bean;
 
 <<<<<<< HEAD
