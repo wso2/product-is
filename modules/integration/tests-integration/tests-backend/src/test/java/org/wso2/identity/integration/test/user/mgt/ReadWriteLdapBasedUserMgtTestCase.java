@@ -22,11 +22,14 @@ import java.io.File;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.utils.CarbonUtils;
 
 public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
@@ -55,10 +58,21 @@ public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTes
 		userMgtClient.addUser("user2", "passWord1@", null, "default");
         userMgtClient.addUser("user3", "passWord1@", new String[]{"admin"}, "default");
 		userMgtClient.addUser("user4", "passWord1@", new String[]{"admin"}, "default");
+
+		ClaimValue claimValue = new ClaimValue();
+		claimValue.setClaimURI("http://wso2.org/claims/displayName");
+		claimValue.setValue("displayName5");
+		userMgtClient.addUserWithClaims("user5", "passWord@", null, new ClaimValue[]{claimValue}, "default");
         
 		userMgtClient.addRole("umRole1", null, new String[] { "/permission/admin/login" }, false);
 		userMgtClient.addRole("umRole3", new String[]{"user1"}, new String[]{"login"}, false);
 		
+	}
+
+	@Test
+	public void testUserDisplayName() throws Exception{
+		String[] users = userMgtClient.listUsers("user5", 100);
+		Assert.assertEquals("user5|displayName5", users[0], "User display name is not retrieved correctly.");
 	}
 
 	@AfterClass(alwaysRun = true)
