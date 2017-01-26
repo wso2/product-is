@@ -8,14 +8,14 @@ $(window).load(function(){
 		$(this).parent().find('.image-container .after').show();
 	},function(){
 		$(this).parent().find('.image-container .after').hide();
-	})
+	});
 
     $('input[name=recover-option],[name=recover-option-email],[name=recover-option-question]').click(function(){
         if($(this).parent().parent().find('.recover-option-container').is(':hidden')){
             $('.recover-option-container').slideUp();
             $(this).parent().parent().find('.recover-option-container').slideDown();
         }
-    })
+    });
 
 
 	$('.rating:not(.half) .icon').click(function(){
@@ -60,10 +60,10 @@ $(window).load(function(){
      * Affix spacer when media left is affixed
      */
     $('.sidebar-wrapper').on('affix.bs.affix',function(){
-        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>')
+        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>');
     }).on('affixed-top.bs.affix',function(){
         $('.affix-spacer').remove();
-    })
+    });
 
     $('.sign-up-additional').click(function(){
         var el = $('.extended-form'),
@@ -75,8 +75,8 @@ $(window).load(function(){
         }else{
             el.slideUp(function(){
                 triggerEl.text('Show Additional Details');
-            })
+            });
         }
-    })
+    });
 
 });

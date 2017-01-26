@@ -1,5 +1,5 @@
 {{layout "unprivilege"}}
-{{title (t "user-portal.user.password.recovery") " | " @config.appName}}
+{{title (t "password.recovery") " | " @config.appName}}
 {{css "css/user-portal.css"}}
 {{js "js/script.js"}}
 {{js "js/left-navigation.js"}}
@@ -9,7 +9,7 @@
 {{#fillZone "content"}}
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "user-portal.user.password.recovery.error"}}</strong>
+            <i class="icon fw fw-error"></i><strong>{{t "password.recovery.error"}}</strong>
             {{errorMessage}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
             <span aria-hidden="true">
@@ -36,14 +36,14 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
-                            <h3>{{t "user-portal.user.password.recovery"}}</h3>
+                            <h3>{{t "password.recovery"}}</h3>
 
-                            <h4>{{t "user-portal.user.page.under.construction"}}</h4>
+                            <h4>{{t "page.under.construction"}}</h4>
 
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <a href="{{@contextPath}}/" class="add-margin-top-2x">{{t
-                                    "user-portal.applications.breadcrumb"}}</a>
+                                    "applications.breadcrumb"}}</a>
                                 </div>
                             </div>
                         </div>

@@ -56,7 +56,7 @@ var recoveryManager = {};
                 }
             }
             Log.error(message);
-            return {success: false, message: "user-portal.user.something.wrong.error"};
+            return {success: false, message: "something.wrong.error"};
         }
     }
 

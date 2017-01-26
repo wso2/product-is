@@ -14,7 +14,118 @@
  *  limitations under the License.
  */
 
+function getProfile() {
+
+    /**
+     * Get the Claim Profile
+     */
+
+    var claimProfile;
+    try {
+        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfile", ["self-signUp"]);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.claim'};
+    }
+    var claimForProfileEntry = claimProfile.claims;
+
+    var claimProfileArray = [];
+    var userName = [];
+
+    for (var i = 0; i < claimForProfileEntry.length; i++) {
+        if (claimForProfileEntry[i].claimURI == "http://wso2.org/claims/username") {
+            userName[i] = generateClaimProfileMap(claimForProfileEntry[i]);
+        } else {
+            claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
+        }
+    }
+
+
+    /**
+     * Get the set of domain names
+     */
+
+    var domainNames;
+    var domainNamesList;
+    try {
+        domainNamesList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getDomainNames", []);
+        if (domainNamesList.size() != 1) {
+            domainNames = domainNamesList;
+        }
+
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
+    }
+
+    sendToClient("signupClaims", claimProfileArray);
+    return {
+        "usernameClaim": userName,
+        "signupClaims": claimProfileArray,
+        "domainNames": domainNames
+    };
+}
+
+function generateClaimProfileMap(claimProfileEntry) {
+    var claimProfileMap = {};
+    claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
+    claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
+    if (claimProfileEntry.getDefaultValue()) {
+        claimProfileMap["defaultValue"] = claimProfileEntry.getDefaultValue();
+    }
+    claimProfileMap["claimLabel"] = claimProfileEntry.getClaimURI().replace("http://wso2.org/claims/", "");
+    claimProfileMap["required"] = claimProfileEntry.getRequired();
+    claimProfileMap["regex"] = claimProfileEntry.getRegex();
+    claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
+    claimProfileMap["dataType"] = claimProfileEntry.getDataType();
+    return claimProfileMap;
+}
+
+function userRegistration(claimMap, credentialMap, domain) {
+    try {
+        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "addUser", [claimMap, credentialMap, domain]);
+        return {userRegistration: userRegistrationResult};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+        return {errorMessage: 'signup.error.registration'};
+    }
+}
+
+function authenticate(username, password, domain) {
+    try {
+        var passwordChar = Java.to(password.split(''), 'char[]');
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "authenticate", [username, passwordChar, domain]);
+
+        createSession(uufUser);
+        return {success: true, message: "success"};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+
+        return {success: false, message: 'login.error.authentication'};
+    }
+}
+
 function onRequest(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
 
     if (env.request.method == "POST") {
         var formParams = {};
@@ -25,7 +136,7 @@ function onRequest(env) {
         for (var i in formParams) {
             if (i == "password") {
                 credentialMap["password"] = formParams[i];
-            } else if (i == "domainValue") {
+            } else if (i == "domain") {
                 domain = formParams[i];
             }
             else {
@@ -49,114 +160,5 @@ function onRequest(env) {
 
     if (env.request.method == "GET") {
         return getProfile();
-    }
-}
-
-function getProfile() {
-
-    /**
-     * Get the Claim Profile
-     */
-
-    var claimProfile;
-    try {
-        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["self-signUp"]);
-    } catch (e) {
-        return {errorMessage: 'user-portal.user.signup.error.retrieve.claim'};
-    }
-    var claimForProfile = claimProfile.claims;
-
-    var claimProfileArray = [];
-    var userName = [];
-
-    for (var i = 0; i < claimForProfile.length; i++) {
-        if (claimForProfile[i].claimURI == "http://wso2.org/claims/username") {
-            var usernameClaim = {};
-            usernameClaim["displayName"] = claimForProfile[i].getDisplayName();
-            usernameClaim["claimURI"] = claimForProfile[i].getClaimURI();
-            if (claimForProfile[i].getDefaultValue()) {
-                usernameClaim["defaultValue"] = claimForProfile[i].getDefaultValue();
-            }
-            usernameClaim["claimLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            usernameClaim["required"] = claimForProfile[i].getRequired();
-            usernameClaim["regex"] = claimForProfile[i].getRegex();
-            usernameClaim["readonly"] = claimForProfile[i].getReadonly();
-            usernameClaim["dataType"] = claimForProfile[i].getDataType();
-            userName[i] = usernameClaim;
-        } else {
-            var claimProfileMap = {};
-            claimProfileMap["displayName"] = claimForProfile[i].getDisplayName();
-            claimProfileMap["claimURI"] = claimForProfile[i].getClaimURI();
-            if (claimForProfile[i].getDefaultValue()) {
-                claimProfileMap["defaultValue"] = claimForProfile[i].getDefaultValue();
-            }
-            claimProfileMap["claimLabel"] = claimForProfile[i].getClaimURI().replace("http://wso2.org/claims/", "");
-            claimProfileMap["required"] = claimForProfile[i].getRequired();
-            claimProfileMap["regex"] = claimForProfile[i].getRegex();
-            claimProfileMap["readonly"] = claimForProfile[i].getReadonly();
-            claimProfileMap["dataType"] = claimForProfile[i].getDataType();
-            claimProfileArray[i] = claimProfileMap;
-        }
-    }
-
-
-    /**
-     * Get the set of domain names
-     */
-
-    var domainNames;
-    try {
-        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getDomainNames", []);
-    } catch (e) {
-        return {errorMessage: 'user-portal.user.signup.error.retrieve.domain'};
-    }
-
-    sendToClient("signupClaims", claimProfileArray);
-    return {
-        "usernameClaim": userName,
-        "signupClaims": claimProfileArray,
-        "domainNames": domainNames
-    };
-}
-
-function userRegistration(claimMap, credentialMap, domain) {
-    try {
-        var userRegistration = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "addUser", [claimMap, credentialMap, domain]);
-        return {userRegistration: userRegistration};
-    } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause != null) {
-            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-        return {errorMessage: 'user-portal.user.signup.error.registration'};
-    }
-}
-
-function authenticate(username, password, domain) {
-    try {
-        var passwordChar = Java.to(password.split(''), 'char[]');
-        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar, domain]);
-
-        createSession(uufUser);
-        return {success: true, message: "success"}
-    } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause != null) {
-            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-
-        return {success: false, message: 'user-portal.user.login.error.authentication'};
     }
 }

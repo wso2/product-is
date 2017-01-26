@@ -224,18 +224,6 @@
             <artifactId>org.wso2.carbon.messaging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.store.connector.jdbc</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.security.userstore</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc</artifactId>
         </dependency>
@@ -252,8 +240,12 @@
             <artifactId>org.wso2.carbon.identity.commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.commons</groupId>
-            <artifactId>org.wso2.carbon.identity.event</artifactId>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
@@ -380,11 +372,6 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.identity.governance</groupId>-->
-            <!--<artifactId>org.wso2.carbon.identity.recovery</artifactId>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.ant</artifactId>

@@ -44,6 +44,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tools.core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.kernel.feature</artifactId>
@@ -62,11 +63,6 @@
         <dependency>
             <groupId>org.wso2.carbon.messaging</groupId>
             <artifactId>org.wso2.carbon.messaging.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -103,8 +99,8 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+            <groupId>org.wso2.carbon.security.caas</groupId>
+            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -165,16 +161,6 @@
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -260,7 +246,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.security.userstore</groupId>
-                                    <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
+                                    <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
@@ -389,10 +375,6 @@
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -409,7 +391,7 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
@@ -419,6 +401,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
                                 </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
@@ -433,14 +419,6 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -558,10 +536,6 @@
                                     <version>${carbon.datasources.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.caas.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -578,7 +552,7 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
@@ -588,6 +562,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.security.caas.feature</id>
+                                    <version>${carbon.security.version}</version>
                                 </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
@@ -601,14 +579,6 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
                             </features>
                         </configuration>
                     </execution>

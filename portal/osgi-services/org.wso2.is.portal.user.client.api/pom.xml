@@ -85,6 +85,10 @@
             <groupId>org.wso2.msf4j</groupId>
             <artifactId>msf4j-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <!--<dependency>-->
         <!--<groupId>org.apache.felix</groupId>-->
         <!--<artifactId>org.apache.felix.scr.ds-annotations</artifactId>-->
@@ -96,6 +100,7 @@
         <import.package>
             org.osgi.framework,
             javax.security.*,
+            org.apache.commons.lang3.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.claim.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",

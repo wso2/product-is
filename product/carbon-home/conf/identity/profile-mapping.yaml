@@ -22,7 +22,7 @@ profiles:
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
+   displayName: "Username"
    required: true
    readonly: true
    verifier: "claim verifying extension"

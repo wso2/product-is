@@ -41,7 +41,7 @@ function onRequest(env) {
         if (result.success) {
             return {isPasswordRecoveryEnabled: result.isEnabled}
         } else {
-            sendError(505, "user-portal.user.something.wrong.error");
+            sendError(505, "something.wrong.error");
         }
     }
 }
