@@ -394,7 +394,7 @@
                             <descriptors>
                                 <descriptor>src/assembly/bin.xml</descriptor>
                                 <descriptor>src/assembly/src.xml</descriptor>
-                                <descriptor>src/assembly/docs.xml</descriptor>
+                                <!--descriptor>src/assembly/docs.xml</descriptor-->
                             </descriptors>
                         </configuration>
                     </execution>
