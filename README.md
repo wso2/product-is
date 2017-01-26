@@ -30,18 +30,25 @@ New Features
 ============
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 C5 User Portal
 =======
 *
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+C5 User Portal
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 Other Key Features
 =============
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 *
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 System Requirements
 ===================
@@ -51,10 +58,14 @@ System Requirements
 2. (processor)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 3. JDK 1.8
 =======
 3. (jdk)
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+3. JDK 1.8
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 4. (browser/javascript)
 
@@ -64,10 +75,14 @@ Building Identity Server from Source
 ====================================
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 https://docs.wso2.com/display/IS600/Downloading+and+Running+the+Product
 =======
 (link to docs)
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+https://docs.wso2.com/display/IS600/Downloading+and+Running+the+Product
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 Project Resources
 =================
@@ -75,10 +90,14 @@ Project Resources
 * Home page           : http://wso2.com/products/identity-server
 * Library             : http://wso2.org/library/identity
 <<<<<<< HEAD
+<<<<<<< HEAD
 * Documentation       : https://docs.wso2.com/display/IS600/WSO2+Identity+Server+Documentation
 =======
 * Documentation       : https://docs.wso2.com/display/IS520/WSO2+Identity+Server+Documentation
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+* Documentation       : https://docs.wso2.com/display/IS600/WSO2+Identity+Server+Documentation
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 * JIRA-Issue Tracker  : https://wso2.org/jira/browse/IDENTITY
 * Forums              : http://stackoverflow.com/questions/tagged/wso2/
 * WSO2 Developer List : dev@wso2.org
@@ -89,10 +108,14 @@ Installation and Running
 ========================
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 https://docs.wso2.com/display/IS600/Downloading+and+Running+the+Product
 =======
 (link to docs)
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+https://docs.wso2.com/display/IS600/Downloading+and+Running+the+Product
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 Upgrading from a Previous Version
 =================================
@@ -103,20 +126,28 @@ Known Issues
 ============
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 All known issues have been recorded at
 =======
 All known issues have been recorded at https://wso2.org/jira/issues/?filter=13028
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+All known issues have been recorded at
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 Issues Fixed In This Release
 ============================
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 All issues fixed for WSO2 Identity Server 6.0.0-m1 release have been recorded at https://wso2.org/jira/issues/?filter=13640
 =======
 All issues fixed for WSO2 Identity Server {product.version} release have been recorded at https://wso2
 .org/jira/issues/?filter=13027
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+All issues fixed for WSO2 Identity Server 6.0.0-m1 release have been recorded at https://wso2.org/jira/issues/?filter=13640
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -208,6 +239,7 @@ WSO2 Identity Server Distribution Directory Structure
     - security
     - tmp
 <<<<<<< HEAD
+<<<<<<< HEAD
         Used for storing temporary files, and is pointed to by the java.io.tmpdir System property.
 =======
       Used for storing temporary files, and is pointed to by the
@@ -220,6 +252,9 @@ WSO2 Identity Server Distribution Directory Structure
     - README.txt
       This document.
 >>>>>>> b84e760... Refactoring c5 product-is branch
+=======
+        Used for storing temporary files, and is pointed to by the java.io.tmpdir System property.
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 
 Secure sensitive information in carbon configuration files
 ----------------------------------------------------------

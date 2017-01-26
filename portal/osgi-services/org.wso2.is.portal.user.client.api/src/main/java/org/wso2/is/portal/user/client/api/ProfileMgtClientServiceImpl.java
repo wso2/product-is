@@ -19,6 +19,7 @@
  */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 package org.wso2.is.portal.user.client.api;
 
 import org.osgi.framework.BundleContext;
@@ -49,6 +50,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 =======
 
+=======
+>>>>>>> 70a471d... Modified readme and removed unnecessary debug logs
 package org.wso2.is.portal.user.client.api;
 >>>>>>> c9a9414... Adding ProfileMgtClientService
 
@@ -267,7 +270,9 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("ProfileMgtClientService activated successfully.");
+        }
     }
 
     @Reference(

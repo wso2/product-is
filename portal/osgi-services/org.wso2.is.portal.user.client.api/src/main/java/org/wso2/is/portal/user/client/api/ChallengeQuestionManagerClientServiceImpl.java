@@ -56,7 +56,9 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     @Activate
     protected void start(BundleContext bundleContext) {
 
-        LOGGER.info("Challenge question manager service activated successfully.");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("ChallengeQuestionManagerClientService activated successfully.");
+        }
     }
 
     @Reference(
