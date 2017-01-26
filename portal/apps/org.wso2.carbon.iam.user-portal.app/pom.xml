@@ -47,7 +47,7 @@
         <!--UUF Themes-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.common</groupId>
-            <artifactId>org.wso2.carbon.uuf.common.theme.default.theme</artifactId>
+            <artifactId>org.wso2.carbon.uuf.common.default.theme</artifactId>
             <version>${carbon.uuf.common.version}</version>
             <type>zip</type>
             <classifier>uuf-theme</classifier>
