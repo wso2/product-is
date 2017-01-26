@@ -47,7 +47,7 @@
 <form method="post" class="form-horizontal" action="?{{profile}}#{{profile}}" id="profile-form">
     {{#each uiEntries}}
         <div class="form-group">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                 <label for="{{claimURI}}">{{displayName}}<span>{{requiredIcon}}</span></label>
                 <input type="{{dataType}}" name="{{claimURI}}" id="{{claimURI}}" class="form-control"
                        maxlength="250" value="{{value}}" {{readonly}} {{required}}
