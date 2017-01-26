@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.wso2.is.portal.user.client.api;
 
 import org.osgi.framework.BundleContext;
@@ -61,7 +60,9 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("ProfileMgtClientService activated successfully.");
+        }
     }
 
     @Reference(

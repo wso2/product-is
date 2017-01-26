@@ -62,7 +62,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        LOGGER.info("Registered service implementation" + IdentityStoreClientServiceImpl.class); //todo
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("IdentityStoreClientService activated successfully.");
+        }
     }
 
     @Reference(
