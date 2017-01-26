@@ -17,8 +17,6 @@
  */
 package org.wso2.is.portal.user.client.api.unit.test;
 
-import org.ops4j.pax.exam.Configuration;
-import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.ops4j.pax.exam.testng.listener.PaxExam;
@@ -26,25 +24,17 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.ProfileImageDownloaderService;
-import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 import org.wso2.msf4j.MicroservicesRunner;
 
-import javax.inject.Inject;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.util.List;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.Response;
 
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
 
 @Listeners(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -72,7 +62,8 @@ public class ProfileImageDownloaderServiceTest {
 
     @Test(groups = "getProfileImage")
     public void testGetProfileImage() throws IOException {
-        HttpURLConnection urlConn = request("/DynamicPath/image?userid=1.0a8faaa2-4091-4000-bdd4-9c417798e47c", HttpMethod.GET);
+        HttpURLConnection urlConn = request("/DynamicPath/image?userid=1.0a8faaa2-4091-4000-bdd4-9c417798e47c",
+                HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
     }
 
