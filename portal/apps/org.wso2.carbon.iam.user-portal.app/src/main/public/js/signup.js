@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1b5ffcb... Changed year to 2017
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -15,8 +18,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 =======
 >>>>>>> 2d76d75... Added UI validations in user self sign-up
+=======
+>>>>>>> 1b5ffcb... Changed year to 2017
 $(window).load(function () {
     //password strength meter logic
     $("#password").on("focus keyup", function () {

@@ -1,9 +1,13 @@
 /*
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 =======
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 >>>>>>> c9a9414... Adding ProfileMgtClientService
+=======
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> 1b5ffcb... Changed year to 2017
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1b5ffcb... Changed year to 2017
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -15,8 +18,11 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 =======
 >>>>>>> 7fa08ef... adding the login page to user portal
+=======
+>>>>>>> 1b5ffcb... Changed year to 2017
 $(window).load(function(){
 
     var animating = false;
