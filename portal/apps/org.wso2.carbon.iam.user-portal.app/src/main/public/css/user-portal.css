@@ -450,9 +450,12 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .modal-title{color: #000;}
 >>>>>>> ec888d6... Adding password strength to password input
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
 .modal-content, .btn{border-radius: 0px;}
 
 #password-modal{

@@ -32,16 +32,22 @@ VALUES ('uid'),
   ('lastModifiedDate'),
   ('location'),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
   ('version'),
   ('challengeQuestionUris'),
   ('challengeQuestion1'),
   ('challengeQuestion2');
+<<<<<<< HEAD
 =======
   ('organization');
 >>>>>>> f76445f... adding configuration changes
 =======
   ('version');
 >>>>>>> c3168a2... Fix pom warnings and add scim related fixes
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
 
 INSERT INTO UM_PASSWORD (PASSWORD, USER_UNIQUE_ID)
 VALUES ('3opCozpRixH6BvSXyr0513v1nyFWpdcQy7F6r6P/LFE=', '5c724592-3506-46ec-9286-f611c2a098dc');

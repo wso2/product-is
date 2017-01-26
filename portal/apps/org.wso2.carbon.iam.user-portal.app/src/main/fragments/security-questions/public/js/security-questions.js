@@ -1,6 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+=======
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+>>>>>>> 97dd10b... Added the complete flow with delete.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +20,7 @@
  * limitations under the License.
  */
 
+<<<<<<< HEAD
 $(document).ready(function () {
 
     if ($("#list-questions").length === 0) {
@@ -24,7 +30,10 @@ $(document).ready(function () {
 
 function editQuestion(questionId, questionSetId, questionText) {
 =======
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
 $(document).ready(function () {
+
     if ($("#list-questions").length === 0) {
         $("#add-question").show();
     }
@@ -75,12 +84,16 @@ function updateQuestion() {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
 function deleteQuestion(questionId, questionSetId) {
 
     var deleteModal = $('#deleteModal');
 
     deleteModal.modal();
     deleteModal.find('.btn-primary').click(function postDeleteData() {
+<<<<<<< HEAD
 
         var formElement = document.createElement("form");
         formElement.setAttribute("method", "post");
@@ -114,19 +127,34 @@ function deleteQuestion() {
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
 =======
 function deleteQuestion(questionId) {
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
 
-    var data = {};
+        var formElement = document.createElement("form");
+        formElement.setAttribute("method", "post");
+        formElement.setAttribute("action", window.location.href);
 
-    data.action = "delete-question";
-    data.questionId = questionId;
+        var actionElement = document.createElement("input");
+        actionElement.setAttribute("type", "hidden");
+        actionElement.setAttribute("name", "action");
+        actionElement.setAttribute("value", "delete-question");
 
-    $.ajax({
-        type: "POST",
-        url: window.location.href,
-        data: data,
-        success: function () {
+        var questionIdElement = document.createElement("input");
+        questionIdElement.setAttribute("type", "hidden");
+        questionIdElement.setAttribute("name", "question-id");
+        questionIdElement.setAttribute("value", questionId);
 
-        }
+        var questionSetIdElement = document.createElement("input");
+        questionSetIdElement.setAttribute("type", "hidden");
+        questionSetIdElement.setAttribute("name", "question-set-id");
+        questionSetIdElement.setAttribute("value", questionSetId);
+
+        formElement.appendChild(actionElement);
+        formElement.appendChild(questionIdElement);
+        formElement.appendChild(questionSetIdElement);
+
+        document.body.appendChild(formElement);
+        formElement.submit();
     });
 >>>>>>> 80c8492... Added the front end functions for the challenge questions.
 }
@@ -135,9 +163,14 @@ function addQuestion() {
     $("#add-question").show();
     $("#create-question").hide();
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 <<<<<<< HEAD
+=======
+}
+
+>>>>>>> 97dd10b... Added the complete flow with delete.
 function goBack() {
 
     if ($("#list-questions").length === 0) {
@@ -147,6 +180,7 @@ function goBack() {
     }
 
     $("#edit-question").hide();
+<<<<<<< HEAD
 =======
 function saveQuestion() {
     $("#add-question").hide();
@@ -156,4 +190,6 @@ function saveQuestion() {
 >>>>>>> 966974f... Added the front end functionality for the security questions page.
 =======
 >>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
+=======
+>>>>>>> 97dd10b... Added the complete flow with delete.
 }
