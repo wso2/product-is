@@ -21,6 +21,7 @@ function buildUIEntries(profileUIEntries) {
         for (var i = 0; i < profileUIEntries.length > 0; i++) {
             var entry = {
                 claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
+                claimLabel: profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", ""),
                 displayName: profileUIEntries[i].claimConfigEntry.displayName,
                 value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
                 readonly: ((profileUIEntries[i].claimConfigEntry.readonly &&
