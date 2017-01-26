@@ -20,10 +20,13 @@ function drawPage() {
         if (json.return.fieldValues[i].claimUri =="http://wso2.org/claims/identity/accountDisabled") {
             continue;
         }
+        if(json.return.fieldValues[i].displayName =="Encoding" || json.return.fieldValues[i].displayName =="Secret Key"){
+            continue;
+        }
 
         body = body + "          <tr>\n" +
-        "                           <td>" +
-        "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
+            "                           <td>" +
+            "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
         if (json.return.fieldValues[i].required == "true") {
             body = body + " <span class=\"required\">*</span>";
         }
@@ -31,14 +34,50 @@ function drawPage() {
         body = body + " </label>\n</td>" +
             "                    <td><div class=\"controls\">";
 
-        if (json.return.fieldValues[i].readOnly == "true") {
-            body = body + "                        <input type=\"text\" disabled=\"\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />\n" +
-                " <input type=\"hidden\" name=\"" + json.return.fieldValues[i].claimUri + "\" value=\"" + json.return.fieldValues[i].fieldValue + "\" />";
+        if(json.return.fieldValues[i].displayName =="Refresh Secret Key"){
+            if(json.return.fieldValues[i].fieldValue!=""){
+                body = body +"<input type=\"checkbox\" checked name=\"refreshenable\" onclick=\"validateRefreshSecret();\"/></div>\n<br>"
+                continue;
+            } else {
+                body = body +" <input type=\"checkbox\" name=\"refreshenable\" onclick=\"validateRefreshSecret();\"/></div>\n<br>"
+                continue;
+            }
         }
-        else {
-            body = body + "<input type=\"text\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri +
-                "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />";
+        if(json.return.fieldValues[i].displayName !="Enable TOTP") {
+            if (json.return.fieldValues[i].readOnly == "true") {
+                body = body + "                        <input type=\"text\" disabled=\"\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri + "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />\n" +
+                    " <input type=\"hidden\" name=\"" + json.return.fieldValues[i].claimUri + "\" value=\"" + json.return.fieldValues[i].fieldValue + "\" />";
+            }
+            else {
+                body = body + "<input type=\"text\" value=\"" + json.return.fieldValues[i].fieldValue + "\" id=\"" + json.return.fieldValues[i].claimUri + "\" name=\"" + json.return.fieldValues[i].claimUri +
+                    "\" style=\"height: 30px;  align: left;width: 100%;padding-left: 25px;padding-right: 25px;\" />";
 
+            }
+        } else{
+            var encoding = "";
+            for(var j in json.return.fieldValues){
+                if(json.return.fieldValues[j].displayName=="Encoding"){
+                    encoding = json.return.fieldValues[j].fieldValue;
+                    break;
+                }
+            }
+            if(encoding !="Invalid"){
+                if(json.return.fieldValues[i].fieldValue!=""){
+                    body +=" <input type=\"checkbox\" checked name=\"totpenable\" onclick=\"validateCheckBox();\"/>\n<br><br>"+
+                        " <div id=\"qrdiv\">"+
+                        " <form name=\"qrinp\">"+
+                        "<input type=\"button\" class=\"btn btn-primary mgL14px\" value=\"Scan QR Code\" onclick='initiateTOTP()' style=\"display:inline-block;float:left;\"/>"+
+                        "<input type=\"numeric\" name=\"ECC\" value=\"1\" size=\"1\" style=\"Display:none\">"+
+                        "<canvas id=\"qrcanv\" style=\"display:inline-block;float:right;\">"+"</form>"+
+                        "</div>";
+                }else{
+                    body +="<input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+
+                        "<img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\" style=\"Display:none\">";
+                }
+            }else{
+                body +="<input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\" style=\"float:left\"/>"+ "<label id=\"tokenInvalid\" style=\"margin-left:20px\">Invalid Token Please Reconfigure</label>"+
+                    "<img id=\"totpQRCode\" src=\""+json.return.fieldValues[i].fieldValue+"\" style=\"Display:none\">" +"<canvas id=\"qrcanv\">";
+            }
         }
         body = body + "                    </div>\n" +
             "                </td></tr>";
@@ -150,148 +189,191 @@ function validateEmpty(fldname) {
 
 function reloadGrid() {
     $.ajax({
-               url: "/portal/gadgets/user_profile/index.jag",
-               type: "GET",
-               data: "&cookie=" + cookie + "&user=" + userName,
-               success: function (data) {
-json = $.parseJSON(data);
-drawPage();
+        url: "/portal/gadgets/user_profile/index.jag",
+        type: "GET",
+        data: "&cookie=" + cookie + "&user=" + userName,
+        success: function (data) {
+            json = $.parseJSON(data);
+            drawPage();
 
 
-               },
-               error: function (e) {
-                   message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
-                   }});
-               }
-           });
+        },
+        error: function (e) {
+            message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
+            }});
+        }
+    });
 }
 
 function deleteFIDOToken(deviceRemarks){
 
- var msg = "You are about to remove Id '" + username + "' From IDP '" + idPId + "'. Do you want to proceed?";
+    var msg = "You are about to remove Id '" + username + "' From IDP '" + idPId + "'. Do you want to proceed?";
     message({content: msg, type: 'confirm', okCallback: function () {
         $.ajax({
-                   url: "/portal/gadgets/connected_accounts/index.jag",
-                   type: "POST",
-                   data: "&cookie=" + cookie + "&username=" + username + "&idPId=" + idPId + "&action=fedDelete",
-                   success: function (data) {
-                       var resp = $.parseJSON(data);
-                       if (resp.success == true) {
-                           reloadFedGrid();
-                       } else {
-                           if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
-                               window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
-                           } else {
-                               if (resp.message != null && resp.message.length > 0) {
-                                   message({content: resp.message, type: 'error', cbk: function () {
-                                   }});
-                               } else {
-                                   message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
-                                   }});
-                               }
-                           }
-                       }
-                   },
-                   error: function (e) {
-                       message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
-                       }});
-                   }
-               });
+            url: "/portal/gadgets/connected_accounts/index.jag",
+            type: "POST",
+            data: "&cookie=" + cookie + "&username=" + username + "&idPId=" + idPId + "&action=fedDelete",
+            success: function (data) {
+                var resp = $.parseJSON(data);
+                if (resp.success == true) {
+                    reloadFedGrid();
+                } else {
+                    if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                        window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                    } else {
+                        if (resp.message != null && resp.message.length > 0) {
+                            message({content: resp.message, type: 'error', cbk: function () {
+                            }});
+                        } else {
+                            message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                            }});
+                        }
+                    }
+                }
+            },
+            error: function (e) {
+                message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                }});
+            }
+        });
     }, cancelCallback: function () {
     }});
 }
 
 function drawFIDORegistration() {
 
-$.ajax({
-           url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
-           type: "GET",
-           data: "&cookie=" + cookie + "&action=idPList",
-           success: function (data) {
+    $.ajax({
+        url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
+        type: "GET",
+        data: "&cookie=" + cookie + "&action=idPList",
+        success: function (data) {
 
-var deviceMetadata = null;
-if(data != null && "" != data){
-               var resp = $.parseJSON(data);
-	       deviceMetadata = resp.return;
-}
+            var deviceMetadata = null;
+            if(data != null && "" != data){
+                var resp = $.parseJSON(data);
+                deviceMetadata = resp.return;
+            }
 
-                       var top =
-                               "    <div class=\"container content-section-wrapper\">\n" +
-                               "        <div class=\"row\">\n" +
-                               "            <div class=\"col-lg-12 content-section\">\n" +
-       			       "                <legend>Manage FIDO U2F Device </legend>\n" +
-                               "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
-                       var middle = "";
-                   if (deviceMetadata != null && deviceMetadata.length > 0) {
-                       var middle =
-                               "    <div class=\"control-group\">\n" +
-                               "        <table class=\"table table-bordered\">\n" +
-                               "            <thead>\n" +
-                               "                <tr>\n" +
-                               "                    <th class='txtAlnCen width80p'>Device Remarks</th>\n" +
-                               "                    <th class='txtAlnCen'>Action</th>\n" +
-                               "                </tr>\n" +
-                               "            </thead>\n";
-
-
-                       if (isArray(deviceMetadata)) {
-                           for (var i in deviceMetadata) {
-                               middle = middle +
-                                         "                <tr>\n" +
-                                         "                    <td > Registration Time : " + deviceMetadata[i] + "</td>\n" +
-                                         "                    <td class='txtAlnCen'>\n" +
-                                         "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
-                                         "                    </td>\n" +
-                                         "                </tr>\n";
-                           }
-                       }
-                       else {
-
-                           middle = middle +
-                                     "                <tr>\n" +
-                                     "                    <td > Registration Time : "  + deviceMetadata + "</td>\n" +
-                                     "                    <td class='txtAlnCen'>\n" +
-                                     "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
-                                     "                    </td>\n" +
-                                     "                </tr>\n";
-
-                       }
-
-                       var middle = middle + "            </tbody>\n" +
-                                  "        </table>\n" +
-                                  "    </div>";
- }
-else {
-middle = middle + "<label > Device not registered yet please register your device ! </label>";
-}
+            var top =
+                "    <div class=\"container content-section-wrapper\">\n" +
+                "        <div class=\"row\">\n" +
+                "            <div class=\"col-lg-12 content-section\">\n" +
+                "                <legend>Manage FIDO U2F Device </legend>\n" +
+                "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
+            var middle = "";
+            if (deviceMetadata != null && deviceMetadata.length > 0) {
+                var middle =
+                    "    <div class=\"control-group\">\n" +
+                    "        <table class=\"table table-bordered\">\n" +
+                    "            <thead>\n" +
+                    "                <tr>\n" +
+                    "                    <th class='txtAlnCen width80p'>Device Remarks</th>\n" +
+                    "                    <th class='txtAlnCen'>Action</th>\n" +
+                    "                </tr>\n" +
+                    "            </thead>\n";
 
 
-                       var end =
-                               "                    <div class=\"control-group\">\n" +
-                               "                        <div class=\"controls\">\n" +
-                               "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
-                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn\" value=\"Done\"/>\n" +
-                               "                        </div>\n" +
-                               "                    </div></div>\n" +
-                               "                </form>\n" +
-                               "            </div>\n" +
-                               "        </div>\n" +
-                               "    </div>   ";
+                if (isArray(deviceMetadata)) {
+                    for (var i in deviceMetadata) {
+                        middle = middle +
+                            "                <tr>\n" +
+                            "                    <td > Registration Time : " + deviceMetadata[i] + "</td>\n" +
+                            "                    <td class='txtAlnCen'>\n" +
+                            "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                            "                    </td>\n" +
+                            "                </tr>\n";
+                    }
+                }
+                else {
 
-                       var output = top + middle + end;
+                    middle = middle +
+                        "                <tr>\n" +
+                        "                    <td > Registration Time : "  + deviceMetadata + "</td>\n" +
+                        "                    <td class='txtAlnCen'>\n" +
+                        "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                        "                    </td>\n" +
+                        "                </tr>\n";
 
-                       $("#gadgetBody").empty();
-                       $("#gadgetBody").append(output);
+                }
+
+                var middle = middle + "            </tbody>\n" +
+                    "        </table>\n" +
+                    "    </div>";
+            }
+            else {
+                middle = middle + "<label > Device not registered yet please register your device ! </label>";
+            }
 
 
-           },
-           error: function (e) {
-               message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
-               }});
-           }
-       });
+            var end =
+                "                    <div class=\"control-group\">\n" +
+                "                        <div class=\"controls\">\n" +
+                "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
+                "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn\" value=\"Done\"/>\n" +
+                "                        </div>\n" +
+                "                    </div></div>\n" +
+                "                </form>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </div>   ";
+
+            var output = top + middle + end;
+
+            $("#gadgetBody").empty();
+            $("#gadgetBody").append(output);
+
+
+        },
+        error: function (e) {
+            message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
+            }});
+        }
+    });
 }
 
 function isArray(element) {
     return Object.prototype.toString.call(element) === '[object Array]';
+}
+
+function validateCheckBox(){
+    var fld = document.getElementsByName("totpenable")[0];
+    if(fld.checked){
+        initiateTOTP();
+        $("#tokenInvalid").empty();
+    }else{
+        $('#totpQRCode').attr("src","");
+        resetTOTP();
+    }
+
+}
+
+function getQRCode(){
+    initiateTOTP();
+}
+function validateRefreshSecret(){
+    var rs = document.getElementsByName("refreshenable")[0];
+    if(rs.checked){
+        refreshSecretKey();
+        alert("SecretKey is refreshed. Please restore the secret key in your mobile app");
+    }else {
+        document.getElementsByName("refreshenable").checked = false;
+    }
+}
+
+function getSecretKey(url){
+    var loc = jQuery.parseJSON(url).return;
+    $('#secret').value(loc);
+}
+
+function loadQRCode(url){
+    var key = jQuery.parseJSON(url).return;
+    var decodedKey = atob(key);
+    setupqr();
+    doqr(decodedKey);
+}
+
+function removeQRCode(){
+    $('#totpQRCode').attr("src","");
+    $('#totpQRCode').css("visibility","hidden");
+    $('#totpQRCode').show();
 }

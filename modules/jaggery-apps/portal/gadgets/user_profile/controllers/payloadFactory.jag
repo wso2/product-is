@@ -1,4 +1,22 @@
 <%
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 include("../util/constants.jag");
 
 var getUserProfile = "<mgt:getUserProfile xmlns:mgt=\"http://mgt.profile.user.identity.carbon.wso2.org\">\n" +
@@ -54,6 +72,15 @@ var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.ca
 
 var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
 
+var initTOTP = "<ns:initTOTP xmlns:ns=\"http://services.totp.authenticator.application.identity.carbon.wso2.org\">\n" +
+			          "<ns:username>{0}</ns:username>\n" +
+			          "</ns:initTOTP>";
+var resetTOTP = "<ns:resetTOTP xmlns:ns=\"http://services.totp.authenticator.application.identity.carbon.wso2.org\">\n" +
+			          "<ns:username>{0}</ns:username>\n" +
+			          "</ns:resetTOTP>";
+var refreshSecretKey = "<ns:refreshSecretKey xmlns:ns=\"http://services.totp.authenticator.application.identity.carbon.wso2.org\">\n" +
+			          "<ns:username>{0}</ns:username>\n" +
+			          "</ns:refreshSecretKey>";
 var startRegistration = "<xsd:startRegistration xmlns:xsd=\"http://service.fido.authenticator.application.identity.carbon.wso2.org\">\n"+  
                     "<xsd:appID>{1}</xsd:appID>\n"+
                     "</xsd:startRegistration>";
@@ -89,6 +116,9 @@ if(!application.get(SAML_ENABLED)){
 	application.put("urn:login", login);
 }
 application.put("urn:getUserInfo", getUserInfo);
+application.put("urn:initTOTP", initTOTP);
+application.put("urn:resetTOTP",resetTOTP);
+application.put("urn:refreshSecretKey",refreshSecretKey);
 application.put("urn:startRegistration", startRegistration);
 application.put("urn:finishRegistration", finishRegistration);
 application.put("urn:removeAllRegistrations", removeRegistration);
