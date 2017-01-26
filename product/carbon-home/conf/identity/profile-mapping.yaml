@@ -63,6 +63,7 @@ profiles:
    required: true
    readonly: false
    regex: "^[a-zA-Z]*$"
+<<<<<<< HEAD
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
@@ -158,12 +159,14 @@ profiles:
    required: true
    readonly: false
    regex: ".*"
+=======
+>>>>>>> 87421eb... Fixing https://wso2.org/jira/browse/IDENTITY-5632
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
    required: false
    readonly: false
-   regex: ".*"
+   regex: "^[a-zA-Z]*$"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
@@ -176,7 +179,7 @@ profiles:
    displayName: "Telephone"
    required: false
    readonly: false
-   regex: ".*"
+   regex: "^(?=.*[0-9])[- +()0-9]+$"
    dataType: "text"
  -
   profileName: "employee"
