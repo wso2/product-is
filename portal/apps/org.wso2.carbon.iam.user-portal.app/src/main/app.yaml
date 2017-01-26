@@ -1,4 +1,4 @@
-theme : "org.wso2.carbon.uuf.common.theme.default"
+theme : "org.wso2.carbon.uuf.common.theme.default.theme"
 #menus :
 #  main :
 #    Home : {link: "", icon: "fw-home"}
