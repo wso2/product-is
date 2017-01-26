@@ -91,32 +91,50 @@ $(window).load(function () {
             && /\d/.test(value); // has a digit
     });
 
-    //confirm password validation
+    //signup form validation
     $("#self-signUp-form").validate({
         rules: {
             confirmPassword: {
-                equalTo: "#password"
+                equalTo: "#password",
+                required: {
+                    depends: function (element) {
+                        return $("#password").is(":not(:blank)");
+                    }
+                }
             },
             password: {
-                required: true,
                 pwcheck: true,
-                minlength: 6
+                minlength: 6,
+                required: true
+            },
+            username: {
+                required: true
             }
         },
         messages: {
-            confirmPassword: "These Passwords do not match.",
-            password: "Password must have a minimum strength of Strong."
+            confirmPassword: {
+                equalTo: "These passwords do not match.",
+                required: "Please re-enter the password."
+            },
+            password: {
+                minlength: "Password should be at least {0} characters long.",
+                pwcheck: "Password must have a minimum strength of Strong.",
+                required: "Required to provide a password."
+            },
+            username: {
+                required: "Required to provide a username."
+            }
         }
     });
-    //username validation
-    $("#username").rules("add", {username: true});
 
+    $("#username").rules("add", { username: true });
+    
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 });
 
 $('#domainSelector').change(function () {
     var domain = document.getElementById('domainSelector').value;
     if (domain != "default") {
-        document.getElementById("domainValue").value = domain;
+        document.getElementById("domain").value = domain;
     }
 });

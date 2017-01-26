@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 function getProfile() {
 
     /**
@@ -46,9 +46,14 @@ function getProfile() {
      */
 
     var domainNames;
+    var domainNamesList;
     try {
-        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        domainNamesList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "getDomainNames", []);
+        if (domainNamesList.size() != 1) {
+            domainNames = domainNamesList;
+        }
+
     } catch (e) {
         return {errorMessage: 'signup.error.retrieve.domain'};
     }
@@ -61,7 +66,7 @@ function getProfile() {
     };
 }
 
-function generateClaimProfileMap(claimProfileEntry){
+function generateClaimProfileMap(claimProfileEntry) {
     var claimProfileMap = {};
     claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
     claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
@@ -131,7 +136,7 @@ function onRequest(env) {
         for (var i in formParams) {
             if (i == "password") {
                 credentialMap["password"] = formParams[i];
-            } else if (i == "domainValue") {
+            } else if (i == "domain") {
                 domain = formParams[i];
             }
             else {

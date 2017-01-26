@@ -150,30 +150,28 @@ function onRequest(env) {
     if (env.request.method == "POST" && env.params.profileName && env.params.profileName == env.params.actionId) {
 
         var updatedClaims = env.request.formParams;
-        var updateProfileResult = updateUserProfile(session.getUser().getUserId(), updatedClaims);
-        success = updateProfileResult.success;
-        message = updateProfileResult.message;
+        var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
+        success = result.success;
+        message = result.message;
+    } else if (env.request.method === "POST" && "image" === env.params.actionId) {
 
-    } else if (env.request.method == "POST" && "image" == env.params.actionId) {
-
-        var uploadFileResult = uploadFile(env, session);
-        success = uploadFileResult.success;
-        message = uploadFileResult.message;
-
+        var result = uploadFile(env, session);
+        success = result.success;
+        message = result.message;
     }
 
     if (env.params.profileName) {
 
         var uiEntries = [];
-        var getProfileUIEntriesResult = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
-        if (getProfileUIEntriesResult.success) {
+        var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
+        if (result.success) {
             if (env.request.method != "POST") {
                 success = true;
             }
-            uiEntries = buildUIEntries(getProfileUIEntriesResult.profileUIEntries);
+            uiEntries = buildUIEntries(result.profileUIEntries);
         } else {
             success = false;
-            message = getProfileUIEntriesResult.message;
+            message = result.message;
         }
         var profileImageResult = isProfileImageAvailbale(session);
         Log.debug(profileImageResult);

@@ -327,7 +327,9 @@
 .settings-nav .nav-stacked > li.active, .settings-nav li ul.sub-menu > li.active{
     margin-right: -1px;
 }
-
+.nav>li>a:focus {
+    background-color: rgba(102,102,102,.25);
+}
 @media (max-width: 600px) {
     .settings-nav{
         width:100%;
@@ -348,6 +350,10 @@
 
 .page-header {
     margin: 20px 0 20px;
+}
+
+.body-wrapper {
+    padding: 20px;
 }
 
 .signup-header {
@@ -508,4 +514,8 @@ label.error {
 .profile-thumb-sm {
     height: 30px;
     width: 30px;
+}
+
+.edit-icon {
+    color: #bfbfbf;
 }
