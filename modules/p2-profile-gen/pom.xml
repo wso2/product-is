@@ -214,9 +214,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.claim.mgt.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.identity.inbound.auth.saml2:org.wso2.carbon.identity.sso.saml.feature:${identity.inbound.auth.saml.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.metadata.saml2:org.wso2.carbon.identity.idp.metadata.saml2.server.feature:${identity.metadata.saml.version}
                                 </featureArtifactDef>
@@ -332,9 +332,9 @@
                                 </featureArtifactDef>
 
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon.identity.tool.validator.sso.saml2:org.wso2.carbon.identity.tools.saml.validator.feature:${identity.tool.samlsso.validator.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.metadata.saml2:org.wso2.carbon.identity.idp.metadata.saml2.server.feature:${identity.metadata.saml.version}
                                 </featureArtifactDef>
@@ -608,10 +608,10 @@
                                     <id>org.wso2.carbon.identity.xacml.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${identity.inbound.auth.saml.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.idp.metadata.saml2.server.feature.group</id>
                                     <version>${identity.metadata.saml.version}</version>
@@ -754,10 +754,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <feature>
-                                    <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
-                                    <version>${identity.tool.samlsso.validator.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>-->
+                                    <!--<version>${identity.tool.samlsso.validator.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -1087,10 +1087,10 @@
                                     <id>org.wso2.carbon.identity.xacml.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${identity.inbound.auth.saml.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.idp.metadata.saml2.server.feature.group</id>
                                     <version>${identity.metadata.saml.version}</version>
@@ -1233,10 +1233,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <feature>
-                                    <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
-                                    <version>${identity.tool.samlsso.validator.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>-->
+                                    <!--<version>${identity.tool.samlsso.validator.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -1502,10 +1502,10 @@
                                     <id>org.wso2.carbon.identity.xacml.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.identity.sso.saml.server.feature.group</id>
                                     <version>${identity.inbound.auth.saml.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.idp.metadata.saml2.server.feature.group</id>
                                     <version>${identity.metadata.saml.version}</version>
@@ -1636,10 +1636,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <feature>
-                                    <id>org.wso2.carbon.identity.tools.saml.validator.server.feature.group</id>
-                                    <version>${identity.tool.samlsso.validator.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.identity.tools.saml.validator.server.feature.group</id>-->
+                                    <!--<version>${identity.tool.samlsso.validator.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
