@@ -35,20 +35,8 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <!--<module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>-->
         <module>osgi-services/org.wso2.is.portal.user.client.api</module>
-        <!--<module>osgi-services/org.wso2.is.portal.user.client.profile</module>-->
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>
-        <!--<module>osgi-services/org.wso2.carbon.uuf.sample.pets-store.bundle</module>-->
-        <!--<module>osgi-services/org.wso2.carbon.uuf.sample.simple-auth.bundle</module>-->
-        <!--<module>themes/org.wso2.carbon.uuf.sample.theme.default</module>-->
-        <!--<module>themes/org.wso2.carbon.uuf.sample.theme.blue</module>-->
-        <!--<module>themes/org.wso2.carbon.uuf.sample.theme.green</module>-->
-        <!--<module>components/org.wso2.carbon.uuf.sample.simple-auth</module>-->
-        <!--<module>components/org.wso2.carbon.uuf.sample.foundation</module>-->
-        <!--<module>components/org.wso2.carbon.uuf.sample.store-common</module>-->
-        <!--<module>apps/org.wso2.carbon.uuf.sample.pets-store</module>-->
-        <!--<module>apps/org.wso2.carbon.uuf.sample.features-app</module>-->
     </modules>
 
 </project>

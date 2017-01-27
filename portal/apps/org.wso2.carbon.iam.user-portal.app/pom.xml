@@ -55,12 +55,10 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
-            <version>${carbon.is.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
-            <version>${org.wso2.carbon.identity.mgt.version}</version>
         </dependency>
     </dependencies>
 
