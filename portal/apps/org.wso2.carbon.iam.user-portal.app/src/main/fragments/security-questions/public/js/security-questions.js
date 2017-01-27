@@ -19,6 +19,8 @@ $(document).ready(function () {
     if ($("#list-questions").length === 0) {
         $("#add-question").show();
     }
+
+    $('#questionUpdateForm').validate();
 });
 
 function editQuestion(questionId, questionSetId, questionText) {

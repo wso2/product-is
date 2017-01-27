@@ -17,14 +17,14 @@
 {{#fillZone "modal"}}
     {{
     fragment "org.wso2.carbon.uuf.common.foundation.modal"
-             id="deleteModal"
-             class="additional-class"
-             modalTitle="Are you sure you want to delete ?"
-             modalBody="Are you sure you want to delete ?"
-             modalFooter=""
-             primaryButton="Yes"
-             secondaryButton="Cancel"
-             dismissButton=true
+         id="deleteModal"
+         class=""
+         modalTitle=(t "modal.delete.header")
+         modalBody=(t "modal.delete.security.question.content")
+         modalFooter=""
+         primaryButton="Yes"
+         secondaryButton="Cancel"
+         dismissButton=true
     }}
 {{/fillZone}}
 

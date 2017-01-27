@@ -16,8 +16,6 @@
 
 $(window).load(function(){
 
-    window.location.hash = '';
-
     var selector = '.settings-nav li';
     $(selector).not(".collapse-li").click(function () {
         $(selector).not(".collapse-li").removeClass('active');
@@ -52,7 +50,7 @@ $(window).load(function(){
 
     // add edit indication on input fields
     var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
-    editField.closest('.form-group').addClass('has-feedback')
+    editField.closest('.form-group').addClass('has-feedback');
     editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
     editField.hover(function(){
         $(this).parent().find('.edit-icon').append('<i class="fw fw-edit"></i>')
