@@ -19,10 +19,6 @@ theme : "org.wso2.carbon.uuf.common.theme.default"
 #         submenus:
 #           - text: "See all our amazing pets"
 #             link: "/pets"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e7b5042... Update the yaml files with new menu structure
 menus :
   - name: "main"
     items:
@@ -47,12 +43,6 @@ menus :
            - text: "Account Settings"
              link: "account/account-setting"
              icon:  "fw fw-add"
-<<<<<<< HEAD
-=======
-
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
-=======
->>>>>>> e7b5042... Update the yaml files with new menu structure
 
 errorPages:
   404: "/foundation/error/404"
@@ -70,11 +60,4 @@ security:
     accept: []
     reject: []
   responseHeaders: null
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
-=======
-
->>>>>>> e7b5042... Update the yaml files with new menu structure

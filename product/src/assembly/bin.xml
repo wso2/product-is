@@ -1,14 +1,6 @@
 <!--
   ~ /*
-<<<<<<< HEAD
-<<<<<<< HEAD
   ~ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-=======
-  ~ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
->>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
-=======
-  ~ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
->>>>>>> b84e760... Refactoring c5 product-is branch
   ~ *
   ~ * Licensed under the Apache License, Version 2.0 (the "License");
   ~ * you may not use this file except in compliance with the License.
@@ -38,60 +30,18 @@
             <excludes>
                 <exclude>README.txt</exclude>
                 <exclude>LICENSE.txt</exclude>
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <exclude>**/identity/domain-config.yaml</exclude>
                 <exclude>**/identity/store-config.yaml</exclude>
                 <exclude>**/identity/claim-mapping.yaml</exclude>
                 <exclude>**/identity/profile-mapping.yaml</exclude>
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <exclude>**/identity/identity-management.yaml</exclude>
-=======
-                <exclude>**/identity/recovery.yaml</exclude>
->>>>>>> 6232657... excluding recovery.yaml and challagne questions for feature and add from product
-=======
-                <exclude>**/identity/identity-management.yaml</exclude>
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                 <exclude>**/identity/challenge-questions/en-US.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
-=======
-                <exclude>**/identity/claim-store.yml</exclude>
-                <exclude>**/identity/connector-config.yml</exclude>
-                <exclude>**/identity/domain-config.yaml</exclude>
-                <exclude>**/identity/store-config.yml</exclude>
-<<<<<<< HEAD
->>>>>>> a695889... update connectors and config changes
             </excludes>
         </fileSet>
-=======
-                <exclude>release-notes.html</exclude>
-=======
->>>>>>> b84e760... Refactoring c5 product-is branch
-                <exclude>**/*.ipr</exclude>
-                <exclude>**/*.iwr</exclude>
-                <exclude>**/*.eclipse</exclude>
-=======
-=======
-                <exclude>**/identity/domain-config.yaml</exclude>
-                <exclude>**/identity/store-config.yaml</exclude>
-                <exclude>**/identity/claim-mapping.yaml</exclude>
-                <exclude>**/identity/profile-mapping.yaml</exclude>
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-                <exclude>**/transports/netty-transports.yml</exclude>
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-            </excludes>
-        </fileSet>
-<<<<<<< HEAD
-
->>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
-=======
->>>>>>> b84e760... Refactoring c5 product-is branch
         <fileSet>
             <directory>..</directory>
             <outputDirectory>.</outputDirectory>
@@ -100,18 +50,6 @@
                 <include>LICENSE</include>
             </includes>
         </fileSet>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <fileSet>
-            <directory>carbon-home/conf/transports</directory>
-            <outputDirectory>conf/transports</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-=======
-
->>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
-=======
->>>>>>> b84e760... Refactoring c5 product-is branch
         <fileSet>
             <directory>carbon-home/conf/transports</directory>
             <outputDirectory>conf/transports</outputDirectory>
@@ -134,8 +72,6 @@
         </fileSet>
         <fileSet>
             <directory>carbon-home/conf/identity</directory>
-<<<<<<< HEAD
-<<<<<<< HEAD
             <outputDirectory>conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
@@ -151,34 +87,6 @@
         </fileSet>
     </fileSets>
 
-=======
-            <outputDirectory>conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>carbon-home/conf/hazelcast</directory>
-            <outputDirectory>conf/hazelcast</outputDirectory>
-=======
-            <outputDirectory>conf/identity</outputDirectory>
->>>>>>> b84e760... Refactoring c5 product-is branch
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>carbon-home/conf/datasources</directory>
-            <outputDirectory>conf/datasources</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>carbon-home/deployment</directory>
-            <outputDirectory>deployment</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-    </fileSets>
-<<<<<<< HEAD
->>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
-=======
-
->>>>>>> b84e760... Refactoring c5 product-is branch
     <files>
 
     </files>

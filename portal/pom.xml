@@ -29,41 +29,15 @@
 
     <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
     <packaging>pom</packaging>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    <version>1.0.0-SNAPSHOT</version>
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
->>>>>>> d78d543... fixing poms
     <name>WSO2 IAM Portal - Parent</name>
 
     <description>IAM Portal</description>
     <url>http://wso2.org</url>
 
     <modules>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         <!--<module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>-->
         <module>osgi-services/org.wso2.is.portal.user.client.api</module>
         <!--<module>osgi-services/org.wso2.is.portal.user.client.profile</module>-->
-=======
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-        <module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>
-        <module>osgi-services/org.wso2.is.portal.user.client.profile</module>
-=======
-        <module>osgi-services/org.wso2.is.portal.user.client.api</module>
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-
->>>>>>> d78d543... fixing poms
-=======
-        <!--<module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>-->
-        <module>osgi-services/org.wso2.is.portal.user.client.api</module>
-        <!--<module>osgi-services/org.wso2.is.portal.user.client.profile</module>-->
->>>>>>> 1ab2f27... fixing maven module structure
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>
         <!--<module>osgi-services/org.wso2.carbon.uuf.sample.pets-store.bundle</module>-->
         <!--<module>osgi-services/org.wso2.carbon.uuf.sample.simple-auth.bundle</module>-->

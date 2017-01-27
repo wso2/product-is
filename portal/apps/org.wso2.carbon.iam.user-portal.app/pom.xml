@@ -23,15 +23,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <version>6.0.0-SNAPSHOT</version>
-=======
-        <version>1.0.0-SNAPSHOT</version>
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-        <version>6.0.0-SNAPSHOT</version>
->>>>>>> 8ae54da... Adding user portal login page..
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -60,56 +52,22 @@
             <classifier>uuf-theme</classifier>
         </dependency>
         <!--Backend dependencies-->
-<<<<<<< HEAD
-<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
             <version>${carbon.is.version}</version>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
             <version>${org.wso2.carbon.identity.mgt.version}</version>
         </dependency>
-=======
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.is.portal.user.client.api</artifactId>
-            <version>${carbon.is.version}</version>
-        </dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 8ae54da... Adding user portal login page..
-=======
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.is.portal.user.client.profile</artifactId>
-            <version>${carbon.is.version}</version>
-        </dependency>
->>>>>>> f889153... Added osgi service for calling ProfileMgtService
-=======
->>>>>>> 1ab2f27... fixing maven module structure
-=======
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.recovery</artifactId>
-            <version>${org.wso2.carbon.identity.mgt.version}</version>
-        </dependency>
->>>>>>> 80c8492... Added the front end functions for the challenge questions.
     </dependencies>
 
 
     <build>
         <plugins>
             <plugin>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8aeb445... Fixing jshint issues
                 <groupId>com.cj.jshintmojo</groupId>
                 <artifactId>jshint-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -131,11 +89,6 @@
                 </configuration>
             </plugin>
             <plugin>
-<<<<<<< HEAD
-=======
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
->>>>>>> 8aeb445... Fixing jshint issues
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
                 <version>${carbon-uuf-maven-plugin.version}</version>
@@ -148,107 +101,27 @@
                             <goal>create-app</goal>
                         </goals>
                         <configuration>
-<<<<<<< HEAD
-<<<<<<< HEAD
                             <instructions>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 80c8492... Added the front end functions for the challenge questions.
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.carbon.identity.recovery.*
                                 </Import-Package>
-<<<<<<< HEAD
-=======
-                            <instructions>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                <Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>
-<<<<<<< HEAD
->>>>>>> 8ae54da... Adding user portal login page..
-=======
-                                <Import-Package>org.wso2.is.portal.user.client.profile</Import-Package>
->>>>>>> f889153... Added osgi service for calling ProfileMgtService
-=======
-                                <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-=======
-=======
-                                <!--<Import-Package>org.wso2.is.portal.user.client.realmservice</Import-Package>-->
-                                <!--<Import-Package>org.wso2.is.portal.user.client.profile</Import-Package>-->
-<<<<<<< HEAD
->>>>>>> 1ab2f27... fixing maven module structure
-                                <Import-Package>org.wso2.is.portal.user.client.api.*</Import-Package>
->>>>>>> 7444e2a... getting user login to work..
-=======
-                                <Import-Package>
-                                    org.wso2.is.portal.user.client.api.util, org.wso2.is.portal.user.client.api.*
-                                </Import-Package>
->>>>>>> dcba92c... Added user portal self sign-up feature
-=======
-                                <Import-Package>org.wso2.is.portal.user.client.api</Import-Package>
->>>>>>> 4f94f5f... Add profile image download
-=======
->>>>>>> 80c8492... Added the front end functions for the challenge questions.
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
                                 <bundle>
-<<<<<<< HEAD
-<<<<<<< HEAD
                                     <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
                                     <version>${carbon.is.version}</version>
-<<<<<<< HEAD
                                 </bundle>
                                 <bundle>
                                     <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </bundle>
-=======
-                            <!--<instructions>-->
-                                <!--<Import-Package>org.wso2.carbon.uuf.sample.simpleauth.bundle</Import-Package>-->
-                            <!--</instructions>-->
-                            <!--&lt;!&ndash;All backend dependencies should be specified here&ndash;&gt;-->
-                            <!--<bundles>-->
-                                <!--<bundle>-->
-                                    <!--<symbolicName>org.wso2.carbon.uuf.sample.pets-store.bundle</symbolicName>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
-                                <!--</bundle>-->
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-                                    <symbolicName>org.wso2.is.portal.user.client.realmservice</symbolicName>
-=======
-                                    <symbolicName>org.wso2.is.portal.user.client.api</symbolicName>
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-                                    <version>${carbon.is.version}</version>
-                                    <symbolicName>org.wso2.is.portal.user.client.profile</symbolicName>
-                                    <version>${carbon.is.version}</version>
-=======
->>>>>>> 1ab2f27... fixing maven module structure
-                                </bundle>
-<<<<<<< HEAD
->>>>>>> 8ae54da... Adding user portal login page..
-=======
-                                <bundle>
-                                    <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </bundle>
->>>>>>> 80c8492... Added the front end functions for the challenge questions.
                                 <!--<bundle>-->
                                     <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</bundle>-->
-<<<<<<< HEAD
-<<<<<<< HEAD
                             </bundles>
-=======
-                            <!--</bundles>-->
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-                            </bundles>
->>>>>>> 8ae54da... Adding user portal login page..
                         </configuration>
                     </execution>
                 </executions>

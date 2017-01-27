@@ -16,21 +16,6 @@
             </button>
         </div>
     {{else}}
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <div class="page-content-wrapper">
-            <div class="container">
-                <div class="login-form-wrapper">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                            <div class="brand-container add-margin-bottom-5x">
-                                <div class="row">
-                                    <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
-                                        <img class="img-responsive brand-spacer"
-                                             src="{{public "images/logo-white.png"}}"
-                                             alt="wso2-logo">
-                                    </div>
-=======
         <div class="container">
             <div class="signup-form-wrapper">
                 <div class="row">
@@ -41,27 +26,10 @@
                                     <img class="img-responsive brand-spacer"
                                          src="{{public "images/logo-white.png"}}"
                                          alt="wso2-logo">
->>>>>>> 56c54ac... UI fixes
                                 </div>
-                                <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
                             </div>
-                            <!--not yet implemented-->
-                            <!--<div class="social-container hidden-sm hidden-xs">-->
-                            <!--<p>Also sign in with</p>-->
-                            <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
-                            <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
-                            <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
-                            <!--</div>-->
+                            <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
                         </div>
-<<<<<<< HEAD
-                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
-                            <div class="data-container">
-                                <form method="post" class="form-horizontal" id="self-signUp-form">
-                                    <div class="form-group">
-                                        <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
-                                            <h3><b>{{t "user-portal.user.signup.title"}}</b></h3>
-                                            <h4>{{t "user-portal.user.signup.sub.title"}}</h4></div>
-=======
                         <!--not yet implemented-->
                         <!--<div class="social-container hidden-sm hidden-xs">-->
                         <!--<p>Also sign in with</p>-->
@@ -93,12 +61,7 @@
                                                     placeholder={{t "placeholder.username"}}
                                                     required/>
                                         {{/each}}
->>>>>>> cf9728b... Sign in, Sign up pages UI fixes
                                     </div>
-<<<<<<< HEAD
-
-                                    <div class="form-group">
-=======
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#if domainNames}}
                                             </br><label class="control-label"
@@ -116,64 +79,8 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="password_strength_meter ">
->>>>>>> 4f4c7d8... Added domain in UI for self sign-up
                                         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                            {{#each usernameClaim}}
-                                                </br><label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
-                                                <span>*</span></label>
-                                                <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
-                                                        name={{this.claimURI}} id={{this.claimLabel}}
-                                                        class="form-control"
-                                                        pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                        placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
-                                                        required/>
-                                            {{/each}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="password_strength_meter ">
-                                            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                                <label for="password">{{t "user-portal.user.signup.password"}}
-                                                    :<span>*</span></label></br>
-                                                <input type="password" name="password" id="password"
-                                                       class="form-control"
-                                                       data-schemaformat="password" required/>
-
-                                                <div id="password_strength_wrap">
-                                                    <div class="pwd_str">
-                                                        <div id="passwordDescription">{{t "user-portal.user.password.notEntered"}}</div>
-                                                        <div id="passwordStrength" class="strength0"></div>
-                                                    </div>
-                                                    <div id="pswd_info">
-                                                        <i>{{t "user-portal.user.password.validation.info1"}}:</i>
-                                                        <ul>
-                                                            <li class="invalid" id="length"><span
-                                                                    class="status_icon"></span>
-                                                                {{t "user-portal.user.password.validation.info2"}}
-                                                            </li>
-                                                            <li class="invalid" id="pnum"><span
-                                                                    class="status_icon"></span>
-                                                                {{t "user-portal.user.password.validation.info3"}}
-                                                            </li>
-                                                            <li class="invalid" id="capital"><span
-                                                                    class="status_icon"></span>
-                                                                {{t "user-portal.user.password.validation.info4"}}&amp;
-                                                                {{t "user-portal.user.password.validation.info5"}}
-                                                            </li>
-                                                            <li class="invalid" id="spchar"><span
-                                                                    class="status_icon"></span>
-                                                                {{t "user-portal.user.password.validation.info6"}}
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <!-- END pswd_info -->
-=======
-                                            <label class="control-label" for="password">{{t "user-portal.user.signup.password"}}
-=======
                                             <label class="control-label" for="password">{{t "signup.password"}}
->>>>>>> 30540af... Code refactoring in user portal app
                                                 <span>*</span></label></br>
                                             <input type="password" name="password" id="password"
                                                    class="form-control"
@@ -205,133 +112,28 @@
                                                             {{t "password.validation.info6"}}
                                                         </li>
                                                     </ul>
->>>>>>> cf9728b... Sign in, Sign up pages UI fixes
                                                 </div>
-                                                <!-- END pwd_strength_wrap -->
+                                                <!-- END pswd_info -->
                                             </div>
-                                        </div>
-
-                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                            <label for="confirmPassword">{{t "user-portal.user.password.reset.new.confirm"}}
-                                                :<span>*</span></label>
-                                            <input type="password" name="confirmPassword" id="confirmPassword"
-                                                   class="form-control" required/>
+                                            <!-- END pwd_strength_wrap -->
                                         </div>
                                     </div>
 
-<<<<<<< HEAD
-                                    <div class="form-group">
-                                        {{#each signupClaims}}
-                                            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                                {{#if this.required}}
-                                                    <label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:
-                                                        <span>*</span></label>
-                                                    <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
-                                                            name={{this.claimURI}} id={{this.claimLabel}}
-                                                            class="form-control"
-                                                            pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                            placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}}
-                                                            required/></br>
-                                                {{else}}
-                                                    <label for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}:</label>
-                                                    <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
-                                                            name={{this.claimURI}} id={{this.claimLabel}}
-                                                            class="form-control"
-                                                            pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                            placeholder={{#if this.defaultValue}}{{this.defaultValue}}{{else}}""{{/if}} /></br>
-                                                {{/if}}
-                                            </div>
-                                        {{else}}
-                                            {{log "No Defined Claims for the user self sign-up!" level="error"}}
-                                            <p class="empty">{{t "user-portal.user.signup.no.content"}}</p>
-                                        {{/each}}
-=======
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <label class="control-label"
                                                for="confirmPassword">{{t "password.reset.new.confirm"}}
                                             <span>*</span></label>
                                         <input type="password" name="confirmPassword" id="confirmPassword"
                                                class="form-control" required/>
->>>>>>> cf9728b... Sign in, Sign up pages UI fixes
                                     </div>
-
-                                    <div class="form-group">
-                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                            <input id="register" class="btn btn-default btn-primary add-margin-right-2x"
-                                                   type="submit" value="Sign Up"/></div>
-                                    </div>
-                                    <h5>{{t "user-portal.user.login.message"}}<a href="{{@contextPath}}/login">
-                                        &nbsp;{{t "user-portal.user.login.title"}}</a></h5>
-                                </form>
-=======
-        <div class="container">
-            <div class="signup-form-wrapper">
-                <h3 class="signup-header">{{t "user-portal.user.add"}}</h3></br>
-                <form method="post" class="form-horizontal" id="self-signUp-form">
-                    <div class="form-group">
-                        <div class="col-xs-14 col-sm-14 col-md-8 col-lg-6">
-                            {{#each signupClaims}}
-                                {{#if this.required}}
-                                    </br><label for={{this.displayLabel}}>{{this.displayName}}
-                                    <span>*</span></label></br>
-                                    <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
-                                            name={{this.claimURI}} id={{this.displayLabel}} class="form-control"
-                                            pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                    placeholder={{this.displayLabel}} required/>
-                                {{else}}
-                                    <label for={{this.displayLabel}}>{{this.displayName}}</label></br>
-                                    <input type={{#if this.dataType}}{{this.dataType}}{{else}}"text"{{/if}}
-                                            name={{this.claimURI}} id={{this.displayLabel}} class="form-control"
-                                            pattern={{#if this.regex}}{{this.regex}}{{/if}}
-                                                    placeholder={{this.displayLabel}} />
-                                {{/if}}
-                            {{else}}
-                                {{log "No Defined Claims for the user self sign-up!" level="error"}}
-                                <p class="empty">No content</p>
-                            {{/each}}
-                        </div>
-                    </div>
-                    <div class="form-group password_strength_meter ">
-                        <div class="col-xs-14 col-sm-14 col-md-8 col-lg-6">
-                            <label for="password">Password<span>*</span></label></br>
-                            <input type="password" name="password" id="password" class="form-control"
-                                   placeholder="password" data-schemaformat="password" required/>
-
-                            <div id="password_strength_wrap">
-                                <div class="pwd_str">
-                                    <div id="passwordDescription">Password not entered</div>
-                                    <div id="passwordStrength" class="strength0"></div>
                                 </div>
-                                <div id="pswd_info">
-                                    <i>Make your password strong by having:</i>
-                                    <ul>
-                                        <li class="invalid" id="length"><span class="status_icon"></span>At least 6
-                                            characters
-                                        </li>
-                                        <li class="invalid" id="pnum"><span class="status_icon"></span>At least one
-                                            number
-                                        </li>
-                                        <li class="invalid" id="capital"><span class="status_icon"></span>At least
-                                            one lowercase &amp; one uppercase letter
-                                        </li>
-                                        <li class="invalid" id="spchar"><span class="status_icon"></span>At least
-                                            one special character
-                                        </li>
-                                    </ul>
-=======
-                                            {{#if this.required}}
-                                                <label class="control-label" for={{this.claimLabel}}>{{t (stringFormat "%s%s" "user-portal.user.claim." this.claimLabel)}}
-=======
+
+                                <div class="form-group">
+                                    {{#each signupClaims}}
+                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                             {{#if required}}
-<<<<<<< HEAD
-                                                <label class="control-label" for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
->>>>>>> 30540af... Code refactoring in user portal app
-=======
                                                 <label class="control-label"
                                                        for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
->>>>>>> a20160f... show domain dropdown in UI when there is multiple domains only
                                                     <span>*</span></label>
                                                 <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                         name={{claimURI}} id={{claimLabel}}
@@ -358,41 +160,15 @@
                                 <div class="form-group">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                               type="submit">{{t "user-portal.user.signup.title"}}</button></div>
->>>>>>> cf9728b... Sign in, Sign up pages UI fixes
-                                </div>
-                                <!-- END pswd_info -->
->>>>>>> c317e55... login signup pages UI fixes
-                            </div>
-                            <!-- END pwd_strength_wrap -->
-=======
-                                               type="submit">{{t "signup.title"}}</button></div>
-=======
                                                 type="submit">{{t "signup.title"}}</button>
                                     </div>
->>>>>>> a20160f... show domain dropdown in UI when there is multiple domains only
                                 </div>
                                 <h5>{{t "login.message"}}<a href="{{@contextPath}}/login">
                                     &nbsp;{{t "login.title"}}</a></h5>
                             </form>
->>>>>>> 30540af... Code refactoring in user portal app
                         </div>
                     </div>
-<<<<<<< HEAD
                 </div>
-=======
-                    <div class="form-group">
-                        <div class="col-xs-14 col-sm-14 col-md-8 col-lg-6">
-                            <label for="confirmPassword">Confirm Password<span>*</span></label></br>
-                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control"
-                                   placeholder="confirmPassword" required/>
-                            </br></br><input id="register" class="btn btn-default btn-primary add-margin-right-2x"
-                                             type="submit" value="Register"/></div>
-                    </div>
-                </form>
->>>>>>> c317e55... login signup pages UI fixes
             </div>
         </div>
     {{/if}}

@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 package org.wso2.is.portal.user.client.api;
 
@@ -23,35 +21,12 @@ import org.wso2.msf4j.Microservice;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
-=======
-=======
-
->>>>>>> b8255cb... Added license headers
-package org.wso2.is.portal.user.client.api;
-
-import org.wso2.msf4j.Microservice;
-
-<<<<<<< HEAD
->>>>>>> 4f94f5f... Add profile image download
-=======
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Arrays;
->>>>>>> 296fb47... enabling checkstyle
 import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import java.io.File;
-import java.nio.file.Paths;
->>>>>>> 4f94f5f... Add profile image download
-=======
->>>>>>> 296fb47... enabling checkstyle
 
 /**
  * This the API implemetation for profile image download.
@@ -62,8 +37,6 @@ public class ProfileImageDownloaderService implements Microservice {
     @Path("/image")
     @Produces("image/*")
     public Response getProfileImage(@QueryParam("userid") String userId) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         File imageDirectory = new File(Paths.get(System.getProperty("carbon.home"), "images").toString());
         String[] imageNames = imageDirectory.list();
 
@@ -83,45 +56,6 @@ public class ProfileImageDownloaderService implements Microservice {
                 }).
                 findAny().
                 orElse(Response.ok().build());
-=======
-        File imageFile = null;
-        String mimeType = null;
-        File imageDirectory = new File(Paths.get(System.getProperty("carbon.home"), "images").toString());
-        String[] imageNames = imageDirectory.list();
-        if (imageNames != null) {
-            for (int i = 0; i < imageNames.length; i++) {
-                if (imageNames[i].contains(userId)) {
-                    imageFile = new File(Paths.get(System.getProperty("carbon.home"), "images").toString() + File.separator
-                            + imageNames[i]);
-                    mimeType = new MimetypesFileTypeMap().getContentType(imageFile);
-                }
-            }
-        }
-
-        return Response.ok(imageFile, mimeType).build();
->>>>>>> 4f94f5f... Add profile image download
-=======
-        File imageDirectory = new File(Paths.get(System.getProperty("user.dir"), "images").toString());
-
-        String[] imageNames = imageDirectory.list();
-
-        if (imageNames == null) {
-            return Response.ok().build();
-        }
-
-        return Arrays.stream(imageNames).
-                filter(imageName -> imageName.contains(userId)).
-                map(imageName -> {
-                    File imageFile = new File(
-                            Paths.get(System.getProperty("user.dir"), "images").toString() + File.separator
-                                    + imageName);
-                    String mimeType = new MimetypesFileTypeMap().getContentType(imageFile);
-
-                    return Response.ok(imageFile, mimeType).build();
-                }).
-                findAny().
-                orElse(Response.ok().build());
->>>>>>> 296fb47... enabling checkstyle
 
     }
 

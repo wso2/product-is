@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1b5ffcb... Changed year to 2017
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -18,11 +14,6 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
-=======
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
->>>>>>> 1b5ffcb... Changed year to 2017
 $(window).load(function(){
 
 	$(".search-wrap .dropdown-menu li a").click(function(){
@@ -33,30 +24,14 @@ $(window).load(function(){
 		$(this).parent().find('.image-container .after').show();
 	},function(){
 		$(this).parent().find('.image-container .after').hide();
-<<<<<<< HEAD
-<<<<<<< HEAD
 	});
-=======
-	})
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
-	});
->>>>>>> 8aeb445... Fixing jshint issues
 
     $('input[name=recover-option]').click(function(){
         if($(this).parent().parent().find('.recover-option-container').is(':hidden')){
             $('.recover-option-container').slideUp();
             $(this).parent().parent().find('.recover-option-container').slideDown();
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
     });
-=======
-    })
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
-    });
->>>>>>> 8aeb445... Fixing jshint issues
 
 
 	$('.rating:not(.half) .icon').click(function(){
@@ -101,24 +76,10 @@ $(window).load(function(){
      * Affix spacer when media left is affixed
      */
     $('.sidebar-wrapper').on('affix.bs.affix',function(){
-<<<<<<< HEAD
-<<<<<<< HEAD
         $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>');
     }).on('affixed-top.bs.affix',function(){
         $('.affix-spacer').remove();
     });
-=======
-        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>')
-    }).on('affixed-top.bs.affix',function(){
-        $('.affix-spacer').remove();
-    })
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
-        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>');
-    }).on('affixed-top.bs.affix',function(){
-        $('.affix-spacer').remove();
-    });
->>>>>>> 8aeb445... Fixing jshint issues
 
     $('.sign-up-additional').click(function(){
         var el = $('.extended-form'),
@@ -130,20 +91,8 @@ $(window).load(function(){
         }else{
             el.slideUp(function(){
                 triggerEl.text('Show Additional Details');
-<<<<<<< HEAD
-<<<<<<< HEAD
             });
         }
     });
-=======
-            })
-        }
-    })
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
-            });
-        }
-    });
->>>>>>> 8aeb445... Fixing jshint issues
 
 });

@@ -18,52 +18,27 @@
 profiles:
  -
   profileName: "default"
-<<<<<<< HEAD
-<<<<<<< HEAD
   isAdminProfile: false
   claims:
   -
    claimURI: "http://wso2.org/claims/username"
    displayName: "Username"
-<<<<<<< HEAD
-=======
-=======
-  isAdminProfile: false
->>>>>>> 6e1fe1a... Fixing IDENTITY-5585
-  claims:
-  -
-   claimURI: "http://wso2.org/claims/username"
-   displayName: "User Name"
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-=======
->>>>>>> 27c1b81... Changing Profile Username display name
    required: true
    readonly: true
    verifier: "claim verifying extension"
    validator: "claim validating extension"
    transformer: "transform extension"
-<<<<<<< HEAD
-<<<<<<< HEAD
    regex: ".*"
-=======
-   regex: "*"
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-=======
-   regex: ".*"
->>>>>>> 9d1f91f... Adding regex validations.
    defaultValue: "user1"
    dataType: "text"
    properties:
     customproperty: "custom value"
   -
-<<<<<<< HEAD
-<<<<<<< HEAD
    claimURI: "http://wso2.org/claims/givenname"
    displayName: "First Name"
    required: true
    readonly: false
    regex: "^[a-zA-Z]*$"
-<<<<<<< HEAD
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
@@ -149,115 +124,3 @@ profiles:
    dataType: "email"
    regex: "*"
    defaultValue: "user@example.com"
-=======
-   claimURI: "http://wso2.org/claims/email"
-   displayName: "Email"
-=======
-   claimURI: "http://wso2.org/claims/givenname"
-   displayName: "First Name"
->>>>>>> 951ade6... Adding profile loading js
-   required: true
-   readonly: false
-   regex: ".*"
-=======
->>>>>>> 87421eb... Fixing https://wso2.org/jira/browse/IDENTITY-5632
-  -
-   claimURI: "http://wso2.org/claims/lastname"
-   displayName: "Last Name"
-   required: false
-   readonly: false
-   regex: "^[a-zA-Z]*$"
-  -
-   claimURI: "http://wso2.org/claims/email"
-   displayName: "Email"
-   required: true
-   readonly: false
-   dataType: "email"
-   regex: ".*"
-  -
-   claimURI: "http://wso2.org/claims/telephone"
-   displayName: "Telephone"
-   required: false
-   readonly: false
-   regex: "^(?=.*[0-9])[- +()0-9]+$"
-   dataType: "text"
- -
-  profileName: "employee"
-  isAdminProfile: false
-  claims:
-  -
-   claimURI: "http://wso2.org/claims/username"
-   displayName: "Username"
-   required: true
-   readonly: true
-   regex: ".*"
-   defaultValue: "user1"
-   dataType: "text"
-   properties:
-    customproperty: "custom value"
-<<<<<<< HEAD
->>>>>>> 2f9a026... Updating org.wso2.is.portal.user.client.realmservice to api
-=======
-  -
-   claimURI: "http://wso2.org/claims/givenname"
-   displayName: "Employee Name"
-   required: true
-   readonly: false
-   regex: ".*"
-  -
-   claimURI: "http://wso2.org/claims/email"
-   displayName: "Email"
-   required: true
-   readonly: false
-   dataType: "email"
-<<<<<<< HEAD
-   regex: "*"
->>>>>>> 951ade6... Adding profile loading js
-=======
-   regex: ".*"
-<<<<<<< HEAD
->>>>>>> 9d1f91f... Adding regex validations.
-=======
- -
-  profileName: "self-signUp"
-  isAdminProfile: true
-  claims:
-  -
-   claimURI: "http://wso2.org/claims/username"
-   displayName: "Username"
-   required: true
-   readonly: true
-   verifier: "claim verifying extension"
-   validator: "claim validating extension"
-   transformer: "transform extension"
-   regex: "*"
-   dataType: "text"
-   properties:
-    customproperty: "custom value"
-  -
-   claimURI: "http://wso2.org/claims/givenname"
-   displayName: "First Name"
-   required: true
-   readonly: false
-   regex: "*"
-   dataType: "text"
-  -
-   claimURI: "http://wso2.org/claims/lastname"
-   displayName: "Last Name"
-   required: true
-   readonly: false
-   regex: "*"
-   dataType: "text"
-  -
-   claimURI: "http://wso2.org/claims/email"
-   displayName: "Email"
-   required: true
-   readonly: false
-   dataType: "email"
-   regex: "*"
-<<<<<<< HEAD
-   defaultValue: "user1@example.com"
->>>>>>> fbac98b... Added a claim profile for self sign up
-=======
-   defaultValue: "user@example.com"
->>>>>>> a70ea91... Fixing https://wso2.org/jira/browse/IDENTITY-5621

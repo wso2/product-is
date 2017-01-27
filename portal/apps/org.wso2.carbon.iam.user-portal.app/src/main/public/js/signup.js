@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1b5ffcb... Changed year to 2017
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -18,44 +14,19 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
-=======
->>>>>>> 2d76d75... Added UI validations in user self sign-up
-=======
->>>>>>> 1b5ffcb... Changed year to 2017
 $(window).load(function () {
     //password strength meter logic
     $("#password").on("focus keyup", function () {
         var score = 0;
         var a = $(this).val();
-<<<<<<< HEAD
-<<<<<<< HEAD
         var desc = [];
-=======
-        var desc = new Array();
->>>>>>> 2d76d75... Added UI validations in user self sign-up
-=======
-        var desc = [];
->>>>>>> 8aeb445... Fixing jshint issues
 
         // strength desc
         desc[0] = "Too short";
         desc[1] = "Weak";
-<<<<<<< HEAD
-<<<<<<< HEAD
         desc[2] = "Fair";
         desc[3] = "Good";
         desc[4] = "Strong";
-=======
-        desc[2] = "Good";
-        desc[3] = "Strong";
-        desc[4] = "Best";
->>>>>>> 2d76d75... Added UI validations in user self sign-up
-=======
-        desc[2] = "Fair";
-        desc[3] = "Good";
-        desc[4] = "Strong";
->>>>>>> 3a985d1... Changing password catagories
 
         // password length
         var valid = '<i class="fw fw-success"></i>';
@@ -121,17 +92,10 @@ $(window).load(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
     jQuery.validator.addMethod("notEqual", function (value, element, param) {
         return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     jQuery.validator.addMethod("username", function (value, element) {
         return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
     }, "Invalid username.");
@@ -167,7 +131,6 @@ $(window).load(function () {
             confirmPassword: {
                 equalTo: "These passwords do not match.",
                 required: "Please re-enter the password."
-<<<<<<< HEAD
             },
             password: {
                 minlength: "Password should be at least {0} characters long.",
@@ -190,131 +153,4 @@ $('#domainSelector').change(function () {
     if (domain != "default") {
         document.getElementById("domain").value = domain;
     }
-=======
-=======
->>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
-=======
-    jQuery.validator.addMethod("username", function(value, element) {
-        return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
-    }, "Invalid username.");
-
->>>>>>> b0b053f... Fixing https://wso2.org/jira/browse/IDENTITY-5622
-=======
-    jQuery.validator.addMethod("username", function (value, element) {
-        return this.optional(element) || /^[a-zA-Z0-9._-|//]{3,30}$/.test(value);
-    }, "Invalid username.");
-
-    jQuery.validator.addMethod("pwcheck", function (value) {
-        return /[a-z]/.test(value) // has a lowercase letter
-            && /[A-Z]/.test(value) // has a uppercase letter
-            && /[^A-Za-z0-9]/.test(value) // has a special character
-            && /\d/.test(value); // has a digit
-    });
-
-<<<<<<< HEAD
->>>>>>> c98269e... Add validation for user self signup in user portal
-    //confirm password validation
-=======
-    //signup form validation
->>>>>>> 3d7e7e5... Change validation error message for blank inputs for passwords when resetting
-    $("#self-signUp-form").validate({
-        rules: {
-            confirmPassword: {
-                equalTo: "#password",
-                required: {
-                    depends: function (element) {
-                        return $("#password").is(":not(:blank)");
-                    }
-                }
-            },
-            password: {
-                pwcheck: true,
-                minlength: 6,
-                required: true
-            },
-            username: {
-                required: true
-            }
-        },
-        messages: {
-<<<<<<< HEAD
-            confirmPassword: {
-                equalTo: "These passwords do not match.",
-                required: "Please confirm the password."
-=======
->>>>>>> f1c2e4e... Chnaged error messages
-            },
-            password: {
-                minlength: "Password should be at least {0} characters long.",
-                pwcheck: "Password must have a minimum strength of Strong.",
-                required: "Required to provide a password."
-            },
-            username: {
-                required: "Required to provide a username."
-            }
-=======
-            confirmPassword: "These Passwords do not match.",
-            password: "Password must have a minimum strength of Strong."
->>>>>>> ad09462... Fixing https://wso2.org/jira/browse/IDENTITY-5633
-        }
-    });
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 2d76d75... Added UI validations in user self sign-up
 });
-=======
-});
-
-<<<<<<< HEAD
-/*$('#register').click( function() {
- $("#self-signUp-form").validate({
- rules: {
- passwordDescription: {notEqual: "Weak"},
- passwordDescription: {notEqual: "Too short"}
- },
- messages: {
- passwordDescription: "Password strength is low. Please add more strngthen password."
- }
- }).form();
- });*/
-
-<<<<<<< HEAD
-
->>>>>>> dd9caf8... Remove the additional space at the top of the Sign-up page.
-=======
-=======
-    //username validation
-<<<<<<< HEAD
-    $("#username").rules("add", { username: true });
->>>>>>> b0b053f... Fixing https://wso2.org/jira/browse/IDENTITY-5622
-=======
-    $("#username").rules("add", {username: true});
->>>>>>> c98269e... Add validation for user self signup in user portal
-=======
->>>>>>> 3d7e7e5... Change validation error message for blank inputs for passwords when resetting
-
-    $("#username").rules("add", { username: true });
-    
-    $('.signup-form-wrapper').parents('body').addClass('background-grey');
-});
->>>>>>> c317e55... login signup pages UI fixes
-=======
-$('#domainSelector').change( function() {
-
-    if(this.val() != "select a user store domain"){
-        var element = document.getElementById("domainValue");
-        element.value = domain;
-    }
-
-});
->>>>>>> 4f4c7d8... Added domain in UI for self sign-up
-=======
-$('#domainSelector').change(function () {
-    var domain = document.getElementById('domainSelector').value;
-    if (domain != "default") {
-        document.getElementById("domain").value = domain;
-    }
-});
->>>>>>> be786bb... Added code improvement

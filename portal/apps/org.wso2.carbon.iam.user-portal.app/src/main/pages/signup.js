@@ -14,51 +14,6 @@
  * limitations under the License.
  */
 
-<<<<<<< HEAD
-function onRequest(env) {
-    var session = getSession();
-    if (session) {
-        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-    }
-
-    if (env.request.method == "POST") {
-        var formParams = {};
-        var claimMap = {};
-        var credentialMap = {};
-        var domain;
-        formParams = env.request.formParams;
-        for (var i in formParams) {
-            if (i == "password") {
-                credentialMap["password"] = formParams[i];
-            } else if (i == "domain") {
-                domain = formParams[i];
-            }
-            else {
-                claimMap[i] = formParams[i];
-            }
-        }
-
-        var registrationResult = userRegistration(claimMap, credentialMap, domain);
-        if (registrationResult.errorMessage) {
-            return {errorMessage: registrationResult.message};
-        }
-        else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
-            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
-            if (authenticationResult.success) {
-                sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-            } else {
-                sendRedirect(env.contextPath + env.config['loginPageUri']);
-            }
-        }
-    }
-
-    if (env.request.method == "GET") {
-        return getProfile();
-    }
-}
-
-=======
->>>>>>> 8aeb445... Fixing jshint issues
 function getProfile() {
 
     /**
@@ -167,6 +122,10 @@ function authenticate(username, password, domain) {
 }
 
 function onRequest(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
 
     if (env.request.method == "POST") {
         var formParams = {};
@@ -177,7 +136,7 @@ function onRequest(env) {
         for (var i in formParams) {
             if (i == "password") {
                 credentialMap["password"] = formParams[i];
-            } else if (i == "domainValue") {
+            } else if (i == "domain") {
                 domain = formParams[i];
             }
             else {

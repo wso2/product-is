@@ -1,9 +1,6 @@
 {{css "css/security-questions.css"}}
 {{js "js/security-questions.js"}}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 <h3>{{t "account.securityQ"}}</h3>
 <hr/>
 {{#if success}}
@@ -36,7 +33,6 @@
         <div id="new-security-question">
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-<<<<<<< HEAD
                     <label class="control-label" for="question-list">Security Question</label>
                     <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
                         {{#each questionList}}
@@ -79,7 +75,6 @@
                                     <span class="fw fw-edit" aria-hidden="true"></span>
                                 </a>
                                 <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }}, '{{ this.questionSetId }}')">
-<<<<<<< HEAD
                                     <span class="fw fw-delete" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -97,12 +92,12 @@
             <p>{{t "security.question.info.body"}}</p>
         </div>
     </div>
-    <form class="form-horizontal" method="post">
+    <form class="form-horizontal" method="post" id="questionUpdateForm">
         <div id="password">
             <div class="form-group">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                    <label for="old-password">Password</label>
-                    <input type="password" class="form-control" id="old-password" name="old-password"/>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                    <label class="control-label" for="old-password">Password<span>*</span></label>
+                    <input type="password" class="form-control" id="old-password" name="old-password" required/>
                 </div>
             </div>
         </div>
@@ -112,181 +107,18 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div id="current-question"></div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-                    <label class="control-label">{{t "signup.security.question.answer"}}</label>
-                    <input class="form-control" type="text" id="answer">
-                </div>
-            </div>
-        </div>
-        <input type="submit" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
-        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Back" onclick="goBack()">
-        <input type="hidden" id="question-id" name="question-id" value="">
-        <input type="hidden" id="question-set-id" name="question-set-id" value="">
-        <input type="hidden" name="action" value="update-question">
-=======
-<div id="add-question">
-    <form>
-        <div id="new-security-question" class="form-group">
-            <label for="question-list">Security Question</label>
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="questions-dropdown"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">Select a question
-                    <span class="caret"></span>
-                </button>
-                <ul id="question-list" class="dropdown-menu" aria-labelledby="questions-dropdown">
-                    {{#each question_list}}
-                        <li value="{{ question_value }}"><a href="#">{{ question_text }}</a></li>
-                    {{/each}}
-                </ul>
-=======
-<h3>{{t "user-portal.user.account.securityQ"}}</h3>
-=======
-<h3>{{t "account.securityQ"}}</h3>
->>>>>>> 30540af... Code refactoring in user portal app
-<hr/>
-{{#if success}}
-    {{#if message}}
-        <div class="alert alert-success" role="alert">
-            <i class="icon fw fw-success"></i><strong>{{t "profile.success"}}</strong>
-            {{message}}
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
-                <span aria-hidden="true">
-                    <i class="fw fw-cancel"></i>
-                </span>
-            </button>
-        </div>
-    {{/if}}
-{{else}}
-    {{#if message}}
-        <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "profile.failure"}}</strong>
-            {{message}}
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
-                <span aria-hidden="true">
-                    <i class="fw fw-cancel"></i>
-                </span>
-            </button>
-        </div>
-    {{/if}}
-{{/if}}
-<div id="add-question" class="well">
-    <form class="form-horizontal" method="post">
-        <div id="new-security-question">
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-=======
->>>>>>> 1cd260b... Expand input field lengths
-                    <label class="control-label" for="question-list">Security Question</label>
-                    <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
-                        {{#each questionList}}
-                            <option value="{{questionSetId}}:{{questionId}}">{{question}}</option>
-                        {{/each}}
-                    </select>
-                </div>
->>>>>>> 0d51879... Security Question section markup improvements
             </div>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-answer">Answer</label>
-                    <input id="question-answer" name="question-answer" type="text" class="form-control">
-                    <input type="hidden" name="action" value="add-question">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-        </div>
-    </form>
-</div>
-{{#if isUserHasQuestions }}
-    <div id="list-questions">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="row">
-                <div id="create-question" class="pull-right add-margin-bottom-4x">
-                    <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
-                            class="fw fw-add fw-1x"></span> Create
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="row">
-                <div id="question-list">
-                    {{#each userQuestions}}
-                        <div class="question">
-                            <span class="question-text">{{question}}</span>
-                            <div class="pull-right">
-                                <a aria-label="Edit"
-                                   onclick="editQuestion('{{questionId}}', '{{questionSetId}}', '{{question}}')">
-                                    <span class="fw fw-edit" aria-hidden="true"></span>
-                                </a>
-                                <a aria-label="Delete" onclick="deleteQuestion({{questionId}})">
-=======
->>>>>>> 97dd10b... Added the complete flow with delete.
-                                    <span class="fw fw-delete" aria-hidden="true"></span>
-                                </a>
-                            </div>
-                        </div>
-                    {{/each}}
-                </div>
-            </div>
-        </div>
-    </div>
-{{/if}}
-<div id="edit-question">
-    <div id="info">
-        <div class="message message-info">
-            <h4><i class="icon fw fw-info"></i>{{t "password.info.header"}}</h4>
-            <p>{{t "security.question.info.body"}}</p>
-        </div>
-    </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 966974f... Added the front end functionality for the security questions page.
-=======
-    <form class="form-horizontal">
-=======
-    <form class="form-horizontal" method="post">
->>>>>>> 80c8492... Added the front end functions for the challenge questions.
-        <div id="password">
-            <div class="form-group">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                    <label for="old-password">Password</label>
-                    <input type="password" class="form-control" id="old-password" name="old-password"/>
-                </div>
-            </div>
-        </div>
-        <div id="security-question">
-            <label class="control-label">{{t "signup.security.question"}}</label>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div id="current-question"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
                     <label class="control-label">{{t "signup.security.question.answer"}}</label>
                     <input class="form-control" type="text" id="answer">
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <input type="button" class="btn btn-primary" value="Update" onclick="updateQuestion()"/>
-<<<<<<< HEAD
->>>>>>> 0d51879... Security Question section markup improvements
-=======
-=======
-        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
->>>>>>> 694b41c... Security question section markup improvements
-=======
-        <input type="submit" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
-        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Back" onclick="goBack()">
+        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">Update</button>
+        <input type="button" class="btn btn-default add-margin-bottom-3x" value="Back" onclick="goBack()">
         <input type="hidden" id="question-id" name="question-id" value="">
         <input type="hidden" id="question-set-id" name="question-set-id" value="">
->>>>>>> 80c8492... Added the front end functions for the challenge questions.
         <input type="hidden" name="action" value="update-question">
->>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
     </form>
 </div>

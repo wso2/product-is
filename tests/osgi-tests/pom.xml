@@ -48,49 +48,11 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
-            </plugin>
->>>>>>> 8527b67... Added test framework for user portal
-=======
->>>>>>> b2c630f... Added necessary transitive dependency bundles
         </plugins>
     </build>
 
 
     <dependencies>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>xalan.wso2</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.1.wso2v1</version>
-        </dependency>
-
-        <!-- Dependencies for Testing -->
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>osgi-test-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-=======
-        <!-- Carbon Dependencies -->
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -363,298 +325,6 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.core</artifactId>
-<<<<<<< HEAD
-            <version>1.0.0-m7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.governance</groupId>
-            <artifactId>org.wso2.carbon.identity.recovery</artifactId>
-        </dependency>
-
-<<<<<<< HEAD
-        <!-- Pax Exam Dependencies-->
->>>>>>> 8527b67... Added test framework for user portal
-=======
-        <!-- Dependencies for Testing -->
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>osgi-test-util</artifactId>
-            <scope>test</scope>
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-        </dependency>
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-        <dependency>
-<<<<<<< HEAD
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam-container-native</artifactId>
-<<<<<<< HEAD
-            <version>${pax.exam.version}</version>
-=======
->>>>>>> 8527b67... Added test framework for user portal
-=======
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j</artifactId>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.renderablecreator.hbs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.renderablecreator.html</artifactId>
-        </dependency>
-        <dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <groupId>org.ops4j.pax.url</groupId>
-            <artifactId>pax-url-aether</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.ow2.spec.ee</groupId>
-            <artifactId>ow2-jta-1.1-spec</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.minidev.wso2</groupId>
-            <artifactId>json-smart</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io.wso2</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-pool.wso2</groupId>
-            <artifactId>commons-pool</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.simpleconfigurator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.gogo.command</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.gogo.runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.gogo.shell</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.app</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.concurrent</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.console</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.ds</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.frameworkadmin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.frameworkadmin.equinox</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.launcher</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.preferences</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.simpleconfigurator.manipulator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.cm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi.compatibility.state</artifactId>
-            <version>1.0.1.v20140709-1414</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-
-
-
-        <!-- Carbon Dependencies -->
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.datasources</groupId>
-            <artifactId>org.wso2.carbon.datasource.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.caching</groupId>
-            <artifactId>org.wso2.carbon.caching</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.messaging</groupId>
-            <artifactId>org.wso2.carbon.messaging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.claim</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.commons</groupId>
-            <artifactId>org.wso2.carbon.identity.commons</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-            <artifactId>axiom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.is.portal.user.client.api</artifactId>
-        </dependency>
-
-        <!-- Dependencies for UUF -->
-        <dependency>
-            <groupId>org.wso2.carbon.jndi</groupId>
-            <artifactId>org.wso2.carbon.jndi</artifactId>
-        </dependency>
-        <!--JavaX-->
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-        </dependency>
-        <!--Orbit-->
-        <dependency>
-            <groupId>org.wso2.orbit.org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-        </dependency>
-        <!--Other-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>msf4j-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.deployment.engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.pax.logging</groupId>
-            <artifactId>pax-logging-api</artifactId>
-            <version>${pax.logging.version}</version>
-=======
-            <groupId>org.ops4j.pax.logging</groupId>
-            <artifactId>pax-logging-api</artifactId>
->>>>>>> 8527b67... Added test framework for user portal
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.pax.logging</groupId>
-            <artifactId>pax-logging-log4j2</artifactId>
-<<<<<<< HEAD
-            <version>${pax.logging.log4j2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi.services</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
@@ -702,7 +372,6 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-handler</artifactId>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.ant</artifactId>
@@ -710,65 +379,6 @@
         </dependency>
     </dependencies>
 
-=======
-=======
-            <groupId>org.ops4j.pax.url</groupId>
-            <artifactId>pax-url-aether</artifactId>
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-=======
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.identity.governance</groupId>-->
-            <!--<artifactId>org.wso2.carbon.identity.recovery</artifactId>-->
-        <!--</dependency>-->
-
-=======
->>>>>>> fef37cc... Removing caas dependencies and fixing test cases
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.ant</artifactId>
-            <version>${org.jacoco.ant.version}</version>
-        </dependency>
-    </dependencies>
-
-<<<<<<< HEAD
-
->>>>>>> 8527b67... Added test framework for user portal
-=======
->>>>>>> b2c630f... Added necessary transitive dependency bundles
     <profiles>
         <profile>
             <id>with-tests</id>
@@ -781,11 +391,6 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> dd53edd... Adding Jacoco integration
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
 
@@ -806,18 +411,10 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-<<<<<<< HEAD
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-=======
->>>>>>> dd53edd... Adding Jacoco integration
                         <artifactId>maven-compiler-plugin</artifactId>
                         <configuration>
                             <source>1.8</source>
                             <target>1.8</target>
-<<<<<<< HEAD
-=======
-=======
                         </configuration>
                     </plugin>
 
@@ -831,88 +428,6 @@
                                     <goal>prepare-agent</goal>
                                 </goals>
                                 <configuration>
-                                    <propertyName>surefireArgLine</propertyName>
-                                    <destFile>${project.build.directory}/jacoco.exec</destFile>
-                                    <includes>
-                                        <include>org.wso2.*</include>
-                                    </includes>
-                                    <append>true</append>
-                                    <sessionId>user-portal-tests</sessionId>
-                                </configuration>
-                            </execution>
-                            <!--<execution>-->
-                                <!--<id>default-check</id>-->
-                                <!--<goals>-->
-                                    <!--<goal>check</goal>-->
-                                <!--</goals>-->
-                                <!--<configuration>-->
-                                    <!--<rules>-->
-                                        <!--<rule>-->
-                                        <!--</rule>-->
-                                    <!--</rules>-->
-                                <!--</configuration>-->
-                            <!--</execution>-->
-                            <!-- report phase setup -->
-                            <!--<execution>-->
-                                <!--<id>post-unit-test</id>-->
-                                <!--<phase>test</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>report</goal>-->
-                                <!--</goals>-->
-                                <!--<configuration>-->
-                                    <!--&lt;!&ndash; output file with report data. &ndash;&gt;-->
-                                    <!--<dataFile>${project.build.directory}/jacoco.exec</dataFile>-->
-                                    <!--&lt;!&ndash; output directory for the reports. &ndash;&gt;-->
-                                    <!--<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>-->
-                                <!--</configuration>-->
-                            <!--</execution>-->
-                    </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <argLine>${surefireArgLine}</argLine>
-                            <systemPropertyVariables>
-                                <org.ops4j.pax.url.mvn.localRepository>${settings.localRepository}
-                                </org.ops4j.pax.url.mvn.localRepository>
-                                <!--<jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>-->
-                                <org.ops4j.pax.logging.DefaultServiceLog.level>INFO</org.ops4j.pax.logging.DefaultServiceLog.level>
-                            </systemPropertyVariables>
-                            <systemProperties>
-                                <property>
-                                    <name>carbon.home</name>
-                                    <value>${project.build.directory}/test-classes/carbon-home</value>
-                                </property>
-                            </systemProperties>
-                            <suiteXmlFiles>
-                                <suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>
-                            </suiteXmlFiles>
->>>>>>> 8527b67... Added test framework for user portal
-                        </configuration>
-                    </plugin>
-
-<<<<<<< HEAD
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-<<<<<<< HEAD
-                        <executions>
-                            <execution>
-                                <id>pre-unit-test</id>
-=======
-                        <version>${jacoco.version}</version>
-                        <executions>
-                            <execution>
-                                <id>default-prepare-agent</id>
->>>>>>> 8527b67... Added test framework for user portal
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
-<<<<<<< HEAD
                                     <propertyName>surefireArgLine</propertyName>
                                     <destFile>${project.build.directory}/jacoco.exec</destFile>
                                     <includes>
@@ -974,85 +489,9 @@
                         </configuration>
                     </plugin>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-
-=======
-=======
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
->>>>>>> dd53edd... Adding Jacoco integration
-                                    <includes>
-                                        <include>org.wso2.carbon*</include>
-                                    </includes>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>default-check</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <rule>
-                                        </rule>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-<<<<<<< HEAD
->>>>>>> 8527b67... Added test framework for user portal
-                    <plugin>
-=======
-                    <!--<plugin>-->
-                        <!--<groupId>org.jacoco</groupId>-->
-                        <!--<artifactId>jacoco-maven-plugin</artifactId>-->
-                        <!--<version>${jacoco.version}</version>-->
-                        <!--<executions>-->
-                            <!--<execution>-->
-                                <!--<id>default-prepare-agent</id>-->
-                                <!--<goals>-->
-                                    <!--<goal>prepare-agent</goal>-->
-                                <!--</goals>-->
-                                <!--<configuration>-->
-                                    <!--<includes>-->
-                                        <!--<include>org.wso2.carbon*</include>-->
-                                    <!--</includes>-->
-                                <!--</configuration>-->
-                            <!--</execution>-->
-                            <!--<execution>-->
-                                <!--<id>default-check</id>-->
-                                <!--<goals>-->
-                                    <!--<goal>check</goal>-->
-                                <!--</goals>-->
-                                <!--<configuration>-->
-                                    <!--<rules>-->
-                                        <!--<rule>-->
-                                        <!--</rule>-->
-                                    <!--</rules>-->
-                                <!--</configuration>-->
-                            <!--</execution>-->
-                        <!--</executions>-->
-                    <!--</plugin>-->
-                   <!-- <plugin>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-=======
-=======
-
->>>>>>> 51d9eea... fixing test coverage generation
 
                     <plugin>
->>>>>>> dd53edd... Adding Jacoco integration
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
@@ -1068,8 +507,6 @@
                                             <executiondata>
                                                 <file file="${project.build.directory}/jacoco.exec"/>
                                             </executiondata>
-<<<<<<< HEAD
-<<<<<<< HEAD
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
                                                     <fileset
@@ -1077,22 +514,6 @@
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
                                                     <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src"/>
-=======
-                                            <structure name="Carbon Security OSGi Tests">
-=======
-                                            <structure name="Identity Server Tests">
->>>>>>> dd53edd... Adding Jacoco integration
-                                                <classfiles>
-                                                    <fileset
-                                                            dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/target/classes"/>
-                                                </classfiles>
-                                                <sourcefiles encoding="UTF-8">
-<<<<<<< HEAD
-                                                    <fileset dir="org.wso2.is.portal.user.client.api/src"/>
->>>>>>> 8527b67... Added test framework for user portal
-=======
-                                                    <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src"/>
->>>>>>> dd53edd... Adding Jacoco integration
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco"/>
@@ -1125,50 +546,6 @@
                             </execution>
                         </executions>
                     </plugin>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>sql-maven-plugin</artifactId>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.h2database</groupId>
-                                <artifactId>h2</artifactId>
-                                <version>1.4.191</version>
-                            </dependency>
-                        </dependencies>
-                        <configuration>
-                            <url>
-                                jdbc:h2:file:${basedir}/target/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE
-                            </url>
-                            <username>wso2carbon</username>
-                            <password>wso2carbon</password>
-                            <driver>org.h2.Driver</driver>
-                        </configuration>
-                        <executions>
-                            <!--Create the database-->
-                            <execution>
-                                <id>create-database</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>execute</goal>
-                                </goals>
-                                <configuration>
-                                    <autocommit>true</autocommit>
-                                    <srcFiles>
-                                        <srcFile>
-                                            src/test/resources/dbscripts/identity-mgt/h2.sql
-                                        </srcFile>
-                                    </srcFiles>
-                                    <onError>abort</onError>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
->>>>>>> 8527b67... Added test framework for user portal
-=======
->>>>>>> dd53edd... Adding Jacoco integration
                 </plugins>
             </build>
         </profile>

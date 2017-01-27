@@ -15,9 +15,6 @@
 ################################################################################
 listenerConfigurations:
  -
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   id: "netty-gw-https"
   host: "0.0.0.0"
   port: 9292
@@ -36,66 +33,3 @@ listenerConfigurations:
 senderConfigurations:
  -
   id: "netty-gw"
-=======
-  id: "jaxrs-http"
-  host: "127.0.0.1"
-  port: 9443
-  bossThreadPoolSize: 2
-  enableDisruptor: true
-  workerThreadPoolSize: 250
-  execHandlerThreadPoolSize: 60
-=======
-  id: "netty-gw"
-  host: "0.0.0.0"
-  port: 9090
-  bossThreadPoolSize: 4
-  workerThreadPoolSize: 8
-  enableDisruptor: false
->>>>>>> e8068bb... Correcting netty transport file.
-  parameters:
-    -
-     name: "executor.workerpool.size"
-     value: 20
-
- -
-=======
->>>>>>> 084c5d0... IDENTITY-5589 remove http transport
-  id: "netty-gw-https"
-  host: "0.0.0.0"
-  port: 9292
-  bossThreadPoolSize: 4
-  workerThreadPoolSize: 8
-  enableDisruptor: false
-  scheme: "https"
-  keyStoreFile: "resources/security/wso2carbon.jks"
-  keyStorePass: "wso2carbon"
-  certPass: "wso2carbon"
-  parameters:
-      -
-       name: "executor.workerpool.size"
-       value: 20
-
-senderConfigurations:
- -
-<<<<<<< HEAD
-  id: "netty-gw"
-  parameters:
-    -
-     name: "connection.pool.count"
-     value: 0
-# -
-#  id: "https-sender"
-#  scheme: "https"
-#  trustStoreFile: "resources/security/wso2carbon.jks"
-#  trustStorePass: "wso2carbon"
-#  keyStoreFile: "resources/security/wso2carbon.jks"
-#  keyStorePass: "wso2carbon"
-#  certPass: "wso2carbon"
-#  parameters:
-#    -
-#     name: "connection.pool.count"
-#     value: 0
->>>>>>> 0008e22... Initiating C5 adaption for wso2 identity server
-=======
-  id: "netty-gw"
->>>>>>> e8068bb... Correcting netty transport file.

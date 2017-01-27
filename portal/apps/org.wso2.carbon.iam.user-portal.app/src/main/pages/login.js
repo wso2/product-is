@@ -1,8 +1,4 @@
 /*
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1b5ffcb... Changed year to 2017
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,76 +51,20 @@ function authenticate(username, password, domain) {
     }
 }
 
-=======
- *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-<<<<<<< HEAD
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
-function authenticate(username, password, domain) {
-    try {
-        var passwordChar = Java.to(password.split(''), 'char[]');
-        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar, domain]);
-
-        createSession(uufUser);
-        return {success: true, message: "success"};
-    } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause !== null) {
-            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-
-        return {success: false, message: 'user-portal.user.login.error.authentication'};
-    }
-}
-
->>>>>>> 8aeb445... Fixing jshint issues
 function onRequest(env) {
     var session = getSession();
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (env.request.method == "GET") {
         return getDomainNames(env);
-=======
-    if (env.request.method == "GET") {
-<<<<<<< HEAD
-        return getDomainNames();
->>>>>>> d30cce6... Add domain selector configurations in app
-=======
-        return getDomainNames(env);
->>>>>>> c7b5de7... Code Improvement
     }
 
     if (env.request.method == "POST") {
         var domain = env.request.formParams['domain'];
         var username = env.request.formParams['username'];
         var password = env.request.formParams['password'];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d30cce6... Add domain selector configurations in app
 
         if (!env.config.isDomainInLogin) {
             if (username.indexOf("/") != -1) {
@@ -135,39 +75,9 @@ function onRequest(env) {
                 } else {
                     return {errorMessage: 'login.error.invalid.username'};
                 }
-<<<<<<< HEAD
             }
         }
         var result = authenticate(username, password, domain);
-=======
-    if (env.request.method == "POST") {
-        var username = env.request.formParams['username'];
-        var password = env.request.formParams['password'];
-<<<<<<< HEAD
-        var result = authenticate(username, password);
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
-        var result = authenticate(username, password, null);
->>>>>>> 4f4c7d8... Added domain in UI for self sign-up
-=======
-        var domain = null;
-        var usernameWithoutDomain = username;
-        if(username.indexOf("/") != -1) {
-            var splitedValue = username.split("/");
-            if(splitedValue.length == 2) {
-                domain = splitedValue[0];
-                usernameWithoutDomain = splitedValue[1];
-            } else {
-                return {errorMessage: 'login.error.invalid.username'};
-            }
-        }
-        var result = authenticate(usernameWithoutDomain, password, domain);
->>>>>>> 759b7c7... add user store domain support in login and update password
-=======
-            }
-        }
-        var result = authenticate(username, password, domain);
->>>>>>> d30cce6... Add domain selector configurations in app
         if (result.success) {
             //configure login redirect uri
             sendRedirect(env.contextPath + env.config['loginRedirectUri']);
@@ -176,57 +86,4 @@ function onRequest(env) {
         }
     }
 }
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-function authenticate(username, password) {
-=======
-=======
-function getDomainNames() {
-=======
-function getDomainNames(env) {
->>>>>>> c7b5de7... Code Improvement
-    var domainNames;
-    if (env.config.isDomainInLogin) {
-        try {
-            domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-                "getDomainNames", []);
-        } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
-        }
-    }
-    return {
-        "domainNames": domainNames
-    };
-}
-
->>>>>>> d30cce6... Add domain selector configurations in app
-function authenticate(username, password, domain) {
->>>>>>> 4f4c7d8... Added domain in UI for self sign-up
-    try {
-        var passwordChar = Java.to(password.split(''), 'char[]');
-        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "authenticate", [username, passwordChar, domain]);
-
-        createSession(uufUser);
-        return {success: true, message: "success"}
-    } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause != null) {
-            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-
-        return {success: false, message: 'login.error.authentication'};
-    }
-}
->>>>>>> 7fa08ef... adding the login page to user portal
-=======
->>>>>>> 8aeb445... Fixing jshint issues

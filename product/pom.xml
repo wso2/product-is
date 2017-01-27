@@ -58,8 +58,6 @@
         <dependency>
             <groupId>org.wso2.carbon.caching</groupId>
             <artifactId>org.wso2.carbon.caching.feature</artifactId>
-<<<<<<< HEAD
-<<<<<<< HEAD
             <type>zip</type>
         </dependency>
         <dependency>
@@ -70,66 +68,6 @@
         <dependency>
             <groupId>org.wso2.carbon.jndi</groupId>
             <artifactId>org.wso2.carbon.jndi.feature</artifactId>
-=======
-            <version>${org.wso2.carbon.caching.version}</version>
->>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
-=======
->>>>>>> c3168a2... Fix pom warnings and add scim related fixes
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.messaging</groupId>
-            <artifactId>org.wso2.carbon.messaging.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.login.feature</artifactId>
-            <version>${org.wso2.carbon.identity.mgt.version}</version>
-            <type>zip</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>org.wso2.msf4j.feature</artifactId>
-=======
-            <groupId>org.wso2.carbon.security.caas</groupId>
-            <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
-            <groupId>org.wso2.carbon.jndi</groupId>
-            <artifactId>org.wso2.carbon.jndi.feature</artifactId>
->>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
             <type>zip</type>
         </dependency>
         <dependency>
@@ -180,8 +118,6 @@
             <type>zip</type>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-=======
             <groupId>org.wso2.carbon.metrics</groupId>
             <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
             <type>zip</type>
@@ -192,7 +128,6 @@
             <type>zip</type>
         </dependency>
         <dependency>
->>>>>>> 6906998... Made the UUF app for user portal buildable
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.core.feature</artifactId>
             <type>zip</type>
@@ -210,14 +145,6 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
-<<<<<<< HEAD
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
-=======
->>>>>>> e3ae06a... Fixing few of the pom.xml errors.
             <type>zip</type>
         </dependency>
         <dependency>
@@ -226,43 +153,9 @@
             <type>zip</type>
         </dependency>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-=======
-        <!-- Sample Simple Authentication Component -->
->>>>>>> 89611a7... Remove unwanted UUF features.
-        <dependency>
-<<<<<<< HEAD
-            <groupId>org.wso2.carbon.identity.commons</groupId>
-            <artifactId>org.wso2.carbon.identity.common.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
-            <type>zip</type>
-=======
-            <groupId>org.wso2.carbon.security.userstore</groupId>
-            <artifactId>org.wso2.carbon.security.userstore.jdbc.feature</artifactId>
-=======
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
-<<<<<<< HEAD
-            <version>${carbon.deployment.version}</version>
->>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
-=======
->>>>>>> a695889... update connectors and config changes
             <type>zip</type>
         </dependency>
         <dependency>
@@ -283,24 +176,6 @@
 
         <!-- Sample Simple Authentication Component -->
 
-<<<<<<< HEAD
-        <dependency>
-            <groupId>org.wso2.carbon.uuf.sample</groupId>
-            <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
-<<<<<<< HEAD
-                <type>zip</type>
->>>>>>> e3ae06a... Fixing few of the pom.xml errors.
-=======
-            <type>zip</type>
->>>>>>> f8474f3... Removing user-mgt feature and adapting the changes in pom.xml files.
-        </dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-        <!-- Sample Simple Authentication Component -->
-
-=======
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
         <!--<dependency>-->
             <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
             <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
@@ -311,39 +186,6 @@
             <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
             <!--<type>zip</type>-->
         <!--</dependency>-->
-<<<<<<< HEAD
-=======
-        <dependency>
-<<<<<<< HEAD
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-<<<<<<< HEAD
-=======
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.is</groupId>-->
-            <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-            <type>zip</type>
-        </dependency>
->>>>>>> d78d543... fixing poms
-        <dependency>
-=======
->>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
-            <groupId>org.wso2.carbon.uuf.sample</groupId>
-            <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
-            <type>zip</type>
-        </dependency>
->>>>>>> 6906998... Made the UUF app for user portal buildable
-=======
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
     </dependencies>
 
     <build>
@@ -404,15 +246,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.security.userstore</groupId>
-<<<<<<< HEAD
-<<<<<<< HEAD
                                     <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
-=======
-                                    <artifactId>org.wso2.carbon.security.store.connector.jdbc.feature</artifactId>
->>>>>>> a695889... update connectors and config changes
-=======
-                                    <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
@@ -443,24 +277,12 @@
                                     </outputDirectory>
                                     <includes>**/h2.sql</includes>
                                 </artifactItem>
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.mgt</groupId>
                                     <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                     <type>zip</type>
                                 </artifactItem>
-=======
->>>>>>> a695889... update connectors and config changes
-=======
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.mgt</groupId>
-                                    <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                    <type>zip</type>
-                                </artifactItem>
->>>>>>> f889153... Added osgi service for calling ProfileMgtService
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -503,50 +325,18 @@
                                 <feature>
                                     <id>org.wso2.msf4j.feature</id>
                                     <version>${msf4j.version}</version>
-<<<<<<< HEAD
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.messaging.feature</id>
-                                    <version>${carbon.messaging.version}</version>
-=======
->>>>>>> 9bd8ee3... Adding structure for new component
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.messaging.feature</id>
                                     <version>${carbon.messaging.version}</version>
                                 </feature>
                                 <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.uuf.core.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.renderablecreator.html.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.iam.user-portal.feature</id>
-                                    <version>${carbon.is.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.jndi.feature</id>
-                                    <version>${carbon.jndi.version}</version>
-=======
                                     <id>org.wso2.carbon.transport.http.netty.feature</id>
                                     <version>${carbon.transport.http.netty.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.core.feature</id>
                                     <version>${carbon.uuf.version}</version>
->>>>>>> 9bd8ee3... Adding structure for new component
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature</id>
@@ -561,38 +351,10 @@
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.datasource.core.feature</id>
-                                    <version>${carbon.datasources.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.mgt.feature</id>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.claim.feature</id>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.mgt.login.feature</id>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
-=======
-=======
                                     <id>org.wso2.carbon.iam.user-portal.feature</id>
                                     <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
                                     <id>org.wso2.carbon.jndi.feature</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -645,43 +407,10 @@
                                     <version>${carbon.security.version}</version>
                                 </feature>
                                 <!-- Sample Applications -->
-<<<<<<< HEAD
-                                <feature>
-                                    <id>org.wso2.carbon.is.user-portal.feature</id>
-                                    <version>${carbon.is.version}</version>
-                                </feature>
-<<<<<<< HEAD
-                                <!-- Sample Applications -->
->>>>>>> 9bd8ee3... Adding structure for new component
-                                <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.identity.common.feature</id>
-                                    <version>${org.wso2.carbon.identity.commons.feature.version}</version>
-                                </feature>
-=======
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
-<<<<<<< HEAD
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-                                <feature>
-                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
-                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
-                                </feature>
-=======
->>>>>>> 6906998... Made the UUF app for user portal buildable
-                                <feature>
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
-                                <!-- Sample Applications -->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
-                                <!--</feature>-->
-=======
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
@@ -690,35 +419,6 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                                    <id>org.wso2.carbon.uuf.Features-app.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-<<<<<<< HEAD
->>>>>>> 89611a7... Remove unwanted UUF features.
-=======
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-<<<<<<< HEAD
->>>>>>> a695889... update connectors and config changes
-=======
-=======
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
->>>>>>> 566488f... Adding scim feature
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                             </features>
                         </configuration>
                     </execution>
@@ -782,7 +482,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.caching.feature.group</id>
                                     <version>${carbon.cache.version}</version>
-<<<<<<< HEAD
                                 </feature>
                                 <feature>
                                     <id>org.wso2.msf4j.feature.group</id>
@@ -799,74 +498,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.uuf.core.feature.group</id>
                                     <version>${carbon.uuf.version}</version>
-=======
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.msf4j.feature.group</id>
-                                    <version>${msf4j.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.messaging.feature.group</id>
-                                    <version>${carbon.messaging.version}</version>
->>>>>>> 9bd8ee3... Adding structure for new component
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature.group</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.uuf.renderablecreator.html.feature.group</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.httpconnector.msf4j.feature.group</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.iam.user-portal.feature.group</id>
-                                    <version>${carbon.is.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.jndi.feature.group</id>
-                                    <version>${carbon.jndi.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.core.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.jdbc.core.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.das.core.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.datasource.core.feature.group</id>
-                                    <version>${carbon.datasources.version}</version>
-                                </feature>
-                                <feature>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.identity.mgt.feature</id>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.claim.feature</id>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.mgt.login.feature</id>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-=======
-                                    <id>org.wso2.carbon.uuf.core.feature.group</id>
-                                    <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.uuf.renderablecreator.hbs.feature.group</id>
@@ -903,50 +534,8 @@
                                 <feature>
                                     <id>org.wso2.carbon.datasource.core.feature.group</id>
                                     <version>${carbon.datasources.version}</version>
->>>>>>> 9bd8ee3... Adding structure for new component
                                 </feature>
                                 <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.common.feature</id>
-                                    <version>${org.wso2.carbon.identity.commons.feature.version}</version>
-                                </feature>
-                                <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
-                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
-                                </feature>
-                                <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.version}</version>
-                                </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
-                                <!--</feature>-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
-                                <!--</feature>-->
-=======
-=======
-=======
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature</id>
-=======
-                                    <id>org.wso2.carbon.security.caas.feature</id>
-                                    <version>${carbon.security.caas.version}</version>
-                                </feature>
-                                <feature>
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                                     <id>org.wso2.carbon.identity.mgt.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -963,47 +552,9 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-<<<<<<< HEAD
-                                    <id>org.wso2.carbon.security.store.connector.jdbc.feature</id>
->>>>>>> a695889... update connectors and config changes
-=======
                                     <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
-<<<<<<< HEAD
-                                <feature>
->>>>>>> f20af8b... Updated MSF4J dependency.
-                                    <id>org.wso2.carbon.uuf.Features-app.feature.group</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-<<<<<<< HEAD
-                                <feature>
-<<<<<<< HEAD
->>>>>>> 89611a7... Remove unwanted UUF features.
-                                    <id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
-<<<<<<< HEAD
->>>>>>> 9bd8ee3... Adding structure for new component
-=======
-                                    <id>org.wso2.carbon.is.user-portal.feature.group</id>
-                                    <version>${carbon.is.version}</version>
-                                </feature>
-<<<<<<< HEAD
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.security.userstore.jdbc.feature.group</id>-->
-                                    <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
-                                <!--</feature>-->
->>>>>>> 6906998... Made the UUF app for user portal buildable
-=======
-=======
-=======
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.identity.recovery.server.feature</id>-->
-                                    <!--<version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>-->
-                                <!--</feature>-->
-=======
                                 <feature>
                                     <id>org.wso2.carbon.identity.common.feature</id>
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
@@ -1012,50 +563,22 @@
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
                                     <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
-<<<<<<< HEAD
->>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
-=======
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
                                 </feature>
->>>>>>> f02c66a... readding caas to product
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
                                     <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
-<<<<<<< HEAD
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-                                <feature>
-                                    <id>org.wso2.carbon.uuf.sample.pets-store.feature</id>
-                                    <version>${carbon.uuf.version}</version>
-                                </feature>
-<<<<<<< HEAD
->>>>>>> a695889... update connectors and config changes
-=======
-=======
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
-<<<<<<< HEAD
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
-                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                                </feature>
->>>>>>> 566488f... Adding scim feature
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                             </features>
                         </configuration>
                     </execution>
@@ -1098,20 +621,10 @@
                                     <classpath>
                                         <path refid="h2.classpath"/>
                                     </classpath>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f76445f... adding configuration changes
                                     <fileset dir="${basedir}/target/resources/dbscripts/">
                                         <include name="**/h2.sql" />
                                     </fileset>
                                     <fileset file="carbon-home/resources/h2-test-data/test-data.sql"/>
-<<<<<<< HEAD
-=======
-                                    <fileset file="${basedir}/target/resources/dbscripts/*.sql"/>
->>>>>>> a695889... update connectors and config changes
-=======
->>>>>>> f76445f... adding configuration changes
                                 </sql>
                                 <echo message="##################### END ########################"/>
                             </target>

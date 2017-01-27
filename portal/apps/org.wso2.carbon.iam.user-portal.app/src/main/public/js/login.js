@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1b5ffcb... Changed year to 2017
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -28,11 +24,3 @@ $('#domainSelector').change(function () {
         document.getElementById("domain").value = domain;
     }
 });
-<<<<<<< HEAD
-=======
-$(window).load(function () {
-    $('.login-form-wrapper').parents('body').addClass('background-grey');
-});
->>>>>>> c317e55... login signup pages UI fixes
-=======
->>>>>>> d30cce6... Add domain selector configurations in app

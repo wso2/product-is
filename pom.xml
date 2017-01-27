@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -48,48 +47,9 @@
     </scm>
 
     <modules>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         <module>portal</module>
-=======
-        <!--Components-->
-
-        <!--Features-->
-
-        <!--Tests-->
-        <!--<module>tests</module>-->
-
-        <!--Tools-->
-        <!--<module>tools</module>-->
-
-        <!--Product-->
->>>>>>> b74c743... Temporary hide/fix on build issues in user-portal
         <module>product</module>
         <module>tests</module>
-=======
-=======
-        <module>carbon-is</module>
->>>>>>> fd97d4c... Adding C5 Identity Provider implementation
-=======
->>>>>>> ec8cd2b... Removing the code that is moved to new repo https://github.com/wso2/carbon-identity-providers
-        <module>product</module>
-<<<<<<< HEAD
-        <module>portal/user</module>
->>>>>>> b84e760... Refactoring c5 product-is branch
-=======
-        <module>portal</module>
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
-        <module>portal</module>
-        <module>product</module>
-<<<<<<< HEAD
->>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
-=======
-        <module>tests</module>
->>>>>>> 8527b67... Added test framework for user portal
     </modules>
 
     <dependencyManagement>
@@ -122,21 +82,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
                 <groupId>commons-pool.wso2</groupId>
                 <artifactId>commons-pool</artifactId>
                 <version>${commons-pool.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-=======
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -280,18 +231,10 @@
                 <artifactId>org.wso2.carbon.metrics.core</artifactId>
                 <version>${carbon.metrics.version}</version>
             </dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
             <dependency>
-<<<<<<< HEAD
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.recovery</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
-=======
-                <groupId>org.wso2.carbon.identity.provider</groupId>
-                <artifactId>org.wso2.carbon.identity.provider.common</artifactId>
-                <version>6-SNAPSHOT</version>
->>>>>>> 7a96980... Making the required changes to compile new code.
             </dependency>
 
             <dependency>
@@ -303,54 +246,6 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
-<<<<<<< HEAD
-                <version>${org.wso2.carbon.identity.mgt.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
-                <version>${carbon.security.userstore.jdbc.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.commons</groupId>
-                <artifactId>org.wso2.carbon.identity.common.feature</artifactId>
-                <version>${org.wso2.carbon.identity.commons.feature.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
-                <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>1.4.191</version>
-            </dependency>
-=======
->>>>>>> 6906998... Made the UUF app for user portal buildable
-=======
-            <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.recovery</artifactId>
-                <version>${org.wso2.carbon.identity.mgt.version}</version>
-            </dependency>
->>>>>>> 966974f... Added the front end functionality for the security questions page.
-
-            <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
-                <version>${org.wso2.carbon.identity.mgt.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.meta.claim.mgt.feature</artifactId>
-=======
->>>>>>> 7303600... Adapt package name changing in meta.claim.mgt package.
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
             </dependency>
@@ -412,8 +307,6 @@
                 <version>${carbon.cache.version}</version>
                 <type>zip</type>
             </dependency>
-<<<<<<< HEAD
-=======
             <dependency>
                 <groupId>org.wso2.carbon.metrics</groupId>
                 <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
@@ -445,43 +338,6 @@
                 <type>zip</type>
             </dependency>
             <!--End of Dependent Features-->
-<<<<<<< HEAD
-
-            <!--Identity Server Dependent Features-->
->>>>>>> 6906998... Made the UUF app for user portal buildable
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.core.feature</artifactId>
-                <version>${carbon.metrics.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.jdbc.core.feature</artifactId>
-                <version>${carbon.metrics.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.metrics</groupId>
-                <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
-                <version>${carbon.metrics.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.deployment</groupId>
-                <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
-                <version>${carbon.deployment.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.deployment</groupId>
-                <artifactId>org.wso2.carbon.deployment.notifier.feature</artifactId>
-                <version>${carbon.deployment.version}</version>
-                <type>zip</type>
-            </dependency>
-            <!--End of Dependent Features-->
-=======
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
             <!-- UUF Dependent Features -->
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
@@ -502,177 +358,6 @@
                 <type>zip</type>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-                <groupId>org.wso2.carbon.uuf</groupId>
-                <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
-                <version>${carbon.uuf.version}</version>
-                <type>zip</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
-                <version>${carbon.is.version}</version>
-                <type>zip</type>
-            </dependency>
-            <!-- End of Dependent Features -->
-
-
-            <!--UUF Components-->
-            <dependency>
-                <groupId>org.wso2.carbon.uuf</groupId>
-                <artifactId>org.wso2.carbon.uuf.core</artifactId>
-                <version>${carbon.uuf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.uuf.common</groupId>
-                <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
-                <version>${carbon.uuf.common.version}</version>
-                <type>zip</type>
-            </dependency>
-            <!--End of UUF Components-->
-            <!--UUF Themes-->
-            <dependency>
-<<<<<<< HEAD
-                <groupId>org.wso2.carbon.uuf.common</groupId>
-                <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
-                <version>${carbon.uuf.common.version}</version>
-                <type>zip</type>
-            </dependency>
-            <!--End of UUF Themes-->
-
-            <!-- UUF Dependencies -->
-
-            <dependency>
-                <groupId>javax.cache</groupId>
-                <artifactId>cache-api</artifactId>
-                <version>${javax.cache-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${org.apache.commons.commons-lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${gson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>${org.objectweb.asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.msf4j</groupId>
-                <artifactId>msf4j-core</artifactId>
-                <version>${msf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>${test.javax.ws.rs-api.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.transport</groupId>
-                <artifactId>org.wso2.carbon.transport.http.netty</artifactId>
-                <version>${carbon.transport.http.netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-transport</artifactId>
-                <version>${netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-buffer</artifactId>
-                <version>${netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-common</artifactId>
-                <version>${netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec</artifactId>
-                <version>${netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec-http</artifactId>
-                <version>${netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>${netty.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wso2.carbon.deployment</groupId>
-                <artifactId>org.wso2.carbon.deployment.engine</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.deployment</groupId>
-                <artifactId>org.wso2.carbon.deployment.notifier</artifactId>
-                <version>5.1.0-SNAPSHOT</version>
-            </dependency>
-
-            <!--Identity Server Dependent Features-->
-            <dependency>
-                <groupId>org.wso2.carbon.transport</groupId>
-                <artifactId>org.wso2.carbon.transport.http.netty.feature</artifactId>
-                <version>${carbon.transport.http.netty.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.messaging</groupId>
-                <artifactId>org.wso2.carbon.messaging.feature</artifactId>
-                <version>${carbon.messaging.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.msf4j</groupId>
-                <artifactId>org.wso2.msf4j.feature</artifactId>
-                <version>${msf4j.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.tools.core</artifactId>
-                <version>${carbon.kernel.version}</version>
-            </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
-                <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
-                <!--<version>${carbon.uuf.version}</version>-->
-                <!--<type>zip</type>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.is</groupId>-->
-                <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
-                <!--<version>${carbon.is.version}</version>-->
-                <!--<type>zip</type>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
-                <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
-                <!--<version>${carbon.uuf.version}</version>-->
-                <!--<type>zip</type>-->
-            <!--</dependency>-->
-=======
-=======
->>>>>>> 7a96980... Making the required changes to compile new code.
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
                 <version>${carbon.uuf.version}</version>
@@ -821,64 +506,24 @@
                 <artifactId>org.wso2.carbon.tools.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
-<<<<<<< HEAD
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-                <version>${carbon.security.version}</version>
-                <type>zip</type>
-            </dependency>
-<<<<<<< HEAD
-            <dependency>
-                <groupId>org.wso2.carbon.uuf.sample</groupId>
-                <artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>
-                <version>${carbon.uuf.version}</version>
-                <type>zip</type>
-            </dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> b0095c3... Fixing few of the pom.xml errors.
-=======
-            <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>
-                <version>${carbon.is.version}</version>
-                <type>zip</type>
-            </dependency>
-=======
-=======
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
             <!--<dependency>-->
                 <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
                 <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
                 <!--<version>${carbon.uuf.version}</version>-->
                 <!--<type>zip</type>-->
             <!--</dependency>-->
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
             <!--<dependency>-->
                 <!--<groupId>org.wso2.is</groupId>-->
                 <!--<artifactId>org.wso2.carbon.is.user-portal.feature</artifactId>-->
                 <!--<version>${carbon.is.version}</version>-->
                 <!--<type>zip</type>-->
             <!--</dependency>-->
-<<<<<<< HEAD
->>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
-            <dependency>
-                <groupId>org.wso2.carbon.uuf.sample</groupId>
-                <artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>
-                <version>${carbon.uuf.version}</version>
-                <type>zip</type>
-            </dependency>
->>>>>>> a695889... update connectors and config changes
-=======
             <!--<dependency>-->
                 <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
                 <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
                 <!--<version>${carbon.uuf.version}</version>-->
                 <!--<type>zip</type>-->
             <!--</dependency>-->
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
             <!--End of Dependent Features-->
 
             <!--Identity Server Dependencies-->
@@ -887,49 +532,6 @@
 
             <!--Dependencies for Testing-->
 
-<<<<<<< HEAD
-            <dependency>
-                <groupId>org.wso2.carbon.uuf</groupId>
-                <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j</artifactId>
-                <version>${carbon.uuf.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.uuf</groupId>
-                <artifactId>org.wso2.carbon.uuf.renderablecreator.hbs</artifactId>
-                <version>${carbon.uuf.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.uuf</groupId>
-                <artifactId>org.wso2.carbon.uuf.renderablecreator.html</artifactId>
-                <version>${carbon.uuf.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.commons</groupId>
-                <artifactId>org.wso2.carbon.identity.commons</artifactId>
-                <version>${org.wso2.carbon.identity.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
-                <artifactId>axiom</artifactId>
-                <version>${axiom.wso2.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>osgi-test-util</artifactId>
-                <version>${carbon.osgi.test.util.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.minidev.wso2</groupId>
-                <artifactId>json-smart</artifactId>
-                <version>${json.smart.version}</version>
-            </dependency>
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
             <dependency>
                 <groupId>org.wso2.carbon.uuf</groupId>
                 <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j</artifactId>
@@ -1029,9 +631,6 @@
                 <version>${ow2.jta.spec.version}</version>
                 <scope>test</scope>
             </dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
             <dependency>
                 <groupId>org.wso2.eclipse.equinox</groupId>
@@ -1118,164 +717,15 @@
                 <artifactId>org.eclipse.equinox.cm</artifactId>
                 <version>${org.eclipse.equinox.cm.version}</version>
             </dependency>
-=======
->>>>>>> 5c9fb84... Fixed some build issues and added i18n.
-=======
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
-                <scope>test</scope>
-            </dependency>
-<<<<<<< HEAD
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-=======
-=======
->>>>>>> dd53edd... Adding Jacoco integration
-
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.simpleconfigurator</artifactId>
-                <version>${equinox.simpleconfigurator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.gogo.command</artifactId>
-                <version>${apache.felix.gogo.command.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.gogo.runtime</artifactId>
-                <version>${apache.felix.gogo.runtime.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.gogo.shell</artifactId>
-                <version>${apache.felix.gogo.shell.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.app</artifactId>
-                <version>${equinox.app.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.common</artifactId>
-                <version>${equinox.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.concurrent</artifactId>
-                <version>${equinox.concurrent.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.console</artifactId>
-                <version>${equinox.console.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.ds</artifactId>
-                <version>${equinox.ds.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.frameworkadmin</artifactId>
-                <version>${equinox.frameworkadmin.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.frameworkadmin.equinox</artifactId>
-                <version>${equinox.frameworkadmin.equinox.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.launcher</artifactId>
-                <version>${equinox.launcher.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.preferences</artifactId>
-                <version>${equinox.preferences.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.registry</artifactId>
-                <version>${equinox.registry.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.simpleconfigurator.manipulator</artifactId>
-                <version>${equinox.simpleconfigurator.manipulator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.util</artifactId>
-                <version>${equinox.util.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.eclipse.equinox</groupId>
-                <artifactId>org.eclipse.equinox.cm</artifactId>
-                <version>${org.eclipse.equinox.cm.version}</version>
-            </dependency>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
             <!--End of Dependencies for Testing-->
 
             <!-- Carbon Dependencies -->
             <dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.core</artifactId>
-                <version>${carbon.core.version}</version>
-            </dependency>
-            <dependency>
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-=======
->>>>>>> dd53edd... Adding Jacoco integration
                 <groupId>org.wso2.carbon.caching</groupId>
                 <artifactId>org.wso2.carbon.caching</artifactId>
                 <version>${org.wso2.carbon.caching.version}</version>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.identity.connector.jdbc</artifactId>
-                <version>${carbon.security.userstore.jdbc.version}</version>
-                <scope>test</scope>
-            </dependency>
-<<<<<<< HEAD
-            <dependency>
-                <groupId>org.wso2.carbon.security.userstore</groupId>
-                <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc</artifactId>
-                <version>${carbon.security.userstore.jdbc.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-                <version>${org.wso2.carbon.identity.mgt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.mgt</groupId>
-                <artifactId>org.wso2.carbon.identity.claim</artifactId>
-                <version>${org.wso2.carbon.identity.mgt.version}</version>
-=======
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas</artifactId>
-                <version>${org.wso2.carbon.security.caas.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
-                <version>${org.wso2.carbon.security.caas.version}</version>
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-            </dependency>
-            <dependency>
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.identity.connector.jdbc</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
@@ -1316,31 +766,6 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.is.portal.user.client.api</artifactId>
-<<<<<<< HEAD
-                <version>${org.wso2.is.portal.user.client.api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas</artifactId>
-                <version>${carbon.security.version}</version>
-            </dependency>
-<<<<<<< HEAD
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.boot</artifactId>
-                <version>${carbon.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.security.caas</groupId>
-                <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-                <version>${carbon.security.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.is.portal.user.client.api</artifactId>
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
                 <version>${carbon.is.version}</version>
             </dependency>
             <dependency>
@@ -1352,45 +777,6 @@
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-all</artifactId>
                 <version>${msf4j.version}</version>
-<<<<<<< HEAD
-            </dependency>
-            <dependency>
-                <groupId>apache-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
-                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
-                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                <type>zip</type>
-            </dependency>
-=======
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.security.userstore</groupId>-->
-                <!--<artifactId>org.wso2.carbon.security.userstore.jdbc</artifactId>-->
-                <!--<version>${carbon.security.userstore.jdbc.version}</version>-->
-            <!--</dependency>-->
->>>>>>> 6906998... Made the UUF app for user portal buildable
-=======
->>>>>>> a695889... update connectors and config changes
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.container</artifactId>
-                <version>${carbon.container.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.msf4j</groupId>
-                <artifactId>msf4j-all</artifactId>
-                <version>2.1.0</version>
-=======
->>>>>>> c3168a2... Fix pom warnings and add scim related fixes
             </dependency>
             <dependency>
                 <groupId>apache-collections</groupId>
@@ -1453,8 +839,6 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
@@ -1467,71 +851,8 @@
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
         <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
         <carbon.security.version>1.0.1-SNAPSHOT</carbon.security.version>
-<<<<<<< HEAD
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
-=======
-        <org.wso2.carbon.identity.mgt.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
-        <carbon.uuf.version>1.0.0-SNAPSHOT</carbon.uuf.version>
-        <carbon.security.caas.version>1.0.0-SNAPSHOT</carbon.security.caas.version>
-<<<<<<< HEAD
->>>>>>> a695889... update connectors and config changes
-=======
-        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
->>>>>>> 566488f... Adding scim feature
-=======
-        <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
-        <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> f76445f... adding configuration changes
-=======
-        <org.wso2.carbon.identity.governance.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.governance.version>
-<<<<<<< HEAD
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
->>>>>>> 1f19211... temporarily fixing challenge question page issues..
-=======
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.3-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
->>>>>>> 8bc6552... Fixed issue in rendering signup page due to redirection to login everytime
-=======
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
-<<<<<<< HEAD
-        <org.wso2.carbon.identity.commons.feature.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>6.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
->>>>>>> 005c948... Added the challenge question related dependencies and osgi test dependencies.
-=======
-        <org.wso2.carbon.identity.commons.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <carbon.uuf.version>1.0.0-m9</carbon.uuf.version>
-<<<<<<< HEAD
-=======
-        <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
-        <carbon-uuf-maven-plugin.version>1.0.0-m9</carbon-uuf-maven-plugin.version>
-<<<<<<< HEAD
-=======
-=======
-        <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
->>>>>>> 0ca51ea... Fixing IDENTITY-5598
-        <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
->>>>>>> 61dae9a... upgrading uuf maven tool
-        <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
-        <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
-=======
->>>>>>> 6d3bf1a... refactor caas version
-        <carbon.metrics.version>2.0.0</carbon.metrics.version>
-
-=======
-        <carbon.security.version>1.0.0-m2</carbon.security.version>
-        <carbon.metrics.version>2.0.0</carbon.metrics.version>
-        <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
->>>>>>> 1cc6099... Loading profile values.
 
         <!--3rd party related properties-->
         <commons-beanutils.wso2.version>1.8.0.wso2v1</commons-beanutils.wso2.version>
@@ -1560,14 +881,7 @@
         <slf4j.import.version.range>[1.7.1, 2.0.0)</slf4j.import.version.range>
         <slf4j.version>1.7.5</slf4j.version>
         <commons-io.version>2.4.0.wso2v1</commons-io.version>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <commons-pool.version>1.5.6.wso2v1</commons-pool.version>
-=======
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-=======
-        <commons-pool.version>1.5.6.wso2v1</commons-pool.version>
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
         <io.swagger.annotations.version>1.5.8</io.swagger.annotations.version>
         <io.swagger.jaxrs.version>1.5.8</io.swagger.jaxrs.version>
         <commons-lang.version>2.1</commons-lang.version>
@@ -1576,14 +890,7 @@
         <HikariCP.version>2.4.1</HikariCP.version>
 
         <!--WSO2 related properties-->
-<<<<<<< HEAD
-<<<<<<< HEAD
         <carbon.core.version>5.1.0</carbon.core.version>
-=======
->>>>>>> d78d543... fixing poms
-=======
-        <carbon.core.version>5.1.0</carbon.core.version>
->>>>>>> b2c630f... Added necessary transitive dependency bundles
         <org.wso2.carbon.identity.mgt.version.range>[1.0.0,2.0.0)</org.wso2.carbon.identity.mgt.version.range>
         <andes.dependency.version>3.5.0-SNAPSHOT</andes.dependency.version>
         <andes.package.export.version.range>3.5.0</andes.package.export.version.range>
@@ -1592,79 +899,16 @@
         <carbon.datasources.import.version.range>[1.0.0, 2.0.0)</carbon.datasources.import.version.range>
         <carbon.datasources.version>1.0.0</carbon.datasources.version>
         <carbon.feature.plugin.version>2.0.1</carbon.feature.plugin.version>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        <carbon-uuf-maven-plugin.version>1.0.0-SNAPSHOT</carbon-uuf-maven-plugin.version>
-=======
-        <carbon-uuf-maven-plugin.version>1.0.0-m5</carbon-uuf-maven-plugin.version>
-<<<<<<< HEAD
->>>>>>> 6906998... Made the UUF app for user portal buildable
-        <carbon.hazelcast.feature.version>1.0.0</carbon.hazelcast.feature.version>
-        <carbon.hazelcast.package.import.version.range>[1.0.0, 2.0.0)</carbon.hazelcast.package.import.version.range>
-        <carbon.hazelcast.version>1.0.0-SNAPSHOT</carbon.hazelcast.version>
->>>>>>> 960354e... added uuf maven plugin version property to pom.xml
-=======
->>>>>>> f20af8b... Updated MSF4J dependency.
-=======
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
         <carbon.jndi.version>1.0.0</carbon.jndi.version>
         <carbon.kernel.package.import.version.range>[5.1.0, 6.0.0)</carbon.kernel.package.import.version.range>
         <carbon.kernel.version>5.1.0</carbon.kernel.version>
         <carbon.container.version>5.2.0-m2</carbon.container.version>
         <carbon.deployment.version>5.0.0</carbon.deployment.version>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         <carbon.messaging.version>1.0.11</carbon.messaging.version>
         <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
-=======
-        <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <carbon.itentity.mgt.version>1.0.0-SNAPSHOT</carbon.itentity.mgt.version>
-=======
->>>>>>> d78d543... fixing poms
-        <carbon.messaging.version>1.0.6</carbon.messaging.version>
-        <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
-        <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
-        <msf4j.version>2.1.0</msf4j.version>
-        <uuf.version>1.0.0-SNAPSHOT</uuf.version>
-        <carbon.security.version>1.0.0-SNAPSHOT</carbon.security.version>
-        <carbon.metrics.version>2.0.0</carbon.metrics.version>
-<<<<<<< HEAD
->>>>>>> cf65c8a... Adding the API and restructure...
-=======
-        <carbon.uuf.common.version>1.0.0-SNAPSHOT</carbon.uuf.common.version>
-<<<<<<< HEAD
-        <carbon.iam.portal.version>1.0.0-SNAPSHOT</carbon.iam.portal.version>
->>>>>>> 6f4a6a3... Adding org.wso2.carbon.iam.user-portal.app to the product-is
-=======
->>>>>>> 5d5ac71... adding org.wso2.carbon.iam.user-portal.feature
-=======
-        <carbon.messaging.version>1.0.11</carbon.messaging.version>
-        <carbon.transport.http.netty.version>2.1.4</carbon.transport.http.netty.version>
-        <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
-        <msf4j.version>2.1.0</msf4j.version>
->>>>>>> 8053620... making user portal compatible with latest uuf changes..
-=======
-        <org.wso2.carbon.identity.governance.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.governance.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.2-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
->>>>>>> 966974f... Added the front end functionality for the security questions page.
-=======
->>>>>>> 1f19211... temporarily fixing challenge question page issues..
-=======
-        <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
-<<<<<<< HEAD
-        <org.wso2.carbon.security.caas.version>1.0.0-m2</org.wso2.carbon.security.caas.version>
->>>>>>> b2c630f... Added necessary transitive dependency bundles
-=======
->>>>>>> 7891fb3... Changing commons versions + renaming recovery config
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -1707,19 +951,6 @@
         <equinox.util.version>1.0.500.v20130404-1337</equinox.util.version>
         <org.eclipse.equinox.cm.version>1.1.0.v20131021-1936</org.eclipse.equinox.cm.version>
 
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <!-- UUF-->
-        <javax.cache-api.version>1.0.0</javax.cache-api.version>
-        <org.apache.commons.commons-lang3.version>3.4</org.apache.commons.commons-lang3.version>
-        <org.objectweb.asm.version>5.1</org.objectweb.asm.version>
-        <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
-
-        <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
-=======
->>>>>>> 0dfb5d6... Integrating pax exam test framework to product-is
 
         <!-- UUF-->
         <javax.cache-api.version>1.0.0</javax.cache-api.version>
@@ -1730,34 +961,7 @@
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
 
     </properties>
-=======
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven.checkstyleplugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${maven.findbugsplugin.version}</version>
-            </plugin>
-        </plugins>
-    </build>
->>>>>>> b74c743... Temporary hide/fix on build issues in user-portal
 
-=======
->>>>>>> a2541ae... Cleaning up product pom file.
     <developers>
         <developer>
             <name>Ruchith Fernando</name>
@@ -1990,546 +1194,3 @@
     </developers>
 
 </project>
-=======
-<!-- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights 
-	Reserved. ~ ~ WSO2 Inc. licenses this file to you under the Apache License, 
-	~ Version 2.0 (the "License"); you may not use this file except ~ in compliance 
-	with the License. ~ You may obtain a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 
-	~ ~ Unless required by applicable law or agreed to in writing, ~ software 
-	distributed under the License is distributed on an ~ "AS IS" BASIS, WITHOUT 
-	WARRANTIES OR CONDITIONS OF ANY ~ KIND, either express or implied. See the 
-	License for the ~ specific language governing permissions and limitations 
-	~ under the License. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-	<!--parent>
-		<groupId>org.wso2.carbon</groupId>
-		<artifactId>carbon-products</artifactId>
-		<version>4.2.0</version>
-		<relativePath>../../pom.xml</relativePath>
-	</parent-->
-
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.wso2.identity</groupId>
-	<artifactId>identity-server-parent</artifactId>
-	<packaging>pom</packaging>
-	<description>WSO2 Identity Server</description>
-	<version>5.1.0-SNAPSHOT</version>
-	<name>WSO2 Identity Server</name>
-	<url>http://wso2.org/projects/identity</url>
-
-	<modules>
-		<module>modules/features</module>
-		<module>modules/p2-profile-gen</module>
-		<module>modules/distribution</module>
-		<module>modules/styles</module>
-		<module>modules/dashboard</module>
-	<!--	<module>modules/integration</module> -->
-<!--		<module>modules/samples</module> -->
-	</modules>
-
-	<licenses>
-		<license>
-			<name>Apache License Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
-
-	<organization>
-		<name>WSO2</name>
-		<url>http://www.wso2.org</url>
-	</organization>
-
-	<issueManagement>
-		<system>JIRA</system>
-		<url>http://www.wso2.org/jira/browse/IDENTITY</url>
-	</issueManagement>
-	<mailingLists>
-		<mailingList>
-			<name>Identity Server Developers</name>
-			<subscribe>identity-dev-subscribe@wso2.org</subscribe>
-			<unsubscribe>identity-dev-unsubscribe@wso2.org</unsubscribe>
-			<post>identity-dev@wso2.org</post>
-			<archive>http://wso2.org/mailarchive/identity-dev/</archive>
-		</mailingList>
-	</mailingLists>
-
-	<inceptionYear>2007</inceptionYear>
-
-	<developers>
-		<developer>
-			<name>Ruchith Fernando</name>
-			<id>ruchith</id>
-			<email>ruchith AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Dimuthu Leelaratne</name>
-			<id>dimuthul</id>
-			<email>dimuthul AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Dumindu Perera</name>
-			<id>dumindu</id>
-			<email>dumindu AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Saminda Abeyruwan</name>
-			<id>saminda</id>
-			<email>saminda AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Nandana Mihindukulasooriya</name>
-			<id>nandana</id>
-			<email>nandana AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Prabath Siriwardena</name>
-			<id>prabath</id>
-			<email>prabath AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Thilina Buddhika</name>
-			<id>thilina</id>
-			<email>thilinab AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Amila Jayasekara</name>
-			<id>amilaj</id>
-			<email>amilaj AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Asela Pathberiya</name>
-			<id>asela</id>
-			<email>asela AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Hasini Gunasinghe</name>
-			<id>hasini</id>
-			<email>hasini AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Manjula Rathnayake</name>
-			<id>manjula</id>
-			<email>manjular AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Suresh Attanayake</name>
-			<id>suresh</id>
-			<email>suresh AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-		<developer>
-			<name>Johann Nallathamby</name>
-			<id>johann</id>
-			<email>johann AT wso2.com</email>
-			<organization>WSO2</organization>
-		</developer>
-	</developers>
- 
-	<scm>
- 		<connection>scm:svn:https://wso2.org/repos/wso2/trunk/solutions/identity</connection>
-		<developerConnection>
-            scm:svn:https://wso2.org/repos/wso2/trunk/solutions/identity
-        </developerConnection>
-		<url>https://wso2.org/repos/wso2/trunk/solutions/identity</url>
-	</scm>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>wso2-maven2-repository</id>
-            <url>http://dist.wso2.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2.releases</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2.snapshots</id>
-            <name>Apache Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
-
-	<build>
-		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.2</version>
-			</plugin>
-			<plugin>
-				<inherited>false</inherited>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.1</version>
-			</plugin>
-		</plugins>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.7.2</version>
-                    <executions>
-                        <execution>
-                            <id>generate-scr-scrdescriptor</id>
-                            <goals>
-                                <goal>scr</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.3.7</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <obrRepository>NONE</obrRepository>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.2-beta-2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-	</build>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.ui</artifactId>
-				<version>${carbon.platform.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>org.apache.felix.framework</artifactId>
-				<version>1.0.3</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>org.apache.felix.main</artifactId>
-				<version>1.0.3</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>org.osgi.compendium</artifactId>
-				<version>1.0.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.equinox</groupId>
-				<artifactId>org.eclipse.equinox.http.servlet</artifactId>
-				<version>2.2.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.equinox</groupId>
-				<artifactId>org.eclipse.equinox.http.helper</artifactId>
-				<version>1.0.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.equinox</groupId>
-				<artifactId>org.eclipse.equinox.jsp.jasper</artifactId>
-				<version>1.0.1.R33x_v20070816</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.equinox</groupId>
-				<artifactId>javax.servlet.jsp</artifactId>
-				<version>2.0.0.v200706191603</version>
-			</dependency>
-
-			<!-- For identity util -->
-			<dependency>
-				<groupId>org.apache.derby.wso2</groupId>
-				<artifactId>derby</artifactId>
-				<version>${apache.derby.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate.wso2</groupId>
-				<artifactId>hibernate</artifactId>
-				<version>${hibernate.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.bcel.wso2</groupId>
-				<artifactId>bcel</artifactId>
-				<version>${bcel.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>asm.wso2</groupId>
-				<artifactId>asm</artifactId>
-				<version>${asm.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cglib.wso2</groupId>
-				<artifactId>cglib</artifactId>
-				<version>${cglib.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.axis2.wso2</groupId>
-				<artifactId>axis2-jibx</artifactId>
-				<version>${axis2.jibx.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jibx.wso2</groupId>
-				<artifactId>jibx</artifactId>
-				<version>${jibx.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.axis2.wso2</groupId>
-				<artifactId>axis2-jaxbri</artifactId>
-				<version>${axis2.jaxb.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.xml.bind.wso2</groupId>
-				<artifactId>jaxb</artifactId>
-				<version>${jaxb.wso2.version}</version>
-			</dependency>
-
-
-			<!-- Dependancies for sso -->
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.core</artifactId>
-				<version>${carbon.platform.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.axis2.wso2</groupId>
-				<artifactId>axis2</artifactId>
-				<version>${axis2.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.ws.commons.axiom.wso2</groupId>
-				<artifactId>axiom</artifactId>
-				<version>${axiom.wso2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.identity.core</artifactId>
-				<version>${carbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.identity.sso.saml</artifactId>
-				<version>${carbon.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.identity.sso.saml.ui</artifactId>
-				<version>${carbon.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<profiles>
-		<profile>
-			<id>jdk14</id>
-			<activation>
-				<jdk>1.4</jdk>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>bouncycastle</groupId>
-					<artifactId>bcprov-jdk13</artifactId>
-					<version>${bcprov.jdk13.version}</version>
-				</dependency>
-			</dependencies>
-		</profile>
-
-		<profile>
-			<id>jdk15</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<jdk>1.5</jdk>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>bouncycastle</groupId>
-					<artifactId>bcprov-jdk15</artifactId>
-					<version>${bcprov.jdk15.version}</version>
-				</dependency>
-			</dependencies>
-		</profile>
-
-		<profile>
-			<id>Sign-Artifacts</id>
-			<activation>
-				<property>
-					<name>sign</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.0-alpha-3</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-	</profiles>
-
-
-    <distributionManagement>
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-	<properties>
-		<carbon.platform.version>4.3.0-SNAPSHOT</carbon.platform.version>
-		<stratos.identity.version>${stratos.version}</stratos.identity.version>
-		<identity.version>${wso2carbon.version}</identity.version>
-		<bcprov.jdk13.version>140</bcprov.jdk13.version>
-		<bcprov.jdk15.version>132</bcprov.jdk15.version>
-		<axis2.wso2.version>${orbit.version.axis2}</axis2.wso2.version>
-		<axiom.wso2.version>${orbit.version.axiom}</axiom.wso2.version>
-		<carbon.version>${wso2carbon.version}</carbon.version>
-		<carbon.kernel.version>4.2.0</carbon.kernel.version>
-		<carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
-		<orbit.version.axiom>1.2.11.wso2v5-SNAPSHOT</orbit.version.axiom>
-		<orbit.version.axis2>1.6.1.wso2v11-SNAPSHOT</orbit.version.axis2>
-		<stratos.version.221>2.2.1</stratos.version.221>
-		<stratos.version.220>2.2.0</stratos.version.220>
-		<apache.derby.wso2.version>10.3.2.1wso2v1</apache.derby.wso2.version>
-		<hibernate.wso2.version>3.2.5.ga-wso2v1</hibernate.wso2.version>
-		<bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>		
-		<asm.wso2.version>3.1.wso2v1</asm.wso2.version>
-		<cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
-		<axis2.jibx.wso2.version>${orbit.version.axis2}</axis2.jibx.wso2.version>
-		<axis2.jaxb.wso2.version>${orbit.version.axis2}</axis2.jaxb.wso2.version>
-		<jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
-		<jaxb.wso2.version>2.2.5.wso2v1</jaxb.wso2.version>
-		<kaptcha.wso2.version>2.3.0.wso2v1</kaptcha.wso2.version>
-		<version.commons.logging>1.1.1</version.commons.logging>
-	</properties>
-
-    <repositories>
-        <!-- Before adding ANYTHING in here, please start a discussion on the dev list.
-	Ideally the Axis2 build should only use Maven central (which is available
-	by default) and nothing else. We had troubles with other repositories in
-	the past. Therefore configuring additional repositories here should be
-	considered very carefully. -->
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-
-        <repository>
-            <id>wso2.releases</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-
-        <repository>
-            <id>wso2.snapshots</id>
-            <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-
-</project>
->>>>>>> f8c01fb... Updating product files
