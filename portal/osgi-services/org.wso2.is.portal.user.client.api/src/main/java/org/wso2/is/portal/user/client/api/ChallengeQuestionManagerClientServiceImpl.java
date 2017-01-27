@@ -90,6 +90,14 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     }
 
     @Override
+    public List<ChallengeQuestion> getAllChallengeQuestions() throws IdentityRecoveryException {
+        if (challengeQuestionManager == null) {
+            throw new IdentityRecoveryException("Challenge question manager is not available.");
+        }
+        return challengeQuestionManager.getAllChallengeQuestions();
+    }
+
+    @Override
     public List<ChallengeQuestion> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException {
 
@@ -178,7 +186,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     }
 
     @Override
-    public UserChallengeAnswer[] getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
+    public List<UserChallengeAnswer> getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException {
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");

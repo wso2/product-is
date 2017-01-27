@@ -30,6 +30,13 @@ import java.util.List;
 public interface ChallengeQuestionManagerClientService {
 
     /**
+     * Get all registered challenge questions
+     * @return registered challenge questions
+     * @throws IdentityRecoveryException
+     */
+    List<ChallengeQuestion> getAllChallengeQuestions() throws IdentityRecoveryException;
+
+    /**
      * Get all of the available challenge questions for user.
      * @param userUniqueId User's unique ID.
      * @return List of challenge questions.
@@ -76,6 +83,6 @@ public interface ChallengeQuestionManagerClientService {
     void deleteChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId)
             throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException;
 
-    UserChallengeAnswer[] getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
+    List<UserChallengeAnswer> getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
 }
