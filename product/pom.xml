@@ -82,13 +82,11 @@
             <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
             <type>zip</type>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.login.feature</artifactId>
             <type>zip</type>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.security.userstore</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>

@@ -103,6 +103,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.mgt.login.feature</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
@@ -436,22 +442,6 @@
                 <artifactId>commons-collections</artifactId>
                 <version>${commons.collections.version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-jaxrs</artifactId>
-                <version>${io.swagger.jaxrs.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.ws.rs</groupId>
-                        <artifactId>jsr311-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>-->
-            <!--<dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${io.swagger.annotations.version}</version>
-            </dependency>-->
             <dependency>
                 <groupId>org.apache.geronimo.specs.wso2</groupId>
                 <artifactId>geronimo-jms_1.1_spec</artifactId>
@@ -844,8 +834,6 @@
         <slf4j.version>1.7.5</slf4j.version>
         <commons-io.version>2.4.0.wso2v1</commons-io.version>
         <commons-pool.version>1.5.6.wso2v1</commons-pool.version>
-        <io.swagger.annotations.version>1.5.8</io.swagger.annotations.version>
-        <io.swagger.jaxrs.version>1.5.8</io.swagger.jaxrs.version>
         <commons-lang.version>2.1</commons-lang.version>
         <org.snakeyaml.version>1.16.0.wso2v1</org.snakeyaml.version>
         <json.smart.version>2.1.0.wso2v1</json.smart.version>
