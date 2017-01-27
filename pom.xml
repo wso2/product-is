@@ -1191,6 +1191,12 @@
             <email>jayangak AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
+        <developer>
+            <name>Danushka Fernando</name>
+            <id>danushkaf</id>
+            <email>danushkaf AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
     </developers>
 
 </project>
