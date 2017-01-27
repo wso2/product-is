@@ -71,6 +71,7 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                       <phase>process-sources</phase>
                         <goals>
                             <goal>lint</goal>
                         </goals>

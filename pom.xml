@@ -210,18 +210,6 @@
                 <artifactId>org.wso2.carbon.container</artifactId>
                 <version>${carbon.container.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
-                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
-                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                <type>zip</type>
-            </dependency>
 
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
@@ -846,7 +834,7 @@
 
         <!--WSO2 related properties-->
         <carbon.core.version>5.1.0</carbon.core.version>
-        <org.wso2.carbon.identity.mgt.version.range>[0.1.0,2.0.0)</org.wso2.carbon.identity.mgt.version.range>
+        <org.wso2.carbon.identity.mgt.version.range>[0.1.0,1.0.0)</org.wso2.carbon.identity.mgt.version.range>
         <andes.dependency.version>3.5.0</andes.dependency.version>
         <andes.package.export.version.range>3.5.0</andes.package.export.version.range>
         <andes.package.import.version.range>[3.5.0, 4.0.0)</andes.package.import.version.range>
