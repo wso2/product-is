@@ -14,6 +14,20 @@
     </div>
 {{/fillZone}}
 
+{{#fillZone "modal"}}
+    {{
+    fragment "org.wso2.carbon.uuf.common.foundation.modal"
+             id="deleteModal"
+             class="additional-class"
+             modalTitle="Are you sure you want to delete ?"
+             modalBody="Are you sure you want to delete ?"
+             modalFooter=""
+             primaryButton="Yes"
+             secondaryButton="Cancel"
+             dismissButton=true
+    }}
+{{/fillZone}}
+
 {{#fillZone "content"}}
     <div class="body-wrapper acc-settings">
         <div class="container-fluid">
