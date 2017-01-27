@@ -131,7 +131,7 @@ function onRequest(env) {
         var formParams = {};
         var claimMap = {};
         var credentialMap = {};
-        var domain;
+        var domain = null;
         formParams = env.request.formParams;
         for (var i in formParams) {
             if (i == "password") {
