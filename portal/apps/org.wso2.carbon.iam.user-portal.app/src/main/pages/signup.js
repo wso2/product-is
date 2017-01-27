@@ -146,7 +146,7 @@ function onRequest(env) {
 
         var registrationResult = userRegistration(claimMap, credentialMap, domain);
         if (registrationResult.errorMessage) {
-            return {errorMessage: registrationResult.message};
+            return {errorMessage: registrationResult.errorMessage};
         }
         else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
             var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
