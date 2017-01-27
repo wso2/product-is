@@ -210,18 +210,6 @@
                 <artifactId>org.wso2.carbon.container</artifactId>
                 <version>${carbon.container.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
-                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
-                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
-                <type>zip</type>
-            </dependency>
 
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
@@ -794,7 +782,6 @@
         <org.wso2.carbon.identity.mgt.version>0.1.1</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
-        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
         <org.wso2.carbon.identity.recovery.server.feature.version>0.1.1</org.wso2.carbon.identity.recovery.server.feature.version>
         <org.wso2.carbon.identity.commons.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
@@ -847,9 +834,6 @@
         <!--WSO2 related properties-->
         <carbon.core.version>5.1.0</carbon.core.version>
         <org.wso2.carbon.identity.mgt.version.range>[0.0.0,1.0.0)</org.wso2.carbon.identity.mgt.version.range>
-        <andes.dependency.version>3.5.0-SNAPSHOT</andes.dependency.version>
-        <andes.package.export.version.range>3.5.0</andes.package.export.version.range>
-        <andes.package.import.version.range>[3.5.0, 4.0.0)</andes.package.import.version.range>
         <carbon.cache.version>1.0.0</carbon.cache.version>
         <carbon.datasources.import.version.range>[1.0.0, 2.0.0)</carbon.datasources.import.version.range>
         <carbon.datasources.version>1.0.0</carbon.datasources.version>
@@ -864,7 +848,7 @@
         <msf4j.import.version.range>[2.0.0, 3.0.0)</msf4j.import.version.range>
         <msf4j.version>2.1.0</msf4j.version>
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
-        <org.wso2.carbon.deployment.version>5.1.0-SNAPSHOT</org.wso2.carbon.deployment.version>
+        <org.wso2.carbon.deployment.version>5.0.0</org.wso2.carbon.deployment.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
