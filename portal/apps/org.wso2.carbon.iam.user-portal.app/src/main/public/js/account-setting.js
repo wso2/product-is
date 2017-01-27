@@ -41,6 +41,7 @@ $(window).load(function(){
     $('.settings-nav a, .sub-menu a').on('shown.bs.tab', function (e) {
         window.location.hash = e.target.hash;
         $(window).scrollTop(0);
+        $('.settings-content').find('.alert').remove();
     });
 
     //remove readonly input focus 
