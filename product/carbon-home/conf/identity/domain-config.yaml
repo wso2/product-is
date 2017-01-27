@@ -120,6 +120,15 @@ domains:
       -
         attribute: "version"
         claimUri: "http://wso2.org/claims/version"
+      -
+        attribute: "challengeQuestionUris"
+        claimUri: "http://wso2.org/claims/challengeQuestionUris"
+      -
+        attribute: "challengeQuestion1"
+        claimUri: "http://wso2.org/claims/challengeQuestion1"
+      -
+        attribute: "challengeQuestion2"
+        claimUri: "http://wso2.org/claims/challengeQuestion2"
 
     credentialStoreConnectors:
     -

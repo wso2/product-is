@@ -74,7 +74,7 @@
                                    onclick="editQuestion('{{questionId}}', '{{questionSetId}}', '{{question}}')">
                                     <span class="fw fw-edit" aria-hidden="true"></span>
                                 </a>
-                                <a aria-label="Delete" onclick="deleteQuestion({{questionId}})">
+                                <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }}, '{{ this.questionSetId }}')">
                                     <span class="fw fw-delete" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -116,6 +116,7 @@
             </div>
         </div>
         <input type="submit" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
+        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Back" onclick="goBack()">
         <input type="hidden" id="question-id" name="question-id" value="">
         <input type="hidden" id="question-set-id" name="question-set-id" value="">
         <input type="hidden" name="action" value="update-question">
