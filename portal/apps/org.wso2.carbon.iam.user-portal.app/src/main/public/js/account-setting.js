@@ -41,6 +41,15 @@ $(window).load(function(){
     $('.settings-nav a, .sub-menu a').on('shown.bs.tab', function (e) {
         window.location.hash = e.target.hash;
         $(window).scrollTop(0);
+        $('.settings-content').find('.alert').remove();
+
+        var url = window.location.href;
+        var queryParam = url.match(/\?(.*?)\#/);
+        if(queryParam) {
+            queryParam = url.match(/\?(.*?)\#/)[0].slice(0, -1);
+            var removedQueryParamUrl = url.replace(queryParam, '');
+            history.pushState(null, "", removedQueryParamUrl);
+        }
     });
 
     //remove readonly input focus 
