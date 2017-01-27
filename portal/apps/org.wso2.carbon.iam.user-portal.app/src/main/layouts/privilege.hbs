@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{#placeholder "favicon"}}
+        <link rel="shortcut icon" href="{{public "images/default-favicon.png"}}" type="image/png"/>
+    {{/placeholder}}
+    <title>{{#placeholder "title"}}UUF Foundation{{/placeholder}}</title>
+    {{placeholder "css"}}
+    {{placeholder "headJs"}}
+    {{placeholder "headOther"}}
+</head>
+
+<body class="sticky-footer">
+<!-- header -->
+<header class="header header-default">
+    <div class="container-fluid">
+        <div class="pull-left brand">
+            <a href="{{@contextPath}}/">
+                <img src="{{public "images/logo.png"}}" class="logo" alt="wso2" title="wso2" class="logo"/>
+                <span>{{@config.appName}}</span>
+            </a>
+        </div>
+
+        {{defineZone "usermenu"}}
+    </div>
+</header>
+<!-- /header -->
+
+<div class="breadcrumb-container">
+    {{defineZone "breadcrumbs"}}
+</div>
+
+<div class="modal-container">
+    {{defineZone "modal"}}
+</div>
+
+<div class="navbar-container">
+    {{defineZone "navbar"}}
+</div>
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        {{defineZone "content"}}
+    </div>
+</div>
+<!-- footer -->
+<footer class="footer">
+    <div class="container-fluid">
+        <p>
+            {{t "footer.content"}} | &copy;
+            <script>document.write((new Date().getFullYear()).toString());</script>
+            <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>.
+        </p>
+    </div>
+</footer>
+<!-- /footer -->
+{{placeholder "js"}}
+</body>
+</html>

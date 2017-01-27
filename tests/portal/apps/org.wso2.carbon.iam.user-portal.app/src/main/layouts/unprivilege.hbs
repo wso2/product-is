@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{#placeholder "favicon"}}
+        <link rel="shortcut icon" href="{{public "images/default-favicon.png"}}" type="image/png"/>
+    {{/placeholder}}
+    <title>{{#placeholder "title"}}Simple Auth{{/placeholder}}</title>
+    {{placeholder "css"}}
+    {{placeholder "headJs"}}
+    {{placeholder "headOther"}}
+</head>
+
+<body class="sticky-footer">
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="body-wrapper">
+            {{defineZone "alert"}}
+            {{defineZone "message"}}
+            {{defineZone "content"}}
+        </div>
+    </div>
+</div>
+<!-- footer -->
+<footer class="footer">
+    <div class="container-fluid">
+        <p>
+            {{t "footer.content"}} | &copy;
+            <script>document.write((new Date().getFullYear()).toString());</script>
+            <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>.
+        </p>
+    </div>
+</footer>
+<!-- /footer -->
+{{defineZone "modal"}}
+{{placeholder "js"}}
+</body>
+</html>

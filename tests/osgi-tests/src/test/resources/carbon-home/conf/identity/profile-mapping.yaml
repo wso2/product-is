@@ -1,0 +1,88 @@
+###############################################################################
+#   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+###############################################################################
+---
+# Configurations related to profile claim mappings
+profiles:
+ -
+  profileName: "default"
+  isAdminProfile: false
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "User Name"
+   required: true
+   readonly: true
+   verifier: "claim verifying extension"
+   validator: "claim validating extension"
+   transformer: "transform extension"
+   regex: ".*"
+   defaultValue: "user1"
+   dataType: "text"
+   properties:
+    customproperty: "custom value"
+  -
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "First Name"
+   required: true
+   readonly: false
+   regex: ".*"
+  -
+   claimURI: "http://wso2.org/claims/lastname"
+   displayName: "Last Name"
+   required: false
+   readonly: false
+   regex: ".*"
+  -
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: false
+   dataType: "email"
+   regex: ".*"
+  -
+   claimURI: "http://wso2.org/claims/telephone"
+   displayName: "Telephone"
+   required: false
+   readonly: false
+   regex: ".*"
+   dataType: "text"
+ -
+  profileName: "employee"
+  isAdminProfile: false
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "User Name"
+   required: true
+   readonly: true
+   regex: ".*"
+   defaultValue: "user1"
+   dataType: "text"
+   properties:
+    customproperty: "custom value"
+  -
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "Employee Name"
+   required: true
+   readonly: false
+   regex: ".*"
+  -
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: false
+   dataType: "email"
+   regex: ".*"

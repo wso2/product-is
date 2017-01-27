@@ -1,0 +1,11 @@
+{{layout "org.wso2.carbon.uuf.is.foundation.main"}}
+{{title "Page Not Found | " @config.appName}}
+{{#fillZone "content"}}
+    <div class="message message-danger">
+        <h4><i class="icon fw fw-error"></i>Page Not Found!</h4>
+
+        <div style="padding-left: 25px;">
+            <p style="white-space: pre-wrap;">{{@params.message}}</p>
+        </div>
+    </div>
+{{/fillZone}}
