@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
     @Activate
     protected void start(final BundleContext bundleContext) {
-        LOGGER.info("Registered service implementation" + IdentityStoreClientServiceImpl.class); //todo
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("IdentityStoreClientService activated successfully.");
+        }
     }
 
     @Reference(

@@ -1,60 +1,18 @@
 /*
- *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
-function onRequest(env) {
-    var session = getSession();
-    if (session) {
-        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-    }
-
-    if (env.request.method == "POST") {
-        var formParams = {};
-        var claimMap = {};
-        var credentialMap = {};
-        var domain;
-        formParams = env.request.formParams;
-        for (var i in formParams) {
-            if (i == "password") {
-                credentialMap["password"] = formParams[i];
-            } else if (i == "domain") {
-                domain = formParams[i];
-            }
-            else {
-                claimMap[i] = formParams[i];
-            }
-        }
-
-        var registrationResult = userRegistration(claimMap, credentialMap, domain);
-        if (registrationResult.errorMessage) {
-            return {errorMessage: registrationResult.message};
-        }
-        else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
-            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
-            if (authenticationResult.success) {
-                sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-            } else {
-                sendRedirect(env.contextPath + env.config['loginPageUri']);
-            }
-        }
-    }
-
-    if (env.request.method == "GET") {
-        return getProfile();
-    }
-}
 
 function getProfile() {
 
@@ -125,13 +83,13 @@ function generateClaimProfileMap(claimProfileEntry) {
 
 function userRegistration(claimMap, credentialMap, domain) {
     try {
-        var userRegistration = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "addUser", [claimMap, credentialMap, domain]);
-        return {userRegistration: userRegistration};
+        return {userRegistration: userRegistrationResult};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
-        if (cause != null) {
+        if (cause !== null) {
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
@@ -148,11 +106,11 @@ function authenticate(username, password, domain) {
             "authenticate", [username, passwordChar, domain]);
 
         createSession(uufUser);
-        return {success: true, message: "success"}
+        return {success: true, message: "success"};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
-        if (cause != null) {
+        if (cause !== null) {
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
@@ -160,5 +118,47 @@ function authenticate(username, password, domain) {
         }
 
         return {success: false, message: 'login.error.authentication'};
+    }
+}
+
+function onRequest(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
+
+    if (env.request.method == "POST") {
+        var formParams = {};
+        var claimMap = {};
+        var credentialMap = {};
+        var domain;
+        formParams = env.request.formParams;
+        for (var i in formParams) {
+            if (i == "password") {
+                credentialMap["password"] = formParams[i];
+            } else if (i == "domain") {
+                domain = formParams[i];
+            }
+            else {
+                claimMap[i] = formParams[i];
+            }
+        }
+
+        var registrationResult = userRegistration(claimMap, credentialMap, domain);
+        if (registrationResult.errorMessage) {
+            return {errorMessage: registrationResult.message};
+        }
+        else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
+            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
+            if (authenticationResult.success) {
+                sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+            } else {
+                sendRedirect(env.contextPath + env.config['loginPageUri']);
+            }
+        }
+    }
+
+    if (env.request.method == "GET") {
+        return getProfile();
     }
 }

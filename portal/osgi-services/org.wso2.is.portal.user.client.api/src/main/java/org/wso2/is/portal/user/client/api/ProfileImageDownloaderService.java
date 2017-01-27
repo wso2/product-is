@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.msf4j.Microservice;
@@ -36,8 +37,7 @@ public class ProfileImageDownloaderService implements Microservice {
     @Path("/image")
     @Produces("image/*")
     public Response getProfileImage(@QueryParam("userid") String userId) {
-        File imageDirectory = new File(Paths.get(System.getProperty("user.dir"), "images").toString());
-
+        File imageDirectory = new File(Paths.get(System.getProperty("carbon.home"), "images").toString());
         String[] imageNames = imageDirectory.list();
 
         if (imageNames == null) {
@@ -48,7 +48,7 @@ public class ProfileImageDownloaderService implements Microservice {
                 filter(imageName -> imageName.contains(userId)).
                 map(imageName -> {
                     File imageFile = new File(
-                            Paths.get(System.getProperty("user.dir"), "images").toString() + File.separator
+                            Paths.get(System.getProperty("carbon.home"), "images").toString() + File.separator
                                     + imageName);
                     String mimeType = new MimetypesFileTypeMap().getContentType(imageFile);
 

@@ -1,0 +1,21 @@
+{
+  // Options
+  "maxparams": 5,
+  "indent": true,
+  "camelcase": true,
+  "eqeqeq": false,
+  "forin": true,
+  "immed": true,
+  "latedef": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "sub": true,
+  /*
+   * Globals
+   */
+  "globals": {
+     "require": false,
+     "$": false,
+  }
+}

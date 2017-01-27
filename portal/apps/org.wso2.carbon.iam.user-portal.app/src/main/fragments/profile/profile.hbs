@@ -1,6 +1,6 @@
 {{fragment "org.wso2.carbon.uuf.common.foundation.jquery-validation"}}
 {{js "js/profile.js"}}
-<h3>{{t "profile"}}</h3>
+<h3 class="text-capitalize">{{profile}} {{t "profile"}}</h3>
 <hr/>
 {{#if success}}
     {{#if message}}
@@ -44,12 +44,12 @@
     </div>
     <input type="file" id="image" name="image" style="visibility: hidden; width: 1px; height: 1px" accept="image/*"/>
 </form>
-<form method="post" class="form-horizontal" action="?{{profile}}#{{profile}}" id="profile-form">
+<form method="post" class="form-horizontal profile-form" action="?{{profile}}#{{profile}}" id="{{profile}}-form">
     {{#each uiEntries}}
         <div class="form-group">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                 <label for="{{claimURI}}">{{displayName}}<span>{{requiredIcon}}</span></label>
-                <input type="{{dataType}}" name="{{claimURI}}" id="{{claimURI}}" class="form-control"
+                <input type="{{dataType}}" name="{{claimURI}}" id="{{claimLabel}}" class="form-control"
                        maxlength="250" value="{{value}}" {{readonly}} {{required}}
                        pattern="{{regex}}"  />
             </div>

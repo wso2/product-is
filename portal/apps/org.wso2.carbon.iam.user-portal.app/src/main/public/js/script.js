@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 $(window).load(function(){
 
 	$(".search-wrap .dropdown-menu li a").click(function(){
@@ -8,14 +24,14 @@ $(window).load(function(){
 		$(this).parent().find('.image-container .after').show();
 	},function(){
 		$(this).parent().find('.image-container .after').hide();
-	})
+	});
 
     $('input[name=recover-option]').click(function(){
         if($(this).parent().parent().find('.recover-option-container').is(':hidden')){
             $('.recover-option-container').slideUp();
             $(this).parent().parent().find('.recover-option-container').slideDown();
         }
-    })
+    });
 
 
 	$('.rating:not(.half) .icon').click(function(){
@@ -60,10 +76,10 @@ $(window).load(function(){
      * Affix spacer when media left is affixed
      */
     $('.sidebar-wrapper').on('affix.bs.affix',function(){
-        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>')
+        $('.media').prepend('<div class="affix-spacer" style="width:'+ $(this).width() +'px;float:left;height: 100vh"></div>');
     }).on('affixed-top.bs.affix',function(){
         $('.affix-spacer').remove();
-    })
+    });
 
     $('.sign-up-additional').click(function(){
         var el = $('.extended-form'),
@@ -75,8 +91,8 @@ $(window).load(function(){
         }else{
             el.slideUp(function(){
                 triggerEl.text('Show Additional Details');
-            })
+            });
         }
-    })
+    });
 
 });
