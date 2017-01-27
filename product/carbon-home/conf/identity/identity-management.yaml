@@ -14,8 +14,8 @@
 #   limitations under the License.
 ###############################################################################
 recovery:
- password:
-  securityQuestion:
+ securityQuestion:
+  password:
    enable: false
    notifyStart: false
    separator: "!"
@@ -27,3 +27,4 @@ recovery:
     enable: false
     internalyManage:
       enable: true
+      
