@@ -20,10 +20,10 @@
         <groupId>org.wso2.is</groupId>
         <artifactId>product-is</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>6.0.0-m1</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
-    <version>6.0.0-m1</version>
+    <version>6.0.0-SNAPSHOT</version>
     <artifactId>user-portal-tests</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 User Portal - Tests</name>
