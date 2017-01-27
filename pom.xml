@@ -790,19 +790,19 @@
     <properties>
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <carbon.security.userstore.jdbc.version>1.0.0-SNAPSHOT</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <carbon.security.userstore.jdbc.version>0.1.1</carbon.security.userstore.jdbc.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.1</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <carbon.is.version>6.0.0-SNAPSHOT</carbon.is.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.0-SNAPSHOT</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.1</org.wso2.carbon.identity.recovery.server.feature.version>
         <org.wso2.carbon.identity.commons.feature.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>1.0.0-SNAPSHOT</org.wso2.carbon.identity.commons.version>
 
         <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
         <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
-        <carbon.security.version>1.0.1-SNAPSHOT</carbon.security.version>
+        <carbon.security.version>1.0.0</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
 
@@ -846,7 +846,7 @@
 
         <!--WSO2 related properties-->
         <carbon.core.version>5.1.0</carbon.core.version>
-        <org.wso2.carbon.identity.mgt.version.range>[1.0.0,2.0.0)</org.wso2.carbon.identity.mgt.version.range>
+        <org.wso2.carbon.identity.mgt.version.range>[0.0.0,1.0.0)</org.wso2.carbon.identity.mgt.version.range>
         <andes.dependency.version>3.5.0-SNAPSHOT</andes.dependency.version>
         <andes.package.export.version.range>3.5.0</andes.package.export.version.range>
         <andes.package.import.version.range>[3.5.0, 4.0.0)</andes.package.import.version.range>
