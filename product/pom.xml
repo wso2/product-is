@@ -387,12 +387,12 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.common.feature</id>
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>

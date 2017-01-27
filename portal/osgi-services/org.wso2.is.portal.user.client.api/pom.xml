@@ -102,7 +102,7 @@
             org.wso2.carbon.kernel.utils.*,
             org.wso2.msf4j;version="${msf4j.import.version.range}",
             javax.ws.rs.*;version="${javax.ws.rs.import.version.range}",
-            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version}"
+            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version.range}"
         </import.package>
         <!--//todo set versions-->
         <export.package>
