@@ -15,9 +15,7 @@
   ~  limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -35,20 +33,8 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <!--<module>osgi-services/org.wso2.is.portal.user.client.realmservice</module>-->
         <module>osgi-services/org.wso2.is.portal.user.client.api</module>
-        <!--<module>osgi-services/org.wso2.is.portal.user.client.profile</module>-->
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>
-        <!--<module>osgi-services/org.wso2.carbon.uuf.sample.pets-store.bundle</module>-->
-        <!--<module>osgi-services/org.wso2.carbon.uuf.sample.simple-auth.bundle</module>-->
-        <!--<module>themes/org.wso2.carbon.uuf.sample.theme.default</module>-->
-        <!--<module>themes/org.wso2.carbon.uuf.sample.theme.blue</module>-->
-        <!--<module>themes/org.wso2.carbon.uuf.sample.theme.green</module>-->
-        <!--<module>components/org.wso2.carbon.uuf.sample.simple-auth</module>-->
-        <!--<module>components/org.wso2.carbon.uuf.sample.foundation</module>-->
-        <!--<module>components/org.wso2.carbon.uuf.sample.store-common</module>-->
-        <!--<module>apps/org.wso2.carbon.uuf.sample.pets-store</module>-->
-        <!--<module>apps/org.wso2.carbon.uuf.sample.features-app</module>-->
     </modules>
 
 </project>

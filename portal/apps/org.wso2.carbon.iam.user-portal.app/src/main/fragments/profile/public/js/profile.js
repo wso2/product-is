@@ -31,13 +31,13 @@ $(window).load(function () {
             var re = new RegExp(regexp);
             return this.optional(element) || re.test(value);
         },
-        "Please check your input."
+        "Please enter a valid input."
     );
 
     $('#default-form').validate();
     $('#employee-form').validate();
     
-    $('.profile-form input[type=text], .profile-form input[type=email]').each(function(){
+    $('.profile-form input[type=text]').each(function(){
         var pattern = $(this).attr('pattern');
 
         if ((typeof pattern !== typeof undefined) && pattern !==".*" ) {

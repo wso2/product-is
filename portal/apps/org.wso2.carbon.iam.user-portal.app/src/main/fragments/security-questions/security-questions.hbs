@@ -92,12 +92,12 @@
             <p>{{t "security.question.info.body"}}</p>
         </div>
     </div>
-    <form class="form-horizontal" method="post">
+    <form class="form-horizontal" method="post" id="questionUpdateForm">
         <div id="password">
             <div class="form-group">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                    <label for="old-password">Password</label>
-                    <input type="password" class="form-control" id="old-password" name="old-password"/>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                    <label class="control-label" for="old-password">Password<span>*</span></label>
+                    <input type="password" class="form-control" id="old-password" name="old-password" required/>
                 </div>
             </div>
         </div>
@@ -109,14 +109,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                     <label class="control-label">{{t "signup.security.question.answer"}}</label>
                     <input class="form-control" type="text" id="answer">
                 </div>
             </div>
         </div>
-        <input type="submit" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
-        <input type="button" class="btn btn-primary add-margin-bottom-3x" value="Back" onclick="goBack()">
+        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">Update</button>
+        <input type="button" class="btn btn-default add-margin-bottom-3x" value="Cancel" onclick="goBack()">
         <input type="hidden" id="question-id" name="question-id" value="">
         <input type="hidden" id="question-set-id" name="question-set-id" value="">
         <input type="hidden" name="action" value="update-question">
