@@ -22,6 +22,7 @@ function onRequest(env) {//TODO change to onGet
     if (env.request.method == "GET") {
         var username = env.request.queryParams['username'];
         var domain = env.request.queryParams['domain'];
+        var userId = env.request.queryParams['userId'];
 
         //if username is not available redirected to password recovery init page
         if (!username) {
@@ -31,7 +32,7 @@ function onRequest(env) {//TODO change to onGet
         Log.debug("Check whether Notification Based Password Recovery is Enabled.");
         var hasMultiple = recoveryManager.hasMultiplePasswordRecoveryEnabled();
 
-        if (hasMultiple.success) { // TODO
+        if (hasMultiple.success) {
             if (!hasMultiple.isEnabled) {//when multiple recovery options are not enabled
                 Log.debug("Multiple Password Recovery options are not Enabled.");
                 if (recoveryManager.isPasswordRecoveryOptionEnabled("notification-based").isEnabled) {
@@ -45,7 +46,14 @@ function onRequest(env) {//TODO change to onGet
                 }
                 //TODO decide what, when non of the options are enabled
             } else {
-                 return { hasMultipleOptions: hasMultiple.isEnabled }
+                var questions = recoveryManager.getUserQuestions(userId);
+                if (questions.data.length > 0) {
+                    return { hasMultipleOptions: hasMultiple.isEnabled,
+                            hasUserQuestions: true,
+                            userQuestions: questions.data } ;
+                } else {
+                    return { hasMultipleOptions: hasMultiple.isEnabled };
+                }
             }
         } else {
             Log.error("Error while checking whether multiple recovery options are enabled.");
@@ -55,5 +63,18 @@ function onRequest(env) {//TODO change to onGet
 
     if (env.request.method == "POST") {
         //TODO pasword recover option handle
+
+//        Log.info(env.request.formParams);
+//        var isEmailBased = env.request.formParams['recover-option-email'];
+//        if(isEmailBased){
+//            //TODO invoke password recovery via email
+//            sendRedirect(env.contextPath + '/recovery/password-complete');
+//        }
+//        var isQuestionBased = env.request.formParams['recover-option-question'];
+//        if(isQuestionBased){
+//            //TODO invoke password recovery via questions
+//            sendRedirect(env.contextPath + '/recovery/password-complete');
+//        }
+//        //TODO else
     }
 }

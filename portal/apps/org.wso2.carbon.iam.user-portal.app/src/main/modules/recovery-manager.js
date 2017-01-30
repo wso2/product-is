@@ -26,7 +26,7 @@ var recoveryManager = {};
 (function (recoveryManager) {
 
     /**
-     * Check whether the passworord recovery enabled
+     * Check whether the password recovery enabled
      * if method is not provided returns whether password recovery options are enabled at all
      * @param method define osgi service method to be called
      * @returns {*}
@@ -61,6 +61,30 @@ var recoveryManager = {};
     }
 
     /**
+     * private method to return security questions of the user
+     * @param userUniqueId
+     * @returns {{}}
+     */
+    function getUserQuestions(userUniqueId) {
+
+        var result = {};
+        result.success = true;
+        result.message = "";
+        Log.info(userUniqueId);
+        try {
+            var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+                "getAllChallengeQuestionsForUser", [userUniqueId]);
+        } catch (e) {
+            result.success = false;
+            result.message = e.message;
+            Log.info(result);
+            return result;
+        }
+        result.data = challengeQuestions;
+        return result;
+    }
+
+    /**
      * Returns whether password recovery options are enabled
      * @returns {success: true/flase, isEnabled: true/false}
      */
@@ -90,5 +114,31 @@ var recoveryManager = {};
             return { success: true, isEnabled: false };
         }
     };
+
+    /**
+     * Returns security questions of the user
+     * @param uniqueUserId
+     * @returns {*}
+     */
+    recoveryManager.getUserQuestions = function (uniqueUserId) {
+        if (uniqueUserId) {
+            return getUserQuestions(uniqueUserId);
+        } else {
+            return { success: false };
+        }
+    };
+
+    /**
+     * Returns recovery related constants
+     * @returns ""
+     */
+    recoveryManager.CONSTANTS = {
+        IS_NOTIFICATION_BASED_PWD_REOCVERY_ENABLED: "isPasswordRecoveryViaNotificationEnabled",
+        IS_QUESTION_BASED_PWD_REOCVERY_ENABLED: "isPasswordRecoveryWithSecurityQuestionsEnabled",
+        NOTIFICATION_BASED: "notification-based",
+        SECURITY_QUESTION_BASED: "security-question-based"
+
+    };
+
 
 })(recoveryManager);
