@@ -36,15 +36,16 @@
         <!--UUF Components-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.common</groupId>
-            <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
+            <artifactId>org.wso2.carbon.uuf.common.foundation.ui</artifactId>
             <version>${carbon.uuf.common.version}</version>
             <type>zip</type>
             <classifier>uuf-component</classifier>
         </dependency>
+
         <!--UUF Themes-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.common</groupId>
-            <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
+            <artifactId>org.wso2.carbon.uuf.common.default.theme</artifactId>
             <version>${carbon.uuf.common.version}</version>
             <type>zip</type>
             <classifier>uuf-theme</classifier>
