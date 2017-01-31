@@ -126,14 +126,13 @@ var recoveryManager = {};
         var result = {};
         result.success = true;
         result.message = "";
-        Log.info(userUniqueId);
         try {
             var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
                 "getAllChallengeQuestionsForUser", [userUniqueId]);
         } catch (e) {
+            Log.error(e.message);
             result.success = false;
-            result.message = e.message;
-            Log.info(result);
+            result.message = "something.wrong.error";
             return result;
         }
         result.data = challengeQuestions;
@@ -183,18 +182,5 @@ var recoveryManager = {};
             return { success: false };
         }
     };
-
-    /**
-     * Returns recovery related constants
-     * @returns ""
-     */
-    recoveryManager.CONSTANTS = {
-        IS_NOTIFICATION_BASED_PWD_REOCVERY_ENABLED: "isNotificationBasedPasswordRecoveryEnabled",
-        IS_QUESTION_BASED_PWD_REOCVERY_ENABLED: "isPasswordRecoveryWithSecurityQuestionsEnabled",
-        NOTIFICATION_BASED: "notification-based",
-        SECURITY_QUESTION_BASED: "security-question-based"
-
-    };
-
 
 })(recoveryManager);
