@@ -14,9 +14,16 @@
 #   limitations under the License.
 ###############################################################################
 recovery:
- securityQuestion:
-  password:
+ password:
+  securityQuestion:
    enable: false
    notifyStart: false
    separator: "!"
    minAnswers: 2
+
+ # Username recovery
+ username:
+  notification:
+    enable: false
+    internalyManage:
+      enable: true
