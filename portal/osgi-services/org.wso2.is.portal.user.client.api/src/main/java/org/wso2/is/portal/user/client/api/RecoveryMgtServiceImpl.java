@@ -42,24 +42,9 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         LOGGER.info("Registered service implementation" + RecoveryMgtService.class); //todo
     }
 
-
     @Override
-    public boolean isPasswordRecoveryEnabled() throws UserPortalUIException {
+    public boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException {
         return true;
     }
 
-    @Override
-    public boolean isMultiplePasswordRecoveryEnabled() throws UserPortalUIException {
-        return isPasswordRecoveryViaNotificationEnabled() && isPasswordRecoveryWithSecurityQuestionsEnabled();
-    }
-
-    @Override
-    public boolean isPasswordRecoveryViaNotificationEnabled() throws UserPortalUIException {
-        return true;
-    }
-
-    @Override
-    public boolean isPasswordRecoveryWithSecurityQuestionsEnabled() throws UserPortalUIException {
-        return true;
-    }
 }

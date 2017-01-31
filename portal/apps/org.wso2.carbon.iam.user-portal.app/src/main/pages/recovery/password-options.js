@@ -24,7 +24,7 @@ function onGet(env) {
     var userId = env.request.queryParams['userId'];
 
     //if username is not available redirected to password recovery init page
-    if (!username) {
+    if (!username || !domain || !userId) {
         sendRedirect(env.contextPath + '/recovery/password');
     }
 
@@ -46,6 +46,10 @@ function onGet(env) {
             //TODO decide what, when non of the options are enabled
         } else {
             var questions = recoveryManager.getUserQuestions(userId);
+            if (!questions.success) {
+                sendError(500, "something.wrong.error");
+                //TODO
+            }
             if (questions.data.length > 0) {
                 return {
                     hasMultipleOptions: hasMultiple.isEnabled,
@@ -61,7 +65,6 @@ function onGet(env) {
         return {errorMessage: "something.wrong.error"};
     }
 }
-
 
 function onPost(env) {
     //TODO pasword recover option handle

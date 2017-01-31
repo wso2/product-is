@@ -49,7 +49,7 @@ var userManager = {};
                 return {success: false, message: "user.not.found.for.username"}
             } else {
                 Log.debug("No user found in the system with username: " + username);
-                return {success: false, message: "user.not.found.for.username"}
+                return {success: false, code:404, message: "user.not.found.for.username"}
             }
 
         } catch (e) {

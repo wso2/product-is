@@ -85,4 +85,7 @@ public interface ChallengeQuestionManagerClientService {
 
     List<UserChallengeAnswer> getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
+
+    boolean isQuestionBasedPwdRecoveryEnabled() throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException;
 }
