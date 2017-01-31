@@ -39,7 +39,6 @@ function onGet(env) {
 function onPost(env) {
 
     var data = {};
-    var result;
     data.success = true;
     var session = getSession();
     var userUniqueId = session.getUser().getUserId();
@@ -63,12 +62,12 @@ function onPost(env) {
         questionSetId = env.request.formParams["question-set-id"];
         var username = session.getUser().getUsername();
         var domain = session.getUser().getDomainName();
-        var result = authenticate(username, oldPassword, domain);
-        if (result.success) {
+        var authenticationResult = authenticate(username, oldPassword, domain);
+        if (authenticationResult.success) {
             setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId);
         } else {
-            data.success = result.success;
-            data.message = result.message;
+            data.success = authenticationResult.success;
+            data.message = authenticationResult.message;
         }
     } else if (action == "delete-question") {
 
@@ -76,19 +75,19 @@ function onPost(env) {
         questionId = env.request.formParams["question-id"];
         questionSetId = env.request.formParams["question-set-id"];
 
-        result = deleteQuestion(userUniqueId, questionId, questionSetId);
+        var deleteQResult = deleteQuestion(userUniqueId, questionId, questionSetId);
 
-        data.message = result.message;
-        data.success = result.success;
+        data.message = deleteQResult.message;
+        data.success = deleteQResult.success;
     }
 
-    result = getUserQuestions(userUniqueId);
+    var getQResult = getUserQuestions(userUniqueId);
 
-    if (result.data.length === 0) {
+    if (getQResult.data.length === 0) {
         data.isUserHasQuestions = false;
     } else {
         data.isUserHasQuestions = true;
-        data.userQuestions = result.data;
+        data.userQuestions = getQResult.data;
     }
 
     data.questionList = getChallengeQuestions(userUniqueId).data;
