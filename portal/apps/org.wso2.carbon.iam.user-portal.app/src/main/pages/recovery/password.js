@@ -31,6 +31,9 @@ function onRequest(env) {
             sendRedirect(env.contextPath + '/recovery/password-options?username=' + result.username
                 + "&domain=" + result.userdomain + "&userId=" + result.uniqueUserId);
         } else {
+            if(result.code === 404){
+                return {isPasswordRecoveryEnabled: false}
+            }
             return {errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true};
         }
     }

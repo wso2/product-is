@@ -195,5 +195,14 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         return challengeQuestionManager.getChallengeAnswersOfUser
                 (realmService.getIdentityStore().getUser(userUniqueId));
     }
+
+    @Override
+    public boolean isQuestionBasedPwdRecoveryEnabled() throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException {
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+        return challengeQuestionManager.isQuestionBasedPwdRecoveryEnabled();
+    }
 }
 
