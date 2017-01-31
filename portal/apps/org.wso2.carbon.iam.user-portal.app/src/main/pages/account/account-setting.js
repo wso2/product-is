@@ -33,27 +33,6 @@ function getProfileNames() {
     return {success: false, message: message};
 }
 
-/*function onRequest(env) {
-
-    var session = getSession();
-    if (!session || !session.getUser()) {
-        sendRedirect(env.contextPath + env.config['loginPageUri']);
-    }
-
-    var formId = "";
-    if (env.request.method == "POST") {
-        formId = env.request.queryString;
-    }
-
-    var result = getProfileNames();
-
-    if (result.success) {
-        return {profiles: result.profiles, actionId: formId};
-    } else {
-        return {errorMessage: result.message};
-    }
-}*/
-
 function onGet(env) {
     var session = getSession();
     if (!session || !session.getUser()) {
