@@ -25,7 +25,7 @@ function onRequest(env) {//TODO change to onGet
         var userId = env.request.queryParams['userId'];
 
         //if username is not available redirected to password recovery init page
-        if (!username) {
+        if (!username || !domain || !userId) {
             sendRedirect(env.contextPath + '/recovery/password');
         }
 
@@ -47,6 +47,10 @@ function onRequest(env) {//TODO change to onGet
                 //TODO decide what, when non of the options are enabled
             } else {
                 var questions = recoveryManager.getUserQuestions(userId);
+                if(!questions.success){
+                    sendError(500, "something.wrong.error");
+                    //TODO
+                }
                 if (questions.data.length > 0) {
                     return { hasMultipleOptions: hasMultiple.isEnabled,
                             hasUserQuestions: true,
