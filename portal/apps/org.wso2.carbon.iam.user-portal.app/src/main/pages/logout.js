@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-function onRequest(env) {
+function onPost(env) {
     if (getSession()) {
         if (destroySession()) {
             sendRedirect(env.contextPath + env.config['loginPageUri']);
@@ -25,3 +25,4 @@ function onRequest(env) {
         sendRedirect(env.contextPath + env.config['loginPageUri']);
     }
 }
+

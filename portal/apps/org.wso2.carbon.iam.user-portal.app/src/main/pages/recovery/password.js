@@ -18,30 +18,30 @@
 module("recovery-manager");
 module("user-manager");
 
-function onRequest(env) {
+function onGet(env) {
     var domainSeparator = env.config['domainSeparator'];
-    if (env.request.method == "POST") {
-        var username = env.request.formParams['username'];
-
-        //check whether user exists
-        var result = userManager.isUserExists(username, domainSeparator);
-        if (result.success) {
-            Log.debug("An unique user found in the system with username: " + username);
-            //configure recovery-options redirect uri
-            sendRedirect(env.contextPath + '/recovery/password-options?username=' + result.username
-                + "&domain=" + result.userdomain + "&userId=" + result.uniqueUserId);
-        } else {
-            return {errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true};
-        }
+    //check whether password recovery options are enabled
+    var result = recoveryManager.isPasswordRecoveryEnabled();
+    if (result.success) {
+        return {isPasswordRecoveryEnabled: result.isEnabled}
+    } else {
+        sendError(505, "something.wrong.error");
     }
+}
 
-    if (env.request.method == "GET") {
-        //check whether password recovery options are enabled
-        var result = recoveryManager.isPasswordRecoveryEnabled();
-        if (result.success) {
-            return {isPasswordRecoveryEnabled: result.isEnabled}
-        } else {
-            sendError(505, "something.wrong.error");
-        }
+
+function onPost(env) {
+    var domainSeparator = env.config['domainSeparator'];
+    var username = env.request.formParams['username'];
+
+    //check whether user exists
+    var result = userManager.isUserExists(username, domainSeparator);
+    if (result.success) {
+        Log.debug("An unique user found in the system with username: " + username);
+        //configure recovery-options redirect uri
+        sendRedirect(env.contextPath + '/recovery/password-options?username=' + result.username
+            + "&domain=" + result.userdomain + "&userId=" + result.uniqueUserId);
+    } else {
+        return {errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true};
     }
 }

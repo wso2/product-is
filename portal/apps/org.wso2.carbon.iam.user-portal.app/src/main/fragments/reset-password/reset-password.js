@@ -24,25 +24,15 @@ function updatePassword(username, oldPassword, newPassword, domain) {
         return {success: true, message: "You have successfully updated the password"};
     } catch (e) {
         var message = e.message;
-        var cause = e.getCause();
-        if (cause !== null) {
-            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-
         return {success: false, message: message};
     }
 }
 
-function onRequest(env) {
-
+function onPost(env) {
     var session = getSession();
     var username = session.getUser().getUsername();
     var domain = session.getUser().getDomainName();
-
-    if (env.request.method == "POST" && "reset-password" == env.params.actionId) {
+    if ("reset-password" == env.params.actionId) {
         var oldPassword = env.request.formParams['oldPassword'];
         var newPassword = env.request.formParams['newPassword'];
         var result = updatePassword(username, oldPassword, newPassword, domain);

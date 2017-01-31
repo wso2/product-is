@@ -8,8 +8,8 @@
 {{#fillZone "breadcrumbs"}}
     <div class="breadcrumb-wrapper">
         <ol class="breadcrumb">
-            <li><a href="/user-portal"><i class="icon fw fw-home"></i> <span class="hidden-xs">{{t "applications.breadcrumb"}} </span></a></li>
-            <li class="active"><a href="/user-portal/account/account-setting">{{t "account.setting"}}</a></li>
+            <li><a href="/user-portal"><i class="icon fw fw-home"></i> <span class="hidden-xs">{{i18n "applications.breadcrumb"}} </span></a></li>
+            <li class="active"><a href="/user-portal/account/account-setting">{{i18n "account.setting"}}</a></li>
         </ol>
     </div>
 {{/fillZone}}
@@ -19,8 +19,8 @@
     fragment "org.wso2.carbon.uuf.common.foundation.ui.modal"
          id="deleteModal"
          class=""
-         modalTitle=(t "modal.delete.header")
-         modalBody=(t "modal.delete.security.question.content")
+         modalTitle=(i18n "modal.delete.header")
+         modalBody=(i18n "modal.delete.security.question.content")
          modalFooter=""
          primaryButton="Yes"
          secondaryButton="Cancel"
@@ -43,7 +43,7 @@
                     <div class="settings-nav sidebar-nav">
                         <ul class="nav nav-pills nav-stacked nav-filter" id="acc-settings-menu">
                             <li class="collapse-li">
-                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#profile-menu" class="collapsed">{{t "account.profile"}}<span class="arrow"></span></a>
+                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#profile-menu" class="collapsed">{{i18n "account.profile"}}<span class="arrow"></span></a>
                                 <ul class="sub-menu collapse" id="profile-menu">
                                     {{#each profiles}}
                                         <li>
@@ -53,22 +53,22 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#password" class="" data-toggle="tab">{{t "account.password"}}</a>
+                                <a href="#password" class="" data-toggle="tab">{{i18n "account.password"}}</a>
                             </li>
                             <!--<li>-->
-                                <!--<a href="#authentication" class="" data-toggle="tab">{{t "account.multiFactor"}}</a>-->
+                                <!--<a href="#authentication" class="" data-toggle="tab">{{i18n "account.multiFactor"}}</a>-->
                             <!--</li>-->
                             <li>
-                                <a href="#security-questions" class="" data-toggle="tab">{{t "account.securityQ"}}</a>
+                                <a href="#security-questions" class="" data-toggle="tab">{{i18n "account.securityQ"}}</a>
                             </li>
                             <li class="collapse-li hide">
-                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">{{t "account.association"}}<span class="arrow"></span></a>
+                                <a data-toggle="collapse" data-parent="#acc-settings-menu" href="#asscciations-menu" class="collapsed">{{i18n "account.association"}}<span class="arrow"></span></a>
                                 <ul class="sub-menu collapse" id="asscciations-menu">
                                     <li>
-                                        <a href="#local" class="" data-toggle="tab">{{t "account.association.local"}}</a>
+                                        <a href="#local" class="" data-toggle="tab">{{i18n "account.association.local"}}</a>
                                     </li>
                                     <li>
-                                        <a href="#federated" class="" data-toggle="tab">{{t "account.association.federated"}}</a>
+                                        <a href="#federated" class="" data-toggle="tab">{{i18n "account.association.federated"}}</a>
                                     </li>
                                 </ul>
                             </li>
