@@ -46,10 +46,10 @@ var userManager = {};
                     domainSeparator), uniqueUserId: uufUsers[0].getUserId()};
             } else if (uufUsers.length > 1) {
                 Log.debug("Multiple users are found with username: " + username);
-                return {success: false, message: "user-portal.user.not.found.for.username"}
+                return {success: false, message: "user.not.found.for.username"}
             } else {
                 Log.debug("No user found in the system with username: " + username);
-                return {success: false, message: "user-portal.user.not.found.for.username"}
+                return {success: false, message: "user.not.found.for.username"}
             }
 
         } catch (e) {
@@ -62,7 +62,7 @@ var userManager = {};
                 }
             }
             LOG.error(message);
-            return {success: false, message: "user-portal.user.something.wrong.error."};
+            return {success: false, message: "something.wrong.error."};
         }
     }
 

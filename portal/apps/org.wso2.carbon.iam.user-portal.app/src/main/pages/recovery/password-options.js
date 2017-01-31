@@ -57,7 +57,7 @@ function onRequest(env) {//TODO change to onGet
             }
         } else {
             Log.error("Error while checking whether multiple recovery options are enabled.");
-            return { errorMessage: "user-portal.user.something.wrong.error" };
+            return { errorMessage: "something.wrong.error" };
         }
     }
 
