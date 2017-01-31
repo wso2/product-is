@@ -8,6 +8,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
+        <listener class-name="org.wso2.identity.integration.test.listeners.IdentityTestListener"/>
     </listeners>
 
     <test name="is-tests-initialize" preserve-order="true" parallel="false" group-by-instances="true">
@@ -83,6 +84,7 @@
 
             <!--User Store Test Cases-->
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>
             <!--Provisioning Test Cases-->
