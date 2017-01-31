@@ -131,9 +131,11 @@ function isProfileImageAvailbale(session) {
             for (var i = 0; i < names.length; i++) {
                 var imageName = names[i].toString();
                 if (imageName.indexOf(session.getUser().getUserId()) !== -1) {
-                    return {profileImage: true,
+                    return {
+                        profileImage: true,
                         userId: session.getUser().getUserId(),
-                        usernameChar: usernameChar};
+                        usernameChar: usernameChar
+                    };
                 }
             }
         }
@@ -142,19 +144,51 @@ function isProfileImageAvailbale(session) {
     return {profileImage: false, usernameChar: usernameChar};
 }
 
-function onRequest(env) {
+function onGet(env) {
+    var session = getSession();
+    var success = false;
+    var message = "";
+    if (env.params.profileName) {
 
+        var uiEntries = [];
+        var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
+        if (result.success) {
+            if (env.request.method != "POST") {
+                success = true;
+            }
+            uiEntries = buildUIEntries(result.profileUIEntries);
+        } else {
+            success = false;
+            message = result.message;
+        }
+        var profileImageResult = isProfileImageAvailbale(session);
+        Log.debug(profileImageResult);
+
+        return {
+            success: success, profile: env.params.profileName, uiEntries: uiEntries,
+            message: message,
+            profileImage: profileImageResult.profileImage,
+            userId: profileImageResult.userId,
+            usernameChar: profileImageResult.usernameChar
+        };
+    }
+
+    return {success: false, message: "Invalid profile name."};
+}
+
+
+function onPost(env) {
     var session = getSession();
     var success = false;
     var message = "";
 
-    if (env.request.method == "POST" && env.params.profileName && env.params.profileName == env.params.actionId) {
+    if (env.params.profileName && env.params.profileName == env.params.actionId) {
 
         var updatedClaims = env.request.formParams;
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
         message = result.message;
-    } else if (env.request.method === "POST" && "image" === env.params.actionId) {
+    } else if ("image" === env.params.actionId) {
 
         var result = uploadFile(env, session);
         success = result.success;
@@ -177,11 +211,13 @@ function onRequest(env) {
         var profileImageResult = isProfileImageAvailbale(session);
         Log.debug(profileImageResult);
 
-        return {success: success, profile: env.params.profileName, uiEntries: uiEntries,
+        return {
+            success: success, profile: env.params.profileName, uiEntries: uiEntries,
             message: message,
             profileImage: profileImageResult.profileImage,
             userId: profileImageResult.userId,
-            usernameChar: profileImageResult.usernameChar};
+            usernameChar: profileImageResult.usernameChar
+        };
     }
 
     return {success: false, message: "Invalid profile name."};

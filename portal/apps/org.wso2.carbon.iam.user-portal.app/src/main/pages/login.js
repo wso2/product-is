@@ -51,39 +51,42 @@ function authenticate(username, password, domain) {
     }
 }
 
-function onRequest(env) {
+function onGet(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
+    return getDomainNames(env);
+}
+
+
+function onPost(env) {
     var session = getSession();
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
 
-    if (env.request.method == "GET") {
-        return getDomainNames(env);
-    }
+    var domain = env.request.formParams['domain'];
+    var username = env.request.formParams['username'];
+    var password = env.request.formParams['password'];
 
-    if (env.request.method == "POST") {
-        var domain = env.request.formParams['domain'];
-        var username = env.request.formParams['username'];
-        var password = env.request.formParams['password'];
-
-        if (!env.config.isDomainInLogin) {
-            if (username.indexOf("/") != -1) {
-                var splitedValue = username.split("/");
-                if (splitedValue.length == 2) {
-                    domain = splitedValue[0];
-                    username = splitedValue[1];
-                } else {
-                    return {errorMessage: 'login.error.invalid.username'};
-                }
+    if (!env.config.isDomainInLogin) {
+        if (username.indexOf("/") != -1) {
+            var splitedValue = username.split("/");
+            if (splitedValue.length == 2) {
+                domain = splitedValue[0];
+                username = splitedValue[1];
+            } else {
+                return {errorMessage: 'login.error.invalid.username'};
             }
         }
-        var result = authenticate(username, password, domain);
-        if (result.success) {
-            //configure login redirect uri
-            sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-        } else {
-            return {errorMessage: result.message};
-        }
+    }
+    var result = authenticate(username, password, domain);
+    if (result.success) {
+        //configure login redirect uri
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    } else {
+        return {errorMessage: result.message};
     }
 }
 

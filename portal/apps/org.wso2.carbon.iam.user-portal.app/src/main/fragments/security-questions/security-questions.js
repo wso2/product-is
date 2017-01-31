@@ -14,16 +14,37 @@
  * limitations under the License.
  */
 
-function onRequest(env) {
+function onGet(env) {
+    var data = {};
+    data.success = true;
+    var session = getSession();
+    var userUniqueId = session.getUser().getUserId();
+    var action = env.request.formParams["action"];
+
+    var result = getUserQuestions(userUniqueId);
+
+    if (result.data.length === 0) {
+        data.isUserHasQuestions = false;
+    } else {
+        data.isUserHasQuestions = true;
+        data.userQuestions = result.data;
+    }
+
+    data.questionList = getChallengeQuestions(userUniqueId).data;
+
+    return data;
+}
+
+
+function onPost(env) {
 
     var data = {};
     data.success = true;
     var session = getSession();
     var userUniqueId = session.getUser().getUserId();
-    var requestMethod = env.request.method;
     var action = env.request.formParams["action"];
 
-    if (requestMethod == "POST" && action == "add-question") {
+    if (action == "add-question") {
 
         // Add question flow.
         var answer = env.request.formParams["question-answer"];
@@ -32,7 +53,7 @@ function onRequest(env) {
         var questionSetId = idsArray[0];
         var questionId = idsArray[1];
         setChallengeAnswer(userUniqueId, answer, questionSetId, questionId);
-    } else if (requestMethod== "POST" && action == "update-question") {
+    } else if (action == "update-question") {
 
         // Update question answer flow.
         var oldPassword = env.request.formParams["old-password"];
@@ -48,7 +69,7 @@ function onRequest(env) {
             data.success = result.success;
             data.message = result.message;
         }
-    } else if (requestMethod == "POST" && action == "delete-question") {
+    } else if (action == "delete-question") {
 
         // Delete question flow.
         questionId = env.request.formParams["question-id"];
