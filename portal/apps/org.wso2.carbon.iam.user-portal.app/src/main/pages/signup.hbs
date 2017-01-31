@@ -32,13 +32,13 @@
                         <form method="post" class="form-horizontal" id="self-signUp-form">
                             <div class="form-group">
                                 <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
-                                    <h3>{{i18n"signup.title"}}</h3>
-                                    <p>{{i18n"signup.sub.title"}}</p></div>
+                                    <h3>{{i18n "signup.title"}}</h3>
+                                    <p>{{i18n "signup.sub.title"}}</p></div>
                             </div>
 
                             {{#if errorMessage}}
                                 <div class="alert alert-danger" role="alert">
-                                    <i class="icon fw fw-error"></i><strong>{{i18n"signup.error.default"}}</strong>&nbsp;
+                                    <i class="icon fw fw-error"></i><strong>{{i18n "signup.error.default"}}</strong>&nbsp;
                                     {{i18nerrorMessage}}
                                     <button type="button" class="close" aria-label="close" data-dismiss="alert">
                                         <span aria-hidden="true">
@@ -52,25 +52,25 @@
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     {{#each usernameClaim}}
                                         </br><label class="control-label"
-                                                    for={{claimLabel}}>{{i18n(stringFormat "%s%s" "claim." claimLabel)}}
+                                                    for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}
                                         <span>*</span></label>
                                         <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                 name={{claimURI}}
                                                         class="form-control"
                                                 id="username"
                                                 pattern={{#if regex}}{{regex}}{{/if}}
-                                                        placeholder={{i18n"placeholder.username"}}
+                                                        placeholder={{i18n "placeholder.username"}}
                                                 required/>
                                     {{/each}}
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     {{#if domainNames}}
                                         </br><label class="control-label"
-                                                    for="domain">{{i18n"signup.domain"}}</label></br>
+                                                    for="domain">{{i18n "signup.domain"}}</label></br>
                                         <input type="hidden" name="domainValue" id="domainValue"
                                                class="form-control"/>
                                         <select class="form-control" id="domainSelector">
-                                            <option value="default">{{i18n"signup.domain.placeholder"}}</option>
+                                            <option value="default">{{i18n "signup.domain.placeholder"}}</option>
                                             {{#each domainNames}}
                                                 <option value={{this}}>{{this}}</option>
                                             {{/each}}
@@ -81,7 +81,7 @@
                             <div class="form-group">
                                 <div class="password_strength_meter ">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <label class="control-label" for="password">{{i18n"signup.password"}}
+                                        <label class="control-label" for="password">{{i18n "signup.password"}}
                                             <span>*</span></label></br>
                                         <input type="password" name="password" id="password"
                                                class="form-control"
@@ -89,28 +89,28 @@
 
                                         <div id="password_strength_wrap">
                                             <div class="pwd_str">
-                                                <div id="passwordDescription">{{i18n"password.notEntered"}}</div>
+                                                <div id="passwordDescription">{{i18n "password.notEntered"}}</div>
                                                 <div id="passwordStrength" class="strength0"></div>
                                             </div>
                                             <div id="pswd_info">
-                                                <i>{{i18n"password.validation.info1"}}</i>
+                                                <i>{{i18n "password.validation.info1"}}</i>
                                                 <ul>
                                                     <li class="invalid" id="length">
                                                         <span class="status_icon"></span>
-                                                        {{i18n"password.validation.info2"}}
+                                                        {{i18n "password.validation.info2"}}
                                                     </li>
                                                     <li class="invalid" id="pnum">
                                                         <span class="status_icon"></span>
-                                                        {{i18n"password.validation.info3"}}
+                                                        {{i18n "password.validation.info3"}}
                                                     </li>
                                                     <li class="invalid" id="capital">
                                                         <span class="status_icon"></span>
-                                                        {{i18n"password.validation.info4"}}&amp;
-                                                        {{i18n"password.validation.info5"}}
+                                                        {{i18n "password.validation.info4"}}&amp;
+                                                        {{i18n "password.validation.info5"}}
                                                     </li>
                                                     <li class="invalid" id="spchar">
                                                         <span class="status_icon"></span>
-                                                        {{i18n"password.validation.info6"}}
+                                                        {{i18n "password.validation.info6"}}
                                                     </li>
                                                 </ul>
                                             </div>
@@ -122,7 +122,7 @@
 
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <label class="control-label"
-                                           for="confirmPassword">{{i18n"password.reset.new.confirm"}}
+                                           for="confirmPassword">{{i18n "password.reset.new.confirm"}}
                                         <span>*</span></label>
                                     <input type="password" name="confirmPassword" id="confirmPassword"
                                            class="form-control" required/>
@@ -134,41 +134,41 @@
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#if required}}
                                             <label class="control-label"
-                                                   for={{claimLabel}}>{{i18n(stringFormat "%s%s" "claim." claimLabel)}}
+                                                   for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}
                                                 <span>*</span></label>
                                             <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                     name={{claimURI}} id={{claimLabel}}
                                                     class="form-control"
                                                     pattern={{#if regex}}{{regex}}{{/if}}
-                                                            placeholder={{i18n(stringFormat "%s%s" "placeholder." claimLabel)}}
+                                                            placeholder={{i18n (stringFormat "%s%s" "placeholder." claimLabel)}}
                                                     required/></br>
                                         {{else}}
                                             <label class="control-label"
-                                                   for={{claimLabel}}>{{i18n(stringFormat "%s%s" "claim." claimLabel)}}</label>
+                                                   for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}</label>
                                             <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                     name={{claimURI}} id={{claimLabel}}
                                                     class="form-control"
                                                     pattern={{#if regex}}{{regex}}{{/if}}
-                                                            placeholder={{i18n(stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
+                                                            placeholder={{i18n (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
                                         {{/if}}
                                     </div>
                                 {{else}}
                                     {{log "No Defined Claims for the user self sign-up!" level="error"}}
-                                    <p class="empty">{{i18n"signup.no.content"}}</p>
+                                    <p class="empty">{{i18n "signup.no.content"}}</p>
                                 {{/each}}
                             </div>
 
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
-                                            type="submit">{{i18n"signup.title"}}</button>
+                                            type="submit">{{i18n "signup.title"}}</button>
                                 </div>
                             </div>
 
                             {{/if}}
 
-                            <h5>{{i18n"login.message"}}<a href="{{@contextPath}}/login">
-                                &nbsp;{{i18n"login.title"}}</a></h5>
+                            <h5>{{i18n "login.message"}}<a href="{{@contextPath}}/login">
+                                &nbsp;{{i18n "login.title"}}</a></h5>
                         </form>
                     </div>
                 </div>

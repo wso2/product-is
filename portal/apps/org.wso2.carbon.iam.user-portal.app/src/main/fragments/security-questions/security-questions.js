@@ -39,6 +39,7 @@ function onGet(env) {
 function onPost(env) {
 
     var data = {};
+    var result;
     data.success = true;
     var session = getSession();
     var userUniqueId = session.getUser().getUserId();
