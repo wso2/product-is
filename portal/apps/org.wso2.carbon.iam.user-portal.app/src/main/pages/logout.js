@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-function onPost(env) {
+function onGet(env) {
     if (getSession()) {
         if (destroySession()) {
             sendRedirect(env.contextPath + env.config['loginPageUri']);
