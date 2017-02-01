@@ -84,7 +84,7 @@
 .dark .data-container, .dark .error-details-container{
     background-color: #2E2A2B;
 }
-.dark .recover-option-container{
+.dark .recover-option-container, .dark .recover-question-container{
     background-color: #332F30;
 }
 .dark .input-group .form-control{
@@ -102,6 +102,11 @@
     display: none;
 }
 
+.recover-question-container{
+    background-color: #F3F3F3;
+    padding: 20px;
+    margin-top: 15px;
+}
 
 /**** Theme Overrides ****/
 .radio > input[type=radio]:not(:disabled) + .helper:before {
@@ -521,10 +526,10 @@ label.error {
 .dark .username-text, .dark .question-no {
     color:#eee;
 }
-.recover-option-container hr{
+.recover-option-container hr, .recover-question-container hr{
     border: 1px solid #fff;
 }
-.dark .recover-option-container hr{
+.dark .recover-option-container hr, .recover-question-container hr{
     border: 1px solid #2E2A2B;
 }
 .edit-icon {
@@ -536,9 +541,9 @@ label.error {
 .dark .username-text, .dark .question-no {
     color:#eee;
 }
-.recover-option-container hr{
+.recover-option-container hr, .recover-question-container hr{
     border: 1px solid #fff;
 }
-.dark .recover-option-container hr{
+.dark .recover-option-container hr, .recover-question-container hr{
     border: 1px solid #2E2A2B;
 }

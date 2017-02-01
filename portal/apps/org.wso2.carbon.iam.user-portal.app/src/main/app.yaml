@@ -47,6 +47,7 @@ menus :
 errorPages:
   404: "/foundation/error/404"
   401: "/login"
+  500: "/error"
   default: "/foundation/error/default"
 
 loginPageUri: "/login"

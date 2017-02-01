@@ -34,28 +34,12 @@ var recoveryManager = {};
 
     function isQuestionBasedPasswordRecoveryEnabled() {
         var checkMethod = "isQuestionBasedPwdRecoveryEnabled";
-
-        try {
-            var isPwRecoveryEnabled = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
-                checkMethod, []);
-            return { success: true, isEnabled: isPwRecoveryEnabled }
-
-        } catch (e) {
-            var message = e.message;
-            var cause = e.getCause();
-            if (cause != null) {
-                //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-                if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                    message = cause.getTargetException().message;
-                }
-            }
-            Log.error(message);
-            return { success: false, message: "something.wrong.error" };
-        }
+        return callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+            checkMethod, []);
     }
 
     /**
-     * Check whether the question password recovery enabled
+     * Check whether the notification based password recovery enabled
      *
      * @param method define osgi service method to be called
      * @returns {*}
@@ -63,24 +47,9 @@ var recoveryManager = {};
 
     function isNotificationBasedPasswordRecoveryEnabled() {
         var checkMethod = "isNotificationBasedPasswordRecoveryEnabled";
+        return callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
+            checkMethod, []);
 
-        try {
-            var isPwRecoveryEnabled = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
-                checkMethod, []);
-            return { success: true, isEnabled: isPwRecoveryEnabled }
-
-        } catch (e) {
-            var message = e.message;
-            var cause = e.getCause();
-            if (cause != null) {
-                //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-                if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                    message = cause.getTargetException().message;
-                }
-            }
-            Log.error(message);
-            return { success: false, message: "something.wrong.error" };
-        }
     }
 
     /**
@@ -92,11 +61,7 @@ var recoveryManager = {};
     function isPasswordRecoveryEnabled() {
         var questionBased = isQuestionBasedPasswordRecoveryEnabled();
         var notificationBased = isNotificationBasedPasswordRecoveryEnabled();
-        if (questionBased.success || notificationBased.success){
-            return { success: true, isEnabled: questionBased.isEnabled || notificationBased.isEnabled };
-        } else {
-            return { success: false, message: "something.wrong.error" };
-        }
+        return notificationBased || questionBased;
     }
 
     /**
@@ -108,11 +73,7 @@ var recoveryManager = {};
     function hasMultiplePasswordRecoveryEnabled() {
         var questionBased = isQuestionBasedPasswordRecoveryEnabled();
         var notificationBased = isNotificationBasedPasswordRecoveryEnabled();
-        if (questionBased.success && notificationBased.success){
-            return { success: true, isEnabled: questionBased.isEnabled && notificationBased.isEnabled };
-        } else {
-            return { success: false, message: "something.wrong.error" };
-        }
+        return notificationBased && questionBased;
     }
 
 
@@ -166,7 +127,7 @@ var recoveryManager = {};
         } else if (option == "security-question-based") {
             return isQuestionBasedPasswordRecoveryEnabled();
         } else {
-            return { success: true, isEnabled: false };
+            return false;
         }
     };
 

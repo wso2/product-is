@@ -36,7 +36,17 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
-                            <h3>{{i18n "password.recovery"}}</h3>
+                            <form class="form-horizontal" method="post">
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <h3>{{i18n "password.recovery.for"}} <span
+                                                class="username-text"><i>{{@queryParams.username}}</i></span></h3>
+                                        <div class="recover-question-container">
+                                            {{fragment "security-question-answer"}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
 
                             <h4>{{i18n "page.under.construction"}}</h4>
 

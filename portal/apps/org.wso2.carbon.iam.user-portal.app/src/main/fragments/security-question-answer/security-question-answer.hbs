@@ -1,9 +1,11 @@
 {{log this}}
-<div class="recover-option-container">
+
+{{#if hasUserQuestions}}
     {{#each userQuestions}}
         <div class="form-group add-margin-bottom-5x">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <label class="control-label">{{i18n "question"}}</label>
+
                 <p>{{question}}</p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
@@ -20,4 +22,12 @@
                     class="btn btn-default btn-secondary hidden-xs hidden-sm">{{i18n "cancel"}}</button>
         </div>
     </div>
-</div>
+{{else}}
+    <div class="form-group add-margin-bottom-5x">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="form-horizontal">
+                <p>{{i18n "no.recovery.questions.answered"}}</p>
+            </div>
+        </div>
+    </div>
+{{/if}}
