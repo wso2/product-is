@@ -92,6 +92,11 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
+            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.security.caas</groupId>
             <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
@@ -272,12 +277,6 @@
                                     </outputDirectory>
                                     <includes>**/h2.sql</includes>
                                 </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.mgt</groupId>
-                                    <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                    <type>zip</type>
-                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -400,6 +399,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
+                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
@@ -561,6 +564,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
+                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
