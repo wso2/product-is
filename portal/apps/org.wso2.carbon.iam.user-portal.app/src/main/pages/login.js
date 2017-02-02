@@ -105,7 +105,9 @@ function onPost(env) {
         //configure login redirect uri
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     } else {
-        return {errorMessage: result.message};
+        var domainNames = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
+        return {errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName};
     }
 }
 
