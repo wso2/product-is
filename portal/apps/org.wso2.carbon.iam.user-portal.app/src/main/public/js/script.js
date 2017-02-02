@@ -27,10 +27,8 @@ $(window).load(function(){
 	});
 
     $('input[name=recover-option],[name=recover-option-email],[name=recover-option-question]').click(function(){
-        if($(this).parent().parent().find('.recover-option-container').is(':hidden')){
-            $('.recover-option-container').slideUp();
-            $(this).parent().parent().find('.recover-option-container').slideDown();
-        }
+        $('.recover-option-container').hide();
+        $('.'+$(this).val()).closest('.recover-option-container').fadeIn();
     });
 
 
