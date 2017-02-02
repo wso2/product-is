@@ -93,8 +93,9 @@ var recoveryManager = {};
         } catch (e) {
             Log.error(e.message);
             result.success = false;
-            result.message = "something.wrong.error";
+            result.message = "contact.system.admin";
             return result;
+            // TODO Backend throws error when user doesn't exist with useId, has to distinguish no-user exists
         }
         result.data = challengeQuestions;
         return result;

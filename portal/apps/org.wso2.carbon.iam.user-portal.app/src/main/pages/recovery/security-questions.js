@@ -25,7 +25,7 @@ function onGet(env){
     }
     var questions = recoveryManager.getUserQuestions(userId);
     if (!questions.success) {
-        sendError(500, " ");
+        sendError(500, questions.message);
         //TODO
     }
     return {

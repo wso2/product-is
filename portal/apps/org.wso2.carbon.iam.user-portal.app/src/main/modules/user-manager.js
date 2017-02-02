@@ -55,7 +55,7 @@ var userManager = {};
         } catch (e) {
             var message = e.message;
             LOG.error(message);
-            return {success: false, message: "something.wrong.error."};
+            return { success: false };
         }
     }
 
