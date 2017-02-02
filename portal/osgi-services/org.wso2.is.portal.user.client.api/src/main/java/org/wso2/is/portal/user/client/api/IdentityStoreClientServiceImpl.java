@@ -259,6 +259,20 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         return domainSet;
     }
 
+    @Override
+    public String getPrimaryDomainName() throws UserPortalUIException {
+        String primaryDomain;
+        try {
+            primaryDomain = getRealmService().getIdentityStore().getPrimaryDomainName();
+        } catch (IdentityStoreException e) {
+            String error = "Failed to get the primary domain name.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return primaryDomain;
+
+    }
+
     private RealmService getRealmService() {
         if (this.realmService == null) {
             throw new IllegalStateException("Realm Service is null.");
