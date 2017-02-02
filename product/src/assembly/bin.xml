@@ -33,6 +33,12 @@
                 <exclude>**/*.ipr</exclude>
                 <exclude>**/*.iwr</exclude>
                 <exclude>**/*.eclipse</exclude>
+                <exclude>**/identity/domain-config.yaml</exclude>
+                <exclude>**/identity/store-config.yaml</exclude>
+                <exclude>**/identity/claim-mapping.yaml</exclude>
+                <exclude>**/identity/profile-mapping.yaml</exclude>
+                <!--<exclude>**/identity/identity-management.yaml</exclude>-->
+                <exclude>**/identity/challenge-questions/en-US.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
             </excludes>
         </fileSet>
@@ -62,6 +68,11 @@
         <fileSet>
             <directory>carbon-home/samples</directory>
             <outputDirectory>samples</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/conf/identity</directory>
+            <outputDirectory>conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
