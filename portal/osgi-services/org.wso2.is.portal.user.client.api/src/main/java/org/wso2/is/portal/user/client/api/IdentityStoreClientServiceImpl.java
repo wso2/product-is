@@ -261,6 +261,20 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
+    public String getPrimaryDomainName() throws UserPortalUIException {
+        String primaryDomain;
+        try {
+            primaryDomain = getRealmService().getIdentityStore().getPrimaryDomainName();
+        } catch (IdentityStoreException e) {
+            String error = "Failed to get the primary domain name.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return primaryDomain;
+
+    }
+
+    @Override
     public List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
                                    String domainName) throws UserPortalUIException {
 

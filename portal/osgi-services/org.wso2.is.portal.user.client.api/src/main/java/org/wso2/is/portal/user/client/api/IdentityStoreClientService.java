@@ -84,7 +84,21 @@ public interface IdentityStoreClientService {
      */
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 
+    /**
+     * Get list of domain names
+     *
+     * @return Domain name List
+     * @throws UserPortalUIException
+     */
     Set<String> getDomainNames() throws UserPortalUIException;
+
+    /**
+     * Get primary domain name
+     *
+     * @return Primary domain name
+     * @throws UserPortalUIException
+     */
+    String getPrimaryDomainName() throws UserPortalUIException;
 
     /**
      * List users by claim
