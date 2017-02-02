@@ -31,7 +31,7 @@ var userManager = {};
      * @returns {success: true, userdomain: "*", username: "*", uniqueUserId: "*"} or
      *          {success: false, message: "*"}
      */
-    function isUserExists(username, domainSeparator) {
+    function isUserExist(username, domainSeparator) {
         try {
             var uufUsers = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                 "listUsers", ["http://wso2.org/claims/username", extractUsername(username, domainSeparator) , 0, 2,
@@ -54,15 +54,8 @@ var userManager = {};
 
         } catch (e) {
             var message = e.message;
-            var cause = e.getCause();
-            if (cause != null) {
-                //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-                if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                    message = cause.getTargetException().message;
-                }
-            }
             LOG.error(message);
-            return {success: false, message: "something.wrong.error."};
+            return { success: false };
         }
     }
 
@@ -98,11 +91,11 @@ var userManager = {};
      * Public function to check whether a unique user exists
      * @param username
      * @param domainSeparator
-     * @returns result of private isUserExists function
+     * @returns result of private isUserExist function
      */
-    userManager.isUserExists = function (username, domainSeparator) {
+    userManager.isUserExist = function (username, domainSeparator) {
         Log.debug("Check whether a unique user is found with username: " + username);
-        return isUserExists(username, domainSeparator);
+        return isUserExist(username, domainSeparator);
     }
 
 })(userManager);

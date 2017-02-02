@@ -21,11 +21,11 @@ module("user-manager");
 function onGet(env) {
     var domainSeparator = env.config['domainSeparator'];
     //check whether password recovery options are enabled
-    var result = recoveryManager.isPasswordRecoveryEnabled();
-    if (result.success) {
-        return {isPasswordRecoveryEnabled: result.isEnabled}
-    } else {
-        sendError(505, "something.wrong.error");
+    try {
+        var result = recoveryManager.isPasswordRecoveryEnabled();
+        return { isPasswordRecoveryEnabled: result }
+    } catch (e) {
+        sendError(500, "something.went.wrong");
     }
 }
 
@@ -35,7 +35,7 @@ function onPost(env) {
     var username = env.request.formParams['username'];
 
     //check whether user exists
-    var result = userManager.isUserExists(username, domainSeparator);
+    var result = userManager.isUserExist(username, domainSeparator);
     if (result.success) {
         Log.debug("An unique user found in the system with username: " + username);
         //configure recovery-options redirect uri
@@ -43,8 +43,8 @@ function onPost(env) {
             + "&domain=" + result.userdomain + "&userId=" + result.uniqueUserId);
     } else {
         if (result.code === 404) {
-            return {isPasswordRecoveryEnabled: false}
+            return { isPasswordRecoveryEnabled: false }
         }
-        return {errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true};
+        return { errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true };
     }
 }
