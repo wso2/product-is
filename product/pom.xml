@@ -14,8 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -32,10 +31,7 @@
     <url>http://wso2.org</url>
 
     <dependencies>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-        </dependency>
+        <!-- Carbon Dependencies-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.launcher</artifactId>
@@ -85,14 +81,11 @@
             <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
             <type>zip</type>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.login.feature</artifactId>
-            <version>${org.wso2.carbon.identity.mgt.version}</version>
             <type>zip</type>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.security.userstore</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
@@ -101,15 +94,6 @@
         <dependency>
             <groupId>org.wso2.carbon.security.caas</groupId>
             <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.msf4j</groupId>
-            <artifactId>org.wso2.msf4j.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -127,32 +111,6 @@
             <artifactId>org.wso2.carbon.metrics.das.core.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.core.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.renderablecreator.hbs.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.uuf</groupId>
-            <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
@@ -174,18 +132,55 @@
             <type>zip</type>
         </dependency>
 
-        <!-- Sample Simple Authentication Component -->
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>org.wso2.msf4j.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <!-- UUF Dependencies-->
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.core.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.renderablecreator.hbs.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.httpconnector.msf4j.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.uuf</groupId>
+            <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
+            <type>zip</type>
+        </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
-            <!--<artifactId>org.wso2.carbon.uuf.Features-app.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.uuf.sample</groupId>-->
-            <!--<artifactId>org.wso2.carbon.uuf.sample.pets-store.feature</artifactId>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
+        <!--Other Dependencies-->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xalan.wso2</groupId>
+            <artifactId>xalan</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -391,12 +386,12 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
-                                    <version>${carbon.security.userstore.jdbc.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.common.feature</id>
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
+                                    <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.recovery.server.feature</id>
@@ -593,9 +588,8 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <replace dir="target/wso2carbon-kernel-${carbon.kernel.version}/osgi" token="false"
-                                         value="true">
-                                    <include name="**/bundles.info"/>
+                                <replace dir="target/wso2carbon-kernel-${carbon.kernel.version}/osgi" token="false" value="true">
+                                    <include name="**/bundles.info" />
                                 </replace>
                             </target>
                         </configuration>
@@ -612,21 +606,19 @@
                         <configuration>
                             <target>
                                 <path id="h2.classpath">
-                                    <path refid="maven.compile.classpath"/>
+                                    <path refid="maven.compile.classpath" />
                                 </path>
-                                <echo message="########### Creating Carbon Database ##############"/>
-                                <sql driver="org.h2.Driver"
-                                     url="jdbc:h2:${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/database/WSO2CARBON_DB;MV_STORE=FALSE;create=true"
-                                     userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                <echo message="########### Creating Carbon Database ##############" />
+                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/database/WSO2CARBON_DB;MV_STORE=FALSE;create=true" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
-                                        <path refid="h2.classpath"/>
+                                        <path refid="h2.classpath" />
                                     </classpath>
                                     <fileset dir="${basedir}/target/resources/dbscripts/">
                                         <include name="**/h2.sql" />
                                     </fileset>
-                                    <fileset file="carbon-home/resources/h2-test-data/test-data.sql"/>
+                                    <fileset file="carbon-home/resources/h2-test-data/test-data.sql" />
                                 </sql>
-                                <echo message="##################### END ########################"/>
+                                <echo message="##################### END ########################" />
                             </target>
                         </configuration>
                     </execution>
@@ -635,15 +627,15 @@
                         <phase>install</phase>
                         <configuration>
                             <target>
-                                <delete dir="target/archive-tmp"/>
-                                <delete dir="target/dependency-maven-plugin-markers"/>
-                                <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart"/>
-                                <delete dir="target/p2-repo"/>
-                                <delete file="target/tmp"/>
-                                <delete dir="target/wso2carbon-kernel-${carbon.kernel.version}"/>
-                                <delete dir="target/antrun"/>
-                                <delete dir="target/resources"/>
-                                <delete dir="target/maven-shared-archive-resources"/>
+                                <delete dir="target/archive-tmp" />
+                                <delete dir="target/dependency-maven-plugin-markers" />
+                                <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart" />
+                                <delete dir="target/p2-repo" />
+                                <delete file="target/tmp" />
+                                <delete dir="target/wso2carbon-kernel-${carbon.kernel.version}" />
+                                <delete dir="target/antrun" />
+                                <delete dir="target/resources" />
+                                <delete dir="target/maven-shared-archive-resources" />
                             </target>
                         </configuration>
                         <goals>

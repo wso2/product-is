@@ -5,171 +5,174 @@
 {{css "css/user-portal.css"}}
 {{js "js/signup.js"}}
 {{#fillZone "content"}}
-    {{#if errorMessage}}
-        <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "signup.error.default"}}</strong>&nbsp;
-            {{t errorMessage}}
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
-                <span aria-hidden="true">
-                    <i class="fw fw-cancel"></i>
-                </span>
-            </button>
-        </div>
-    {{else}}
-        <div class="container">
-            <div class="signup-form-wrapper">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                        <div class="brand-container add-margin-bottom-5x">
-                            <div class="row">
-                                <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
-                                    <img class="img-responsive brand-spacer"
-                                         src="{{public "images/logo-white.png"}}"
-                                         alt="wso2-logo">
-                                </div>
+    <div class="container">
+        <div class="signup-form-wrapper">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="brand-container add-margin-bottom-5x">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm float-remove-xs pull-right-md pull-right-lg">
+                                <img class="img-responsive brand-spacer"
+                                     src="{{public "images/logo-white.png"}}"
+                                     alt="wso2-logo">
                             </div>
-                            <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
                         </div>
-                        <!--not yet implemented-->
-                        <!--<div class="social-container hidden-sm hidden-xs">-->
-                        <!--<p>Also sign in with</p>-->
-                        <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
-                        <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
-                        <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
-                        <!--</div>-->
+                        <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
-                        <div class="data-container">
-                            <form method="post" class="form-horizontal" id="self-signUp-form">
-                                <div class="form-group">
-                                    <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
-                                        <h3>{{t "signup.title"}}</h3>
-                                        <p>{{t "signup.sub.title"}}</p></div>
+                    <!--not yet implemented-->
+                    <!--<div class="social-container hidden-sm hidden-xs">-->
+                    <!--<p>Also sign in with</p>-->
+                    <!--<a href=""><img class="img-responsive" src="{{public "images/googleplus.jpg"}}" alt="Sign in with google"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="{{public "images/twitter.jpg"}}" alt="Sign in with twitter"></a>-->
+                    <!--<a href=""><img class="img-responsive" src="{{public "images/facebook.jpg"}}" alt="Sign in with facebook"></a>-->
+                    <!--</div>-->
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
+                    <div class="data-container">
+                        <form method="post" class="form-horizontal" id="self-signUp-form">
+                            <div class="form-group">
+                                <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
+                                    <h3>{{t "signup.title"}}</h3>
+                                    <p>{{t "signup.sub.title"}}</p></div>
+                            </div>
+
+                            {{#if errorMessage}}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="icon fw fw-error"></i><strong>{{t "signup.error.default"}}</strong>&nbsp;
+                                    {{t errorMessage}}
+                                    <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                    </button>
                                 </div>
+                            {{else}}
 
-                                <div class="form-group">
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        {{#each usernameClaim}}
-                                            </br><label class="control-label"
-                                                        for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
-                                            <span>*</span></label>
-                                            <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
-                                                    name={{claimURI}}
-                                                    class="form-control"
-                                                    id="username"
-                                                    pattern={{#if regex}}{{regex}}{{/if}}
-                                                    placeholder={{t "placeholder.username"}}
-                                                    required/>
-                                        {{/each}}
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        {{#if domainNames}}
-                                            </br><label class="control-label"
-                                                        for="domain">{{t "signup.domain"}}</label></br>
-                                            <input type="hidden" name="domainValue" id="domainValue"
-                                                   class="form-control"/>
-                                            <select class="form-control" id="domainSelector">
-                                                <option value="default">{{t "signup.domain.placeholder"}}</option>
-                                                {{#each domainNames}}
-                                                    <option value={{this}}>{{this}}</option>
-                                                {{/each}}
-                                            </select>
-                                        {{/if}}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="password_strength_meter ">
-                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                            <label class="control-label" for="password">{{t "signup.password"}}
-                                                <span>*</span></label></br>
-                                            <input type="password" name="password" id="password"
-                                                   class="form-control"
-                                                   data-schemaformat="password" required/>
-
-                                            <div id="password_strength_wrap">
-                                                <div class="pwd_str">
-                                                    <div id="passwordDescription">{{t "password.notEntered"}}</div>
-                                                    <div id="passwordStrength" class="strength0"></div>
-                                                </div>
-                                                <div id="pswd_info">
-                                                    <i>{{t "password.validation.info1"}}</i>
-                                                    <ul>
-                                                        <li class="invalid" id="length">
-                                                            <span class="status_icon"></span>
-                                                            {{t "password.validation.info2"}}
-                                                        </li>
-                                                        <li class="invalid" id="pnum">
-                                                            <span class="status_icon"></span>
-                                                            {{t "password.validation.info3"}}
-                                                        </li>
-                                                        <li class="invalid" id="capital">
-                                                            <span class="status_icon"></span>
-                                                            {{t "password.validation.info4"}}&amp;
-                                                            {{t "password.validation.info5"}}
-                                                        </li>
-                                                        <li class="invalid" id="spchar">
-                                                            <span class="status_icon"></span>
-                                                            {{t "password.validation.info6"}}
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <!-- END pswd_info -->
-                                            </div>
-                                            <!-- END pwd_strength_wrap -->
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <label class="control-label"
-                                               for="confirmPassword">{{t "password.reset.new.confirm"}}
-                                            <span>*</span></label>
-                                        <input type="password" name="confirmPassword" id="confirmPassword"
-                                               class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    {{#each signupClaims}}
-                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                            {{#if required}}
-                                                <label class="control-label"
-                                                       for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
-                                                    <span>*</span></label>
-                                                <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
-                                                        name={{claimURI}} id={{claimLabel}}
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    {{#each usernameClaim}}
+                                        </br><label class="control-label"
+                                                    for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
+                                        <span>*</span></label>
+                                        <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                                name={{claimURI}}
                                                         class="form-control"
-                                                        pattern={{#if regex}}{{regex}}{{/if}}
-                                                        placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}}
-                                                        required/></br>
-                                            {{else}}
-                                                <label class="control-label"
-                                                       for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}</label>
-                                                <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
-                                                        name={{claimURI}} id={{claimLabel}}
-                                                        class="form-control"
-                                                        pattern={{#if regex}}{{regex}}{{/if}}
-                                                        placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
-                                            {{/if}}
-                                        </div>
-                                    {{else}}
-                                        {{log "No Defined Claims for the user self sign-up!" level="error"}}
-                                        <p class="empty">{{t "signup.no.content"}}</p>
+                                                id="username"
+                                                pattern={{#if regex}}{{regex}}{{/if}}
+                                                        placeholder={{t "placeholder.username"}}
+                                                required/>
                                     {{/each}}
                                 </div>
-
-                                <div class="form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    {{#if domainNames}}
+                                        </br><label class="control-label"
+                                                    for="domain">{{t "signup.domain"}}</label></br>
+                                        <input type="hidden" name="domainValue" id="domainValue"
+                                               class="form-control"/>
+                                        <select class="form-control" id="domainSelector">
+                                            <option value="default">{{t "signup.domain.placeholder"}}</option>
+                                            {{#each domainNames}}
+                                                <option value={{this}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="password_strength_meter ">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
-                                                type="submit">{{t "signup.title"}}</button>
+                                        <label class="control-label" for="password">{{t "signup.password"}}
+                                            <span>*</span></label></br>
+                                        <input type="password" name="password" id="password"
+                                               class="form-control"
+                                               data-schemaformat="password" required/>
+
+                                        <div id="password_strength_wrap">
+                                            <div class="pwd_str">
+                                                <div id="passwordDescription">{{t "password.notEntered"}}</div>
+                                                <div id="passwordStrength" class="strength0"></div>
+                                            </div>
+                                            <div id="pswd_info">
+                                                <i>{{t "password.validation.info1"}}</i>
+                                                <ul>
+                                                    <li class="invalid" id="length">
+                                                        <span class="status_icon"></span>
+                                                        {{t "password.validation.info2"}}
+                                                    </li>
+                                                    <li class="invalid" id="pnum">
+                                                        <span class="status_icon"></span>
+                                                        {{t "password.validation.info3"}}
+                                                    </li>
+                                                    <li class="invalid" id="capital">
+                                                        <span class="status_icon"></span>
+                                                        {{t "password.validation.info4"}}&amp;
+                                                        {{t "password.validation.info5"}}
+                                                    </li>
+                                                    <li class="invalid" id="spchar">
+                                                        <span class="status_icon"></span>
+                                                        {{t "password.validation.info6"}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- END pswd_info -->
+                                        </div>
+                                        <!-- END pwd_strength_wrap -->
                                     </div>
                                 </div>
-                                <h5>{{t "login.message"}}<a href="{{@contextPath}}/login">
-                                    &nbsp;{{t "login.title"}}</a></h5>
-                            </form>
-                        </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <label class="control-label"
+                                           for="confirmPassword">{{t "password.reset.new.confirm"}}
+                                        <span>*</span></label>
+                                    <input type="password" name="confirmPassword" id="confirmPassword"
+                                           class="form-control" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {{#each signupClaims}}
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        {{#if required}}
+                                            <label class="control-label"
+                                                   for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}
+                                                <span>*</span></label>
+                                            <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                                    name={{claimURI}} id={{claimLabel}}
+                                                    class="form-control"
+                                                    pattern={{#if regex}}{{regex}}{{/if}}
+                                                            placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}}
+                                                    required/></br>
+                                        {{else}}
+                                            <label class="control-label"
+                                                   for={{claimLabel}}>{{t (stringFormat "%s%s" "claim." claimLabel)}}</label>
+                                            <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                                    name={{claimURI}} id={{claimLabel}}
+                                                    class="form-control"
+                                                    pattern={{#if regex}}{{regex}}{{/if}}
+                                                            placeholder={{t (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
+                                        {{/if}}
+                                    </div>
+                                {{else}}
+                                    {{log "No Defined Claims for the user self sign-up!" level="error"}}
+                                    <p class="empty">{{t "signup.no.content"}}</p>
+                                {{/each}}
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
+                                            type="submit">{{t "signup.title"}}</button>
+                                </div>
+                            </div>
+
+                            {{/if}}
+
+                            <h5>{{t "login.message"}}<a href="{{@contextPath}}/login">
+                                &nbsp;{{t "login.title"}}</a></h5>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    {{/if}}
+    </div>
 {{/fillZone}}
