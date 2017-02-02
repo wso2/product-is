@@ -1,25 +1,26 @@
-{{log this}}
-
 {{#if hasUserQuestions}}
     {{#each userQuestions}}
         <div class="form-group add-margin-bottom-5x">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <label class="control-label">{{i18n "question"}}</label>
-
                 <p>{{question}}</p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                 <label for="input-sec-question" class="control-label">{{i18n "answer"}}</label>
-                <input type="text" class="form-control" id="input-sec-question">
+                <input type="text" class="form-control" name="{{questionSetId}}-{{questionId}}"
+                       id="input-sec-question-{{questionSetId}}-{{questionId}}">
             </div>
         </div>
     {{/each}}
     <div class="form-group add-margin-top-5x">
         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-            <button type="submit"
+            <button type="submit" id="pwd-recover-email"
                     class="btn btn-default btn-primary add-margin-right-2x">{{i18n "recover"}}</button>
-            <button type="submit"
-                    class="btn btn-default btn-secondary hidden-xs hidden-sm">{{i18n "cancel"}}</button>
+            <a href="{{@contextPath}}/" class="hidden-xs hidden-sm">
+                {{i18n "back.to.sign.in"}}</a>
+            <a href="{{@contextPath}}/"
+               class="visible-xs visible-sm add-margin-2x text-center">
+                {{i18n "back.to.sign.in"}}</a>
         </div>
     </div>
 {{else}}
@@ -28,6 +29,15 @@
             <div class="form-horizontal">
                 <p>{{i18n "no.recovery.questions.answered"}}</p>
             </div>
+        </div>
+    </div>
+    <div class="form-group add-margin-top-5x">
+        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+            <a href="{{@contextPath}}/" class="hidden-xs hidden-sm">
+                {{i18n "back.to.sign.in"}}</a>
+            <a href="{{@contextPath}}/"
+               class="visible-xs visible-sm add-margin-2x text-center">
+                {{i18n "back.to.sign.in"}}</a>
         </div>
     </div>
 {{/if}}
