@@ -58,11 +58,20 @@ function getProfile() {
         return {errorMessage: 'signup.error.retrieve.domain'};
     }
 
+    var primaryDomainName;
+    try {
+        primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getPrimaryDomainName", []);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
+    }
+
     sendToClient("signupClaims", claimProfileArray);
     return {
         "usernameClaim": userName,
         "signupClaims": claimProfileArray,
-        "domainNames": domainNames
+        "domainNames": domainNames,
+        "primaryDomainName": primaryDomainName
     };
 }
 
