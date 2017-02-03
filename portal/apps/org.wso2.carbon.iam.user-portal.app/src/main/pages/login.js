@@ -70,12 +70,8 @@ function onGet(env) {
     }
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
-
-    if(domainNames.contains(primaryDomainName)){
-        domainNames.remove(primaryDomainName);
-    }
-   
-    return { "domainNames":domainNames, "primaryDomainName":primaryDomainName};
+    
+    return { domainNames:domainNames, primaryDomainName:primaryDomainName};
 }
 
 
