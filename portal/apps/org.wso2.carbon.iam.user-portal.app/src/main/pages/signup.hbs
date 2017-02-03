@@ -69,8 +69,7 @@
                                                     for="domain">{{i18n "signup.domain"}}</label></br>
                                         <input type="hidden" name="domainValue" id="domainValue"
                                                class="form-control"/>
-                                        <select class="form-control" id="domainSelector">
-                                            <option value="default">{{i18n "signup.domain.placeholder"}}</option>
+                                        <select class="form-control" id="domainSelector" data-primary={{primaryDomainName}}>
                                             {{#each domainNames}}
                                                 <option value={{this}}>{{this}}</option>
                                             {{/each}}

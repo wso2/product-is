@@ -146,11 +146,14 @@ $(window).load(function () {
     $("#username").rules("add", { username: true });
     
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
+
+    //setting primary domain as the default
+    $('#domainSelector option[value='+ $('#domainSelector').attr('data-primary') +']').prop('selected','selected');
+    var primaryDomain = $('#domainSelector').val();
+    $("#domainValue").val(primaryDomain);
 });
 
 $('#domainSelector').change(function () {
-    var domain = document.getElementById('domainSelector').value;
-    if (domain != "default") {
-        document.getElementById("domain").value = domain;
-    }
+    var domain = $(this).val();
+    $("#domainValue").val(domain);
 });
