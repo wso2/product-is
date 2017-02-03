@@ -367,6 +367,14 @@
     font-weight: bold;
     color: #F27B21;
 }
+/* show/hide password */
+.hide-pass {
+    float: right;
+    margin-top: -27px;
+    margin-right: 7px;
+    cursor: pointer;
+    color: rgb(101, 101, 101);
+}
 
 /* password strength meter */
 .progress{
