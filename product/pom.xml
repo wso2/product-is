@@ -181,6 +181,21 @@
             <groupId>xalan.wso2</groupId>
             <artifactId>xalan</artifactId>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.resource.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
@@ -414,6 +429,15 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.resource.feature.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
@@ -574,6 +598,16 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${org.wso2.carbon.identity.gateway.resource.feature.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
