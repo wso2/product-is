@@ -27,13 +27,26 @@ function getDomainNames(env) {
     }
 
     var recoveryConfig = recoveryManager.getRecoveryConfigs();
-
     return {
         "domainNames": domainNames,
-        "passwordRecoveryUrl" : recoveryConfig.getPassword().getUrl() || env.contextPath + '/recovery/password',
-        "usernameRecoveryUrl" : recoveryConfig.getUsername().getUrl() || env.contextPath + '/recovery/username'
+        "passwordRecoveryUrl": recoveryConfig.getPassword().getUrl() || env.contextPath + '/recovery/password',
+        "usernameRecoveryUrl": recoveryConfig.getUsername().getUrl() || env.contextPath + '/recovery/username'
     };
 }
+
+function getPrimaryDomainName(env) {
+    var primaryDomainName;
+    if (env.config.isDomainInLogin) {
+        try {
+            primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getPrimaryDomainName", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
+    }
+    return primaryDomainName;
+}
+
 
 function authenticate(username, password, domain) {
     try {
@@ -62,7 +75,10 @@ function onGet(env) {
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
-    return getDomainNames(env);
+    var domainNames = getDomainNames(env);
+    var primaryDomainName = getPrimaryDomainName(env);
+    
+    return { domainNames:domainNames, primaryDomainName:primaryDomainName};
 }
 
 
@@ -92,7 +108,9 @@ function onPost(env) {
         //configure login redirect uri
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     } else {
-        return {errorMessage: result.message};
+        var domainNames = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
+        return {errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName};
     }
 }
 

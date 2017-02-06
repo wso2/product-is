@@ -16,11 +16,13 @@
 
 $(window).load(function () {
     $('.login-form-wrapper').parents('body').addClass('background-grey');
+    
+    $('#domainSelector option[value='+ $('#domainSelector').attr('data-primary') +']').prop('selected','selected');
+    var primaryDomain = $('#domainSelector').val();
+    $("#domain").val(primaryDomain);
 });
 
 $('#domainSelector').change(function () {
-    var domain = document.getElementById('domainSelector').value;
-    if (domain != "default") {
-        document.getElementById("domain").value = domain;
-    }
+    var domain = $(this).val();
+    $("#domain").val(domain);
 });
