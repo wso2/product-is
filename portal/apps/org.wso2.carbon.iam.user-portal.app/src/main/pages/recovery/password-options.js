@@ -28,17 +28,20 @@ function onGet(env) {
     }
 
     //TODO wrap with try after fixing error in senRedirect inside try
+    var pwdRecoveryConfig = recoveryManager.getRecoveryConfigs().getPassword();
     var hasMultiple = recoveryManager.hasMultiplePasswordRecoveryEnabled();
     if (!hasMultiple) {//when multiple recovery options are not enabled
-        if (recoveryManager.isPasswordRecoveryOptionEnabled("notification-based")) {
+        if (pwdRecoveryConfig.getNotificationBased().getEmailLink().isEnablePortal()) {
             Log.debug("Notification Based Password Recovery flow started for user: " + userId);
             //TODO invoke password recovery via email
             sendRedirect(env.contextPath + '/recovery/complete?password=true');
 
-        } else if (recoveryManager.isPasswordRecoveryOptionEnabled("security-question-based")) {
+        } else if (pwdRecoveryConfig.getSecurityQuestion().isEnablePortal()) {
             Log.debug("Security Question Based Password Recovery flow for user: " + userId);
             sendRedirect(env.contextPath + '/recovery/security-questions?username=' + username + "&userId="+ userId);
 
+        } else if (pwdRecoveryConfig.getExternal().isEnablePortal()){
+            sendRedirect(pwdRecoveryConfig.getExternal().getUrl());
         }
         //TODO decide what, when non of the options are enabled
     } else {
@@ -50,7 +53,8 @@ function onGet(env) {
         return {
             hasMultipleOptions: hasMultiple,
             hasUserQuestions: questions.data.length > 0,
-            userQuestions: questions.data
+            userQuestions: questions.data,
+            externalOption : pwdRecoveryConfig.getExternal().getUrl()
         };
     }
 }

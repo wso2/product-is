@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+module("recovery-manager");
 
 function getDomainNames(env) {
     var domainNames;
@@ -24,8 +25,13 @@ function getDomainNames(env) {
             return {errorMessage: 'signup.error.retrieve.domain'};
         }
     }
+
+    var recoveryConfig = recoveryManager.getRecoveryConfigs();
+
     return {
-        "domainNames": domainNames
+        "domainNames": domainNames,
+        "passwordRecoveryUrl" : recoveryConfig.getPassword().getUrl() || env.contextPath + '/recovery/password',
+        "usernameRecoveryUrl" : recoveryConfig.getUsername().getUrl() || env.contextPath + '/recovery/username'
     };
 }
 
