@@ -38,10 +38,17 @@
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
                             <form class="form-horizontal">
-                                <h3>{{i18n "password.recovery"}}</h3>
+                                {{#if @queryParams.password}}
+                                    <h3>{{i18n "password.recovery"}}</h3>
 
-                                <p>{{i18n "recovery.email.completed"}}</p>
+                                    <p>{{i18n "recovery.email.completed"}}</p>
+                                {{else}}
+                                    {{#if @queryParams.username}}
+                                        <h3>{{i18n "username.recovery"}}</h3>
 
+                                        <p>{{i18n "recovery.username.completed"}}</p>
+                                    {{/if}}
+                                {{/if}}
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <a href="{{@contextPath}}/" class="add-margin-top-2x">{{i18n
