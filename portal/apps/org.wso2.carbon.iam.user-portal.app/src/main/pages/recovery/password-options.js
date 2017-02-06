@@ -33,7 +33,7 @@ function onGet(env) {
         if (recoveryManager.isPasswordRecoveryOptionEnabled("notification-based")) {
             Log.debug("Notification Based Password Recovery flow started for user: " + userId);
             //TODO invoke password recovery via email
-            sendRedirect(env.contextPath + '/recovery/password-complete?username=' + username);
+            sendRedirect(env.contextPath + '/recovery/complete?password=true');
 
         } else if (recoveryManager.isPasswordRecoveryOptionEnabled("security-question-based")) {
             Log.debug("Security Question Based Password Recovery flow for user: " + userId);
@@ -62,12 +62,12 @@ function onPost(env) {
 //        var isEmailBased = env.request.formParams['recover-option-email'];
 //        if(isEmailBased){
 //            //TODO invoke password recovery via email
-//            sendRedirect(env.contextPath + '/recovery/password-complete');
+//            sendRedirect(env.contextPath + '/recovery/complete?username=true');
 //        }
 //        var isQuestionBased = env.request.formParams['recover-option-question'];
 //        if(isQuestionBased){
 //            //TODO invoke password recovery via questions
-//            sendRedirect(env.contextPath + '/recovery/password-complete');
+//            sendRedirect(env.contextPath + '/recovery/complete?username=true');
 //        }
 //        //TODO else
 }
