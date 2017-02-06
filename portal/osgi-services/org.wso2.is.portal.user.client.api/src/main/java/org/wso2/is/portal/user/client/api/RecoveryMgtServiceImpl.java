@@ -22,9 +22,18 @@ package org.wso2.is.portal.user.client.api;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
+import org.wso2.carbon.identity.recovery.model.UserClaim;
+import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Represent Recovery management service implementation
@@ -36,6 +45,8 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 public class RecoveryMgtServiceImpl implements RecoveryMgtService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecoveryMgtService.class);
+    private NotificationUsernameRecoveryManager notificationUsernameRecoveryManager;
+
 
     @Activate
     protected void start(final BundleContext bundleContext) {
@@ -47,4 +58,40 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         return true;
     }
 
+    @Reference(
+            name = "notificationUsernameRecoveryManager",
+            service = NotificationUsernameRecoveryManager.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unSetNotificationUsernameRecoveryManager")
+    protected void setNotificationUsernameRecoveryManager(NotificationUsernameRecoveryManager
+                                                                      notificationUsernameRecoveryManager) {
+        this.notificationUsernameRecoveryManager = notificationUsernameRecoveryManager;
+    }
+
+    protected void unSetNotificationUsernameRecoveryManager(NotificationUsernameRecoveryManager
+                                                                    notificationUsernameRecoveryManager) {
+        this.notificationUsernameRecoveryManager = null;
+    }
+
+
+    @Override
+    public boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException {
+
+
+        ArrayList<UserClaim> claimsList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            UserClaim claim = new UserClaim(entry.getKey(), entry.getValue());
+            claimsList.add(claim);
+        }
+
+
+        return getNotificationUsernameRecoveryManager().verifyUsername(claimsList);
+
+    }
+
+
+    public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
+        return notificationUsernameRecoveryManager;
+    }
 }

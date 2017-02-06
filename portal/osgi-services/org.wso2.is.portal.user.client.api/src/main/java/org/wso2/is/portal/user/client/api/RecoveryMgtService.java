@@ -19,7 +19,10 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+
+import java.util.Map;
 
 /**
  * Represent Recovery management service
@@ -34,5 +37,22 @@ public interface RecoveryMgtService {
      * @throws UserPortalUIException
      */
     boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException;
+
+/*    *//***
+     *
+     * @param userClaims
+     * @return
+     * @throws IdentityRecoveryException
+     *//*
+    boolean recoverUserByClaims(Map<String, String> userClaims) throws IdentityRecoveryException;*/
+
+    /***
+     *
+     * @param userClaims
+     * @return
+     * @throws IdentityRecoveryException
+     */
+    boolean verifyUsername(Map<String, String> userClaims) throws
+            IdentityRecoveryException;
 
 }
