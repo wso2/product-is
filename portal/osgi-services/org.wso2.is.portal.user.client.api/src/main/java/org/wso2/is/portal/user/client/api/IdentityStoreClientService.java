@@ -57,16 +57,45 @@ public interface IdentityStoreClientService {
      * Add new user to the default domain.
      *
      * @param userClaims claims of the user
+     * @param credentials credentials of the user
      * @return Created user.
      * @throws UserPortalUIException User Not Found Exception
      */
     UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException;
 
+    /**
+     * Add new user to the defined domain.
+     *
+     * @param userClaims claims of the user
+     * @param credentials credentials of the user
+     * @param domainName domain name of the user
+     * @return Created user
+     * @throws UserPortalUIException
+     */
     UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName)
             throws UserPortalUIException;
 
     /**
-     * Update user claims by user id
+     * Check user existence in a specific domain.
+     *
+     * @param userClaims claims of the user
+     * @param domain domain name of the user
+     * @return True if user exists
+     * @throws UserPortalUIException
+     */
+    boolean isUserExist(Map<String, String> userClaims, String domain) throws UserPortalUIException;
+
+    /**
+     * Check user existence across domains.
+     *
+     * @param userClaims claims of the user
+     * @return meta data of user existence check
+     * @throws UserPortalUIException
+     */
+    Map<String, String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException;
+
+    /**
+     * Update user claims by user id.
      *
      * @param uniqueUserId     User unique id
      * @param updatedClaimsMap Updated user claims map
@@ -75,7 +104,7 @@ public interface IdentityStoreClientService {
     void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
 
     /**
-     * Get list of user claims by user id
+     * Get list of user claims by user id.
      *
      * @param uniqueUserId User unique id
      * @param metaClaims   Meta claim map
@@ -85,7 +114,7 @@ public interface IdentityStoreClientService {
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 
     /**
-     * Get list of domain names
+     * Get list of domain names.
      *
      * @return Domain name List
      * @throws UserPortalUIException
@@ -93,7 +122,7 @@ public interface IdentityStoreClientService {
     Set<String> getDomainNames() throws UserPortalUIException;
 
     /**
-     * Get primary domain name
+     * Get primary domain name.
      *
      * @return Primary domain name
      * @throws UserPortalUIException
@@ -101,7 +130,8 @@ public interface IdentityStoreClientService {
     String getPrimaryDomainName() throws UserPortalUIException;
 
     /**
-     * List users by claim
+     * List users by claim.
+     *
      * @param claimUri claim uri for filtering
      * @param claimValue claim value
      * @param offset starting point of user list
