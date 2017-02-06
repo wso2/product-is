@@ -202,7 +202,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
-        return challengeQuestionManager.isQuestionBasedPwdRecoveryEnabled();
+        return challengeQuestionManager.isQuestionBasedPwdRecoveryEnabledInPortal();
     }
 }
 

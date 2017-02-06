@@ -19,6 +19,7 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 /**
@@ -34,5 +35,13 @@ public interface RecoveryMgtService {
      * @throws UserPortalUIException
      */
     boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException;
+
+    /**
+     * get recovery config bean object
+     *
+     * @return
+     * @throws UserPortalUIException
+     */
+    RecoveryConfig getRecoveryConfigs() throws UserPortalUIException;
 
 }

@@ -54,14 +54,24 @@ var recoveryManager = {};
 
     /**
      * Check whether the password recovery enabled
-     * @param method define osgi service method to be called
+     * @param
      * @returns {*}
      */
 
     function isPasswordRecoveryEnabled() {
-        var questionBased = isQuestionBasedPasswordRecoveryEnabled();
-        var notificationBased = isNotificationBasedPasswordRecoveryEnabled();
-        return notificationBased || questionBased;
+        return getRecoveryConfigs().getPassword().isEnablePortal();
+    }
+
+    /**
+     * Get recovery configs of the system
+     * @param
+     * @returns {*}
+     */
+
+    function getRecoveryConfigs() {
+        var checkMethod = "getRecoveryConfigs";
+        return callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
+            checkMethod, []);
     }
 
     /**
@@ -71,9 +81,11 @@ var recoveryManager = {};
      */
 
     function hasMultiplePasswordRecoveryEnabled() {
-        var questionBased = isQuestionBasedPasswordRecoveryEnabled();
-        var notificationBased = isNotificationBasedPasswordRecoveryEnabled();
-        return notificationBased && questionBased;
+        var config = getRecoveryConfigs().getPassword();
+        var emailLink = config.getNotificationBased().getEmailLink().isEnablePortal();
+        var questionBased = config.getSecurityQuestion().isEnablePortal();
+        var external = config.getExternal().isEnablePortal();
+        return emailLink ? (questionBased || external) : (questionBased && external);
     }
 
 
@@ -118,21 +130,6 @@ var recoveryManager = {};
     };
 
     /**
-     * Returns whether requested password recovery option is enabled
-     * @param option recovery option
-     * @returns {success: true/false, isEnabled: true/false}
-     */
-    recoveryManager.isPasswordRecoveryOptionEnabled = function (option) {
-        if (option == "notification-based") {
-            return isNotificationBasedPasswordRecoveryEnabled();
-        } else if (option == "security-question-based") {
-            return isQuestionBasedPasswordRecoveryEnabled();
-        } else {
-            return false;
-        }
-    };
-
-    /**
      * Returns security questions of the user
      * @param uniqueUserId
      * @returns {*}
@@ -143,6 +140,15 @@ var recoveryManager = {};
         } else {
             return { success: false };
         }
+    };
+
+    /**
+     * Returns security questions of the user
+     * @param uniqueUserId
+     * @returns {*}
+     */
+    recoveryManager.getRecoveryConfigs = function () {
+        return getRecoveryConfigs();
     };
 
 })(recoveryManager);

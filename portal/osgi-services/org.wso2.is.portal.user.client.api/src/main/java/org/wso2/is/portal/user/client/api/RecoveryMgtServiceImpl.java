@@ -24,6 +24,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 /**
@@ -36,15 +37,23 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 public class RecoveryMgtServiceImpl implements RecoveryMgtService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecoveryMgtService.class);
+    private RecoveryConfig recoveryConfig;
 
     @Activate
     protected void start(final BundleContext bundleContext) {
         LOGGER.info("Registered service implementation" + RecoveryMgtService.class); //todo
+        recoveryConfig = new RecoveryConfig();
     }
 
     @Override
     public boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException {
         return true;
     }
+
+    @Override
+    public RecoveryConfig getRecoveryConfigs() {
+        return recoveryConfig;
+    }
+
 
 }

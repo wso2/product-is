@@ -28,17 +28,20 @@ function onGet(env) {
     }
 
     //TODO wrap with try after fixing error in senRedirect inside try
+    var pwdRecoveryConfig = recoveryManager.getRecoveryConfigs().getPassword();
     var hasMultiple = recoveryManager.hasMultiplePasswordRecoveryEnabled();
     if (!hasMultiple) {//when multiple recovery options are not enabled
-        if (recoveryManager.isPasswordRecoveryOptionEnabled("notification-based")) {
+        if (pwdRecoveryConfig.getNotificationBased().getEmailLink().isEnablePortal()) {
             Log.debug("Notification Based Password Recovery flow started for user: " + userId);
             //TODO invoke password recovery via email
-            sendRedirect(env.contextPath + '/recovery/password-complete?username=' + username);
+            sendRedirect(env.contextPath + '/recovery/complete?password=true');
 
-        } else if (recoveryManager.isPasswordRecoveryOptionEnabled("security-question-based")) {
+        } else if (pwdRecoveryConfig.getSecurityQuestion().isEnablePortal()) {
             Log.debug("Security Question Based Password Recovery flow for user: " + userId);
             sendRedirect(env.contextPath + '/recovery/security-questions?username=' + username + "&userId="+ userId);
 
+        } else if (pwdRecoveryConfig.getExternal().isEnablePortal()){
+            sendRedirect(pwdRecoveryConfig.getExternal().getUrl());
         }
         //TODO decide what, when non of the options are enabled
     } else {
@@ -50,7 +53,8 @@ function onGet(env) {
         return {
             hasMultipleOptions: hasMultiple,
             hasUserQuestions: questions.data.length > 0,
-            userQuestions: questions.data
+            userQuestions: questions.data,
+            externalOption : pwdRecoveryConfig.getExternal().getUrl()
         };
     }
 }
@@ -62,12 +66,12 @@ function onPost(env) {
 //        var isEmailBased = env.request.formParams['recover-option-email'];
 //        if(isEmailBased){
 //            //TODO invoke password recovery via email
-//            sendRedirect(env.contextPath + '/recovery/password-complete');
+//            sendRedirect(env.contextPath + '/recovery/complete?username=true');
 //        }
 //        var isQuestionBased = env.request.formParams['recover-option-question'];
 //        if(isQuestionBased){
 //            //TODO invoke password recovery via questions
-//            sendRedirect(env.contextPath + '/recovery/password-complete');
+//            sendRedirect(env.contextPath + '/recovery/complete?username=true');
 //        }
 //        //TODO else
 }
