@@ -26,11 +26,9 @@ $(window).load(function(){
 		$(this).parent().find('.image-container .after').hide();
 	});
 
-    $('input[name=recover-option]').click(function(){
-        if($(this).parent().parent().find('.recover-option-container').is(':hidden')){
-            $('.recover-option-container').slideUp();
-            $(this).parent().parent().find('.recover-option-container').slideDown();
-        }
+    $('input[name=recover-option],[name=recover-option-email],[name=recover-option-question]').click(function(){
+        $('.recover-option-container').hide();
+        $('.'+$(this).val()).closest('.recover-option-container').fadeIn();
     });
 
 

@@ -1,4 +1,4 @@
-theme : "org.wso2.carbon.uuf.common.theme.default"
+theme : "org.wso2.carbon.uuf.common.default.theme"
 #menus :
 #  main :
 #    Home : {link: "", icon: "fw-home"}
@@ -47,6 +47,7 @@ menus :
 errorPages:
   404: "/foundation/error/404"
   401: "/login"
+  500: "/error/custom"
   default: "/foundation/error/default"
 
 loginPageUri: "/login"

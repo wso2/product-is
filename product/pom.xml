@@ -163,6 +163,12 @@
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.apimgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+            <type>zip</type>
+        </dependency>
 
         <!--Other Dependencies-->
         <dependency>
@@ -277,6 +283,17 @@
                                     <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                     <type>zip</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.apimgt</groupId>
+                                    <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
+                                    <version>7.0.0-SNAPSHOT</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -400,6 +417,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.apimgt.lifecycle.manager.feature</id>
+                                    <version>7.0.0-SNAPSHOT</version>
                                 </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
@@ -561,6 +582,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.apimgt.lifecycle.manager.feature</id>
+                                    <version>7.0.0-SNAPSHOT</version>
                                 </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->

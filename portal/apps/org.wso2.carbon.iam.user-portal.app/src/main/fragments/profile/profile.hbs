@@ -1,11 +1,11 @@
-{{fragment "org.wso2.carbon.uuf.common.foundation.jquery-validation"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
 {{js "js/profile.js"}}
-<h3 class="text-capitalize">{{profile}} {{t "profile"}}</h3>
+<h3 class="text-capitalize">{{profile}} {{i18n "profile"}}</h3>
 <hr/>
 {{#if success}}
     {{#if message}}
         <div class="alert alert-success" role="alert">
-            <i class="icon fw fw-success"></i><strong>{{t "profile.success"}}</strong>
+            <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
             {{message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -17,7 +17,7 @@
 {{else}}
     {{#if message}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "profile.failure"}}</strong>
+            <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
             {{message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
