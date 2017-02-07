@@ -157,6 +157,11 @@
                 <version>${org.wso2.carbon.identity.commons.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.commons</groupId>
+                <artifactId>org.wso2.carbon.identity.event</artifactId>
+                <version>${org.wso2.carbon.identity.commons.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.caching</groupId>
                 <artifactId>org.wso2.carbon.caching</artifactId>
                 <version>${org.wso2.carbon.caching.version}</version>
@@ -734,6 +739,18 @@
                 <version>${carbon.uuf.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.apimgt</groupId>
+                <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
+                <version>7.0.0-SNAPSHOT</version>
+                <type>zip</type>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.h2database.wso2</groupId>
+                        <artifactId>h2-database-engine</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -780,16 +797,16 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>0.1.1</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>0.1.7-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.8-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.7-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
-        <org.wso2.carbon.identity.commons.feature.version>0.1.10-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>0.1.10-SNAPSHOT</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.8-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.commons.feature.version>0.1.12</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>0.1.12</org.wso2.carbon.identity.commons.version>
 
         <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m11</carbon-uuf-maven-plugin.version>
         <carbon.uuf.common.version>1.0.0-m3</carbon.uuf.common.version>
-        <carbon.security.version>1.0.2-SNAPSHOT</carbon.security.version>
+        <carbon.security.version>1.0.1</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
 
