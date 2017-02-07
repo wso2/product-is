@@ -7,7 +7,7 @@
     {{#if message}}
         <div class="alert alert-success" role="alert">
             <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
-            {{message}}
+            {{i18n message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -19,7 +19,7 @@
     {{#if message}}
         <div class="alert alert-danger" role="alert">
             <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
-            {{message}}
+            {{i18n message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -33,7 +33,7 @@
         <div id="new-security-question">
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-list">Security Question</label>
+                    <label class="control-label" for="question-list">{{i18n "security.question.label.securityQ"}}</label>
                     <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
                         {{#each questionList}}
                             <option value="{{questionSetId}}:{{questionId}}">{{question}}</option>
@@ -43,12 +43,12 @@
             </div>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-answer">Answer</label>
+                    <label class="control-label" for="question-answer">{{i18n "security.question.label.answer"}}</label>
                     <input id="question-answer" name="question-answer" type="text" class="form-control">
                     <input type="hidden" name="action" value="add-question">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary">{{i18n "security.question.label.add"}}</button>
         </div>
     </form>
 </div>
@@ -58,7 +58,7 @@
             <div class="row">
                 <div id="create-question" class="pull-right add-margin-bottom-4x">
                     <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
-                            class="fw fw-add fw-1x"></span> Create
+                            class="fw fw-add fw-1x"></span>{{i18n "security.question.label.create"}}
                     </button>
                 </div>
             </div>
@@ -96,7 +96,7 @@
         <div id="password">
             <div class="form-group">
                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                    <label class="control-label" for="old-password">Password<span>*</span></label>
+                    <label class="control-label" for="old-password">{{i18n "security.question.label.password"}}<span>*</span></label>
                     <input type="password" class="form-control" id="old-password" name="old-password" required/>
                 </div>
             </div>
@@ -115,8 +115,10 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">Update</button>
-        <input type="button" class="btn btn-default add-margin-bottom-3x" value="Cancel" onclick="goBack()">
+        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">
+            {{i18n "security.question.label.update"}}</button>
+        <input type="button" class="btn btn-default add-margin-bottom-3x"
+               value='{{i18n "security.question.label.cancel"}}' onclick="goBack()">
         <input type="hidden" id="question-id" name="question-id" value="">
         <input type="hidden" id="question-set-id" name="question-set-id" value="">
         <input type="hidden" name="action" value="update-question">
