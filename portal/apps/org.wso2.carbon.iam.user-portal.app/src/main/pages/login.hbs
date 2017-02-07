@@ -49,7 +49,8 @@
                                         <input type="hidden" name="domain" id="domain"
                                                class="form-control"/>
                                         <label for="domainSelector" class="control-label">{{i18n "domain"}}</label>
-                                        <select class="form-control" id="domainSelector" data-primary={{primaryDomainName}}>
+                                        <select class="form-control" id="domainSelector"
+                                                data-primary={{primaryDomainName}}>
                                             {{#each domainNames}}
                                                 <option value={{this}}>{{this}}</option>
                                             {{/each}}
@@ -85,8 +86,8 @@
                                 </div>
                             </div>
                             <p>{{i18n "forgot.your"}}&nbsp;<a
-                                    href="{{usernameRecoveryUrl}}">{{i18n "username"}}
-                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{passwordRecoveryUrl}}">
+                                    href="{{recoveryInfo.usernameRecoveryUrl}}">{{i18n "username"}}
+                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}">
                                 {{i18n "password"}}</a>&nbsp;?
                             </p>
 
