@@ -25,12 +25,14 @@ function getDomainNames(env) {
             return {errorMessage: 'signup.error.retrieve.domain'};
         }
     }
+    return domainNames;
+}
 
+function getRecoveryConfigInfo(){
     var recoveryConfig = recoveryManager.getRecoveryConfigs();
     return {
-        "domainNames": domainNames,
-        "passwordRecoveryUrl": recoveryConfig.getPassword().getUrl() || env.contextPath + '/recovery/password',
-        "usernameRecoveryUrl": recoveryConfig.getUsername().getUrl() || env.contextPath + '/recovery/username'
+        passwordRecoveryUrl: recoveryConfig.getPassword().getUrl() || env.contextPath + '/recovery/password',
+        usernameRecoveryUrl: recoveryConfig.getUsername().getUrl() || env.contextPath + '/recovery/username'
     };
 }
 
@@ -77,8 +79,8 @@ function onGet(env) {
     }
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
-    
-    return { domainNames:domainNames, primaryDomainName:primaryDomainName};
+    var recoverynfo = getRecoveryConfigInfo();
+    return { domainNames:domainNames, primaryDomainName:primaryDomainName, recoveryInfo: recoverynfo };
 }
 
 
@@ -110,7 +112,9 @@ function onPost(env) {
     } else {
         var domainNames = getDomainNames(env);
         var primaryDomainName = getPrimaryDomainName(env);
-        return {errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName};
+        var recoverynfo = getRecoveryConfigInfo();
+        return { errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName,
+            recoveryInfo: recoverynfo };
     }
 }
 
