@@ -144,13 +144,34 @@ $(window).load(function () {
     });
 
     $("#username").rules("add", { username: true });
-    
+
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
+
+    //setting primary domain as the default
+    $('#domainSelector option[value='+ $('#domainSelector').attr('data-primary') +']').prop('selected','selected');
+    var primaryDomain = $('#domainSelector').val();
+    $("#domainValue").val(primaryDomain);
 });
 
 $('#domainSelector').change(function () {
-    var domain = document.getElementById('domainSelector').value;
-    if (domain != "default") {
-        document.getElementById("domain").value = domain;
-    }
+    var domain = $(this).val();
+    $("#domainValue").val(domain);
 });
+
+function userNameExists(url) {
+    var username = document.getElementById('username').value;
+    if(!username){
+        return;
+    }
+    var usernameClaimUri = document.getElementById('username').name;
+    var domain = null;
+    if(document.getElementById('domainSelector')) {
+        domain = document.getElementById('domainSelector').value;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: {actionId: "usernameExists", username: username, usernameClaimUri: usernameClaimUri, domain: domain}
+    });
+}
