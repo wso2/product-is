@@ -24,10 +24,22 @@ function getDomainNames(env) {
             return {errorMessage: 'signup.error.retrieve.domain'};
         }
     }
-    return {
-        "domainNames": domainNames
-    };
+    return domainNames;
 }
+
+function getPrimaryDomainName(env) {
+    var primaryDomainName;
+    if (env.config.isDomainInLogin) {
+        try {
+            primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getPrimaryDomainName", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
+    }
+    return primaryDomainName;
+}
+
 
 function authenticate(username, password, domain) {
     try {
@@ -56,7 +68,10 @@ function onGet(env) {
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
-    return getDomainNames(env);
+    var domainNames = getDomainNames(env);
+    var primaryDomainName = getPrimaryDomainName(env);
+   
+    return { "domainNames":domainNames, "primaryDomainName":primaryDomainName};
 }
 
 
