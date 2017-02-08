@@ -198,6 +198,11 @@ public class UserPortalOSGiTestUtils {
                 artifactId("org.wso2.carbon.identity.commons")
                 .versionAsInProject());
         optionList.add(mavenBundle().
+                groupId("org.wso2.carbon.identity.commons").
+                artifactId("org.wso2.carbon.identity.event")
+                .versionAsInProject());
+
+        optionList.add(mavenBundle().
                 groupId("org.wso2.carbon.identity.mgt").
                 artifactId("org.wso2.carbon.identity.mgt")
                 .versionAsInProject());

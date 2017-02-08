@@ -157,3 +157,48 @@ $('#domainSelector').change(function () {
     var domain = $(this).val();
     $("#domainValue").val(domain);
 });
+
+function userNameExists(url) {
+    var username = document.getElementById('username').value;
+    if (!username) {
+        return;
+    }
+    var usernameClaimUri = document.getElementById('username').name;
+    var domain = null;
+    if (document.getElementById('domainSelector')) {
+        domain = document.getElementById('domainSelector').value;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: {username: username, usernameClaimUri: usernameClaimUri, domain: domain},
+        success: function (data) {
+            if (data === "true") {
+                var fillingObject = {
+                    "userExists": true
+                };
+                var callbacks = {
+                    onSuccess: function () {
+                        $("#register").prop('disabled', true);
+                    },
+                    onFailure: function (e) {
+                    }
+                };
+                UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.user-existance", fillingObject,
+                    "userExistsError-area", "OVERWRITE", callbacks);
+            } else {
+                var fillingObject = {};
+                var callbacks = {
+                    onSuccess: function () {
+                        $("#register").prop('disabled', false);
+                    },
+                    onFailure: function (e) {
+                    }
+                };
+                UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.user-existance", fillingObject,
+                    "userExistsError-area", "OVERWRITE", callbacks);
+            }
+        }
+    });
+}

@@ -135,7 +135,7 @@ function onGet(env) {
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
-    return getProfile();
+    return { profile: getProfile()};
 }
 
 
