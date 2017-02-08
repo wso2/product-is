@@ -148,7 +148,7 @@ $(window).load(function () {
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 
     //setting primary domain as the default
-    $('#domainSelector option[value='+ $('#domainSelector').attr('data-primary') +']').prop('selected','selected');
+    $('#domainSelector option[value=' + $('#domainSelector').attr('data-primary') + ']').prop('selected', 'selected');
     var primaryDomain = $('#domainSelector').val();
     $("#domainValue").val(primaryDomain);
 });
@@ -160,18 +160,45 @@ $('#domainSelector').change(function () {
 
 function userNameExists(url) {
     var username = document.getElementById('username').value;
-    if(!username){
+    if (!username) {
         return;
     }
     var usernameClaimUri = document.getElementById('username').name;
     var domain = null;
-    if(document.getElementById('domainSelector')) {
+    if (document.getElementById('domainSelector')) {
         domain = document.getElementById('domainSelector').value;
     }
 
     $.ajax({
         type: "GET",
         url: url,
-        data: {actionId: "usernameExists", username: username, usernameClaimUri: usernameClaimUri, domain: domain}
+        data: {username: username, usernameClaimUri: usernameClaimUri, domain: domain},
+        success: function (data) {
+            if (data === "true") {
+                var fillingObject = {
+                    "userExists": true
+                };
+                var callbacks = {
+                    onSuccess: function () {
+                        $("#register").prop('disabled', true);
+                    },
+                    onFailure: function (e) {
+                    }
+                };
+                UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.user-existance", fillingObject,
+                    "userExistsError-area", "OVERWRITE", callbacks);
+            } else {
+                var fillingObject = {};
+                var callbacks = {
+                    onSuccess: function () {
+                        $("#register").prop('disabled', false);
+                    },
+                    onFailure: function (e) {
+                    }
+                };
+                UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.user-existance", fillingObject,
+                    "userExistsError-area", "OVERWRITE", callbacks);
+            }
+        }
     });
 }

@@ -1,6 +1,7 @@
 {{layout "unprivilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
 {{title "Sign up | " @config.appName}}
 {{css "css/user-portal.css"}}
 {{js "js/signup.js"}}
@@ -55,7 +56,9 @@
                                             </br><label class="control-label"
                                                         for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}
                                             <span>*</span></label>
-                                            <input onblur="userNameExists('{{@contextPath}}/signup')" type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                            <input onblur="userNameExists
+                                                    ('{{@contextPath}}/root/apis/identityStore-micro-service/userExists')"
+                                                   type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                    name={{claimURI}}
                                                            class="form-control"
                                                    id="username"
@@ -63,6 +66,11 @@
                                                            placeholder={{i18n "placeholder.username"}}
                                                    required/>
                                         {{/each}}
+                                        {{#defineZone "userExistsError-area"}}
+                                            <div id="userExistsError">
+                                                <!-- Here is generated content for erro when user already exists -->
+                                            </div>
+                                        {{/defineZone}}
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#if profile.domainNames}}
@@ -79,17 +87,6 @@
                                         {{/if}}
                                     </div>
                                 </div>
-
-                                {{#if userExistsErrorMessage}}
-                                    <div class="alert alert-danger">
-                                        {{i18n userExistsErrorMessage}}
-                                        <button type="button" class="close" aria-label="close" data-dismiss="alert">
-                                        <span aria-hidden="true">
-                                            <i class="fw fw-cancel"></i>
-                                        </span>
-                                        </button>
-                                    </div>
-                                {{/if}}
 
                                 <div class="form-group">
                                     <div class="password_strength_meter ">

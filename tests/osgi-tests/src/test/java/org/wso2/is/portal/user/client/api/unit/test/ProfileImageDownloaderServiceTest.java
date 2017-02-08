@@ -23,7 +23,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.wso2.is.portal.user.client.api.ProfileImageDownloaderService;
+import org.wso2.is.portal.user.client.api.micro.ProfileImageDownloaderService;
 import org.wso2.msf4j.MicroservicesRunner;
 
 import java.io.IOException;
