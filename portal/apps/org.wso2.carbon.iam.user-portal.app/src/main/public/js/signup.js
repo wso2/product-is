@@ -144,11 +144,11 @@ $(window).load(function () {
     });
 
     $("#username").rules("add", { username: true });
-
+    
     $('.signup-form-wrapper').parents('body').addClass('background-grey');
 
     //setting primary domain as the default
-    $('#domainSelector option[value=' + $('#domainSelector').attr('data-primary') + ']').prop('selected', 'selected');
+    $('#domainSelector option[value='+ $('#domainSelector').attr('data-primary') +']').prop('selected','selected');
     var primaryDomain = $('#domainSelector').val();
     $("#domainValue").val(primaryDomain);
 });

@@ -149,22 +149,7 @@ function onGet(env) {
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
-
-    /*    if (env.request.queryParams != null && env.request.queryParams.actionId != null &&
-     "usernameExists" === env.request.queryParams.actionId) {
-     var usernameClaimUri = env.request.queryParams.usernameClaimUri;
-     var username = env.request.queryParams.username;
-     var domain = env.request.queryParams.domain;
-     var userExistenceResult = isUserExists(username, usernameClaimUri, domain);
-     if (userExistenceResult.errorMessage) {
-     return {errorMessage: userExistenceResult.errorMessage};
-     }
-     else if (userExistenceResult.isUserExists) {
-     return {errorMessage: 'signup.error.retrieve.claim'};
-     }
-     } else {*/
-    return {profile: getProfile()};
-    //}
+    return { profile: getProfile()};
 }
 
 
