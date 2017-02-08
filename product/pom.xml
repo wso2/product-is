@@ -403,16 +403,16 @@
                                 </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
+                                <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
+                                <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
+                                <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
                             </features>
                         </configuration>

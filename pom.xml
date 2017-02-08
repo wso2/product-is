@@ -234,13 +234,13 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.uuf.common</groupId>
-                <artifactId>org.wso2.carbon.uuf.common.foundation</artifactId>
+                <artifactId>org.wso2.carbon.uuf.common.foundation.ui</artifactId>
                 <version>${carbon.uuf.common.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.uuf.common</groupId>
-                <artifactId>org.wso2.carbon.uuf.common.theme.default</artifactId>
+                <artifactId>org.wso2.carbon.uuf.common.default.theme</artifactId>
                 <version>${carbon.uuf.common.version}</version>
                 <type>zip</type>
             </dependency>
@@ -786,9 +786,9 @@
         <org.wso2.carbon.identity.commons.feature.version>0.1.3</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>0.1.3</org.wso2.carbon.identity.commons.version>
 
-        <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
+        <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
-        <carbon.uuf.common.version>1.0.0-m1</carbon.uuf.common.version>
+        <carbon.uuf.common.version>1.0.0-m3</carbon.uuf.common.version>
         <carbon.security.version>1.0.0</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
 
