@@ -79,8 +79,8 @@
                                             <input type="hidden" name="domainValue" id="domainValue"
                                                    class="form-control"/>
                                             <select class="form-control" id="domainSelector"
-                                                    data-primary={{primaryDomainName}}>
-                                                {{#each domainNames}}
+                                                    data-primary={{profile.primaryDomainName}}>
+                                                {{#each profile.domainNames}}
                                                     <option value={{this}}>{{this}}</option>
                                                 {{/each}}
                                             </select>
