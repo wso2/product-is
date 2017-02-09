@@ -37,9 +37,9 @@ public class IdentityStoreClientMicroService implements Microservice {
 
     @GET
     @Path("/userExists")
-    public Response getProfileImage(@QueryParam("username") String username,
-                                    @QueryParam("usernameClaimUri") String usernameClaimUri,
-                                    @QueryParam("domain") String domain) throws UserPortalUIException {
+    public Response getUserExistence(@QueryParam("username") String username,
+                                     @QueryParam("usernameClaimUri") String usernameClaimUri,
+                                     @QueryParam("domain") String domain) throws UserPortalUIException {
         IdentityStoreClientService identityStoreClientService = null;
         boolean isUserExists = false;
         Map<String, String> userClaims = new HashMap<>();
