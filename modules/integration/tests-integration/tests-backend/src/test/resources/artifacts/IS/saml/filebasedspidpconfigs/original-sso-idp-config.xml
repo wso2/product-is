@@ -1,0 +1,67 @@
+<!--
+~ Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+ -->
+
+<!-- The full ServiceProvider configuration is as follows. -->
+
+  <!--ServiceProvider>
+    <Issuer></Issuer>
+    <AssertionConsumerServiceURLs>
+      <AssertionConsumerServiceURL></AssertionConsumerServiceURL>
+    </AssertionConsumerServiceURLs>
+    <DefaultAssertionConsumerServiceURL></DefaultAssertionConsumerServiceURL>
+    <EnableSingleLogout>true</EnableSingleLogout>
+    <SLOResponseURL></SLOResponseURL>
+    <SLORequestURL></SLORequestURL>
+    <SAMLDefaultSigningAlgorithmURI>http://www.w3.org/2000/09/xmldsig#rsa-sha1</SAMLDefaultSigningAlgorithmURI>
+    <SAMLDefaultDigestAlgorithmURI>http://www.w3.org/2000/09/xmldsig#sha1</SAMLDefaultDigestAlgorithmURI>
+    <SignResponse>true</SignResponse>
+    <ValidateSignatures>true</ValidateSignatures>
+    <EncryptAssertion>true</EncryptAssertion>
+    <CertAlias></CertAlias>
+    <EnableAttributeProfile>true</EnableAttributeProfile>
+    <IncludeAttributeByDefault>true</IncludeAttributeByDefault>
+    <ConsumingServiceIndex></ConsumingServiceIndex>
+    <EnableAudienceRestriction>false</EnableAudienceRestriction>
+    <AudiencesList>
+      <Audience></Audience>
+    </AudiencesList>
+    <EnableRecipients>false</EnableRecipients>
+    <RecipientList>
+      <Recipient></Recipient>
+    </RecipientList>
+    <EnableIdPInitiatedSSO>false</EnableIdPInitiatedSSO>
+    <EnableIdPInitSLO>false</EnableIdPInitSLO>
+    <ReturnToURLList>
+      <ReturnToURL></ReturnToURL>
+    </ReturnToURLList>
+  </ServiceProvider-->
+
+<SSOIdentityProviderConfig>
+  <ServiceProviders>
+    <ServiceProvider>
+ <Issuer>wso2.my.dashboard</Issuer>
+ <AssertionConsumerServiceURLs>
+ <AssertionConsumerServiceURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs</AssertionConsumerServiceURL>
+      </AssertionConsumerServiceURLs>
+      <DefaultAssertionConsumerServiceURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs</DefaultAssertionConsumerServiceURL>
+      <SignResponse>true</SignResponse>
+      <EnableAudienceRestriction>true</EnableAudienceRestriction>
+      <AudiencesList>
+        <Audience>carbonServer</Audience>
+      </AudiencesList>
+    </ServiceProvider>
+  </ServiceProviders>
+</SSOIdentityProviderConfig>
