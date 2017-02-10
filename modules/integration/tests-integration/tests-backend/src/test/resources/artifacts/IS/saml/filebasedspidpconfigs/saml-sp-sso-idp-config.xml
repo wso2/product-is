@@ -1,0 +1,35 @@
+<SSOIdentityProviderConfig>
+    <ServiceProviders>
+        <ServiceProvider>
+            <Issuer>travelocity.com</Issuer>
+            <AssertionConsumerServiceURLs>
+                <AssertionConsumerServiceURL>http://localhost:8490/travelocity.com/home.jsp
+                </AssertionConsumerServiceURL>
+            </AssertionConsumerServiceURLs>
+            <DefaultAssertionConsumerServiceURL>http://localhost:8490/travelocity.com/home.jsp
+            </DefaultAssertionConsumerServiceURL>
+            <SignResponse>true</SignResponse>
+            <EnableSingleLogout>true</EnableSingleLogout>
+            <ValidateSignatures>true</ValidateSignatures>
+            <EnableAttributeProfile>true</EnableAttributeProfile>
+            <IncludeAttributeByDefault>true</IncludeAttributeByDefault>
+            <ConsumingServiceIndex>1701087467</ConsumingServiceIndex>
+        </ServiceProvider>
+        <ServiceProvider>
+            <Issuer>wso2.my.dashboard</Issuer>
+            <AssertionConsumerServiceURLs>
+                <AssertionConsumerServiceURL>
+                    ${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs
+                </AssertionConsumerServiceURL>
+            </AssertionConsumerServiceURLs>
+            <DefaultAssertionConsumerServiceURL>
+                ${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs
+            </DefaultAssertionConsumerServiceURL>
+            <SignResponse>true</SignResponse>
+            <EnableAudienceRestriction>true</EnableAudienceRestriction>
+            <AudiencesList>
+                <Audience>carbonServer</Audience>
+            </AudiencesList>
+        </ServiceProvider>
+    </ServiceProviders>
+</SSOIdentityProviderConfig>
