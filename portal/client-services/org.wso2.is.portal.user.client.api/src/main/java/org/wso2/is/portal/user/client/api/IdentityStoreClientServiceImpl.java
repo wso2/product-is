@@ -204,6 +204,48 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
+    public boolean isUserExist(Map<String, String> userClaims, String domain) throws UserPortalUIException {
+        List<Claim> claimsList = new ArrayList<>();
+        boolean isUserExists;
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        try {
+            isUserExists = getRealmService().getIdentityStore().isUserExist(claimsList, domain);
+        } catch (IdentityStoreException e) {
+            String error = "Error while checking whether the user exists.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return isUserExists;
+    }
+
+    @Override
+    public Map<String, String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException {
+        List<Claim> claimsList = new ArrayList<>();
+        Map<String, String> userExistsMeta;
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        try {
+            userExistsMeta = getRealmService().getIdentityStore().isUserExist(claimsList);
+        } catch (IdentityStoreException e) {
+            String error = "Error while checking whether the user exists.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return userExistsMeta;
+    }
+
+    @Override
     public void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws
             UserPortalUIException {
 
@@ -257,6 +299,20 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             throw new UserPortalUIException(error);
         }
         return domainSet;
+    }
+
+    @Override
+    public String getPrimaryDomainName() throws UserPortalUIException {
+        String primaryDomain;
+        try {
+            primaryDomain = getRealmService().getIdentityStore().getPrimaryDomainName();
+        } catch (IdentityStoreException e) {
+            String error = "Failed to get the primary domain name.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return primaryDomain;
+
     }
 
     private RealmService getRealmService() {

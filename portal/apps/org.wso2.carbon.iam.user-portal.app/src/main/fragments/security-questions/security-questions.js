@@ -14,16 +14,46 @@
  * limitations under the License.
  */
 
-function onRequest(env) {
+function onGet(env) {
+    var data = {};
+    data.success = true;
+    var session = getSession();
+    var userUniqueId = session.getUser().getUserId();
+    var action = env.request.formParams["action"];
+
+    var getUserQuestionsResult = getUserQuestions(userUniqueId);
+
+    if(!getUserQuestionsResult.success) {
+        data.success = getUserQuestionsResult.success;
+        data.message = getUserQuestionsResult.message;
+    }
+
+    if (getUserQuestionsResult.data.length === 0) {
+        data.isUserHasQuestions = false;
+    } else {
+        data.isUserHasQuestions = true;
+        data.userQuestions = getUserQuestionsResult.data;
+    }
+
+    var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
+    if(!getChallengeQuestionsResult.success) {
+        data.success = getChallengeQuestionsResult.success;
+        data.message = getChallengeQuestionsResult.message;
+    }
+    data.questionList = getChallengeQuestionsResult.data;
+    return data;
+}
+
+
+function onPost(env) {
 
     var data = {};
     data.success = true;
     var session = getSession();
     var userUniqueId = session.getUser().getUserId();
-    var requestMethod = env.request.method;
     var action = env.request.formParams["action"];
 
-    if (requestMethod == "POST" && action == "add-question") {
+    if (action == "add-question") {
 
         // Add question flow.
         var answer = env.request.formParams["question-answer"];
@@ -31,8 +61,10 @@ function onRequest(env) {
         var idsArray = ids.split(":");
         var questionSetId = idsArray[0];
         var questionId = idsArray[1];
-        setChallengeAnswer(userUniqueId, answer, questionSetId, questionId);
-    } else if (requestMethod== "POST" && action == "update-question") {
+        var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId);
+        data.success = addChallengeQResult.success;
+        data.message = addChallengeQResult.message;
+    } else if (action == "update-question") {
 
         // Update question answer flow.
         var oldPassword = env.request.formParams["old-password"];
@@ -41,125 +73,87 @@ function onRequest(env) {
         questionSetId = env.request.formParams["question-set-id"];
         var username = session.getUser().getUsername();
         var domain = session.getUser().getDomainName();
-        var result = authenticate(username, oldPassword, domain);
-        if (result.success) {
-            setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId);
+        var authenticationResult = authenticate(username, oldPassword, domain);
+        if (authenticationResult.success) {
+            var updateChallengeQResult = setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId);
+            data.success = updateChallengeQResult.success;
+            data.message = updateChallengeQResult.message;
         } else {
-            data.success = result.success;
-            data.message = result.message;
+            data.success = authenticationResult.success;
+            data.message = authenticationResult.message;
         }
-    } else if (requestMethod == "POST" && action == "delete-question") {
+    } else if (action == "delete-question") {
 
         // Delete question flow.
         questionId = env.request.formParams["question-id"];
         questionSetId = env.request.formParams["question-set-id"];
-
-        result = deleteQuestion(userUniqueId, questionId, questionSetId);
-
-        data.message = result.message;
-        data.success = result.success;
+        var deleteChallengeQResult = deleteQuestion(userUniqueId, questionId, questionSetId);
+        data.message = deleteChallengeQResult.message;
+        data.success = deleteChallengeQResult.success;
     }
 
-    result = getUserQuestions(userUniqueId);
+    var getChallengeQResult = getUserQuestions(userUniqueId);
 
-    if (result.data.length === 0) {
+    if (getChallengeQResult.data.length === 0) {
         data.isUserHasQuestions = false;
     } else {
         data.isUserHasQuestions = true;
-        data.userQuestions = result.data;
+        data.userQuestions = getChallengeQResult.data;
     }
 
-    data.questionList = getChallengeQuestions(userUniqueId).data;
-
+    var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
+    data.questionList = getChallengeQuestionsResult.data;
     return data;
 }
 
 function getUserQuestions(userUniqueId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "getAllChallengeQuestionsForUser", [userUniqueId]);
+        return {success: true, message: "", data : challengeQuestions};
     } catch (e) {
-        result.success = false;
-        result.message = e.message;
-        return result;
+        return {success: false, message: 'security.question.error.getChallengeQuestionsForUser'};
     }
-
-    result.data = challengeQuestions;
-    return result;
 }
 
 function getChallengeQuestions(userUniqueId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "getChallengeQuestionList", [userUniqueId]);
+        return {success: true, message: "", data : challengeQuestions};
     } catch (e) {
-        result.success = false;
-        result.message = e.message;
+        return {success: false, message: 'security.question.error.getChallengeQuestionList'};
     }
-
-    result.data = challengeQuestions;
-    return result;
 }
 
 function setChallengeAnswer(userUniqueId, answer, questionSetId, questionId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "setChallengeQuestionForUser", [userUniqueId, questionId, questionSetId, answer]);
+        return {success: true, message: 'security.question.success.setChallengeAnswer'};
     } catch (e) {
-        result.message = e.message;
-        result.success = false;
+        return {success: false, message: 'security.question.error.setChallengeAnswer'};
     }
-
-    return result;
 }
 
 function deleteQuestion(userUniqueId, questionId, questionSetId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "deleteChallengeQuestionForUser", [userUniqueId, questionId, questionSetId]);
+        return {success: true, message: 'security.question.success.deleteQuestion'};
     } catch (e) {
-        result.message = e.message;
-        result.success = false;
+        return {success: false, message: 'security.question.error.deleteQuestion'};
     }
-
-    return result;
 }
 
 function authenticate(username, password, domain) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
-        callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "authenticate", [username, passwordChar, domain]);
-        return {success: true, message: ""};
+        createSession(uufUser);
+        return {success: true, message: "success"};
     } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause != null) {
-            // The exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-        return {success: false, message: message};
+        return {success: false, message: 'security.question.error.invalidPassword'};
     }
 }

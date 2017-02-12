@@ -3,8 +3,10 @@
 #    - className: "org.wso2.carbon.uuf.sample.pets-store.PetsStoreMicroservice"
 #      uri: "/pets/"
 apis:
-  - className: "org.wso2.is.portal.user.client.api.ProfileImageDownloaderService"
+  - className: "org.wso2.is.portal.user.client.api.micro.ProfileImageDownloaderService"
     uri: "/profile-image-service/"
+  - className: "org.wso2.is.portal.user.client.api.micro.IdentityStoreClientMicroService"
+    uri: "/identityStore-micro-service/"
 
 # Binding fragments into zones.
 # Modes:
@@ -13,14 +15,14 @@ apis:
 #   overwrite - remove/ignore the existing pushed content of the zone and replace with specified fragments
 # Please note that the configured order of the fragments in here, will be honored when filling the zone
 bindings:
-    - zoneName: "org.wso2.carbon.uuf.common.foundation.footer"
+    - zoneName: "org.wso2.carbon.uuf.common.foundation.ui.footer"
       mode: "append"
       fragments:
-        - "org.wso2.carbon.uuf.common.foundation.footer"
-    - zoneName: "org.wso2.carbon.uuf.common.foundation.menubar"
+        - "org.wso2.carbon.uuf.common.foundation.ui.footer"
+    - zoneName: "org.wso2.carbon.uuf.common.foundation.ui.menubar"
       mode: "append"
       fragments:
-        - "org.wso2.carbon.uuf.common.foundation.menubar"
+        - "org.wso2.carbon.uuf.common.foundation.ui.menubar"
     - zoneName: "org.wso2.carbon.iam.user-portal.feature.usermenu"
       mode: "append"
       fragments:

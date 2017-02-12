@@ -58,11 +58,20 @@ function getProfile() {
         return {errorMessage: 'signup.error.retrieve.domain'};
     }
 
+    var primaryDomainName;
+    try {
+        primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getPrimaryDomainName", []);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
+    }
+
     sendToClient("signupClaims", claimProfileArray);
     return {
         "usernameClaim": userName,
         "signupClaims": claimProfileArray,
-        "domainNames": domainNames
+        "domainNames": domainNames,
+        "primaryDomainName": primaryDomainName
     };
 }
 
@@ -121,44 +130,47 @@ function authenticate(username, password, domain) {
     }
 }
 
-function onRequest(env) {
+function onGet(env) {
     var session = getSession();
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
+    return { profile: getProfile()};
+}
 
-    if (env.request.method == "POST") {
-        var formParams = {};
-        var claimMap = {};
-        var credentialMap = {};
-        var domain = null;
-        formParams = env.request.formParams;
-        for (var i in formParams) {
-            if (i == "password") {
-                credentialMap["password"] = formParams[i];
-            } else if (i == "domain") {
-                domain = formParams[i];
-            }
-            else {
-                claimMap[i] = formParams[i];
-            }
-        }
 
-        var registrationResult = userRegistration(claimMap, credentialMap, domain);
-        if (registrationResult.errorMessage) {
-            return {errorMessage: registrationResult.errorMessage};
+function onPost(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
+    var formParams = {};
+    var claimMap = {};
+    var credentialMap = {};
+    var domain = null;
+    formParams = env.request.formParams;
+    for (var i in formParams) {
+        if (i == "password") {
+            credentialMap["password"] = formParams[i];
+        } else if (i == "domainValue") {
+            domain = formParams[i];
         }
-        else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
-            var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
-            if (authenticationResult.success) {
-                sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-            } else {
-                sendRedirect(env.contextPath + env.config['loginPageUri']);
-            }
+        else {
+            claimMap[i] = formParams[i];
         }
     }
 
-    if (env.request.method == "GET") {
-        return getProfile();
+    var registrationResult = userRegistration(claimMap, credentialMap, domain);
+    if (registrationResult.errorMessage) {
+        return {errorMessage: registrationResult.errorMessage};
+    }
+    else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
+        var authenticationResult = authenticate(claimMap["http://wso2.org/claims/username"], credentialMap["password"], domain);
+        if (authenticationResult.success) {
+            sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+        } else {
+            sendRedirect(env.contextPath + env.config['loginPageUri']);
+        }
     }
 }
+

@@ -39,8 +39,19 @@ function isProfileImageAvailbale(session) {
     return {profileImage: false};
 }
 
-function onRequest(env) {
-    
+function onGet(env) {
+    var session = getSession();
+    if (!session) {
+        sendRedirect(env.contextPath + env.config.loginPageUri);
+    }
+    var profileImageResult = isProfileImageAvailbale(session);
+    return {
+        username: session.getUser().getUsername(), profileImage: profileImageResult.profileImage,
+        userId: profileImageResult.userId
+    };
+}
+
+function onPost(env) {
     var session = getSession();
     if (!session) {
         sendRedirect(env.contextPath + env.config.loginPageUri);

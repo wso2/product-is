@@ -24,10 +24,22 @@ function getDomainNames(env) {
             return {errorMessage: 'signup.error.retrieve.domain'};
         }
     }
-    return {
-        "domainNames": domainNames
-    };
+    return domainNames;
 }
+
+function getPrimaryDomainName(env) {
+    var primaryDomainName;
+    if (env.config.isDomainInLogin) {
+        try {
+            primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getPrimaryDomainName", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
+    }
+    return primaryDomainName;
+}
+
 
 function authenticate(username, password, domain) {
     try {
@@ -51,39 +63,47 @@ function authenticate(username, password, domain) {
     }
 }
 
-function onRequest(env) {
+function onGet(env) {
+    var session = getSession();
+    if (session) {
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    }
+    var domainNames = getDomainNames(env);
+    var primaryDomainName = getPrimaryDomainName(env);
+   
+    return { "domainNames":domainNames, "primaryDomainName":primaryDomainName};
+}
+
+
+function onPost(env) {
     var session = getSession();
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
 
-    if (env.request.method == "GET") {
-        return getDomainNames(env);
-    }
+    var domain = env.request.formParams['domain'];
+    var username = env.request.formParams['username'];
+    var password = env.request.formParams['password'];
 
-    if (env.request.method == "POST") {
-        var domain = env.request.formParams['domain'];
-        var username = env.request.formParams['username'];
-        var password = env.request.formParams['password'];
-
-        if (!env.config.isDomainInLogin) {
-            if (username.indexOf("/") != -1) {
-                var splitedValue = username.split("/");
-                if (splitedValue.length == 2) {
-                    domain = splitedValue[0];
-                    username = splitedValue[1];
-                } else {
-                    return {errorMessage: 'login.error.invalid.username'};
-                }
+    if (!env.config.isDomainInLogin) {
+        if (username.indexOf("/") != -1) {
+            var splitedValue = username.split("/");
+            if (splitedValue.length == 2) {
+                domain = splitedValue[0];
+                username = splitedValue[1];
+            } else {
+                return {errorMessage: 'login.error.invalid.username'};
             }
         }
-        var result = authenticate(username, password, domain);
-        if (result.success) {
-            //configure login redirect uri
-            sendRedirect(env.contextPath + env.config['loginRedirectUri']);
-        } else {
-            return {errorMessage: result.message};
-        }
+    }
+    var result = authenticate(username, password, domain);
+    if (result.success) {
+        //configure login redirect uri
+        sendRedirect(env.contextPath + env.config['loginRedirectUri']);
+    } else {
+        var domainNames = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
+        return {errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName};
     }
 }
 
