@@ -825,8 +825,8 @@
         <org.wso2.carbon.identity.mgt.version>0.1.1</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <org.wso2.carbon.identity.recovery.server.feature.version>0.1.1</org.wso2.carbon.identity.recovery.server.feature.version>
-        <org.wso2.carbon.identity.commons.feature.version>0.1.10</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>0.1.10</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.commons.feature.version>0.1.14</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>0.1.14</org.wso2.carbon.identity.commons.version>
 
         <carbon.uuf.version>1.0.0-m10</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
