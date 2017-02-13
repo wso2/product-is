@@ -1,0 +1,51 @@
+serviceProviderConfig:
+  name: "sample"
+  requestValidationConfig:
+    requestValidatorConfigs:
+      -
+          type: "SAML"
+          uniquePropertyName : "issuer"
+          properties:
+            issuer : "ravelocity.com"
+            assertionConsumerUrls:
+                - "http://localhost:8080/travelocity.com/home.jsp"
+                - "https://wso2.acme.instructure.com/login/saml"
+            nameIDformat: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+            certificateAlias: "wso2Carbon"
+            responseSigningAlgorithm : "http://www.w3.org/2000/09/xmldsig#dsa-sha1"
+      -
+          type: "oidc"
+          uniquePropertyName : "key"
+          properties:
+              assertionConsumerUrls:
+                  - "http://localhost:8080/playground/home.jsp"
+              key : "f3f43f43f43f43v4343gfddd"
+              secret : "ssdf232f23f32f32f32f32f32f"
+
+  authenticationConfig:
+    authenticationStepConfigs :
+      -
+        useLocalSubjectIdentifier : "true"
+        useDomainInLocalSubjectIdentifier : "true"
+        authStrategy : ""
+        identityProviders :
+          -
+            identityProviderName : "fed"
+            authenticatorName : "Google"
+            identityProviderConfig :
+          -
+            identityProviderName : "fed"
+            authenticatorName : "Facebook"
+
+      -
+        identityProviders :
+          -
+            identityProviderName : "resident-idp"
+            authenticatorName : "BasicAuthenticator"
+
+  responseBuildingConfig:
+    responseBuilderConfigs:
+      -
+        type: "SAML"
+        properties:
+          responseSigning : "true"

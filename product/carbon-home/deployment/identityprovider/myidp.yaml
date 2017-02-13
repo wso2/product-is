@@ -1,0 +1,49 @@
+identityProviderConfig:
+  name: "myidp"
+
+  idpMetaData :
+    properties :
+      sampleProperty : "testValue"
+    certificates :
+      -
+        key : "test"
+        value : "certificate-content"
+    federationHub : "false"
+    homeRealm : "false"
+
+    roleConfiguration :
+      roleMappings :
+        -
+          localRoleName : "admin"
+          idpRoleName : "fed-role"
+
+  authenticationConfig :
+    requestedClaimUris :
+      - "http://localhst/identitt/etc"
+    authenticatorConfigs:
+      -
+        name : "google"
+        properties :
+          entityId : "wso2"
+          ssoURL : "http://localhost:9443/gateway"
+          designingAlgorithm : "SHA1"
+
+  provisioningConfig :
+
+    jitProvisioningConfig :
+      provisioningIdPs :
+        - "linkedin,facebook"
+    provisioningClaimConfigs :
+      -
+        claimId : ""
+        defaultValue : ""
+
+    provisioningRoles :
+      - "admin"
+      - "test"
+
+    provisionerConfigs :
+      -
+        name : "local"
+        properties :
+          test : "testValue"
