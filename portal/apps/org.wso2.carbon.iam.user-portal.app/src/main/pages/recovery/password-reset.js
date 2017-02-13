@@ -16,11 +16,20 @@
  * under the License.
  */
 
-$(function () {
-    var mode = "APPEND"; // Available modes [OVERWRITE,APPEND, PREPEND]
-    var questions = {"questions" : [{"question" : "This is question 1?"}]};
-//    UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.security-question-answer",
-//        questions,
-//        "question", mode, {"onSuccess":function(){}, "onFailure":function(){}});
+/*
+ Page sent to a user in order to recover password
+ */
 
-});
+function onGet(env) {
+    /*TODO
+     * confirmation code has to be sent in the URL (a query param) and need to validate it here
+     * If the confirmation code is expired notify in the UI
+     * Proceed to page otherwise
+     */
+}
+
+function onPost(env) {
+    /*TODO
+     * perform password reset with newly provided password and verification code
+     */
+ }

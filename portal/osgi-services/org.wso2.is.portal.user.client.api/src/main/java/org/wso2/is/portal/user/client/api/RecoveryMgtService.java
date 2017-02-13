@@ -19,6 +19,7 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 /**
@@ -28,36 +29,19 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 public interface RecoveryMgtService {
 
     /**
-     * check whether there are any password recovery method is enabled
-     *
-     * @return
-     * @throws UserPortalUIException
-     */
-    boolean isPasswordRecoveryEnabled() throws UserPortalUIException;
-
-    /**
-     * check whether there are any password recovery method is enabled
-     *
-     * @return
-     * @throws UserPortalUIException
-     */
-    boolean isMultiplePasswordRecoveryEnabled() throws UserPortalUIException;
-
-    /**
      * check whether password recovery via notification method is enabled
      *
      * @return
      * @throws UserPortalUIException
      */
-    boolean isPasswordRecoveryViaNotificationEnabled() throws UserPortalUIException;
+    boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException;
 
     /**
-     * check whether password recovery with security question method is enabled
+     * get recovery config bean object
      *
      * @return
      * @throws UserPortalUIException
      */
-    boolean isPasswordRecoveryWithSecurityQuestionsEnabled() throws UserPortalUIException;
-
+    RecoveryConfig getRecoveryConfigs() throws UserPortalUIException;
 
 }

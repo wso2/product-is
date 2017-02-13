@@ -16,11 +16,12 @@
  * under the License.
  */
 
-$(function () {
-    var mode = "APPEND"; // Available modes [OVERWRITE,APPEND, PREPEND]
-    var questions = {"questions" : [{"question" : "This is question 1?"}]};
-//    UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.security-question-answer",
-//        questions,
-//        "question", mode, {"onSuccess":function(){}, "onFailure":function(){}});
+function onGet(env){
 
-});
+    var username = env.request.queryParams['username'];
+    var password = env.request.queryParams['password'];
+
+    if(username !== 'true' && password !== 'true'){
+        sendRedirect(env.contextPath);
+    }
+}

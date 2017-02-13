@@ -26,38 +26,91 @@ var recoveryManager = {};
 (function (recoveryManager) {
 
     /**
-     * Check whether the passworord recovery enabled
-     * if method is not provided returns whether password recovery options are enabled at all
+     * Check whether the question password recovery enabled
+     *
      * @param method define osgi service method to be called
      * @returns {*}
      */
 
-    function isPasswordRecoveryEnabled(method) {
-        var checkMethod = "isPasswordRecoveryEnabled";
-        if (method) {
-            checkMethod = method;
-        }
-        try {
-            var isPwRecoveryEnabled = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
-                checkMethod, []);
-            if (isPwRecoveryEnabled) {
-                return {success: true, isEnabled: true}
-            } else {
-                return {success: true, isEnabled: false}
-            }
+    function isQuestionBasedPasswordRecoveryEnabled() {
+        var checkMethod = "isQuestionBasedPwdRecoveryEnabled";
+        return callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+            checkMethod, []);
+    }
 
+    /**
+     * Check whether the notification based password recovery enabled
+     *
+     * @param method define osgi service method to be called
+     * @returns {*}
+     */
+
+    function isNotificationBasedPasswordRecoveryEnabled() {
+        var checkMethod = "isNotificationBasedPasswordRecoveryEnabled";
+        return callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
+            checkMethod, []);
+
+    }
+
+    /**
+     * Check whether the password recovery enabled
+     * @param
+     * @returns {*}
+     */
+
+    function isPasswordRecoveryEnabled() {
+        return getRecoveryConfigs().getPassword().isEnablePortal();
+    }
+
+    /**
+     * Get recovery configs of the system
+     * @param
+     * @returns {*}
+     */
+
+    function getRecoveryConfigs() {
+        var checkMethod = "getRecoveryConfigs";
+        return callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
+            checkMethod, []);
+    }
+
+    /**
+     * Check whether multiple password recovery options enabled
+     * @param method define osgi service method to be called
+     * @returns {*}
+     */
+
+    function hasMultiplePasswordRecoveryEnabled() {
+        var config = getRecoveryConfigs().getPassword();
+        var emailLink = config.getNotificationBased().getEmailLink().isEnablePortal();
+        var questionBased = config.getSecurityQuestion().isEnablePortal();
+        var external = config.getExternal().isEnablePortal();
+        return emailLink ? (questionBased || external) : (questionBased && external);
+    }
+
+
+    /**
+     * private method to return security questions of the user
+     * @param userUniqueId
+     * @returns {{}}
+     */
+    function getUserQuestions(userUniqueId) {
+
+        var result = {};
+        result.success = true;
+        result.message = "";
+        try {
+            var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+                "getAllChallengeQuestionsForUser", [userUniqueId]);
         } catch (e) {
-            var message = e.message;
-            var cause = e.getCause();
-            if (cause != null) {
-                //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-                if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                    message = cause.getTargetException().message;
-                }
-            }
-            Log.error(message);
-            return {success: false, message: "something.wrong.error"};
+            Log.error(e.message);
+            result.success = false;
+            result.message = "contact.system.admin";
+            return result;
+            // TODO Backend throws error when user doesn't exist with useId, has to distinguish no-user exists
         }
+        result.data = challengeQuestions;
+        return result;
     }
 
     /**
@@ -73,22 +126,29 @@ var recoveryManager = {};
      * @returns {success: true/flase, isEnabled: true/false}
      */
     recoveryManager.hasMultiplePasswordRecoveryEnabled = function () {
-        return isPasswordRecoveryEnabled("isMultiplePasswordRecoveryEnabled");
+        return hasMultiplePasswordRecoveryEnabled();
     };
 
     /**
-     * Returns whether requested password recovery option is enabled
-     * @param option recovery option
-     * @returns {success: true/false, isEnabled: true/false}
+     * Returns security questions of the user
+     * @param uniqueUserId
+     * @returns {*}
      */
-    recoveryManager.isPasswordRecoveryOptionEnabled = function (option) {
-        if (option == "notification-based") {
-            return isPasswordRecoveryEnabled("isPasswordRecoveryViaNotificationEnabled");
-        } else if (option == "security-question-based") {
-            return isPasswordRecoveryEnabled("isPasswordRecoveryWithSecurityQuestionsEnabled");
+    recoveryManager.getUserQuestions = function (uniqueUserId) {
+        if (uniqueUserId) {
+            return getUserQuestions(uniqueUserId);
         } else {
-            return { success: true, isEnabled: false };
+            return { success: false };
         }
+    };
+
+    /**
+     * Returns security questions of the user
+     * @param uniqueUserId
+     * @returns {*}
+     */
+    recoveryManager.getRecoveryConfigs = function () {
+        return getRecoveryConfigs();
     };
 
 })(recoveryManager);

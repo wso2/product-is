@@ -31,5 +31,5 @@ config:
   pageSize: 10
   loginRedirectUri: "/"
   loginPageUri: "/login"
-  domainSeparator: "/"
   isDomainInLogin: true
+  domainSeparator: "/"

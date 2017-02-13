@@ -1,6 +1,20 @@
-$(window).load(function(){
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-    window.location.hash = '';
+$(window).load(function(){
 
     var selector = '.settings-nav li';
     $(selector).not(".collapse-li").click(function () {
@@ -36,7 +50,7 @@ $(window).load(function(){
 
     // add edit indication on input fields
     var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
-    editField.closest('.form-group').addClass('has-feedback')
+    editField.closest('.form-group').addClass('has-feedback');
     editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
     editField.hover(function(){
         $(this).parent().find('.edit-icon').append('<i class="fw fw-edit"></i>')

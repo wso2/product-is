@@ -18,30 +18,33 @@
 module("recovery-manager");
 module("user-manager");
 
-function onRequest(env) {
+function onGet(env) {
     var domainSeparator = env.config['domainSeparator'];
-    if (env.request.method == "POST") {
-        var username = env.request.formParams['username'];
-
-        //check whether user exists
-        var result = userManager.isUserExists(username, domainSeparator);
-        if (result.success) {
-            Log.debug("An unique user found in the system with username: " + username);
-            //configure recovery-options redirect uri
-            sendRedirect(env.contextPath + '/recovery/password-options?username=' + result.username
-                + "&domain=" + result.userdomain + "&userId=" + result.uniqueUserId);
-        } else {
-            return {errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true};
-        }
-    }
-
-    if (env.request.method == "GET") {
-        //check whether password recovery options are enabled
+    //check whether password recovery options are enabled
+    try {
         var result = recoveryManager.isPasswordRecoveryEnabled();
-        if (result.success) {
-            return {isPasswordRecoveryEnabled: result.isEnabled}
-        } else {
-            sendError(505, "something.wrong.error");
+        return { isPasswordRecoveryEnabled: result }
+    } catch (e) {
+        sendError(500, "something.went.wrong");
+    }
+}
+
+
+function onPost(env) {
+    var domainSeparator = env.config['domainSeparator'];
+    var username = env.request.formParams['username'];
+
+    //check whether user exists
+    var result = userManager.isUserExist(username, domainSeparator);
+    if (result.success) {
+        Log.debug("An unique user found in the system with username: " + username);
+        //configure recovery-options redirect uri
+        sendRedirect(env.contextPath + '/recovery/password-options?username=' + result.username
+            + "&domain=" + result.userdomain + "&userId=" + result.uniqueUserId);
+    } else {
+        if (result.code === 404) {
+            return { isPasswordRecoveryEnabled: false }
         }
+        return { errorMessage: result.message, username: username, isPasswordRecoveryEnabled: true };
     }
 }

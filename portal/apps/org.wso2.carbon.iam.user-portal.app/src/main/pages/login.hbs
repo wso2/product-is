@@ -31,11 +31,11 @@
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                     <div class="data-container">
                         <form class="form-horizontal" method="post">
-                            <h3>{{t "login"}}</h3>
+                            <h3>{{i18n "login.title"}}</h3>
                             {{#if errorMessage}}
                                 <div class="alert alert-danger" role="alert">
-                                    <i class="icon fw fw-error"></i><strong>{{t "login.error.default"}}</strong>&nbsp;
-                                    {{t errorMessage}}
+                                    <i class="icon fw fw-error"></i><strong>{{i18n "login.error.default"}}</strong>&nbsp;
+                                    {{i18n errorMessage}}
                                     <button type="button" class="close" aria-label="close" data-dismiss="alert">
                                         <span aria-hidden="true">
                                             <i class="fw fw-cancel"></i>
@@ -48,8 +48,9 @@
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         <input type="hidden" name="domain" id="domain"
                                                class="form-control"/>
-                                        <select class="form-control" id="domainSelector">
-                                            <option value="default">{{t "signup.domain.placeholder"}}</option>
+                                        <label for="domainSelector" class="control-label">{{i18n "domain"}}</label>
+                                        <select class="form-control" id="domainSelector"
+                                                data-primary={{primaryDomainName}}>
                                             {{#each domainNames}}
                                                 <option value={{this}}>{{this}}</option>
                                             {{/each}}
@@ -60,32 +61,38 @@
 
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <label for="username" class="control-label">{{i18n "username"}}</label>
+
                                     <div class="input-group input-wrap">
-                                        <input type="text" name="username" class="form-control" placeholder="Username">
+                                        <input type="text" name="username" class="form-control" id="username">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <label for="password" class="control-label">{{i18n "password"}}</label>
+
                                     <div class="input-group input-wrap">
-                                        <input type="password" name="password" class="form-control"
-                                               placeholder="Password">
+                                        <input type="password" name="password" class="form-control" id="password">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <button type="submit"
-                                            class="btn btn-default btn-primary add-margin-right-2x">{{t "login.title"}}</button>
+                                            class="btn btn-default btn-primary add-margin-right-2x">{{i18n "login.title"}}</button>
                                     <!--not yet implemented-->
                                     <!--<button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>-->
                                 </div>
                             </div>
-                            <a href="{{@contextPath}}/recovery/password" class="add-margin-bottom-5x remove-margin-lg
-                            remove-margin-md">{{t "forgot.password"}}</a>
-                            <p class="hidden-xs hidden-sm">{{t "signup.message"}}<a
-                                    href="{{@contextPath}}/signup">
-                                &nbsp;{{t "signup.title"}}</a>
+                            <p>{{i18n "forgot.your"}}&nbsp;<a
+                                    href="{{recoveryInfo.usernameRecoveryUrl}}">{{i18n "username"}}
+                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}">
+                                {{i18n "password"}}</a>&nbsp;?
+                            </p>
+
+                            <p class="hidden-xs hidden-sm">{{i18n "signup.message"}}<a
+                                    href="{{@contextPath}}/signup">&nbsp;{{i18n "signup.title"}}</a>
                             </p>
                         </form>
                     </div>

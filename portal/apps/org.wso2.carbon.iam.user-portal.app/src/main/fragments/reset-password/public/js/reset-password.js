@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 //password strength meter logic
 $(window).load(function () {
 
@@ -120,4 +136,20 @@ $(window).load(function () {
             }
         }
     });
+
+    //add show /hide option on password field
+    $('input[type=password]').after('<span class="hide-pass" title="Show/Hide Password"><i class="fw fw-view"></i> </span>');
+    var highPass = $('.hide-pass');
+    $(highPass).click(function(){
+        if($(this).find('i').hasClass("fw-hide")){
+            $(this).parent().find('input[data-schemaformat=password]').attr('type', 'password');
+            $(this).find('i').removeClass( "fw-hide" );
+            $(this).find('i').addClass( "fw-view");
+        }else{
+            $(this).find('i').removeClass( "fw-view" );
+            $(this).find('i').addClass( "fw-hide");
+            $(this).parent().find('input[data-schemaformat=password]').attr('type', 'text');
+        }
+    });
+
 });

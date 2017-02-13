@@ -84,7 +84,7 @@
 .dark .data-container, .dark .error-details-container{
     background-color: #2E2A2B;
 }
-.dark .recover-option-container{
+.dark .recover-option-container, .dark .recover-question-container{
     background-color: #332F30;
 }
 .dark .input-group .form-control{
@@ -102,6 +102,11 @@
     display: none;
 }
 
+.recover-question-container{
+    background-color: #F3F3F3;
+    padding: 20px;
+    margin-top: 15px;
+}
 
 /**** Theme Overrides ****/
 .radio > input[type=radio]:not(:disabled) + .helper:before {
@@ -362,6 +367,14 @@
     font-weight: bold;
     color: #F27B21;
 }
+/* show/hide password */
+.hide-pass {
+    float: right;
+    margin-top: -27px;
+    margin-right: 7px;
+    cursor: pointer;
+    color: rgb(101, 101, 101);
+}
 
 /* password strength meter */
 .progress{
@@ -377,7 +390,6 @@
     height: 25px;
 }
 
-.modal-title{color: #000;}
 .modal-content, .btn{border-radius: 0px;}
 
 #password-modal{
@@ -522,12 +534,24 @@ label.error {
 .dark .username-text, .dark .question-no {
     color:#eee;
 }
-.recover-option-container hr{
+.recover-option-container hr, .recover-question-container hr{
     border: 1px solid #fff;
 }
-.dark .recover-option-container hr{
+.dark .recover-option-container hr, .recover-question-container hr{
     border: 1px solid #2E2A2B;
 }
 .edit-icon {
     color: #bfbfbf;
+}
+.username-text, .question-no {
+    color:#555;
+}
+.dark .username-text, .dark .question-no {
+    color:#eee;
+}
+.recover-option-container hr, .recover-question-container hr{
+    border: 1px solid #fff;
+}
+.dark .recover-option-container hr, .recover-question-container hr{
+    border: 1px solid #2E2A2B;
 }

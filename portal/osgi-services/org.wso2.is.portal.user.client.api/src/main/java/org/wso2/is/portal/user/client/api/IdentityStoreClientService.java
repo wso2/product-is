@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,21 @@ public interface IdentityStoreClientService {
      */
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 
+    /**
+     * Get list of domain names
+     *
+     * @return Domain name List
+     * @throws UserPortalUIException
+     */
     Set<String> getDomainNames() throws UserPortalUIException;
+
+    /**
+     * Get primary domain name
+     *
+     * @return Primary domain name
+     * @throws UserPortalUIException
+     */
+    String getPrimaryDomainName() throws UserPortalUIException;
 
     /**
      * List users by claim

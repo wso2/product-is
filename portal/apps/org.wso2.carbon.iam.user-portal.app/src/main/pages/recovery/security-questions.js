@@ -16,11 +16,20 @@
  * under the License.
  */
 
-$(function () {
-    var mode = "APPEND"; // Available modes [OVERWRITE,APPEND, PREPEND]
-    var questions = {"questions" : [{"question" : "This is question 1?"}]};
-//    UUFClient.renderFragment("org.wso2.carbon.iam.user-portal.feature.security-question-answer",
-//        questions,
-//        "question", mode, {"onSuccess":function(){}, "onFailure":function(){}});
+module("recovery-manager");
 
-});
+function onGet(env){
+    var userId = env.request.queryParams['userId'];
+    if (!userId) {
+        sendRedirect(env.contextPath + '/recovery/password');
+    }
+    var questions = recoveryManager.getUserQuestions(userId);
+    if (!questions.success) {
+        sendError(500, questions.message);
+        //TODO
+    }
+    return {
+        hasUserQuestions: questions.data.length > 0,
+        userQuestions: questions.data
+    };
+}

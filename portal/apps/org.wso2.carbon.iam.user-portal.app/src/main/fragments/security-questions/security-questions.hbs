@@ -1,12 +1,12 @@
 {{css "css/security-questions.css"}}
 {{js "js/security-questions.js"}}
 
-<h3>{{t "account.securityQ"}}</h3>
+<h3>{{i18n "account.securityQ"}}</h3>
 <hr/>
 {{#if success}}
     {{#if message}}
         <div class="alert alert-success" role="alert">
-            <i class="icon fw fw-success"></i><strong>{{t "profile.success"}}</strong>
+            <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
             {{message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -18,7 +18,7 @@
 {{else}}
     {{#if message}}
         <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{t "profile.failure"}}</strong>
+            <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
             {{message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
@@ -74,7 +74,7 @@
                                    onclick="editQuestion('{{questionId}}', '{{questionSetId}}', '{{question}}')">
                                     <span class="fw fw-edit" aria-hidden="true"></span>
                                 </a>
-                                <a aria-label="Delete" onclick="deleteQuestion({{questionId}})">
+                                <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }}, '{{ this.questionSetId }}')">
                                     <span class="fw fw-delete" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -88,34 +88,35 @@
 <div id="edit-question">
     <div id="info">
         <div class="message message-info">
-            <h4><i class="icon fw fw-info"></i>{{t "password.info.header"}}</h4>
-            <p>{{t "security.question.info.body"}}</p>
+            <h4><i class="icon fw fw-info"></i>{{i18n "password.info.header"}}</h4>
+            <p>{{i18n "security.question.info.body"}}</p>
         </div>
     </div>
-    <form class="form-horizontal" method="post">
+    <form class="form-horizontal" method="post" id="questionUpdateForm">
         <div id="password">
             <div class="form-group">
-                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                    <label for="old-password">Password</label>
-                    <input type="password" class="form-control" id="old-password" name="old-password"/>
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                    <label class="control-label" for="old-password">Password<span>*</span></label>
+                    <input type="password" class="form-control" id="old-password" name="old-password" required/>
                 </div>
             </div>
         </div>
         <div id="security-question">
-            <label class="control-label">{{t "signup.security.question"}}</label>
+            <label class="control-label">{{i18n "signup.security.question"}}</label>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div id="current-question"></div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-                    <label class="control-label">{{t "signup.security.question.answer"}}</label>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                    <label class="control-label">{{i18n "signup.security.question.answer"}}</label>
                     <input class="form-control" type="text" id="answer">
                 </div>
             </div>
         </div>
-        <input type="submit" class="btn btn-primary add-margin-bottom-3x" value="Update" onclick="updateQuestion()"/>
+        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">Update</button>
+        <input type="button" class="btn btn-default add-margin-bottom-3x" value="Cancel" onclick="goBack()">
         <input type="hidden" id="question-id" name="question-id" value="">
         <input type="hidden" id="question-set-id" name="question-set-id" value="">
         <input type="hidden" name="action" value="update-question">

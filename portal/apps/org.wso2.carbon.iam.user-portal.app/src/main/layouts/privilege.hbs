@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {{#placeholder "favicon"}}
-        <link rel="shortcut icon" href="{{public "images/default-favicon.png"}}" type="image/png"/>
+        <link rel="shortcut icon" href="{{public "images/favicon.png"}}" type="image/png"/>
     {{/placeholder}}
     <title>{{#placeholder "title"}}UUF Foundation{{/placeholder}}</title>
     {{placeholder "css"}}
@@ -33,6 +33,10 @@
     {{defineZone "breadcrumbs"}}
 </div>
 
+<div class="modal-container">
+    {{defineZone "modal"}}
+</div>
+
 <div class="navbar-container">
     {{defineZone "navbar"}}
 </div>
@@ -46,7 +50,7 @@
 <footer class="footer">
     <div class="container-fluid">
         <p>
-            {{t "footer.content"}} | &copy;
+            {{i18n "footer.content"}} | &copy;
             <script>document.write((new Date().getFullYear()).toString());</script>
             <a href="http://wso2.com/" target="_blank"><i class="icon fw fw-wso2"></i> Inc</a>.
         </p>
