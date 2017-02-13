@@ -61,7 +61,7 @@ function onPost(env) {
         var idsArray = ids.split(":");
         var questionSetId = idsArray[0];
         var questionId = idsArray[1];
-        var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId);
+        var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId, "challengeQAdd");
         data.success = addChallengeQResult.success;
         data.message = addChallengeQResult.message;
     } else if (action == "update-question") {
@@ -75,7 +75,8 @@ function onPost(env) {
         var domain = session.getUser().getDomainName();
         var authenticationResult = authenticate(username, oldPassword, domain);
         if (authenticationResult.success) {
-            var updateChallengeQResult = setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId);
+            var updateChallengeQResult = setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId,
+                "challengeQUpdate");
             data.success = updateChallengeQResult.success;
             data.message = updateChallengeQResult.message;
         } else {
@@ -126,10 +127,10 @@ function getChallengeQuestions(userUniqueId) {
     }
 }
 
-function setChallengeAnswer(userUniqueId, answer, questionSetId, questionId) {
+function setChallengeAnswer(userUniqueId, answer, questionSetId, questionId, actionId) {
     try {
         callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
-            "setChallengeQuestionForUser", [userUniqueId, questionId, questionSetId, answer]);
+            "setChallengeQuestionForUser", [userUniqueId, questionId, questionSetId, answer, actionId]);
         return {success: true, message: 'security.question.success.setChallengeAnswer'};
     } catch (e) {
         return {success: false, message: 'security.question.error.setChallengeAnswer'};
