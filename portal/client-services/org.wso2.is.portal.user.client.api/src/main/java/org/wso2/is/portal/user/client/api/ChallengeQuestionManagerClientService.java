@@ -64,11 +64,13 @@ public interface ChallengeQuestionManagerClientService {
      * @param questionId Question id.
      * @param questionSetId Question set ID.
      * @param answer User's answer.
+     * @param actionId ActionId to indicate whether challenge questions are added/updated
      * @throws IdentityStoreException Exception in identity management component.
      * @throws UserNotFoundException User not found.
      * @throws IdentityRecoveryException Exception in recovery component.
      */
-    void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer)
+    void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer,
+                                     String actionId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
 
     /**

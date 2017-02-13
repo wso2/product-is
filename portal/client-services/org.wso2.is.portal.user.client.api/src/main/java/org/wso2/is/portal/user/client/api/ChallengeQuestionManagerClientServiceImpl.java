@@ -36,6 +36,7 @@ import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,7 +140,8 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     }
 
     @Override
-    public void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer)
+    public void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer,
+                                            String actionId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException {
 
         if (challengeQuestionManager == null || realmService == null) {
@@ -149,6 +151,20 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
         List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
+
+        if (StringUtils.equals(actionId, "challengeQUpdate")) {
+            Iterator<UserChallengeAnswer> existingAnswersIterator = existingAnswers.iterator();
+            while (existingAnswersIterator.hasNext()) {
+                ChallengeQuestion challengeQuestion = existingAnswersIterator.next().getQuestion();
+                if (StringUtils.equals(challengeQuestion.getQuestionSetId(),
+                        new String(Base64.getDecoder().decode(questionSetId.getBytes(Charset.forName("UTF-8"))),
+                                Charset.forName("UTF-8"))) &&
+                        StringUtils.equals(challengeQuestion.getQuestionId(), questionId)) {
+                    existingAnswersIterator.remove();
+                    break;
+                }
+            }
+        }
 
         List<ChallengeQuestion> challengeQuestions = challengeQuestionManager.getAllChallengeQuestionsForUser(user);
         ChallengeQuestion challengeQuestion = challengeQuestions.stream()
