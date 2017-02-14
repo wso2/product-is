@@ -126,7 +126,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         }
 
         List<UserChallengeAnswer> userChallengeAnswers = challengeQuestionManager
-                .getChallengeAnswersOfUser(realmService.getIdentityStore().getUser(userUniqueId));
+                .getChallengeAnswersOfUser(userUniqueId);
 
         return userChallengeAnswers
                 .stream()
@@ -148,7 +148,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
-        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
+        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
 
         List<ChallengeQuestion> challengeQuestions = challengeQuestionManager.getAllChallengeQuestionsForUser(user);
         ChallengeQuestion challengeQuestion = challengeQuestions.stream()
@@ -175,7 +175,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
-        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
+        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
 
         existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
                 StringUtils.equals(answer.getQuestion().getQuestionSetId(),
@@ -192,8 +192,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
 
-        return challengeQuestionManager.getChallengeAnswersOfUser
-                (realmService.getIdentityStore().getUser(userUniqueId));
+        return challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
     }
 
     @Override
