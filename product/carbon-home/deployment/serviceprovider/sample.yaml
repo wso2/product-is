@@ -22,6 +22,11 @@ serviceProviderConfig:
               key : "f3f43f43f43f43v4343gfddd"
               secret : "ssdf232f23f32f32f32f32f32f"
 
+  claimConfig:
+   profile : "sdsd"
+   dialectUri : "dfdf"
+   subjectClaimUri : "SdsD"
+
   authenticationConfig:
     authenticationStepConfigs :
       -
