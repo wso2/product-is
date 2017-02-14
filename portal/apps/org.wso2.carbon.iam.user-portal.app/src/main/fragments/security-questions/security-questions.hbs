@@ -34,20 +34,34 @@
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                     <label class="control-label" for="question-list">{{i18n "security.question.label.securityQ"}}</label>
-                    <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
+                    <table>
                         {{#each questionList}}
-                            <option value="{{questionSetId}}:{{questionId}}">{{question}}</option>
+                            <tr>
+                                <td>
+                                    <select class="form-control" id="question-list" name="question_list"
+                                            aria-labelledby="questions-dropdown">
+                                        {{#each challengeQuestionList}}
+                                            <option name="{{questionSetId}}"
+                                                    value="{{questionSetId}}:{{questionId}}">{{question}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <div class="form-group">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                            <label class="control-label"
+                                                   for="question-answer-{{challengeQuestionSetId}}">
+                                                {{i18n "security.question.label.answer"}}</label>
+                                            <input id="question-answer-{{challengeQuestionSetId}}"
+                                                   name="question-answer-{{challengeQuestionSetId}}" type="text"
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                         {{/each}}
-                    </select>
+                    </table>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-answer">{{i18n "security.question.label.answer"}}</label>
-                    <input id="question-answer" name="question-answer" type="text" class="form-control">
-                    <input type="hidden" name="action" value="add-question">
-                </div>
-            </div>
+            <input type="hidden" name="action" value="add-question">
             <button type="submit" class="btn btn-primary">{{i18n "security.question.label.add"}}</button>
         </div>
     </form>

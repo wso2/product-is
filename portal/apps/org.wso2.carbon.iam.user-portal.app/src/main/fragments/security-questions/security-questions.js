@@ -56,14 +56,26 @@ function onPost(env) {
     if (action == "add-question") {
 
         // Add question flow.
-        var answer = env.request.formParams["question-answer"];
         var ids = env.request.formParams["question_list"];
-        var idsArray = ids.split(":");
-        var questionSetId = idsArray[0];
-        var questionId = idsArray[1];
-        var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId, "challengeQAdd");
-        data.success = addChallengeQResult.success;
-        data.message = addChallengeQResult.message;
+        var i;
+        for (i = 0; i < ids.length; i++) {
+            var idsArray = ids[i].split(":");
+            var questionSetId = idsArray[0];
+            var questionId = idsArray[1];
+            var answerId = "question-answer-" + questionSetId;
+            var answer = env.request.formParams[answerId];
+            var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
+                "challengeQAdd");
+            if (!addChallengeQResult.success) {
+                data.success = addChallengeQResult.success;
+                data.message = addChallengeQResult.message;
+                break;
+            } else {
+                data.success = addChallengeQResult.success;
+                data.message = addChallengeQResult.message;
+            }
+        }
+
     } else if (action == "update-question") {
 
         // Update question answer flow.
