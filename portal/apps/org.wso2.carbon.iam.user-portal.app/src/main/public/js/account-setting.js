@@ -58,7 +58,7 @@ $(window).load(function(){
     });
 
     // add edit indication on input fields
-    var editField = $("input[type=text]:not(:read-only),input[type=email]:not(:read-only)");
+    var editField = $("input[type=text]:not(read-only),input[type=email]:not(read-only)");
     editField.closest('.form-group').addClass('has-feedback');
     editField.parent().append('<span class="form-control-feedback edit-icon" aria-hidden="true"></span>');
     editField.hover(function(){
