@@ -21,6 +21,7 @@ import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
+import org.wso2.is.portal.user.client.api.bean.ChallengeQuestionSetEntry;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public interface ChallengeQuestionManagerClientService {
      * @throws IdentityStoreException Exception in identity management component.
      * @throws UserNotFoundException User not found.
      */
-    List<ChallengeQuestion> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
+    List<ChallengeQuestionSetEntry> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
 
     /**

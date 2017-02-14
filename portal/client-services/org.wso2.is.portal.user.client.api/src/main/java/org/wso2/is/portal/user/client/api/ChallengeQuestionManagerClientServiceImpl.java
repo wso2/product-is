@@ -33,11 +33,14 @@ import org.wso2.carbon.identity.recovery.ChallengeQuestionManager;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
+import org.wso2.is.portal.user.client.api.bean.ChallengeQuestionSetEntry;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -99,23 +102,32 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     }
 
     @Override
-    public List<ChallengeQuestion> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
+    public List<ChallengeQuestionSetEntry> getChallengeQuestionList(String userUniqueId) throws
+            IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException {
 
+        List<ChallengeQuestionSetEntry> challengeQuestionSetEntryList = new ArrayList<ChallengeQuestionSetEntry>();
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
-
         User user = realmService.getIdentityStore().getUser(userUniqueId);
-
-        return challengeQuestionManager.getAllChallengeQuestionsForUser(user)
-                .stream()
-                .map(challengeQuestion -> {
-                    challengeQuestion.setQuestionSetId(new String(Base64.getEncoder().encode(challengeQuestion
-                            .getQuestionSetId().getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8")));
-                    return challengeQuestion;
-                })
-                .collect(Collectors.toList());
+        List<ChallengeQuestion> challengeQuestions = challengeQuestionManager.getAllChallengeQuestionsForUser(user);
+        Map<String, List<ChallengeQuestion>> groupedChallengeQuestionMap = challengeQuestions.stream()
+                .collect(Collectors
+                .groupingBy(ChallengeQuestion::getQuestionSetId));
+        for (Map.Entry<String, List<ChallengeQuestion>> entry : groupedChallengeQuestionMap.entrySet()) {
+            ChallengeQuestionSetEntry challengeQuestionSetEntry = new ChallengeQuestionSetEntry();
+            challengeQuestionSetEntry.setChallengeQuestionSetId(encodeChallengeQuestionSetId(entry.getKey()));
+            List<ChallengeQuestion> encodedSetIdChallengeQuestionsList = entry.getValue().stream().
+                    map(challengeQuestion -> {
+                        challengeQuestion.setQuestionSetId(encodeChallengeQuestionSetId(challengeQuestion
+                                .getQuestionSetId()));
+                        return challengeQuestion;
+                    }).collect(Collectors.toList());
+            challengeQuestionSetEntry.setChallengeQuestionList(encodedSetIdChallengeQuestionsList);
+            challengeQuestionSetEntryList.add(challengeQuestionSetEntry);
+        }
+        return challengeQuestionSetEntryList;
     }
 
     @Override
@@ -210,6 +222,11 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         return challengeQuestionManager.getChallengeAnswersOfUser
                 (realmService.getIdentityStore().getUser(userUniqueId));
+    }
+
+    private String encodeChallengeQuestionSetId(String questionSetId) {
+        return new String(Base64.getEncoder().encode(questionSetId.
+                getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
     }
 }
 
