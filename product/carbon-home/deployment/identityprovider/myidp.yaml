@@ -11,7 +11,11 @@ identityProviderConfig:
     federationHub : "false"
     homeRealm : "false"
 
-    roleConfiguration :
+    claimConfig:
+       profile : "sdsd"
+       dialectUri : "dfdf"
+
+    roleConfig :
       roleMappings :
         -
           localRoleName : "admin"
