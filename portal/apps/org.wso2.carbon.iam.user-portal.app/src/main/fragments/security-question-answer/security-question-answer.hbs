@@ -1,4 +1,5 @@
 {{#if hasUserQuestions}}
+    <input type="hidden" name="question-recovery-code" value="{{recoveryCode}}">
     {{#each userQuestions}}
         <div class="form-group add-margin-bottom-5x">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -7,8 +8,8 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                 <label for="input-sec-question" class="control-label">{{i18n "answer"}}</label>
-                <input type="text" class="form-control" name="{{questionSetId}}-{{questionId}}"
-                       id="input-sec-question-{{questionSetId}}-{{questionId}}">
+                <input type="text" class="form-control" name="{{questionSetId}}"
+                       id="input-sec-question-{{questionSetId}}" required>
             </div>
         </div>
     {{/each}}

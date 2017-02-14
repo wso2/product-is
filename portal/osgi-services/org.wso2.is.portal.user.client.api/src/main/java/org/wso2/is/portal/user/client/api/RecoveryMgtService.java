@@ -19,8 +19,11 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+
+import java.util.Map;
 
 /**
  * Represent Recovery management service
@@ -43,5 +46,22 @@ public interface RecoveryMgtService {
      * @throws UserPortalUIException
      */
     RecoveryConfig getRecoveryConfigs() throws UserPortalUIException;
+
+    /**
+     * get recovery config bean object
+     *
+     * @return
+     * @throws UserPortalUIException
+     */
+    ChallengeQuestionsResponse getUserChallengeQuestionAtOnce(String userUniqueId) throws UserPortalUIException;
+
+    /**
+     * get recovery config bean object
+     *
+     * @return
+     * @throws UserPortalUIException
+     */
+    ChallengeQuestionsResponse verifyUserChallengeAnswers(String code,
+                                                          Map<String, String> answers) throws UserPortalUIException;
 
 }
