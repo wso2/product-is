@@ -43,6 +43,9 @@ function getPrimaryDomainName(env) {
 
 function authenticate(username, password, domain) {
     try {
+        if(!username || !password){
+            return {success: false, message: 'login.error.empty.authentication'};
+        }
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "authenticate", [username, passwordChar, domain]);
