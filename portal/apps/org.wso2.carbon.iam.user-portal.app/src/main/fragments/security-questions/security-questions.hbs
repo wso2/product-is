@@ -28,13 +28,18 @@
         </div>
     {{/if}}
 {{/if}}
-<div id="add-question" class="well">
+<div id="add-question">
     <form class="form-horizontal" method="post" action="?security-questions#security-questions">
         <div id="new-security-question">
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-list">{{i18n "security.question.label.securityQ"}}</label>
-                    <table>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{i18n "security.question.label.securityQ"}}</th>
+                                <th>{{i18n "security.question.label.answer"}}</th>
+                            </tr>
+                        </thead>
                         {{#each questionList}}
                             <tr>
                                 <td>
@@ -45,15 +50,12 @@
                                                     value="{{questionSetId}}:{{questionId}}">{{question}}</option>
                                         {{/each}}
                                     </select>
-                                    <div class="form-group">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                                            <label class="control-label"
-                                                   for="question-answer-{{challengeQuestionSetId}}">
-                                                {{i18n "security.question.label.answer"}}</label>
-                                            <input id="question-answer-{{challengeQuestionSetId}}"
-                                                   name="question-answer-{{challengeQuestionSetId}}" type="text"
-                                                   class="form-control">
-                                        </div>
+                                </td>
+                                <td>
+                                    <div class="table-input">
+                                    <input id="question-answer-{{challengeQuestionSetId}}"
+                                           name="question-answer-{{challengeQuestionSetId}}" type="text"
+                                           class="form-control">
                                     </div>
                                 </td>
                             </tr>
@@ -61,8 +63,12 @@
                     </table>
                 </div>
             </div>
-            <input type="hidden" name="action" value="add-question">
-            <button type="submit" class="btn btn-primary">{{i18n "security.question.label.add"}}</button>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+            <div class="row">
+                <input type="hidden" name="action" value="add-question">
+                <button type="submit" class="btn btn-primary">{{i18n "security.question.label.add"}}</button>
+            </div>
         </div>
     </form>
 </div>
