@@ -751,6 +751,18 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+                <artifactId>org.wso2.carbon.email.mgt.server.feature</artifactId>
+                <type>zip</type>
+                <version>${org.wso2.carbon.identity.event.handler.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+                <artifactId>org.wso2.carbon.event.handler.notification.server.feature</artifactId>
+                <type>zip</type>
+                <version>${org.wso2.carbon.identity.event.handler.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -797,9 +809,9 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>0.1.1</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>0.1.13</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.14</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.13</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.14</org.wso2.carbon.identity.recovery.server.feature.version>
         <org.wso2.carbon.identity.commons.feature.version>0.1.17</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>0.1.17</org.wso2.carbon.identity.commons.version>
 
@@ -869,6 +881,7 @@
         <msf4j.version>2.1.0</msf4j.version>
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
         <org.wso2.carbon.deployment.version>5.0.0</org.wso2.carbon.deployment.version>
+        <org.wso2.carbon.identity.event.handler.version>1.0.1-SNAPSHOT</org.wso2.carbon.identity.event.handler.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>

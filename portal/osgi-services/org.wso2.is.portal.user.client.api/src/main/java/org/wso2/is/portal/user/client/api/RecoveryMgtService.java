@@ -40,6 +40,21 @@ public interface RecoveryMgtService {
     boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException;
 
     /**
+     * send notification to the user with a url to recover password
+     *
+     * @throws UserPortalUIException
+     */
+    void setPasswordRecoveryNotification(String userUniqueId) throws UserPortalUIException;
+
+    /**
+     *
+     * @param code
+     * @param password
+     * @throws UserPortalUIException
+     */
+    void updatePassword(String code, char[] password) throws UserPortalUIException;
+
+    /**
      * get recovery config bean object
      *
      * @return

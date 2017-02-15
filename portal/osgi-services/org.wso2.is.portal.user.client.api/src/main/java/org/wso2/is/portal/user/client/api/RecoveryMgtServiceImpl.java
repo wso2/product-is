@@ -18,7 +18,6 @@
 
 package org.wso2.is.portal.user.client.api;
 
-
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -36,6 +35,7 @@ import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
+import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
@@ -55,6 +55,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     private static final Logger log = LoggerFactory.getLogger(RecoveryMgtService.class);
     private RecoveryConfig recoveryConfig;
     private RealmService realmService;
+    private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
 
     private SecurityQuestionPasswordRecoveryManager securityQuestionPasswordRecoveryManager;
 
@@ -95,6 +96,23 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
                                                                         securityQuestionPasswordRecoveryManager) {
 
         this.securityQuestionPasswordRecoveryManager = null;
+    }
+
+    @Reference(
+            name = "NotificationPasswordRecoveryManager",
+            service = NotificationPasswordRecoveryManager.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetNotificationPasswordRecoveryManagerService")
+    protected void setNotificationPasswordRecoveryManagerService(
+            NotificationPasswordRecoveryManager notificationPasswordRecoveryManager) {
+
+        this.notificationPasswordRecoveryManager = notificationPasswordRecoveryManager;
+    }
+
+    protected void unsetNotificationPasswordRecoveryManagerService(
+            NotificationPasswordRecoveryManager notificationPasswordRecoveryManager) {
+        this.notificationPasswordRecoveryManager = null;
     }
 
     @Override
@@ -177,6 +195,31 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
 //            log.error("Error while getting recovery questions for userID: " + userUniqueId, e);
 //            throw new UserPortalUIException("Error while getting recovery questions for userID: " + userUniqueId);
 //        }
+    }
+
+    @Override
+    public void setPasswordRecoveryNotification(String userUniqueId) throws UserPortalUIException {
+        try {
+            getNotificationPasswordRecoveryManager().sendRecoveryNotification(userUniqueId, true);
+        } catch (IdentityRecoveryException e) {
+            throw new UserPortalUIException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void updatePassword(String code, char[] password) throws UserPortalUIException {
+        try {
+            getNotificationPasswordRecoveryManager().updatePassword(code, password);
+        } catch (IdentityRecoveryException e) {
+            throw new UserPortalUIException(e.getMessage());
+        }
+    }
+
+    private NotificationPasswordRecoveryManager getNotificationPasswordRecoveryManager() {
+        if (this.notificationPasswordRecoveryManager == null) {
+            throw new IllegalStateException("Notification password recovery manager is null.");
+        }
+        return this.notificationPasswordRecoveryManager;
     }
 
 

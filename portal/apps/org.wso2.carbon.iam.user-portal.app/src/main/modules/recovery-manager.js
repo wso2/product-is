@@ -264,4 +264,27 @@ var recoveryManager = {};
         return getRecoveryConfigs();
     };
 
+    recoveryManager.sendRecoveryNotification = function (uniqueUserId) {
+        if (uniqueUserId) {
+            try {
+                var recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "setPasswordRecoveryNotification", [uniqueUserId]);
+            } catch (e) {
+                //todo need show error message in UI
+                Log.error(e.getMessage());
+            }
+        }
+    }
+
+    recoveryManager.updatePassword = function (code, password) {
+        try {
+            var passwordChar = Java.to(password.split(''), 'char[]');
+            var recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "updatePassword", [code, passwordChar]);
+        } catch (e) {
+            //todo need show error message in UI
+            Log.error(e.getMessage());
+        }
+
+    }
+
+
 })(recoveryManager);

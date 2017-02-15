@@ -34,6 +34,7 @@ function onGet(env) {
         if (pwdRecoveryConfig.getNotificationBased().getRecoveryLink().isEnablePortal()) {
             Log.debug("Notification Based Password Recovery flow started for user: " + userId);
             //TODO invoke password recovery via email
+            recoveryManager.sendRecoveryNotification(userId);
             sendRedirect(env.contextPath + '/recovery/complete?password=true');
 
         } else if (pwdRecoveryConfig.getSecurityQuestion().isEnablePortal()) {
@@ -62,23 +63,17 @@ function onGet(env) {
 
 function onPost(env) {
     //TODO pasword recover option handle
+    var recoveryOption = env.request.formParams['recover-option'];
+    var userId = env.request.queryParams['userId'];
 
-//        Log.info(env.request.formParams);
-//        var isEmailBased = env.request.formParams['recover-option-email'];
-//        if(isEmailBased){
-//            //TODO invoke password recovery via email
-//            sendRedirect(env.contextPath + '/recovery/complete?username=true');
-//        }
-//        var isQuestionBased = env.request.formParams['recover-option-question'];
-//        if(isQuestionBased){
-//            //TODO invoke password recovery via questions
-//            sendRedirect(env.contextPath + '/recovery/complete?username=true');
-//        }
-//        //TODO else
-    var recoverOption = env.request.formParams['recover-option'];
-
-
+    if (recoveryOption === "email-recovery") {
+        recoveryManager.sendRecoveryNotification(userId);
+        sendRedirect(env.contextPath + '/recovery/complete?password=true');
+    }
+    
     if(recoverOption === 'security-question-recovery') {
         return recoveryManager.recoverPasswordViaUserChallengeAnswers(env);
     }
+        //TODO else
+    
 }
