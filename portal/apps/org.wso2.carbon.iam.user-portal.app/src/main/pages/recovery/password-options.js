@@ -68,7 +68,7 @@ function onPost(env) {
 
     if (recoveryOption === "email-recovery") {
         recoveryManager.sendRecoveryNotification(userId);
-        sendRedirect(env.contextPath + '/recovery/password-complete');
+        sendRedirect(env.contextPath + '/recovery/complete?password=true');
     }
     
     if(recoverOption === 'security-question-recovery') {

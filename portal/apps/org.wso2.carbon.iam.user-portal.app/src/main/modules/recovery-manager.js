@@ -270,7 +270,7 @@ var recoveryManager = {};
                 var recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "setPasswordRecoveryNotification", [uniqueUserId]);
             } catch (e) {
                 //todo need show error message in UI
-                Log.error(e + " ");
+                Log.error(e.getMessage());
             }
         }
     }
@@ -281,7 +281,7 @@ var recoveryManager = {};
             var recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "updatePassword", [code, passwordChar]);
         } catch (e) {
             //todo need show error message in UI
-            Log.error(e + " ");
+            Log.error(e.getMessage());
         }
 
     }
