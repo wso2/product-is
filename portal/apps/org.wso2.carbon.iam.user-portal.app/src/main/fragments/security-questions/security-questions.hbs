@@ -28,6 +28,26 @@
         </div>
     {{/if}}
 {{/if}}
+{{#if passwordform}}
+    <div id="check-password">
+        <form class="form-horizontal" method="post" action="?security-questions#security-questions">
+            <div id="info">
+                <div class="message message-info">
+                    <p>{{i18n "security.question.info.body"}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                    <label class="control-label" for="old-password">{{i18n "security.question.label.password"}}<span>*</span></label>
+                    <input type="password" class="form-control" id="old-password" name="old-password" required/>
+                </div>
+            </div>
+            <input type="hidden" name="action" value="check-password">
+            <button type="submit" class="btn btn-primary">{{i18n "security.question.label.continue"}}</button>
+        </form>
+    </div>
+{{/if}}
+{{#if isUserAuthenticated}}
 <div id="add-question">
     <form class="form-horizontal" method="post" action="?security-questions#security-questions">
         <div id="new-security-question">
@@ -72,6 +92,7 @@
         </div>
     </form>
 </div>
+{{/if}}
 {{#if isUserHasQuestions }}
     <div id="list-questions">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
