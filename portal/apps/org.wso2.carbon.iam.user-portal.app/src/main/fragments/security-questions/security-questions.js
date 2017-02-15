@@ -23,16 +23,19 @@ function onGet(env) {
 
     var getUserQuestionsResult = getUserQuestions(userUniqueId);
 
-    if(!getUserQuestionsResult.success) {
+    if (!getUserQuestionsResult.success) {
         data.success = getUserQuestionsResult.success;
         data.message = getUserQuestionsResult.message;
     }
 
-    if (getUserQuestionsResult.data.length === 0) {
-        data.isUserHasQuestions = false;
-    } else {
-        data.isUserHasQuestions = true;
-        data.userQuestions = getUserQuestionsResult.data;
+    if (getUserQuestionsResult.data !== null) {
+
+        if (getUserQuestionsResult.data.length === 0) {
+            data.isUserHasQuestions = false;
+        } else {
+            data.isUserHasQuestions = true;
+            data.userQuestions = getUserQuestionsResult.data;
+        }
     }
 
     var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
@@ -54,28 +57,28 @@ function onPost(env) {
     var action = env.request.formParams["action"];
 
     if (action == "add-question") {
-
         // Add question flow.
         var ids = env.request.formParams["question_list"];
         var i;
-        for (i = 0; i < ids.length; i++) {
-            var idsArray = ids[i].split(":");
-            var questionSetId = idsArray[0];
-            var questionId = idsArray[1];
-            var answerId = "question-answer-" + questionSetId;
-            var answer = env.request.formParams[answerId];
-            var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
-                "challengeQAdd");
-            if (!addChallengeQResult.success) {
-                data.success = addChallengeQResult.success;
-                data.message = addChallengeQResult.message;
-                break;
-            } else {
-                data.success = addChallengeQResult.success;
-                data.message = addChallengeQResult.message;
+        if (ids !== null) {
+            for (i = 0; i < ids.length; i++) {
+                var idsArray = ids[i].split(":");
+                var questionSetId = idsArray[0];
+                var questionId = idsArray[1];
+                var answerId = "question-answer-" + questionSetId;
+                var answer = env.request.formParams[answerId];
+                var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
+                    "challengeQAdd");
+                if (!addChallengeQResult.success) {
+                    data.success = addChallengeQResult.success;
+                    data.message = addChallengeQResult.message;
+                    break;
+                } else {
+                    data.success = addChallengeQResult.success;
+                    data.message = addChallengeQResult.message;
+                }
             }
         }
-
     } else if (action == "update-question") {
 
         // Update question answer flow.
@@ -106,12 +109,13 @@ function onPost(env) {
     }
 
     var getChallengeQResult = getUserQuestions(userUniqueId);
-
-    if (getChallengeQResult.data.length === 0) {
-        data.isUserHasQuestions = false;
-    } else {
-        data.isUserHasQuestions = true;
-        data.userQuestions = getChallengeQResult.data;
+    if (getChallengeQResult.data !== null) {
+        if (getChallengeQResult.data.length === 0) {
+            data.isUserHasQuestions = false;
+        } else {
+            data.isUserHasQuestions = true;
+            data.userQuestions = getChallengeQResult.data;
+        }
     }
 
     var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);

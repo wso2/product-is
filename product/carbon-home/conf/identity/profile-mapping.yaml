@@ -38,13 +38,13 @@ profiles:
    displayName: "First Name"
    required: true
    readonly: false
-   regex: "^[a-zA-Z]*$"
+   regex: "^[a-zA-Z]+( [a-zA-Z]+)*$"
   -
    claimURI: "http://wso2.org/claims/lastname"
    displayName: "Last Name"
    required: false
    readonly: false
-   regex: "^[a-zA-Z]*$"
+   regex: "^[a-zA-Z]+( [a-zA-Z]+)*$"
   -
    claimURI: "http://wso2.org/claims/email"
    displayName: "Email"
