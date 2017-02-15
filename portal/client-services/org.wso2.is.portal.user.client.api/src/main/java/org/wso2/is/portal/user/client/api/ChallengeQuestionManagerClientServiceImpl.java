@@ -139,7 +139,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         }
 
         List<UserChallengeAnswer> userChallengeAnswers = challengeQuestionManager
-                .getChallengeAnswersOfUser(realmService.getIdentityStore().getUser(userUniqueId));
+                .getChallengeAnswersOfUser(userUniqueId);
 
         return userChallengeAnswers
                 .stream()
@@ -162,7 +162,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
-        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
+        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
 
         if (StringUtils.equals(actionId, "challengeQUpdate")) {
             Iterator<UserChallengeAnswer> existingAnswersIterator = existingAnswers.iterator();
@@ -203,7 +203,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
-        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
+        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
 
         existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
                 StringUtils.equals(answer.getQuestion().getQuestionSetId(),
@@ -221,7 +221,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         }
 
         return challengeQuestionManager.getChallengeAnswersOfUser
-                (realmService.getIdentityStore().getUser(userUniqueId));
+                (userUniqueId);
     }
 
     private String encodeChallengeQuestionSetId(String questionSetId) {
