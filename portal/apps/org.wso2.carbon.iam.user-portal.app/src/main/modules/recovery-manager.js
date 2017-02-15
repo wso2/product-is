@@ -233,7 +233,7 @@ var recoveryManager = {};
         }
         var error;
         if(result.status === "COMPLETE"){
-            sendRedirect(env.contextPath + '/recovery/password-reset?code=' + result.code);
+            sendRedirect(env.contextPath + '/recovery/password-reset?confirmation=' + result.code);
         } else if (result.status === "INCOMPLETE") {
             sendToClient("result", { status: result.status, option : "security-question-recovery" } );
         } else if (result.status === "20008") {
