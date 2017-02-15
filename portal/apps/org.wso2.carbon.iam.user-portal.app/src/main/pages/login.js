@@ -43,7 +43,7 @@ function getPrimaryDomainName(env) {
 
 function authenticate(username, password, domain) {
     try {
-        if(!username || !password){
+        if (!(username && password)) {
             return {success: false, message: 'login.error.empty.authentication'};
         }
         var passwordChar = Java.to(password.split(''), 'char[]');
