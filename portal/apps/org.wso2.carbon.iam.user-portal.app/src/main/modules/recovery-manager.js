@@ -25,11 +25,10 @@ var recoveryManager = {};
 
 (function (recoveryManager) {
 
-     /**
-      * Check whether the username recovery portal enabled.
-      * @param
-      * @returns {*}
-      */
+    /**
+     * Check whether username recovery enabled.
+     * @returns {*}
+     */
 
     function isUsernameRecoveryPortalEnabled() {
         return getRecoveryConfigs().getUsername().isEnablePortal();
@@ -318,6 +317,5 @@ var recoveryManager = {};
         }
 
     }
-
 
 })(recoveryManager);

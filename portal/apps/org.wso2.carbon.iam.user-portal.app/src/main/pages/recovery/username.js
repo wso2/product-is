@@ -16,84 +16,71 @@
 
  module("recovery-manager");
 
-  function getClaims(){
-        /**
-         * Get the username-recovery Profile
-         */
+function getClaims() {
+    /**
+     * Get the username-recovery Profile
+     */
+    var claimProfile;
+    try {
+        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfile", ["username-recovery"]);
+    } catch (e) {
+        return {errorMessage: profile + '.error.retrieve.claim'};
+    }
+    var claimForProfileEntry = claimProfile.claims;
+    var claimProfileArray = [];
 
-      var claimProfile;
-
-      try {
-          claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-                "getProfile", ["username-recovery"]);
-      } catch (e) {
-      Log.error("Error", e);
-                    return {errorMessage: profile + '.error.retrieve.claim'};
-      }
-      var claimForProfileEntry = claimProfile.claims;
-
-      var claimProfileArray = [];
-
-      for (var i = 0; i < claimForProfileEntry.length; i++) {
-
-         claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
-
-      }
-
-      return{
-         "usernameRecoveryClaims":claimProfileArray
-      };
-  }
-
-    function generateClaimProfileMap(claimProfileEntry) {
-        var claimProfileMap = {};
-        claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
-        claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
-        claimProfileMap["required"] = claimProfileEntry.getRequired();
-        claimProfileMap["regex"] = claimProfileEntry.getRegex();
-        claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
-        claimProfileMap["dataType"] = claimProfileEntry.getDataType();
-        claimProfileMap["claimLabel"] = claimProfileEntry.getClaimURI().replace("http://wso2.org/claims/", "");
-        return claimProfileMap;
+    for (var i = 0; i < claimForProfileEntry.length; i++) {
+        claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
     }
 
+    return {
+        "usernameRecoveryClaims": claimProfileArray
+    };
+}
 
+function generateClaimProfileMap(claimProfileEntry) {
+    var claimProfileMap = {};
+    claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
+    claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
+    claimProfileMap["required"] = claimProfileEntry.getRequired();
+    claimProfileMap["regex"] = claimProfileEntry.getRegex();
+    claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
+    claimProfileMap["dataType"] = claimProfileEntry.getDataType();
+    claimProfileMap["claimLabel"] = claimProfileEntry.getClaimURI().replace("http://wso2.org/claims/", "");
+    return claimProfileMap;
+}
 
- function onGet(env) {
+function onGet(env) {
 
-     var domainSeparator = env.config['domainSeparator'];
-         //check whether password recovery options are enabled
-         try {
-             var result = recoveryManager.isUsernameRecoveryPortalEnabled();
-             if (result) {
-                return getClaims();
-             }else {
-                return {isUsernameRecoveryDisabled: true};
-             }
+    var domainSeparator = env.config['domainSeparator'];
+    //check whether password recovery options are enabled
+    try {
+        var result = recoveryManager.isUsernameRecoveryPortalEnabled();
+        if (result) {
+            return getClaims();
+        } else {
+            return {isUsernameRecoveryDisabled: true};
+        }
 
-         } catch (e) {
-             sendError(500, "something.went.wrong");
-         }
- }
-
-
- function onPost(env) {
-     Log.info(" on post starts ..")
-     var claimMap =  env.request.formParams;
-     Log.info(" got form params to a claim map");
-
-    for (var i in claimMap) {
-        Log.info(i +"------------" + claimMap[i])
+    } catch (e) {
+        sendError(500, "something.went.wrong");
     }
+}
+
+
+function onPost(env) {
+
+    var claimMap = env.request.formParams;
     //TODO check formparams and send only not null ones
-     var userRecovered = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
-                                                            "verifyUsername", [claimMap]);
-    Log.info("User recovered :" + userRecovered );
+    var userRecovered = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
+        "verifyUsername", [claimMap]);
+    Log.info("User recovered :" + userRecovered);
 
     if (userRecovered) {
         sendRedirect(env.contextPath + '/recovery/complete?username=true');
-    }else {
+    } else {
         return {errorMessage: 'username.error.invalid.username'};
     }
- }
+}
 

@@ -41,6 +41,7 @@ import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryMa
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+import org.wso2.carbon.identity.mgt.constant.IdentityMgtConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,14 +246,13 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     @Override
     public boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException {
 
-
         List<Claim> claims = new ArrayList<>();
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
             // Check whether claim value is empty or not.
             if (entry.getValue().isEmpty()) {
                 continue;
             } else {
-                Claim claim = new Claim("http://wso2.org/claims", entry.getKey(), entry.getValue());
+                Claim claim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue());
                 claims.add(claim);
             }
         }

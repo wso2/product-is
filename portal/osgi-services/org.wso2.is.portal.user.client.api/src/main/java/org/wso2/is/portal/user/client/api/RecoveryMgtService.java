@@ -83,9 +83,9 @@ public interface RecoveryMgtService {
     /**
      *  Check whether a username is available bu given set of user claims.
      *
-     * @param userClaims
+     * @param userClaims user claims.
      * @return
-     * @throws IdentityRecoveryException
+     * @throws IdentityRecoveryException IdentityRecoveryExceptions
      */
     boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException;
 

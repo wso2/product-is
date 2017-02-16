@@ -70,7 +70,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    <label for="password" class="control-label">{{i18n "passowrd"}}</label>
+                                    <label for="password" class="control-label">{{i18n "passoword"}}</label>
 
                                     <div class="input-group input-wrap">
                                         <input type="password" name="password" class="form-control" id="password">
@@ -86,8 +86,8 @@
                                 </div>
                             </div>
                             <p>{{i18n "forgot.your"}}&nbsp;<a
-                                    href="{{@contextPath}}/recovery/username">{{i18n "username"}}
-                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{@contextPath}}/recovery/password">
+                                    href="{{recoveryInfo.usernameRecoveryUrl}}">{{i18n "username"}}
+                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}">
                                 {{i18n "password"}}</a>&nbsp;?
                             </p>
 

@@ -38,7 +38,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 login">
                         <div class="data-container">
                             <form class="form-horizontal" method="post">
-                                <h3>Recover Username</h3>
+                                <h3>{{i18n "recover.username"}}</h3>
                                 {{#if isUsernameRecoveryDisabled}}
                                         <div>
                                             <h3>{{i18n "username.recovery"}}</h3>
@@ -51,7 +51,7 @@
                                             </div>
                                         </div>
                                 {{else}}
-                                <p>Please fill in the below form to recover your username</p>
+                                <p>{{i18n "fill.below.to.recover"}}</p>
                                 <div class="form-group add-margin-top-5x">
                                      {{#each usernameRecoveryClaims}}
                                          {{log this}}
@@ -65,8 +65,8 @@
                                 </div>
                                 <div class="form-group add-margin-top-5x">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                        <button type="submit" class="btn btn-default btn-primary add-margin-right-2x">Recover</button>
-                                        <a href="{{@contextPath}}/" class="hidden-xs hidden-sm">Back to sign in</a>
+                                        <button type="submit" class="btn btn-default btn-primary add-margin-right-2x">{{i18n "recover"}}</button>
+                                        <a href="{{@contextPath}}/" class="hidden-xs hidden-sm">{{i18n "back.sign.in"}}</a>
                                         <!--<a href="/login" class="visible-xs visible-sm add-margin-2x text-center">Back to sign in</a>-->
                                     </div>
                                 </div>
