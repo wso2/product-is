@@ -41,7 +41,6 @@ import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryMa
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
-import org.wso2.carbon.identity.mgt.constant.IdentityMgtConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +56,7 @@ import java.util.Map;
 public class RecoveryMgtServiceImpl implements RecoveryMgtService {
 
     private static final Logger log = LoggerFactory.getLogger(RecoveryMgtService.class);
+    public static final String CLAIM_ROOT_DIALECT = "http://wso2.org/claims";
     private RecoveryConfig recoveryConfig;
     private RealmService realmService;
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
@@ -252,7 +252,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
             if (entry.getValue().isEmpty()) {
                 continue;
             } else {
-                Claim claim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue());
+                Claim claim = new Claim(CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue());
                 claims.add(claim);
             }
         }
