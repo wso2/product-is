@@ -23,20 +23,23 @@ function onGet(env) {
 function onPost(env) {
 
     var data = {};
+    var session, userUniqueId, action, oldPassword, username, domain, authenticationResult, getChallengeQResult
+        , getChallengeQuestionsResult, ids, newAnswer, questionId, questionSetId, updateChallengeQResult
+        , deleteChallengeQResult;
     data.success = true;
-    var session = getSession();
-    var userUniqueId = session.getUser().getUserId();
-    var action = env.request.formParams["action"];
-    if (action == "check-password") {
-        var oldPassword = env.request.formParams["old-password"];
-        var username = session.getUser().getUsername();
-        var domain = session.getUser().getDomainName();
-        var authenticationResult = authenticate(username, oldPassword, domain);
+    session = getSession();
+    userUniqueId = session.getUser().getUserId();
+    action = env.request.formParams["action"];
+    if (action === "check-password") {
+        oldPassword = env.request.formParams["old-password"];
+        username = session.getUser().getUsername();
+        domain = session.getUser().getDomainName();
+        authenticationResult = authenticate(username, oldPassword, domain);
         if (authenticationResult.success) {
-            var getChallengeQResult = getUserQuestions(userUniqueId);
+            getChallengeQResult = getUserQuestions(userUniqueId);
             if (getChallengeQResult.data.length === 0) {
                 data.isUserAuthenticated = true;
-                var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
+                getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
                 data.questionList = getChallengeQuestionsResult.data;
                 data.passwordform = false;
             } else {
@@ -50,15 +53,15 @@ function onPost(env) {
             data.message = authenticationResult.message;
         }
         return data;
-    } else if (action == "add-question") {
+    } else if (action === "add-question") {
         // Add question flow.
-        var ids = env.request.formParams["question_list"];
+        ids = env.request.formParams["question_list"];
         var i;
         if (ids !== null) {
             for (i = 0; i < ids.length; i++) {
                 var idsArray = ids[i].split(":");
-                var questionSetId = idsArray[0];
-                var questionId = idsArray[1];
+                questionSetId = idsArray[0];
+                questionId = idsArray[1];
                 var answerId = "question-answer-" + questionSetId;
                 var answer = env.request.formParams[answerId];
                 var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
@@ -75,47 +78,33 @@ function onPost(env) {
                 }
             }
         }
-        var getChallengeQResult = getUserQuestions(userUniqueId);
-        if (getChallengeQResult.data !== null) {
-            if (getChallengeQResult.data.length === 0) {
-                data.isUserHasQuestions = false;
-            } else {
-                data.isUserHasQuestions = true;
-                data.userQuestions = getChallengeQResult.data;
-            }
-        }
-        return data;
-
-    } else if (action == "update-question") {
+    } else if (action === "update-question") {
 
         // Update question answer flow.
-        var oldPassword = env.request.formParams["old-password"];
-        var newAnswer = env.request.formParams["new-answer"];
+        newAnswer = env.request.formParams["new-answer"];
         questionId = env.request.formParams["question-id"];
         questionSetId = env.request.formParams["question-set-id"];
-        var updateChallengeQResult = setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId,
+        updateChallengeQResult = setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId,
             "challengeQUpdate");
         data.success = updateChallengeQResult.success;
         data.message = updateChallengeQResult.message;
-        var getChallengeQResult = getUserQuestions(userUniqueId);
-        if (getChallengeQResult.data !== null) {
-            if (getChallengeQResult.data.length === 0) {
-                data.isUserHasQuestions = false;
-            } else {
-                data.isUserHasQuestions = true;
-                data.userQuestions = getChallengeQResult.data;
-            }
-        }
-        return data;
-
-    } else if (action == "delete-question") {
+    } else if (action === "delete-question") {
 
         // Delete question flow.
         questionId = env.request.formParams["question-id"];
         questionSetId = env.request.formParams["question-set-id"];
-        var deleteChallengeQResult = deleteQuestion(userUniqueId, questionId, questionSetId);
+        deleteChallengeQResult = deleteQuestion(userUniqueId, questionId, questionSetId);
         data.message = deleteChallengeQResult.message;
         data.success = deleteChallengeQResult.success;
+    }
+    getChallengeQResult = getUserQuestions(userUniqueId);
+    if (getChallengeQResult.data !== null) {
+        if (getChallengeQResult.data.length === 0) {
+            data.isUserHasQuestions = false;
+        } else {
+            data.isUserHasQuestions = true;
+            data.userQuestions = getChallengeQResult.data;
+        }
     }
     return data;
 }
