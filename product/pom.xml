@@ -174,12 +174,15 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.apimgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <groupId>org.wso2.carbon.lcm</groupId>
+            <artifactId>org.wso2.carbon.lcm.core.feature</artifactId>
             <type>zip</type>
         </dependency>
-
+        <dependency>
+            <groupId>org.wso2.carbon.lcm</groupId>
+            <artifactId>org.wso2.carbon.lcm.sql.feature</artifactId>
+            <type>zip</type>
+        </dependency>
         <!--Other Dependencies-->
         <dependency>
             <groupId>org.osgi</groupId>
@@ -295,9 +298,9 @@
                                     <type>zip</type>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.apimgt</groupId>
-                                    <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
-                                    <version>7.0.0-SNAPSHOT</version>
+                                    <groupId>org.wso2.carbon.lcm</groupId>
+                                    <artifactId>org.wso2.carbon.lcm.sql.feature</artifactId>
+                                    <version>${org.wso2.carbon.lcm.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>
@@ -373,6 +376,14 @@
                                     <version>${carbon.uuf.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.lcm.core.feature</id>
+                                    <version>${org.wso2.carbon.lcm.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.lcm.sql.feature</id>
+                                    <version>${org.wso2.carbon.lcm.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.iam.user-portal.feature</id>
                                     <version>${carbon.is.version}</version>
                                 </feature>
@@ -427,10 +438,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.apimgt.lifecycle.manager.feature</id>
-                                    <version>7.0.0-SNAPSHOT</version>
                                 </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
@@ -602,8 +609,12 @@
                                     <version>${carbon.security.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.apimgt.lifecycle.manager.feature</id>
-                                    <version>7.0.0-SNAPSHOT</version>
+                                    <id>org.wso2.carbon.lcm.core.feature</id>
+                                    <version>${org.wso2.carbon.lcm.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.lcm.sql.feature</id>
+                                    <version>${org.wso2.carbon.lcm.version}</version>
                                 </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
