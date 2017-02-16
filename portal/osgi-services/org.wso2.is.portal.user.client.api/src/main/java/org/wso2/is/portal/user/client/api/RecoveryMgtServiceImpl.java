@@ -225,6 +225,12 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     }
 
 
+    @Override
+    public RecoveryConfig getRecoveryConfigs() {
+        return recoveryConfig;
+    }
+
+
     @Reference(
             name = "notificationUsernameRecoveryManager",
             service = NotificationUsernameRecoveryManager.class,
@@ -246,14 +252,19 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     public boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException {
 
 
-        ArrayList<UserClaim> claimsList = new ArrayList<>();
+        List<Claim> claims = new ArrayList<>();
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
-            UserClaim claim = new UserClaim(entry.getKey(), entry.getValue());
-            claimsList.add(claim);
+            // Check whether claim value is empty or not.
+            if (entry.getValue().isEmpty()) {
+                continue;
+            } else {
+                Claim claim = new Claim("http://wso2.org/claims", entry.getKey(), entry.getValue());
+                claims.add(claim);
+            }
         }
 
 
-        return getNotificationUsernameRecoveryManager().verifyUsername(claimsList);
+        return getNotificationUsernameRecoveryManager().verifyUsername(claims);
 
     }
 

@@ -40,9 +40,6 @@ domains:
         attribute: "cn"
         claimUri: "http://wso2.org/claims/fullname"
       -
-        attribute: "givenName"
-        claimUri: "http://wso2.org/claims/givenname"
-      -
         attribute: "sn"
         claimUri: "http://wso2.org/claims/lastname"
       -
@@ -129,6 +126,16 @@ domains:
       -
         attribute: "challengeQuestion2"
         claimUri: "http://wso2.org/claims/challengeQuestion2"
+
+      connectorId: "JDBCIS2"
+      connectorType: "JDBCIdentityStore"
+      properties:
+        dataSource: "WSO2CARBON_DBCON3"
+        databaseType: "MySQL"
+      attributeMappings:
+      -
+        attribute: "givenName"
+        claimUri: "http://wso2.org/claims/givenname"
 
     credentialStoreConnectors:
     -

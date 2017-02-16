@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+ module("recovery-manager");
+
   function getClaims(){
         /**
          * Get the username-recovery Profile
          */
 
       var claimProfile;
-       //Log.info("---------------------0-");
 
       try {
           claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
@@ -36,8 +37,6 @@
       for (var i = 0; i < claimForProfileEntry.length; i++) {
 
          claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
-        // Log.info("----------------------");
-        // Log.info(claimProfileArray[i]);
 
       }
 
@@ -59,24 +58,35 @@
     }
 
 
-    function recoverUserByClaims(claimMap) {
-
-
-    }
 
  function onGet(env) {
 
-     return getClaims();
+     var domainSeparator = env.config['domainSeparator'];
+         //check whether password recovery options are enabled
+         try {
+             var result = recoveryManager.isUsernameRecoveryPortalEnabled();
+             if (result) {
+                return getClaims();
+             }else {
+                return {isUsernameRecoveryDisabled: true};
+             }
+
+         } catch (e) {
+             sendError(500, "something.went.wrong");
+         }
  }
 
 
  function onPost(env) {
+     Log.info(" on post starts ..")
+     var claimMap =  env.request.formParams;
+     Log.info(" got form params to a claim map");
 
-    var claimMap = {};
-    claimMap = env.request.formParams;
+    for (var i in claimMap) {
+        Log.info(i +"------------" + claimMap[i])
+    }
     //TODO check formparams and send only not null ones
-
-    var userRecovered = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
+     var userRecovered = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService",
                                                             "verifyUsername", [claimMap]);
     Log.info("User recovered :" + userRecovered );
 
@@ -85,7 +95,5 @@
     }else {
         return {errorMessage: 'username.error.invalid.username'};
     }
-
-
  }
 

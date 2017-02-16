@@ -70,10 +70,10 @@ function onPost(env) {
         recoveryManager.sendRecoveryNotification(userId);
         sendRedirect(env.contextPath + '/recovery/complete?password=true');
     }
-    
+
     if(recoverOption === 'security-question-recovery') {
         return recoveryManager.recoverPasswordViaUserChallengeAnswers(env);
     }
         //TODO else
-    
+
 }

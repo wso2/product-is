@@ -25,6 +25,16 @@ var recoveryManager = {};
 
 (function (recoveryManager) {
 
+     /**
+      * Check whether the username recovery portal enabled.
+      * @param
+      * @returns {*}
+      */
+
+    function isUsernameRecoveryPortalEnabled() {
+        return getRecoveryConfigs().getUsername().isEnablePortal();
+    }
+
     /**
      * Check whether the question password recovery enabled
      *
@@ -54,7 +64,7 @@ var recoveryManager = {};
 
     /**
      * Check whether the password recovery enabled
-     * @param
+     * @param method define osgi service method to be called
      * @returns {*}
      */
 
@@ -165,6 +175,14 @@ var recoveryManager = {};
     }
 
     /**
+     * Returns whether username recovery portal enabled.
+     * @returns {success: true/flase, isEnabled: true/false}
+     */
+    recoveryManager.isUsernameRecoveryPortalEnabled = function () {
+        return isUsernameRecoveryPortalEnabled();
+    };
+
+    /**
      * Returns whether password recovery options are enabled
      * @returns {success: true/flase, isEnabled: true/false}
      */
@@ -178,6 +196,21 @@ var recoveryManager = {};
      */
     recoveryManager.hasMultiplePasswordRecoveryEnabled = function () {
         return hasMultiplePasswordRecoveryEnabled();
+    };
+
+    /**
+     * Returns whether requested password recovery option is enabled
+     * @param option recovery option
+     * @returns {success: true/false, isEnabled: true/false}
+     */
+    recoveryManager.isPasswordRecoveryOptionEnabled = function (option) {
+        if (option == "notification-based") {
+            return isNotificationBasedPasswordRecoveryEnabled();
+        } else if (option == "security-question-based") {
+            return isQuestionBasedPasswordRecoveryEnabled();
+        } else {
+            return false;
+        }
     };
 
     /**
