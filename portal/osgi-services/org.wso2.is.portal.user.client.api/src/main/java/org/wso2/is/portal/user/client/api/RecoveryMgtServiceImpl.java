@@ -242,7 +242,6 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         this.notificationUsernameRecoveryManager = null;
     }
 
-
     @Override
     public boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException {
 
@@ -258,11 +257,8 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
             }
         }
 
-
         return getNotificationUsernameRecoveryManager().verifyUsername(claims);
-
     }
-
 
     public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
         return notificationUsernameRecoveryManager;
