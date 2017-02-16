@@ -71,7 +71,7 @@ function onPost(env) {
         sendRedirect(env.contextPath + '/recovery/complete?password=true');
     }
     
-    if(recoverOption === 'security-question-recovery') {
+    if(recoveryOption === 'security-question-recovery') {
         return recoveryManager.recoverPasswordViaUserChallengeAnswers(env);
     }
         //TODO else

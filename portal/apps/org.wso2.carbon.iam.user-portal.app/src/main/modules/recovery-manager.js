@@ -229,7 +229,7 @@ var recoveryManager = {};
         var result = verifyUserChallengeAnswers(formParams);
 
         if (!result.success) {
-            sendError(500, questions.message);
+            sendError(500, result.message);
         }
         var error;
         if(result.status === "COMPLETE"){
@@ -273,7 +273,7 @@ var recoveryManager = {};
                 Log.error(e.getMessage());
             }
         }
-    }
+    };
 
     recoveryManager.updatePassword = function (code, password) {
         try {
@@ -284,7 +284,7 @@ var recoveryManager = {};
             Log.error(e.getMessage());
         }
 
-    }
+    };
 
 
 })(recoveryManager);
