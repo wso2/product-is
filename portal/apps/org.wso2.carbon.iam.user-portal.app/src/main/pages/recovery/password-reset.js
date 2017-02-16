@@ -19,17 +19,19 @@
 /*
  Page sent to a user in order to recover password
  */
+module("recovery-manager");
 
 function onGet(env) {
-    /*TODO
-     * confirmation code has to be sent in the URL (a query param) and need to validate it here
-     * If the confirmation code is expired notify in the UI
-     * Proceed to page otherwise
-     */
+    if (!env.request.queryParams['confirmation']) {
+        sendRedirect(env.contextPath + '/login');
+    }
 }
 
 function onPost(env) {
-    /*TODO
-     * perform password reset with newly provided password and verification code
-     */
+    var confirmationCode = env.request.queryParams['confirmation'];
+    var password = env.request.formParams['input-password'];
+
+    if (confirmationCode && password) {
+        recoveryManager.updatePassword(confirmationCode, password);
+    }
  }

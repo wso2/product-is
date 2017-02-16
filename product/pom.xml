@@ -142,6 +142,16 @@
             <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+            <artifactId>org.wso2.carbon.email.mgt.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+            <artifactId>org.wso2.carbon.event.handler.notification.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
         <!-- UUF Dependencies-->
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
@@ -161,6 +171,12 @@
         <dependency>
             <groupId>org.wso2.carbon.uuf</groupId>
             <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.apimgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
             <type>zip</type>
         </dependency>
 
@@ -277,6 +293,17 @@
                                     <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                     <type>zip</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.apimgt</groupId>
+                                    <artifactId>org.wso2.carbon.apimgt.lifecycle.manager.feature</artifactId>
+                                    <version>7.0.0-SNAPSHOT</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -401,6 +428,10 @@
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.apimgt.lifecycle.manager.feature</id>
+                                    <version>7.0.0-SNAPSHOT</version>
+                                </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
@@ -414,6 +445,14 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.email.mgt.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.handler.notification.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -562,6 +601,10 @@
                                     <id>org.wso2.carbon.security.caas.feature</id>
                                     <version>${carbon.security.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.apimgt.lifecycle.manager.feature</id>
+                                    <version>7.0.0-SNAPSHOT</version>
+                                </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
@@ -574,6 +617,14 @@
                                     <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
                                     <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.email.mgt.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.event.handler.notification.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

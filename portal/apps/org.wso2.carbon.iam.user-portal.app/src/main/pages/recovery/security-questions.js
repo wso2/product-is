@@ -23,13 +23,18 @@ function onGet(env){
     if (!userId) {
         sendRedirect(env.contextPath + '/recovery/password');
     }
-    var questions = recoveryManager.getUserQuestions(userId);
+    var questions = recoveryManager.getUserAnsweredQuestions(userId);
     if (!questions.success) {
         sendError(500, questions.message);
         //TODO
     }
     return {
         hasUserQuestions: questions.data.length > 0,
-        userQuestions: questions.data
+        userQuestions: questions.data,
+        recoveryCode : questions.code
     };
+}
+
+function onPost(env) {
+    return recoveryManager.recoverPasswordViaUserChallengeAnswers(env);
 }
