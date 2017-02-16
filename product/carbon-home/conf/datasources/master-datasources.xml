@@ -19,33 +19,29 @@
 
 <datasources-configuration>
 
-    <datasources-configuration>
+    <datasources>
+        <datasource>
+            <name>WSO2_CARBON_DB</name>
+            <description>The datasource used for identity server database</description>
+            <jndiConfig>
+                <name>jdbc/WSO2CARBON_DB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:h2:./database/WSO2CARBON_DB;IFEXISTS=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE</url>
+                    <username>wso2carbon</username>
+                    <password>wso2carbon</password>
+                    <driverClassName>org.h2.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
 
-        <datasources>
-            <datasource>
-                <name>WSO2_CARBON_DB</name>
-                <description>The datasource used for identity server database</description>
-                <jndiConfig>
-                    <name>jdbc/WSO2CARBON_DB</name>
-                </jndiConfig>
-                <definition type="RDBMS">
-                    <configuration>
-                        <url>jdbc:h2:./database/WSO2CARBON_DB;IFEXISTS=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE</url>
-                        <username>wso2carbon</username>
-                        <password>wso2carbon</password>
-                        <driverClassName>org.h2.Driver</driverClassName>
-                        <maxActive>50</maxActive>
-                        <maxWait>60000</maxWait>
-                        <testOnBorrow>true</testOnBorrow>
-                        <validationQuery>SELECT 1</validationQuery>
-                        <validationInterval>30000</validationInterval>
-                        <defaultAutoCommit>false</defaultAutoCommit>
-                    </configuration>
-                </definition>
-            </datasource>
-
-        </datasources>
-
-    </datasources-configuration>
+    </datasources>
 
 </datasources-configuration>
