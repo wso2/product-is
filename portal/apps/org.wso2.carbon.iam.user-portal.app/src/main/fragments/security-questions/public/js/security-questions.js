@@ -35,11 +35,11 @@ function editQuestion(questionId, questionSetId, questionText) {
     $("#current-question").html(questionText);
 }
 
-function updateQuestion() {
+/*function updateQuestion() {
     $("#add-question").hide();
     $("#list-questions").show();
     $("#edit-question").hide();
-}
+}*/
 
 function deleteQuestion(questionId, questionSetId) {
 
