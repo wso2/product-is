@@ -19,6 +19,7 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -78,5 +79,14 @@ public interface RecoveryMgtService {
      */
     ChallengeQuestionsResponse verifyUserChallengeAnswers(String code,
                                                           Map<String, String> answers) throws UserPortalUIException;
+
+    /**
+     *  Check whether a username is available bu given set of user claims.
+     *
+     * @param userClaims
+     * @return
+     * @throws IdentityRecoveryException
+     */
+    boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException;
 
 }

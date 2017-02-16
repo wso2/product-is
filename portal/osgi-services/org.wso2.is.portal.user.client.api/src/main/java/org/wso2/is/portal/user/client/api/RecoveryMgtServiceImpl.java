@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
+import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
@@ -38,6 +39,7 @@ import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
+import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.ArrayList;
@@ -223,13 +225,6 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         }
         return this.notificationPasswordRecoveryManager;
     }
-
-
-    @Override
-    public RecoveryConfig getRecoveryConfigs() {
-        return recoveryConfig;
-    }
-
 
     @Reference(
             name = "notificationUsernameRecoveryManager",
