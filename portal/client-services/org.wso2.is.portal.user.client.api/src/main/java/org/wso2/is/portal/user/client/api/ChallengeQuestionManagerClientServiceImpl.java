@@ -34,6 +34,7 @@ import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 import org.wso2.is.portal.user.client.api.bean.ChallengeQuestionSetEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -195,22 +196,25 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
     @Override
     public void deleteChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId)
-            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException {
+            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException, UserPortalUIException {
 
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
-
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
         List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
+        if (challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer() < existingAnswers.size()) {
+            existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
+                    StringUtils.equals(answer.getQuestion().getQuestionSetId(),
+                            new String(Base64.getDecoder().decode(questionSetId.getBytes(Charset.forName("UTF-8"))),
+                                    Charset.forName("UTF-8"))));
 
-        existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
-                StringUtils.equals(answer.getQuestion().getQuestionSetId(),
-                        new String(Base64.getDecoder().decode(questionSetId.getBytes(Charset.forName("UTF-8"))),
-                                Charset.forName("UTF-8"))));
-
-        challengeQuestionManager.setChallengesOfUser(user, existingAnswers);
+            challengeQuestionManager.setChallengesOfUser(user, existingAnswers);
+        } else {
+            String error = "Cannot delete minimum number of security questions";
+            throw new UserPortalUIException(error);
+        }
     }
 
     @Override
