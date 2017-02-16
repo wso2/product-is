@@ -147,6 +147,7 @@ profiles:
    displayName: "Email"
    required: true
    readonly: false
-   regex: "*"
+   regex: "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*
+      @[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
    dataType: "email"
 

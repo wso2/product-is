@@ -62,8 +62,7 @@ var recoveryManager = {};
     }
 
     /**
-     * Check whether the password recovery enabled
-     * @param method that defines osgi service methods to be called.
+     *  Check whether password recovery enabled.
      * @returns {*}
      */
 
