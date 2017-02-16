@@ -32,6 +32,7 @@ import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
@@ -56,7 +57,6 @@ import java.util.Map;
 public class RecoveryMgtServiceImpl implements RecoveryMgtService {
 
     private static final Logger log = LoggerFactory.getLogger(RecoveryMgtService.class);
-    public static final String CLAIM_ROOT_DIALECT = "http://wso2.org/claims";
     private RecoveryConfig recoveryConfig;
     private RealmService realmService;
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
@@ -252,7 +252,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
             if (entry.getValue().isEmpty()) {
                 continue;
             } else {
-                Claim claim = new Claim(CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue());
+                Claim claim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue());
                 claims.add(claim);
             }
         }
