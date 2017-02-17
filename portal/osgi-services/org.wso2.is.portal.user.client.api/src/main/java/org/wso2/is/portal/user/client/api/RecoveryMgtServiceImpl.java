@@ -18,6 +18,7 @@
 
 package org.wso2.is.portal.user.client.api;
 
+
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -28,8 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
+import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
@@ -37,6 +40,7 @@ import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
+import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.ArrayList;
@@ -56,8 +60,9 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     private RecoveryConfig recoveryConfig;
     private RealmService realmService;
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
-
     private SecurityQuestionPasswordRecoveryManager securityQuestionPasswordRecoveryManager;
+    private NotificationUsernameRecoveryManager notificationUsernameRecoveryManager;
+
 
     @Activate
     protected void start(final BundleContext bundleContext) {
@@ -222,5 +227,40 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         return this.notificationPasswordRecoveryManager;
     }
 
+    @Reference(
+            name = "notificationUsernameRecoveryManager",
+            service = NotificationUsernameRecoveryManager.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unSetNotificationUsernameRecoveryManager")
+    protected void setNotificationUsernameRecoveryManager(NotificationUsernameRecoveryManager
+                                                                      notificationUsernameRecoveryManager) {
+        this.notificationUsernameRecoveryManager = notificationUsernameRecoveryManager;
+    }
 
+    protected void unSetNotificationUsernameRecoveryManager(NotificationUsernameRecoveryManager
+                                                                    notificationUsernameRecoveryManager) {
+        this.notificationUsernameRecoveryManager = null;
+    }
+
+    @Override
+    public boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException {
+
+        List<Claim> claims = new ArrayList<>();
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            // Check whether claim value is empty or not.
+            if (entry.getValue().isEmpty()) {
+                continue;
+            } else {
+                Claim claim = new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue());
+                claims.add(claim);
+            }
+        }
+
+        return getNotificationUsernameRecoveryManager().verifyUsername(claims);
+    }
+
+    public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
+        return notificationUsernameRecoveryManager;
+    }
 }

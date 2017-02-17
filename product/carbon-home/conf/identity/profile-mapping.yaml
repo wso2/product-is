@@ -124,3 +124,28 @@ profiles:
    dataType: "email"
    regex: "*"
    defaultValue: "user@example.com"
+ -
+  profileName: "username-recovery"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "First Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/lastname"
+   displayName: "Last Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "email"
