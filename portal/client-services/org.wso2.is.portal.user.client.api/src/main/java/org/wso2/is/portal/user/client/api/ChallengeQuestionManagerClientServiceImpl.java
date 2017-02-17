@@ -37,6 +37,7 @@ import org.wso2.is.portal.user.client.api.bean.ChallengeQuestionSetEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
@@ -207,9 +208,8 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         if (challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer() < existingAnswers.size()) {
             existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
                     StringUtils.equals(answer.getQuestion().getQuestionSetId(),
-                            new String(Base64.getDecoder().decode(questionSetId.getBytes(Charset.forName("UTF-8"))),
-                                    Charset.forName("UTF-8"))));
-
+                            new String(Base64.getDecoder().decode(questionSetId.getBytes(StandardCharsets.UTF_8)),
+                                    StandardCharsets.UTF_8)));
             challengeQuestionManager.setChallengesOfUser(user, existingAnswers);
         } else {
             String error = "Cannot delete minimum number of security questions";
