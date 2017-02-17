@@ -25,7 +25,8 @@ CREATE TABLE IDM_USER
   DOMAIN_ID         INTEGER                            NOT NULL,
   CONNECTOR_TYPE    CHAR(1) DEFAULT 'I'                NOT NULL,
   CONNECTOR_ID      VARCHAR(64)                        NOT NULL,
-  CONNECTOR_USER_ID VARCHAR(64)                        NOT NULL
+  CONNECTOR_USER_ID VARCHAR(64)                        NOT NULL,
+  STATE             VARCHAR(64)                        NOT NULL
 );
 
 CREATE TABLE IDM_GROUP

@@ -1,0 +1,33 @@
+<datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
+
+    <providers>
+        <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
+    </providers>
+
+    <datasources>
+
+        <datasource>
+            <name>WSO2_LIFECYCLE_DB</name>
+            <description>The datasource used for Lifecycle framework</description>
+            <jndiConfig>
+                <name>jdbc/WSO2LifecycleDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:h2:./database/WSO2LIFECYCLE_DB;DB_CLOSE_ON_EXIT=FALSE;MVCC=true</url>
+                    <username>wso2carbon</username>
+                    <password>wso2carbon</password>
+                    <driverClassName>org.h2.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+
+    </datasources>
+
+</datasources-configuration>
+
