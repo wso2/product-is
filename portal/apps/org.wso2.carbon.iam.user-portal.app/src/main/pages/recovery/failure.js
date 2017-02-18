@@ -16,17 +16,8 @@
  * under the License.
  */
 
-$(function () {
-    var mode = "APPEND"; // Available modes [OVERWRITE,APPEND, PREPEND]
-    var questions = {"questions" : [{"question" : "This is question 1?"}]};
-
-    $( document ).ready(function() {
-        if(result && result.option === 'security-question-recovery'){
-            $('.email-recovery').parent().attr("disabled", "disabled");
-            $('.security-question-recovery').closest('.recover-option-container').fadeIn();
-            $("input[name=recover-option][value=email-recovery]").attr("disabled",true);
-            $("input[name=recover-option][value=security-question-recovery]").prop("checked",true);
-        }
-    });
-
-});
+function onGet(env){
+    var status = env.request.queryParams['status'];
+    var code = env.request.queryParams['code'];
+    return {errorMessage : 'error.' + status, code : code}
+}

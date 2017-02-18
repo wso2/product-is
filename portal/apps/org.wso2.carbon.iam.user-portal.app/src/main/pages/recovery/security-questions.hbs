@@ -3,14 +3,13 @@
 {{css "css/user-portal.css"}}
 {{js "js/script.js"}}
 {{js "js/left-navigation.js"}}
-{{js "js/recover-password-options.js"}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
 
 {{#fillZone "content"}}
     {{#if errorMessage}}
         <div class="alert alert-danger" role="alert">
             <i class="icon fw fw-error"></i><strong>{{i18n "password.recovery.error"}}</strong>
-            {{errorMessage}}
+            {{i18n errorMessage}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
             <span aria-hidden="true">
                 <i class="fw fw-cancel"></i>

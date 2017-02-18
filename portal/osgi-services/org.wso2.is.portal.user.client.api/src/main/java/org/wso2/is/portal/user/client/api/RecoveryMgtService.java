@@ -19,8 +19,12 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
+import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
+
+import java.util.Map;
 
 /**
  * Represent Recovery management service
@@ -37,11 +41,52 @@ public interface RecoveryMgtService {
     boolean isNotificationBasedPasswordRecoveryEnabled() throws UserPortalUIException;
 
     /**
+     * send notification to the user with a url to recover password
+     *
+     * @throws UserPortalUIException
+     */
+    void setPasswordRecoveryNotification(String userUniqueId) throws UserPortalUIException;
+
+    /**
+     *
+     * @param code
+     * @param password
+     * @throws UserPortalUIException
+     */
+    void updatePassword(String code, char[] password) throws UserPortalUIException;
+
+    /**
      * get recovery config bean object
      *
      * @return
      * @throws UserPortalUIException
      */
     RecoveryConfig getRecoveryConfigs() throws UserPortalUIException;
+
+    /**
+     * get recovery config bean object
+     *
+     * @return
+     * @throws UserPortalUIException
+     */
+    ChallengeQuestionsResponse getUserChallengeQuestionAtOnce(String userUniqueId) throws UserPortalUIException;
+
+    /**
+     * get recovery config bean object
+     *
+     * @return
+     * @throws UserPortalUIException
+     */
+    ChallengeQuestionsResponse verifyUserChallengeAnswers(String code,
+                                                          Map<String, String> answers) throws UserPortalUIException;
+
+    /**
+     *  Check whether a username is available bu given set of user claims.
+     *
+     * @param userClaims user claims.
+     * @return
+     * @throws IdentityRecoveryException IdentityRecoveryExceptions
+     */
+    boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException;
 
 }

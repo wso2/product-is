@@ -1,0 +1,40 @@
+{{layout "unprivilege"}}
+{{title (i18n "password.recovery") " | " (i18n "app.name")}}
+{{css "css/user-portal.css"}}
+{{js "js/script.js"}}
+{{js "js/left-navigation.js"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+
+{{#fillZone "content"}}
+    <div class="page-content-wrapper">
+        <div class="container">
+            <div class="error-container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        <div class="brand-container add-margin-bottom-5x">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-3 col-md-9 col-lg-9 center-block float-remove-sm
+                                float-remove-xs pull-right-md pull-right-lg">
+                                    <img class="img-responsive brand-spacer" src="{{public "images/logo-white.png"}}"
+                                         alt="wso2-logo">
+                                </div>
+                            </div>
+                            <h2 class="text-center-sm text-center-xs text-center-md text-right">{{@config.appName}}</h2>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                            <div class="message message-danger">
+                                <h4><i class="icon fw fw-error"></i>{{i18n errorMessage}}</h4>
+
+                                <div style="padding-left: 25px;">
+                                    <h5><b>{{i18n "code"}} : {{code}}</b></h5>
+
+                                    <!--<p style="white-space: pre-wrap;">{{!i18n (@params.message)}}</p>-->
+                                <!--</div>-->
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/fillZone}}
