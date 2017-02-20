@@ -94,11 +94,13 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             passwordCallback.setPassword(password);
             AuthenticationContext authenticationContext = getRealmService().getIdentityStore()
                     .authenticate(usernameClaim, new Callback[]{passwordCallback}, domain);
-            User identityUser = authenticationContext.getUser();
 
-            //TODO if another claim used, need to load username claim
+            if (authenticationContext.isAuthenticated()) {
+                User identityUser = authenticationContext.getUser();
 
-            return new UUFUser(username, identityUser.getUniqueUserId(), identityUser.getDomainName());
+                //TODO if another claim used, need to load username claim
+                return new UUFUser(username, identityUser.getUniqueUserId(), identityUser.getDomainName());
+            }
         } catch (AuthenticationFailure e) {
             String error = "Invalid credentials.";
             if (LOGGER.isDebugEnabled()) {
@@ -110,6 +112,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
+        throw new UserPortalUIException("Invalid credentials.");
     }
 
     @Override
