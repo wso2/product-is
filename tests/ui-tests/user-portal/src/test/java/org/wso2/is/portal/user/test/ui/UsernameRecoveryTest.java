@@ -18,30 +18,47 @@
 
 package org.wso2.is.portal.user.test.ui;
 
-import com.thoughtworks.selenium.Selenium;
-import org.testng.Assert;
+
 import org.testng.annotations.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.wso2.carbon.iam.userportal.pageobject.UsernamerecoveryPage;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
+import org.wso2.carbon.identity.mgt.connector.Attribute;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * UI Tests for username recovery .
  */
 public class UsernameRecoveryTest {
 
-    private Selenium selenium;
-    UsernamerecoveryPage usernamerecoveryPage = new UsernamerecoveryPage();
+    private static UsernameRecoveryPageAction usernameRecoveryPageAction
+            = new UsernameRecoveryPageAction();
+    private static WebDriver driver = new HtmlUnitDriver();
 
     @Test(groups = "usernameRecoveryTest")
-    public void testUsernameRecovery() throws Exception {
-        Assert.assertTrue(true);
-        selenium.open("https://localhost:9292/user-portal");
+    public void loadUsernameRecoveryPage() throws Exception {
+        driver.get("https://localhost:9292/user-portal/recovery/username");
 
     }
+    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
+    public void testUssernameRecovery() throws Exception {
+        String[] claims = {"givenname", "lastname", "email"};
+        String[] values = {"dinali", "dabarera", "dinali@wso2.com"};
+        List<Attribute> attributes = new ArrayList<>();
+        for (int count = 0; count < 3; count ++) {
+            Attribute attribute = new Attribute();
+            attribute.setAttributeName(claims[count]);
+            attribute.setAttributeValue(values[count]);
+        }
+        usernameRecoveryPageAction.recoverUsername(driver, attributes);
+    }
 
-
-
+    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
+    public void backToSignIn() throws Exception {
+       usernameRecoveryPageAction.backToSignIn(driver);
+    }
 
 }

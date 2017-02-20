@@ -18,16 +18,33 @@
 
 package org.wso2.is.portal.user.test.ui;
 
-import org.testng.Assert;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
-//import org.wso2.carbon.iam.userportal.pageobject.LoginPage;
+import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
 
 public class SignInTest {
 
-    @Test(groups = "loginTest")
-    public void testLogin() {
-        Assert.assertTrue(true);
-        //Assert.assertEquals("gdhsagdj", "gfhyjwuiwqh");
+    private static LoginPageAction loginPageAction = new LoginPageAction();
+    private static WebDriver driver = new HtmlUnitDriver();
+
+    @Test(groups = "signInTest")
+    public void loadLoginPage() throws Exception {
+        driver.get("https://localhost:9292/user-portal");
     }
 
+    @AfterTest(dependsOnMethods = "loadLoginPage")
+    public void testLogin() throws Exception{
+        String username = "admin";
+        String password = "admin";
+        loginPageAction.login(driver, username, password);
+        testClickUsernameRecovery(driver);
+
+    }
+
+    @AfterTest(dependsOnMethods = "loadLoginPage")
+    public void testClickUsernameRecovery(WebDriver driver) throws Exception {
+        loginPageAction.clickForgetUsername(driver);
+    }
 }

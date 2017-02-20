@@ -22,7 +22,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Represents username recovery page.
  */
-public class UsernamerecoveryPage {
+public class UsernameRecoveryPage {
 
     private static WebElement element = null;
 
