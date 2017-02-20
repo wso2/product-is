@@ -89,4 +89,6 @@ public interface ChallengeQuestionManagerClientService {
 
     List<UserChallengeAnswer> getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
+
+    int getMinimumNoOfChallengeQuestionsToAnswer() throws IdentityRecoveryException;
 }

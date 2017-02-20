@@ -202,17 +202,19 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
+        int minNumOfSecurityQuestions = challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer();
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
         List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
-        if (challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer() < existingAnswers.size()) {
+        if (minNumOfSecurityQuestions < existingAnswers.size()) {
             existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
                     StringUtils.equals(answer.getQuestion().getQuestionSetId(),
                             new String(Base64.getDecoder().decode(questionSetId.getBytes(StandardCharsets.UTF_8)),
                                     StandardCharsets.UTF_8)));
             challengeQuestionManager.setChallengesOfUser(user, existingAnswers);
         } else {
-            String error = "Cannot delete minimum number of security questions";
+            String error = "Cannot delete security question. You need to have at least" +
+                    minNumOfSecurityQuestions + "security questions";
             throw new UserPortalUIException(error);
         }
     }
@@ -226,6 +228,13 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         return challengeQuestionManager.getChallengeAnswersOfUser
                 (userUniqueId);
+    }
+
+    public int getMinimumNoOfChallengeQuestionsToAnswer() throws IdentityRecoveryException {
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+        return challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer();
     }
 
     private String encodeChallengeQuestionSetId(String questionSetId) {
