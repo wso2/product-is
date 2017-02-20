@@ -240,6 +240,16 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     private String encodeChallengeQuestionSetId(String questionSetId) {
         return new String(Base64.getEncoder().encode(questionSetId.
                 getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
+        return challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
+    }
+
+    @Override
+    public boolean isQuestionBasedPwdRecoveryEnabled() throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException {
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+        return challengeQuestionManager.isQuestionBasedPwdRecoveryEnabledInPortal();
     }
 }
 

@@ -85,6 +85,11 @@
             <outputDirectory>deployment</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>carbon-home/conf/email</directory>
+            <outputDirectory>conf/email</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
     </fileSets>
 
     <files>

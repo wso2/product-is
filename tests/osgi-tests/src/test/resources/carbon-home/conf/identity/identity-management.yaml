@@ -14,9 +14,26 @@
 #   limitations under the License.
 ###############################################################################
 recovery:
- securityQuestion:
-  password:
-   enable: false
-   notifyStart: false
-   separator: "!"
-   minAnswers: 2
+ password:
+   enableAPI: true
+   enablePortal: true
+   url: "/user-portal/recovery/password"
+   securityQuestion:
+    enableAPI: true
+    enablePortal: true
+    notifyStart: false
+    minAnswers: 2
+   notificationBased:
+    recoveryLink:
+        enableAPI: true
+        enablePortal: true
+    recoveryCode:
+        enableAPI: true
+        enablePortal: true
+   external:
+     enablePortal: false
+     url: "https://somewhere.com"
+ username:
+  enableAPI: true
+  enablePortal: true
+  url: "/user-portal/recovery/username"
