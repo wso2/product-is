@@ -36,7 +36,7 @@ public class UsernamerecoveryPage {
         return element;
     }
 
-    public static WebElement txtbx_FirstName(WebDriver driver, String label) {
+    public static WebElement txtbx_ClaimLabel(WebDriver driver, String label) {
         element = driver.findElement(By.id(label));
         return element;
     }
