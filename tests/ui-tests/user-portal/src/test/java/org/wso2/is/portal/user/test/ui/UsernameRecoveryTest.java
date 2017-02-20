@@ -18,10 +18,9 @@
 
 package org.wso2.is.portal.user.test.ui;
 
-
-import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
 import org.wso2.carbon.identity.mgt.connector.Attribute;
 
@@ -48,7 +47,7 @@ public class UsernameRecoveryTest {
         String[] claims = {"givenname", "lastname", "email"};
         String[] values = {"dinali", "dabarera", "dinali@wso2.com"};
         List<Attribute> attributes = new ArrayList<>();
-        for (int count = 0; count < 3; count ++) {
+        for (int count = 0; count < 3; count++) {
             Attribute attribute = new Attribute();
             attribute.setAttributeName(claims[count]);
             attribute.setAttributeValue(values[count]);

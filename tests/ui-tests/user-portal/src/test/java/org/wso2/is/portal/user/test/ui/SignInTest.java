@@ -35,7 +35,7 @@ public class SignInTest {
     }
 
     @AfterTest(dependsOnMethods = "loadLoginPage")
-    public void testLogin() throws Exception{
+    public void testLogin() throws Exception {
         String username = "admin";
         String password = "admin";
         loginPageAction.login(driver, username, password);
