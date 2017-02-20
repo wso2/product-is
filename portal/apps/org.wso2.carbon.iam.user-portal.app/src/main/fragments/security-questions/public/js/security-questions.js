@@ -36,10 +36,10 @@ function editQuestion(questionId, questionSetId, questionText) {
 }
 
 /*function updateQuestion() {
-    $("#add-question").hide();
-    $("#list-questions").show();
-    $("#edit-question").hide();
-}*/
+ $("#add-question").hide();
+ $("#list-questions").show();
+ $("#edit-question").hide();
+ }*/
 
 function deleteQuestion(questionId, questionSetId) {
 
@@ -79,6 +79,38 @@ function deleteQuestion(questionId, questionSetId) {
 function addQuestion() {
     $("#add-question").show();
     $("#create-question").hide();
+}
+
+function checkMinQuestions() {
+    var count = 0;
+    var minQuestions = $("#min-questions").val();
+    $('.question-answer').each(function () {
+        if ($(this).val()) {
+            count = count + 1;
+        }
+    });
+    if (count >= minQuestions) {
+        $('#questionAdd').submit();
+    } else {
+        var fillingObject = {
+            "id": "min-val",
+            "alertClass": "danger",
+            "class": "",
+            "icon": "fw fw-error",
+            "alertTitle": "Failure!",
+            "alertBody": "Please provide answers for at least minimum number of questions allowed",
+            "dismissable": true
+
+        };
+        var callbacks = {
+            onSuccess: function () {
+            },
+            onFailure: function (e) {
+            }
+        };
+        UUFClient.renderFragment("org.wso2.carbon.uuf.common.foundation.ui.alert", fillingObject,
+            "minQuestionError-area", "OVERWRITE", callbacks);
+    }
 }
 
 function goBack() {

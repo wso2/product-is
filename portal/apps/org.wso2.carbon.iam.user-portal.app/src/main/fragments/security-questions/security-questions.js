@@ -16,6 +16,7 @@
 
 function onGet(env) {
     var data = {};
+
     data.passwordform=true;
     return data;
 }
@@ -27,6 +28,7 @@ function onPost(env) {
         , getChallengeQuestionsResult, ids, newAnswer, questionId, questionSetId, updateChallengeQResult
         , deleteChallengeQResult;
     data.success = true;
+    data.minQuestions =getMinimumNoOfQuestionsToAnswer().data;
     session = getSession();
     userUniqueId = session.getUser().getUserId();
     action = env.request.formParams["action"];
@@ -64,20 +66,34 @@ function onPost(env) {
                 questionId = idsArray[1];
                 var answerId = "question-answer-" + questionSetId;
                 var answer = env.request.formParams[answerId];
-                var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
-                    "challengeQAdd");
-                if (!addChallengeQResult.success) {
-                    data.isUserAuthenticated = true;
-                    data.success = addChallengeQResult.success;
-                    data.message = addChallengeQResult.message;
-                    break;
-                } else {
-                    data.isUserHasQuestions = true;
-                    data.success = addChallengeQResult.success;
-                    data.message = addChallengeQResult.message;
+                if(answer) {
+                    var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
+                        "challengeQAdd");
+                    if (!addChallengeQResult.success) {
+                        getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
+                        data.questionList = getChallengeQuestionsResult.data;
+                        data.isUserAuthenticated = true;
+                        data.success = addChallengeQResult.success;
+                        data.message = addChallengeQResult.message;
+                        break;
+                    } else {
+                        data.isUserHasQuestions = true;
+                        data.success = addChallengeQResult.success;
+                        data.message = addChallengeQResult.message;
+                        getChallengeQResult = getUserQuestions(userUniqueId);
+                        if (getChallengeQResult.data !== null) {
+                            if (getChallengeQResult.data.length === 0) {
+                                data.isUserHasQuestions = false;
+                            } else {
+                                data.isUserHasQuestions = true;
+                                data.userQuestions = getChallengeQResult.data;
+                            }
+                        }
+                    }
                 }
             }
         }
+        return data;
     } else if (action === "update-question") {
 
         // Update question answer flow.
@@ -157,5 +173,15 @@ function authenticate(username, password, domain) {
         return {success: true, message: "success"};
     } catch (e) {
         return {success: false, message: 'security.question.error.invalidPassword'};
+    }
+}
+
+function getMinimumNoOfQuestionsToAnswer(){
+    try{
+    var minNumOfQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+        "getMinimumNoOfChallengeQuestionsToAnswer", []);
+        return {success: true, data: minNumOfQuestions};
+    } catch (e) {
+        return {success: false, message: 'security.question.error.getMinimumNoOfChallengeQuestionsToAnswer'};
     }
 }
