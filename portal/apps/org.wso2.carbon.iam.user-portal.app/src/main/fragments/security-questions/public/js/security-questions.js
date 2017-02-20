@@ -81,7 +81,7 @@ function addQuestion() {
     $("#create-question").hide();
 }
 
-function checkMinQuestion() {
+function checkMinQuestions() {
     var count = 0;
     var minQuestions = $("#min-questions").val();
     $('.question-answer').each(function () {
