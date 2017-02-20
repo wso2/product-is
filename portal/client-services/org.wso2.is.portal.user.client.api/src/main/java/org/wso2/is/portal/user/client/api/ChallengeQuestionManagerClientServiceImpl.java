@@ -240,7 +240,6 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     private String encodeChallengeQuestionSetId(String questionSetId) {
         return new String(Base64.getEncoder().encode(questionSetId.
                 getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
-        return challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
     }
 
     @Override
