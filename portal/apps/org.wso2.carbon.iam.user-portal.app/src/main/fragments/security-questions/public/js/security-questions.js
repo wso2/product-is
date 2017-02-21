@@ -99,7 +99,7 @@ function checkMinQuestions() {
             "class": "",
             "icon": "fw fw-error",
             "alertTitle": "Failure!",
-            "alertBody": "Please provide answers to add security questions",
+            "alertBody": "Answer is empty. Please enter a valid answer",
             "dismissable": true
 
         };

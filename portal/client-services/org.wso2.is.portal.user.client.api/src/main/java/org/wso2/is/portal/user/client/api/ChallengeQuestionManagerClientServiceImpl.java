@@ -251,8 +251,11 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     public List<ChallengeQuestionSetEntry> getRemainingChallengeQuestions(String userUniqueId) throws
             IdentityRecoveryException, IdentityStoreException, UserNotFoundException {
 
-        if (challengeQuestionManager == null || realmService == null) {
-            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        if (challengeQuestionManager == null) {
+            throw new IdentityRecoveryException("Challenge question manager is not available.");
+        }
+        if (realmService == null) {
+            throw new IdentityRecoveryException("Realm service is not available.");
         }
         List<ChallengeQuestionSetEntry> challengeQuestionSetEntries = getChallengeQuestionList(userUniqueId);
         List<UserChallengeAnswer> existingAnswers = getChallengeAnswersOfUser(userUniqueId);
@@ -265,8 +268,8 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
             ChallengeQuestion challengeQuestion = existingAnswersIterator.next().getQuestion();
             for (int i = 0; i < listofSetIds.size(); i++) {
                 if (StringUtils.equals(challengeQuestion.getQuestionSetId(), new String(Base64.getDecoder()
-                        .decode(listofSetIds.get(i).getBytes(Charset.forName("UTF-8"))),
-                        Charset.forName("UTF-8")))) {
+                        .decode(listofSetIds.get(i).getBytes(StandardCharsets.UTF_8)),
+                        StandardCharsets.UTF_8))) {
                     String setId = listofSetIds.get(i);
                     challengeQuestionSetEntries.removeIf(challengeQuestionSetEntry ->
                             StringUtils.equals(challengeQuestionSetEntry.getChallengeQuestionSetId(), setId));
