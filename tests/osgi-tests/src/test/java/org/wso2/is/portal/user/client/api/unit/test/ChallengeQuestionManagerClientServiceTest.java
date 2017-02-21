@@ -39,7 +39,7 @@ import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -126,8 +126,8 @@ public class ChallengeQuestionManagerClientServiceTest {
         try {
             challengeQuestionManagerClientService.setChallengeQuestionForUser(users.get(0).getUserId(),
                     challengeQuestions.get(0).getQuestionId(), new String(Base64.getEncoder().encode
-                            (challengeQuestions.get(0).getQuestionSetId().getBytes(Charset.forName("UTF-8"))),
-                            Charset.forName("UTF-8")), "Answer1");
+                            (challengeQuestions.get(0).getQuestionSetId().getBytes(StandardCharsets.UTF_8)),
+                            StandardCharsets.UTF_8), "Answer1");
         } catch (IdentityStoreException | UserNotFoundException | IdentityRecoveryException e) {
             throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
         }
