@@ -25,3 +25,4 @@ function onGet(env) {
         sendRedirect(env.contextPath + env.config['loginPageUri']);
     }
 }
+

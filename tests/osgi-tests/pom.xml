@@ -512,6 +512,44 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <version>1.4.191</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <url>
+                                jdbc:h2:file:${basedir}/target/test-classes/carbon-home/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE
+                            </url>
+                            <username>wso2carbon</username>
+                            <password>wso2carbon</password>
+                            <driver>org.h2.Driver</driver>
+                        </configuration>
+                        <executions>
+                            <!--Create the database-->
+                            <execution>
+                                <id>create-database</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <srcFiles>
+                                        <srcFile>
+                                            ${basedir}/target/test-classes/dbscripts/identity-mgt/test-data.sql
+                                        </srcFile>
+                                    </srcFiles>
+                                    <onError>abort</onError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>

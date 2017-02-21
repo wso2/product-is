@@ -31,6 +31,7 @@ import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
+import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -38,8 +39,10 @@ import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,34 +123,33 @@ public class ChallengeQuestionManagerClientServiceTest {
 
         users.add(user);
 
-       /* try {
+        try {
             challengeQuestionManagerClientService.setChallengeQuestionForUser(users.get(0).getUserId(),
-                    challengeQuestions.get(0).getQuestionId(),
-                    challengeQuestions.get(0).getQuestionSetId(), "Answer1");
+                    challengeQuestions.get(0).getQuestionId(), new String(Base64.getEncoder().encode
+                            (challengeQuestions.get(0).getQuestionSetId().getBytes(StandardCharsets.UTF_8)),
+                            StandardCharsets.UTF_8), "Answer1", "challengeQAdd");
         } catch (IdentityStoreException | UserNotFoundException | IdentityRecoveryException e) {
             throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
         }
-        LOGGER.info("Test Passed. Successfully set challenge questions for the user.");*/
-        /*UserChallengeAnswer[] userChallengeAnswers = challengeQuestionManagerClientService
+        LOGGER.info("Test Passed. Successfully set challenge questions for the user.");
+        List<UserChallengeAnswer> userChallengeAnswers = challengeQuestionManagerClientService
                 .getChallengeAnswersOfUser(users.get(0).getUserId());
 
         Assert.assertNotNull(userChallengeAnswers, "Failed to set challenge questions for the user.");
 
         boolean isAdded = false;
         for (UserChallengeAnswer challengeAnswer : userChallengeAnswers) {
-            if (challengeAnswer.getQuestion().equals(challengeQuestions.get(0).getQuestion())) {
-                Assert.assertEquals(challengeAnswer.getAnswer(), "Answer1",
-                        "Failed to set challenge questions for the user.");
-                isAdded = true;
-            }
+            Assert.assertEquals(challengeAnswer.getQuestion().getQuestion(), challengeQuestions.get(0).getQuestion(),
+                    "Failed to set challenge questions for the user.");
+            isAdded = true;
         }
         if (!isAdded) {
             throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
-        }*/
+        }
     }
 
 
-    /*@Test(groups = "getChallengeQuestionForUser", dependsOnGroups = {"getChallengeQuestionList",
+    @Test(groups = "getChallengeQuestionForUser", dependsOnGroups = {"getChallengeQuestionList",
             "setChallengeQuestion"})
     public void testGetAllChallengeQuestionsForUser() throws IdentityRecoveryException, IdentityStoreException,
             UserNotFoundException {
@@ -160,7 +162,7 @@ public class ChallengeQuestionManagerClientServiceTest {
         List<ChallengeQuestion> challengeQuestions = challengeQuestionManagerClientService
                 .getAllChallengeQuestionsForUser(users.get(0).getUserId());
         Assert.assertNotNull(challengeQuestions, "Failed to retrieve the challenge question list for user.");
-    }*/
+    }
 
    /* @Test(dependsOnGroups = {"setChallengeQuestion"})
     public void testGetAllChallengeQuestionsForUser() throws UserPortalUIException, UserNotFoundException,

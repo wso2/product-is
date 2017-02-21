@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+module("recovery-manager");
 
 function getDomainNames(env) {
     var domainNames;
@@ -25,6 +26,14 @@ function getDomainNames(env) {
         }
     }
     return domainNames;
+}
+
+function getRecoveryConfigInfo(){
+    var recoveryConfig = recoveryManager.getRecoveryConfigs();
+    return {
+        passwordRecoveryUrl: recoveryConfig.getPassword().getUrl() || env.contextPath + '/recovery/password',
+        usernameRecoveryUrl: recoveryConfig.getUsername().getUrl() || env.contextPath + '/recovery/username'
+    };
 }
 
 function getPrimaryDomainName(env) {
@@ -43,6 +52,9 @@ function getPrimaryDomainName(env) {
 
 function authenticate(username, password, domain) {
     try {
+        if (!(username && password)) {
+            return {success: false, message: 'login.error.empty.authentication'};
+        }
         var passwordChar = Java.to(password.split(''), 'char[]');
         var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "authenticate", [username, passwordChar, domain]);
@@ -70,8 +82,8 @@ function onGet(env) {
     }
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
-   
-    return { "domainNames":domainNames, "primaryDomainName":primaryDomainName};
+    var recoverynfo = getRecoveryConfigInfo();
+    return { domainNames:domainNames, primaryDomainName:primaryDomainName, recoveryInfo: recoverynfo };
 }
 
 
@@ -103,7 +115,9 @@ function onPost(env) {
     } else {
         var domainNames = getDomainNames(env);
         var primaryDomainName = getPrimaryDomainName(env);
-        return {errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName};
+        var recoverynfo = getRecoveryConfigInfo();
+        return { errorMessage: result.message, domainNames: domainNames, primaryDomainName:primaryDomainName,
+            recoveryInfo: recoverynfo };
     }
 }
 

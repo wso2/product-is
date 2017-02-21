@@ -136,4 +136,20 @@ $(window).load(function () {
             }
         }
     });
+
+    //add show /hide option on password field
+    $('input[type=password]').after('<span class="hide-pass" title="Show/Hide Password"><i class="fw fw-view"></i> </span>');
+    var highPass = $('.hide-pass');
+    $(highPass).click(function(){
+        if($(this).find('i').hasClass("fw-hide")){
+            $(this).parent().find('input[data-schemaformat=password]').attr('type', 'password');
+            $(this).find('i').removeClass( "fw-hide" );
+            $(this).find('i').addClass( "fw-view");
+        }else{
+            $(this).find('i').removeClass( "fw-view" );
+            $(this).find('i').addClass( "fw-hide");
+            $(this).parent().find('input[data-schemaformat=password]').attr('type', 'text');
+        }
+    });
+
 });

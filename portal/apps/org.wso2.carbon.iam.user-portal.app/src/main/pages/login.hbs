@@ -49,6 +49,9 @@
                                         <input type="hidden" name="domain" id="domain"
                                                class="form-control"/>
                                         <select class="form-control" id="domainSelector" data-primary={{primaryDomainName}}>
+                                        <label for="domainSelector" class="control-label">{{i18n "domain"}}</label>
+                                        <select class="form-control" id="domainSelector"
+                                                data-primary="{{primaryDomainName}}">
                                             {{#each domainNames}}
                                                 <option value={{this}}>{{this}}</option>
                                             {{/each}}
@@ -59,16 +62,19 @@
 
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <label for="username" class="control-label">{{i18n "username"}}</label>
+
                                     <div class="input-group input-wrap">
-                                        <input type="text" name="username" class="form-control" placeholder="Username">
+                                        <input type="text" name="username" class="form-control" id="username">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <label for="password" class="control-label">{{i18n "password"}}</label>
+
                                     <div class="input-group input-wrap">
-                                        <input type="password" name="password" class="form-control"
-                                               placeholder="Password">
+                                        <input type="password" name="password" class="form-control" id="password">
                                     </div>
                                 </div>
                             </div>
@@ -80,9 +86,14 @@
                                     <!--<button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>-->
                                 </div>
                             </div>
+                            <p>{{i18n "forgot.your"}}&nbsp;<a
+                                    href="{{recoveryInfo.usernameRecoveryUrl}}">{{i18n "username"}}
+                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}">
+                                {{i18n "password"}}</a>&nbsp;?
+                            </p>
+
                             <p class="hidden-xs hidden-sm">{{i18n "signup.message"}}<a
-                                    href="{{@contextPath}}/signup">
-                                &nbsp;{{i18n "signup.title"}}</a>
+                                    href="{{@contextPath}}/signup">&nbsp;{{i18n "signup.title"}}</a>
                             </p>
                         </form>
                     </div>

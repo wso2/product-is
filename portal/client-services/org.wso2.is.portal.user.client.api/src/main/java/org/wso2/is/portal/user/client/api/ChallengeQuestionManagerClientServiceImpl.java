@@ -33,10 +33,16 @@ import org.wso2.carbon.identity.recovery.ChallengeQuestionManager;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
+import org.wso2.is.portal.user.client.api.bean.ChallengeQuestionSetEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -98,23 +104,32 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     }
 
     @Override
-    public List<ChallengeQuestion> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
+    public List<ChallengeQuestionSetEntry> getChallengeQuestionList(String userUniqueId) throws
+            IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException {
 
+        List<ChallengeQuestionSetEntry> challengeQuestionSetEntryList = new ArrayList<ChallengeQuestionSetEntry>();
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
-
         User user = realmService.getIdentityStore().getUser(userUniqueId);
-
-        return challengeQuestionManager.getAllChallengeQuestionsForUser(user)
-                .stream()
-                .map(challengeQuestion -> {
-                    challengeQuestion.setQuestionSetId(new String(Base64.getEncoder().encode(challengeQuestion
-                            .getQuestionSetId().getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8")));
-                    return challengeQuestion;
-                })
-                .collect(Collectors.toList());
+        List<ChallengeQuestion> challengeQuestions = challengeQuestionManager.getAllChallengeQuestionsForUser(user);
+        Map<String, List<ChallengeQuestion>> groupedChallengeQuestionMap = challengeQuestions.stream()
+                .collect(Collectors
+                .groupingBy(ChallengeQuestion::getQuestionSetId));
+        for (Map.Entry<String, List<ChallengeQuestion>> entry : groupedChallengeQuestionMap.entrySet()) {
+            ChallengeQuestionSetEntry challengeQuestionSetEntry = new ChallengeQuestionSetEntry();
+            challengeQuestionSetEntry.setChallengeQuestionSetId(encodeChallengeQuestionSetId(entry.getKey()));
+            List<ChallengeQuestion> encodedSetIdChallengeQuestionsList = entry.getValue().stream().
+                    map(challengeQuestion -> {
+                        challengeQuestion.setQuestionSetId(encodeChallengeQuestionSetId(challengeQuestion
+                                .getQuestionSetId()));
+                        return challengeQuestion;
+                    }).collect(Collectors.toList());
+            challengeQuestionSetEntry.setChallengeQuestionList(encodedSetIdChallengeQuestionsList);
+            challengeQuestionSetEntryList.add(challengeQuestionSetEntry);
+        }
+        return challengeQuestionSetEntryList;
     }
 
     @Override
@@ -126,7 +141,7 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         }
 
         List<UserChallengeAnswer> userChallengeAnswers = challengeQuestionManager
-                .getChallengeAnswersOfUser(realmService.getIdentityStore().getUser(userUniqueId));
+                .getChallengeAnswersOfUser(userUniqueId);
 
         return userChallengeAnswers
                 .stream()
@@ -139,7 +154,8 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
     }
 
     @Override
-    public void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer)
+    public void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer,
+                                            String actionId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException {
 
         if (challengeQuestionManager == null || realmService == null) {
@@ -148,7 +164,21 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
-        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
+        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
+
+        if (StringUtils.equals(actionId, "challengeQUpdate")) {
+            Iterator<UserChallengeAnswer> existingAnswersIterator = existingAnswers.iterator();
+            while (existingAnswersIterator.hasNext()) {
+                ChallengeQuestion challengeQuestion = existingAnswersIterator.next().getQuestion();
+                if (StringUtils.equals(challengeQuestion.getQuestionSetId(),
+                        new String(Base64.getDecoder().decode(questionSetId.getBytes(Charset.forName("UTF-8"))),
+                                Charset.forName("UTF-8"))) &&
+                        StringUtils.equals(challengeQuestion.getQuestionId(), questionId)) {
+                    existingAnswersIterator.remove();
+                    break;
+                }
+            }
+        }
 
         List<ChallengeQuestion> challengeQuestions = challengeQuestionManager.getAllChallengeQuestionsForUser(user);
         ChallengeQuestion challengeQuestion = challengeQuestions.stream()
@@ -167,22 +197,26 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
 
     @Override
     public void deleteChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId)
-            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException {
+            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException, UserPortalUIException {
 
         if (challengeQuestionManager == null || realmService == null) {
             throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
         }
-
+        int minNumOfSecurityQuestions = challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer();
         User user = realmService.getIdentityStore().getUser(userUniqueId);
 
-        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(user);
-
-        existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
-                StringUtils.equals(answer.getQuestion().getQuestionSetId(),
-                        new String(Base64.getDecoder().decode(questionSetId.getBytes(Charset.forName("UTF-8"))),
-                                Charset.forName("UTF-8"))));
-
-        challengeQuestionManager.setChallengesOfUser(user, existingAnswers);
+        List<UserChallengeAnswer> existingAnswers = challengeQuestionManager.getChallengeAnswersOfUser(userUniqueId);
+        if (minNumOfSecurityQuestions < existingAnswers.size()) {
+            existingAnswers.removeIf(answer -> StringUtils.equals(answer.getQuestion().getQuestionId(), questionId) &&
+                    StringUtils.equals(answer.getQuestion().getQuestionSetId(),
+                            new String(Base64.getDecoder().decode(questionSetId.getBytes(StandardCharsets.UTF_8)),
+                                    StandardCharsets.UTF_8)));
+            challengeQuestionManager.setChallengesOfUser(user, existingAnswers);
+        } else {
+            String error = "Cannot delete security question. You need to have at least" +
+                    minNumOfSecurityQuestions + "security questions";
+            throw new UserPortalUIException(error);
+        }
     }
 
     @Override
@@ -193,7 +227,28 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         }
 
         return challengeQuestionManager.getChallengeAnswersOfUser
-                (realmService.getIdentityStore().getUser(userUniqueId));
+                (userUniqueId);
+    }
+
+    public int getMinimumNoOfChallengeQuestionsToAnswer() throws IdentityRecoveryException {
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+        return challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer();
+    }
+
+    private String encodeChallengeQuestionSetId(String questionSetId) {
+        return new String(Base64.getEncoder().encode(questionSetId.
+                getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
+    }
+
+    @Override
+    public boolean isQuestionBasedPwdRecoveryEnabled() throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException {
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+        return challengeQuestionManager.isQuestionBasedPwdRecoveryEnabledInPortal();
     }
 }
 

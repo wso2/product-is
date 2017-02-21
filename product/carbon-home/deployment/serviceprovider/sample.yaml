@@ -6,13 +6,15 @@ serviceProviderConfig:
           type: "SAML"
           uniquePropertyName : "issuer"
           properties:
-            issuer : "ravelocity.com"
+            issuer : "travelocity.com"
             assertionConsumerUrls:
                 - "http://localhost:8080/travelocity.com/home.jsp"
-                - "https://wso2.acme.instructure.com/login/saml"
+            defaultAssertionConsumerUrl : "http://localhost:8080/travelocity.com/home.jsp"
             nameIDformat: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-            certificateAlias: "wso2Carbon"
-            responseSigningAlgorithm : "http://www.w3.org/2000/09/xmldsig#dsa-sha1"
+            certificateAlias: "wso2carbon"
+            enableAttributesByDefault : "true"
+            idPInitSSOEnabled : "true"
+            attributeConsumingServiceIndex : "2342342"
       -
           type: "oidc"
           uniquePropertyName : "key"
@@ -35,22 +37,24 @@ serviceProviderConfig:
         authStrategy : ""
         identityProviders :
           -
-            identityProviderName : "fed"
-            authenticatorName : "Google"
-            identityProviderConfig :
-          -
-            identityProviderName : "fed"
-            authenticatorName : "Facebook"
-
-      -
-        identityProviders :
-          -
-            identityProviderName : "resident-idp"
-            authenticatorName : "BasicAuthenticator"
+            identityProviderName : "myidp"
+            authenticatorName : "SAML2SSOAuthenticator"
 
   responseBuildingConfig:
     responseBuilderConfigs:
       -
         type: "SAML"
         properties:
-          responseSigning : "true"
+          defaultAssertionConsumerUrl : "http://localhost:8080/travelocity.com/home.jsp"
+          certificateAlias : "wso2carbon"
+          doSignResponse : "true"
+          doSingleLogout : "false"
+          doSignAssertions : "true"
+          attributeConsumingServiceIndex : "2342342"
+          enableAttributesByDefault : ""
+          doEnableEncryptedAssertion : "false"
+          signingAlgorithmUri : "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+          digestAlgorithmUri : "http://www.w3.org/2000/09/xmldsig#sha1"
+          requestedAudiences :
+            - "testing"
+            - "testing2"
