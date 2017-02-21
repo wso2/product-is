@@ -91,4 +91,10 @@ public interface ChallengeQuestionManagerClientService {
             IdentityStoreException, UserNotFoundException;
 
     int getMinimumNoOfChallengeQuestionsToAnswer() throws IdentityRecoveryException;
+
+    boolean hasUserAnsweredQuestions(String userUniqueId) throws IdentityRecoveryException, IdentityStoreException,
+            UserNotFoundException;
+
+    List<ChallengeQuestionSetEntry> getRemainingChallengeQuestions(String userUniqueId) throws
+            IdentityRecoveryException, IdentityStoreException, UserNotFoundException;
 }

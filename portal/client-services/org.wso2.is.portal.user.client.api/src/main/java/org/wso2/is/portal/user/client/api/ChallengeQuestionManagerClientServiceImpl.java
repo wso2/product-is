@@ -237,6 +237,46 @@ public class ChallengeQuestionManagerClientServiceImpl implements ChallengeQuest
         return challengeQuestionManager.getMinimumNoOfChallengeQuestionsToAnswer();
     }
 
+    public boolean hasUserAnsweredQuestions(String userUniqueID) throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException {
+
+        List<UserChallengeAnswer> existingAnswers = getChallengeAnswersOfUser(userUniqueID);
+        if (!existingAnswers.isEmpty() && existingAnswers.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<ChallengeQuestionSetEntry> getRemainingChallengeQuestions(String userUniqueId) throws
+            IdentityRecoveryException, IdentityStoreException, UserNotFoundException {
+
+        if (challengeQuestionManager == null || realmService == null) {
+            throw new IdentityRecoveryException("Challenge question manager or Realm service is not available.");
+        }
+        List<ChallengeQuestionSetEntry> challengeQuestionSetEntries = getChallengeQuestionList(userUniqueId);
+        List<UserChallengeAnswer> existingAnswers = getChallengeAnswersOfUser(userUniqueId);
+        List<String> listofSetIds = new ArrayList<String>();
+        for (ChallengeQuestionSetEntry challengeQuestionSetEntry : challengeQuestionSetEntries) {
+            listofSetIds.add(challengeQuestionSetEntry.getChallengeQuestionSetId());
+        }
+        Iterator<UserChallengeAnswer> existingAnswersIterator = existingAnswers.iterator();
+        while (existingAnswersIterator.hasNext()) {
+            ChallengeQuestion challengeQuestion = existingAnswersIterator.next().getQuestion();
+            for (int i = 0; i < listofSetIds.size(); i++) {
+                if (StringUtils.equals(challengeQuestion.getQuestionSetId(), new String(Base64.getDecoder()
+                        .decode(listofSetIds.get(i).getBytes(Charset.forName("UTF-8"))),
+                        Charset.forName("UTF-8")))) {
+                    String setId = listofSetIds.get(i);
+                    challengeQuestionSetEntries.removeIf(challengeQuestionSetEntry ->
+                            StringUtils.equals(challengeQuestionSetEntry.getChallengeQuestionSetId(), setId));
+                }
+            }
+
+        }
+        return challengeQuestionSetEntries;
+    }
+
     private String encodeChallengeQuestionSetId(String questionSetId) {
         return new String(Base64.getEncoder().encode(questionSetId.
                 getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
