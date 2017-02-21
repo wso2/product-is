@@ -83,8 +83,8 @@ public class RecoveryMgtServiceTest {
     public void getUserChallengeQuestionAtOnce() throws UserPortalUIException, IdentityRecoveryException {
 
         addUser();
-        getAllChallangeQuestionsForUser();
-        addChallangeQuestionForUser();
+        getAllChallengeQuestionsForUser();
+        addChallengeQuestionForUser();
         challengeQuestionsResponse = recoveryMgtService.getUserChallengeQuestionAtOnce(users.get(0).getUserId());
         Assert.assertNotNull(challengeQuestionsResponse, "Failed to start challenge question based password recovery " +
                 "for the user");
@@ -159,7 +159,7 @@ public class RecoveryMgtServiceTest {
         users.add(user);
     }
 
-    private void getAllChallangeQuestionsForUser() throws IdentityRecoveryException {
+    private void getAllChallengeQuestionsForUser() throws IdentityRecoveryException {
         ChallengeQuestionManagerClientService challengeQuestionManagerClientService =
                 bundleContext.getService(bundleContext.getServiceReference
                         (ChallengeQuestionManagerClientService.class));
@@ -172,7 +172,7 @@ public class RecoveryMgtServiceTest {
         this.challengeQuestions = challengeQuestions;
     }
 
-    private void addChallangeQuestionForUser() throws UserPortalUIException {
+    private void addChallengeQuestionForUser() throws UserPortalUIException {
         ChallengeQuestionManagerClientService challengeQuestionManagerClientService =
                 bundleContext.getService(bundleContext.getServiceReference
                         (ChallengeQuestionManagerClientService.class));
