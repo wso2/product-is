@@ -141,8 +141,10 @@ var recoveryManager = {};
             return result;
             // TODO Backend throws error when user doesn't exist with useId, has to distinguish no-user exists
         }
+        // TODO handle account locked(17003) and disabled(17004) status
         result.code = challengeQuestionsResponse.getCode();
         result.data = challengeQuestionsResponse.getQuestions();
+        result.status = challengeQuestionsResponse.getStatus();
         return result;
     }
 

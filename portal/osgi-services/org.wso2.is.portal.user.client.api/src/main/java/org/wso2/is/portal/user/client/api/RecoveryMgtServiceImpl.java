@@ -19,6 +19,7 @@
 package org.wso2.is.portal.user.client.api;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -33,6 +34,7 @@ import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
+import org.wso2.carbon.identity.recovery.IdentityRecoveryConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
@@ -44,6 +46,7 @@ import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryMa
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -151,8 +154,13 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
             log.error("UserNotFoundFor userID: " + userUniqueId, e);
             throw new UserPortalUIException("UserNotFoundFor userID: " + userUniqueId);
         } catch (IdentityRecoveryException e) {
-            log.error("Error while getting recovery questions for userID: " + userUniqueId, e);
-            throw new UserPortalUIException("Error while getting recovery questions for userID: " + userUniqueId);
+            log.error("Error while starting challenge question based recovery for userID: " + userUniqueId, e);
+            String errorCode = !StringUtils.isEmpty(e.getErrorCode()) ? e.getErrorCode() : IdentityRecoveryConstants
+                    .ErrorMessages.ERROR_CODE_UNEXPECTED.getCode();
+            ChallengeQuestionsResponse challengeQuestionResponse = new ChallengeQuestionsResponse(Collections
+                    .EMPTY_LIST);
+            challengeQuestionResponse.setStatus(errorCode);
+            return challengeQuestionResponse;
         }
     }
 
