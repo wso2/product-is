@@ -1,0 +1,73 @@
+identityProviderConfig:
+  name: "myidp"
+
+  idpMetaData :
+    properties :
+      sampleProperty : "testValue"
+    certificates :
+      -
+        key : "primary"
+        value : "MIICNTCCAZ6gAwIBAgIES343gjANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJV
+UzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoM
+BFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xMDAyMTkwNzAyMjZaFw0zNTAy
+MTMwNzAyMjZaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwN
+TW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUp/oV1vWc8/TkQSiAvTousMzO
+M4asB2iltr2QKozni5aVFu818MpOLZIr8LMnTzWllJvvaA5RAAdpbECb+48FjbBe
+0hseUdN5HpwvnH/DW8ZccGvk53I6Orq7hLCv1ZHtuOCokghz/ATrhyPq+QktMfXn
+RS4HrKGJTzxaCcU7OQIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBPAwDQYJKoZIhvcN
+AQEFBQADgYEAW5wPR7cr1LAdq+IrR44iQlRG5ITCZXY9hI0PygLP2rHANh+PYfTm
+xbuOnykNGyhM6FjFLbW2uZHQTY1jMrPprjOrmyK5sjJRO4d1DeGHT/YnIjs9JogR
+Kv4XHECwLtIVdAbIdWHEtVZJyMSktcyysFcvuhPQK8Qc/E/Wq8uHSCo="
+    federationHub : "false"
+    homeRealm : "false"
+
+    claimConfig:
+       profile : "null"
+       dialectUri : "http://wso2.org/claims"
+
+    roleConfig :
+      roleMappings :
+        -
+          localRoleName : "admin"
+          idpRoleName : "fed-role"
+
+  authenticationConfig :
+    requestedClaimUris :
+      - "http://wso2.org/claims/firstName"
+      - "http://wso2.org/claims/lastName"
+    authenticatorConfigs:
+      -
+        name : "SAML2SSOAuthenticator"
+        properties :
+          RequestBinding : "POST"
+          Force : "false"
+          Passive : "false"
+          SAML2SSOUrl : https://localhost:9443/samlsso
+          entityId : "wso2"
+          ssoURL : "http://localhost:9443/gateway"
+          AuthnRequestSigned : "false"
+          AuthnResponseSigned : "false"
+          AuthnRequestEnrypted : "false"
+          DigestAlgo : "http://www.w3.org/2000/09/xmldsig#sha1"
+          SignatureAlgo : "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+
+  provisioningConfig :
+
+    jitProvisioningConfig :
+      provisioningIdPs :
+        - "linkedin,facebook"
+    provisioningClaimConfigs :
+      -
+        claimId : ""
+        defaultValue : ""
+
+    provisioningRoles :
+      - "admin"
+      - "test"
+
+    provisionerConfigs :
+      -
+        name : "local"
+        properties :
+          test : "testValue"

@@ -183,6 +183,26 @@
             <artifactId>org.wso2.carbon.lcm.sql.feature</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.resource.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
+            <artifactId>org.wso2.carbon.identity.sso.saml.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</groupId>
+            <artifactId>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
         <!--Other Dependencies-->
         <dependency>
             <groupId>org.osgi</groupId>
@@ -460,6 +480,23 @@
                                     <id>org.wso2.carbon.event.handler.notification.server.feature</id>
                                     <version>${org.wso2.carbon.identity.event.handler.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.sso.saml.server.feature</id>
+                                    <version>${carbon.identity.saml.inbound.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature</id>
+                                    <version>${carbon.identity.saml.outbound.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
@@ -635,6 +672,22 @@
                                 <feature>
                                     <id>org.wso2.carbon.event.handler.notification.server.feature</id>
                                     <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.sso.saml.server.feature</id>
+                                    <version>${carbon.identity.saml.inbound.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature</id>
+                                    <version>${carbon.identity.saml.outbound.version}</version>
                                 </feature>
                             </features>
                         </configuration>
