@@ -49,7 +49,7 @@ public class UsernameRecoveryTest {
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
     public void testUssernameRecovery() throws Exception {
-        Map<String,String> attibuteMap = new HashMap<>();
+        Map<String, String> attibuteMap = new HashMap<>();
         attibuteMap.put("givenname", "dinali");
         attibuteMap.put("lastname", "silva");
         attibuteMap.put("email", "dinali@wso2.com");
