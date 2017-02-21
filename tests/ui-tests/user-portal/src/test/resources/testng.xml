@@ -23,6 +23,7 @@
     <test name="wso2-identity-server-user-portal-ui" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.is.portal.user.test.ui.SignInTest"/>
+            <class name="org.wso2.is.portal.user.test.ui.UsernameRecoveryTest"/>
         </classes>
     </test>
 </suite>

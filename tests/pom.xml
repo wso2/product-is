@@ -32,7 +32,6 @@
     <modules>
         <module>osgi-tests</module>
 	    <module>ui-tests</module>
-        <module>commons</module>
     </modules>
 
 </project>
