@@ -62,7 +62,8 @@ var recoveryManager = {};
     }
 
     /**
-     *  Check whether password recovery enabled.
+     * Check whether the password recovery enabled
+     * @param
      * @returns {*}
      */
 
@@ -141,8 +142,10 @@ var recoveryManager = {};
             return result;
             // TODO Backend throws error when user doesn't exist with useId, has to distinguish no-user exists
         }
+        // TODO handle account locked(17003) and disabled(17004) status
         result.code = challengeQuestionsResponse.getCode();
         result.data = challengeQuestionsResponse.getQuestions();
+        result.status = challengeQuestionsResponse.getStatus();
         return result;
     }
 
@@ -260,11 +263,11 @@ var recoveryManager = {};
         var result = verifyUserChallengeAnswers(formParams);
 
         if (!result.success) {
-            sendError(500, questions.message);
+            sendError(500, result.message);
         }
         var error;
         if(result.status === "COMPLETE"){
-            sendRedirect(env.contextPath + '/recovery/password-reset?code=' + result.code);
+            sendRedirect(env.contextPath + '/recovery/password-reset?confirmation=' + result.code);
         } else if (result.status === "INCOMPLETE") {
             sendToClient("result", { status: result.status, option : "security-question-recovery" } );
         } else if (result.status === "20008") {
@@ -304,7 +307,7 @@ var recoveryManager = {};
                 Log.error(e.getMessage());
             }
         }
-    }
+    };
 
     recoveryManager.updatePassword = function (code, password) {
         try {
@@ -315,6 +318,6 @@ var recoveryManager = {};
             Log.error(e.getMessage());
         }
 
-    }
+    };
 
 })(recoveryManager);
