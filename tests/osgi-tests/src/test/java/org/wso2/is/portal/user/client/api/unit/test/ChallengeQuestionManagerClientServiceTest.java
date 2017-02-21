@@ -127,7 +127,7 @@ public class ChallengeQuestionManagerClientServiceTest {
             challengeQuestionManagerClientService.setChallengeQuestionForUser(users.get(0).getUserId(),
                     challengeQuestions.get(0).getQuestionId(), new String(Base64.getEncoder().encode
                             (challengeQuestions.get(0).getQuestionSetId().getBytes(StandardCharsets.UTF_8)),
-                            StandardCharsets.UTF_8), "Answer1");
+                            StandardCharsets.UTF_8), "Answer1", "challengeQAdd");
         } catch (IdentityStoreException | UserNotFoundException | IdentityRecoveryException e) {
             throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
         }
