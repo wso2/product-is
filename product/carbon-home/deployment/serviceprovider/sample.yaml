@@ -1,0 +1,60 @@
+serviceProviderConfig:
+  name: "sample"
+  requestValidationConfig:
+    requestValidatorConfigs:
+      -
+          type: "SAML"
+          uniquePropertyName : "issuer"
+          properties:
+            issuer : "travelocity.com"
+            assertionConsumerUrls:
+                - "http://localhost:8080/travelocity.com/home.jsp"
+            defaultAssertionConsumerUrl : "http://localhost:8080/travelocity.com/home.jsp"
+            nameIDformat: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+            certificateAlias: "wso2carbon"
+            enableAttributesByDefault : "true"
+            idPInitSSOEnabled : "true"
+            attributeConsumingServiceIndex : "2342342"
+      -
+          type: "oidc"
+          uniquePropertyName : "key"
+          properties:
+              assertionConsumerUrls:
+                  - "http://localhost:8080/playground/home.jsp"
+              key : "f3f43f43f43f43v4343gfddd"
+              secret : "ssdf232f23f32f32f32f32f32f"
+
+  claimConfig:
+   profile : "sdsd"
+   dialectUri : "dfdf"
+   subjectClaimUri : "SdsD"
+
+  authenticationConfig:
+    authenticationStepConfigs :
+      -
+        useLocalSubjectIdentifier : "true"
+        useDomainInLocalSubjectIdentifier : "true"
+        authStrategy : ""
+        identityProviders :
+          -
+            identityProviderName : "myidp"
+            authenticatorName : "SAML2SSOAuthenticator"
+
+  responseBuildingConfig:
+    responseBuilderConfigs:
+      -
+        type: "SAML"
+        properties:
+          defaultAssertionConsumerUrl : "http://localhost:8080/travelocity.com/home.jsp"
+          certificateAlias : "wso2carbon"
+          doSignResponse : "true"
+          doSingleLogout : "false"
+          doSignAssertions : "true"
+          attributeConsumingServiceIndex : "2342342"
+          enableAttributesByDefault : ""
+          doEnableEncryptedAssertion : "false"
+          signingAlgorithmUri : "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+          digestAlgorithmUri : "http://www.w3.org/2000/09/xmldsig#sha1"
+          requestedAudiences :
+            - "testing"
+            - "testing2"
