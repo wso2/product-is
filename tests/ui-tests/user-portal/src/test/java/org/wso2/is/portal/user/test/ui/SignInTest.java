@@ -24,8 +24,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
 
-
-
+/**
+ * UI Tests for Sign In.
+ */
 public class SignInTest {
 
     private static LoginPageAction loginPageAction = new LoginPageAction();
@@ -34,7 +35,6 @@ public class SignInTest {
     private static String adminPage = "https://localhost:9292/user-portal/";
     private static String usernameRecoveryPage = "https://localhost:9292/user-portal/recovery/username";
     private static String passwordRecoveryPage = "https://localhost:9292/user-portal/recovery/password";
-
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
@@ -51,7 +51,6 @@ public class SignInTest {
         driver = new HtmlUnitDriver();
         driver.get(loginPage);
         testClickUsernameRecovery(driver);
-
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")

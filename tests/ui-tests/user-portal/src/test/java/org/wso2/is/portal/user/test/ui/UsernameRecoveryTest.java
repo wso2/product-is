@@ -26,11 +26,12 @@ import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
 import org.wso2.carbon.identity.mgt.connector.Attribute;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 /**
- * UI Tests for username recovery .
+ * UI Tests for Username Recovery.
  */
 public class UsernameRecoveryTest {
 
@@ -43,26 +44,34 @@ public class UsernameRecoveryTest {
     @Test(groups = "usernameRecoveryTest")
     public void loadUsernameRecoveryPage() throws Exception {
         driver.get(usernameRecoveryPage);
-
+        driver.close();
     }
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
     public void testUssernameRecovery() throws Exception {
-        String[] claims = {"givenname", "lastname", "email"};
-        String[] values = {"dinali", "dabarera", "dinali@wso2.com"};
+        Map<String,String> attibuteMap = new HashMap<>();
+        attibuteMap.put("givenname", "dinali");
+        attibuteMap.put("lastname", "silva");
+        attibuteMap.put("email", "dinali@wso2.com");
         List<Attribute> attributes = new ArrayList<>();
-        for (int count = 0; count < 3; count++) {
+        attibuteMap.entrySet().forEach(entry -> {
             Attribute attribute = new Attribute();
-            attribute.setAttributeName(claims[count]);
-            attribute.setAttributeValue(values[count]);
-        }
-        //TODO usernameRecoveryPageAction.recoverUsername(driver, attributes);
-        //TODO Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage);
+            attribute.setAttributeName(entry.getKey());
+            attribute.setAttributeValue(entry.getValue());
+            attributes.add(attribute);
+        });
+        driver = new HtmlUnitDriver();
+        driver.get(usernameRecoveryPage);
+        usernameRecoveryPageAction.recoverUsername(driver, attributes);
+        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage);
+        driver.close();
     }
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
     public void backToSignIn() throws Exception {
-       usernameRecoveryPageAction.backToSignIn(driver);
+        driver = new HtmlUnitDriver();
+        driver.get(usernameRecoveryPage);
+        usernameRecoveryPageAction.backToSignIn(driver);
         Assert.assertEquals(driver.getCurrentUrl(), loginPage);
         driver.quit();
     }

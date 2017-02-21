@@ -37,9 +37,7 @@ public class UsernameRecoveryPageAction {
             usernameRecoveryPage.txtbx_ClaimLabel(driver, attribute.getAttributeName())
                     .sendKeys(attribute.getAttributeValue());
         }
-
         usernameRecoveryPage.btn_Recover(driver).click();
-
     }
 
     public void backToSignIn(WebDriver driver) {

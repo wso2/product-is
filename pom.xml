@@ -820,7 +820,7 @@
 
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <carbon.security.userstore.jdbc.version>0.1.1</carbon.security.userstore.jdbc.version>
+        <carbon.security.userstore.jdbc.version>0.1.2</carbon.security.userstore.jdbc.version>
         <org.wso2.carbon.identity.mgt.version>0.1.22</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <org.wso2.carbon.identity.recovery.server.feature.version>0.1.22</org.wso2.carbon.identity.recovery.server.feature.version>
@@ -943,6 +943,13 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
+
+        <!-- Selenium -->
+        <org.seleniumhq.selenium.version>2.40.0</org.seleniumhq.selenium.version>
+
+        <!-- Test jar plugins -->
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
 
     </properties>
 

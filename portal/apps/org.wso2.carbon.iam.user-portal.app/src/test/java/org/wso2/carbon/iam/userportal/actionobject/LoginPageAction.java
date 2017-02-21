@@ -28,7 +28,6 @@ public class LoginPageAction {
 
     private static LoginPage loginPage = new LoginPage();
 
-
     public void login(WebDriver driver, String username, String password) {
         loginPage.txtbx_UserName(driver).sendKeys(username);
         loginPage.txtbx_Password(driver).sendKeys(password);
