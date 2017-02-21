@@ -233,6 +233,10 @@ VALUES ('uid'),
   ('challengeQuestion2'),
   ('challengeQuestion3'),
   ('accountLock'),
+  ('failedLoginAttempts'),
+  ('unlockTime'),
+  ('emailVerified'),
+  ('failedLoginLockoutCount'),
   ('accountDisable');
 
 -- INSERT INTO UM_PASSWORD (PASSWORD, USER_UNIQUE_ID)

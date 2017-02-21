@@ -227,6 +227,10 @@ public class UserPortalOSGiTestUtils {
                 .groupId("org.wso2.carbon.lcm")
                 .artifactId("org.wso2.carbon.lcm.sql")
                 .versionAsInProject());
+        optionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.identity.mgt")
+                .artifactId("org.wso2.carbon.identity.handler.event.account.lock")
+                .versionAsInProject());
 
         CarbonSysPropConfiguration sysPropConfiguration = new CarbonSysPropConfiguration();
         sysPropConfiguration.setCarbonHome(System.getProperty("carbon.home"));
