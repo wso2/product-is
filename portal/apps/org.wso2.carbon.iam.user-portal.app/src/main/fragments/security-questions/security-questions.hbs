@@ -98,6 +98,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                 <div class="row">
                     <input type="hidden" id="min-questions" name="min-questions" value={{minQuestions}}>
+                    <input type="hidden" id="has-answered" name="has-answered" value={{hasAddedQuestionsBefore}}>
                     <input type="hidden" name="action" value="add-question">
                     <button type="button" class="btn btn-primary"
                             onclick="checkMinQuestions()">{{i18n "security.question.label.add"}}</button>
@@ -108,35 +109,41 @@
 {{/if}}
 {{#if isUserHasQuestions }}
     <div id="list-questions">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="row">
-                <div id="create-question" class="pull-right add-margin-bottom-4x">
-                    <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
-                            class="fw fw-add fw-1x"></span>{{i18n "security.question.label.create"}}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="row">
-                <div id="question-list">
-                    {{#each userQuestions}}
-                        <div class="question">
-                            <span class="question-text">{{question}}</span>
-                            <div class="pull-right">
-                                <a aria-label="Edit"
-                                   onclick="editQuestion('{{questionId}}', '{{questionSetId}}', '{{question}}')">
-                                    <span class="fw fw-edit" aria-hidden="true"></span>
-                                </a>
-                                <a aria-label="Delete" onclick="deleteQuestion({{ this.questionId }}, '{{ this.questionSetId }}')">
-                                    <span class="fw fw-delete" aria-hidden="true"></span>
-                                </a>
-                            </div>
+        <form class="form-horizontal" method="post" id="questionListAndAdd">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                    {{#if isQuestionsRemaining}}
+                        <div id="create-question" class="pull-right add-margin-bottom-4x">
+                            <button type="submit" class="btn btn-secondary btn-lg"><span
+                                    class="fw fw-add fw-1x"></span>{{i18n "security.question.label.create"}}
+                            </button>
                         </div>
-                    {{/each}}
+                    {{/if}}
+                    <input type="hidden" name="action" value="add-more-questions">
                 </div>
             </div>
-        </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <div id="question-list">
+                        {{#each userQuestions}}
+                            <div class="question">
+                                <span class="question-text">{{question}}</span>
+                                <div class="pull-right">
+                                    <a aria-label="Edit"
+                                       onclick="editQuestion('{{questionId}}', '{{questionSetId}}', '{{question}}')">
+                                        <span class="fw fw-edit" aria-hidden="true"></span>
+                                    </a>
+                                    <a aria-label="Delete"
+                                       onclick="deleteQuestion({{ this.questionId }}, '{{ this.questionSetId }}')">
+                                        <span class="fw fw-delete" aria-hidden="true"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 {{/if}}
 <div id="edit-question">

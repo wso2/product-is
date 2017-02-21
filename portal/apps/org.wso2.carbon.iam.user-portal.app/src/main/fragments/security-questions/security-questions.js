@@ -18,6 +18,8 @@ function onGet(env) {
     var data = {};
 
     data.passwordform=true;
+    data.isUserAuthenticated=false;
+    data.isUserHasQuestions=false;
     return data;
 }
 
@@ -26,11 +28,12 @@ function onPost(env) {
     var data = {};
     var session, userUniqueId, action, oldPassword, username, domain, authenticationResult, getChallengeQResult
         , getChallengeQuestionsResult, ids, newAnswer, questionId, questionSetId, updateChallengeQResult
-        , deleteChallengeQResult;
-    data.success = true;
-    data.minQuestions =getMinimumNoOfQuestionsToAnswer().data;
+        , deleteChallengeQResult, remainingQuestions;
     session = getSession();
     userUniqueId = session.getUser().getUserId();
+    data.success = true;
+    data.minQuestions =getMinimumNoOfQuestionsToAnswer().data;
+    data.hasAddedQuestionsBefore = hasAnsweredQuestions(userUniqueId).data;
     action = env.request.formParams["action"];
     if (action === "check-password") {
         oldPassword = env.request.formParams["old-password"];
@@ -46,6 +49,12 @@ function onPost(env) {
                 data.passwordform = false;
             } else {
                 data.isUserHasQuestions = true;
+                remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
+                if (remainingQuestions.length > 0) {
+                    data.isQuestionsRemaining = true;
+                } else {
+                    data.isQuestionsRemaining = false;
+                }
                 data.passwordform = false;
                 data.userQuestions = getChallengeQResult.data;
             }
@@ -58,42 +67,40 @@ function onPost(env) {
     } else if (action === "add-question") {
         // Add question flow.
         ids = env.request.formParams["question_list"];
-        var i;
-        if (ids !== null) {
-            for (i = 0; i < ids.length; i++) {
-                var idsArray = ids[i].split(":");
-                questionSetId = idsArray[0];
-                questionId = idsArray[1];
-                var answerId = "question-answer-" + questionSetId;
-                var answer = env.request.formParams[answerId];
-                if(answer) {
-                    var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
-                        "challengeQAdd");
-                    if (!addChallengeQResult.success) {
-                        getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
-                        data.questionList = getChallengeQuestionsResult.data;
-                        data.isUserAuthenticated = true;
-                        data.success = addChallengeQResult.success;
-                        data.message = addChallengeQResult.message;
-                        break;
-                    } else {
-                        data.isUserHasQuestions = true;
-                        data.success = addChallengeQResult.success;
-                        data.message = addChallengeQResult.message;
-                        getChallengeQResult = getUserQuestions(userUniqueId);
-                        if (getChallengeQResult.data !== null) {
-                            if (getChallengeQResult.data.length === 0) {
-                                data.isUserHasQuestions = false;
-                            } else {
-                                data.isUserHasQuestions = true;
-                                data.userQuestions = getChallengeQResult.data;
-                            }
-                        }
-                    }
+        remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
+        if (remainingQuestions.length === 1) {
+            var idsArray = ids.split(":");
+            questionSetId = idsArray[0];
+            questionId = idsArray[1];
+            addChallengeQuestion(questionSetId, questionId, userUniqueId, getChallengeQuestionsResult, data,
+                getChallengeQResult, env);
+        } else {
+            var i;
+            if (ids !== null) {
+                for (i = 0; i < ids.length; i++) {
+                    var idsArray = ids[i].split(":");
+                    questionSetId = idsArray[0];
+                    questionId = idsArray[1];
+                    addChallengeQuestion(questionSetId, questionId, userUniqueId, getChallengeQuestionsResult, data,
+                        getChallengeQResult, env);
                 }
             }
+
+        }
+        remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
+        if (remainingQuestions.length > 0) {
+            data.isQuestionsRemaining = true;
+        } else {
+            data.isQuestionsRemaining = false;
         }
         return data;
+    } else if (action === "add-more-questions") {
+
+        data.isUserHasQuestions = false;
+        data.questionList = getRemainingQuestionsList(userUniqueId).data;
+        data.isUserAuthenticated = true;
+        return data;
+
     } else if (action === "update-question") {
 
         // Update question answer flow.
@@ -118,11 +125,53 @@ function onPost(env) {
         if (getChallengeQResult.data.length === 0) {
             data.isUserHasQuestions = false;
         } else {
+            var remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
+            if (remainingQuestions.length > 0) {
+                data.isQuestionsRemaining = true;
+            } else {
+                data.isQuestionsRemaining = false;
+            }
             data.isUserHasQuestions = true;
             data.userQuestions = getChallengeQResult.data;
         }
     }
     return data;
+}
+
+function addChallengeQuestion(questionSetId, questionId, userUniqueId, getChallengeQuestionsResult, data,
+                              getChallengeQResult, env) {
+
+    var answerId = "question-answer-" + questionSetId;
+    var answer = env.request.formParams[answerId];
+    if (answer) {
+        var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId,
+            "challengeQAdd");
+        if (!addChallengeQResult.success) {
+            data.questionList = getRemainingQuestionsList(userUniqueId).data;
+            data.isUserAuthenticated = true;
+            data.success = addChallengeQResult.success;
+            data.message = addChallengeQResult.message;
+            //break;
+        } else {
+            data.isUserHasQuestions = true;
+            data.success = addChallengeQResult.success;
+            data.message = addChallengeQResult.message;
+            getChallengeQResult = getUserQuestions(userUniqueId);
+            if (getChallengeQResult.data !== null) {
+                if (getChallengeQResult.data.length === 0) {
+                    data.isUserHasQuestions = false;
+                } else {
+                    data.isUserHasQuestions = true;
+                    data.userQuestions = getChallengeQResult.data;
+                }
+            }
+        }
+    }
+}
+
+function getRemainingQuestionsList(userUniqueId){
+    var remainingQuestions = getRemainingQuestions(userUniqueId).data;
+    return {data:remainingQuestions};
 }
 
 function getUserQuestions(userUniqueId) {
@@ -183,5 +232,25 @@ function getMinimumNoOfQuestionsToAnswer(){
         return {success: true, data: minNumOfQuestions};
     } catch (e) {
         return {success: false, message: 'security.question.error.getMinimumNoOfChallengeQuestionsToAnswer'};
+    }
+}
+
+function hasAnsweredQuestions(userUniqueId){
+    try{
+        var hasAnswered = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+            "hasUserAnsweredQuestions", [userUniqueId]);
+        return {success: true, data: hasAnswered};
+    } catch (e) {
+        return {success: false, message: 'security.question.error.hasAnsweredQuestions'};
+    }
+}
+
+function getRemainingQuestions(userUniqueId){
+    try{
+        var remainingChallengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
+            "getRemainingChallengeQuestions", [userUniqueId]);
+        return {success: true, data: remainingChallengeQuestions};
+    } catch (e) {
+        return {success: false, message: 'security.question.error.getRemainingQuestions'};
     }
 }
