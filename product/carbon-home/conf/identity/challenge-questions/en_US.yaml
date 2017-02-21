@@ -49,3 +49,8 @@ challengeQuestions:
     question: "Favorite sport ?"
     questionId: 8
     questionSetId: "http://wso2.org/claims/challengeQuestion2"
+
+  -
+    question: "Favorite Movie ?"
+    questionId: 9
+    questionSetId: "http://wso2.org/claims/challengeQuestion3"
