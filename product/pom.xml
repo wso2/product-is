@@ -328,6 +328,17 @@
                                     </outputDirectory>
                                     <includes>**/h2.sql</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.gateway</groupId>
+                                    <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
