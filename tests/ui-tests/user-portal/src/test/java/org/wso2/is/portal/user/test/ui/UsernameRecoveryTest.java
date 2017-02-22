@@ -38,8 +38,10 @@ public class UsernameRecoveryTest {
     private static UsernameRecoveryPageAction usernameRecoveryPageAction
             = new UsernameRecoveryPageAction();
     private static WebDriver driver;
-    private static String  loginPage = "https://localhost:9292/user-portal/login";
-    private static String usernameRecoveryPage = "https://localhost:9292/user-portal/recovery/username";
+    private static String  loginPage = "https://" + System.getProperty("home") + ":" +
+            System.getProperty("port") + "/user-portal/login";
+    private static String usernameRecoveryPage = "https://" + System.getProperty("home")  + ":" +
+            System.getProperty("port") + "/user-portal/recovery/username";
 
     @Test(groups = "usernameRecoveryTest")
     public void loadUsernameRecoveryPage() throws Exception {

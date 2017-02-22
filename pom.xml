@@ -369,7 +369,7 @@
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-htmlunit-driver</artifactId>
-                <version>${org.seleniumhq.selenium.version}</version>
+                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -962,7 +962,8 @@
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
 
         <!-- Selenium -->
-        <org.seleniumhq.selenium.version>2.40.0</org.seleniumhq.selenium.version>
+        <org.seleniumhq.selenium.version>3.1.0</org.seleniumhq.selenium.version>
+        <org.seleniumhq.selenium.unitdriver.version>2.40.0</org.seleniumhq.selenium.unitdriver.version>
 
         <!-- Test jar plugins -->
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>

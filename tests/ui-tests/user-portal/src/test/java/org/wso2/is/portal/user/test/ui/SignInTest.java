@@ -31,10 +31,14 @@ public class SignInTest {
 
     private static LoginPageAction loginPageAction = new LoginPageAction();
     private static WebDriver driver;
-    private static String loginPage = "https://localhost:9292/user-portal/login";
-    private static String adminPage = "https://localhost:9292/user-portal/";
-    private static String usernameRecoveryPage = "https://localhost:9292/user-portal/recovery/username";
-    private static String passwordRecoveryPage = "https://localhost:9292/user-portal/recovery/password";
+    private static String loginPage = "https://" + System.getProperty("home")  + ":" +
+            System.getProperty("port") + "/user-portal/login";
+    private static String adminPage = "https://" + System.getProperty("home")  + ":" +
+            System.getProperty("port") + "/user-portal/";
+    private static String usernameRecoveryPage = "https://" + System.getProperty("home")  + ":" +
+            System.getProperty("port") + "/user-portal/recovery/username";
+    private static String passwordRecoveryPage = "https://" + System.getProperty("home")  + ":" +
+            System.getProperty("port") + "/user-portal/recovery/password";
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
