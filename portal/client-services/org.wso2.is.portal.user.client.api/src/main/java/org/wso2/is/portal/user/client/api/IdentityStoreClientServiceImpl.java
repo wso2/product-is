@@ -228,9 +228,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public Map<String, String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException {
+    public List<String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException {
         List<Claim> claimsList = new ArrayList<>();
-        Map<String, String> userExistsMeta;
+        List<String> userExistsMeta;
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
             Claim claim = new Claim();
             claim.setClaimUri(entry.getKey());

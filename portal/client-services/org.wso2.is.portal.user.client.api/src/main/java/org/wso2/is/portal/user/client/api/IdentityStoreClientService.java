@@ -92,7 +92,7 @@ public interface IdentityStoreClientService {
      * @return meta data of user existence check
      * @throws UserPortalUIException
      */
-    Map<String, String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException;
+    List<String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException;
 
     /**
      * Update user claims by user id.
