@@ -16,16 +16,14 @@
 
 function onGet(env) {
     var data = {};
-
-    data.passwordform=true;
-    data.isUserAuthenticated=false;
-    data.isUserHasQuestions=false;
+    setPasswordView(data);
     return data;
 }
 
 function onPost(env) {
 
     var data = {};
+    setPasswordView(data);
     var session, userUniqueId, action, oldPassword, username, domain, authenticationResult, getChallengeQResult
         , getChallengeQuestionsResult, ids, newAnswer, questionId, questionSetId, updateChallengeQResult
         , deleteChallengeQResult, remainingQuestions;
@@ -65,6 +63,7 @@ function onPost(env) {
         }
         return data;
     } else if (action === "add-question") {
+        resetPasswordView(data);
         // Add question flow.
         ids = env.request.formParams["question_list"];
         remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
@@ -95,14 +94,14 @@ function onPost(env) {
         }
         return data;
     } else if (action === "add-more-questions") {
-
+        resetPasswordView(data);
         data.isUserHasQuestions = false;
         data.questionList = getRemainingQuestionsList(userUniqueId).data;
         data.isUserAuthenticated = true;
         return data;
 
     } else if (action === "update-question") {
-
+        resetPasswordView(data);
         // Update question answer flow.
         newAnswer = env.request.formParams["new-answer"];
         questionId = env.request.formParams["question-id"];
@@ -112,7 +111,7 @@ function onPost(env) {
         data.success = updateChallengeQResult.success;
         data.message = updateChallengeQResult.message;
     } else if (action === "delete-question") {
-
+        resetPasswordView(data);
         // Delete question flow.
         questionId = env.request.formParams["question-id"];
         questionSetId = env.request.formParams["question-set-id"];
@@ -172,6 +171,16 @@ function addChallengeQuestion(questionSetId, questionId, userUniqueId, getChalle
 function getRemainingQuestionsList(userUniqueId){
     var remainingQuestions = getRemainingQuestions(userUniqueId).data;
     return {data:remainingQuestions};
+}
+
+function setPasswordView(data) {
+    data.passwordform = true;
+    data.isUserAuthenticated = false;
+    data.isUserHasQuestions = false;
+}
+
+function resetPasswordView(data) {
+    data.passwordform = false;
 }
 
 function getUserQuestions(userUniqueId) {
