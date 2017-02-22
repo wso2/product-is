@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.mgt.RealmService;
+import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
@@ -141,6 +143,24 @@ public class RecoveryMgtServiceTest {
 
     }
 
+    @Test(groups = "startChallengeQuestionWhenAccountLocked", dependsOnGroups = {"answerRecoveryQuestions"})
+    public void startChallengeQuestionWhenAccountLocked() throws IdentityRecoveryException, UserNotFoundException,
+            IdentityStoreException, UserPortalUIException {
+
+        lockAccount(users.get(0).getUserId());
+        ChallengeQuestionsResponse challengeQuestionsResponse = startQuestionBasedPasswordRecovery();
+        Assert.assertEquals(challengeQuestionsResponse.getStatus(), "17003", "Account lock status is not returned");
+    }
+
+//    @Test(groups = "startChallengeQuestionWhenAccountDisabled", dependsOnGroups = {"answerRecoveryQuestions"})
+//    public void startChallengeQuestionWhenAccountDisabled() throws IdentityRecoveryException, UserNotFoundException,
+//            IdentityStoreException, UserPortalUIException {
+//
+//        disableAccount(users.get(0).getUserId());
+//        ChallengeQuestionsResponse challengeQuestionsResponse = startQuestionBasedPasswordRecovery();
+//       Assert.assertEquals(challengeQuestionsResponse.getStatus(), "17004", "Account Disable status is not returned");
+//    }
+
     private void addUser() throws UserPortalUIException {
         IdentityStoreClientService identityStoreClientService =
                 bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
@@ -190,5 +210,32 @@ public class RecoveryMgtServiceTest {
 
     private ChallengeQuestionsResponse startQuestionBasedPasswordRecovery() throws UserPortalUIException {
         return recoveryMgtService.getUserChallengeQuestionAtOnce(users.get(0).getUserId());
+    }
+
+    private void lockAccount(String uniqueUserID) throws UserNotFoundException, IdentityStoreException {
+        Claim claim = new Claim("http://wso2.org/claims", "http://wso2.org/claims/accountLocked", "true");
+
+        updateUserClaims(uniqueUserID, claim);
+    }
+
+    private void disableAccount(String uniqueUserID) throws UserNotFoundException, IdentityStoreException {
+        Claim claim = new Claim("http://wso2.org/claims", "http://wso2.org/claims/accountDisabled", "true");
+
+        updateUserClaims(uniqueUserID, claim);
+    }
+
+    private void updateUserClaims(String uniqueUserId, Claim claim) throws UserNotFoundException,
+            IdentityStoreException {
+        RealmService realmService = bundleContext.getService(bundleContext.getServiceReference(RealmService.class));
+
+        List<Claim> claims = new ArrayList<>();
+        claims.add(claim);
+
+        try {
+            realmService.getIdentityStore().updateUserClaims(uniqueUserId, claims);
+        } catch (IdentityStoreException e) {
+            Assert.fail("Failed to update user claims.");
+        }
+
     }
 }
