@@ -134,10 +134,23 @@ domains:
         claimUri: "http://wso2.org/claims/challengeQuestion3"
       -
         attribute: "accountLock"
-        claimUri: "http://wso2.org/claims/identity/accountLocked"
+        claimUri: "http://wso2.org/claims/accountLocked"
       -
         attribute: "accountDisable"
-        claimUri: "http://wso2.org/claims/identity/accountDisabled"
+        claimUri: "http://wso2.org/claims/accountDisabled"
+      -
+        attribute: "failedLoginAttempts"
+        claimUri: "http://wso2.org/claims/failedLoginAttempts"
+      -
+        attribute: "unlockTime"
+        claimUri: "http://wso2.org/claims/unlockTime"
+      -
+        attribute: "emailVerified"
+        claimUri: "http://wso2.org/claims/emailVerified"
+      -
+        attribute: "failedLoginLockoutCount"
+        claimUri: "http://wso2.org/claims/failedLoginLockoutCount"
+
 
     credentialStoreConnectors:
     -

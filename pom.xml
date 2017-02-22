@@ -96,6 +96,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.handler.event.account.lock</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
@@ -821,11 +826,11 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>0.1.2</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>0.1.23</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.26</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.23</org.wso2.carbon.identity.recovery.server.feature.version>
-        <org.wso2.carbon.identity.commons.feature.version>0.1.20</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>0.1.20</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.26</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.commons.feature.version>0.1.23</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>0.1.23</org.wso2.carbon.identity.commons.version>
 
         <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m11</carbon-uuf-maven-plugin.version>
