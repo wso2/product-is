@@ -39,26 +39,57 @@ function isProfileImageAvailbale(session) {
     return {profileImage: false};
 }
 
+function getPrimaryDomainName() {
+    var primaryDomainName;
+        try {
+            primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "getPrimaryDomainName", []);
+        } catch (e) {
+            return {errorMessage: 'signup.error.retrieve.domain'};
+        }
+    return primaryDomainName;
+}
+
 function onGet(env) {
     var session = getSession();
+    var domain, primaryDomainName, isPrimaryDomain, currentDomain;
     if (!session) {
         sendRedirect(env.contextPath + env.config.loginPageUri);
     }
     var profileImageResult = isProfileImageAvailbale(session);
+    domain = session.getUser().getDomainName();
+    primaryDomainName = getPrimaryDomainName();
+    if (domain === primaryDomainName) {
+        isPrimaryDomain = true;
+    }
+    else {
+        isPrimaryDomain = false;
+        currentDomain = domain;
+    }
     return {
         username: session.getUser().getUsername(), profileImage: profileImageResult.profileImage,
-        userId: profileImageResult.userId
+        userId: profileImageResult.userId, domain: currentDomain, isPrimaryDomain: isPrimaryDomain
     };
 }
 
 function onPost(env) {
     var session = getSession();
+    var domain, primaryDomainName, isPrimaryDomain, currentDomain;
     if (!session) {
         sendRedirect(env.contextPath + env.config.loginPageUri);
     }
     var profileImageResult = isProfileImageAvailbale(session);
+    domain = session.getUser().getDomainName();
+    primaryDomainName = getPrimaryDomainName();
+    if (domain === primaryDomainName) {
+        isPrimaryDomain = true;
+    }
+    else {
+        isPrimaryDomain = false;
+        currentDomain = domain;
+    }
     return {
         username: session.getUser().getUsername(), profileImage: profileImageResult.profileImage,
-        userId: profileImageResult.userId
+        userId: profileImageResult.userId, domain: currentDomain, isPrimaryDomain: isPrimaryDomain
     };
 }
