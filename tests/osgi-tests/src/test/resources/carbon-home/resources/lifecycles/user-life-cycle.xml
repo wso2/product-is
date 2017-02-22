@@ -28,56 +28,50 @@
                             <execution forTarget="LOCKED_SELF_SIGN_UP"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="LOCKED#UNVERIFIED"
+                            <execution forTarget="LOCKED__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="UNLOCKED#REQUEST_PASSWORD"
+                            <execution forTarget="UNLOCKED__REQUEST_PASSWORD"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-     			    <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
- 			    <execution forTarget="DISABLED"
+                            <execution forTarget="DISABLED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_CREDENTIAL__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_ANSWER__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_ANSWER__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
                     <transition event="Locked self signup User" target="LOCKED_SELF_SIGN_UP"/>
-                    <transition event="Locked - unverified" target="LOCKED#UNVERIFIED"/>
-                    <transition event="Unlocked -Request password" target="UNLOCKED#REQUEST_PASSWORD"/>
-                    <transition event="Unlocked -unverified" target="UNLOCKED#UNVERIFIED"/>
+                    <transition event="Locked - unverified" target="LOCKED__UNVERIFIED"/>
+                    <transition event="Unlocked -Request password" target="UNLOCKED__REQUEST_PASSWORD"/>
+                    <transition event="Unlocked -unverified" target="UNLOCKED__UNVERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
-
+                    <transition event="Locked invalid credentials- unverified" target="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"/>
+                    <transition event="Locked invalid credentails -verified" target="LOCKED_INVALID_CREDENTIAL__VERIFIED"/>
+                    <transition event="Locked invalid answer- unverified" target="LOCKED_INVALID_ANSWER__UNVERIFIED"/>
+                    <transition event="Locked invalid answer- unverified" target="LOCKED_INVALID_ANSWER__VERIFIED"/>
                 </state>
 
                 <state id="LOCKED_SELF_SIGN_UP">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="UNLOCKED#VERIFIED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-                            <execution forTarget="DISABLED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-                        </data>
-                    </datamodel>
-                    <transition event="Unlocked -unverified" target="UNLOCKED#UNVERIFIED"/>
-                    <transition event="Unlocked -verified" target="UNLOCKED#VERIFIED"/>
-                    <transition event="Disabled" target="DISABLED"/>
-                </state>
-
-
-                <state id="LOCKED#UNVERIFIED">
-                    <datamodel>
-
-                        <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#VERIFIED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-                            <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                             <execution forTarget="DISABLED"
@@ -85,166 +79,229 @@
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked -verified" target="UNLOCKED#VERIFIED"/>
-                    <transition event="Unlocked -unverified" target="UNLOCKED#UNVERIFIED"/>
+                    <transition event="Unlocked -unverified" target="UNLOCKED__UNVERIFIED"/>
+                    <transition event="Unlocked -verified" target="UNLOCKED__VERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-                <state id="LOCKED_INVALID_CREDENTIAL#VERIFIED">	
+
+                <state id="LOCKED__UNVERIFIED">
                     <datamodel>
+
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#VERIFIED"
+                            <execution forTarget="UNLOCKED__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="DISABLED"
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked - verified" target="UNLOCKED#VERIFIED"/>
+                    <transition event="Unlocked -verified" target="UNLOCKED__VERIFIED"/>
+                    <transition event="Unlocked -unverified" target="UNLOCKED__UNVERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-                <state id="LOCKED_INVALID_CREDENTIAL#UNVERIFIED">
+                <state id="LOCKED__VERIFIED">
                     <datamodel>
+
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="DISABLED"
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked -verified" target="UNLOCKED#UNVERIFIED"/>
+                    <transition event="Unlocked -verified" target="UNLOCKED__VERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-                <state id="UNLOCKED#UNVERIFIED">
+                <state id="LOCKED_INVALID_CREDENTIAL__VERIFIED">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forTarget="LOCKED_INVALID_CREDENTIAL#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="LOCKED_INVALID_ANSWER#UNVERIFIED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-			    <execution forTarget="DISABLED"
-                                       class="org.wso2.carbon.identity.handler.event.account.lock.executors.APIExecutor">
-                            </execution>
-                        </data>
-                    </datamodel>
-                    <transition event="Locked invalid credentials -verified" target="LOCKED_INVALID_CREDENTIAL#UNVERIFIED"/>
-                    <transition event="Locked invalid answer -verified" target="LOCKED_INVALID_ANSWER#UNVERIFIED"/>
-                    <transition event="Disabled" target="DISABLED"/>
-                </state>
-
-                <state id="UNLOCKED#VERIFIED">
-                    <datamodel>
-                        <data name="transitionExecution">
-                            <execution forTarget="LOCKED_INVALID_CREDENTIAL#VERIFIED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-                            <execution forTarget="LOCKED_INVALID_ANSWER#UNVERIFIED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-                            <execution forTarget="LOCKED_AIPR#VERIFIED"
-                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
-                            </execution>
-			    <execution forTarget="DISABLED"
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Locked invalid credentails -verified" target="LOCKED_INVALID_CREDENTIAL#VERIFIED"/>
-                    <transition event="Unlocked -verified" target="LOCKED_INVALID_ANSWER#UNVERIFIED"/>
-                    <transition event="Locked -verified" target="LOCKED_AIPR#VERIFIED"/>
+                    <transition event="Unlocked - verified" target="UNLOCKED__VERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-   		<state id="LOCKED_INVALID_ANSWER#UNVERIFIED">
+                <state id="LOCKED_INVALID_CREDENTIAL__UNVERIFIED">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="DISABLED"
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked -verified" target="UNLOCKED#UNVERIFIED"/>
+                    <transition event="Unlocked -verified" target="UNLOCKED__UNVERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-   		<state id="LOCKED_AIPR#VERIFIED">
+                <state id="UNLOCKED__UNVERIFIED">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#VERIFIED"
+                            <execution forTarget="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="DISABLED"
+                            <execution forTarget="LOCKED_INVALID_ANSWER__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked -verified" target="UNLOCKED#VERIFIED"/>
+                    <transition event="Locked invalid credentials -verified" target="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"/>
+                    <transition event="Locked invalid answer -verified" target="LOCKED_INVALID_ANSWER__UNVERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-   		<state id="LOCKED_AIPR#UNVERIFIED">
+                <state id="UNLOCKED__VERIFIED">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="LOCKED_INVALID_CREDENTIAL__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="DISABLED"
+                            <execution forTarget="LOCKED_INVALID_ANSWER__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_AIPR__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked -unverified" target="UNLOCKED#UNVERIFIED"/>
+                    <transition event="Locked invalid credentails -verified" target="LOCKED_INVALID_CREDENTIAL__VERIFIED"/>
+                    <transition event="Unlocked -verified" target="LOCKED_INVALID_ANSWER__UNVERIFIED"/>
+                    <transition event="Locked -AIPR" target="LOCKED_AIPR__VERIFIED"/>
+                    <transition event="Locked -verified" target="LOCKED__VERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
                 </state>
 
-   		<state id="DISABLED">
+                <state id="LOCKED_INVALID_ANSWER__UNVERIFIED">
                     <datamodel>
                         <data name="transitionExecution">
-                            <execution forTarget="UNLOCKED#UNVERIFIED"
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="UNLOCKED#VERIFIED"
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="LOCKED_AIPR#VERIFIED"
+                        </data>
+                    </datamodel>
+                    <transition event="Unlocked -verified" target="UNLOCKED__UNVERIFIED"/>
+                    <transition event="Disabled" target="DISABLED"/>
+                </state>
+
+                <state id="LOCKED_INVALID_ANSWER__VERIFIED">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forTarget="UNLOCKED__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="LOCKED_AIPR#UNVERIFIED"
+                            <execution forTarget="DISABLED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-                            <execution forTarget="LOCKED_INVALID_CREDENTIAL#VERIFIED"
+                        </data>
+                    </datamodel>
+                    <transition event="Unlocked -verified" target="UNLOCKED__VERIFIED"/>
+                    <transition event="Disabled" target="DISABLED"/>
+                </state>
+
+                <state id="LOCKED_AIPR__VERIFIED">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forTarget="UNLOCKED__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="DISABLED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                        </data>
+                    </datamodel>
+                    <transition event="Unlocked -verified" target="UNLOCKED__VERIFIED"/>
+                    <transition event="Disabled" target="DISABLED"/>
+                </state>
+
+                <state id="LOCKED_AIPR__UNVERIFIED">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="DISABLED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                        </data>
+                    </datamodel>
+                    <transition event="Unlocked -unverified" target="UNLOCKED__UNVERIFIED"/>
+                    <transition event="Disabled" target="DISABLED"/>
+                </state>
+
+                <state id="DISABLED">
+                    <datamodel>
+                        <data name="transitionExecution">
+                            <execution forTarget="UNLOCKED__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="UNLOCKED__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_AIPR__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_AIPR__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_CREDENTIAL__VERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                             <execution forTarget="LOCKED_SELF_SIGN_UP"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="LOCKED#UNVERIFIED"
+                            <execution forTarget="LOCKED__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
-			    <execution forTarget="LOCKED_INVALID_ANSWER#UNVERIFIED"
+                            <execution forTarget="LOCKED_INVALID_ANSWER__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
+                            <execution forTarget="LOCKED_INVALID_ANSWER__VERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Unlocked -unverified" target="UNLOCKED#UNVERIFIED"/>
-                    <transition event="Unlocked -verified" target="UNLOCKED#VERIFIED"/>
-                    <transition event="Locked -verified" target="LOCKED_AIPR#VERIFIED"/>
-                    <transition event="Locked -unverified" target="LOCKED_AIPR#UNVERIFIED"/>
-                    <transition event="Locked invalid credentails -verified" target="LOCKED_INVALID_CREDENTIAL#VERIFIED"/>
+                    <transition event="Unlocked -unverified" target="UNLOCKED__UNVERIFIED"/>
+                    <transition event="Unlocked -verified" target="UNLOCKED__VERIFIED"/>
+                    <transition event="Locked -verified" target="LOCKED_AIPR__VERIFIED"/>
+                    <transition event="Locked -unverified" target="LOCKED_AIPR__UNVERIFIED"/>
+                    <transition event="Locked invalid credentails -verified" target="LOCKED_INVALID_CREDENTIAL__VERIFIED"/>
                     <transition event="Locked Self Signup" target="LOCKED_SELF_SIGN_UP"/>
-                    <transition event="Locked -unverified" target="LOCKED#UNVERIFIED"/>
-                    <transition event="Locked invalid credentials- unverified" target="LOCKED_INVALID_CREDENTIAL#UNVERIFIED"/>
-                    <transition event="Locked invalid answer- unverified" target="LOCKED_INVALID_ANSWER#UNVERIFIED"/>
+                    <transition event="Locked -unverified" target="LOCKED__UNVERIFIED"/>
+                    <transition event="Locked invalid credentials- unverified" target="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"/>
+                    <transition event="Locked invalid answer- unverified" target="LOCKED_INVALID_ANSWER__UNVERIFIED"/>
+                    <transition event="Locked invalid answer- unverified" target="LOCKED_INVALID_ANSWER__VERIFIED"/>
                 </state>
             </scxml>
         </lifecycle>
