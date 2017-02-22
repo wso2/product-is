@@ -207,7 +207,11 @@ function setChallengeAnswer(userUniqueId, answer, questionSetId, questionId, act
     try {
         callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "setChallengeQuestionForUser", [userUniqueId, questionId, questionSetId, answer, actionId]);
-        return {success: true, message: 'security.question.success.setChallengeAnswer'};
+        if(actionId === "challengeQAdd"){
+            return {success: true, message: 'security.question.success.setChallengeAnswer.add'};
+        }else if (actionId === "challengeQUpdate"){
+            return {success: true, message: 'security.question.success.setChallengeAnswer.update'};
+        }
     } catch (e) {
         return {success: false, message: 'security.question.error.setChallengeAnswer'};
     }
