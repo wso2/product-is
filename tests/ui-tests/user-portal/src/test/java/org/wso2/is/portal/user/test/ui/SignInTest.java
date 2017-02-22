@@ -51,8 +51,8 @@ public class SignInTest {
     public void testLogin() throws Exception {
         driver = new HtmlUnitDriver();
         driver.get(loginPage);
-        String username = "admin";
-        String password = "admin";
+        String username = System.getProperty("username");
+        String password = System.getProperty("password");
         loginPageAction.login(driver, username, password);
         Assert.assertEquals(driver.getCurrentUrl(), adminPage,
                 "This current page is not the admin user page.");

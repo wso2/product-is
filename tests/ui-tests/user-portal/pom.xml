@@ -138,6 +138,14 @@
                                     <name>port</name>
                                     <value>9292</value>
                                 </property>
+                                <property>
+                                    <name>username</name>
+                                    <value>admin</value>
+                                </property>
+                                <property>
+                                    <name>password</name>
+                                    <value>admin</value>
+                                </property>
                             </systemProperties>
                             <suiteXmlFiles>
                                 <suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>
