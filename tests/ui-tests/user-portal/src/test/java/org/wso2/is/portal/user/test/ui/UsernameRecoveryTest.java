@@ -37,18 +37,21 @@ public class UsernameRecoveryTest {
 
     private static UsernameRecoveryPageAction usernameRecoveryPageAction
             = new UsernameRecoveryPageAction();
-    private static WebDriver driver = new HtmlUnitDriver();
+    private static WebDriver driver;
     private static String  loginPage = "https://localhost:9292/user-portal/login";
     private static String usernameRecoveryPage = "https://localhost:9292/user-portal/recovery/username";
 
     @Test(groups = "usernameRecoveryTest")
     public void loadUsernameRecoveryPage() throws Exception {
+        driver = new HtmlUnitDriver();
         driver.get(usernameRecoveryPage);
         driver.close();
     }
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
     public void testUssernameRecovery() throws Exception {
+        driver = new HtmlUnitDriver();
+        driver.get(usernameRecoveryPage);
         Map<String, String> attibuteMap = new HashMap<>();
         attibuteMap.put("givenname", "dinali");
         attibuteMap.put("lastname", "silva");
@@ -63,7 +66,8 @@ public class UsernameRecoveryTest {
         driver = new HtmlUnitDriver();
         driver.get(usernameRecoveryPage);
         usernameRecoveryPageAction.recoverUsername(driver, attributes);
-        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage);
+        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
+                "This current page is not the username recovery page.");
         driver.close();
     }
 
@@ -72,7 +76,7 @@ public class UsernameRecoveryTest {
         driver = new HtmlUnitDriver();
         driver.get(usernameRecoveryPage);
         usernameRecoveryPageAction.backToSignIn(driver);
-        Assert.assertEquals(driver.getCurrentUrl(), loginPage);
+        Assert.assertEquals(driver.getCurrentUrl(), loginPage, "This current page is not the login page.");
         driver.quit();
     }
 

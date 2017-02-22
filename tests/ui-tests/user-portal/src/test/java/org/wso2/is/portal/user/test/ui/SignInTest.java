@@ -30,7 +30,7 @@ import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
 public class SignInTest {
 
     private static LoginPageAction loginPageAction = new LoginPageAction();
-    private static WebDriver driver = new HtmlUnitDriver();
+    private static WebDriver driver;
     private static String loginPage = "https://localhost:9292/user-portal/login";
     private static String adminPage = "https://localhost:9292/user-portal/";
     private static String usernameRecoveryPage = "https://localhost:9292/user-portal/recovery/username";
@@ -38,35 +38,40 @@ public class SignInTest {
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
+        driver = new HtmlUnitDriver();
         driver.get(loginPage);
+        driver.close();
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
     public void testLogin() throws Exception {
+        driver = new HtmlUnitDriver();
+        driver.get(loginPage);
         String username = "admin";
         String password = "admin";
         loginPageAction.login(driver, username, password);
-        Assert.assertEquals(driver.getCurrentUrl(), adminPage);
+        Assert.assertEquals(driver.getCurrentUrl(), adminPage,
+                "This current page is not the admin user page.");
         driver.close();
-        driver = new HtmlUnitDriver();
-        driver.get(loginPage);
-        testClickUsernameRecovery(driver);
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
-    public void testClickUsernameRecovery(WebDriver driver) throws Exception {
+    public void testClickUsernameRecovery() throws Exception {
+        driver = new HtmlUnitDriver();
+        driver.get(loginPage);
         loginPageAction.clickForgetUsername(driver);
-        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage);
+        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
+                "This current page is not the username recovery page.");
         driver.close();
-        driver = new HtmlUnitDriver();
-        driver.get(loginPage);
-        testClickPasswordRecovery(driver);
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
-    public void testClickPasswordRecovery(WebDriver driver) throws Exception {
+    public void testClickPasswordRecovery() throws Exception {
+        driver = new HtmlUnitDriver();
+        driver.get(loginPage);
         loginPageAction.clickForgetPassword(driver);
-        Assert.assertEquals(driver.getCurrentUrl(), passwordRecoveryPage);
+        Assert.assertEquals(driver.getCurrentUrl(), passwordRecoveryPage,
+                "This current page is not the password recovery page.");
         driver.quit();
 
     }

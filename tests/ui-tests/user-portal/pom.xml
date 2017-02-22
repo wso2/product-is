@@ -24,6 +24,7 @@
         <artifactId>product-is-tests-ui</artifactId>
         <groupId>org.wso2.is</groupId>
         <version>6.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>user-portal-tests-ui</artifactId>
@@ -39,12 +40,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
             <version>${carbon.is.version}</version>
@@ -54,14 +49,10 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-api</artifactId>
-            <version>${org.seleniumhq.selenium.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-htmlunit-driver</artifactId>
-            <version>${org.seleniumhq.selenium.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

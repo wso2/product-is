@@ -25,37 +25,37 @@ import org.openqa.selenium.WebElement;
 public class LoginPage {
     private static WebElement element = null;
 
-    public static WebElement txtbx_UserName(WebDriver driver) {
+    public static WebElement txtbxUsername(WebDriver driver) {
         element = driver.findElement(By.id("username"));
         return element;
     }
 
-    public static WebElement txtbx_Password(WebDriver driver) {
+    public static WebElement txtbxPassword(WebDriver driver) {
         element = driver.findElement(By.id("password"));
         return element;
     }
 
-    public static WebElement btn_SignIn(WebDriver driver) {
+    public static WebElement btnSignIn(WebDriver driver) {
         element = driver.findElement(By.id("sign-in"));
         return element;
     }
 
-    public static WebElement lnk_ForgotPassword(WebDriver driver) {
+    public static WebElement lnkForgotPassword(WebDriver driver) {
         element = driver.findElement(By.id("recover-password"));
         return element;
     }
 
-    public static WebElement lnk_SignUp(WebDriver driver) {
+    public static WebElement lnkSignUp(WebDriver driver) {
         element = driver.findElement(By.id("sign-up"));
         return element;
     }
 
-    public static WebElement span_SignInError(WebDriver driver) {
+    public static WebElement spanSignInError(WebDriver driver) {
         element = driver.findElement(By.id("sign-in-error"));
         return element;
     }
 
-    public static WebElement lnk_ForgotUsername(WebDriver driver) {
+    public static WebElement lnkForgotUsername(WebDriver driver) {
         element = driver.findElement(By.id("recover-username"));
         return element;
     }

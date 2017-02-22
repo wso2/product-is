@@ -29,21 +29,21 @@ public class LoginPageAction {
     private static LoginPage loginPage = new LoginPage();
 
     public void login(WebDriver driver, String username, String password) {
-        loginPage.txtbx_UserName(driver).sendKeys(username);
-        loginPage.txtbx_Password(driver).sendKeys(password);
-        loginPage.btn_SignIn(driver).click();
+        loginPage.txtbxUsername(driver).sendKeys(username);
+        loginPage.txtbxPassword(driver).sendKeys(password);
+        loginPage.btnSignIn(driver).click();
     }
 
     public void signUp(WebDriver driver) {
-        loginPage.lnk_SignUp(driver).click();
+        loginPage.lnkSignUp(driver).click();
     }
 
     public void clickForgetUsername(WebDriver driver) {
-        loginPage.lnk_ForgotUsername(driver).click();
+        loginPage.lnkForgotUsername(driver).click();
     }
 
     public void clickForgetPassword(WebDriver driver) {
-        loginPage.lnk_ForgotPassword(driver).click();
+        loginPage.lnkForgotPassword(driver).click();
     }
 
 }

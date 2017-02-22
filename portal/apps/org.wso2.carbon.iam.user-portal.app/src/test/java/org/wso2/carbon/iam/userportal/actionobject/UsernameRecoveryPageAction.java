@@ -34,13 +34,13 @@ public class UsernameRecoveryPageAction {
     public void recoverUsername(WebDriver driver, List<Attribute> attributes) {
 
         for (Attribute attribute: attributes) {
-            usernameRecoveryPage.txtbx_ClaimLabel(driver, attribute.getAttributeName())
+            usernameRecoveryPage.txtbxClaimLabel(driver, attribute.getAttributeName())
                     .sendKeys(attribute.getAttributeValue());
         }
-        usernameRecoveryPage.btn_Recover(driver).click();
+        usernameRecoveryPage.btnRecover(driver).click();
     }
 
     public void backToSignIn(WebDriver driver) {
-        usernameRecoveryPage.btn_BackSignIn(driver).click();
+        usernameRecoveryPage.btnBackSignIn(driver).click();
     }
 }

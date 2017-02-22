@@ -26,17 +26,17 @@ public class UsernameRecoveryPage {
 
     private static WebElement element = null;
 
-    public static WebElement btn_BackSignIn(WebDriver driver) {
+    public static WebElement btnBackSignIn(WebDriver driver) {
         element = driver.findElement(By.id("back-sign-in"));
         return element;
     }
 
-    public static WebElement btn_Recover(WebDriver driver) {
+    public static WebElement btnRecover(WebDriver driver) {
         element = driver.findElement(By.id("recover"));
         return element;
     }
 
-    public static WebElement txtbx_ClaimLabel(WebDriver driver, String label) {
+    public static WebElement txtbxClaimLabel(WebDriver driver, String label) {
         element = driver.findElement(By.id(label));
         return element;
     }
