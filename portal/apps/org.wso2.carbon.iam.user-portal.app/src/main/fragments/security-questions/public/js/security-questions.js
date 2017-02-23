@@ -138,6 +138,31 @@ function checkMinQuestions() {
     }
 }
 
+function updateQuestion() {
+    if ($('#new-answer').val()) {
+        $('#questionUpdateForm').submit();
+    } else {
+        var fillingObject = {
+            "id": "min-val",
+            "alertClass": "danger",
+            "class": "",
+            "icon": "fw fw-error",
+            "alertTitle": "Failure!",
+            "alertBody": "Answer is empty. Please enter a valid answer",
+            "dismissable": true
+
+        };
+        var callbacks = {
+            onSuccess: function () {
+            },
+            onFailure: function (e) {
+            }
+        };
+        UUFClient.renderFragment("org.wso2.carbon.uuf.common.foundation.ui.alert", fillingObject,
+            "minQuestionError-area", "OVERWRITE", callbacks);
+    }
+}
+
 function goBack() {
 
     if ($("#list-questions").length === 0) {
