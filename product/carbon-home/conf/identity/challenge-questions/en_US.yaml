@@ -49,3 +49,19 @@ challengeQuestions:
     question: "Favorite sport ?"
     questionId: 8
     questionSetId: "http://wso2.org/claims/challengeQuestion2"
+  -
+    question: "What was your childhood nickname ?"
+    questionId: 9
+    questionSetId: "http://wso2.org/claims/challengeQuestion3"
+  -
+    question: "What is your mother's maiden name ?"
+    questionId: 10
+    questionSetId: "http://wso2.org/claims/challengeQuestion3"
+  -
+    question: "What was the last name of your third grade teacher ?"
+    questionId: 11
+    questionSetId: "http://wso2.org/claims/challengeQuestion3"
+  -
+    question: "Who was your childhood hero ?"
+    questionId: 12
+    questionSetId: "http://wso2.org/claims/challengeQuestion3"

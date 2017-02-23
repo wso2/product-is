@@ -30,7 +30,8 @@ VALUES ('uid'),
   ('version'),
   ('challengeQuestionUris'),
   ('challengeQuestion1'),
-  ('challengeQuestion2');
+  ('challengeQuestion2'),
+  ('challengeQuestion3');
 
 INSERT INTO UM_PASSWORD (PASSWORD, USER_UNIQUE_ID)
 VALUES ('3opCozpRixH6BvSXyr0513v1nyFWpdcQy7F6r6P/LFE=', '5c724592-3506-46ec-9286-f611c2a098dc');

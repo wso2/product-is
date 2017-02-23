@@ -129,6 +129,9 @@ domains:
       -
         attribute: "challengeQuestion2"
         claimUri: "http://wso2.org/claims/challengeQuestion2"
+      -
+        attribute: "challengeQuestion3"
+        claimUri: "http://wso2.org/claims/challengeQuestion3"
 
     credentialStoreConnectors:
     -
