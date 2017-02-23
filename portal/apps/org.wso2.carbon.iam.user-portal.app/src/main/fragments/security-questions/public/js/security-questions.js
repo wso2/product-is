@@ -33,6 +33,8 @@ function editQuestion(questionId, questionSetId, questionText) {
     $("#question-set-id").val(questionSetId);
 
     $("#current-question").html(questionText);
+    $('.alert-success').alert('close');
+
 }
 
 /*function updateQuestion() {
@@ -170,6 +172,6 @@ function goBack() {
     } else {
         $("#list-questions").show();
     }
-
+    $('#min-val').alert('close');
     $("#edit-question").hide();
 }
