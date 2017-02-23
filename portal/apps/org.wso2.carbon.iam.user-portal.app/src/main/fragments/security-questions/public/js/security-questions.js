@@ -100,7 +100,7 @@ function checkMinQuestions() {
             "alertClass": "danger",
             "class": "",
             "icon": "fw fw-error",
-            "alertTitle": "Failure!",
+            "alertTitle": "",
             "alertBody": "Answer is empty. Please enter a valid answer",
             "dismissable": true
 
@@ -123,7 +123,7 @@ function checkMinQuestions() {
                 "alertClass": "danger",
                 "class": "",
                 "icon": "fw fw-error",
-                "alertTitle": "Failure!",
+                "alertTitle": "",
                 "alertBody": "Please provide answers for at least minimum number of questions allowed",
                 "dismissable": true
 
@@ -149,7 +149,7 @@ function updateQuestion() {
             "alertClass": "danger",
             "class": "",
             "icon": "fw fw-error",
-            "alertTitle": "Failure!",
+            "alertTitle": "",
             "alertBody": "Answer is empty. Please enter a valid answer",
             "dismissable": true
 
