@@ -232,7 +232,7 @@ public class RecoveryMgtServiceTest {
         claims.add(claim);
 
         try {
-            realmService.getIdentityStore().updateUserClaims(uniqueUserId, claims);
+            realmService.getIdentityStore().updateUserClaims(uniqueUserId, claims, null);
         } catch (IdentityStoreException e) {
             Assert.fail("Failed to update user claims.");
         }
