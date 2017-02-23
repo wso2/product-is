@@ -10,7 +10,11 @@
                                <i class="fw fw-user fw-stack-1x fw-inverse"></i>
                                </span>
             {{/if}}
+            {{#if isPrimaryDomain}}
             <span class="hidden-xs add-margin-left-1x">{{username}}<span class="caret"></span></span>
+            {{else}}
+                <span class="hidden-xs add-margin-left-1x">{{domain}}/{{username}}<span class="caret"></span></span>
+            {{/if}}
         </a>
         <ul class="dropdown-menu dropdown-menu-right slideInDown" role="menu">
             <li><a href="{{@contextPath}}/account/account-setting">Account Settings</a></li>
