@@ -157,6 +157,9 @@
                             <execution forTarget="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
+                            <execution forTarget="LOCKED__UNVERIFIED"
+                                       class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
+                            </execution>
                             <execution forTarget="LOCKED_INVALID_ANSWER__UNVERIFIED"
                                        class="org.wso2.carbon.identity.mgt.executor.UserLifeCycleExecutor">
                             </execution>
@@ -168,6 +171,8 @@
                     <transition event="Locked invalid credentials -verified" target="LOCKED_INVALID_CREDENTIAL__UNVERIFIED"/>
                     <transition event="Locked invalid answer -verified" target="LOCKED_INVALID_ANSWER__UNVERIFIED"/>
                     <transition event="Disabled" target="DISABLED"/>
+                    <transition event="Locked unverified" target="LOCKED__UNVERIFIED"/>
+
                 </state>
 
                 <state id="UNLOCKED__VERIFIED">
