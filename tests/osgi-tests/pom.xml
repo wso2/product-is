@@ -476,7 +476,10 @@
                                             </executiondata>
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/target/classes" />
+                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/target/classes">
+                                                        <exclude name="**/*Exception.class" />
+                                                        <exclude name="**/*Constants.class" />
+                                                    </fileset>
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
                                                     <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/src" />
