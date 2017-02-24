@@ -97,7 +97,13 @@ function onPost(env) {
         resetPasswordView(data);
         data.isUserHasQuestions = false;
         data.questionList = getRemainingQuestionsList(userUniqueId).data;
-        data.isUserAuthenticated = true;
+        if(data.questionList.length === 0){
+            getChallengeQResult = getUserQuestions(userUniqueId);
+            data.userQuestions = getChallengeQResult.data;
+            data.isUserHasQuestions = true;
+        }else {
+            data.isUserAuthenticated = true;
+        }
         return data;
 
     } else if (action === "update-question") {
@@ -119,20 +125,26 @@ function onPost(env) {
         data.message = deleteChallengeQResult.message;
         data.success = deleteChallengeQResult.success;
     }
-    getChallengeQResult = getUserQuestions(userUniqueId);
-    if (getChallengeQResult.data !== null) {
-        if (getChallengeQResult.data.length === 0) {
-            data.isUserHasQuestions = false;
-        } else {
-            var remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
-            if (remainingQuestions.length > 0) {
-                data.isQuestionsRemaining = true;
+    if (action !== null) {
+        getChallengeQResult = getUserQuestions(userUniqueId);
+        if (getChallengeQResult.data !== null) {
+            if (getChallengeQResult.data.length === 0) {
+                data.isUserHasQuestions = false;
             } else {
-                data.isQuestionsRemaining = false;
+                var remainingQuestions = getRemainingQuestionsList(userUniqueId).data;
+                if (remainingQuestions.length > 0) {
+                    data.isQuestionsRemaining = true;
+                } else {
+                    data.isQuestionsRemaining = false;
+                }
+                data.isUserHasQuestions = true;
+                data.userQuestions = getChallengeQResult.data;
             }
-            data.isUserHasQuestions = true;
-            data.userQuestions = getChallengeQResult.data;
         }
+
+    } else {
+        data.isUserHasQuestions = false;
+        data.isUserAuthenticated = false;
     }
     return data;
 }

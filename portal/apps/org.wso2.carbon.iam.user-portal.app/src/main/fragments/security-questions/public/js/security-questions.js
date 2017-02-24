@@ -33,6 +33,8 @@ function editQuestion(questionId, questionSetId, questionText) {
     $("#question-set-id").val(questionSetId);
 
     $("#current-question").html(questionText);
+    $('.alert-success').alert('close');
+
 }
 
 /*function updateQuestion() {
@@ -98,7 +100,7 @@ function checkMinQuestions() {
             "alertClass": "danger",
             "class": "",
             "icon": "fw fw-error",
-            "alertTitle": "Failure!",
+            "alertTitle": "",
             "alertBody": "Answer is empty. Please enter a valid answer",
             "dismissable": true
 
@@ -121,7 +123,7 @@ function checkMinQuestions() {
                 "alertClass": "danger",
                 "class": "",
                 "icon": "fw fw-error",
-                "alertTitle": "Failure!",
+                "alertTitle": "",
                 "alertBody": "Please provide answers for at least minimum number of questions allowed",
                 "dismissable": true
 
@@ -138,6 +140,31 @@ function checkMinQuestions() {
     }
 }
 
+function updateQuestion() {
+    if ($('#new-answer').val()) {
+        $('#questionUpdateForm').submit();
+    } else {
+        var fillingObject = {
+            "id": "min-val",
+            "alertClass": "danger",
+            "class": "",
+            "icon": "fw fw-error",
+            "alertTitle": "",
+            "alertBody": "Answer is empty. Please enter a valid answer",
+            "dismissable": true
+
+        };
+        var callbacks = {
+            onSuccess: function () {
+            },
+            onFailure: function (e) {
+            }
+        };
+        UUFClient.renderFragment("org.wso2.carbon.uuf.common.foundation.ui.alert", fillingObject,
+            "minQuestionError-area", "OVERWRITE", callbacks);
+    }
+}
+
 function goBack() {
 
     if ($("#list-questions").length === 0) {
@@ -145,6 +172,12 @@ function goBack() {
     } else {
         $("#list-questions").show();
     }
-
+    $('#min-val').alert('close');
     $("#edit-question").hide();
 }
+
+window.setTimeout(function() {
+    $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 5000);
