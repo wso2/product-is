@@ -97,7 +97,13 @@ function onPost(env) {
         resetPasswordView(data);
         data.isUserHasQuestions = false;
         data.questionList = getRemainingQuestionsList(userUniqueId).data;
-        data.isUserAuthenticated = true;
+        if(data.questionList.length === 0){
+            getChallengeQResult = getUserQuestions(userUniqueId);
+            data.userQuestions = getChallengeQResult.data;
+            data.isUserHasQuestions = true;
+        }else {
+            data.isUserAuthenticated = true;
+        }
         return data;
 
     } else if (action === "update-question") {
