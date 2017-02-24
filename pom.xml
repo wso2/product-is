@@ -762,10 +762,6 @@
                     <name>sign</name>
                 </property>
             </activation>
-            <build>
-                <plugins>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
@@ -1149,6 +1145,12 @@
             <name>Jayanga Kaushalya</name>
             <id>jayangak</id>
             <email>jayangak AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Denuwanthi De Silva</name>
+            <id>denuwanthi</id>
+            <email>denuwanthi AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
     </developers>
