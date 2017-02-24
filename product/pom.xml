@@ -21,7 +21,7 @@
         <groupId>org.wso2.is</groupId>
         <artifactId>product-is</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.0-m2</version>
     </parent>
 
     <artifactId>org.wso2.is.product</artifactId>
