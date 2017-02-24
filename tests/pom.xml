@@ -23,7 +23,6 @@
         <version>6.0.0-SNAPSHOT</version>
     </parent>
 
-    <version>6.0.0-SNAPSHOT</version>
     <artifactId>user-portal-tests</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 User Portal - Tests</name>

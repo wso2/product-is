@@ -19,7 +19,6 @@
 package org.wso2.is.portal.user.test.ui;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
@@ -33,7 +32,7 @@ import java.util.Map;
 /**
  * UI Tests for Username Recovery.
  */
-public class UsernameRecoveryTest {
+public class UsernameRecoveryTest extends SelectDriver {
 
     private static UsernameRecoveryPageAction usernameRecoveryPageAction
             = new UsernameRecoveryPageAction();
@@ -45,14 +44,14 @@ public class UsernameRecoveryTest {
 
     @Test(groups = "usernameRecoveryTest")
     public void loadUsernameRecoveryPage() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
         driver.close();
     }
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
     public void testUssernameRecovery() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
         Map<String, String> attibuteMap = new HashMap<>();
         attibuteMap.put("givenname", "dinali");
@@ -65,7 +64,7 @@ public class UsernameRecoveryTest {
             attribute.setAttributeValue(entry.getValue());
             attributes.add(attribute);
         });
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
         usernameRecoveryPageAction.recoverUsername(driver, attributes);
         Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
@@ -75,7 +74,7 @@ public class UsernameRecoveryTest {
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
     public void backToSignIn() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
         usernameRecoveryPageAction.backToSignIn(driver);
         Assert.assertEquals(driver.getCurrentUrl(), loginPage, "This current page is not the login page.");

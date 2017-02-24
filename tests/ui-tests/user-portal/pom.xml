@@ -47,12 +47,39 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.user.test.common</artifactId>
+            <version>${carbon.is.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-htmlunit-driver</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.opera</groupId>
+            <artifactId>operadriver</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-ie-driver</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -130,6 +157,11 @@
                                 </org.ops4j.pax.logging.DefaultServiceLog.level>
                             </systemPropertyVariables>
                             <systemProperties>
+                                <!--properties can be : headless, firefox, chrome, ie, opera-->
+                                <property>
+                                    <name>driver</name>
+                                    <value>firefox</value>
+                                </property>
                                 <property>
                                     <name>home</name>
                                     <value>localhost</value>

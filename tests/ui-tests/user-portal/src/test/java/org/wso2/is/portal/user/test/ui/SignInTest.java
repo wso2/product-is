@@ -19,7 +19,6 @@
 package org.wso2.is.portal.user.test.ui;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
@@ -27,7 +26,7 @@ import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
 /**
  * UI Tests for Sign In.
  */
-public class SignInTest {
+public class SignInTest extends SelectDriver {
 
     private static LoginPageAction loginPageAction = new LoginPageAction();
     private static WebDriver driver;
@@ -42,14 +41,14 @@ public class SignInTest {
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(loginPage);
         driver.close();
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
     public void testLogin() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(loginPage);
         String username = System.getProperty("username");
         String password = System.getProperty("password");
@@ -61,7 +60,7 @@ public class SignInTest {
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
     public void testClickUsernameRecovery() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(loginPage);
         loginPageAction.clickForgetUsername(driver);
         Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
@@ -71,7 +70,7 @@ public class SignInTest {
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
     public void testClickPasswordRecovery() throws Exception {
-        driver = new HtmlUnitDriver();
+        driver = selectDriver(System.getProperty("driver"));
         driver.get(loginPage);
         loginPageAction.clickForgetPassword(driver);
         Assert.assertEquals(driver.getCurrentUrl(), passwordRecoveryPage,
