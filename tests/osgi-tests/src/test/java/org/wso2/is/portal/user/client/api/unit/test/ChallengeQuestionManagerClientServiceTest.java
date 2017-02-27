@@ -31,7 +31,6 @@ import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
-import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -40,7 +39,6 @@ import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -48,7 +46,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
