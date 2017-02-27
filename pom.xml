@@ -361,52 +361,39 @@
                 <version>${xalan.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>ui-test-commons</artifactId>
+                <version>${carbon.is.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-api</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-htmlunit-driver</artifactId>
                 <version>${org.seleniumhq.selenium.unitdriver.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-firefox-driver</artifactId>
-                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-chrome-driver</artifactId>
-                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.opera</groupId>
                 <artifactId>operadriver</artifactId>
                 <version>${org.seleniumhq.selenium.operaminidriver.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-ie-driver</artifactId>
                 <version>${org.seleniumhq.selenium.unitdriver.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-firefox-driver</artifactId>
                 <version>${org.seleniumhq.selenium.firfoxdriver.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-chrome-driver</artifactId>
                 <version>${org.seleniumhq.selenium.firfoxdriver.version}</version>
-                <scope>test</scope>
             </dependency>
 
 

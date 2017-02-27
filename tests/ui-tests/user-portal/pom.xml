@@ -29,9 +29,9 @@
 
     <artifactId>user-portal-tests-ui</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
     <name>WSO2 Identity Server User Portal UI- Tests</name>
     <url>http://wso2.com</url>
+    <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
@@ -42,13 +42,6 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
-            <version>${carbon.is.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.iam.user.test.common</artifactId>
             <version>${carbon.is.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
@@ -81,6 +74,10 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-ie-driver</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>ui-test-commons</artifactId>
         </dependency>
     </dependencies>
 
@@ -160,7 +157,7 @@
                                 <!--properties can be : headless, firefox, chrome, ie, opera-->
                                 <property>
                                     <name>driver</name>
-                                    <value>firefox</value>
+                                    <value>headless</value>
                                 </property>
                                 <property>
                                     <name>home</name>
@@ -189,5 +186,10 @@
 
         </profile>
     </profiles>
+    <properties>
+        <import-packages>
+            org.wso2.is.user.portal.test.driver.*; version="${carbon.is.version}"
+        </import-packages>
+    </properties>
 
 </project>

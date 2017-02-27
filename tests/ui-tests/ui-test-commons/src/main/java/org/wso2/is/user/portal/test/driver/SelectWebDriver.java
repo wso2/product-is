@@ -15,7 +15,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.is.portal.user.test.ui;
+
+package org.wso2.is.user.portal.test.driver;
 
 import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
@@ -27,7 +28,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 /**
  * Select the driver to run tests.
  */
-public class SelectDriver {
+public class SelectWebDriver {
+
     public static WebDriver selectDriver(String driverType) {
 
         WebDriver driver = null;

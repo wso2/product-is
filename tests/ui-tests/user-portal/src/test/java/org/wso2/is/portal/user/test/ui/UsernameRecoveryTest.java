@@ -23,6 +23,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
 import org.wso2.carbon.identity.mgt.connector.Attribute;
+import org.wso2.is.user.portal.test.driver.SelectWebDriver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.Map;
 /**
  * UI Tests for Username Recovery.
  */
-public class UsernameRecoveryTest extends SelectDriver {
+public class UsernameRecoveryTest extends SelectWebDriver {
 
     private static UsernameRecoveryPageAction usernameRecoveryPageAction
             = new UsernameRecoveryPageAction();

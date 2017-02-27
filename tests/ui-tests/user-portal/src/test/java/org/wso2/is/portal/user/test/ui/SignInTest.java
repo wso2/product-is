@@ -22,11 +22,13 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
+import org.wso2.is.user.portal.test.driver.SelectWebDriver;
+
 
 /**
  * UI Tests for Sign In.
  */
-public class SignInTest extends SelectDriver {
+public class SignInTest extends SelectWebDriver {
 
     private static LoginPageAction loginPageAction = new LoginPageAction();
     private static WebDriver driver;
@@ -41,6 +43,7 @@ public class SignInTest extends SelectDriver {
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
+        new SelectWebDriver();
         driver = selectDriver(System.getProperty("driver"));
         driver.get(loginPage);
         driver.close();
