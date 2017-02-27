@@ -1193,6 +1193,12 @@
             <email>jayangak AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
+        <developer>
+            <name>Denuwanthi De Silva</name>
+            <id>denuwanthi</id>
+            <email>denuwanthi AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
     </developers>
 
 </project>
