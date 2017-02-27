@@ -122,8 +122,9 @@ public class ProfileMgtClientServiceTest {
         Map<String, String> credentials = new HashMap<>();
         userClaims.put("http://wso2.org/claims/username", "user1");
         userClaims.put("http://wso2.org/claims/givenname", "user1_firstName");
-        userClaims.put("http://wso2.org/claims/lastName", "user1_lastName");
+        userClaims.put("http://wso2.org/claims/lastname", "user1_lastName");
         userClaims.put("http://wso2.org/claims/email", "user1@wso2.com");
+        userClaims.put("http://wso2.org/claims/telephone", "0723456789");
 
         credentials.put("password", "admin");
 
@@ -140,6 +141,11 @@ public class ProfileMgtClientServiceTest {
 
         List<ProfileUIEntry> profileEntries = profileMgtClientService.getProfileEntries(DEFAULT, user.getUserId());
         Assert.assertNotNull(profileEntries, "Failed to retrieve the profile entries.");
+        for (ProfileUIEntry profileUIEntry : profileEntries) {
+            Assert.assertNotNull(profileUIEntry.getValue(), "Failed to retrieve the profile entry value.");
+            Assert.assertNotNull(profileUIEntry.getClaimConfigEntry(),
+                    "Failed to retrieve the profile ClaimConfigEntry.");
+        }
     }
 
     @Test(groups = "getProfile")

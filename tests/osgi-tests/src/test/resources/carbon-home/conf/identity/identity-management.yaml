@@ -37,3 +37,5 @@ recovery:
   enableAPI: true
   enablePortal: true
   url: "/user-portal/recovery/username"
+  notificationInternallyManaged:
+    enable: true
