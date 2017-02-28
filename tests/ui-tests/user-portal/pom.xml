@@ -157,7 +157,7 @@
                                 <!--properties can be : headless, firefox, chrome, ie, opera-->
                                 <property>
                                     <name>driver</name>
-                                    <value>headless</value>
+                                    <value>firefox</value>
                                 </property>
                                 <property>
                                     <name>home</name>

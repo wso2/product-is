@@ -18,32 +18,37 @@
 
 package org.wso2.is.user.portal.test.driver;
 
-import com.opera.core.systems.OperaDriver;
+//import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+//import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+//import org.openqa.selenium.ie.InternetExplorerDriver;
 
 /**
  * Select the driver to run tests.
  */
 public class SelectWebDriver {
 
+    private static WebDriver driver;
+
     public static WebDriver selectDriver(String driverType) {
 
-        WebDriver driver = null;
-
         if (driverType.equalsIgnoreCase("headless")) {
-            driver = new HtmlUnitDriver();
-        } else if (driverType.equalsIgnoreCase("firefox")) {
-            driver = new FirefoxDriver();
-        } else if (driverType.equalsIgnoreCase("chrome")) {
-            driver = new ChromeDriver();
-        } else if (driverType.equalsIgnoreCase("opera")) {
-            driver = new OperaDriver();
+            // driver = new HtmlUnitDriver();
+            //   } else if (driverType.equalsIgnoreCase("firefox")) {
         } else {
-            driver = new InternetExplorerDriver();
+            System.setProperty("webdriver.gecko.driver",
+                    "/home/wso2dinali/GIT/wso2/product-is/tests/ui-tests/ui-test-commons/"
+                            + "src/main/resources/drivers/geckodriver/geckodriver");
+            driver = new FirefoxDriver();
+
+//        } else if (driverType.equalsIgnoreCase("chrome")) {
+//          //  driver = new ChromeDriver();
+//        } else if (driverType.equalsIgnoreCase("opera")) {
+//          //  driver = new OperaDriver();
+//        } else {
+//          //  driver = new InternetExplorerDriver();
         }
         return driver;
     }
