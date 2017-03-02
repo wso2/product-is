@@ -149,17 +149,25 @@
 <div id="edit-question">
     <form class="form-horizontal" method="post" id="questionUpdateForm" action="?security-questions#security-questions">
         <div id="security-question">
-            <label class="control-label">{{i18n "signup.security.question"}}</label>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div id="current-question"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label">{{i18n "signup.security.question.answer"}}</label>
-                    <input class="form-control" type="text" id="new-answer" name="new-answer">
-                </div>
+            <div class="row">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{i18n "security.question.label.securityQ"}}</th>
+                        <th>{{i18n "security.question.label.answer"}}</th>
+                    </tr>
+                    </thead>
+                        <tr>
+                            <td>
+                                <div id="current-question"></div>
+                            </td>
+                            <td>
+                                <div class="table-input">
+                                    <input class="form-control" type="text" id="new-answer" name="new-answer">
+                                </div>
+                            </td>
+                        </tr>
+                </table>
             </div>
         </div>
         <button type="button" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">

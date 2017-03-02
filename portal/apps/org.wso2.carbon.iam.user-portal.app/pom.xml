@@ -41,6 +41,7 @@
             <type>zip</type>
             <classifier>uuf-component</classifier>
         </dependency>
+
         <!--UUF Themes-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.common</groupId>

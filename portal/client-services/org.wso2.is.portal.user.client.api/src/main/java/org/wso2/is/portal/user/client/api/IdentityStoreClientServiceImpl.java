@@ -94,11 +94,13 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             passwordCallback.setPassword(password);
             AuthenticationContext authenticationContext = getRealmService().getIdentityStore()
                     .authenticate(usernameClaim, new Callback[]{passwordCallback}, domain);
-            User identityUser = authenticationContext.getUser();
 
-            //TODO if another claim used, need to load username claim
+            if (authenticationContext.isAuthenticated()) {
+                User identityUser = authenticationContext.getUser();
 
-            return new UUFUser(username, identityUser.getUniqueUserId(), identityUser.getDomainName());
+                //TODO if another claim used, need to load username claim
+                return new UUFUser(username, identityUser.getUniqueUserId(), identityUser.getDomainName());
+            }
         } catch (AuthenticationFailure e) {
             String error = "Invalid credentials.";
             if (LOGGER.isDebugEnabled()) {
@@ -110,6 +112,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
+        throw new UserPortalUIException("Invalid credentials.");
     }
 
     @Override
@@ -225,9 +228,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public Map<String, String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException {
+    public List<String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException {
         List<Claim> claimsList = new ArrayList<>();
-        Map<String, String> userExistsMeta;
+        List<String> userExistsMeta;
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
             Claim claim = new Claim();
             claim.setClaimUri(entry.getKey());
@@ -299,6 +302,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             throw new UserPortalUIException(error);
         }
         return domainSet;
+
     }
 
     @Override
@@ -314,6 +318,42 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         return primaryDomain;
 
     }
+
+    @Override
+    public List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
+                                   String domainName) throws UserPortalUIException {
+
+        //TODO check for domain existence when provided
+        List<UUFUser> users = new ArrayList<>();
+        Claim claim = new Claim();
+        claim.setClaimUri(claimUri);
+        claim.setValue(claimValue);
+        try {
+            List<User> userList = getRealmService().getIdentityStore().listUsers(claim, offset, length, domainName);
+            for (User user : userList) {
+                users.add(new UUFUser("", user.getUniqueUserId(), user.getDomainName()));
+            }
+        } catch (IdentityStoreException e) {
+            String error = "Error while listing users for claimUri :" + claimUri + " and claimValue: " + claimValue;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return users;
+    }
+
+//    @Override
+//    public String getPrimaryDomainName() throws UserPortalUIException {
+//        String primaryDomain;
+//        try {
+//            primaryDomain = getRealmService().getIdentityStore().getPrimaryDomainName();
+//        } catch (IdentityStoreException e) {
+//            String error = "Failed to get the primary domain name.";
+//            LOGGER.error(error, e);
+//            throw new UserPortalUIException(error);
+//        }
+//        return primaryDomain;
+//
+//    }
 
     private RealmService getRealmService() {
         if (this.realmService == null) {
