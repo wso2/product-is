@@ -21,10 +21,6 @@ package org.wso2.is.portal.user.client.api.unit.test.util;
 public class UserPotalOSGiTestConstants {
     public static final String PRIMARY_DOMAIN = "PRIMARY";
     public static final String PASSWORD_CALLBACK = "password";
-    public static final String JAVA_SEC_SYSTEM_PROPERTY = "java.security.auth.login.config";
-    public static final String CARBON_DIRECTORY_CONF = "conf";
-    public static final String CARBON_DIRECTORY_SECURITY = "security";
-    public static final String JAAS_CONFIG_FILE = "carbon-jaas.config";
 
 
     public static class ClaimURIs {
@@ -35,9 +31,5 @@ public class UserPotalOSGiTestConstants {
         public static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/firstName";
         public static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
         public static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastName";
-        public static final String ACCOUNT_DISABLED_CLAIM_URI = "http://wso2.org/claims/accountDisabled";
-        public static final String ACCOUNT_LOCKED_CLAIM_URI = "http://wso2.org/claims/accountLocked";
-        public static final String GROUP_NAME_CLAIM_URI = "http://wso2.org/claims/groupName";
-        public static final String ORGANIZATION_CLAIM_URI = "http://wso2.org/claims/organization";
     }
 }

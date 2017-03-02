@@ -89,7 +89,7 @@ public class RecoveryMgtServiceTest {
         userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "Dissanayaka");
         userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "ayesha@wso2.com");
 
-        credentials.put("password", "password");
+        credentials.put(UserPotalOSGiTestConstants.PASSWORD_CALLBACK, "password");
         addUser(userClaims, credentials);
         getAllChallengeQuestionsForUser();
         addChallengeQuestionForUser();
@@ -183,7 +183,7 @@ public class RecoveryMgtServiceTest {
         userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
         userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "dabarera");
         userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "dinali@wso2.com");
-        credentials.put("password", "password");
+        credentials.put(UserPotalOSGiTestConstants.PASSWORD_CALLBACK, "password");
         addUser(userClaims, credentials);
 
         Map<String, String> testUserClaims = new HashMap<>();
@@ -201,7 +201,7 @@ public class RecoveryMgtServiceTest {
         userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
         userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "silva");
         userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "dinali@wso2.com");
-        credentials2.put("password", "password");
+        credentials2.put(UserPotalOSGiTestConstants.PASSWORD_CALLBACK, "password");
         addUser(userClaims2, credentials2);
 
         Map<String, String> testUserClaims = new HashMap<>();
