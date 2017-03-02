@@ -96,6 +96,9 @@
                         <configuration>
                             <instructions>
                                 <Import-Package>
+                                    org.wso2.is.portal.user.client.api,
+                                    org.wso2.is.portal.user.client.api.micro,
+                                    org.wso2.is.portal.user.client.api.bean,
                                     org.wso2.carbon.identity.recovery.*
                                 </Import-Package>
                             </instructions>
