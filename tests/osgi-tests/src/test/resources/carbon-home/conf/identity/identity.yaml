@@ -1,3 +1,4 @@
+
 ###############################################################################
 #   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
@@ -13,29 +14,8 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ###############################################################################
-recovery:
- password:
-   enableAPI: true
-   enablePortal: true
-   url: "/user-portal/recovery/password"
-   securityQuestion:
-    enableAPI: true
-    enablePortal: true
-    notifyStart: false
-    minAnswers: 2
-   notificationBased:
-    recoveryLink:
-        enableAPI: true
-        enablePortal: true
-    recoveryCode:
-        enableAPI: true
-        enablePortal: true
-   external:
-     enablePortal: false
-     url: "https://somewhere.com"
- username:
-  enableAPI: true
-  enablePortal: true
-  url: "/user-portal/recovery/username"
-  notificationInternallyManaged:
+
+identityStoreInterceptors:
+  - name: org.wso2.carbon.identity.mgt.test.identity.store.interceptor.TestIdentityStoreInterceptor
     enable: true
+orderID: 20

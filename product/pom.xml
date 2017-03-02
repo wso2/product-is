@@ -92,6 +92,16 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
+            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
+            <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.security.caas</groupId>
             <artifactId>org.wso2.carbon.security.caas.feature</artifactId>
             <type>zip</type>
@@ -420,6 +430,14 @@
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
+                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
+                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</id>
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
@@ -441,16 +459,16 @@
                                 </feature>
                                 <!-- Sample Applications -->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--<id>org.wso2.carbon.is.user-portal.feature</id>-->
+                                <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--<id>org.wso2.carbon.uuf.Features-app.feature</id>-->
+                                <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
+                                <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.email.mgt.server.feature</id>
@@ -585,6 +603,14 @@
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</id>
+                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</id>
+                                    <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.mgt.login.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
@@ -617,16 +643,16 @@
                                     <version>${org.wso2.carbon.lcm.version}</version>
                                 </feature>
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--<id>org.wso2.carbon.uuf.Features-app.feature.group</id>-->
+                                <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
-                                    <!--<version>${carbon.is.version}</version>-->
+                                <!--<id>org.wso2.carbon.is.user-portal.feature.group</id>-->
+                                <!--<version>${carbon.is.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
-                                    <!--<version>${carbon.uuf.version}</version>-->
+                                <!--<id>org.wso2.carbon.uuf.sample.pets-store.feature</id>-->
+                                <!--<version>${carbon.uuf.version}</version>-->
                                 <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.email.mgt.server.feature</id>

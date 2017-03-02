@@ -759,6 +759,18 @@
                 <version>${msf4j.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
+                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.common.feature</artifactId>
+                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
+                <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
+                <version>${org.wso2.carbon.identity.inbound.provisioning.scim2.version}</version>
+                <type>zip</type>
+            </dependency>
 
             <!-- UUF Dependent Features -->
             <dependency>
@@ -867,11 +879,12 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>0.1.2</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>0.1.28</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.33</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.28</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.33</org.wso2.carbon.identity.recovery.server.feature.version>
         <org.wso2.carbon.identity.commons.feature.version>0.1.23</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>0.1.23</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.1</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 
         <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m11</carbon-uuf-maven-plugin.version>
@@ -939,7 +952,7 @@
         <msf4j.version>2.1.0</msf4j.version>
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
         <org.wso2.carbon.deployment.version>5.0.0</org.wso2.carbon.deployment.version>
-        <org.wso2.carbon.identity.event.handler.version>1.0.1-SNAPSHOT</org.wso2.carbon.identity.event.handler.version>
+        <org.wso2.carbon.identity.event.handler.version>1.0.2</org.wso2.carbon.identity.event.handler.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -1228,6 +1241,12 @@
             <name>Jayanga Kaushalya</name>
             <id>jayangak</id>
             <email>jayangak AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Denuwanthi De Silva</name>
+            <id>denuwanthi</id>
+            <email>denuwanthi AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
     </developers>

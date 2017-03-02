@@ -135,7 +135,7 @@ function onGet(env) {
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
-    return getProfile();
+    return { profile: getProfile()};
 }
 
 
@@ -152,7 +152,7 @@ function onPost(env) {
     for (var i in formParams) {
         if (i == "password") {
             credentialMap["password"] = formParams[i];
-        } else if (i == "domain") {
+        } else if (i == "domainValue") {
             domain = formParams[i];
         }
         else {

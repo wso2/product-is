@@ -178,6 +178,7 @@ public class IdentityStoreClientServiceTest {
 
         Assert.assertNotNull(user, "Failed to authenticate the user.");
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+        Assert.assertNotNull(user.getDomainName(), "Invalid domain name.");
     }
 
     @Test(groups = "authentication", dependsOnGroups = {"addUsers"})

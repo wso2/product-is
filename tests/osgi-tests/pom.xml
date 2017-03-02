@@ -24,7 +24,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <version>6.0.0-SNAPSHOT</version>
     <artifactId>user-portal-osgi-tests</artifactId>
     <name>WSO2 User Portal - OSGi Tests</name>
     <description>OSGi Tests for WSO2 User Portal</description>
@@ -480,10 +479,13 @@
                                             </executiondata>
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/target/classes" />
+                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/target/classes">
+                                                        <exclude name="**/*Exception.class" />
+                                                        <exclude name="**/*Constants.class" />
+                                                    </fileset>
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
-                                                    <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src" />
+                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/src" />
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco" />
