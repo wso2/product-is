@@ -21,6 +21,8 @@ import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
+import org.wso2.is.portal.user.client.api.bean.ChallengeQuestionSetEntry;
+import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public interface ChallengeQuestionManagerClientService {
      * @throws IdentityStoreException Exception in identity management component.
      * @throws UserNotFoundException User not found.
      */
-    List<ChallengeQuestion> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
+    List<ChallengeQuestionSetEntry> getChallengeQuestionList(String userUniqueId) throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
 
     /**
@@ -64,11 +66,13 @@ public interface ChallengeQuestionManagerClientService {
      * @param questionId Question id.
      * @param questionSetId Question set ID.
      * @param answer User's answer.
+     * @param actionId ActionId to indicate whether challenge questions are added/updated
      * @throws IdentityStoreException Exception in identity management component.
      * @throws UserNotFoundException User not found.
      * @throws IdentityRecoveryException Exception in recovery component.
      */
-    void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer)
+    void setChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId, String answer,
+                                     String actionId)
             throws IdentityStoreException, UserNotFoundException, IdentityRecoveryException;
 
     /**
@@ -81,7 +85,7 @@ public interface ChallengeQuestionManagerClientService {
      * @throws UserNotFoundException User not found.
      */
     void deleteChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId)
-            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException;
+            throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException, UserPortalUIException;
 
     /**
      * Get challenge questions answered by user for recovery
@@ -99,4 +103,6 @@ public interface ChallengeQuestionManagerClientService {
 
     boolean isQuestionBasedPwdRecoveryEnabled() throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
+
+    int getMinimumNoOfChallengeQuestionsToAnswer() throws IdentityRecoveryException;
 }

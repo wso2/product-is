@@ -480,10 +480,10 @@
                                             </executiondata>
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/target/classes" />
+                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/target/classes" />
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
-                                                    <fileset dir="../../portal/osgi-services/org.wso2.is.portal.user.client.api/src" />
+                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/src" />
                                                 </sourcefiles>
                                             </structure>
                                             <html destdir="${project.build.directory}/site/jacoco" />

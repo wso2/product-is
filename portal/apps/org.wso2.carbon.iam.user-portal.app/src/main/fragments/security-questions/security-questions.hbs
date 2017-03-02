@@ -1,13 +1,20 @@
 {{css "css/security-questions.css"}}
 {{js "js/security-questions.js"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
 
 <h3>{{i18n "account.securityQ"}}</h3>
 <hr/>
+
+{{#defineZone "minQuestionError-area"}}
+    <div id="minQuestionError">
+        <!-- Error message for minimum num of questions is displayed here -->
+    </div>
+{{/defineZone}}
 {{#if success}}
     {{#if message}}
         <div class="alert alert-success" role="alert">
             <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
-            {{message}}
+            {{i18n message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -19,7 +26,7 @@
     {{#if message}}
         <div class="alert alert-danger" role="alert">
             <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
-            {{message}}
+            {{i18n message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -28,37 +35,84 @@
         </div>
     {{/if}}
 {{/if}}
-<div id="add-question" class="well">
-    <form class="form-horizontal" method="post">
-        <div id="new-security-question">
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-list">Security Question</label>
-                    <select class="form-control" id="question-list" name="question_list" aria-labelledby="questions-dropdown">
-                        {{#each questionList}}
-                            <option value="{{questionSetId}}:{{questionId}}">{{question}}</option>
-                        {{/each}}
-                    </select>
+{{#if passwordform}}
+    <div id="check-password">
+        <form class="form-horizontal" method="post" action="?security-questions#security-questions">
+            <div id="info">
+                <div class="message message-info">
+                    <p>{{i18n "security.question.info.body"}}</p>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <label class="control-label" for="question-answer">Answer</label>
-                    <input id="question-answer" name="question-answer" type="text" class="form-control">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+                    <label class="control-label" for="old-password">{{i18n "security.question.label.password"}}<span>*</span></label>
+                    <input type="password" class="form-control" id="old-password" name="old-password" required/>
+                </div>
+            </div>
+            <input type="hidden" name="action" value="check-password">
+            <button type="submit" class="btn btn-primary">{{i18n "security.question.label.continue"}}</button>
+        </form>
+    </div>
+{{/if}}
+{{#if isUserAuthenticated}}
+    <div id="add-question">
+        <form class="form-horizontal" method="post" id="questionAdd" action="?security-questions#security-questions">
+            <div class="message message-info">
+                <p><i class="icon fw fw-info"></i>{{i18n "security.question.add.info.body.part1"}}&nbsp;{{minQuestions}}
+                    {{i18n "security.question.add.info.body.part2"}}</p>
+            </div>
+            <div id="new-security-question">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                    <div class="row">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>{{i18n "security.question.label.securityQ"}}</th>
+                                <th>{{i18n "security.question.label.answer"}}</th>
+                            </tr>
+                            </thead>
+                            {{#each questionList}}
+                                <tr>
+                                    <td>
+                                        <select class="form-control" id="question-list" name="question_list"
+                                                aria-labelledby="questions-dropdown">
+                                            {{#each challengeQuestionList}}
+                                                <option name="{{questionSetId}}"
+                                                        value="{{questionSetId}}:{{questionId}}">{{question}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="table-input">
+                                            <input id="question-answer-{{challengeQuestionSetId}}"
+                                                   name="question-answer-{{challengeQuestionSetId}}" type="text"
+                                                   class="form-control question-answer">
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/each}}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <div class="row">
+                    <input type="hidden" id="min-questions" name="min-questions" value={{minQuestions}}>
                     <input type="hidden" name="action" value="add-question">
+                    <button type="button" class="btn btn-primary"
+                            onclick="checkMinQuestion()">{{i18n "security.question.label.add"}}</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+{{/if}}
 {{#if isUserHasQuestions }}
     <div id="list-questions">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="row">
                 <div id="create-question" class="pull-right add-margin-bottom-4x">
                     <button class="btn btn-secondary btn-lg" onclick="addQuestion()"><span
-                            class="fw fw-add fw-1x"></span> Create
+                            class="fw fw-add fw-1x"></span>{{i18n "security.question.label.create"}}
                     </button>
                 </div>
             </div>
@@ -92,11 +146,11 @@
             <p>{{i18n "security.question.info.body"}}</p>
         </div>
     </div>
-    <form class="form-horizontal" method="post" id="questionUpdateForm">
+    <form class="form-horizontal" method="post" id="questionUpdateForm" action="?security-questions#security-questions">
         <div id="password">
             <div class="form-group">
                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                    <label class="control-label" for="old-password">Password<span>*</span></label>
+                    <label class="control-label" for="old-password">{{i18n "security.question.label.password"}}<span>*</span></label>
                     <input type="password" class="form-control" id="old-password" name="old-password" required/>
                 </div>
             </div>
@@ -111,12 +165,14 @@
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                     <label class="control-label">{{i18n "signup.security.question.answer"}}</label>
-                    <input class="form-control" type="text" id="answer">
+                    <input class="form-control" type="text" id="new-answer" name="new-answer">
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">Update</button>
-        <input type="button" class="btn btn-default add-margin-bottom-3x" value="Cancel" onclick="goBack()">
+        <button type="submit" class="btn btn-primary add-margin-bottom-3x" onclick="updateQuestion()">
+            {{i18n "security.question.label.update"}}</button>
+        <input type="button" class="btn btn-default add-margin-bottom-3x"
+               value='{{i18n "security.question.label.cancel"}}' onclick="goBack()">
         <input type="hidden" id="question-id" name="question-id" value="">
         <input type="hidden" id="question-set-id" name="question-set-id" value="">
         <input type="hidden" name="action" value="update-question">

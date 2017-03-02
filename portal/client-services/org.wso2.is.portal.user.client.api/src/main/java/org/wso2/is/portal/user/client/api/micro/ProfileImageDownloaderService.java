@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.is.portal.user.client.api;
+package org.wso2.is.portal.user.client.api.micro;
 
 import org.wso2.msf4j.Microservice;
 
@@ -29,7 +29,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
- * This the API implemetation for profile image download.
+ * This is the API implementation for profile image download.
  */
 public class ProfileImageDownloaderService implements Microservice {
 
@@ -58,5 +58,4 @@ public class ProfileImageDownloaderService implements Microservice {
                 orElse(Response.ok().build());
 
     }
-
 }

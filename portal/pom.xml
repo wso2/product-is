@@ -33,7 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>osgi-services/org.wso2.is.portal.user.client.api</module>
+        <module>client-services/org.wso2.is.portal.user.client.api</module>
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>
     </modules>
 
