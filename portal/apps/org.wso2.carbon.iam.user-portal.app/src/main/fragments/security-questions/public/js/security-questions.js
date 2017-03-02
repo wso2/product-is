@@ -19,8 +19,6 @@ $(document).ready(function () {
     if ($("#list-questions").length === 0) {
         $("#add-question").show();
     }
-
-    $('#questionUpdateForm').validate();
 });
 
 function editQuestion(questionId, questionSetId, questionText) {
@@ -36,9 +34,11 @@ function editQuestion(questionId, questionSetId, questionText) {
 }
 
 function updateQuestion() {
-    $("#add-question").hide();
-    $("#list-questions").show();
-    $("#edit-question").hide();
+    if($('#questionUpdateForm').valid()){
+        $("#add-question").hide();
+        $("#list-questions").show();
+        $("#edit-question").hide();
+    }
 }
 
 function deleteQuestion(questionId, questionSetId) {
