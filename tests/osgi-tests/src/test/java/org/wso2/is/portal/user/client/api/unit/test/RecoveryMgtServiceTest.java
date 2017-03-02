@@ -24,6 +24,7 @@ import org.wso2.is.portal.user.client.api.RecoveryMgtService;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
+import org.wso2.is.portal.user.client.api.unit.test.util.UserPotalOSGiTestConstants;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
@@ -81,8 +82,15 @@ public class RecoveryMgtServiceTest {
 
     @Test(groups = "getRecoveryQuestions", dependsOnGroups = {"getRecoveryConfig"})
     public void getUserChallengeQuestionAtOnce() throws UserPortalUIException, IdentityRecoveryException {
+        Map<String, String> userClaims = new HashMap<>();
+        Map<String, String> credentials = new HashMap<>();
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.USERNAME_CLAIM_URI, "Ayesha");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "Ayesha");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "Dissanayaka");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "ayesha@wso2.com");
 
-        addUser();
+        credentials.put(UserPotalOSGiTestConstants.PASSWORD_CALLBACK, "password");
+        addUser(userClaims, credentials);
         getAllChallengeQuestionsForUser();
         addChallengeQuestionForUser();
         challengeQuestionsResponse = recoveryMgtService.getUserChallengeQuestionAtOnce(users.get(0).getUserId());
@@ -141,20 +149,71 @@ public class RecoveryMgtServiceTest {
 
     }
 
-    private void addUser() throws UserPortalUIException {
-        IdentityStoreClientService identityStoreClientService =
-                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
-        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+    @Test(groups = "usernameRecovery")
+    public void verifyUsernameWithNoClaims() throws UserPortalUIException, IdentityRecoveryException {
+        Map<String, String> testUserClaims = new HashMap<>();
+        boolean result = recoveryMgtService.verifyUsername(testUserClaims);
+        Assert.assertEquals(result, false, "There should not be any user recovered.");
+    }
+
+/*    @Test(groups = "usernameRecovery")
+    public void verifyUsernameWithOneClaims() throws UserPortalUIException, IdentityRecoveryException {
 
         Map<String, String> userClaims = new HashMap<>();
         Map<String, String> credentials = new HashMap<>();
-        userClaims.put("http://wso2.org/claims/username", "Ayesha");
-        userClaims.put("http://wso2.org/claims/givenname", "Ayesha");
-        userClaims.put("http://wso2.org/claims/lastName", "Dissanayaka");
-        userClaims.put("http://wso2.org/claims/email", "ayesha@wso2.com");
-
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.USERNAME_CLAIM_URI, "dinali1234");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "dabarera");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "dinali@wso2.com");
         credentials.put("password", "password");
+        addUser(userClaims, credentials);
 
+        Map<String, String> testUserClaims = new HashMap<>();
+        testUserClaims.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "dabarera");
+        boolean result = recoveryMgtService.verifyUsername(testUserClaims);
+        Assert.assertEquals(result, true, "There user should be recovered.");
+    }*/
+
+    @Test(groups = "usernameRecovery")
+    public void verifyUsernameWithWrongClaims() throws UserPortalUIException, IdentityRecoveryException {
+
+        Map<String, String> userClaims = new HashMap<>();
+        Map<String, String> credentials = new HashMap<>();
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.USERNAME_CLAIM_URI, "dinali1234");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "dabarera");
+        userClaims.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "dinali@wso2.com");
+        credentials.put(UserPotalOSGiTestConstants.PASSWORD_CALLBACK, "password");
+        addUser(userClaims, credentials);
+
+        Map<String, String> testUserClaims = new HashMap<>();
+        testUserClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "mala");
+        boolean result = recoveryMgtService.verifyUsername(testUserClaims);
+        Assert.assertEquals(result, false, "There should not be any user recovered.");
+    }
+
+    @Test(groups = "usernameRecovery", dependsOnMethods = "verifyUsernameWithWrongClaims")
+    public void verifyUsernameWithMultipleClaims() throws UserPortalUIException, IdentityRecoveryException {
+
+        Map<String, String> userClaims2 = new HashMap<>();
+        Map<String, String> credentials2 = new HashMap<>();
+        userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.USERNAME_CLAIM_URI, "dinaliDuplicate");
+        userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
+        userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.LAST_NAME_CLAIM_URI, "silva");
+        userClaims2.put(UserPotalOSGiTestConstants.ClaimURIs.EMAIL_CLAIM_URI, "dinali@wso2.com");
+        credentials2.put(UserPotalOSGiTestConstants.PASSWORD_CALLBACK, "password");
+        addUser(userClaims2, credentials2);
+
+        Map<String, String> testUserClaims = new HashMap<>();
+        testUserClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
+        boolean result = recoveryMgtService.verifyUsername(testUserClaims);
+        Assert.assertEquals(result, false, "There should not be any user recovered.");
+    }
+
+    private void addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
         UUFUser user = identityStoreClientService.addUser(userClaims, credentials);
         users.add(user);
     }
