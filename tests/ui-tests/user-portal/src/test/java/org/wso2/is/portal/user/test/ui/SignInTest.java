@@ -43,9 +43,8 @@ public class SignInTest extends SelectWebDriver {
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
-        new SelectWebDriver();
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(loginPage);
+        driver = selectDriver("chrome");
+        driver.get("https://localhost:9292/user-portal/login");
         driver.close();
     }
 

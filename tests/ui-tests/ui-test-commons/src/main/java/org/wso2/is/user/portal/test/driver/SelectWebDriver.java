@@ -18,12 +18,14 @@
 
 package org.wso2.is.user.portal.test.driver;
 
-//import com.opera.core.systems.OperaDriver;
+import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
-//import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-//import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-//import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Select the driver to run tests.
@@ -35,20 +37,25 @@ public class SelectWebDriver {
     public static WebDriver selectDriver(String driverType) {
 
         if (driverType.equalsIgnoreCase("headless")) {
-            // driver = new HtmlUnitDriver();
-            //   } else if (driverType.equalsIgnoreCase("firefox")) {
-        } else {
-            System.setProperty("webdriver.gecko.driver",
-                    "/home/wso2dinali/GIT/wso2/product-is/tests/ui-tests/ui-test-commons/"
-                            + "src/main/resources/drivers/geckodriver/geckodriver");
+             driver = new HtmlUnitDriver();
+        } else if (driverType.equalsIgnoreCase("firefox")) {
+            System.setProperty("webdriver.gecko.driver", "/home/wso2dinali/IdeaProjects/firefoxtest/" +
+                    "src/main/resources/geckodriver");
             driver = new FirefoxDriver();
 
-//        } else if (driverType.equalsIgnoreCase("chrome")) {
-//          //  driver = new ChromeDriver();
-//        } else if (driverType.equalsIgnoreCase("opera")) {
-//          //  driver = new OperaDriver();
-//        } else {
-//          //  driver = new InternetExplorerDriver();
+        } else if (driverType.equalsIgnoreCase("chrome")) {
+
+            System.setProperty("webdriver.chrome.driver", "/home/wso2dinali/GIT/wso2/product-is/tests/ui-tests/" +
+                    "ui-test-commons/src/main/resources/drivers/chromedriver/chromedriver");
+            DesiredCapabilities capability = DesiredCapabilities.chrome();
+            capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+            driver = new ChromeDriver(capability);
+
+        } else if (driverType.equalsIgnoreCase("opera")) {
+            driver = new OperaDriver();
+
+        } else {
+            driver = new InternetExplorerDriver();
         }
         return driver;
     }
