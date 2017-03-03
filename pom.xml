@@ -360,6 +360,42 @@
                 <artifactId>xalan</artifactId>
                 <version>${xalan.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>ui-test-commons</artifactId>
+                <version>${carbon.is.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-api</artifactId>
+                <version>${org.seleniumhq.selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-htmlunit-driver</artifactId>
+                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.opera</groupId>
+                <artifactId>operadriver</artifactId>
+                <version>${org.seleniumhq.selenium.operaminidriver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-ie-driver</artifactId>
+                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-firefox-driver</artifactId>
+                <version>${org.seleniumhq.selenium.firfoxdriver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-chrome-driver</artifactId>
+                <version>${org.seleniumhq.selenium.firfoxdriver.version}</version>
+            </dependency>
+
 
             <!-- Other Dependencies-->
             <dependency>
@@ -961,6 +997,15 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
+
+        <!-- Selenium -->
+        <org.seleniumhq.selenium.version>3.1.0</org.seleniumhq.selenium.version>
+        <org.seleniumhq.selenium.unitdriver.version>2.40.0</org.seleniumhq.selenium.unitdriver.version>
+        <org.seleniumhq.selenium.operaminidriver.version>0.8.1</org.seleniumhq.selenium.operaminidriver.version>
+        <org.seleniumhq.selenium.firfoxdriver.version>2.48.2</org.seleniumhq.selenium.firfoxdriver.version>
+        <!-- Test jar plugins -->
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
 
     </properties>
 
