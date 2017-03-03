@@ -153,6 +153,11 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.admin-portal.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
             <artifactId>org.wso2.carbon.email.mgt.server.feature</artifactId>
             <type>zip</type>
@@ -398,6 +403,10 @@
                                     <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.iam.admin-portal.feature</id>
+                                    <version>${carbon.is.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.jndi.feature</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -572,6 +581,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.iam.user-portal.feature.group</id>
+                                    <version>${carbon.is.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.iam.admin-portal.feature.group</id>
                                     <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
