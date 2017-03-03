@@ -24,6 +24,7 @@ limitations under the License.
             <class name="org.wso2.is.portal.user.client.api.unit.test.RecoveryMgtServiceTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.AccountLockHandlerTest"/>
             <class name="org.wso2.is.portal.user.client.api.unit.test.AccountDisabledHandlerTest"/>
+            <class name="org.wso2.is.portal.user.client.api.unit.test.UUFUserTest"/>
         </classes>
     </test>
 </suite>
