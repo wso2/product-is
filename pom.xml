@@ -849,7 +849,7 @@
         <org.wso2.carbon.identity.recovery.server.feature.version>0.1.33</org.wso2.carbon.identity.recovery.server.feature.version>
         <org.wso2.carbon.identity.commons.feature.version>0.1.23</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>0.1.23</org.wso2.carbon.identity.commons.version>
-        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.1</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
+        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.15</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 
         <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m11</carbon-uuf-maven-plugin.version>
