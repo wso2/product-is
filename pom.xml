@@ -361,39 +361,40 @@
                 <version>${xalan.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>ui-test-commons</artifactId>
-                <version>${carbon.is.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-java</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-api</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-htmlunit-driver</artifactId>
                 <version>${org.seleniumhq.selenium.unitdriver.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-firefox-driver</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-chrome-driver</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-exec</artifactId>
                 <version>${org.apache.commons.exec.version}</version>
+                <scope>test</scope>
             </dependency>
 
 
