@@ -381,16 +381,6 @@
                 <version>${org.seleniumhq.selenium.unitdriver.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.opera</groupId>
-                <artifactId>operadriver</artifactId>
-                <version>${org.seleniumhq.selenium.operaminidriver.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.seleniumhq.selenium</groupId>
-                <artifactId>selenium-ie-driver</artifactId>
-                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-firefox-driver</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
@@ -399,6 +389,11 @@
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-chrome-driver</artifactId>
                 <version>${org.seleniumhq.selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>${org.apache.commons.exec.version}</version>
             </dependency>
 
 
@@ -1006,11 +1001,12 @@
         <!-- Selenium -->
         <org.seleniumhq.selenium.version>3.0.1</org.seleniumhq.selenium.version>
         <org.seleniumhq.selenium.unitdriver.version>2.40.0</org.seleniumhq.selenium.unitdriver.version>
-        <org.seleniumhq.selenium.operaminidriver.version>0.8.1</org.seleniumhq.selenium.operaminidriver.version>
         <org.seleniumhq.selenium.firfoxdriver.version>2.26.0</org.seleniumhq.selenium.firfoxdriver.version>
         <!-- Test jar plugins -->
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
+
+        <org.apache.commons.exec.version>1.3</org.apache.commons.exec.version>
 
     </properties>
 

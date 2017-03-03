@@ -34,7 +34,6 @@
     <url>http://wso2.com</url>
 
     <modules>
-        <module>ui-test-commons</module>
         <module>user-portal</module>
     </modules>
 

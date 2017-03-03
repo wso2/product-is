@@ -20,11 +20,25 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="WSO2-Identity-Server-user-portal-ui-Test-Suite">
-    <test name="wso2-identity-server-user-portal-ui" preserve-order="true" parallel="false">
-        <!--Commenting these tests, because in order to run these there should be a IS 6.0 server running. -->
-        <classes>
-            <class name="org.wso2.is.portal.user.test.ui.SignInTest"/>
-            <class name="org.wso2.is.portal.user.test.ui.UsernameRecoveryTest"/>
-        </classes>
-    </test>
+    <!--Before running UI tests- set up web browser drivers and a running pack and uncomment these tests -->
+        <test name="GroupSignInTest">
+            <groups>
+                <run>
+                    <include name="signInTest" />
+                </run>
+            </groups>
+            <classes>
+                <!--<class name="org.wso2.is.portal.user.test.ui.SignInTest"/>-->
+            </classes>
+        </test>
+        <test name="GroupUsernameRecoveryTest">
+            <groups>
+                <run>
+                    <include name="usernameRecoveryTest" />
+                </run>
+            </groups>
+            <classes>
+                <!--<class name="org.wso2.is.portal.user.test.ui.UsernameRecoveryTest"/>-->
+            </classes>
+        </test>
 </suite>

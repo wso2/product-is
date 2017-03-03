@@ -23,7 +23,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
 import org.wso2.carbon.identity.mgt.connector.Attribute;
-import org.wso2.is.user.portal.test.driver.SelectWebDriver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ import java.util.Map;
 /**
  * UI Tests for Username Recovery.
  */
-public class UsernameRecoveryTest extends SelectWebDriver {
+public class UsernameRecoveryTest extends SelectDriver {
 
     private static UsernameRecoveryPageAction usernameRecoveryPageAction
             = new UsernameRecoveryPageAction();
@@ -47,7 +46,7 @@ public class UsernameRecoveryTest extends SelectWebDriver {
     public void loadUsernameRecoveryPage() throws Exception {
         driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
-        driver.close();
+        driver.quit();
     }
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
@@ -70,7 +69,7 @@ public class UsernameRecoveryTest extends SelectWebDriver {
         usernameRecoveryPageAction.recoverUsername(driver, attributes);
         Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
                 "This current page is not the username recovery page.");
-        driver.close();
+        driver.quit();
     }
 
     @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")

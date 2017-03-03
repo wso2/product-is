@@ -22,13 +22,13 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
-import org.wso2.is.user.portal.test.driver.SelectWebDriver;
+
 
 
 /**
  * UI Tests for Sign In.
  */
-public class SignInTest extends SelectWebDriver {
+public class SignInTest extends SelectDriver {
 
     private static LoginPageAction loginPageAction = new LoginPageAction();
     private static WebDriver driver;
@@ -43,9 +43,9 @@ public class SignInTest extends SelectWebDriver {
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
-        driver = selectDriver("chrome");
-        driver.get("https://localhost:9292/user-portal/login");
-        driver.close();
+        driver = selectDriver(System.getProperty("driver"));
+        driver.get(loginPage);
+        driver.quit();
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
@@ -57,7 +57,7 @@ public class SignInTest extends SelectWebDriver {
         loginPageAction.login(driver, username, password);
         Assert.assertEquals(driver.getCurrentUrl(), adminPage,
                 "This current page is not the admin user page.");
-        driver.close();
+        driver.quit();
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
@@ -67,7 +67,7 @@ public class SignInTest extends SelectWebDriver {
         loginPageAction.clickForgetUsername(driver);
         Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
                 "This current page is not the username recovery page.");
-        driver.close();
+        driver.quit();
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
