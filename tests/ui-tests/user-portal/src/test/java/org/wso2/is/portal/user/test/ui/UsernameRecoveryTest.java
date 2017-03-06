@@ -46,6 +46,8 @@ public class UsernameRecoveryTest extends SelectDriver {
     public void loadUsernameRecoveryPage() throws Exception {
         driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
+        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
+                "This current page is not the username recovery page.");
         driver.quit();
     }
 

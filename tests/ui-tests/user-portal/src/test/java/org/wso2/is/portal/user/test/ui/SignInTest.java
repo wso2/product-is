@@ -45,6 +45,8 @@ public class SignInTest extends SelectDriver {
     public void loadLoginPage() throws Exception {
         driver = selectDriver(System.getProperty("driver"));
         driver.get(loginPage);
+        Assert.assertEquals(driver.getCurrentUrl(), loginPage,
+                "This current page is not the login page.");
         driver.quit();
     }
 
