@@ -19,6 +19,7 @@
 package org.wso2.is.portal.user.test.ui;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.CapabilityType;
@@ -48,11 +49,10 @@ public class SelectDriver {
             } else {
                 driver = new HtmlUnitDriver();
             }
+        } catch (WebDriverException wb) {
+            LOGGER.info("The relavent driver is not found. Please read the README.txt in the uer-portal tests");
         } catch (Exception e) {
-            String error = e + "The relavent driver is not found. Please read the README.txt in the uer-portal tests";
-            LOGGER.info(error);
-
-
+            LOGGER.info(e.toString());
         }
         return driver;
     }

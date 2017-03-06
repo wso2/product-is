@@ -26,24 +26,20 @@ import org.wso2.carbon.iam.userportal.pageobject.LoginPage;
  */
 public class LoginPageAction {
 
-    private static LoginPage loginPage = new LoginPage();
+    private LoginPage loginPage = new LoginPage();
 
     public void login(WebDriver driver, String username, String password) {
         loginPage.txtbxUsername(driver).sendKeys(username);
         loginPage.txtbxPassword(driver).sendKeys(password);
         loginPage.btnSignIn(driver).click();
     }
-
     public void signUp(WebDriver driver) {
         loginPage.lnkSignUp(driver).click();
     }
-
     public void clickForgetUsername(WebDriver driver) {
         loginPage.lnkForgotUsername(driver).click();
     }
-
     public void clickForgetPassword(WebDriver driver) {
         loginPage.lnkForgotPassword(driver).click();
     }
-
 }

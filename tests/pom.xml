@@ -32,5 +32,4 @@
         <module>osgi-tests</module>
         <module>ui-tests</module>
     </modules>
-
 </project>

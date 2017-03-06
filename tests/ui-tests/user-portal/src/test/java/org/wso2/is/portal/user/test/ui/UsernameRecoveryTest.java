@@ -24,10 +24,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
 import org.wso2.carbon.identity.mgt.connector.Attribute;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * UI Tests for Username Recovery.
@@ -57,13 +57,13 @@ public class UsernameRecoveryTest extends SelectDriver {
         attibuteMap.put("givenname", "dinali");
         attibuteMap.put("lastname", "silva");
         attibuteMap.put("email", "dinali@wso2.com");
-        List<Attribute> attributes = new ArrayList<>();
-        attibuteMap.entrySet().forEach(entry -> {
+        List<Attribute> attributes = attibuteMap.entrySet().stream().map(entry -> {
             Attribute attribute = new Attribute();
             attribute.setAttributeName(entry.getKey());
             attribute.setAttributeValue(entry.getValue());
-            attributes.add(attribute);
-        });
+            return attribute;
+        }).collect(Collectors.toList());
+
         driver = selectDriver(System.getProperty("driver"));
         driver.get(usernameRecoveryPage);
         usernameRecoveryPageAction.recoverUsername(driver, attributes);
