@@ -218,6 +218,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
+                <artifactId>org.wso2.carbon.identity.auth.saml2.common.feature</artifactId>
+                <version>${carbon.identity.auth.saml2.common.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.saml.server.feature</artifactId>
                 <version>${carbon.identity.saml.inbound.version}</version>
                 <type>zip</type>
@@ -852,6 +858,7 @@
         <org.wso2.carbon.identity.commons.feature.version>0.1.20</org.wso2.carbon.identity.commons.feature.version>
         <org.wso2.carbon.identity.commons.version>0.1.20</org.wso2.carbon.identity.commons.version>
         <carbon.identity.gateway.version>1.0.0-SNAPSHOT</carbon.identity.gateway.version>
+        <carbon.identity.auth.saml2.common.version>6.0.0-SNAPSHOT</carbon.identity.auth.saml2.common.version>
         <carbon.identity.saml.inbound.version>6.0.0-SNAPSHOT</carbon.identity.saml.inbound.version>
         <carbon.identity.saml.outbound.version>6.0.0-SNAPSHOT</carbon.identity.saml.outbound.version>
 
