@@ -58,12 +58,7 @@
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-firefox-driver</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-htmlunit-driver</artifactId>
+            <artifactId>htmlunit-driver</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -154,7 +149,11 @@
                                 <!--properties can be : headless, firefox, chrome, ie, opera-->
                                 <property>
                                     <name>driver</name>
-                                    <value>chrome</value>
+                                    <value>headless</value>
+                                </property>
+                                <property>
+                                    <name>pathToChromeDriver</name>
+                                    <value>src/test/resources/drivers/chrome/chromedriver</value>
                                 </property>
                                 <property>
                                     <name>home</name>
