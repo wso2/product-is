@@ -157,6 +157,10 @@
                                     <value>chrome</value>
                                 </property>
                                 <property>
+                                    <name>pathToChromeDriver</name>
+                                    <value>/home/wso2dinali/Downloads/chrome/chromedriver</value>
+                                </property>
+                                <property>
                                     <name>home</name>
                                     <value>localhost</value>
                                 </property>
