@@ -23,6 +23,10 @@ bindings:
       mode: "append"
       fragments:
         - "org.wso2.carbon.uuf.common.foundation.ui.menubar"
+    - zoneName: "org.wso2.carbon.iam.admin-portal.feature.usermenu"
+      mode: "append"
+      fragments:
+        - "org.wso2.carbon.iam.admin-portal.feature.usermenu"
 
 config:
   appName: "Identity Server Admin Portal"

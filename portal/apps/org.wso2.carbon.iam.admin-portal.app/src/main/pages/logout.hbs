@@ -1,0 +1,24 @@
+{{layout "unprivilege"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{title "Logout | " @config.appName}}
+{{css "css/admin-portal.css"}}
+{{js "js/script.js"}}
+
+{{#fillZone "content"}}
+    {{#if errorMessage}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>Login Error!</strong>
+            {{errorMessage}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+
+    <div class="page-content-wrapper">
+        <h3>Logging Out..</h3>
+    </div>
+
+{{/fillZone}}

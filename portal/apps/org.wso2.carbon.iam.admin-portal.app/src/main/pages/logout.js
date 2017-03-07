@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 function onGet(env) {
-
-}
-
-
-function onPost(env) {
-
+    if (getSession()) {
+        if (destroySession()) {
+            sendRedirect(env.contextPath + env.config['loginPageUri']);
+        } else {
+            Log.debug("Error while logging out.");
+        }
+    } else {
+        sendRedirect(env.contextPath + env.config['loginPageUri']);
+    }
 }
 
