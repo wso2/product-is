@@ -10,33 +10,22 @@ Welcome to WSO2 Identity Server UI tests
 
  1. To run these tests, you need to download web drivers from here and extract them and put them in
  their driver folder in a drivers folder in product-is/tests/ui-tests/user-portal/src/test/resources/drivers .
-         Eg: Chrome - chromedriver
+         eg:chrome - chromedriver
 
     Download Links :
     ----------------
          Chrome : https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip
 
- 2. Change the property in the product-is/tests/ui-tests/user-portal/pom.xml
+ 2. Change the property of the driver in the product-is/tests/ui-tests/user-portal/pom.xml
  to the specific web driver you test.
 
          Only: Headless and Chrome is available at the moment.
          
-         1. <property>
-               <name>driver</name>
-               <value>chrome</value>
-            </property>
-            
-         2. <property>
-               <name>pathToChromeDriver</name>
-               <value>...your path to the crome driver ..</value>
-            </property>
- 
- 3. At the moment, you also need to get latest WSO2 IS 6.0 pack and run in parallel to the tests before 
-   running the tests.
          
 Secure sensitive information in carbon configuration files
 ----------------------------------------------------------
 
+(link to docs)
 
 Support
 =======

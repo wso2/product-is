@@ -41,7 +41,7 @@ public class SelectDriver {
 
         try {
             if (driverType.equalsIgnoreCase("chrome")) {
-                System.setProperty("webdriver.chrome.driver", System.getProperty("pathToChromeDriver"));
+                System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver/chromedriver");
                 DesiredCapabilities capability = DesiredCapabilities.chrome();
                 capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
                 driver = new ChromeDriver(capability);
