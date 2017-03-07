@@ -851,9 +851,9 @@
         <org.wso2.carbon.identity.commons.version>0.1.23</org.wso2.carbon.identity.commons.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.15</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 
-        <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
+        <carbon.uuf.version>1.0.0-m13</carbon.uuf.version>
         <carbon-uuf-maven-plugin.version>1.0.0-m11</carbon-uuf-maven-plugin.version>
-        <carbon.uuf.common.version>1.0.0-m3</carbon.uuf.common.version>
+        <carbon.uuf.common.version>1.0.0-m5</carbon.uuf.common.version>
         <carbon.security.version>1.0.1</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
         <org.wso2.carbon.lcm.version>1.0.0</org.wso2.carbon.lcm.version>
