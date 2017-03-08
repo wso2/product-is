@@ -29,7 +29,7 @@ menus :
         link: "/users"
         icon: "fw fw-user"
       - text: "Groups"
-        link: ""
+        link: "/groups"
         icon: "fw fw-user"
       - text: "Roles"
         link: ""
