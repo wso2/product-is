@@ -1,0 +1,77 @@
+{{secured}}
+{{layout "privilege"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{title "Add User | " @config.appName}}
+{{css "css/admin-portal.css"}}
+
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "users.add.header"}}</h1>
+        </div>
+        <form class="form-horizontal" role="form" method="post">
+            {{#if domainNames}}
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                        <input type="hidden" name="domain" id="domain"
+                               class="form-control"/>
+                        <label for="domainSelector" class="control-label">{{i18n "users.add.domain"}}
+                            <span class="requiredAstrix"> *</span></label>
+                        <select class="form-control" id="domainSelector"
+                                data-primary="{{primaryDomainName}}">
+                            {{#each domainNames}}
+                                <option value={{this}}>{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            {{/if}}
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                    <label for="inputUsername" class="control-label">{{i18n "users.add.username"}}
+                        <span class="requiredAstrix"> *</span></label>
+                    <input class="form-control" id="inputUsername" placeholder="Username" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                    <label for="verificationSelector" class="control-label">{{i18n "users.add.selectMethod"}}
+                        <span class="requiredAstrix"> *</span></label>
+                    <select class="form-control" id="verificationSelector">
+                        <option>{{i18n "users.add.select.with.password"}}</option>
+                        <option>{{i18n "users.add.select.with.email.and.askPassword"}}</option>
+                        <option>{{i18n "users.add.select.with.otp.and.askPassword"}}</option>
+                        <option>{{i18n "users.add.select.with.email.or.phone"}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group password_strength_meter">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                    <div class="well">
+
+                        <label class="control-label" for="newPassword">{{i18n "users.add.password"}}
+                            <span class="requiredAstrix"> *</span></label>
+                        <div class="form-group form-inline">
+                            <input type="password" name="newPassword" id="newPassword" class="form-control"
+                                   required data-schemaformat="password" placeholder="Password"/>
+
+
+                            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="generatePassword"
+                                   value="Generate Password"/>
+                        </div>
+
+                        <label class="control-label" for="confirmPassword">{{i18n "users.confirm.password"}}
+                            <span class="requiredAstrix"> *</span></label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control"
+                               required data-schemaformat="password"/>
+                    </div>
+                </div>
+            </div>
+
+
+            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addUser" value="Add User"/>
+        </form>
+    </div>
+{{/fillZone}}
