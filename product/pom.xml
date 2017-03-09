@@ -701,6 +701,10 @@
                                     <id>org.wso2.carbon.identity.gateway.resource.feature</id>
                                     <version>${carbon.identity.gateway.version}</version>
                                 </feature>
+				<feature>
+                                    <id>org.wso2.carbon.identity.auth.saml2.common.feature</id>
+                                    <version>${carbon.identity.auth.saml2.common.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.server.feature</id>
                                     <version>${carbon.identity.saml.inbound.version}</version>
