@@ -868,7 +868,7 @@
 
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <carbon.security.userstore.jdbc.version>0.1.2</carbon.security.userstore.jdbc.version>
+        <carbon.security.userstore.jdbc.version>0.1.4</carbon.security.userstore.jdbc.version>
         <org.wso2.carbon.identity.mgt.version>0.1.38</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
         <org.wso2.carbon.identity.recovery.feature.version>0.1.38</org.wso2.carbon.identity.recovery.feature.version>
