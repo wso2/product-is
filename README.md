@@ -11,7 +11,7 @@ Welcome to WSO2 Identity Server
 
 |  Branch | Build Status |
 | :------------ |:-------------
-| master      | [![Build Status](https://wso2.org/jenkins/buildStatus/icon?job=products/product-is)](https://wso2.org/jenkins/job/product-is) |
+| master      | [![Build Status](https://wso2.org/jenkins/buildStatus/icon?job=products/product-is)](https://wso2.org/jenkins/view/All%20Builds/job/products/job/product-is/) |
 
 
 
