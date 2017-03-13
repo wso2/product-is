@@ -1,0 +1,73 @@
+{{secured}}
+{{layout "privilege"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{css "css/admin-portal.css"}}
+
+{{#fillZone "usernavbar"}}
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="add">
+                    <span class="icon fw-stack">
+                        <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    Add User
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon fw-stack">
+                        <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    Import Users
+                </a>
+            </li>
+        </ul>
+    </div>
+{{/fillZone}}
+
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "overview.users"}}</h1>
+        </div>
+        <form class="form-horizontal" role="form" method="post">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>{{i18n "users.list.username"}}</th>
+                            <th>{{i18n "users.list.status"}}</th>
+                            <th>{{i18n "users.list.Groups"}}</th>
+                            <th>{{i18n "users.list.roles"}}</th>
+                            <th>{{i18n "list.actions"}}</th>
+                        </tr>
+                        </thead>
+                        {{#each userList}}
+                            <tr>
+                                <td>
+                                    <div>{{userId}}</div>
+                                </td>
+                                <td>
+                                    <div>{{state}}</div>
+                                </td>
+                                <td>
+                                    {{#each groups}}
+                                        <div>{{uniqueGroupId}}</div>
+                                    {{/each}}
+                                </td>
+                                <td>
+                                    <div>todo</div>
+                                </td>
+                                <td>
+                                    <div>todo</div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+{{/fillZone}}
