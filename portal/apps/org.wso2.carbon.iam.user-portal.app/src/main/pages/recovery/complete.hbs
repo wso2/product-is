@@ -49,6 +49,11 @@
                                         <p>{{i18n "recovery.username.completed"}}</p>
                                     {{/if}}
                                 {{/if}}
+                                {{#if @queryParams.password-recovery-success}}
+                                    <h3>{{i18n "password.recovery.success"}}</h3>
+
+                                    <p>{{i18n "recovery.password.completed"}}</p>
+                                {{/if}}
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <a href="{{@contextPath}}/" class="add-margin-top-2x">{{i18n

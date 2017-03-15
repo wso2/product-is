@@ -302,21 +302,27 @@ var recoveryManager = {};
             try {
                 var recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "setPasswordRecoveryNotification", [uniqueUserId]);
             } catch (e) {
-                //todo need show error message in UI
-                Log.error(e.getMessage());
+                sendError(500, "contact.system.admin");
             }
         }
     };
 
-    recoveryManager.updatePassword = function (code, password) {
+    recoveryManager.updatePassword = function (code, password, env) {
+        var passwordChar = Java.to(password.split(''), 'char[]');
+        var recoveryMgtService;
+
         try {
-            var passwordChar = Java.to(password.split(''), 'char[]');
-            var recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "updatePassword", [code, passwordChar]);
+            recoveryMgtService = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "updatePassword", [code, passwordChar]);
         } catch (e) {
-            //todo need show error message in UI
-            Log.error(e.getMessage());
+            Log.error(e.message);
+            sendError(500, "contact.system.admin");
         }
 
+        if (recoveryMgtService === "UPDATED") {
+            sendRedirect(env.contextPath + '/recovery/complete?password-recovery-success=true');
+        } else {
+            sendRedirect(env.contextPath + '/recovery/failure?code=' + code + '&status=' + recoveryMgtService);
+        }
     };
 
 })(recoveryManager);

@@ -20,8 +20,9 @@ function onGet(env){
 
     var username = env.request.queryParams['username'];
     var password = env.request.queryParams['password'];
+    var passwordRecoverySuccess = env.request.queryParams['password-recovery-success'];
 
-    if(username !== 'true' && password !== 'true'){
+    if (username !== 'true' && password !== 'true' && passwordRecoverySuccess !== 'true') {
         sendRedirect(env.contextPath);
     }
 }
