@@ -68,5 +68,4 @@ public class IdentityStoreClientMicroService implements Microservice {
         return Response.ok(generatedPassword).build();
     }
 
-
 }

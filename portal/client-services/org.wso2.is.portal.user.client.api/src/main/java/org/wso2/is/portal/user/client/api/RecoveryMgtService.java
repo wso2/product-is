@@ -91,9 +91,9 @@ public interface RecoveryMgtService {
 
     /**
      *
-     * @param userUnqueId selected user id
+     * @param uniqueUserId selected user id
      * @param otp generated one time password
      */
-    void insertOTPValue(String userUnqueId, String otp) throws UserPortalUIException;
+    void persistOTP(String uniqueUserId, String otp) throws UserPortalUIException;
 
 }

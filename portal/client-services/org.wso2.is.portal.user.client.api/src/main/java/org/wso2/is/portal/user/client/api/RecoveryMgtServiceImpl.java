@@ -269,14 +269,18 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         return getNotificationUsernameRecoveryManager().verifyUsername(claims);
     }
 
+    /**
+     * @param uniqueUserId selected user id
+     * @param otp          generated one time password
+     * @throws UserPortalUIException
+     */
     @Override
-    public void insertOTPValue(String uniqueUserId, String otp) throws UserPortalUIException {
+    public void persistOTP(String uniqueUserId, String otp) throws UserPortalUIException {
         try {
-            AdminForcePasswordResetManager.getInstance().insertOTPValue(uniqueUserId, otp);
+            AdminForcePasswordResetManager.getInstance().persistOTP(uniqueUserId, otp);
         } catch (IdentityRecoveryException e) {
             throw new UserPortalUIException("Error while storing the OTP: " + otp);
         }
-
     }
 
     public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
