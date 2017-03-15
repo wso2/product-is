@@ -37,6 +37,7 @@ import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
+import org.wso2.carbon.identity.recovery.forced.AdminForcePasswordResetManager;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
@@ -266,6 +267,16 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         }
 
         return getNotificationUsernameRecoveryManager().verifyUsername(claims);
+    }
+
+    @Override
+    public void insertOTPValue(String uniqueUserId, String otp) throws UserPortalUIException {
+        try {
+            AdminForcePasswordResetManager.getInstance().insertOTPValue(uniqueUserId, otp);
+        } catch (IdentityRecoveryException e) {
+            throw new UserPortalUIException("Error while storing the OTP: " + otp);
+        }
+
     }
 
     public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {

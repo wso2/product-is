@@ -89,4 +89,11 @@ public interface RecoveryMgtService {
      */
     boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException;
 
+    /**
+     *
+     * @param userUnqueId selected user id
+     * @param otp generated one time password
+     */
+    void insertOTPValue(String userUnqueId, String otp) throws UserPortalUIException;
+
 }
