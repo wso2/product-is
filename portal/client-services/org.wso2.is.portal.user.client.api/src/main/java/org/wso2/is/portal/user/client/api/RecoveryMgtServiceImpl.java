@@ -270,6 +270,8 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     }
 
     /**
+     * Pass otp value to persist
+     *
      * @param uniqueUserId selected user id
      * @param otp          generated one time password
      * @throws UserPortalUIException
