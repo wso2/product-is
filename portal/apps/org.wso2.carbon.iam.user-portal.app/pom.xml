@@ -104,7 +104,7 @@
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.is.portal.user.client.api.micro,
                                     org.wso2.is.portal.user.client.api.bean,
-                                    org.wso2.carbon.identity.recovery.*
+                                    org.wso2.carbon.identity.recovery.*,
                                 </Import-Package>
                             </instructions>
                             <!--All backend dependencies should be specified here-->

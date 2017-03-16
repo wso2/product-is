@@ -41,6 +41,14 @@
             <classifier>uuf-component</classifier>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
+            <version>${carbon.is.version}</version>
+            <type>zip</type>
+            <classifier>uuf-component</classifier>
+        </dependency>
+
         <!--UUF Themes-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.common</groupId>

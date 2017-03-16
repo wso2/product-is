@@ -36,6 +36,7 @@
         <module>client-services/org.wso2.is.portal.user.client.api</module>
         <module>apps/org.wso2.carbon.iam.user-portal.app</module>
         <module>apps/org.wso2.carbon.iam.admin-portal.app</module>
+        <module>apps/org.wso2.carbon.iam.portal.common</module>
     </modules>
 
 </project>
