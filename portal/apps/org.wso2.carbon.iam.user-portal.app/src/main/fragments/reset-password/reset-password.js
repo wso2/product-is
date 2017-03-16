@@ -24,6 +24,25 @@ function updatePassword(username, oldPassword, newPassword, domain) {
         return {success: true, message: "You have successfully updated the password"};
     } catch (e) {
         var message = e.message;
+        var errorCode = -1;
+        var cause = e.getCause();
+        if (cause != null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+        		errorCode = cause.getTargetException().getErrorCode();
+
+        		if (errorCode === "1000") {
+                    var count = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                            "getHistoryCount", []);
+                    message = "Password You entered has already been used in last " + count + "Attempts";
+                } else if(errorCode === "1001") {
+                    var days = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                    "getNumOfDays", []);
+                    message = "Password You entered has already been used in last " + days;
+                }
+            }
+        }
         return {success: false, message: message};
     }
 }

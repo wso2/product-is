@@ -35,6 +35,7 @@ import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.kernel.utils.StringUtils;
+import org.wso2.is.portal.user.client.api.bean.PasswordHistoryBean;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
@@ -131,9 +132,25 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         } catch (IdentityStoreException e) {
             String error = "Failed to update user password.";
             LOGGER.error(error, e);
-            throw new UserPortalUIException(error);
+            throw new UserPortalUIException(error, e.getErrorCode());
         }
 
+    }
+
+    /**
+     * This will be removed with new config model
+     * @return
+     */
+    public int getHistoryCount () {
+        return new PasswordHistoryBean().getMinCountToAllowRepitition();
+    }
+
+    /**
+     * This will be removed with new config model
+     * @return
+     */
+    public int getNumOfDays() {
+        return new PasswordHistoryBean().getMinAgeToAllowRepitition();
     }
 
     @Override
