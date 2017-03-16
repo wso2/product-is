@@ -132,10 +132,12 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
         for (User user : users) {
             List<Group> groups;
             List<Claim> userIds;
+            List<Claim> claims;
             String username = null;
             try {
                 groups = user.getGroups();
                 userIds = user.getClaims(metaClaims);
+                claims = user.getClaims();
                 if (!userIds.isEmpty()) {
                     username = userIds.get(0).getValue();
                 }
@@ -147,9 +149,11 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
 
             UserUIEntry listEntry = new UserUIEntry();
             listEntry.setUserId(username);
+            listEntry.setDomainName(user.getDomainName());
             listEntry.setUserUniqueId(user.getUniqueUserId());
             listEntry.setState(user.getState());
             listEntry.setGroups(groups);
+            listEntry.setClaims(claims);
             userList.add(listEntry);
 
         }

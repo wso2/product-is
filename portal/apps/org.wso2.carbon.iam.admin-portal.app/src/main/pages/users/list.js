@@ -16,7 +16,8 @@
 function onGet(env) {
     var session = getSession();
     var usernameClaim = getUsernameClaimFromProfile();
-    var userList = getUsersForList(0, 10, "", usernameClaim);
+    var userList = getUsersForList(0, 100, "", usernameClaim);
+    buildJSONArray(userList);
     return {userList: userList};
 }
 
@@ -90,4 +91,31 @@ function getUsernameClaimFromProfile() {
     }
 
     return usernameClaim;
+}
+
+function buildJSONArray(userList) {
+    var userArray = [];
+    var claimArray = [];
+    for (var i in userList) {
+        var item = userList[i];
+//        var claims = item.getClaims();
+//        for (var j in claims) {
+//            var claim = claims[j];
+//            claimArray.push({
+//            "DialectURI" : claims.getDialectUri(),
+//            "ClaimURI" : claim.getClaimURI(),
+//            "Value" : claim.getValue()
+//            });
+//        }
+        userArray.push({
+            "Username" : item.getUserId(),
+            "Status" : item.getState(),
+            "Groups" : "",
+            "Roles" : "",
+            "UniqueId" : item.getUserUniqueId(),
+            "Domain" : item.getDomainName(),
+            "Claims" : claimArray
+        });
+    }
+    sendToClient("users", userArray);
 }

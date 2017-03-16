@@ -1,7 +1,10 @@
 {{secured}}
 {{layout "privilege"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.data-tables"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{css "css/admin-portal.css"}}
+{{js "js/list.js"}}
+
 
 {{#fillZone "usernavbar"}}
     <div id="navbar" class="collapse navbar-collapse">
@@ -34,38 +37,67 @@
         <form class="form-horizontal" role="form" method="post">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                 <div class="row">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>{{i18n "users.list.username"}}</th>
-                            <th>{{i18n "users.list.status"}}</th>
-                            <th>{{i18n "users.list.Groups"}}</th>
-                            <th>{{i18n "users.list.roles"}}</th>
-                            <th>{{i18n "list.actions"}}</th>
+                    <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table" id="users-sample">
+                        <thead class="block">
+                        <tr class="sort-row">
+                            <th class="content-fill no-sort"></th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Groups</th>
+                            <th>Roles</th>
+                            <th class="no-sort"></th>
+                        </tr>
+                        <tr class="bulk-action-row">
+                            <th colspan="8">
+
+                                <ul class="tiles">
+                                    <li class="square">
+                                        <a class="btn square-element" data-click-event="delete-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                            Delete Selected
+                                        </a>
+                                    </li>
+                                    <li class="square">
+                                        <a class="btn square-element" data-toggle="modal" data-target="#modalDemo">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-edit fw-stack-1x"></i>
+                                </span>
+                                            Edit Selected
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="modalDemo" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Edit Selected</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                You about perform a bulk operation, please confirm to proceed.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </th>
                         </tr>
                         </thead>
-                        {{#each userList}}
-                            <tr>
-                                <td>
-                                    <div>{{userId}}</div>
-                                </td>
-                                <td>
-                                    <div>{{state}}</div>
-                                </td>
-                                <td>
-                                    {{#each groups}}
-                                        <div>{{uniqueGroupId}}</div>
-                                    {{/each}}
-                                </td>
-                                <td>
-                                    <div>todo</div>
-                                </td>
-                                <td>
-                                    <div>todo</div>
-                                </td>
-                            </tr>
-                        {{/each}}
+                        <tbody>
+                        <!-- Handlebars Template Appends Here -->
+                        </tbody>
                     </table>
+
                 </div>
             </div>
         </form>
