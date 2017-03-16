@@ -13,9 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+$(window).load(function () {
+    $('.login-form-wrapper').parents('body').addClass('background-grey');
+    //setting offline OTP as the default
+    $('#verificationSelector option[value=' + $('#verificationSelector').attr('data-primary') + ']').prop('selected', 'selected');
+    var resetMethod = $('#verificationSelector').val();
+    $("#verificationSelector").val(resetMethod);
+});
 
 $(document).ready(function () {
+    $("#reset").click(function () {
+        $("#newPassword").prop('type', 'hidden');
+        $("#reset").prop('disabled', true);
+        $("#generatePassword").prop('value', 'Generate');
+    });
+
+    $('.pw').hide();
     $("#generatePassword").click(function () {
+        $('.pw').show();
+
+        $("#newPassword").prop('type', 'password');
+
+        if($('.hide-pass').length < 1){
+            $("#newPassword").after('<span class="hide-pass" title="Show/Hide Password">' +
+            '<i class="fw fw-view"></i> </span>');
+        }
+
+        $("#reset").prop('disabled', false);
+        $(this).prop('value', 'Re-generate Password');
+
+        var password = $("#newPassword").val();
         $.ajax({
             type: "GET",
             url: "/admin-portal/root/apis/identityStore-micro-service/generateOTP",
@@ -24,4 +51,27 @@ $(document).ready(function () {
             }
         });
     });
+});
+
+
+$('#verificationSelector').change(function () {
+    var resetMethod = $(this).val();
+
+});
+
+//add show /hide option on password field
+$('input[type=password], input[type=text]').after('<span class="hide-pass" title="Show/Hide Password"><i class="fw fw-view"></i> </span>');
+var hidePass = $('.hide-pass');
+$(document).on('click',hidePass,function(e){
+    if($(this).find('i').hasClass("fw-hide")){
+        $(e.originalEvent.srcElement).parents('.well').find("input[type='text']").prop('type', 'password');
+        //$(this).parent().find('input[data-schemaformat=password]').prop('type', 'password');
+        $(this).find('i').removeClass( "fw-hide" );
+        $(this).find('i').addClass( "fw-view");
+    }else{
+        $(this).find('i').removeClass( "fw-view" );
+        $(this).find('i').addClass( "fw-hide");
+        $(e.originalEvent.srcElement).parents('.well').find("input[type='password']").prop('type', 'text');
+        //$(this).parent().find("input[type='password']").prop('type', 'text');
+    }
 });
