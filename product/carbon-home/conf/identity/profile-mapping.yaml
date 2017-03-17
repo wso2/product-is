@@ -167,3 +167,21 @@ profiles:
    readonly: false
    regex: "*"
    dataType: "text"
+ -
+  profileName: "user-list"
+  isAdminProfile: false
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "Username"
+   required: true
+   readonly: true
+   verifier: "claim verifying extension"
+   validator: "claim validating extension"
+   transformer: "transform extension"
+   regex: ".*"
+   defaultValue: "user1"
+   dataType: "text"
+   properties:
+    claimId: "Username"
+
