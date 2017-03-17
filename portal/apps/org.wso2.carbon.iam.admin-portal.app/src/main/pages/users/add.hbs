@@ -1,15 +1,18 @@
 {{secured}}
 {{layout "privilege"}}
+{{title (i18n "users.add.header") " | " @config.appName}}
 {{favicon "images/favicon.png" type="image/png"}}
-{{title "Add User | " @config.appName}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
 {{css "css/admin-portal.css"}}
+{{js "js/add.js"}}
 
 {{#fillZone "content"}}
     <div class="body-wrapper">
         <div class="page-header">
             <h1>{{i18n "users.add.header"}}</h1>
         </div>
-        <form class="form-horizontal" role="form" method="post">
+        <form class="form-horizontal" role="form" method="post" id="addUserForm">
             {{#if domainNames}}
                 <div class="form-group">
                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
@@ -30,7 +33,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                     <label for="inputUsername" class="control-label">{{i18n "users.add.username"}}
                         <span class="requiredAstrix"> *</span></label>
-                    <input class="form-control" id="inputUsername" placeholder="Username" type="text">
+                    <input class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"
+                           type="text">
                 </div>
             </div>
 
@@ -47,30 +51,9 @@
                 </div>
             </div>
 
-            <div class="form-group password_strength_meter">
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                    <div class="well">
-
-                        <label class="control-label" for="newPassword">{{i18n "users.add.password"}}
-                            <span class="requiredAstrix"> *</span></label>
-                        <div class="form-group form-inline">
-                            <input type="password" name="newPassword" id="newPassword" class="form-control"
-                                   required data-schemaformat="password" placeholder="Password"/>
-
-
-                            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="generatePassword"
-                                   value="Generate Password"/>
-                        </div>
-
-                        <label class="control-label" for="confirmPassword">{{i18n "users.confirm.password"}}
-                            <span class="requiredAstrix"> *</span></label>
-                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control"
-                               required data-schemaformat="password"/>
-                    </div>
-                </div>
-            </div>
-
-
+            {{#defineZone "accountVerificationMethod-area"}}
+                <!-- Here is generated content for different account verification ui's when adding a user -->
+            {{/defineZone}}
             <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addUser" value="Add User"/>
         </form>
     </div>
