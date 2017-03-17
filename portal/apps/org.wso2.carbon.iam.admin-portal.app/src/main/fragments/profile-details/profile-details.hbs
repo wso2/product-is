@@ -25,7 +25,7 @@
         </div>
     {{/if}}
 {{/if}}
-<form method="post" class="form-horizontal profile-form" action="?profile={{profile}}" id="{{profile}}-form">
+<form method="post" class="form-horizontal profile-form" action="?{{profile}}#{{profile}}" id="{{profile}}-form">
     {{#each uiEntries}}
         <div class="form-group">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
@@ -36,6 +36,5 @@
             </div>
         </div>
     {{/each}}
-    <input type="hidden" name="profile" value="{{profile}}" />
     <input id="btn-{{profile}}" class="btn btn-primary add-margin-bottom-3x" type="submit" value="Update" />
 </form>

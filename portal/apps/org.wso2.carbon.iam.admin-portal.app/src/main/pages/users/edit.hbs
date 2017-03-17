@@ -54,12 +54,7 @@
                                         <div id="profile-details">
                                             <select class="selectpicker" id="profileSelector">
                                                 {{#each profiles}}
-                                                    {{#if isSelected}}
-                                                        <option id="option-profile" action="{{name}}-profile-action" value="{{name}}" selected="selected">{{name}}</option>
-                                                    {{else}}
-                                                        <option id="option-profile" action="{{name}}-profile-action" value="{{name}} ">{{name}}</option>
-                                                    {{/if}}
-
+                                                     <option id="option-profile" action="{{this}}-profile-action" value="{{this}}">{{this}}</option>
                                                 {{/each}}
                                             </select>
                                             <br><br>
@@ -67,9 +62,9 @@
                                                 <div id="veiwProfileArea" class="veiwProfileArea">
                                                     <!-- Here is generated content for erro when user already exists -->
                                                 {{#each profiles}}
-                                                    <div id="{{name}}" class="{{name}} box">
+                                                    <div id="{{this}}" class="{{this}} box">
                                                         {{fragment "profile-details"
-                                                                   profileName=name   actionId=actionId}}
+                                                                   profileName=this   actionId=actionId}}
                                                     </div>
                                                 {{/each}}
 

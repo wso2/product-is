@@ -112,16 +112,12 @@ function onPost(env) {
 
     var session = getSession();
     var success = false;
-    var editedProfile = env.request.formParams.profile;
 
     var message = "";
 
-    Log.error("-----------------------------------");
-    Log.error(env.request.formParams.profile);
-
 
     if (env.params.profileName && env.params.profileName == env.params.actionId) {
-        editedProfile = env.params.profileName;
+
         var updatedClaims = env.request.formParams;
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
@@ -137,19 +133,19 @@ function onPost(env) {
                 success = true;
             }
             uiEntries = buildUIEntries(result.profileUIEntries);
-
         } else {
             success = false;
             message = result.message;
         }
 
-
+        return {
+            success: success, profile: env.params.profileName, uiEntries: uiEntries,
+            message: message,
+        };
     }
 
-    return {
-        success: success, profile: editedProfile, uiEntries: uiEntries,
-        message: message,
-    };
 
+
+    return {success: false, message: "Invalid profile name."};
 
 }
