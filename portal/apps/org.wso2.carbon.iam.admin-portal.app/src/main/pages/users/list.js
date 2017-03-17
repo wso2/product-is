@@ -16,14 +16,32 @@
 function onGet(env) {
     var session = getSession();
     var usernameClaim = getUsernameClaimFromProfile();
-    var userList = getUsersForList(0, 100, "", usernameClaim);
+//    var userList = getUsersForList(0, 100, "", usernameClaim);
+    var userList = getFilteredList(0, 100, "", "", "");
+    var claimProfile = getUserListProfile();
+    var domains = getDomainNames(env);
+    var primaryDomainName = getPrimaryDomainName(env);
     buildJSONArray(userList);
-    return {userList: userList};
+    return {claimProfile: claimProfile, domains: domains, primaryDomainName: primaryDomainName};
 }
 
-
 function onPost(env) {
-
+    var session, action, claimUri, claimValue, domainName;
+    session = getSession();
+    action = env.request.formParams["action"];
+    Log.info("--------------------------");
+    Log.info(action);
+    if (action === "filter-list") {
+        claimUri = env.request.formParams["claim-uri"];
+        claimValue = env.request.formParams["claim-filter"];
+        domainName = env.request.formParams["domain-name"];
+        var userList = getFilteredList(0, 100, claimUri, claimValue, domainName);
+        var claimProfile = getUserListProfile();
+        var domains = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
+        buildJSONArray(userList);
+        return {claimProfile: claimProfile, domains: domains, primaryDomainName: primaryDomainName};
+    }
 }
 
 function getUsersForList(offset, length, domainName, usernameClaim) {
@@ -31,6 +49,17 @@ function getUsersForList(offset, length, domainName, usernameClaim) {
     try {
         userList = callOSGiService("org.wso2.is.portal.user.client.api.UserMgtClientService",
             "getUsersForList", [offset, length, domainName, usernameClaim]);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
+    }
+    return userList;
+}
+
+function getFilteredList(offset, length, claimURI, claimValue, domainName){
+    var userList;
+    try {
+        userList = callOSGiService("org.wso2.is.portal.user.client.api.UserMgtClientService",
+            "getFilteredList", [offset, length, claimURI, claimValue, domainName]);
     } catch (e) {
         return {errorMessage: 'signup.error.retrieve.domain'};
     }
@@ -70,7 +99,7 @@ function getUsernameClaimFromProfile() {
     var claimProfile;
     try {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["user-identifier"]);
+            "getProfile", ["user-list"]);
     } catch (e) {
         return {errorMessage: profile + '.error.retrieve.claim'};
     }
@@ -93,20 +122,24 @@ function getUsernameClaimFromProfile() {
     return usernameClaim;
 }
 
+function getUserListProfile () {
+    var claimProfile;
+    try {
+        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfile", ["user-list"]);
+    } catch (e) {
+        return {errorMessage: profile + '.error.retrieve.claim'};
+    }
+    var claimForProfileEntry = claimProfile.claims;
+
+    return claimForProfileEntry;
+}
+
 function buildJSONArray(userList) {
     var userArray = [];
     var claimArray = [];
     for (var i in userList) {
         var item = userList[i];
-//        var claims = item.getClaims();
-//        for (var j in claims) {
-//            var claim = claims[j];
-//            claimArray.push({
-//            "DialectURI" : claims.getDialectUri(),
-//            "ClaimURI" : claim.getClaimURI(),
-//            "Value" : claim.getValue()
-//            });
-//        }
         userArray.push({
             "Username" : item.getUserId(),
             "Status" : item.getState(),
@@ -114,7 +147,6 @@ function buildJSONArray(userList) {
             "Roles" : "",
             "UniqueId" : item.getUserUniqueId(),
             "Domain" : item.getDomainName(),
-            "Claims" : claimArray
         });
     }
     sendToClient("users", userArray);

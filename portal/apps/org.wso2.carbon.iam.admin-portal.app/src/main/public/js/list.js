@@ -73,3 +73,13 @@ $(document).ready(function() {
                 }
             });
 } );
+
+getClaimUri = function() {
+    var claimUri = $('#claimSelector').val();
+    $('#claim-uri').val(claimUri);
+}
+
+getDomain = function() {
+    var domain = $('#domainSelector').val();
+    $('#domain-name').val(domain);
+}

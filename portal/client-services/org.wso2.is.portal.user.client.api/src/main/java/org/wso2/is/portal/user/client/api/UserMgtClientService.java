@@ -36,6 +36,9 @@ public interface UserMgtClientService {
 //    List<UserUIEntry> getUsersForList(int offset, int length, String domainName)
 //            throws UserPortalUIException;
 
-    List<UserUIEntry> getUsersForList(int offset, int length, String domainName, String usernameClaim)
+    List<UserUIEntry> getUsersForList(int offset, int length, String usernameClaim)
+            throws UserPortalUIException;
+
+    List<UserUIEntry> getFilteredList(int offset, int length, String claimURI, String claimValue, String usernameClaim)
             throws UserPortalUIException;
 }
