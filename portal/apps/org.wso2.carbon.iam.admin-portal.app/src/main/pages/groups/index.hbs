@@ -10,23 +10,31 @@
 
 
             <!-- navbar -->
-            <div class="navbar-wrapper">
+            <div class="navbar-wrapper" xmlns="http://www.w3.org/1999/html">
                 <nav class="navbar navbar-default">
                     <div class="container-fluid">
                         <div id="navbar" class="collapse navbar-collapse">
                             <ul class="nav navbar-nav">
                                 <li>
-                                    <a href="#">
+                                    <a href="/admin-portal/groups/">
                                         <i class="fw fw-left fw-helper fw-helper-circle-outline"></i>
                                         {{i18n "go.back"}}
                                     </a>
                                 </li>
                                 <li class="active">
                                     <a href="add">
-                                <span class="icon fw-stack">
-                                    <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
-                                </span>
+    <span class="icon fw-stack">
+    <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+    </span>
                                         {{i18n "groups.add.header"}}
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="edit">
+    <span class="icon fw-stack">
+    <i class="fw fw-edit fw-helper fw-helper-circle-outline"></i>
+    </span>
+                                        {{i18n "groups.edit.header"}}
                                     </a>
                                 </li>
                             </ul>

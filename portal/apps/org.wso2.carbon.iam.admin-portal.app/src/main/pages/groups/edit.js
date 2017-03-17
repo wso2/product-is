@@ -102,12 +102,12 @@ function onPost(env) {
     return {domainNames: domainNames, primaryDomainName: primaryDomainName};
 }
 
-function addGroup(claimMap, domain) {
+function updateGroup(claimMap, domain) {
     try {
         var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "addGroup", [claimMap, domain]);
+            "updateGroup", [claimMap, domain]);
         return {userRegistration: userRegistrationResult};
     } catch (e) {
-        return {errorMessage: 'user.add.error'};
+        return {errorMessage: 'group.add.error'};
     }
 }

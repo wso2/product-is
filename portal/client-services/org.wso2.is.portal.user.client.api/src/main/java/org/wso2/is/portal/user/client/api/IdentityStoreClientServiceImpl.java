@@ -346,7 +346,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public Group addGroup(GroupBean group, String domainName) throws UserPortalUIException {
+    public UUFGroup addGroup(GroupBean group, String domainName) throws UserPortalUIException {
 
         Group groupResult = null;
 
@@ -358,7 +358,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
-        return groupResult;
+        return new UUFGroup(null, groupResult.getUniqueGroupId(), null, groupResult.getDomainName());
     }
 
     @Override
@@ -387,18 +387,24 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public boolean isExistGroup(List<Claim> claims, String domainName) throws UserPortalUIException {
-
-        boolean isExistGroup;
+    public boolean isGroupExist(Map<String, String> groupClaims, String domain) throws UserPortalUIException {
+        List<Claim> claimsList = new ArrayList<>();
+        boolean isGroupExists;
+        for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
 
         try {
-            isExistGroup = getRealmService().getIdentityStore().isGroupExist(claims, domainName);
+            isGroupExists = getRealmService().getIdentityStore().isGroupExist(claimsList, domain);
         } catch (IdentityStoreException e) {
-            String error = "Error while checking group existence in domain : " + domainName;
+            String error = "Error while checking whether the group exists.";
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
-        return isExistGroup;
+        return isGroupExists;
     }
 
     @Override

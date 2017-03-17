@@ -1,11 +1,11 @@
 {{secured}}
 {{layout "privilege"}}
-{{title (i18n "groups.add.header") " | " @config.appName}}
+{{title (i18n "groups.edit.header") " | " @config.appName}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
 {{css "css/admin-portal.css"}}
-{{js "js/add.js"}}
+{{js "js/edit.js"}}
 
 {{#fillZone "content"}}
 
@@ -46,7 +46,7 @@
 
     <div class="body-wrapper">
         <div class="page-header">
-            <h1>{{i18n "groups.add.header"}}</h1>
+            <h1>{{i18n "groups.edit.header"}}</h1>
         </div>
 
         <ul id="tab" class="nav nav-tabs tabs">
@@ -61,7 +61,7 @@
         <div class="tab-content">
             <div class="tab-pane active" id="general">
                 <div class="col-md-12">
-                    <form class="form-horizontal" role="form" method="post" id="addGroupForm">
+                    <form class="form-horizontal" role="form" method="post" id="editGroupForm">
                         {{#if domainNames}}
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
@@ -93,7 +93,7 @@
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                                 <label for="input-description" class="control-label">{{i18n "groups.description"}}
-                                </label>
+                                    <span class="requiredAstrix"> *</span></label>
                                 <input class="form-control" id="input-description" placeholder="Group Description"
                                        type="text">
                             </div>
@@ -101,7 +101,7 @@
 
 
                         <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup"
-                               value="Add Group"/>
+                               value="Edit Group"/>
                     </form>
                 </div>
             </div>
