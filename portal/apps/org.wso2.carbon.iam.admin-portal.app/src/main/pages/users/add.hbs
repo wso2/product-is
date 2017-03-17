@@ -35,6 +35,11 @@
                         <span class="requiredAstrix"> *</span></label>
                     <input class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"
                            type="text">
+                    {{#defineZone "userExistsError-area"}}
+                        <div id="userExistsError">
+                            <!-- Here is generated content for error when user already exists -->
+                        </div>
+                    {{/defineZone}}
                 </div>
             </div>
 
@@ -54,7 +59,8 @@
             {{#defineZone "accountVerificationMethod-area"}}
                 <!-- Here is generated content for different account verification ui's when adding a user -->
             {{/defineZone}}
-            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addUser" value="Add User"/>
+            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addUser" id="addUser"
+                   value="Add User"/>
         </form>
     </div>
 {{/fillZone}}
