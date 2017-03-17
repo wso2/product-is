@@ -1,8 +1,11 @@
 {{secured}}
 {{layout "privilege"}}
+{{title (i18n "groups.add.header") " | " @config.appName}}
 {{favicon "images/favicon.png" type="image/png"}}
-{{title "Add Group | " @config.appName}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
 {{css "css/admin-portal.css"}}
+{{js "js/add.js"}}
 
 {{#fillZone "content"}}
 
@@ -20,10 +23,10 @@
                         </li>
                         <li class="active">
                             <a href="add">
-                                <span class="icon fw-stack">
-                                    <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
-                                </span>
-                                {{i18n "group.add.header"}}
+    <span class="icon fw-stack">
+    <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+    </span>
+                                {{i18n "groups.add.header"}}
                             </a>
                         </li>
                     </ul>
@@ -35,7 +38,7 @@
 
     <div class="body-wrapper">
         <div class="page-header">
-            <h1>{{i18n "group.add.header"}}</h1>
+            <h1>{{i18n "groups.add.header"}}</h1>
         </div>
 
         <ul id="tab" class="nav nav-tabs tabs">
@@ -50,13 +53,13 @@
         <div class="tab-content">
             <div class="tab-pane active" id="general">
                 <div class="col-md-12">
-                    <form class="form-horizontal" role="form" method="post">
+                    <form class="form-horizontal" role="form" method="post" id="addGroupForm">
                         {{#if domainNames}}
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <input type="hidden" name="domain" id="domain"
                                            class="form-control"/>
-                                    <label for="domainSelector" class="control-label">{{i18n "identity.store"}}
+                                    <label for="domainSelector" class="control-label">{{i18n "groups.add.domain"}}
                                         <span class="requiredAstrix"> *</span></label>
                                     <select class="form-control" id="domainSelector"
                                             data-primary="{{primaryDomainName}}">
@@ -67,34 +70,25 @@
                                 </div>
                             </div>
                         {{/if}}
-                        <!--<div class="form-group">-->
-                        <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">-->
-                        <!--<label for="inputGroupName" class="control-label">{{i18n "groups.name"}}-->
-                        <!--<span class="requiredAstrix"> *</span></label>-->
-                        <!--<input class="form-control" id="inputGroupName" placeholder="Group Name" type="text">-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group">-->
-                        <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">-->
-                        <!--<label for="inputDescription" class="control-label">{{i18n "groups.description"}}-->
-                        <!--<span class="requiredAstrix"> *</span></label>-->
-                        <!--<input class="form-control" id="inputDescription" placeholder="Group Description"-->
-                        <!--type="text">-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!-- page content -->
-                        <div class="tab-content settings-content">
-                            {{#each profiles}}
-                                <div class="tab-pane" id="{{this}}">
-                                    <div class="col-md-12">
-                                        {{fragment "org.wso2.carbon.iam.admin-portal.feature.profile" profileName="group"}}
-                                    </div>
-                                </div>
-                            {{/each}}
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                <label for="input-description" class="control-label">{{i18n "groups.name"}}
+                                    <span class="requiredAstrix"> *</span></label>
+                                <input class="form-control" id="input-name" placeholder="Group Name" type="text">
+                            </div>
                         </div>
-                        <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup"
-                               value={{i18n "groups.add.button"}}>
-                        </input>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                <label for="input-description" class="control-label">{{i18n "groups.description"}}
+                                    <span class="requiredAstrix"> *</span></label>
+                                <input class="form-control" id="input-description" placeholder="Group Description"
+                                       type="text">
+                            </div>
+                        </div>
+
+
+                        <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup"
+                               value="Add Group"/>
                     </form>
                 </div>
             </div>

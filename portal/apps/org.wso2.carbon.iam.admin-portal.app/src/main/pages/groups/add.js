@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-function onGet(env) {
-    var session = getSession();
-    var domainNames = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
-    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
-}
-
-
-function onPost(env) {
-    var confirmationCode = env.request.queryParams['confirmation'];
-    var password = env.request.formParams['input-password'];
-
-    if (confirmationCode && password) {
-        recoveryManager.updatePassword(confirmationCode, password);
-    }
-}
+// function onGet(env) {
+//     var session = getSession();
+//     var domainNames = getDomainNames(env);
+//     var primaryDomainName = getPrimaryDomainName(env);
+//     return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+// }
+//
+//
+// function onPost(env) {
+//     var groupName = env.request.formParams['input-groupName'];
+//     var groupDescription = env.request.formParams['input-groupDescription'];
+//     domain = env.request.formParams['domain'];
+//
+//     callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+//         "addGroup", [domain, groupName, groupDescription]);
+//
+//     return {success: true, message: "Group Added Successfully"};
+// }
 
 function getGroupProfile() {
     /**
@@ -78,4 +80,34 @@ function getPrimaryDomainName(env) {
         }
     }
     return primaryDomainName;
+}
+
+function onGet(env) {
+    var domainNames = getDomainNames(env);
+    var primaryDomainName = getPrimaryDomainName(env);
+
+    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+}
+
+function onPost(env) {
+    var claimMap = {};
+    var domain = null;
+    claimMap["http://wso2.org/claims/groupname"] = env.request.formParams['input-name'];
+    claimMap["http://wso2.org/claims/groupdescription"] = env.request.formParams['input-description'];
+    domain = env.request.formParams['domain'];
+    var addGroupResult = addGroup(claimMap, domain);
+    var domainNames = getDomainNames(env);
+    var primaryDomainName = getPrimaryDomainName(env);
+    
+    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+}
+
+function addGroup(claimMap, domain) {
+    try {
+        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "addGroup", [claimMap, domain]);
+        return {userRegistration: userRegistrationResult};
+    } catch (e) {
+        return {errorMessage: 'user.add.error'};
+    }
 }

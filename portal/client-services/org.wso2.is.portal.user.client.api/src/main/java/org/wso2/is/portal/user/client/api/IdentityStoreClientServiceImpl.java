@@ -38,6 +38,7 @@ import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.kernel.utils.StringUtils;
+import org.wso2.is.portal.user.client.api.bean.UUFGroup;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
@@ -351,12 +352,38 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
             groupResult = getRealmService().getIdentityStore().addGroup(group, domainName);
+
         } catch (IdentityStoreException e) {
             String error = "Error while adding the group to domain : " + domainName;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
         return groupResult;
+    }
+
+    @Override
+    public UUFGroup addGroup(Map<String, String> groupClaims, String domainName) throws UserPortalUIException {
+
+        Group groupResult = null;
+        GroupBean groupBean = new GroupBean();
+        List<Claim> claimsList = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+        groupBean.setClaims(claimsList);
+
+        try {
+            groupResult = getRealmService().getIdentityStore().addGroup(groupBean, domainName);
+        } catch (IdentityStoreException e) {
+            String error = "Error while adding groups.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return new UUFGroup(null, groupResult.getUniqueGroupId(), null, groupResult.getDomainName());
     }
 
     @Override
