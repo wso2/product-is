@@ -27,7 +27,7 @@ import java.util.Random;
 public class PasswordGenerationUtil {
 
     /**
-     * This method generates a password according to the password policy condiguration.
+     * This method generates a password according to the password policy configuration.
      * @return
      */
     public static String getGeneratedPassword() {
