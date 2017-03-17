@@ -47,6 +47,7 @@ function deleteQuestion(questionId, questionSetId) {
 
     var deleteModal = $('#deleteModal');
 
+
     deleteModal.modal();
     deleteModal.find('.btn-primary').click(function postDeleteData() {
 
