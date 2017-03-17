@@ -16,6 +16,8 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.mgt.Group;
+import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
@@ -141,4 +143,18 @@ public interface IdentityStoreClientService {
      */
     List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
                             String domainName) throws UserPortalUIException;
+
+    Group addGroup(GroupBean group, String domainName) throws UserPortalUIException;
+
+    boolean isExistGroup(List<Claim> claims, String domainName) throws UserPortalUIException;
+
+    void addUsersToGroup(String groupId, List<String> userIds) throws UserPortalUIException;
+
+    void updateUserInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
+            throws UserPortalUIException;
+
+    boolean isUserInGroup(String userId, String groupId) throws UserPortalUIException;
+
+    void updateGroupProfile(String uniqueUserId, Map<String, String> updatedClaimsMap)
+            throws UserPortalUIException;
 }

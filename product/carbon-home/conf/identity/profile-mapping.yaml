@@ -149,3 +149,21 @@ profiles:
    readonly: false
    regex: "*"
    dataType: "email"
+-
+  profileName: "group"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/groupname"
+   displayName: "Group Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/groupdescription"
+   displayName: "Group Description"
+   required: false
+   readonly: false
+   regex: "*"
+   dataType: "text"
