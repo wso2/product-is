@@ -23,7 +23,7 @@
         <div class="page-header">
             <h1>{{i18n "update.header"}}</h1>
         </div>
-        <div class="container">
+        <div>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                     <div class="panel with-nav-tabs panel-default">
@@ -43,7 +43,7 @@
                         <div class="panel-body">
                             <div class="tab-content">
                                 <div class="tab-pane fade in active" id="editProfile">
-                                    <div class="container">
+                                    <div>
                                         <!-- page content -->
                                         <br class="settings-content">
 
@@ -51,23 +51,27 @@
                                                        actionId=actionId}}
 
                                         <br>
-                                        <div class="dropdown">
+                                        <div id="profile-details">
                                             <select class="selectpicker" id="profileSelector">
                                                 {{#each profiles}}
-                                                     <option id="{{this}}" action="{{this}}-profile-action">{{this}}</option>
+                                                     <option id="option-profile" action="{{this}}-profile-action" value="{{this}}">{{this}}</option>
                                                 {{/each}}
                                             </select>
-                                        <br>
+                                            <br><br>
                                             {{#defineZone "veiwProfileArea"}}
-                                                <div id="veiwProfileArea">
+                                                <div id="veiwProfileArea" class="veiwProfileArea">
                                                     <!-- Here is generated content for erro when user already exists -->
-                                                {{fragment "profile-details"
-                                                           profileName="default" actionId=actionId}}
+                                                {{#each profiles}}
+                                                    <div id="{{this}}" class="{{this}} box">
+                                                        {{fragment "profile-details"
+                                                                   profileName=this   actionId=actionId}}
+                                                    </div>
+                                                {{/each}}
 
                                                 </div>
                                             {{/defineZone}}
 
-                                    </div>
+                                     </div>
                                 </div>
                             </div>
                         </div>

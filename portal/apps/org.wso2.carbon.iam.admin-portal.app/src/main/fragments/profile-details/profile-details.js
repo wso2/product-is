@@ -112,9 +112,9 @@ function onPost(env) {
 
     var session = getSession();
     var success = false;
-    Log.info("Comes to the post of profile form");
+
     var message = "";
-    var updatedClaims = env.request.formParams;
+
 
     if (env.params.profileName && env.params.profileName == env.params.actionId) {
 
@@ -137,7 +137,6 @@ function onPost(env) {
             success = false;
             message = result.message;
         }
-
 
         return {
             success: success, profile: env.params.profileName, uiEntries: uiEntries,

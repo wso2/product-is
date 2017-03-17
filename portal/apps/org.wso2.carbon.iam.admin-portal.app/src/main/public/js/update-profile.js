@@ -14,16 +14,30 @@
  * limitations under the License.
  */
 
+$(window).load(function(){
 
+   /* $("#default").show();*/
 
-$('#profileSelector').change(function () {
-    var profile = $(this).val();
+    $('#profileSelector').change(function () {
+        var profile = $(this).val();
 
-    alert("profile name is "+ profile)
+        $(this).find("#option-profile:selected").each(function(){
+            var optionValue = $(this).attr("value");
+            if(optionValue){
+                $(".box").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else{
+                $(".box").hide();
+            }
+        });
 
+    }).change();
 
 
 });
+
+
+
 
 
 

@@ -555,3 +555,7 @@ label.error {
 .dark .recover-option-container hr, .recover-question-container hr{
     border: 1px solid #2E2A2B;
 }
+
+.box {
+    display: none;
+}

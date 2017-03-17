@@ -54,13 +54,13 @@ function onGet(env) {
 
 
 function onPost(env) {
-
     var session = getSession();
     if (!session || !session.getUser()) {
         sendRedirect(env.contextPath + env.config['loginPageUri']);
     }
 
     var formId = "";
+    formId = env.request.queryString;
     var result = getProfileNames();
 
     if (result.success) {
@@ -68,6 +68,4 @@ function onPost(env) {
     } else {
         return {errorMessage: result.message};
     }
-
-
 }
