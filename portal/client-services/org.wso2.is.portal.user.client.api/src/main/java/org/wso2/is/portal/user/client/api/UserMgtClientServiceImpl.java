@@ -34,10 +34,8 @@ import java.util.List;
 public class UserMgtClientServiceImpl implements UserMgtClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserMgtClientServiceImpl.class);
-    private static final String USER_STATE_DISABLED = "DISABLED";
-    private static final String ACTIVE_USER_INDICATOR = "Active";
-    private static final String DISABLED_USER_INDICATOR = "Disabled";
     private static final String USERNAME_CLAIM = "http://wso2.org/claims/username";
+    private static final int MAX_RECORD_LENGTH = 500;
 
     private RealmService realmService;
 
@@ -67,106 +65,14 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
     }
 
     @Override
-    public List<User> listUsers(int offset, int length, String domainName) throws UserPortalUIException {
-
-        List<User> userList;
-        try {
-            userList = getRealmService().getIdentityStore().listUsers(offset, length, domainName);
-        } catch (IdentityStoreException e) {
-            String error = "Error while listing users";
-            LOGGER.error(error, e);
-            throw new UserPortalUIException(error);
-        }
-        return userList;
-    }
-
-    @Override
-    public List<User> listUsers(Claim claim, int offset, int length, String domainName) throws UserPortalUIException {
-        List<User> userList;
-        try {
-            if (claim != null) {
-                userList = getRealmService().getIdentityStore().listUsers(claim, offset, length, domainName);
-            } else {
-                userList = this.listUsers(offset, length, domainName);
-            }
-        } catch (IdentityStoreException e) {
-            String error = "Error while listing users for claim " + claim.getClaimUri();
-            LOGGER.error(error, e);
-            throw new UserPortalUIException(error);
-        }
-        return userList;
-    }
-
-    @Override
-    public List<Claim> getClaimsOfUser(String uniqueUserId) throws UserPortalUIException {
-        List<Claim> userClaims;
-        try {
-            userClaims = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId);
-        } catch (UserNotFoundException e) {
-            String error = "User not found with unique Id :  " + uniqueUserId;
-            LOGGER.error(error, e);
-            throw new UserPortalUIException(error);
-        } catch (IdentityStoreException e) {
-            String error = "Error while getting claims of user with unique Id :  " + uniqueUserId;
-            LOGGER.error(error, e);
-            throw new UserPortalUIException(error);
-        }
-        return userClaims;
-    }
-
-    @Override
-    public List<UserUIEntry> getUsersForList(int offset, int length,  String usernameClaim)
-            throws UserPortalUIException {
-
-        List<UserUIEntry> userList = new ArrayList<>();
-        List<User> users;
-        try {
-            users = getRealmService().getIdentityStore().listUsers(offset, length);
-        } catch (IdentityStoreException e) {
-            String error = "Error while retrieving users";
-            LOGGER.error(error, e);
-            throw new UserPortalUIException(error);
-        }
-
-        List<MetaClaim> metaClaims = new ArrayList<>();
-        MetaClaim metaClaim = new MetaClaim();
-        metaClaim.setClaimUri(USERNAME_CLAIM);
-        metaClaims.add(metaClaim);
-
-        for (User user : users) {
-            List<Group> groups;
-            List<Claim> userId;
-            String username = null;
-            try {
-                groups = user.getGroups();
-                userId = user.getClaims(metaClaims);
-                if (!userId.isEmpty()) {
-                    username = userId.get(0).getValue();
-                }
-            } catch (IdentityStoreException | GroupNotFoundException | UserNotFoundException e) {
-                String error = "Error while retrieving user data for user :  " + user.getUniqueUserId();
-                LOGGER.error(error, e);
-                throw new UserPortalUIException(error);
-            }
-
-            UserUIEntry listEntry = new UserUIEntry();
-            listEntry.setUserId(username);
-            listEntry.setDomainName(user.getDomainName());
-            listEntry.setUserUniqueId(user.getUniqueUserId());
-            listEntry.setState(user.getState());
-            listEntry.setGroups(groups);
-            userList.add(listEntry);
-
-        }
-        return userList;
-    }
-
-    @Override
     public List<UserUIEntry> getFilteredList(int offset, int length, String claimURI, String claimValue,
                                              String domainName) throws UserPortalUIException {
 
         List<UserUIEntry> userList = new ArrayList<>();
         List<User> users;
+        if (length < 0) {
+            length = MAX_RECORD_LENGTH;
+        }
         if (StringUtils.isNullOrEmpty(claimURI) ||
                 StringUtils.isNullOrEmpty(claimValue)) {
             try {
@@ -200,6 +106,7 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
             String username = null;
             try {
                 groups = user.getGroups();
+                //TODO:implement getUsername() method in User class and use it to retrieve username
                 userId = user.getClaims(metaClaims);
                 if (!userId.isEmpty()) {
                     username = userId.get(0).getValue();
@@ -221,53 +128,6 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
         }
         return userList;
     }
-
-//    @Override
-//    public List<UserUIEntry> getUsersForList(int offset, int length, String domainName,
-//                                             Map<String, String> claims) throws UserPortalUIException {
-//        List<UserUIEntry> userList = new ArrayList<>();
-//        List<User> users = new ArrayList<>();
-//        try {
-//            users = getRealmService().getIdentityStore().listUsers(offset, length, domainName);
-//        } catch (IdentityStoreException e) {
-//
-//        }
-//
-//        List<MetaClaim> metaClaims = new ArrayList<>();
-//        for (String claimUri : claims.values()) {
-//            MetaClaim metaClaim = new MetaClaim();
-//            metaClaim.setClaimUri(claimUri);
-//            metaClaims.add(metaClaim);
-//        }
-//
-//        for (User user : users) {
-//            List<Group> groups;
-//            List<Claim> claimValues;
-//            String username = null;
-//            try {
-//                groups = user.getGroups();
-//                claimValues = user.getClaims(metaClaims);
-//            } catch (IdentityStoreException | GroupNotFoundException | UserNotFoundException e) {
-//                String error = "Error while retrieving user data for user :  " + user.getUniqueUserId();
-//                LOGGER.error(error, e);
-//                throw new UserPortalUIException(error);
-//            }
-//            for (int i = 0; i < claimValues.size(); i++) {
-//
-//            }
-//
-//            UserUIEntry listEntry = new UserUIEntry();
-//            listEntry.setUserId(username);
-//            listEntry.setDomainName(user.getDomainName());
-//            listEntry.setUserUniqueId(user.getUniqueUserId());
-//            listEntry.setState(user.getState());
-//            listEntry.setGroups(groups);
-//            listEntry.setClaims(claimValues);
-//            userList.add(listEntry);
-//
-//        }
-//        return userList;
-//    }
 
     private RealmService getRealmService() {
         if (this.realmService == null) {

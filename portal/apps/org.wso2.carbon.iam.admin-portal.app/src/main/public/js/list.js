@@ -24,24 +24,18 @@ $(document).ready(function() {
                             "render": function (data, type, full, meta) {
                             return   '<a href="#" class="btn btn-default">'+
                             '<span class="fw-stack">'+
-                                                    '<i class="fw fw-circle-outline fw-stack-2x"></i>'+
-                                                    '<i class="fw fw-view fw-stack-1x"></i>'+
+                                                    '<i class="fw fw-edit fw-stack-1x"></i>'+
                                                 '</span>'+
-                            '<span class="hidden-xs">View</span>'+
                             '</a>'+
                             '<a href="#" class="btn btn-default">'+
                             '<span class="fw-stack">'+
-                                                    '<i class="fw fw-circle-outline fw-stack-2x"></i>'+
-                                                    '<i class="fw fw-edit fw-stack-1x"></i>'+
+                                                    '<i class="fw fw-view fw-stack-1x"></i>'+
                                                 '</span>'+
-                            '<span class="hidden-xs">Edit</span>'+
                             '</a>'+
                             '<a href="#" data-click-event="remove-form" class="btn btn-default">'+
                             '<span class="fw-stack">'+
-                                                    '<i class="fw fw-circle-outline fw-stack-2x"></i>'+
                                                     '<i class="fw fw-delete fw-stack-1x"></i>'+
                                                 '</span>'+
-                            '<span class="hidden-xs">Delete</span>'+
                             '</a>';
                         }
                     }
@@ -72,11 +66,40 @@ $(document).ready(function() {
                     $('.random-thumbs .thumbnail.icon').random_background_color();
                 }
             });
+
+    if(selectedClaim) {
+        var i;
+        $($("#claimSelector").children()).each(
+                function(){
+                      if($(this).attr('value') == selectedClaim)
+                            i = $(this).index();
+                }
+          )
+        $('#claimSelector')[0].selectedIndex = i;
+        $('#claim-uri').val(selectedClaim)
+    }
+
+    if(selectedDomain) {
+        var j;
+        $($("#domainSelector").children()).each(
+                function(){
+                      if($(this).attr('value') == selectedDomain)
+                            j = $(this).index();
+                }
+          )
+        $('#domainSelector')[0].selectedIndex = i;
+        $('#domain-name').val(selectedDomain);
+    }
+
 } );
 
 getClaimUri = function() {
     var claimUri = $('#claimSelector').val();
     $('#claim-uri').val(claimUri);
+    var selectedIndex = $("#claimSelector")[0].selectedIndex;
+    if (selectedIndex == 0) {
+        $('#claim-filter').val("");
+    }
 }
 
 getDomain = function() {

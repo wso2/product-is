@@ -15,44 +15,33 @@
  */
 function onGet(env) {
     var session = getSession();
-    var usernameClaim = getUsernameClaimFromProfile();
-//    var userList = getUsersForList(0, 100, "", usernameClaim);
-    var userList = getFilteredList(0, 100, "", "", "");
+    var userList = getFilteredList(0, -1, "", "", "");
     var claimProfile = getUserListProfile();
     var domains = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
-    buildJSONArray(userList);
-    return {claimProfile: claimProfile, domains: domains, primaryDomainName: primaryDomainName};
+    return {claimProfile: claimProfile, domains: domains};
 }
 
 function onPost(env) {
-    var session, action, claimUri, claimValue, domainName;
+    var session, action, claimUri, claimValue, domainName, recordLimit;
     session = getSession();
-    action = env.request.formParams["action"];
-    Log.info("--------------------------");
-    Log.info(action);
+    action = env.request.formParams['action'];
     if (action === "filter-list") {
         claimUri = env.request.formParams["claim-uri"];
         claimValue = env.request.formParams["claim-filter"];
         domainName = env.request.formParams["domain-name"];
-        var userList = getFilteredList(0, 100, claimUri, claimValue, domainName);
+        recordLimit = env.request.formParams["record-limit"];
+        sendToClient("selectedClaim", claimUri);
+        sendToClient("selectedDomain", domainName);
+        if(!recordLimit) {
+            recordLimit = -1
+        }
+        var userList = getFilteredList(0, recordLimit, claimUri, claimValue, domainName);
         var claimProfile = getUserListProfile();
         var domains = getDomainNames(env);
         var primaryDomainName = getPrimaryDomainName(env);
-        buildJSONArray(userList);
-        return {claimProfile: claimProfile, domains: domains, primaryDomainName: primaryDomainName};
+        return {claimProfile: claimProfile, domains: domains, claimValue: claimValue};
     }
-}
-
-function getUsersForList(offset, length, domainName, usernameClaim) {
-    var userList;
-    try {
-        userList = callOSGiService("org.wso2.is.portal.user.client.api.UserMgtClientService",
-            "getUsersForList", [offset, length, domainName, usernameClaim]);
-    } catch (e) {
-        return {errorMessage: 'signup.error.retrieve.domain'};
-    }
-    return userList;
 }
 
 function getFilteredList(offset, length, claimURI, claimValue, domainName){
@@ -63,63 +52,30 @@ function getFilteredList(offset, length, claimURI, claimValue, domainName){
     } catch (e) {
         return {errorMessage: 'signup.error.retrieve.domain'};
     }
+    buildJSONArray(userList);
     return userList;
 }
 
 function getDomainNames(env) {
     var domainNames;
-    if (env.config.isDomainInLogin) {
-        try {
-            domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-                "getDomainNames", []);
-        } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
-        }
+    try {
+        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getDomainNames", []);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
     }
     return domainNames;
 }
 
 function getPrimaryDomainName(env) {
     var primaryDomainName;
-    if (env.config.isDomainInLogin) {
-        try {
-            primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-                "getPrimaryDomainName", []);
-        } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
-        }
+    try {
+        primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getPrimaryDomainName", []);
+    } catch (e) {
+        return {errorMessage: 'signup.error.retrieve.domain'};
     }
     return primaryDomainName;
-}
-
-function getUsernameClaimFromProfile() {
-    /**
-     * Get the unique claim profile
-     */
-    var claimProfile;
-    try {
-        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["user-list"]);
-    } catch (e) {
-        return {errorMessage: profile + '.error.retrieve.claim'};
-    }
-    var claimForProfileEntry = claimProfile.claims;
-    var usernameClaim;
-
-    if (claimForProfileEntry.length > 0) {
-        for (var i = 0; i < claimForProfileEntry.length; i++) {
-            if (claimForProfileEntry[i].getProperties().get("claimId") == "Username") {
-                usernameClaim = claimForProfileEntry[i].getClaimURI();
-            }
-        }
-        if (!usernameClaim) {
-            usernameClaim = claimForProfileEntry[0].getClaimURI();
-        }
-    } else {
-        usernameClaim = "http://wso2.org/claims/username";
-    }
-
-    return usernameClaim;
 }
 
 function getUserListProfile () {

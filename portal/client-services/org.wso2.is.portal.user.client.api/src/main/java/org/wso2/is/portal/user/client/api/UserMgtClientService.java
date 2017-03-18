@@ -15,8 +15,6 @@
  */
 package org.wso2.is.portal.user.client.api;
 
-import org.wso2.carbon.identity.mgt.User;
-import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.is.portal.user.client.api.bean.UserUIEntry;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
@@ -26,18 +24,6 @@ import java.util.List;
  * User management client service
  */
 public interface UserMgtClientService {
-
-    List<User> listUsers(int offset, int length, String domainName) throws UserPortalUIException;
-
-    List<User> listUsers(Claim claim, int offset, int length, String domainName) throws UserPortalUIException;
-
-    List<Claim> getClaimsOfUser(String uniqueUserId) throws UserPortalUIException;
-
-//    List<UserUIEntry> getUsersForList(int offset, int length, String domainName)
-//            throws UserPortalUIException;
-
-    List<UserUIEntry> getUsersForList(int offset, int length, String usernameClaim)
-            throws UserPortalUIException;
 
     List<UserUIEntry> getFilteredList(int offset, int length, String claimURI, String claimValue, String usernameClaim)
             throws UserPortalUIException;
