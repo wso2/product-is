@@ -80,9 +80,9 @@
                         {{/if}}
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                                <label for="input-description" class="control-label">{{i18n "groups.name"}}
+                                <label for="input-groupname" class="control-label">{{i18n "groups.name"}}
                                     <span class="requiredAstrix"> *</span></label>
-                                <input class="form-control" id="input-groupname" placeholder="Group Name" type="text">
+                                <input class="form-control" name="input-groupname" id="input-groupname" placeholder="Group Name" type="text">
                                 {{#defineZone "groupExistsError-area"}}
                                     <div id="groupExistsError">
                                         <!-- Here is generated content for error when group already exists -->
@@ -94,7 +94,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                                 <label for="input-description" class="control-label">{{i18n "groups.description"}}
                                 </label>
-                                <input class="form-control" id="input-description" placeholder="Group Description"
+                                <input class="form-control" name="input-description" id="input-description" placeholder="Group Description"
                                        type="text">
                             </div>
                         </div>
