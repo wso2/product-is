@@ -10,6 +10,11 @@ $(document).ready(function () {
     });
     $('#verificationSelector').change(displayVals);
 });
+$(window).load(function () {
+    jQuery.validator.addMethod("noSpace", function (value, element) {
+        return value.indexOf(" ") < 0 ;
+    }, "Please don't enter spaces");
+});
 function generateNewPassword(){
     $.ajax({
         type: "GET",
@@ -99,7 +104,8 @@ $("#addUserForm").validate({
             }
         },
         newPassword: {
-            required: true
+            required: true,
+            noSpace: true
         },
         inputUsername:{
             required: true
