@@ -150,6 +150,12 @@ domains:
       -
         attribute: "failedLoginLockoutCount"
         claimUri: "http://wso2.org/claims/failedLoginLockoutCount"
+      -
+       attribute: "groupName"
+       claimUri: "http://wso2.org/claims/groupname"
+      -
+       attribute: "groupDescription"
+       claimUri: "http://wso2.org/claims/groupdescription"
 
     credentialStoreConnectors:
     -

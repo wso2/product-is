@@ -369,9 +369,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         List<Claim> claimsList = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
-            Claim claim = new Claim();
-            claim.setClaimUri(entry.getKey());
-            claim.setValue(entry.getValue());
+            Claim claim = new Claim("http://wso2.org/claims", entry.getKey(), entry.getValue());
             claimsList.add(claim);
         }
         groupBean.setClaims(claimsList);
