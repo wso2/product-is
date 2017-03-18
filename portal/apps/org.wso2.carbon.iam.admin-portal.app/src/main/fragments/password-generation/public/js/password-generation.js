@@ -1,16 +1,18 @@
-function initScript() {
-    $("#accountVerification").ready(function () {
-        $("#length .status-text").text("At least " + result.passwordMinLength + " characters");
-        if (result.isNumbersIncluded) {
-            $("#pnum .status-text").text("At least one number");
-        }
-        if (result.isUpperCaseNeeded && result.isLowerCaseNeeded) {
-            $("#capital .status-text").text("At least one lowercase & one uppercase letter");
-        }
-        if (result.isSpecialCharacterNeeded) {
-            $("#spchar .status-text").text("At least one special character");
-        }
-    });
+$(function () {
+    $("#length .status-text").text("At least " + result.passwordMinLength + " characters");
+    if (result.isNumbersIncluded) {
+        $("#pnum .status-text").text("At least one number");
+    }
+    if (result.isUpperCaseNeeded && result.isLowerCaseNeeded) {
+        $("#capital .status-text").text("At least one lowercase & one uppercase letter");
+    }
+    if (result.isSpecialCharacterNeeded) {
+        $("#spchar .status-text").text("At least one special character");
+    }
+    passwordStrengthScript();
+    $('#generatePassword').on('click', generateNewPassword);
+});
+function passwordStrengthScript() {
     $("#newPassword").on("focus keyup", function () {
         var score = 0;
         var a = $(this).val();
@@ -104,6 +106,15 @@ function initScript() {
             $(this).find('i').removeClass("fw-view");
             $(this).find('i').addClass("fw-hide");
             $(this).parent().find('input[data-schemaformat=password]').attr('type', 'text');
+        }
+    });
+}
+function generateNewPassword(){
+    $.ajax({
+        type: "GET",
+        url: "/admin-portal/root/apis/identityStore-micro-service/generatePassword",
+        success: function (result) {
+            $("#newPassword").val(result);
         }
     });
 }

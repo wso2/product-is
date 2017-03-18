@@ -15,21 +15,11 @@ $(window).load(function () {
         return value.indexOf(" ") < 0 ;
     }, "Please don't enter spaces");
 });
-function generateNewPassword(){
-    $.ajax({
-        type: "GET",
-        url: "/admin-portal/root/apis/identityStore-micro-service/generatePassword",
-        success: function (result) {
-            $("#newPassword").val(result);
-        }
-    });
-}
 function displayVals() {
     if ($("#verificationSelector option:selected").text() === "With password") {
         var fillingObject = {};
         var callbacks = {
             onSuccess: function () {
-                initScript();
             },
             onFailure: function (e) {
             }
