@@ -555,3 +555,21 @@ label.error {
 .dark .recover-option-container hr, .recover-question-container hr{
     border: 1px solid #2E2A2B;
 }
+
+table.dataTable tr.filter-row-custom td,
+table.dataTable tr.filter-row-custom th {
+  padding: 0 8px 10px; }
+.table.list-table.grid-view .filter-row-custom,
+.table.list-table thead.block .filter-row-custom {
+background: #e4e4e4;
+margin: 0 15px;
+padding: 15px;
+display: block; }
+.table.list-table.grid-view .filter-row-custom th:empty,
+.table.list-table thead.block .filter-row-custom th:empty {
+display: none; }
+@media (max-width: 767px) {
+  .table.list-table > thead > tr.filter-row-custom,
+  .table.list-table > thead > tr.filter-row-custom td,
+  .table.list-table > thead > tr.filter-row-custom th {
+    display: block; } }
