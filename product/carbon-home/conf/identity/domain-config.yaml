@@ -153,6 +153,8 @@ domains:
       -
        attribute: "groupName"
        claimUri: "http://wso2.org/claims/groupname"
+       properties:
+        unique: "true"
       -
        attribute: "groupDescription"
        claimUri: "http://wso2.org/claims/groupdescription"
