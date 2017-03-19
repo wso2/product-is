@@ -112,7 +112,7 @@ function passwordStrengthScript() {
 function generateNewPassword(){
     $.ajax({
         type: "GET",
-        url: "/admin-portal/root/apis/identityStore-micro-service/generatePassword",
+        url: "/admin-portal/root/apis/passwordUtil-micro-service/generatePassword",
         success: function (result) {
             $("#newPassword").val(result);
         }
