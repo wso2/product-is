@@ -32,7 +32,7 @@
                     <div class="data-container">
                         <form method="post" class="form-horizontal" id="self-signUp-form">
                             <div class="form-group">
-                                <div class="col-xs-18 col-sm-18 col-md-10 col-lg-8">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <h3>{{i18n "signup.title"}}</h3>
                                     <p>{{i18n "signup.sub.title"}}</p></div>
                             </div>
@@ -51,9 +51,9 @@
                             {{else}}
 
                                 <div class="form-group">
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         {{#each profile.usernameClaim}}
-                                            </br><label class="control-label"
+                                            <label class="control-label"
                                                         for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}
                                             <span>*</span></label>
                                             <input onblur="userNameExists
@@ -72,10 +72,10 @@
                                             </div>
                                         {{/defineZone}}
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         {{#if profile.domainNames}}
-                                            </br><label class="control-label"
-                                                        for="domain">{{i18n "signup.domain"}}</label></br>
+                                            <label class="control-label"
+                                                        for="domain">{{i18n "signup.domain"}}</label>
                                             <input type="hidden" name="domainValue" id="domainValue"
                                                    class="form-control"/>
                                             <select class="form-control" id="domainSelector"
@@ -90,9 +90,9 @@
 
                                 <div class="form-group">
                                     <div class="password_strength_meter ">
-                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <label class="control-label" for="password">{{i18n "signup.password"}}
-                                                <span>*</span></label></br>
+                                                <span>*</span></label>
                                             <input type="password" name="password" id="password"
                                                    class="form-control"
                                                    data-schemaformat="password" required/>
@@ -130,7 +130,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <label class="control-label"
                                                for="confirmPassword">{{i18n "password.reset.new.confirm"}}
                                             <span>*</span></label>
@@ -141,7 +141,7 @@
 
                                 <div class="form-group">
                                     {{#each profile.signupClaims}}
-                                        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6  signup-claim">
                                             {{#if required}}
                                                 <label class="control-label"
                                                        for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}
@@ -151,7 +151,7 @@
                                                         class="form-control"
                                                         pattern={{#if regex}}{{regex}}{{/if}}
                                                                 placeholder={{i18n (stringFormat "%s%s" "placeholder." claimLabel)}}
-                                                        required/></br>
+                                                        required/>
                                             {{else}}
                                                 <label class="control-label"
                                                        for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}</label>
@@ -159,7 +159,7 @@
                                                         name={{claimURI}} id={{claimLabel}}
                                                         class="form-control"
                                                         pattern={{#if regex}}{{regex}}{{/if}}
-                                                                placeholder={{i18n (stringFormat "%s%s" "placeholder." claimLabel)}} /></br>
+                                                                placeholder={{i18n (stringFormat "%s%s" "placeholder." claimLabel)}} />
                                             {{/if}}
                                         </div>
                                     {{else}}
@@ -169,7 +169,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <button id="register" class="btn btn-default btn-primary add-margin-right-2x"
                                                 type="submit">{{i18n "signup.title"}}</button>
                                     </div>
