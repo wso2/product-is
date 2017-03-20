@@ -24,7 +24,6 @@ $(window).load(function () {
         $('#image-uploader').submit();
     });
 
-
     $.validator.addMethod(
         "regex",
         function(value, element, regexp) {
@@ -43,10 +42,7 @@ $(window).load(function () {
         if ((typeof pattern !== typeof undefined) && pattern !==".*" ) {
             $("#"+$(this).attr('id')).rules("add", { regex: pattern.toString()});
         }
-    })
-
-
-
+    });
 });
 
 window.setTimeout(function() {
@@ -54,3 +50,15 @@ window.setTimeout(function() {
         $(this).remove();
     });
 }, 5000);
+
+$(function () {
+    //TODO ajax call for post
+    $( document ).ready(function() {
+        if(currentProfile){
+            //alert("Selected current profile." + currentProfile);
+            console.log("Selected current profile." + currentProfile);
+            $('#profileSelector').val(currentProfile);
+        }
+    });
+
+});

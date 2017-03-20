@@ -37,6 +37,14 @@ function buildUIEntries(profileUIEntries) {
     var uiEntries = [];
     if (profileUIEntries) {
         for (var i = 0; i < profileUIEntries.length > 0; i++) {
+            var emailVerified = false;
+            var mobileVerified = false;
+            if (profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", "") === "email"){
+                emailVerified = true;
+            }
+            if (profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", "") === "telephone"){
+                mobileVerified = true;
+            }
             var entry = {
                 claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
                 claimLabel: profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", ""),
@@ -51,7 +59,9 @@ function buildUIEntries(profileUIEntries) {
                 dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
                     profileUIEntries[i].claimConfigEntry.dataType : "text"),
                 regex: (profileUIEntries[i].claimConfigEntry.regex ?
-                    profileUIEntries[i].claimConfigEntry.regex : ".*")
+                    profileUIEntries[i].claimConfigEntry.regex : ".*"),
+                emailVerified: emailVerified,
+                mobileVerified: mobileVerified
             };
             uiEntries.push(entry);
         }
@@ -114,10 +124,10 @@ function onPost(env) {
     var success = false;
 
     var message = "";
-
+ var currentProfile;
 
     if (env.params.profileName && env.params.profileName == env.params.actionId) {
-
+        currentProfile = env.params.profileName;
         var updatedClaims = env.request.formParams;
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
@@ -125,7 +135,6 @@ function onPost(env) {
     }
 
     if (env.params.profileName) {
-
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
@@ -137,14 +146,15 @@ function onPost(env) {
             success = false;
             message = result.message;
         }
-
+        if(currentProfile){
+            Log.info(currentProfile);
+            sendToClient("currentProfile",  currentProfile);
+        }
         return {
             success: success, profile: env.params.profileName, uiEntries: uiEntries,
             message: message,
         };
     }
-
-
 
     return {success: false, message: "Invalid profile name."};
 

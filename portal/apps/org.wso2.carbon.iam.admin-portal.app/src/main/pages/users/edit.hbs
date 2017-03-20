@@ -62,7 +62,7 @@
                                                 <div id="veiwProfileArea" class="veiwProfileArea">
                                                     <!-- Here is generated content for erro when user already exists -->
                                                 {{#each profiles}}
-                                                    <div id="{{this}}" class="{{this}} box">
+                                                    <div id="{{this}}-form" class="{{this}} optionBox">
                                                         {{fragment "profile-details"
                                                                    profileName=this   actionId=actionId}}
                                                     </div>
@@ -71,9 +71,21 @@
                                                 </div>
                                             {{/defineZone}}
 
-                                     </div>
+                                         </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="tab-pane " id="editGroups">
+                                    <div>
+                                        <!-- page content -->
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane " id="editRoles">
+                                    <div>
+                                        <!-- page content -->
+
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>

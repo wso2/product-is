@@ -30,9 +30,24 @@
         <div class="form-group">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                 <label class="control-label" for="{{claimURI}}">{{displayName}}<span>{{requiredIcon}}</span></label>
-                <input type="{{dataType}}" name="{{claimURI}}" id="{{claimLabel}}" class="form-control"
-                       maxlength="250" value="{{value}}" {{readonly}} {{required}}
-                       pattern="{{regex}}"  />
+                    <input type="{{dataType}}" name="{{claimURI}}" id="{{claimLabel}}" class="form-control"
+                           maxlength="250" value="{{value}}" {{readonly}} {{required}}
+                           pattern="{{regex}}"  />
+                    {{#if emailVerified}}
+                        <a href="https://google.com" class="pull-right">verify</a>
+                    <br>
+                    <div class="form-group hidden">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                            <label class="custom-checkbox " >
+                                <input type="checkbox" checked="">
+                                <span class="helper" title="Enable if target network is not open or broadcasting"> Account is locked till user verify.</span>
+                            </label>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if mobileVerified}}
+                        <a href="https://google.com" class="pull-right">verify</a>
+                    {{/if}}
             </div>
         </div>
     {{/each}}

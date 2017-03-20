@@ -44,7 +44,6 @@ function isProfileImageAvailbale(session) {
     return {profileImage: false, usernameChar: usernameChar};
 }
 
-
 function onGet(env) {
     var session = getSession();
     var success = false;
@@ -69,6 +68,7 @@ function onGet(env) {
     return {success: false, message: "Invalid profile name."};
 
 }
+
 function onPost(env) {
     var session = getSession();
     var success = false;
@@ -97,6 +97,4 @@ function onPost(env) {
     }
 
     return {success: false, message: "Invalid profile name."};
-
-
 }

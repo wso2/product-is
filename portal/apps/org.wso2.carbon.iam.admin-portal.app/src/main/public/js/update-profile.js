@@ -24,10 +24,10 @@ $(window).load(function(){
         $(this).find("#option-profile:selected").each(function(){
             var optionValue = $(this).attr("value");
             if(optionValue){
-                $(".box").not("." + optionValue).hide();
+                $(".optionBox").not("." + optionValue).hide();
                 $("." + optionValue).show();
             } else{
-                $(".box").hide();
+                $(".optionBox").hide();
             }
         });
 
@@ -35,6 +35,7 @@ $(window).load(function(){
 
 
 });
+
 
 
 
