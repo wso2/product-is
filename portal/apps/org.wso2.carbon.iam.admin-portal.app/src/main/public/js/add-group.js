@@ -3,13 +3,13 @@ $(document).ready(function () {
     var primaryDomain = $('#domainSelector').val();
     $("#domain").val(primaryDomain);
     //load domain drop down when page loads
-    displayVals();
-    $('#domainSelector').change(function () {
-        var domain = $(this).val();
-        $("#domain").val(domain);
-    });
-    $('#verificationSelector').change(displayVals);
+    displaySelectUsers();
 });
+function displaySelectUsers() {
+        UUFClient.renderFragment("select-users", fillingObject,
+            "selectUsers-area", "OVERWRITE", callbacks);
+    
+}
 document.getElementById("input-groupname").onblur = function () {
     groupNameExists()
 };

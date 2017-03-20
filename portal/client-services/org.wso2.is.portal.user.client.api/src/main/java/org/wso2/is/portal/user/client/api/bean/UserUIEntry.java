@@ -37,8 +37,9 @@ public class UserUIEntry {
 
     private List<Claim> claims;
 
-//    private List<Role> roles;
-    public UserUIEntry(){}
+    //    private List<Role> roles;
+    public UserUIEntry() {
+    }
 
     public String getUserId() {
         return userId;
