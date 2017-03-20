@@ -14,9 +14,14 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
+import org.wso2.carbon.identity.recovery.RecoveryScenarios;
+import org.wso2.carbon.identity.recovery.RecoverySteps;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
+import org.wso2.carbon.identity.recovery.model.UserRecoveryData;
+import org.wso2.carbon.identity.recovery.store.JDBCRecoveryDataStore;
+import org.wso2.carbon.identity.recovery.store.UserRecoveryDataStore;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
@@ -208,6 +213,31 @@ public class RecoveryMgtServiceTest {
         testUserClaims.put(UserPotalOSGiTestConstants.ClaimURIs.FIRST_NAME_CLAIM_URI, "dinali");
         boolean result = recoveryMgtService.verifyUsername(testUserClaims);
         Assert.assertEquals(result, false, "There should not be any user recovered.");
+    }
+
+    @Test(groups = "persistOTP")
+    public void testPersistOTP() throws UserPortalUIException, IdentityRecoveryException {
+        recoveryMgtService.persistOTP("user1", "otp1");
+        UserRecoveryDataStore userRecoveryDataStore = JDBCRecoveryDataStore.getInstance();
+        UserRecoveryData userRecoveryData = userRecoveryDataStore.load("user1", RecoveryScenarios.
+                ADMIN_FORCED_PASSWORD_RESET_VIA_OTP, RecoverySteps.UPDATE_PASSWORD, "otp1");
+        bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(userRecoveryData, "Failed to persist OTP");
+    }
+
+    @Test(groups = "invalidateOldOTP")
+    public void testInvalidateOldOTP() throws IdentityRecoveryException{
+        UserRecoveryData userRecoveryData = null;
+        try {
+            recoveryMgtService.persistOTP("user2", "otp2");
+            recoveryMgtService.persistOTP("user2", "otp3");
+            UserRecoveryDataStore userRecoveryDataStore = JDBCRecoveryDataStore.getInstance();
+            userRecoveryData = userRecoveryDataStore.load("user2", RecoveryScenarios.
+                    ADMIN_FORCED_PASSWORD_RESET_VIA_OTP, RecoverySteps.UPDATE_PASSWORD, "otp2");
+            bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        } catch (UserPortalUIException e) {
+            Assert.assertNull(userRecoveryData, "Failed to overwirte the existing OTP");
+        }
     }
 
     private void addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException {
