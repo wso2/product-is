@@ -138,7 +138,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.recovery.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
             <type>zip</type>
         </dependency>
 
@@ -459,8 +459,8 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.recovery.feature</id>
-                                    <version>${org.wso2.carbon.identity.recovery.feature.version}</version>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
@@ -640,8 +640,8 @@
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.recovery.feature</id>
-                                    <version>${org.wso2.carbon.identity.recovery.feature.version}</version>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
