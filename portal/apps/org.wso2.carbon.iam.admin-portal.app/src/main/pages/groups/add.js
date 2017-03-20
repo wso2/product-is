@@ -92,14 +92,20 @@ function onGet(env) {
 function onPost(env) {
     var claimMap = {};
     var domain = null;
-    claimMap["http://wso2.org/claims/groupname"] = env.request.formParams['input-groupname'];
-    claimMap["http://wso2.org/claims/groupdescription"] = env.request.formParams['input-description'];
-    domain = env.request.formParams['domain'];
-    var addGroupResult = addGroup(claimMap, domain);
-    var domainNames = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
+    try {
+        claimMap["http://wso2.org/claims/groupname"] = env.request.formParams['input-groupname'];
+        claimMap["http://wso2.org/claims/groupdescription"] = env.request.formParams['input-description'];
+        domain = env.request.formParams['domain'];
+        var addGroupResult = addGroup(claimMap, domain);
+        var domainNames = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
+
+        return {addGroupResult: addGroupResult, domainNames: domainNames, primaryDomainName: primaryDomainName};
+    } catch (e) {
+        return {errorMessage: 'group.add.error'};
+    }
     
-    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+    
 }
 
 function addGroup(claimMap, domain) {
@@ -108,6 +114,6 @@ function addGroup(claimMap, domain) {
             "addGroup", [claimMap, domain]);
         return {userRegistration: userRegistrationResult};
     } catch (e) {
-        return {errorMessage: 'user.add.error'};
+        return {errorMessage: 'group.add.error'};
     }
 }

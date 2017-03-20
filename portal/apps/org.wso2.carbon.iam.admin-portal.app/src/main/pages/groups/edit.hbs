@@ -62,6 +62,26 @@
             <div class="tab-pane active" id="general">
                 <div class="col-md-12">
                     <form class="form-horizontal" role="form" method="post" id="editGroupForm">
+                        {{#if errorMessage}}
+                            <div class="alert alert-danger" role="alert">
+                                <i class="icon fw fw-error"></i><strong>{{i18n "group.update.error.default"}}</strong>&nbsp;
+                                {{i18n errorMessage}}
+                                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                </button>
+                            </div>
+                        {{else if updateGroupResult}}
+                            <div class="alert alert-success" role="alert">
+                                <i class="icon fw fw-success"></i><strong>{{i18n "group.updated.successfully.default"}}</strong>
+                                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+                                </button>
+                            </div>
+                        {{/if}}
                         {{#if domainNames}}
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
@@ -101,7 +121,7 @@
 
 
                         <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup"
-                               value="Edit Group"/>
+                               value="{{i18n "group.edit.button"}}"/>
                     </form>
                 </div>
             </div>

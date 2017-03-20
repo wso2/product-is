@@ -454,7 +454,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap)
+    public void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap)
             throws UserPortalUIException {
 
         if (updatedClaimsMap == null || updatedClaimsMap.isEmpty()) {
@@ -467,7 +467,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
                 .collect(Collectors.toList());
 
         try {
-            getRealmService().getIdentityStore().updateGroupClaims(uniqueGroupId, updatedClaims, null);
+            getRealmService().getIdentityStore().updateGroupClaims(uniqueGroupId, updatedClaims);
         } catch (IdentityStoreException | GroupNotFoundException e) {
             String error = "Failed to updated group profile.";
             LOGGER.error(error, e);

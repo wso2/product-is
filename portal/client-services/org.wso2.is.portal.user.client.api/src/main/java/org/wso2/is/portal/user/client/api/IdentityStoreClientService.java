@@ -205,11 +205,12 @@ public interface IdentityStoreClientService {
     boolean isUserInGroup(String userId, String groupId) throws UserPortalUIException;
 
     /**
-     * When attributes of groups are populated with profile claims, update the group attributes via profile.
+     * Update the group with the given unique group id
      *
      * @param uniqueGroupId    unique ID of the group to be updated
      * @param updatedClaimsMap claims with values to be updated.
      * @throws UserPortalUIException
      */
-    void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
+    void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap)
+            throws UserPortalUIException;
 }

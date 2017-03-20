@@ -91,23 +91,29 @@ function onGet(env) {
 
 function onPost(env) {
     var claimMap = {};
-    var domain = null;
-    claimMap["http://wso2.org/claims/groupname"] = env.request.formParams['input-groupname'];
-    claimMap["http://wso2.org/claims/groupdescription"] = env.request.formParams['input-description'];
-    domain = env.request.formParams['domain'];
-    var addGroupResult = addGroup(claimMap, domain);
-    var domainNames = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
-    
-    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+    var groupUniqueID = null;
+
+    try {
+
+        var domainNames = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
+
+        groupUniqueID = env.request.queryParams['groupId'];
+        claimMap["http://wso2.org/claims/groupname"] = env.request.formParams['input-groupname'];
+        claimMap["http://wso2.org/claims/groupdescription"] = env.request.formParams['input-description'];
+        var updateGroupResult = updateGroup(groupUniqueID, claimMap);
+
+        return {domainNames: domainNames, primaryDomainName: primaryDomainName, updateGroupResult: updateGroupResult}
+    } catch (e) {
+        return {domainNames: domainNames, primaryDomainName: primaryDomainName, errorMessage: 'group.update.error'};
+    }
+
+
 }
 
-function updateGroup(claimMap, domain) {
-    try {
-        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "updateGroup", [claimMap, domain]);
-        return {userRegistration: userRegistrationResult};
-    } catch (e) {
-        return {errorMessage: 'group.add.error'};
-    }
+function updateGroup(groupUniqueID, claimMap) {
+    var updateGroupResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        "updateGroup", [groupUniqueID, claimMap]);
+    return updateGroupResult;
+
 }

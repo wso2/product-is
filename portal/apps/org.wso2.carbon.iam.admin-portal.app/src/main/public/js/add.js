@@ -44,8 +44,8 @@ function displayVals() {
             "accountVerificationMethod-area", "OVERWRITE", callbacks);
     }
 }
-document.getElementById("inputUsername").onblur = function() {groupNameExists()};
-function groupNameExists() {
+document.getElementById("inputUsername").onblur = function() {usernameExists()};
+function usernameExists() {
     var username = document.getElementById('inputUsername').value;
     if (!username) {
         return;
@@ -88,50 +88,6 @@ function groupNameExists() {
         }
     });
 }
-document.getElementById("input-groupname").onblur = function() {groupNameExists()};
-function groupNameExists() {
-    var groupName = document.getElementById('input-groupname').value;
-    if (!groupName) {
-        return;
-    }
-    var groupNameClaimUri = "http://wso2.org/claims/groupname";
-    var domain = null;
-    if (document.getElementById('domainSelector')) {
-        domain = document.getElementById('domainSelector').value;
-    }
-    $.ajax({
-        type: "GET",
-        url: "/admin-portal/root/apis/identityStore-micro-service/groupExists",
-        data: {groupName: groupName, groupNameClaimUri: groupNameClaimUri, domain: domain},
-        success: function (data) {
-            if (data === "true") {
-                var fillingObject = {
-                    "groupExists": true
-                };
-                var callbacks = {
-                    onSuccess: function () {
-                        $("#addGroup").prop('disabled', true);
-                    },
-                    onFailure: function (e) {
-                    }
-                };
-                UUFClient.renderFragment("group-existence", fillingObject,
-                    "groupExistsError-area", "OVERWRITE", callbacks);
-            } else {
-                var fillingObject = {};
-                var callbacks = {
-                    onSuccess: function () {
-                        $("#addGroup").prop('disabled', false);
-                    },
-                    onFailure: function (e) {
-                    }
-                };
-                UUFClient.renderFragment("group-existence", fillingObject,
-                    "groupExistsError-area", "OVERWRITE", callbacks);
-            }
-        }
-    });
-}
 $("#addUserForm").validate({
     rules: {
         confirmPassword: {
@@ -159,19 +115,6 @@ $("#addUserForm").validate({
         },
         inputUsername:{
             required: "Required to provide a username"
-        }
-
-    }
-});
-$("#addGroupForm").validate({
-    rules: {
-        inputGroupName: {
-            required: true
-        }
-    },
-    messages: {
-        inputUsername: {
-            required: "Required to provide a group name"
         }
 
     }
