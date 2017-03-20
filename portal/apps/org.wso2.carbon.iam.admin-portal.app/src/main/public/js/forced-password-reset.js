@@ -22,19 +22,14 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
-    $("#reset").click(function () {
-        $("#newPassword").prop('type', 'hidden');
-        $("#reset").prop('disabled', true);
-        $("#generatePassword").prop('value', 'Generate');
-    });
-
     $('.pw').hide();
     $("#generatePassword").click(function () {
         $('.pw').show();
+        $(".hide-pass").show();
 
         $("#newPassword").prop('type', 'password');
 
-        if($('.hide-pass').length < 1){
+        if ($('.hide-pass').length < 1) {
             $("#newPassword").after('<span class="hide-pass" title="Show/Hide Password">' +
             '<i class="fw fw-view"></i> </span>');
         }
@@ -62,15 +57,15 @@ $('#verificationSelector').change(function () {
 //add show /hide option on password field
 $('input[type=password], input[type=text]').after('<span class="hide-pass" title="Show/Hide Password"><i class="fw fw-view"></i> </span>');
 var hidePass = $('.hide-pass');
-$(document).on('click',hidePass,function(e){
-    if($(this).find('i').hasClass("fw-hide")){
+$(document).on('click', '.hide-pass', function (e) {
+    if ($(this).find('i').hasClass("fw-hide")) {
         $(e.originalEvent.srcElement).parents('.well').find("input[type='text']").prop('type', 'password');
         //$(this).parent().find('input[data-schemaformat=password]').prop('type', 'password');
-        $(this).find('i').removeClass( "fw-hide" );
-        $(this).find('i').addClass( "fw-view");
-    }else{
-        $(this).find('i').removeClass( "fw-view" );
-        $(this).find('i').addClass( "fw-hide");
+        $(this).find('i').removeClass("fw-hide");
+        $(this).find('i').addClass("fw-view");
+    } else {
+        $(this).find('i').removeClass("fw-view");
+        $(this).find('i').addClass("fw-hide");
         $(e.originalEvent.srcElement).parents('.well').find("input[type='password']").prop('type', 'text');
         //$(this).parent().find("input[type='password']").prop('type', 'text');
     }
