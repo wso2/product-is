@@ -25,16 +25,20 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
+import org.wso2.carbon.identity.mgt.Group;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
+import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.bean.UserBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.AuthenticationFailure;
+import org.wso2.carbon.identity.mgt.exception.GroupNotFoundException;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.kernel.utils.StringUtils;
+import org.wso2.is.portal.user.client.api.bean.UUFGroup;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
@@ -93,7 +97,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(password);
             AuthenticationContext authenticationContext = getRealmService().getIdentityStore()
-                    .authenticate(usernameClaim, new Callback[]{passwordCallback}, domain);
+                    .authenticate(usernameClaim, new Callback[] { passwordCallback }, domain);
 
             if (authenticationContext.isAuthenticated()) {
                 User identityUser = authenticationContext.getUser();
@@ -126,8 +130,8 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             PasswordCallback passwordCallback = new PasswordCallback("password", false);
             passwordCallback.setPassword(newPassword);
 
-            getRealmService().getIdentityStore().updateUserCredentials(uufUser.getUserId(),
-                    Collections.singletonList(passwordCallback));
+            getRealmService().getIdentityStore()
+                    .updateUserCredentials(uufUser.getUserId(), Collections.singletonList(passwordCallback));
         } catch (IdentityStoreException e) {
             String error = "Failed to update user password.";
             LOGGER.error(error, e);
@@ -137,8 +141,8 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials) throws
-            UserPortalUIException {
+    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials)
+            throws UserPortalUIException {
 
         UserBean userBean = new UserBean();
         List<Claim> claimsList = new ArrayList<>();
@@ -249,8 +253,8 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws
-            UserPortalUIException {
+    public void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap)
+            throws UserPortalUIException {
 
         if (updatedClaimsMap == null || updatedClaimsMap.isEmpty()) {
             return;
@@ -320,8 +324,8 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
-                                   String domainName) throws UserPortalUIException {
+    public List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length, String domainName)
+            throws UserPortalUIException {
 
         //TODO check for domain existence when provided
         List<UUFUser> users = new ArrayList<>();
@@ -341,19 +345,135 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         return users;
     }
 
-//    @Override
-//    public String getPrimaryDomainName() throws UserPortalUIException {
-//        String primaryDomain;
-//        try {
-//            primaryDomain = getRealmService().getIdentityStore().getPrimaryDomainName();
-//        } catch (IdentityStoreException e) {
-//            String error = "Failed to get the primary domain name.";
-//            LOGGER.error(error, e);
-//            throw new UserPortalUIException(error);
-//        }
-//        return primaryDomain;
-//
-//    }
+    @Override
+    public UUFGroup addGroup(GroupBean group, String domainName) throws UserPortalUIException {
+
+        Group groupResult = null;
+
+        try {
+            groupResult = getRealmService().getIdentityStore().addGroup(group, domainName);
+
+        } catch (IdentityStoreException e) {
+            String error = "Error while adding the group to domain : " + domainName;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return new UUFGroup(null, groupResult.getUniqueGroupId(), null, groupResult.getDomainName());
+    }
+
+    @Override
+    public UUFGroup addGroup(Map<String, String> groupClaims, String domainName) throws UserPortalUIException {
+
+        Group groupResult = null;
+        GroupBean groupBean = new GroupBean();
+        List<Claim> claimsList = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
+            Claim claim = new Claim("http://wso2.org/claims", entry.getKey(), entry.getValue());
+            claimsList.add(claim);
+        }
+        groupBean.setClaims(claimsList);
+
+        try {
+            groupResult = getRealmService().getIdentityStore().addGroup(groupBean, domainName);
+        } catch (IdentityStoreException e) {
+            String error = "Error while adding groups.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return new UUFGroup(null, groupResult.getUniqueGroupId(), null, groupResult.getDomainName());
+    }
+
+    @Override
+    public boolean isGroupExist(Map<String, String> groupClaims, String domain) throws UserPortalUIException {
+        List<Claim> claimsList = new ArrayList<>();
+        boolean isGroupExists;
+        for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        try {
+            isGroupExists = getRealmService().getIdentityStore().isGroupExist(claimsList, domain);
+        } catch (IdentityStoreException e) {
+            String error = "Error while checking whether the group exists.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return isGroupExists;
+    }
+
+    @Override
+    public void addUsersToGroup(String groupId, List<String> userIds) throws UserPortalUIException {
+
+        try {
+            getRealmService().getIdentityStore().updateUsersOfGroup(groupId, userIds);
+        } catch (IdentityStoreException e) {
+            String error = "Error while adding the users to group : " + groupId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+    }
+
+    @Override
+    public void updateUserInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
+            throws UserPortalUIException {
+
+        try {
+            getRealmService().getIdentityStore().updateUsersOfGroup(groupId, addingUsers, removingUsers);
+        } catch (IdentityStoreException e) {
+            String error = "Error while updating the users in group : " + groupId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+    }
+
+    @Override
+    public boolean isUserInGroup(String userId, String groupId) throws UserPortalUIException {
+
+        boolean isUserInGroup = false;
+
+        try {
+            getRealmService().getIdentityStore().isUserInGroup(userId, groupId);
+        } catch (IdentityStoreException e) {
+            String error = "Error while checking whether the user : " + userId + " is in group: " + groupId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        } catch (UserNotFoundException e) {
+            String error = "No user exist with ID : " + userId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        } catch (GroupNotFoundException e) {
+            String error = "No group exist with ID : " + groupId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return isUserInGroup;
+    }
+
+    @Override
+    public void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap)
+            throws UserPortalUIException {
+
+        if (updatedClaimsMap == null || updatedClaimsMap.isEmpty()) {
+            return;
+        }
+
+        List<Claim> updatedClaims = updatedClaimsMap.entrySet().stream()
+                .filter(entry -> !StringUtils.isNullOrEmpty(entry.getKey()))
+                .map(entry -> new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        try {
+            getRealmService().getIdentityStore().updateGroupClaims(uniqueGroupId, updatedClaims);
+        } catch (IdentityStoreException | GroupNotFoundException e) {
+            String error = "Failed to updated group profile.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+    }
 
     private RealmService getRealmService() {
         if (this.realmService == null) {
@@ -361,4 +481,5 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         }
         return this.realmService;
     }
+
 }
