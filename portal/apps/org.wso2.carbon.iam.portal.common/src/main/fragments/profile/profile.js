@@ -15,7 +15,6 @@
  */
 
 function buildUIEntries(profileUIEntries) {
-
     var uiEntries = [];
     if (profileUIEntries) {
         for (var i = 0; i < profileUIEntries.length > 0; i++) {
@@ -24,11 +23,11 @@ function buildUIEntries(profileUIEntries) {
                 claimLabel: profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", ""),
                 displayName: profileUIEntries[i].claimConfigEntry.displayName,
                 value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
-                readonly: ((profileUIEntries[i].claimConfigEntry.readonly &&
+                readonly: ((profileUIEntries[i].claimConfigEntry.readonly != null &&
                 profileUIEntries[i].claimConfigEntry.readonly) ? "readonly" : ""),
-                required: ((profileUIEntries[i].claimConfigEntry.required &&
+                required: ((profileUIEntries[i].claimConfigEntry.required != null &&
                 profileUIEntries[i].claimConfigEntry.required) ? "required" : ""),
-                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required &&
+                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required != null &&
                 profileUIEntries[i].claimConfigEntry.required) ? "*" : ""),
                 dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
                     profileUIEntries[i].claimConfigEntry.dataType : "text"),
@@ -42,7 +41,6 @@ function buildUIEntries(profileUIEntries) {
 }
 
 function getProfileUIEntries(profileName, userId) {
-
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfileEntries", [profileName, userId]);
@@ -61,11 +59,10 @@ function getProfileUIEntries(profileName, userId) {
 }
 
 function updateUserProfile(userId, updatedClaims) {
-
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updateUserProfile", [userId, updatedClaims]);
-        return {success: true, message: "Your profile is updated."};
+        return {success: true, message: "profile.updated"};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
@@ -80,26 +77,22 @@ function updateUserProfile(userId, updatedClaims) {
 }
 
 function uploadFile(env, session) {
-
     try {
         var Paths = Java.type('java.nio.file.Paths');
         var System = Java.type('java.lang.System');
         var Files = Java.type('java.nio.file.Files');
         var StandardCopyOption = Java.type('java.nio.file.StandardCopyOption');
-
         var uploadedFile = env.request.files["image"];
         var imageDirPath = Paths.get(System.getProperty('user.dir'), "images");
         if (!Files.exists(imageDirPath)) {
             Files.createDirectories(imageDirPath);
         }
-
         var fileName = session.getUser().getUserId();
         var destination = Paths.get(imageDirPath).resolve(fileName);
         var sourcePath = Paths.get(uploadedFile.path);
         var destinationPath = Paths.get(destination);
-
         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-        return {success: true, message: "Profile image successfully updated"};
+        return {success: true, message: "profile.image.updated"};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
@@ -115,7 +108,6 @@ function uploadFile(env, session) {
 
 function isProfileImageAvailbale(session) {
     var usernameChar = session.getUser().getUsername().charAt(0);
-
     var Paths = Java.type('java.nio.file.Paths');
     var System = Java.type('java.lang.System');
     var Files = Java.type('java.nio.file.Files');
@@ -139,7 +131,6 @@ function isProfileImageAvailbale(session) {
                 }
             }
         }
-
     }
     return {profileImage: false, usernameChar: usernameChar};
 }
@@ -149,13 +140,10 @@ function onGet(env) {
     var success = false;
     var message = "";
     if (env.params.profileName) {
-
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
-            if (env.request.method != "POST") {
-                success = true;
-            }
+            success = true;
             uiEntries = buildUIEntries(result.profileUIEntries);
         } else {
             success = false;
@@ -163,7 +151,6 @@ function onGet(env) {
         }
         var profileImageResult = isProfileImageAvailbale(session);
         Log.debug(profileImageResult);
-
         return {
             success: success, profile: env.params.profileName, uiEntries: uiEntries,
             message: message,
@@ -172,18 +159,14 @@ function onGet(env) {
             usernameChar: profileImageResult.usernameChar
         };
     }
-
-    return {success: false, message: "Invalid profile name."};
+    return {success: false, message: "invalid.profile.name"};
 }
-
 
 function onPost(env) {
     var session = getSession();
     var success = false;
     var message = "";
-
     if (env.params.profileName && env.params.profileName == env.params.actionId) {
-
         var updatedClaims = env.request.formParams;
         var result = updateUserProfile(session.getUser().getUserId(), updatedClaims);
         success = result.success;
@@ -194,22 +177,16 @@ function onPost(env) {
         success = result.success;
         message = result.message;
     }
-
     if (env.params.profileName) {
-
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
-            if (env.request.method != "POST") {
-                success = true;
-            }
+            success = true;
             uiEntries = buildUIEntries(result.profileUIEntries);
         } else {
             success = false;
             message = result.message;
         }
-
-
         return {
             success: success, profile: env.params.profileName, uiEntries: uiEntries,
             message: message,
@@ -218,6 +195,5 @@ function onPost(env) {
             usernameChar: profileImageResult.usernameChar
         };
     }
-
-    return {success: false, message: "Invalid profile name."};
+    return {success: false, message: "invalid.profile.name"};
 }

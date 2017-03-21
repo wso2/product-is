@@ -125,9 +125,7 @@ function onPost(env) {
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
-            if (env.request.method != "POST") {
-                success = true;
-            }
+            success = true;
             uiEntries = buildUIEntries(result.profileUIEntries);
         } else {
             success = false;
