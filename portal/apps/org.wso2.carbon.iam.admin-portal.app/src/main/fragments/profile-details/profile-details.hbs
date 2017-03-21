@@ -4,7 +4,7 @@
     {{#if message}}
         <div class="alert alert-success" role="alert">
             <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
-            {{message}}
+            {{i18n message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -16,7 +16,7 @@
     {{#if message}}
         <div class="alert alert-danger" role="alert">
             <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
-            {{message}}
+            {{i18n message}}
             <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
@@ -33,20 +33,20 @@
                     <input type="{{dataType}}" name="{{claimURI}}" id="{{claimLabel}}" class="form-control"
                            maxlength="250" value="{{value}}" {{readonly}} {{required}}
                            pattern="{{regex}}"  />
-                    {{#if emailVerified}}
-                        <a href="https://google.com" class="pull-right">verify</a>
+                    {{#if emailVerify}}
+                        <a  class="pull-right">verify</a>
                     <br>
                     <div class="form-group hidden">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                             <label class="custom-checkbox " >
                                 <input type="checkbox" checked="">
-                                <span class="helper" title="Enable if target network is not open or broadcasting"> Account is locked till user verify.</span>
+                                <span class="helper" title="Account locked till verify">{{i18n "account.locked"}} </span>
                             </label>
                         </div>
                     </div>
                     {{/if}}
-                    {{#if mobileVerified}}
-                        <a href="https://google.com" class="pull-right">verify</a>
+                    {{#if mobileVerify}}
+                        <a class="pull-right">verify</a>
                     {{/if}}
             </div>
         </div>

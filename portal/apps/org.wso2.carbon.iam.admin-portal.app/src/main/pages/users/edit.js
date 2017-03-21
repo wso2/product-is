@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 function getProfileNames() {
 
     try {
@@ -34,8 +33,6 @@ function getProfileNames() {
     return {success: false, message: message};
 }
 
-
-
 function onGet(env) {
     var session = getSession();
     if (!session || !session.getUser()) {
@@ -51,7 +48,6 @@ function onGet(env) {
         return {errorMessage: result.message};
     }
 }
-
 
 function onPost(env) {
     var session = getSession();

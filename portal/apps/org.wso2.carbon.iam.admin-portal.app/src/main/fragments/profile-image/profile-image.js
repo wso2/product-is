@@ -15,7 +15,6 @@
  */
 function isProfileImageAvailbale(session) {
     var usernameChar = session.getUser().getUsername().charAt(0);
-
     var Paths = Java.type('java.nio.file.Paths');
     var System = Java.type('java.lang.System');
     var Files = Java.type('java.nio.file.Files');
@@ -39,7 +38,6 @@ function isProfileImageAvailbale(session) {
                 }
             }
         }
-
     }
     return {profileImage: false, usernameChar: usernameChar};
 }
@@ -48,14 +46,10 @@ function onGet(env) {
     var session = getSession();
     var success = false;
     var message = "";
-
-
     if (env.params.profileName) {
-
         var profileImageResult = isProfileImageAvailbale(session);
         Log.debug(profileImageResult);
-        message = "Profile image is loaded"
-
+        message = "profile.image.loaded"
         return {
             success: success, profile: env.params.profileName,
             message: message,
@@ -64,29 +58,22 @@ function onGet(env) {
             usernameChar: profileImageResult.usernameChar
         };
     }
-
-    return {success: false, message: "Invalid profile name."};
-
+    return {success: false, message: "invalid.profile.name"};
 }
 
 function onPost(env) {
     var session = getSession();
     var success = false;
     var message = "";
-
     if ("image" === env.params.actionId) {
-
         var result = uploadFile(env, session);
         success = result.success;
         message = result.message;
     }
-
     if (env.params.profileName) {
-
         var profileImageResult = isProfileImageAvailbale(session);
         Log.debug(profileImageResult);
-        message = "Profile image is loaded"
-
+        message = "profile.image.loaded"
         return {
             success: success, profile: env.params.profileName,
             message: message,
@@ -95,6 +82,5 @@ function onPost(env) {
             usernameChar: profileImageResult.usernameChar
         };
     }
-
-    return {success: false, message: "Invalid profile name."};
+    return {success: false, message: "invalid.profile.name"};
 }

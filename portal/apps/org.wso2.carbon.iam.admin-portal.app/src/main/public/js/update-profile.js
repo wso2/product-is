@@ -15,9 +15,6 @@
  */
 
 $(window).load(function(){
-
-   /* $("#default").show();*/
-
     $('#profileSelector').change(function () {
         var profile = $(this).val();
 
@@ -30,16 +27,5 @@ $(window).load(function(){
                 $(".optionBox").hide();
             }
         });
-
     }).change();
-
-
 });
-
-
-
-
-
-
-
-

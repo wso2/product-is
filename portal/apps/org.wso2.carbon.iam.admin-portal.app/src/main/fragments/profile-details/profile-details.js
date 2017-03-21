@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function updateUserProfile(userId, updatedClaims) {
 
+function updateUserProfile(userId, updatedClaims) {
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updateUserProfile", [userId, updatedClaims]);
-        return {success: true, message: "Your profile is updated."};
+        return {success: true, message: "profile.updated"};
     } catch (e) {
         var message = e.message;
         var cause = e.getCause();
@@ -33,35 +33,34 @@ function updateUserProfile(userId, updatedClaims) {
 }
 
 function buildUIEntries(profileUIEntries) {
-
     var uiEntries = [];
     if (profileUIEntries) {
         for (var i = 0; i < profileUIEntries.length > 0; i++) {
-            var emailVerified = false;
-            var mobileVerified = false;
-            if (profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", "") === "email"){
-                emailVerified = true;
+            var emailVerify = false;
+            var mobileVerify = false;
+            if (profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", "") === "email") {
+                emailVerify = true;
             }
-            if (profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", "") === "telephone"){
-                mobileVerified = true;
+            if (profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", "") === "telephone") {
+                mobileVerify = true;
             }
             var entry = {
                 claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
                 claimLabel: profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", ""),
                 displayName: profileUIEntries[i].claimConfigEntry.displayName,
                 value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
-                readonly: ((profileUIEntries[i].claimConfigEntry.readonly &&
+                readonly: ((profileUIEntries[i].claimConfigEntry.readonly != null &&
                 profileUIEntries[i].claimConfigEntry.readonly) ? "readonly" : ""),
-                required: ((profileUIEntries[i].claimConfigEntry.required &&
+                required: ((profileUIEntries[i].claimConfigEntry.required != null &&
                 profileUIEntries[i].claimConfigEntry.required) ? "required" : ""),
-                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required &&
+                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required != null &&
                 profileUIEntries[i].claimConfigEntry.required) ? "*" : ""),
                 dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
                     profileUIEntries[i].claimConfigEntry.dataType : "text"),
                 regex: (profileUIEntries[i].claimConfigEntry.regex ?
                     profileUIEntries[i].claimConfigEntry.regex : ".*"),
-                emailVerified: emailVerified,
-                mobileVerified: mobileVerified
+                emailVerify: emailVerify,
+                mobileVerify: mobileVerify
             };
             uiEntries.push(entry);
         }
@@ -70,7 +69,6 @@ function buildUIEntries(profileUIEntries) {
 }
 
 function getProfileUIEntries(profileName, userId) {
-
     try {
         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfileEntries", [profileName, userId]);
@@ -89,43 +87,33 @@ function getProfileUIEntries(profileName, userId) {
 }
 
 
-
 function onGet(env) {
     var session = getSession();
     var success = false;
     var message = "";
     if (env.params.profileName) {
-
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
         if (result.success) {
-            if (env.request.method != "POST") {
-                success = true;
-            }
+            success = true;
             uiEntries = buildUIEntries(result.profileUIEntries);
         } else {
             success = false;
             message = result.message;
         }
-
-
         return {
             success: success, profile: env.params.profileName, uiEntries: uiEntries,
             message: message,
         };
     }
-
-    return {success: false, message: "Invalid profile name."};
+    return {success: false, message: "invalid.profile.name"};
 }
 
 function onPost(env) {
-
     var session = getSession();
     var success = false;
-
     var message = "";
- var currentProfile;
-
+    var currentProfile;
     if (env.params.profileName && env.params.profileName == env.params.actionId) {
         currentProfile = env.params.profileName;
         var updatedClaims = env.request.formParams;
@@ -133,7 +121,6 @@ function onPost(env) {
         success = result.success;
         message = result.message;
     }
-
     if (env.params.profileName) {
         var uiEntries = [];
         var result = getProfileUIEntries(env.params.profileName, session.getUser().getUserId());
@@ -146,16 +133,13 @@ function onPost(env) {
             success = false;
             message = result.message;
         }
-        if(currentProfile){
-            Log.info(currentProfile);
-            sendToClient("currentProfile",  currentProfile);
+        if (currentProfile) {
+            sendToClient("currentProfile", currentProfile);
         }
         return {
             success: success, profile: env.params.profileName, uiEntries: uiEntries,
             message: message,
         };
     }
-
-    return {success: false, message: "Invalid profile name."};
-
+    return {success: false, message: "invalid.profile.name"};
 }

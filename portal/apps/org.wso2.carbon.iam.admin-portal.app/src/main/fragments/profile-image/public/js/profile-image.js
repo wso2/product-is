@@ -36,7 +36,7 @@ $(window).load(function () {
 
     $('#default-form').validate();
     $('#employee-form').validate();
-    
+
     $('.profile-form input[type=text]').each(function(){
         var pattern = $(this).attr('pattern');
 
@@ -44,9 +44,6 @@ $(window).load(function () {
             $("#"+$(this).attr('id')).rules("add", { regex: pattern.toString()});
         }
     })
-
-
-
 });
 
 window.setTimeout(function() {
