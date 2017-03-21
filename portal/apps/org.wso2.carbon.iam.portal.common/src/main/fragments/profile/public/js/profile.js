@@ -20,14 +20,14 @@ $(window).load(function () {
         $('#image').click();
     });
 
-    $('#image').change(function(){
+    $('#image').change(function () {
         $('#image-uploader').submit();
     });
 
 
     $.validator.addMethod(
         "regex",
-        function(value, element, regexp) {
+        function (value, element, regexp) {
             var re = new RegExp(regexp);
             return this.optional(element) || re.test(value);
         },
@@ -36,21 +36,18 @@ $(window).load(function () {
 
     $('#default-form').validate();
     $('#employee-form').validate();
-    
-    $('.profile-form input[type=text]').each(function(){
+
+    $('.profile-form input[type=text]').each(function () {
         var pattern = $(this).attr('pattern');
 
-        if ((typeof pattern !== typeof undefined) && pattern !==".*" ) {
-            $("#"+$(this).attr('id')).rules("add", { regex: pattern.toString()});
+        if ((typeof pattern !== typeof undefined) && pattern !== ".*") {
+            $("#" + $(this).attr('id')).rules("add", {regex: pattern.toString()});
         }
     })
-
-
-
 });
 
-window.setTimeout(function() {
-    $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
+window.setTimeout(function () {
+    $(".alert-success").fadeTo(500, 0).slideUp(500, function () {
         $(this).remove();
     });
 }, 5000);
