@@ -5,6 +5,8 @@
 apis:
   - className: "org.wso2.is.portal.user.client.api.micro.ProfileImageDownloaderService"
     uri: "/profile-image-service/"
+  - className: "org.wso2.is.portal.user.client.api.micro.IdentityStoreClientMicroService"
+    uri: "/identityStore-micro-service/"
 #  - className: "org.wso2.is.portal.user.client.api.micro.IdentityStoreClientMicroService"
 #    uri: "/identityStore-micro-service/"
 

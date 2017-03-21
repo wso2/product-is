@@ -47,7 +47,7 @@
                                         <!-- page content -->
                                         <br class="settings-content">
 
-                                        {{fragment "profile-image" profileName=this
+                                        {{fragment "org.wso2.carbon.iam.portal.common.profile-image" profileName=this
                                                        actionId=actionId}}
 
                                         <br>
@@ -63,7 +63,7 @@
                                                     <!-- Here is generated content for erro when user already exists -->
                                                 {{#each profiles}}
                                                     <div id="{{this}}-form" class="{{this}} optionBox">
-                                                        {{fragment "profile-details"
+                                                        {{fragment "org.wso2.carbon.iam.portal.common.profile-details"
                                                                    profileName=this   actionId=actionId}}
                                                     </div>
                                                 {{/each}}
