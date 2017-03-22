@@ -15,14 +15,15 @@
  */
 package org.wso2.is.portal.user.client.api.micro;
 
-import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
-import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
-import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
-import org.wso2.is.portal.user.client.api.util.PasswordGenerationUtil;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
+import org.wso2.carbon.identity.policy.password.validation.PasswordValidationService;
 import org.wso2.msf4j.Microservice;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -31,10 +32,20 @@ import javax.ws.rs.core.Response;
 public class PasswordUtilityMicroService implements Microservice {
 
     @GET
-    @Path("/generatePassword")
-    public Response getGeneratedPassword() throws UserNotFoundException, IdentityStoreException, UserPortalUIException {
-        String password = null;
-        password = PasswordGenerationUtil.getGeneratedPassword();
-        return Response.ok(password).build();
+    @Path("/validatePassword")
+    public Response isValidPassword(@QueryParam("newPassword") String password) {
+        PasswordValidationService passwordValidationService = null;
+        boolean isValidPassword = true;
+        BundleContext bundleContext = FrameworkUtil.getBundle(PasswordValidationService.class).getBundleContext();
+        ServiceReference<PasswordValidationService> serviceReference =
+                bundleContext.getServiceReference(PasswordValidationService.class);
+        if (serviceReference != null) {
+            passwordValidationService = bundleContext.getService(serviceReference);
+        }
+        if (passwordValidationService != null) {
+            isValidPassword = passwordValidationService.validatePassword(password);
+        }
+        return Response.ok(isValidPassword).build();
     }
+
 }

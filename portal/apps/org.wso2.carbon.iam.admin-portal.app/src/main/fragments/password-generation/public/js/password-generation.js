@@ -10,7 +10,9 @@ $(function () {
         $("#spchar .status-text").text("At least one special character");
     }
     passwordStrengthScript();
-    $('#generatePassword').on('click', generateNewPassword);
+    $('#newPassword').blur(function(){
+        validateNewPassword();
+    });
 });
 function passwordStrengthScript() {
     $("#newPassword").on("focus keyup", function () {
@@ -109,12 +111,20 @@ function passwordStrengthScript() {
         }
     });
 }
-function generateNewPassword(){
+function validateNewPassword() {
+    var password = $("#newPassword").val();
     $.ajax({
         type: "GET",
-        url: "/admin-portal/root/apis/passwordUtil-micro-service/generatePassword",
+        url: "/admin-portal/root/apis/passwordUtil-micro-service/validatePassword",
+        data: {newPassword: password},
         success: function (result) {
-            $("#newPassword").val(result);
+            if (result === "true") {
+                $("#passwordValidationError").hide();
+                $("#addUser").prop('disabled', false);
+            } else {
+                $("#passwordValidationError").show();
+                $("#addUser").prop('disabled', true);
+            }
         }
     });
 }
