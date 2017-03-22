@@ -64,9 +64,9 @@ public class AdminForcedPasswordResetTest {
     }
 
     @Test
-    public void testvalidateGenerateOTPEndPoint() throws IOException {
+    public void testvalidateGeneratePassCodeEndPoint() throws IOException {
         HttpURLConnection urlConn = request
-                ("/DynamicPath/generateOTP", HttpMethod.GET);
+                ("/DynamicPath/generatePassCode", HttpMethod.GET);
         assertEquals(Response.Status.OK.getStatusCode(), urlConn.getResponseCode());
 
     }

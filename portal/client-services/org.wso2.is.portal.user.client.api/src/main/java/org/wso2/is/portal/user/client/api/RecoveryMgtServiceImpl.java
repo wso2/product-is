@@ -37,10 +37,10 @@ import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
-import org.wso2.carbon.identity.recovery.forced.AdminForcePasswordResetManager;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
+import org.wso2.carbon.identity.recovery.password.AdminForcePasswordResetManager;
 import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
@@ -270,18 +270,18 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     }
 
     /**
-     * Pass otp value to persist
+     * Pass pass code value to persist
      *
      * @param uniqueUserId selected user id
-     * @param otp          generated one time password
+     * @param passCode generated one time password
      * @throws UserPortalUIException
      */
     @Override
-    public void persistOTP(String uniqueUserId, String otp) throws UserPortalUIException {
+    public void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException {
         try {
-            AdminForcePasswordResetManager.getInstance().persistOTP(uniqueUserId, otp);
+            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passCode);
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException("Error while storing the OTP: " + otp);
+            throw new UserPortalUIException("Error while storing the Pass Code: " + passCode);
         }
     }
 

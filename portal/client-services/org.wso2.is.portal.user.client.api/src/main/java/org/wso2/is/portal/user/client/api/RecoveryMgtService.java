@@ -90,11 +90,11 @@ public interface RecoveryMgtService {
     boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException;
 
     /**
-     * Pass otp value to persist
+     * Pass pass code value to persist
      *
      * @param uniqueUserId selected user id
-     * @param otp          generated one time password
+     * @param passCode generated one time passcode
      */
-    void persistOTP(String uniqueUserId, String otp) throws UserPortalUIException;
+    void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException;
 
 }

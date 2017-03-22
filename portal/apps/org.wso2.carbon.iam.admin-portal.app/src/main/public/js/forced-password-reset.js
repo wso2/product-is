@@ -15,7 +15,7 @@
  */
 $(window).load(function () {
     $('.login-form-wrapper').parents('body').addClass('background-grey');
-    //setting offline OTP as the default
+    //setting offline Pass Code as the default
     $('#verificationSelector option[value=' + $('#verificationSelector').attr('data-primary') + ']').prop('selected', 'selected');
     var resetMethod = $('#verificationSelector').val();
     $("#verificationSelector").val(resetMethod);
@@ -40,7 +40,7 @@ $(document).ready(function () {
         var password = $("#newPassword").val();
         $.ajax({
             type: "GET",
-            url: "/admin-portal/root/apis/identityStore-micro-service/generateOTP",
+            url: "/admin-portal/root/apis/identityStore-micro-service/generatePassCode",
             success: function (result) {
                 $("#newPassword").val(result);
             }
