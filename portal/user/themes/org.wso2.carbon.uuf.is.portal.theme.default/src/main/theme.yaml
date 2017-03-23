@@ -1,6 +1,5 @@
 css:
  - css/theme.css
- - css/dataTables.wso2.css
  - libs/select2_4.0.0/css/select2.min.css
  - libs/animate/animate.css
  - libs/font-wso2_1.1.1/css/font-wso2.min.css
@@ -11,6 +10,5 @@ headJs:
  - libs/jquery_1.11.0/jquery-1.11.3.min.js
  - libs/bootstrap_3.3.6/js/bootstrap.min.js
  - js/theme-wso2.min.js
- - js/dataTables.wso2.js
  - js/script.js
 js: []
