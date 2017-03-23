@@ -19,6 +19,9 @@ package org.wso2.is.portal.user.client.api.micro;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
+import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.carbon.identity.recovery.password.AdminForcePasswordResetManager;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.msf4j.Microservice;
@@ -34,7 +37,6 @@ import javax.ws.rs.core.Response;
  * This is the micro service implementation for identity store client services.
  */
 public class IdentityStoreClientMicroService implements Microservice {
-
     @GET
     @Path("/userExists")
     public Response getUserExistence(@QueryParam("username") String username,
@@ -58,4 +60,12 @@ public class IdentityStoreClientMicroService implements Microservice {
 
         return Response.ok(isUserExists).build();
     }
+
+    @GET
+    @Path("/generatePassCode")
+    public Response getGeneratedPassword() throws UserNotFoundException, IdentityStoreException, UserPortalUIException {
+        String generatedPassword = AdminForcePasswordResetManager.getInstance().generatePassode();
+        return Response.ok(generatedPassword).build();
+    }
+
 }
