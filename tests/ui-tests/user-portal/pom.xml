@@ -67,6 +67,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
             <scope>test</scope>
@@ -149,11 +154,11 @@
                                 <!--properties can be : headless, firefox, chrome, ie, opera-->
                                 <property>
                                     <name>driver</name>
-                                    <value>headless</value>
+                                    <value>chrome</value>
                                 </property>
                                 <property>
                                     <name>pathToChromeDriver</name>
-                                    <value>src/test/resources/drivers/chrome/chromedriver</value>
+                                    <value>/home/wso2dinali/Downloads/chrome/chromedriver</value>
                                 </property>
                                 <property>
                                     <name>home</name>
