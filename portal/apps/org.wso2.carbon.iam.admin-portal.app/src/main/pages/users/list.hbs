@@ -1,0 +1,177 @@
+{{secured}}
+{{layout "privilege"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.data-tables"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{css "css/admin-portal.css"}}
+{{js "js/list.js"}}
+
+
+{{#fillZone "usernavbar"}}
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="add">
+                    <span class="icon fw-stack">
+                        <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    {{i18n "add.user.navbar"}}
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon fw-stack">
+                        <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    {{i18n "import.user.navbar"}}
+                </a>
+            </li>
+        </ul>
+    </div>
+{{/fillZone}}
+
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "overview.users"}}</h1>
+        </div>
+        <form class="form-horizontal" method="post" id="filterListForm">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <input type="hidden" id="action" name="action" value="filter-list">
+                <input type="hidden" id="claim-uri" name="claim-uri" value="">
+                <input type="hidden" id="domain-name" name="domain-name" value="">
+                <div class="row">
+                    <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table" id="users-sample">
+                        <thead class="block">
+                        <tr class="sort-row">
+                            <th class="content-fill no-sort"></th>
+                            <th>{{i18n "users.list.username"}}</th>
+                            <th>{{i18n "users.list.status"}}</th>
+                            <th>{{i18n "users.list.groups"}}</th>
+                            <th>{{i18n "users.list.roles"}}</th>
+                            <th class="no-sort">{{i18n "list.actions"}}</th>
+                        </tr>
+                        <tr class="filter-row-custom">
+                            <th class="select-filter">
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <select class="form-control" id="claimSelector" onChange="getClaimUri()">
+                                        <option value="">{{i18n "option.select.claim"}}</option>
+                                        {{#each claimProfile}}
+                                            <option name="claim-uri-{{claimURI}}" id="claim-uri-{{claimURI}}" value="{{claimURI}}">{{displayName}}</option>
+                                        {{/each}}
+                                    </select>
+                                    {{#if claimValue}}
+                                        <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Claim value" value="{{claimValue}}"/>
+                                    {{else}}
+                                        <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Claim value"/>
+                                    {{/if}}
+                                </div>
+                            </th>
+                            <th data-for="Start"><input type="number" id="offset-value" name="offset-value" class="short-input" value="0" /></th>
+                            <th data-for="Maximum Records"><input type="number" id="length-value" name="length-value" class="short-input" value="500" /></th>
+                            <th data-for="Office" class="select-filter"></th>
+                            <th data-for="Age" class="select-filter"></th>
+                            <th>
+                                <select class="form-control" id="domainSelector" name="domainSelector" onChange="getDomain()">
+                                    {{#each domains}}
+                                        <option value={{this}}>{{this}}</option>
+                                    {{/each}}
+                                </select>
+                            </th>
+                            <th class="text-right content-fill text-left-on-grid-view no-wrap">
+                                <button class="btn btn-primary " id="filter-btn" type="submit">
+                                    <i class="fw fw fw-search search-icon add-margin-right-1x"></i>
+                                </button>
+                            </th>
+                        </tr>
+                        <tr class="bulk-action-row" id="bulk-row">
+                            <th colspan="8">
+
+                                <ul class="tiles">
+                                    <li class="square">
+                                        <a class="btn square-element bulk-element" data-click-event="delete-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                            {{i18n "bulk.action.delete"}}
+                                        </a>
+                                    </li>
+                                    <li class="square">
+                                        <a class="btn square-element bulk-element" data-click-event="lock-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-lock fw-stack-1x"></i>
+                                </span>
+                                            {{i18n "bulk.action.lock"}}
+                                        </a>
+                                    </li>
+                                    <li class="square">
+                                        <a class="btn square-element bulk-element" data-click-event="disable-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-disable fw-stack-1x"></i>
+                                </span>
+                                            {{i18n "bulk.action.disable"}}
+                                        </a>
+                                    </li>
+                                    <li class="square">
+                                        <a class="btn square-element bulk-element" data-click-event="activate-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-activate fw-stack-1x"></i>
+                                </span>
+                                            {{i18n "bulk.action.activate"}}
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="modalDemo" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">{{i18n "bulk.action.edit"}}</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                {{i18n "bulk.action.confirm"}}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">{{i18n "bulk.action.save"}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- modal -->
+                        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content clearfix">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fw fw-cancel"></i></button>
+                                        <h3 class="modal-title" id="groupModalLabel">{{i18n "group.modal.heading"}}</h3>
+                                    </div>
+                                    <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /modal -->
+                        <!-- Handlebars Template Appends Here -->
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </form>
+    </div>
+{{/fillZone}}
