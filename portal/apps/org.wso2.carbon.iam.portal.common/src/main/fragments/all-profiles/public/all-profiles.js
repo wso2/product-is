@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-function onGet(env) {
-    var session = getSession();
-    if (!session || !session.getUser()) {
-        sendRedirect(env.contextPath + env.config['loginPageUri']);
-    }
-}
+$(window).load(function(){
+    $('#profileSelector').change(function () {
+        var profile = $(this).val();
 
-function onPost(env) {
-    var session = getSession();
-    if (!session || !session.getUser()) {
-        sendRedirect(env.contextPath + env.config['loginPageUri']);
-    }
-}
+        $(this).find("#option-profile:selected").each(function(){
+            var optionValue = $(this).attr("value");
+            if(optionValue){
+                $(".optionBox").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else{
+                $(".optionBox").hide();
+            }
+        });
+    }).change();
+});

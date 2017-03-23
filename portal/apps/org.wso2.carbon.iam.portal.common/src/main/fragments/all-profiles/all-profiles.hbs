@@ -1,0 +1,59 @@
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
+{{js "js/all-profiles.js"}}
+{{#if success}}
+    {{#if message}}
+        <div class="alert alert-success" role="alert">
+            <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
+            {{i18n message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{else}}
+    {{#if message}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
+            {{i18n message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{/if}}
+
+<div>
+
+    <br class="settings-content">
+
+    {{fragment "profile-image" profileName=this
+               actionId=actionId}}
+
+    <br>
+    <div id="profile-details">
+        <select class="selectpicker" id="profileSelector">
+            {{#each profiles}}
+                <option id="option-profile" action="{{this}}-profile-action"
+                        value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+        <br><br>
+        {{#defineZone "veiwProfileArea"}}
+            <div id="veiwProfileArea" class="veiwProfileArea">
+                <!-- Here is generated content for erro when user already exists -->
+                {{#each profiles}}
+                    <div id="{{this}}-form" class="{{this}} optionBox">
+                        {{fragment "profile-details"
+                                   profileName=this   actionId=actionId}}
+                    </div>
+                {{/each}}
+
+            </div>
+        {{/defineZone}}
+
+    </div>
+</div>
