@@ -12,6 +12,7 @@ import org.wso2.carbon.identity.claim.service.ProfileMgtService;
 import org.wso2.carbon.identity.mgt.Group;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
+import org.wso2.carbon.identity.mgt.UserState;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.GroupNotFoundException;
@@ -37,6 +38,9 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
     private static final String USERNAME_CLAIM = "http://wso2.org/claims/username";
     private static final String GROUPNAME_CLAIM = "http://wso2.org/claims/groupname";
     private static final int MAX_RECORD_LENGTH = 500;
+    private static final String LOCKED_STATE = "LOCKED";
+    private static final String DISABLED_STATE = "DISABLED";
+    private static final String UNLOCKED_STATE = "UNLOCKED";
 
     private RealmService realmService;
 
@@ -129,11 +133,21 @@ public class UserMgtClientServiceImpl implements UserMgtClientService {
                 LOGGER.error(error, e);
                 throw new UserPortalUIException(error);
             }
+
+            String status = null;
+            UserState state = UserState.valueOf(user.getState());
+            if (state.isInGroup(UserState.Group.DISABLED)) {
+                status = DISABLED_STATE;
+            } else if (state.isInGroup(UserState.Group.LOCKED)) {
+                status = LOCKED_STATE;
+            } else if (state.isInGroup(UserState.Group.UNLOCKED)) {
+                status = UNLOCKED_STATE;
+            }
             UserUIEntry listEntry = new UserUIEntry();
             listEntry.setUserId(username);
             listEntry.setDomainName(user.getDomainName());
             listEntry.setUserUniqueId(user.getUniqueUserId());
-            listEntry.setState(user.getState());
+            listEntry.setState(status);
             listEntry.setGroups(groupNames);
             userList.add(listEntry);
 

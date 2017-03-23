@@ -80,6 +80,8 @@ $(document).ready(function() {
             .attr('data-display', 'user')
             .addClass('remove-padding icon-only content-fill');
 
+            $(nRow).addClass(aData.Status);
+
             var columns = [
                 null,
                 aData.Username,
@@ -105,14 +107,28 @@ $(document).ready(function() {
         }
     });
 
+    //------------------ Customizations for datatables plugin ----------------------------------------//
     var ROW_SELECTED_CLASS = 'DTTT_selected';
+    var LOCKED_STATE = 'LOCKED';
+    var DISABLED_STATE = 'DISABLED';
+    var UNLOCKED_STATE = 'UNLOCKED';
+
     var toggle_select_btn = $(this).find("[data-click-event=toggle-select]");
     $(toggle_select_btn).attr("data-click-event", "toggle-select-custom");
 
     var toggle_select_all_btn = $(this).find("[data-click-event=toggle-select-all]");
     $(toggle_select_all_btn).attr("data-click-event", "toggle-select-all-custom");
 
+    $('.navbar-right li').eq(3).after('<li class="deselect-all-btn" style="display:none;"><button data-click-event="toggle-deselect-all-custom" class="btn btn-default btn-primary">Deselect All</li>');
+
     $(this).find("[data-click-event=toggle-list-view]").hide();
+
+    var sAllBtn = $("button[data-click-event='toggle-select-all-custom']");
+
+    $('.bulk-element-delete').attr('disabled', true);
+    $('.bulk-element-disable').attr('disabled', true);
+    $('.bulk-element-lock').attr('disabled', true);
+    $('.bulk-element-activate').attr('disabled', true);
 
     //Enable/Disable selection on rows
     $('.dataTables_wrapper').off('click', '[data-click-event=toggle-select-custom]');
@@ -140,18 +156,46 @@ $(document).ready(function() {
             thisTable = $(this).closest('.dataTables_wrapper').find('.dataTable').dataTable();
 
         var selected = false;
+        var locked = false;
+        var disabled = false;
+        var unlocked = false;
         thisTable.api().rows().every(function () {
             if ($(this.node()).hasClass(ROW_SELECTED_CLASS)) {
                 selected = true;
-                return false;
+                if ($(this.node()).hasClass(LOCKED_STATE)){
+                    locked = true;
+                } else if ($(this.node()).hasClass(UNLOCKED_STATE)) {
+                    unlocked = true;
+                } else if ($(this.node()).hasClass(DISABLED_STATE)) {
+                    disabled = true;
+                }
+
+                if (locked && unlocked && disabled) {
+                    return false;
+                }
             }
         });
-        var sAllBtn = $("button[data-click-event='toggle-select-all-custom']");
+
         if (selected) {
             $(sAllBtn).closest('li').siblings('.deselect-all-btn').show();
-            $('.bulk-element').show();
+            $('.bulk-element-delete').attr('disabled', false);
+            if (locked) {
+                $('.bulk-element-activate').attr('disabled', false);
+                $('.bulk-element-disable').attr('disabled', false);
+                $('.bulk-element-lock').attr('disabled', true);
+            }
+            if (unlocked) {
+                $('.bulk-element-activate').attr('disabled', true);
+                $('.bulk-element-disable').attr('disabled', false);
+                $('.bulk-element-lock').attr('disabled', false);
+            }
+            if (disabled) {
+                $('.bulk-element-activate').attr('disabled', false);
+                $('.bulk-element-disable').attr('disabled', true);
+                $('.bulk-element-lock').attr('disabled', true);
+                $('.bulk-element-delete').attr('disabled', true);
+            }
         } else {
-            $('.bulk-element').hide();
             $(sAllBtn).closest('li').siblings('.deselect-all-btn').hide();
         }
     });
@@ -184,15 +228,44 @@ $(document).ready(function() {
 
     if (action === "select-all") {
         var button = $("button[data-click-event='toggle-select-custom']");
+
+        var locked = false;
+        var disabled = false;
+        var unlocked = false;
         thisTable.rows().every(function () {
             $(this.node()).attr('data-type','selectable');
             $(this.node()).addClass(ROW_SELECTED_CLASS);
+            if ($(this.node()).hasClass(LOCKED_STATE)){
+                    locked = true;
+            } else if ($(this.node()).hasClass(UNLOCKED_STATE)) {
+                unlocked = true;
+            } else if ($(this.node()).hasClass(DISABLED_STATE)) {
+                disabled = true;
+            }
         });
+        $('.bulk-element-delete').attr('disabled', false);
+        if (locked) {
+            $('.bulk-element-activate').attr('disabled', false);
+            $('.bulk-element-disable').attr('disabled', false);
+            $('.bulk-element-lock').attr('disabled', true);
+        }
+        if (unlocked) {
+            $('.bulk-element-activate').attr('disabled', true);
+            $('.bulk-element-disable').attr('disabled', false);
+            $('.bulk-element-lock').attr('disabled', false);
+        }
+        if (disabled) {
+            $('.bulk-element-activate').attr('disabled', false);
+            $('.bulk-element-disable').attr('disabled', true);
+            $('.bulk-element-lock').attr('disabled', true);
+            $('.bulk-element-delete').attr('disabled', true);
+        }
+
         $('#users-sample').addClass("table-selectable");
         $(button).html('Cancel');
-        $(button).closest('li').siblings('.deselect-all-btn').show();
+        $(sAllBtn).closest('li').siblings('.deselect-all-btn').show();
         $('#filter-btn').prop('disabled', true);
-        $('.bulk-element').show();
+
     }
 
     if(selectedClaim) {
