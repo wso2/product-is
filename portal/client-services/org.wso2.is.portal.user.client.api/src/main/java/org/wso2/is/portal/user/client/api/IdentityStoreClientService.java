@@ -20,6 +20,7 @@ import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.bean.UserListBean;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.List;
@@ -141,4 +142,9 @@ public interface IdentityStoreClientService {
      */
     List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
                             String domainName) throws UserPortalUIException;
+
+    List<UserListBean> getFilteredList(int offset, int length, String claimURI, String claimValue,
+                                       String domainName) throws UserPortalUIException;
+
+    List<UserListBean> getUserList(int offset, int length, String domainName) throws UserPortalUIException;
 }

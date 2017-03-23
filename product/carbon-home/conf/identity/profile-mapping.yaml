@@ -150,8 +150,8 @@ profiles:
    regex: "*"
    dataType: "email"
  -
-  profileName: "user-list"
-  isAdminProfile: false
+  profileName: "user-list-filter"
+  isAdminProfile: true
   claims:
   -
    claimURI: "http://wso2.org/claims/username"

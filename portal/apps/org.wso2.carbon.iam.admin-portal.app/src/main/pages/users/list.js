@@ -15,10 +15,10 @@
  */
 function onGet(env) {
     var session = getSession();
-    var userList = getFilteredList(0, -1, "", "", "");
     var claimProfile = getUserListProfile();
     var domains = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
+    getUserList(0, -1, "");
     return {claimProfile: claimProfile, domains: domains};
 }
 
@@ -42,17 +42,28 @@ function onPost(env) {
     var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName);
     var claimProfile = getUserListProfile();
     var domains = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
     return {claimProfile: claimProfile, domains: domains, claimValue: claimValue};
 }
 
 function getFilteredList(offset, length, claimURI, claimValue, domainName){
     var userList;
     try {
-        userList = callOSGiService("org.wso2.is.portal.user.client.api.UserMgtClientService",
+        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "getFilteredList", [offset, length, claimURI, claimValue, domainName]);
     } catch (e) {
-        return {errorMessage: 'signup.error.retrieve.domain'};
+        return {errorMessage: 'list.error.retrieve.users'};
+    }
+    buildJSONArray(userList);
+    return userList;
+}
+
+function getUserList(offset, length, domainName){
+    var userList;
+    try {
+        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getUserList", [offset, length, domainName]);
+    } catch (e) {
+        return {errorMessage: 'list.error.retrieve.users'};
     }
     buildJSONArray(userList);
     return userList;
@@ -84,7 +95,7 @@ function getUserListProfile () {
     var claimProfile;
     try {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["user-list"]);
+            "getProfile", ["user-list-filter"]);
     } catch (e) {
         return {errorMessage: profile + '.error.retrieve.claim'};
     }

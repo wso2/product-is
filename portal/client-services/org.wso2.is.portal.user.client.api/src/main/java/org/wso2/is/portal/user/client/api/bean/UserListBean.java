@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * User List Entry
  */
-public class UserUIEntry {
+public class UserListBean {
 
     private String userId;
 
@@ -37,7 +37,7 @@ public class UserUIEntry {
     private List<Claim> claims;
 
 //    private List<Role> roles;
-    public UserUIEntry(){}
+    public UserListBean(){}
 
     public String getUserId() {
         return userId;
