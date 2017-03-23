@@ -34,14 +34,18 @@
                actionId=actionId}}
 
     <br>
-    <div id="profile-details">
-        <select class="selectpicker" id="profileSelector">
-            {{#each profiles}}
-                <option id="option-profile" action="{{this}}-profile-action"
-                        value="{{this}}">{{this}}</option>
-            {{/each}}
-        </select>
-        <br><br>
+    <div  id="profile-details">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 form-group">
+            <select class="selectpicker form-control" id="profileSelector">
+                {{#each profiles}}
+                    <option id="option-profile" action="{{this}}-profile-action"
+                            value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <br>
+        <br>
+        <br>
         {{#defineZone "veiwProfileArea"}}
             <div id="veiwProfileArea" class="veiwProfileArea">
                 <!-- Here is generated content for erro when user already exists -->

@@ -18,14 +18,12 @@ function isProfileImageAvailbale(session) {
     var Paths = Java.type('java.nio.file.Paths');
     var System = Java.type('java.lang.System');
     var Files = Java.type('java.nio.file.Files');
-    var File = Java.type('java.io.File');
     var imageDirPath = Paths.get(System.getProperty('user.dir'), "images");
     if (!Files.exists(imageDirPath)) {
         return {profileImage: false, usernameChar: usernameChar};
     }
     else {
-        var file = new File(imageDirPath.toString());
-        var names = file.list();
+        var names = Files.list(Files.createFile(imageDirPath.toString()));
         if (names) {
             for (var i = 0; i < names.length; i++) {
                 var imageName = names[i].toString();
