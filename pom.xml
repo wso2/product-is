@@ -249,6 +249,12 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
+                <version>${carbon.is.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.default.theme</artifactId>
                 <version>${carbon.uuf.common.version}</version>

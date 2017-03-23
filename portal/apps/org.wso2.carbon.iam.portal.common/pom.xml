@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (c) 2017, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
@@ -14,9 +14,10 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>org.wso2.carbon.iam.portal.parent</artifactId>
@@ -24,11 +25,9 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>org.wso2.carbon.iam.admin-portal.feature</artifactId>
-    <packaging>carbon-feature</packaging>
-    <name>WSO2 IAM Portal - Admin Portal App</name>
-
-    <description>IAM Admin Portal</description>
+    <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
+    <packaging>uuf-component</packaging>
+    <name>WSO2 IS UUF common</name>
     <url>http://wso2.org</url>
 
     <dependencies>
@@ -37,14 +36,6 @@
             <groupId>org.wso2.carbon.uuf.common</groupId>
             <artifactId>org.wso2.carbon.uuf.common.foundation.ui</artifactId>
             <version>${carbon.uuf.common.version}</version>
-            <type>zip</type>
-            <classifier>uuf-component</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
-            <version>${carbon.is.version}</version>
             <type>zip</type>
             <classifier>uuf-component</classifier>
         </dependency>
@@ -59,36 +50,17 @@
         </dependency>
         <!--Backend dependencies-->
         <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
         </dependency>
     </dependencies>
-
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>com.cj.jshintmojo</groupId>
-                <artifactId>jshint-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>lint</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <configFile>src/main/resources/jshint.conf.json</configFile>
-                    <directories>
-                        <directory>src/main/</directory>
-                    </directories>
-                    <reporter>html</reporter>
-                    <reportFile>target/jshint.html</reportFile>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
@@ -96,13 +68,14 @@
                 <extensions>true</extensions>
                 <executions>
                     <execution>
-                        <id>create</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>create-app</goal>
+                            <goal>create-component</goal>
                         </goals>
                         <configuration>
                             <instructions>
+                                <!--OSGi imports-->
+                                <!-- All backend dependencies should be specified here -->
                                 <Import-Package>
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.is.portal.user.client.api.micro,
@@ -112,14 +85,10 @@
                             </instructions>
                             <!--All backend dependencies should be specified here-->
                             <bundles>
-                                <bundle>
-                                    <symbolicName>org.wso2.carbon.identity.recovery</symbolicName>
-                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
-                                </bundle>
-                                <!--<bundle>-->
-                                <!--<symbolicName>org.wso2.carbon.uuf.sample.simple-auth.bundle</symbolicName>-->
-                                <!--<version>${carbon.uuf.version}</version>-->
-                                <!--</bundle>-->
+                                <!--<bundle>
+                                    <symbolicName>org.wso2.carbon.iam.portal.common</symbolicName>
+                                    <version>${carbon.is.version}</version>
+                                </bundle>-->
                             </bundles>
                         </configuration>
                     </execution>
@@ -128,4 +97,19 @@
         </plugins>
     </build>
 
+    <properties>
+        <!--<export.package>
+            org.wso2.carbon.iam.portal.common.*;
+        </export.package>-->
+        <import.package>
+            org.wso2.is.portal.user.client.api,
+            org.wso2.is.portal.user.client.api.micro,
+            org.wso2.is.portal.user.client.api.bean,
+            org.wso2.carbon.identity.recovery.*
+
+        </import.package>
+
+    </properties>
+
 </project>
+

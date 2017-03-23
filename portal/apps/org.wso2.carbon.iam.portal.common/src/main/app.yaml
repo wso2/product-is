@@ -1,0 +1,40 @@
+theme : "org.wso2.carbon.uuf.common.default.theme"
+#menus :
+#  main :
+#    Home : {link: "", icon: "fw-home"}
+#    Users :
+#      Login : {link: "login", icon: "fw fw-add"}
+#      Sign up : {link: "user/signup", icon: "fw fw-add"}
+#      Reset Password : {link: "user/reset-password", icon: "fw fw-add"}
+#      User Profile: {link: "user/profile", icon: "fw fw-user"}
+#      Account Settings : {link: "account/account-setting", icon: "fw fw-add"}
+
+##  - name: "main"
+#     items:
+#       - text: "Home"
+#         link: "#"
+#         icon: "fw-home"
+#       - text: "Users"
+#         link: ""
+#         submenus:
+#           - text: "See all our amazing pets"
+#             link: "/pets"
+
+errorPages:
+  404: "/foundation/error/404"
+  401: "/login"
+  500: "/error/custom"
+  default: "/foundation/error/default"
+
+loginPageUri: "/login"
+
+# Security related configurations for this app.
+security:
+  csrfPatterns:
+    accept: []
+    reject: []
+  xssPatterns:
+    accept: []
+    reject: []
+  responseHeaders: null
+
