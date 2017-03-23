@@ -87,6 +87,11 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.policy.password.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.security.userstore</groupId>
             <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
             <type>zip</type>
@@ -313,6 +318,12 @@
                                     <type>zip</type>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.mgt</groupId>
+                                    <artifactId>org.wso2.carbon.identity.policy.password.feature</artifactId>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                    <type>zip</type>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.wso2.carbon.lcm</groupId>
                                     <artifactId>org.wso2.carbon.lcm.sql.feature</artifactId>
                                     <version>${org.wso2.carbon.lcm.version}</version>
@@ -436,6 +447,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.mgt.login.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.policy.password.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
@@ -613,6 +628,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.claim.feature</id>
+                                    <version>${org.wso2.carbon.identity.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.policy.password.feature</id>
                                     <version>${org.wso2.carbon.identity.mgt.version}</version>
                                 </feature>
                                 <feature>
