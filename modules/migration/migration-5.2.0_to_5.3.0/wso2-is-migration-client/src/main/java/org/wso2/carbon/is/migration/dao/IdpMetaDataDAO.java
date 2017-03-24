@@ -72,8 +72,7 @@ public class IdpMetaDataDAO {
         } catch (SQLException e) {
             throw new ISMigrationException("Error while retrieving resident idp id of tenant : " + tenantId, e);
         } finally {
-            IdentityDatabaseUtil.closeResultSet(rs);
-            IdentityDatabaseUtil.closeStatement(prepStmt);
+            IdentityDatabaseUtil.closeAllConnections(connection, rs, prepStmt);
         }
 
         return residentIdpId;
@@ -102,8 +101,7 @@ public class IdpMetaDataDAO {
         } catch (SQLException e) {
             throw new ISMigrationException("Error while retrieving resident idp properties of tenant : " + tenantId, e);
         } finally {
-            IdentityDatabaseUtil.closeResultSet(rs);
-            IdentityDatabaseUtil.closeStatement(prepStmt);
+            IdentityDatabaseUtil.closeAllConnections(connection, rs, prepStmt);
         }
 
         return residentIdpPropertyNames;
@@ -136,6 +134,7 @@ public class IdpMetaDataDAO {
             throw new ISMigrationException("Error while inserting default resident idp property values.", e);
         } finally {
             IdentityDatabaseUtil.closeStatement(prepStmt);
+            IdentityDatabaseUtil.closeConnection(connection);
         }
     }
 
