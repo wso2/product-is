@@ -29,4 +29,13 @@ $(function () {
         }
     });
 
+    $('input[name=recover-option]').click(function(){
+        var button = this.value;
+        if(button === "email-recovery"){
+            $('.sec-question-answer').removeAttr("required");
+        }
+        if(button === "security-question-recovery"){
+            $('.sec-question-answer').prop('required',true);;
+        }
+    });
 });
