@@ -1,17 +1,12 @@
 var moreGroups = [];
 $(document).ready(function() {
     var username;
+    var colData = buildColumnHeadings(columnList);
+    var lastIndex = colData[0].length - 1;
     var thisTable = $('#users-sample').DataTable({
         wso2: true,
         data: users,
-        columns: [
-            { "data": null },
-            { "data": "Username" },
-            { "data": "Status" },
-            { "data": "Groups" },
-            { "data": "Roles" },
-            { "data": null }
-        ],
+        columns: colData[0],
         "columnDefs": [
             {
                 "targets": 0,
@@ -29,7 +24,7 @@ $(document).ready(function() {
                 }
             },
             {
-                "targets": 3,
+                "targets": parseInt(colData[1]),
                 "render": function (data, type, full, meta) {
                     var stringData = String(data);
                     var string = '';
@@ -52,7 +47,7 @@ $(document).ready(function() {
                 }
             },
             {
-                "targets": 5,
+                "targets": lastIndex,
                     "render": function (data, type, full, meta) {
                     return   '<a href="#" class="btn btn-default">'+
                     '<span class="fw-stack">'+
@@ -69,7 +64,7 @@ $(document).ready(function() {
                                             '<i class="fw fw-delete fw-stack-1x"></i>'+
                                         '</span>'+
                     '</a>' +
-                    '<input type="hidden" name="userUniqueId" id="userUniqueId" value="' + data.UniqueId + '"/>';
+                    '<input type="hidden" name="userUniqueId" id="userUniqueId" value="' + data + '"/>';
                 }
             }
         ],
@@ -81,16 +76,9 @@ $(document).ready(function() {
             .addClass('remove-padding icon-only content-fill');
 
             $(nRow).addClass(aData.Status);
+            var columns = buildDataArrays(aData, columnList);
 
-            var columns = [
-                null,
-                aData.Username,
-                aData.Status,
-                aData.Groups,
-                aData.Roles,
-                null
-            ];
-            for (i = 1; i < 5; i++) {
+            for (i = 1; i < lastIndex-1; i++) {
                 $('td:eq('+i+')', nRow)
                     .attr('data-search', columns[i])
                     .attr('data-display', columns[i])
@@ -100,7 +88,7 @@ $(document).ready(function() {
                     .addClass('fade-edge remove-padding-top');
                 }
 
-                $('td:eq(5)', nRow).addClass('text-right content-fill text-left-on-grid-view no-wrap');
+                $('td:eq('+lastIndex+')', nRow).addClass('text-right content-fill text-left-on-grid-view no-wrap');
             },
             initComplete: function (){
             $('.random-thumbs .thumbnail.icon').random_background_color();
@@ -306,6 +294,34 @@ $(document).on("click", ".open-more-modal", function () {
     listString = '<ul>' + listString + '</ul>';
     $('.modal-body').html(listString);
 });
+
+buildColumnHeadings = function(columns) {
+    var arrayString = '{ "data": null }';
+    var columnCount = Object.keys(columns).length - 1;
+    var groupIndex;
+    var roleIndex;
+    for (var i = 0; i < columnCount; i ++) {
+        arrayString = arrayString + ',{"data": "' + columns[i] + '"}';
+        if (columns[i] === "Groups") {
+            groupIndex = i + 1;
+        } else if (columns[i] === "Roles") {
+            roleIndex = i + 1;
+        }
+    }
+    var array = JSON.parse('[' + arrayString + ']');
+    return [array, groupIndex, roleIndex];
+}
+
+buildDataArrays = function(aData, columns) {
+    var columnCount = Object.keys(columns).length - 1;
+    var data = [];
+    data[0] = null;
+
+    for (var i = 0; i < columnCount; i ++) {
+        data[i + 1] = aData[columns[i.toString()]];
+    }
+    return data;
+}
 
 getClaimUri = function() {
     var claimUri = $('#claimSelector').val();

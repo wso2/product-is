@@ -15,11 +15,13 @@
  */
 function onGet(env) {
     var session = getSession();
-    var claimProfile = getUserListProfile();
+    var claimProfile = getClaimsInProfile("user-list-filter");
+    var requestedClaims = getClaimsInProfile("user-list-columns");
     var domains = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
-    getUserList(0, -1, "");
-    return {claimProfile: claimProfile, domains: domains};
+    var userList = getUserList(0, -1, "", requestedClaims);
+    var columns = buildJSONArray(userList);
+    sendToClient("columnList", columns);
+    return {claimProfile: claimProfile, domains: domains, columns: columns};
 }
 
 function onPost(env) {
@@ -36,36 +38,40 @@ function onPost(env) {
     sendToClient("action", action);
     sendToClient("offset", offset);
     sendToClient("recordLimit", recordLimit);
+    var claimProfile = getClaimsInProfile("user-list-filter");
+    var requestedClaims = getClaimsInProfile("user-list-columns");
     if(!recordLimit) {
         recordLimit = -1
     }
-    var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName);
-    var claimProfile = getUserListProfile();
+    var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName, requestedClaims);
+    var columns = buildJSONArray(userList);
+    sendToClient("columnList", columns);
+
     var domains = getDomainNames(env);
-    return {claimProfile: claimProfile, domains: domains, claimValue: claimValue};
+    return {claimProfile: claimProfile, domains: domains, claimValue: claimValue, columns: columns};
 }
 
-function getFilteredList(offset, length, claimURI, claimValue, domainName){
+function getFilteredList(offset, length, claimURI, claimValue, domainName, requestedClaims){
     var userList;
     try {
         userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getFilteredList", [offset, length, claimURI, claimValue, domainName]);
+            "getFilteredList", [offset, length, claimURI, claimValue, domainName, requestedClaims]);
     } catch (e) {
         return {errorMessage: 'list.error.retrieve.users'};
     }
-    buildJSONArray(userList);
+
     return userList;
 }
 
-function getUserList(offset, length, domainName){
+function getUserList(offset, length, domainName, requestedClaims){
     var userList;
     try {
         userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getUserList", [offset, length, domainName]);
+            "getUserList", [offset, length, domainName, requestedClaims]);
     } catch (e) {
         return {errorMessage: 'list.error.retrieve.users'};
     }
-    buildJSONArray(userList);
+
     return userList;
 }
 
@@ -91,11 +97,11 @@ function getPrimaryDomainName(env) {
     return primaryDomainName;
 }
 
-function getUserListProfile () {
+function getClaimsInProfile (profileName) {
     var claimProfile;
     try {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["user-list-filter"]);
+            "getProfile", [profileName]);
     } catch (e) {
         return {errorMessage: profile + '.error.retrieve.claim'};
     }
@@ -107,17 +113,32 @@ function getUserListProfile () {
 function buildJSONArray(userList) {
     var userArray = [];
     var groups = [];
+    var roles = [];
+    var columnsArray = {};
+    var claimsMap = {};
+    var claims = {};
+
+    claimsMap = userList[0].getClaims();
+    var index = 0;
+    for (var key in claimsMap) {
+        columnsArray[index] = key;
+        index++;
+    }
+
     for (var i in userList) {
         var item = userList[i];
         groups = item.getGroups();
-        userArray.push({
-            "Username" : item.getUserId(),
-            "Status" : item.getState(),
-            "Groups" : groups,
-            "Roles" : "",
-            "UniqueId" : item.getUserUniqueId(),
-            "Domain" : item.getDomainName(),
-        });
+        claims = item.getClaims();
+        //roles = item.getRoles();
+        for (var key in claims) {
+            if (key === "Groups") {
+                claims[key] = groups;
+            } else if (key === "Roles") {
+                //claims[key] = roles;
+            }
+        }
+        userArray.push(claims);
     }
     sendToClient("users", userArray);
+    return columnsArray;
 }

@@ -15,9 +15,8 @@
  */
 package org.wso2.is.portal.user.client.api.bean;
 
-import org.wso2.carbon.identity.mgt.claim.Claim;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * User List Entry
@@ -34,9 +33,10 @@ public class UserListBean {
 
     private List<String> groups;
 
-    private List<Claim> claims;
+    private List<String> roles;
 
-//    private List<Role> roles;
+    private Map<String, String> claims;
+    
     public UserListBean(){}
 
     public String getUserId() {
@@ -63,11 +63,11 @@ public class UserListBean {
         this.groups = groups;
     }
 
-    public List<Claim> getClaims() {
+    public Map<String, String> getClaims() {
         return claims;
     }
 
-    public void setClaims(List<Claim> claims) {
+    public void setClaims(Map<String, String> claims) {
         this.claims = claims;
     }
 
@@ -85,5 +85,13 @@ public class UserListBean {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
