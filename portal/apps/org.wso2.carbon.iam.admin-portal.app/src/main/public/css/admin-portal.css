@@ -577,3 +577,8 @@ display: none; }
 .short-input {
     max-width: 60px;
 }
+
+
+.optionBox {
+    display: none;
+}
