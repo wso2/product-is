@@ -205,7 +205,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</groupId>
-            <artifactId>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.authenticator.outbound.saml2sso.feature</artifactId>
             <type>zip</type>
         </dependency>
         <!--Other Dependencies-->
