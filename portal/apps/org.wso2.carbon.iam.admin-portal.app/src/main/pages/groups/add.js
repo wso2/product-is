@@ -33,7 +33,7 @@
 //     return {success: true, message: "Group Added Successfully"};
 // }
 
-function getGroupProfile() {
+function getProfile() {
     /**
      * Get the 'group' Profile
      */
@@ -42,7 +42,7 @@ function getGroupProfile() {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["group"]);
     } catch (e) {
-        return {errorMessage: profile + '.error.retrieve.claim'};
+        return {errorMessage: 'group.error.retrieve.claim'};
     }
     var claimForProfileEntry = claimProfile.claims;
     var claimProfileArray = [];
@@ -51,9 +51,25 @@ function getGroupProfile() {
         claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
     }
 
+    // sendToClient("signupClaims", claimProfileArray); ToDo why?
     return {
         "groupClaims": claimProfileArray
     };
+}
+
+function generateClaimProfileMap(claimProfileEntry) {
+    var claimProfileMap = {};
+    claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
+    claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
+    if (claimProfileEntry.getDefaultValue()) {
+        claimProfileMap["defaultValue"] = claimProfileEntry.getDefaultValue();
+    }
+    claimProfileMap["claimLabel"] = claimProfileEntry.getClaimURI().replace("http://wso2.org/claims/", "");
+    claimProfileMap["required"] = claimProfileEntry.getRequired();
+    claimProfileMap["regex"] = claimProfileEntry.getRegex();
+    claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
+    claimProfileMap["dataType"] = claimProfileEntry.getDataType();
+    return claimProfileMap;
 }
 
 function getDomainNames(env) {
@@ -83,10 +99,15 @@ function getPrimaryDomainName(env) {
 }
 
 function onGet(env) {
-    var domainNames = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
+    try {
+        var domainNames = getDomainNames(env);
+        var primaryDomainName = getPrimaryDomainName(env);
 
-    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+        return {domainNames: domainNames, primaryDomainName: primaryDomainName, profile: getProfile()};
+    } catch (e) {
+        return {errorMessage: 'group.add.error'};
+    }
+
 }
 
 function onPost(env) {
@@ -104,8 +125,8 @@ function onPost(env) {
     } catch (e) {
         return {errorMessage: 'group.add.error'};
     }
-    
-    
+
+
 }
 
 function addGroup(claimMap, domain) {
@@ -117,3 +138,101 @@ function addGroup(claimMap, domain) {
         return {errorMessage: 'group.add.error'};
     }
 }
+
+function buildUIEntries(profileUIEntries) {
+
+    var uiEntries = [];
+    if (profileUIEntries) {
+        for (var i = 0; i < profileUIEntries.length > 0; i++) {
+            var entry = {
+                claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
+                claimLabel: profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", ""),
+                displayName: profileUIEntries[i].claimConfigEntry.displayName,
+                value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
+                readonly: ((profileUIEntries[i].claimConfigEntry.readonly &&
+                profileUIEntries[i].claimConfigEntry.readonly) ? "readonly" : ""),
+                required: ((profileUIEntries[i].claimConfigEntry.required &&
+                profileUIEntries[i].claimConfigEntry.required) ? "required" : ""),
+                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required &&
+                profileUIEntries[i].claimConfigEntry.required) ? "*" : ""),
+                dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
+                    profileUIEntries[i].claimConfigEntry.dataType : "text"),
+                regex: (profileUIEntries[i].claimConfigEntry.regex ?
+                    profileUIEntries[i].claimConfigEntry.regex : ".*")
+            };
+            uiEntries.push(entry);
+        }
+    }
+    return uiEntries;
+}
+
+// function getGroupProfileUIEntries() {
+//
+//     try {
+//         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+//             "getProfile", ["group"]);
+//         return {success: true, profileUIEntries: profileUIEntries};
+//     } catch (e) {
+//         var message = e.message;
+//         var cause = e.getCause();
+//         if (cause !== null) {
+//             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+//             if (cause instanceof java.lang.reflect.InvocationTargetException) {
+//                 message = cause.getTargetException().message;
+//             }
+//         }
+//     }
+//     return {success: false, message: message};
+// }
+
+function updateGroupProfile(groupId, updatedClaims) {
+
+    try {
+        var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "updateGroupProfile", [groupId, updatedClaims]);
+        return {success: true, message: "Group profile is updated."};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
+}
+
+function onPost(env) {
+    var success = false;
+    var message = "";
+    var updatedClaims = env.request.formParams;
+    var groupId = env.params.groupId;
+    var result = updateGroupProfile(groupId, updatedClaims);
+    success = result.success;
+    message = result.message;
+
+    if (env.params.profileName) {
+
+        var uiEntries = [];
+        var result = getGroupProfileUIEntries(env.params.profileName, session.getUser().getUserId());
+        if (result.success) {
+            if (env.request.method != "POST") {
+                success = true;
+            }
+            uiEntries = buildUIEntries(result.profileUIEntries);
+        } else {
+            success = false;
+            message = result.message;
+        }
+
+        return {
+            success: success, uiEntries: uiEntries,
+            message: message,
+        };
+    }
+
+    return {success: false, message: "Invalid profile name."};
+}
+

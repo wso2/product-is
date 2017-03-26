@@ -283,6 +283,28 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
+    public void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws
+            UserPortalUIException {
+
+        if (updatedClaimsMap == null || updatedClaimsMap.isEmpty()) {
+            return;
+        }
+
+        List<Claim> updatedClaims = updatedClaimsMap.entrySet().stream()
+                .filter(entry -> !StringUtils.isNullOrEmpty(entry.getKey()))
+                .map(entry -> new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        try {
+            getRealmService().getIdentityStore().updateGroupClaims(uniqueGroupId, updatedClaims, null);
+        } catch (IdentityStoreException | GroupNotFoundException e) {
+            String error = "Failed to updated group profile.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+    }
+
+    @Override
     public List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException {
         List<Claim> claimList = null;
 
@@ -293,6 +315,27 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             try {
                 claimList = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
             } catch (IdentityStoreException | UserNotFoundException e) {
+                String error = "Failed to get claims of the user.";
+                LOGGER.error(error, e);
+                throw new UserPortalUIException(error);
+            }
+        } else {
+            claimList = Collections.emptyList();
+        }
+        return claimList;
+    }
+
+    @Override
+    public List<Claim> getClaimsOfGroup(String uniqueGroupId, List<MetaClaim> metaClaims) throws UserPortalUIException {
+        List<Claim> claimList = null;
+
+        if (StringUtils.isNullOrEmpty(uniqueGroupId)) {
+            throw new UserPortalUIException("Invalid unique group id.");
+        }
+        if (metaClaims != null && !metaClaims.isEmpty()) {
+            try {
+                claimList = getRealmService().getIdentityStore().getClaimsOfGroup(uniqueGroupId, metaClaims);
+            } catch (IdentityStoreException | GroupNotFoundException e) {
                 String error = "Failed to get claims of the user.";
                 LOGGER.error(error, e);
                 throw new UserPortalUIException(error);
@@ -426,7 +469,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public void updateUserInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
+    public void updateUsersInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
             throws UserPortalUIException {
 
         try {

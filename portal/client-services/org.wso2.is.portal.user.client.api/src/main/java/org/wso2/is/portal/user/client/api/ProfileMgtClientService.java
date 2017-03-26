@@ -55,6 +55,4 @@ public interface ProfileMgtClientService {
      */
     List<ProfileUIEntry> getProfileEntries(String profileName, String uniqueUserId) throws UserPortalUIException;
 
-    List<ProfileUIEntry> getGroupProfileEntries(String profileName, String uniqueGroupId)
-            throws UserPortalUIException;
 }

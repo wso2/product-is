@@ -106,6 +106,9 @@ public interface IdentityStoreClientService {
      */
     void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
 
+    void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws
+            UserPortalUIException;
+
     /**
      * Get list of user claims by user id.
      *
@@ -115,6 +118,8 @@ public interface IdentityStoreClientService {
      * @throws UserPortalUIException
      */
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
+
+    List<Claim> getClaimsOfGroup(String uniqueGroupId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 
     /**
      * Get list of domain names
@@ -197,7 +202,7 @@ public interface IdentityStoreClientService {
      * @param removingUsers List of user IDs to be removed from group
      * @throws UserPortalUIException
      */
-    void updateUserInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
+    void updateUsersInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
             throws UserPortalUIException;
 
     /**
