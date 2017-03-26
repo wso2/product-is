@@ -49,107 +49,125 @@
             <h1>{{i18n "groups.add.header"}}</h1>
         </div>
 
-        <ul id="tab" class="nav nav-tabs tabs">
-            <li class="active"><a href="#general" title="General" data-toggle="tab"><i class="fw fw-task"
-                                                                                       title="General"></i> {{i18n "groups.general"}}
-            </a></li>
-            <li><a href="#users" data-toggle="tab" title="Users"><i class="fw fw-user"
-                                                                    title="Users"></i> {{i18n "groups.users"}} </a></li>
-            <li><a href="#roles" data-toggle="tab" title="Roles"><i class="fw fw-google-docs"
-                                                                    title="Roles"></i> {{i18n "groups.roles"}} </a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="general">
-                <div class="col-md-12">
-                    <form class="form-horizontal" role="form" method="post" id="addGroupForm">
-                        {{#if errorMessage}}
-                            <div class="alert alert-danger" role="alert">
-                                <i class="icon fw fw-error"></i><strong>{{i18n "group.add.error.default"}}</strong>&nbsp;
-                                {{i18n errorMessage}}
-                                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+
+        {{#if errorMessage}}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon fw fw-error"></i><strong>{{i18n "group.add.error.default"}}</strong>&nbsp;
+                {{i18n errorMessage}}
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
                                         <span aria-hidden="true">
                                             <i class="fw fw-cancel"></i>
                                         </span>
-                                </button>
-                            </div>
-                        {{else if addGroupResult}}
-                            <div class="alert alert-success" role="alert">
-                                <i class="icon fw fw-success"></i><strong>{{i18n "group.added.successfully.default"}}</strong>
-                                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                </button>
+            </div>
+        {{else if addGroupResult}}
+            <div class="alert alert-success" role="alert">
+                <i class="icon fw fw-success"></i><strong>{{i18n "group.added.successfully.default"}}</strong>
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
                 </span>
-                                </button>
-                            </div>
-                        {{/if}}
+                </button>
+            </div>
+        {{/if}}
 
-                        {{#if domainNames}}
+        <form class="form-horizontal" role="form" method="post" id="addGroupForm">
+            <!-- collapse -->
+            <div id="group-2" class="panel-group panel-extended add-margin-bottom-2x" role="tablist"
+                 aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading flex-container collapsed" role="tab" id="heading4" data-toggle="collapse"
+                         data-parent="#group-2" href="#accordion4" aria-controls="accordion4">
+                        <i class="fw fw-notification fw-lg fw-helper fw-helper-circle-outline"></i>
+                        <h4 class="panel-title flex-item">
+                            <span class="heading">{{i18n "groups.general.details"}}</span>
+                        </h4>
+                        <div class="status flex-item"></div>
+                    </div>
+                    <div id="accordion4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+                        <div class="panel-body">
+
+
+                            {{#if domainNames}}
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <input type="hidden" name="domain" id="domain"
+                                               class="form-control"/>
+                                        <label for="domainSelector" class="control-label">{{i18n "groups.add.domain"}}
+                                            <span class="requiredAstrix"> *</span></label>
+                                        <select class="form-control" id="domainSelector"
+                                                data-primary="{{primaryDomainName}}">
+                                            {{#each domainNames}}
+                                                <option value={{this}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                            {{/if}}
                             <div class="form-group">
-                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    <input type="hidden" name="domain" id="domain"
-                                           class="form-control"/>
-                                    <label for="domainSelector" class="control-label">{{i18n "groups.add.domain"}}
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                    <label for="input-groupname" class="control-label">{{i18n "groups.name"}}
                                         <span class="requiredAstrix"> *</span></label>
-                                    <select class="form-control" id="domainSelector"
-                                            data-primary="{{primaryDomainName}}">
-                                        {{#each domainNames}}
-                                            <option value={{this}}>{{this}}</option>
-                                        {{/each}}
-                                    </select>
+                                    <input class="form-control" name="input-groupname" id="input-groupname"
+                                           placeholder="Group Name" type="text">
+                                    {{#defineZone "groupExistsError-area"}}
+                                        <div id="groupExistsError">
+                                            <!-- Here is generated content for error when group already exists -->
+                                        </div>
+                                    {{/defineZone}}
                                 </div>
                             </div>
-                        {{/if}}
-                        <div class="form-group">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                                <label for="input-groupname" class="control-label">{{i18n "groups.name"}}
-                                    <span class="requiredAstrix"> *</span></label>
-                                <input class="form-control" name="input-groupname" id="input-groupname"
-                                       placeholder="Group Name" type="text">
-                                {{#defineZone "groupExistsError-area"}}
-                                    <div id="groupExistsError">
-                                        <!-- Here is generated content for error when group already exists -->
-                                    </div>
-                                {{/defineZone}}
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                    <label for="input-description" class="control-label">{{i18n "groups.description"}}
+                                    </label>
+                                    <input class="form-control" name="input-description" id="input-description"
+                                           placeholder="Group Description"
+                                           type="text">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                                <label for="input-description" class="control-label">{{i18n "groups.description"}}
-                                </label>
-                                <input class="form-control" name="input-description" id="input-description"
-                                       placeholder="Group Description"
-                                       type="text">
-                            </div>
-                        </div>
-
-
-                        <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup"
-                               value="Add Group"/>
-                    </form>
+                    </div>
                 </div>
-            </div>
-            <div class="tab-pane" id="users">
-                <div class="col-md-12">
-                    {{i18n "groups.users"}}
-                    <div class="body-wrapper">
-                        <div class="page-header">
-                            <h1>{{i18n "overview.users"}}</h1>
+                <div class="panel panel-default">
+                    <div class="panel-heading flex-container collapsed" role="tab" id="heading5" data-toggle="collapse"
+                         data-parent="#group-2" href="#accordion5" aria-controls="accordion5">
+                        <i class="fw fw-user fw-2x"></i>
+                        <h4 class="panel-title flex-item">
+                            <span class="heading">{{i18n "assign.users"}}</span>
+                        </h4>
+                        <div class="status flex-item"></div>
+                    </div>
+                    <div id="accordion5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
+                        <div class="panel-body">
+                            Assign users
                         </div>
-                        {{#defineZone "selectUsers-area"}}
-                            <div id="selectUsers">
-                                <!-- Here is generated content for error when group already exists -->
-                            </div>
-                        {{/defineZone}}
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading flex-container collapsed" role="tab" id="heading6" data-toggle="collapse"
+                         data-parent="#group-2" href="#accordion6" aria-controls="accordion6">
+                        <i class="fw fw-user fw-2x"></i>
+                        <h4 class="panel-title flex-item">
+                            <span class="heading">{{i18n "assign.roles"}}</span>
+                        </h4>
+                        <div class="status flex-item"></div>
+                    </div>
+                    <div id="accordion6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+                        <div class="panel-body">
+                            Assign roles
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="roles">
-                <div class="col-md-12">
-                    {{i18n "groups.roles"}}
-                </div>
-            </div>
-        </div>
+            <!-- /collapse -->
+            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup"
+                   id="addGroup"
+                   value={{i18n "groups.add.button"}}/>
+
+        </form>
 
 
     </div>
+
 {{/fillZone}}

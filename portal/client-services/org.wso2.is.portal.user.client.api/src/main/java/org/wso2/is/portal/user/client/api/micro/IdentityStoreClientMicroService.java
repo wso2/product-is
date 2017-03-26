@@ -21,7 +21,6 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
-import org.wso2.carbon.identity.recovery.password.AdminForcePasswordResetManager;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.msf4j.Microservice;
@@ -88,8 +87,8 @@ public class IdentityStoreClientMicroService implements Microservice {
     @GET
     @Path("/generatePassCode")
     public Response getGeneratedPassword() throws UserNotFoundException, IdentityStoreException, UserPortalUIException {
-        String generatedPassword = AdminForcePasswordResetManager.getInstance().generatePassode();
-        return Response.ok(generatedPassword).build();
+//        String generatedPassword = AdminForcePasswordResetManager.getInstance().generatePassode();
+        return Response.ok("generatedPassword").build();
     }
 
 }

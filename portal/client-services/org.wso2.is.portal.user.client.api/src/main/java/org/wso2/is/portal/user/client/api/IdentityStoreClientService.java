@@ -20,6 +20,7 @@ import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.is.portal.user.client.api.bean.UUFGroup;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.bean.UserListBean;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -220,4 +221,3 @@ public interface IdentityStoreClientService {
             throws UserPortalUIException;
 }
 
-}

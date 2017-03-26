@@ -29,6 +29,7 @@ import org.wso2.carbon.identity.mgt.Group;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.UserState;
+import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.bean.UserBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
@@ -550,13 +551,6 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         metaClaims.add(metaClaim);
 
         return generateUserListBean(users, metaClaims);
-    }
-
-    private RealmService getRealmService() {
-        if (this.realmService == null) {
-            throw new IllegalStateException("Realm Service is null.");
-        }
-        return this.realmService;
     }
 
     private List<UserListBean> generateUserListBean(List<User> users, List<MetaClaim> userClaims)
