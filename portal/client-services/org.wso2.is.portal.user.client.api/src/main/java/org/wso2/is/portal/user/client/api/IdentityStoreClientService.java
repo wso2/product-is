@@ -16,6 +16,7 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
@@ -147,4 +148,76 @@ public interface IdentityStoreClientService {
                                        String domainName) throws UserPortalUIException;
 
     List<UserListBean> getUserList(int offset, int length, String domainName) throws UserPortalUIException;
+
+    /**
+     * Add a group
+     *
+     * @param group      object with claims of the group
+     * @param domainName domain where the group should be added
+     * @return uniquegrouid and other attributes of the created group
+     * @throws UserPortalUIException
+     */
+    UUFGroup addGroup(GroupBean group, String domainName) throws UserPortalUIException;
+
+    /**
+     * Add a group to the given domain
+     *
+     * @param groupClaims claims of the group
+     * @param domainName  domain where the group should be added
+     * @return uniquegrouid and other attributes of the created group
+     * @throws UserPortalUIException
+     */
+    UUFGroup addGroup(Map<String, String> groupClaims, String domainName) throws UserPortalUIException;
+
+    /**
+     * Check whether a group exist with given claims.
+     *
+     * @param groupClaims claim for existence check
+     * @param domain      domain to be checked
+     * @return True if group exists
+     * @throws UserPortalUIException
+     */
+    boolean isGroupExist(Map<String, String> groupClaims, String domain) throws UserPortalUIException;
+
+    /**
+     * Add a set of users to a group.
+     *
+     * @param groupId unique ID of the group
+     * @param userIds unique IDs of the users to be added to the group
+     * @throws UserPortalUIException
+     */
+    void addUsersToGroup(String groupId, List<String> userIds) throws UserPortalUIException;
+
+    /**
+     * Update a group with combination of addition and removal.
+     *
+     * @param groupId       unique ID of the group to be updated
+     * @param addingUsers   List of user IDs to be added to group
+     * @param removingUsers List of user IDs to be removed from group
+     * @throws UserPortalUIException
+     */
+    void updateUserInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
+            throws UserPortalUIException;
+
+    /**
+     * Check whether a user is in a group.
+     *
+     * @param userId  unique ID of the user
+     * @param groupId unique ID of the group
+     * @return True if user belongs to the group
+     * @throws UserPortalUIException
+     */
+    boolean isUserInGroup(String userId, String groupId) throws UserPortalUIException;
+
+    /**
+     * Update the group with the given unique group id
+     *
+     * @param uniqueGroupId    unique ID of the group to be updated
+     * @param updatedClaimsMap claims with values to be updated.
+     * @throws UserPortalUIException
+     */
+    void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap)
+            throws UserPortalUIException;
+}
+
 }

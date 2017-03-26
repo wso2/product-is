@@ -1,0 +1,247 @@
+{{secured}}
+{{layout "privilege"}}
+{{title (i18n "groups.edit.header") " | " @config.appName}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
+{{css "css/admin-portal.css"}}
+{{js "js/edit.js"}}
+
+{{#fillZone "content"}}
+
+    <!-- navbar -->
+    <div class="navbar-wrapper" xmlns="http://www.w3.org/1999/html">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="/admin-portal/groups/">
+                                <i class="fw fw-left fw-helper fw-helper-circle-outline"></i>
+                                {{i18n "go.back"}}
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="add">
+    <span class="icon fw-stack">
+    <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+    </span>
+                                {{i18n "groups.add.header"}}
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="edit">
+    <span class="icon fw-stack">
+    <i class="fw fw-edit fw-helper fw-helper-circle-outline"></i>
+    </span>
+                                {{i18n "groups.edit.header"}}
+                            </a>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+    </div>
+    <!-- /navbar -->
+
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "groups.edit.header"}}</h1>
+        </div>
+
+        <ul id="tab" class="nav nav-tabs tabs">
+            <li class="active"><a href="#general" title="General" data-toggle="tab"><i class="fw fw-task"
+                                                                                       title="General"></i> {{i18n "groups.general"}}
+            </a></li>
+            <li><a href="#users" data-toggle="tab" title="Users"><i class="fw fw-user"
+                                                                    title="Users"></i> {{i18n "groups.users"}} </a></li>
+            <li><a href="#roles" data-toggle="tab" title="Roles"><i class="fw fw-google-docs"
+                                                                    title="Roles"></i> {{i18n "groups.roles"}} </a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="general">
+                <div class="col-md-12">
+                    <form class="form-horizontal" role="form" method="post" id="editGroupForm">
+                        {{#if errorMessage}}
+                            <div class="alert alert-danger" role="alert">
+                                <i class="icon fw fw-error"></i><strong>{{i18n "group.update.error.default"}}</strong>&nbsp;
+                                {{i18n errorMessage}}
+                                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                </button>
+                            </div>
+                        {{else if updateGroupResult}}
+                            <div class="alert alert-success" role="alert">
+                                <i class="icon fw fw-success"></i><strong>{{i18n "group.updated.successfully.default"}}</strong>
+                                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+                                </button>
+                            </div>
+                        {{/if}}
+                        {{#if domainNames}}
+                            <div class="form-group">
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <input type="hidden" name="domain" id="domain"
+                                           class="form-control"/>
+                                    <label for="domainSelector" class="control-label">{{i18n "groups.add.domain"}}
+                                        <span class="requiredAstrix"> *</span></label>
+                                    <select class="form-control" id="domainSelector"
+                                            data-primary="{{primaryDomainName}}">
+                                        {{#each domainNames}}
+                                            <option value={{this}}>{{this}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                        {{/if}}
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                <label for="input-groupname" class="control-label">{{i18n "groups.name"}}
+                                    <span class="requiredAstrix"> *</span></label>
+                                <input class="form-control" name="input-groupname" id="input-groupname" placeholder="Group Name" type="text">
+                                {{#defineZone "groupExistsError-area"}}
+                                    <div id="groupExistsError">
+                                        <!-- Here is generated content for error when group already exists -->
+                                    </div>
+                                {{/defineZone}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                                <label for="input-description" class="control-label">{{i18n "groups.description"}}
+                                    <span class="requiredAstrix"> *</span></label>
+                                <input class="form-control" name="input-description" id="input-description" placeholder="Group Description"
+                                       type="text">
+                            </div>
+                        </div>
+
+
+                        <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup"
+                               value="{{i18n "group.edit.button"}}"/>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane" id="users">
+                <div class="col-md-12">
+                    {{i18n "groups.users"}}
+                    <div class="body-wrapper">
+                        <div class="page-header">
+                            <h1>{{i18n "overview.users"}}</h1>
+                        </div>
+                        <form class="form-horizontal" method="post" id="filterListForm" action="?list#list">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                <div class="row">
+                                    <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table" id="users-sample">
+                                        <thead class="block">
+                                        <tr class="sort-row">
+                                            <th class="content-fill no-sort"></th>
+                                            <th>Username</th>
+                                            <th>Status</th>
+                                            <th>Groups</th>
+                                            <th>Roles</th>
+                                            <th class="no-sort"></th>
+                                        </tr>
+                                        <tr class="filter-row-custom">
+                                            <th data-for="Type"></th>
+                                            <th data-for="Domain" class="text-filter"></th>
+                                            <th class="select-filter">
+                                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                                    Filter By Claim
+                                                    <select class="form-control" id="claimSelector" onChange="getClaimUri()">
+                                                        <option value=""></option>
+                                                        {{#each claimProfile}}
+                                                            <option name="claim-uri-{{claimURI}}" id="claim-uri-{{claimURI}}" value="{{claimURI}}">{{displayName}}</option>
+                                                        {{/each}}
+                                                    </select>
+                                                    <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Value"/>
+                                                </div>
+                                            </th>
+                                            <th data-for="Office" class="select-filter"></th>
+                                            <th data-for="Age" class="select-filter"></th>
+                                            <th>
+                                                <select class="form-control" id="domainSelector" onChange="getDomain()">
+                                                    {{#each domains}}
+                                                        <option value={{this}}>{{this}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </th>
+                                            <input type="hidden" name="action" value="filter-list">
+                                            <input type="hidden" id="claim-uri" name="claim-uri" value="">
+                                            <input type="hidden" id="domain-name" name="domain-name" value="">
+                                            <th class="text-right content-fill text-left-on-grid-view no-wrap">
+                                                <button class="btn btn-primary " type="submit">
+                                                    <i class="fw fw fw-search search-icon add-margin-right-1x"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                        <tr class="bulk-action-row">
+                                            <th colspan="8">
+
+                                                <ul class="tiles">
+                                                    <li class="square">
+                                                        <a class="btn square-element" data-click-event="delete-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                                            Delete Selected
+                                                        </a>
+                                                    </li>
+                                                    <li class="square">
+                                                        <a class="btn square-element" data-toggle="modal" data-target="#modalDemo">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-edit fw-stack-1x"></i>
+                                </span>
+                                                            Edit Selected
+                                                        </a>
+                                                    </li>
+                                                </ul>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="modalDemo" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Edit Selected</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                You about perform a bulk operation, please confirm to proceed.
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <!-- Handlebars Template Appends Here -->
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="roles">
+                <div class="col-md-12">
+                    {{i18n "groups.roles"}}
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+{{/fillZone}}

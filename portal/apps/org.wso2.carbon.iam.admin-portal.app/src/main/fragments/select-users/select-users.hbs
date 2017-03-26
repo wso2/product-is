@@ -1,0 +1,138 @@
+{{secured}}
+{{layout "privilege"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.data-tables"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{css "css/admin-portal.css"}}
+{{js "js/select-users.js"}}
+
+
+{{#fillZone "usernavbar"}}
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="add">
+                    <span class="icon fw-stack">
+                        <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    Add User
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon fw-stack">
+                        <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    Import Users
+                </a>
+            </li>
+        </ul>
+    </div>
+{{/fillZone}}
+
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "overview.users"}}</h1>
+        </div>
+        <form class="form-horizontal" method="post" id="filterListForm" action="?list#list">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <div class="row">
+                    <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table" id="users-sample">
+                        <thead class="block">
+                        <tr class="sort-row">
+                            <th class="content-fill no-sort"></th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Groups</th>
+                            <th>Roles</th>
+                            <th class="no-sort"></th>
+                        </tr>
+                        <tr class="filter-row-custom">
+                            <th data-for="Type"></th>
+                            <th data-for="Domain" class="text-filter"></th>
+                            <th class="select-filter">
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    Filter By Claim
+                                    <select class="form-control" id="claimSelector" onChange="getClaimUri()">
+                                        <option value=""></option>
+                                        {{#each claimProfile}}
+                                            <option name="claim-uri-{{claimURI}}" id="claim-uri-{{claimURI}}" value="{{claimURI}}">{{displayName}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Value"/>
+                                </div>
+                            </th>
+                            <th data-for="Office" class="select-filter"></th>
+                            <th data-for="Age" class="select-filter"></th>
+                            <th>
+                                <select class="form-control" id="domainSelector" onChange="getDomain()">
+                                    {{#each domains}}
+                                        <option value={{this}}>{{this}}</option>
+                                    {{/each}}
+                                </select>
+                            </th>
+                            <input type="hidden" name="action" value="filter-list">
+                            <input type="hidden" id="claim-uri" name="claim-uri" value="">
+                            <input type="hidden" id="domain-name" name="domain-name" value="">
+                            <th class="text-right content-fill text-left-on-grid-view no-wrap">
+                                <button class="btn btn-primary " type="submit">
+                                    <i class="fw fw fw-search search-icon add-margin-right-1x"></i>
+                                </button>
+                            </th>
+                        </tr>
+                        <tr class="bulk-action-row">
+                            <th colspan="8">
+
+                                <ul class="tiles">
+                                    <li class="square">
+                                        <a class="btn square-element" data-click-event="delete-selected-rows">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                </span>
+                                            Delete Selected
+                                        </a>
+                                    </li>
+                                    <li class="square">
+                                        <a class="btn square-element" data-toggle="modal" data-target="#modalDemo">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-edit fw-stack-1x"></i>
+                                </span>
+                                            Edit Selected
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="modalDemo" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Edit Selected</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                You about perform a bulk operation, please confirm to proceed.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Handlebars Template Appends Here -->
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </form>
+    </div>
+{{/fillZone}}
