@@ -96,6 +96,7 @@ $(document).ready(function() {
     });
 
     //------------------ Customizations for datatables plugin ----------------------------------------//
+
     var ROW_SELECTED_CLASS = 'DTTT_selected';
     var LOCKED_STATE = 'LOCKED';
     var DISABLED_STATE = 'DISABLED';
@@ -200,8 +201,12 @@ $(document).ready(function() {
         $('#action').val("select-list");
     });
 
-    $('#offset-value').val(offset);
-    $('#length-value').val(recordLimit);
+    if(offset) {
+        $('#offset-value').val(offset);
+    }
+    if(recordLimit) {
+        $('#length-value').val(recordLimit);
+    }
 
     if (action === "select-list") {
         thisTable.rows().every(function () {

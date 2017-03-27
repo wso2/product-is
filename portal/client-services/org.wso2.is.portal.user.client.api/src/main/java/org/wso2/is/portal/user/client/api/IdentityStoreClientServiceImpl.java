@@ -63,7 +63,6 @@ import javax.security.auth.callback.PasswordCallback;
 public class IdentityStoreClientServiceImpl implements IdentityStoreClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
-    private static final String USERNAME_CLAIM = "http://wso2.org/claims/username";
     private static final String GROUPNAME_CLAIM = "http://wso2.org/claims/groupname";
     private static final int MAX_RECORD_LENGTH = 500;
     private static final String LOCKED_STATE = "LOCKED";
@@ -385,9 +384,8 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             }
         }
 
-        userList = generateUserListBean(users, requestedClaims);
+        return generateUserListBean(users, requestedClaims);
 
-        return userList;
     }
 
     @Override
@@ -454,9 +452,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             }
 
             Map<String, String> userClaimMap = new LinkedHashMap<>();
-            for (Claim claim : userClaims) {
-                userClaimMap.put(claimDisplayNames.get(claim.getClaimUri()), claim.getValue());
-            }
+
+            userClaims.stream().forEach(claim -> userClaimMap.put(
+                    claimDisplayNames.get(claim.getClaimUri()), claim.getValue()));
 
             String status = null;
             UserState state = UserState.valueOf(user.getState());

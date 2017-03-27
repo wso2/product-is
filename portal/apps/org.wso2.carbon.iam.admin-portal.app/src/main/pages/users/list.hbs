@@ -44,12 +44,16 @@
                         <thead class="block">
                         <tr class="sort-row">
                             <th class="content-fill no-sort"></th>
-                            <th>{{i18n "users.list.username"}}</th>
-                            <th>{{i18n "users.list.status"}}</th>
-                            <th>{{i18n "users.list.groups"}}</th>
-                            <th>{{i18n "users.list.roles"}}</th>
+                            {{#each sortRowList}}
+                                {{#if noSort}}
+                                    <th class="{{noSort}}">{{name}}</th>
+                                {{else}}
+                                    <th>{{name}}</th>
+                                {{/if}}
+                            {{/each}}
                             <th class="no-sort">{{i18n "list.actions"}}</th>
                         </tr>
+
                         <tr class="filter-row-custom">
                             <th class="select-filter">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
