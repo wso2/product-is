@@ -122,6 +122,9 @@ public class IdentityStoreClientServiceTest {
         Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
 
         users.add(user);
+
+        boolean isUserExists = identityStoreClientService.isUserExist(userClaims, PRIMARY_DOMAIN);
+        Assert.assertTrue(isUserExists, "User does not exist in the given domain");
     }
 
     @Test(groups = "addUsers")
@@ -260,7 +263,7 @@ public class IdentityStoreClientServiceTest {
         throw new UserPortalUIException("Test Failure. Successfully updated the profile for an invalid user id.");
     }
 
-    @Test(dependsOnGroups = {"addUsers", "update", "authentication"})
+    @Test(groups = "updatePassword", dependsOnGroups = {"addUsers", "update", "authentication"})
     public void testUpdatePassword() throws UserPortalUIException, UserNotFoundException {
 
         IdentityStoreClientService identityStoreClientService =
@@ -345,4 +348,30 @@ public class IdentityStoreClientServiceTest {
         this.domainNames = domainNames;
     }
 
+    //Due to issue :https://wso2.org/jira/browse/IDENTITY-5824 we have to put a depends on for updatePassword method.
+    //Once that issue is solved we need to update
+    // product-is/tests/osgi-tests/src/test/resources/dbscripts/identity-mgt/test-data.sql file with same change
+    @Test(groups = "addUsersByAdmin", dependsOnGroups = {"updatePassword"})
+    public void testAddUserToSecondaryDomain() throws UserPortalUIException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        Map<String, String> userClaims = new HashMap<>();
+        Map<String, String> credentials = new HashMap<>();
+        userClaims.put("http://wso2.org/claims/username", "secondaryuser1");
+        userClaims.put("http://wso2.org/claims/givenname", "secondaryuser1_firstName");
+        userClaims.put("http://wso2.org/claims/lastName", "secondaryuser1_lastName");
+        userClaims.put("http://wso2.org/claims/email", "secondaryuser1@wso2.com");
+
+        credentials.put("password", "secondaryuser1");
+        String validSecodaryDomain = "SECONDARY_VALID";
+        UUFUser user = identityStoreClientService.addUser(userClaims, credentials, validSecodaryDomain);
+
+        Assert.assertNotNull(user, "Failed to add the user.");
+        Assert.assertNotNull(user.getUserId(), "Invalid user unique id.");
+
+        boolean isUserExists = identityStoreClientService.isUserExist(userClaims, validSecodaryDomain);
+        Assert.assertTrue(isUserExists, "User does not exist in the given domain");
+    }
 }

@@ -162,3 +162,152 @@ domains:
         hashAlgorithm: "SHA256"
         keyLength: 256
         iterationCount: 4096
+  -
+    id: 2
+    name: "SECONDARY_VALID"
+    order: 2
+    uniqueIdResolver:
+      type: "JDBCUniqueIdResolver"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+
+    identityStoreConnectors:
+    -
+      connectorId: "JDBCIS2"
+      connectorType: "JDBCIdentityStore"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+        databaseType: "MySQL"
+      attributeMappings:
+      -
+        attribute: "uid"
+        claimUri: "http://wso2.org/claims/username"
+        properties:
+          unique: "true"
+      -
+        attribute: "cn"
+        claimUri: "http://wso2.org/claims/fullname"
+      -
+        attribute: "givenName"
+        claimUri: "http://wso2.org/claims/givenname"
+      -
+        attribute: "sn"
+        claimUri: "http://wso2.org/claims/lastname"
+      -
+        attribute: "middlename"
+        claimUri: "http://wso2.org/claims/middlename"
+      -
+        attribute: "honorificPrefix"
+        claimUri: "http://wso2.org/claims/honorificPrefix"
+      -
+        attribute: "honorificSuffix"
+        claimUri: "http://wso2.org/claims/honorificSuffixclaimUri: "
+      -
+        attribute: "displayName"
+        claimUri: "http://wso2.org/claims/displayName"
+      -
+        attribute: "nickName"
+        claimUri: "http://wso2.org/claims/nickname"
+      -
+        attribute: "mail"
+        claimUri: "http://wso2.org/claims/email"
+      -
+        attribute: "title"
+        claimUri: "http://wso2.org/claims/title"
+      -
+        attribute: "gender"
+        claimUri: "http://wso2.org/claims/gender"
+      -
+        attribute: "dateOfBirth"
+        claimUri: "http://wso2.org/claims/dob"
+      -
+        attribute: "telephoneNumber"
+        claimUri: "http://wso2.org/claims/telephone"
+      -
+        attribute: "otherPhone"
+        claimUri: "http://wso2.org/claims/otherphone"
+      -
+        attribute: "mobile"
+        claimUri: "http://wso2.org/claims/mobile"
+      -
+        attribute: "im"
+        claimUri: "http://wso2.org/claims/im"
+      -
+        attribute: "streetAddress"
+        claimUri: "http://wso2.org/claims/streetaddress"
+      -
+        attribute: "localityName"
+        claimUri: "http://wso2.org/claims/locality"
+      -
+        attribute: "region"
+        claimUri: "http://wso2.org/claims/region"
+      -
+        attribute: "postalcode"
+        claimUri: "http://wso2.org/claims/postalcode"
+      -
+        attribute: "country"
+        claimUri: "http://wso2.org/claims/country"
+      -
+        attribute: "role"
+        claimUri: "http://wso2.org/claims/role"
+      -
+        attribute: "organization"
+        claimUri: "http://wso2.org/claims/organization"
+      -
+        attribute: "resourceType"
+        claimUri: "http://wso2.org/claims/resourceType"
+      -
+        attribute: "createdDate"
+        claimUri: "http://wso2.org/claims/createdDate"
+      -
+        attribute: "lastModifiedDate"
+        claimUri: "http://wso2.org/claims/lastModifiedDate"
+      -
+        attribute: "location"
+        claimUri: "http://wso2.org/claims/location"
+      -
+        attribute: "version"
+        claimUri: "http://wso2.org/claims/version"
+      -
+        attribute: "challengeQuestionUris"
+        claimUri: "http://wso2.org/claims/challengeQuestionUris"
+      -
+        attribute: "challengeQuestion1"
+        claimUri: "http://wso2.org/claims/challengeQuestion1"
+      -
+        attribute: "challengeQuestion2"
+        claimUri: "http://wso2.org/claims/challengeQuestion2"
+      -
+        attribute: "challengeQuestion3"
+        claimUri: "http://wso2.org/claims/challengeQuestion3"
+      -
+        attribute: "accountLock"
+        claimUri: "http://wso2.org/claims/accountLocked"
+      -
+        attribute: "accountDisable"
+        claimUri: "http://wso2.org/claims/accountDisabled"
+      -
+        attribute: "failedLoginAttempts"
+        claimUri: "http://wso2.org/claims/failedLoginAttempts"
+      -
+        attribute: "unlockTime"
+        claimUri: "http://wso2.org/claims/unlockTime"
+      -
+        attribute: "emailVerified"
+        claimUri: "http://wso2.org/claims/emailVerified"
+      -
+        attribute: "failedLoginLockoutCount"
+        claimUri: "http://wso2.org/claims/failedLoginLockoutCount"
+
+
+    credentialStoreConnectors:
+    -
+      connectorId: "JDBCCS2"
+      connectorType: "JDBCCredentialStore"
+      properties:
+        dataSource: "WSO2_CARBON_DB"
+        databaseType: "MySQL"
+        hashAlgorithm: "SHA256"
+        keyLength: 256
+        iterationCount: 4096
+
