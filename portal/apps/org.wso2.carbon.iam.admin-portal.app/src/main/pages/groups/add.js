@@ -113,15 +113,26 @@ function onGet(env) {
 function onPost(env) {
     var claimMap = {};
     var domain = null;
+    var formParams = null;
     try {
-        claimMap["http://wso2.org/claims/groupname"] = env.request.formParams['input-groupname'];
-        claimMap["http://wso2.org/claims/groupdescription"] = env.request.formParams['input-description'];
         domain = env.request.formParams['domain'];
+        formParams = env.request.formParams;
+        for (var i in formParams) {
+            if (i.indexOf("http://wso2.org/claims") !== -1) {
+                claimMap[i] = formParams[i];
+            }
+        }
+
         var addGroupResult = addGroup(claimMap, domain);
         var domainNames = getDomainNames(env);
         var primaryDomainName = getPrimaryDomainName(env);
 
-        return {addGroupResult: addGroupResult, domainNames: domainNames, primaryDomainName: primaryDomainName};
+        return {
+            addGroupResult: addGroupResult,
+            domainNames: domainNames,
+            primaryDomainName: primaryDomainName,
+            profile: getProfile()
+        };
     } catch (e) {
         return {errorMessage: 'group.add.error'};
     }
@@ -131,9 +142,9 @@ function onPost(env) {
 
 function addGroup(claimMap, domain) {
     try {
-        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        var addGroupResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "addGroup", [claimMap, domain]);
-        return {userRegistration: userRegistrationResult};
+        return {addGroupResult: addGroupResult};
     } catch (e) {
         return {errorMessage: 'group.add.error'};
     }
@@ -204,35 +215,35 @@ function updateGroupProfile(groupId, updatedClaims) {
     return {success: false, message: message};
 }
 
-function onPost(env) {
-    var success = false;
-    var message = "";
-    var updatedClaims = env.request.formParams;
-    var groupId = env.params.groupId;
-    var result = updateGroupProfile(groupId, updatedClaims);
-    success = result.success;
-    message = result.message;
-
-    if (env.params.profileName) {
-
-        var uiEntries = [];
-        var result = getGroupProfileUIEntries(env.params.profileName, session.getUser().getUserId());
-        if (result.success) {
-            if (env.request.method != "POST") {
-                success = true;
-            }
-            uiEntries = buildUIEntries(result.profileUIEntries);
-        } else {
-            success = false;
-            message = result.message;
-        }
-
-        return {
-            success: success, uiEntries: uiEntries,
-            message: message,
-        };
-    }
-
-    return {success: false, message: "Invalid profile name."};
-}
+// function onPost(env) {
+//     var success = false;
+//     var message = "";
+//     var updatedClaims = env.request.formParams;
+//     var groupId = env.params.groupId;
+//     var result = updateGroupProfile(groupId, updatedClaims);
+//     success = result.success;
+//     message = result.message;
+//
+//     if (env.params.profileName) {
+//
+//         var uiEntries = [];
+//         var result = getGroupProfileUIEntries(env.params.profileName, session.getUser().getUserId());
+//         if (result.success) {
+//             if (env.request.method != "POST") {
+//                 success = true;
+//             }
+//             uiEntries = buildUIEntries(result.profileUIEntries);
+//         } else {
+//             success = false;
+//             message = result.message;
+//         }
+//
+//         return {
+//             success: success, uiEntries: uiEntries,
+//             message: message,
+//         };
+//     }
+//
+//     return {success: false, message: "Invalid profile name."};
+// }
 
