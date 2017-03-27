@@ -183,6 +183,29 @@ profiles:
    regex: "*"
    dataType: "email"
  -
+  profileName: "user-list-columns"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "Username"
+   required: true
+   readonly: true
+   regex: ".*"
+   defaultValue: "user1"
+   dataType: "text"
+   properties:
+       order: 1
+  -
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "First Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+   properties:
+          order: 2
+ -
   profileName: "group"
   isAdminProfile: true
   claims:
@@ -200,5 +223,4 @@ profiles:
    readonly: false
    regex: "*"
    dataType: "text"
-
 

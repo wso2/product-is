@@ -24,6 +24,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
 import org.wso2.carbon.identity.mgt.AuthenticationContext;
 import org.wso2.carbon.identity.mgt.Group;
 import org.wso2.carbon.identity.mgt.RealmService;
@@ -46,6 +47,7 @@ import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +65,6 @@ import javax.security.auth.callback.PasswordCallback;
 public class IdentityStoreClientServiceImpl implements IdentityStoreClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityStoreClientServiceImpl.class);
-    private static final String USERNAME_CLAIM = "http://wso2.org/claims/username";
     private static final String GROUPNAME_CLAIM = "http://wso2.org/claims/groupname";
     private static final int MAX_RECORD_LENGTH = 500;
     private static final String LOCKED_STATE = "LOCKED";
@@ -534,8 +535,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
-    public List<UserListBean> getFilteredList(int offset, int length, String claimURI, String claimValue,
-            String domainName) throws UserPortalUIException {
+    public List<UserListBean> getFilteredList(int offset, int length,
+                                              String claimURI, String claimValue, String domainName,
+                                              List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException {
 
         List<UserListBean> userList;
         List<User> users;
@@ -550,7 +552,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         if (StringUtils.isNullOrEmpty(claimURI)
                 || StringUtils.isNullOrEmpty(claimValue)) {
-            return getUserList(offset, length, domainName);
+            return getUserList(offset, length, domainName, requestedClaims);
         } else {
             MetaClaim metaClaim = new MetaClaim();
             metaClaim.setClaimUri(claimURI);
@@ -564,18 +566,13 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             }
         }
 
-        List<MetaClaim> metaClaims = new ArrayList<>();
-        MetaClaim metaClaim = new MetaClaim();
-        metaClaim.setClaimUri(USERNAME_CLAIM);
-        metaClaims.add(metaClaim);
+        return generateUserListBean(users, requestedClaims);
 
-        userList = generateUserListBean(users, metaClaims);
-
-        return userList;
     }
 
     @Override
-    public List<UserListBean> getUserList(int offset, int length, String domainName) throws UserPortalUIException {
+    public List<UserListBean> getUserList(int offset, int length, String domainName,
+                                          List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException {
         List<User> users;
         if (length < 0) {
             length = MAX_RECORD_LENGTH;
@@ -588,17 +585,27 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             throw new UserPortalUIException(error);
         }
 
-        List<MetaClaim> metaClaims = new ArrayList<>();
-        MetaClaim metaClaim = new MetaClaim();
-        metaClaim.setClaimUri(USERNAME_CLAIM);
-        metaClaims.add(metaClaim);
-
-        return generateUserListBean(users, metaClaims);
+        return generateUserListBean(users, requestedClaims);
     }
 
-    private List<UserListBean> generateUserListBean(List<User> users, List<MetaClaim> userClaims)
+    private RealmService getRealmService() {
+        if (this.realmService == null) {
+            throw new IllegalStateException("Realm Service is null.");
+        }
+        return this.realmService;
+    }
+
+    private List<UserListBean> generateUserListBean(List<User> users, List<ClaimConfigEntry> requestedClaims)
             throws UserPortalUIException {
         List<UserListBean> userList = new ArrayList<>();
+
+        Map<String, String> claimDisplayNames = requestedClaims.stream()
+                        .collect(Collectors.toMap(ClaimConfigEntry::getClaimURI, ClaimConfigEntry::getDisplayName));
+
+        List<MetaClaim> metaClaims = requestedClaims.stream()
+                .map(claimConfigEntry -> new MetaClaim("", claimConfigEntry.getClaimURI()))
+                .collect(Collectors.toList());
+
 
         List<MetaClaim> groupMetaClaims = new ArrayList<>();
         MetaClaim groupMetaClaim = new MetaClaim();
@@ -607,7 +614,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         for (User user : users) {
             List<Group> groups;
-            List<Claim> userId;
+            List<Claim> userClaims;
             List<Claim> groupId;
             List<String> groupNames = new ArrayList<>();
             String username = null;
@@ -619,15 +626,18 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
                         groupNames.add(groupId.get(0).getValue());
                     }
                 }
-                userId = user.getClaims(userClaims);
-                if (!userId.isEmpty()) {
-                    username = userId.get(0).getValue();
-                }
+                userClaims = user.getClaims(metaClaims);
+
             } catch (IdentityStoreException | GroupNotFoundException | UserNotFoundException e) {
                 String error = "Error while retrieving user data for user :  " + user.getUniqueUserId();
                 LOGGER.error(error, e);
                 throw new UserPortalUIException(error);
             }
+
+            Map<String, String> userClaimMap = new LinkedHashMap<>();
+
+            userClaims.stream().forEach(claim -> userClaimMap.put(
+                    claimDisplayNames.get(claim.getClaimUri()), claim.getValue()));
 
             String status = null;
             UserState state = UserState.valueOf(user.getState());
@@ -638,12 +648,20 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             } else if (state.isInGroup(UserState.Group.UNLOCKED)) {
                 status = UNLOCKED_STATE;
             }
+
+            //TODO : define user claims for these attributes as well
+            userClaimMap.put("Status", status);
+            userClaimMap.put("Groups", "");
+            userClaimMap.put("Roles", "");
+            userClaimMap.put("UniqueId", user.getUniqueUserId());
+            userClaimMap.put("Domain", user.getDomainName());
+
             UserListBean listEntry = new UserListBean();
-            listEntry.setUserId(username);
             listEntry.setDomainName(user.getDomainName());
             listEntry.setUserUniqueId(user.getUniqueUserId());
-            listEntry.setState(status);
             listEntry.setGroups(groupNames);
+            listEntry.setRoles(new ArrayList<>()); //TODO : give the role name list when roles are implemented
+            listEntry.setClaims(userClaimMap);
             userList.add(listEntry);
         }
         return userList;

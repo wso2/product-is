@@ -13,111 +13,206 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+function getFilteredList(offset, length, claimURI, claimValue, domainName, requestedClaims){
+     var userList;
+     try {
+         userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+             "getFilteredList", [offset, length, claimURI, claimValue, domainName, requestedClaims]);
+     } catch (e) {
+         return {errorMessage: 'list.error.retrieve.users'};
+     }
+
+     return userList;
+}
+
+function getUserList(offset, length, domainName, requestedClaims){
+     var userList;
+     try {
+         userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+             "getUserList", [offset, length, domainName, requestedClaims]);
+     } catch (e) {
+         return {errorMessage: 'list.error.retrieve.users'};
+     }
+
+     return userList;
+}
+
+function getDomainNames(env) {
+     var domainNames;
+     try {
+         domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+             "getDomainNames", []);
+     } catch (e) {
+         return {errorMessage: 'signup.error.retrieve.domain'};
+     }
+     return domainNames;
+}
+
+function getPrimaryDomainName(env) {
+     var primaryDomainName;
+     try {
+         primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+             "getPrimaryDomainName", []);
+     } catch (e) {
+         return {errorMessage: 'signup.error.retrieve.domain'};
+     }
+     return primaryDomainName;
+}
+
+function getClaimsInProfile (profileName) {
+     var claimProfile;
+     try {
+         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+             "getProfile", [profileName]);
+     } catch (e) {
+         return {errorMessage: profile + '.error.retrieve.claim'};
+     }
+     var claimForProfileEntry = claimProfile.claims;
+
+     return claimForProfileEntry;
+}
+
+//function buildJSONArray(userList) {
+//     var userArray = [];
+//     var groups = [];
+//     var roles = [];
+//     var columnsArray = {};
+//     var claimsMap = {};
+//     var claims = {};
+//
+//     claimsMap = userList[0].getClaims();
+//     var index = 0;
+//     for (var key in claimsMap) {
+//         columnsArray[index] = key;
+//         index++;
+//     }
+//
+//     for (var i in userList) {
+//         var item = userList[i];
+//         groups = item.getGroups();
+//         claims = item.getClaims();
+//         //roles = item.getRoles();
+//         for (var key in claims) {
+//             if (key === "Groups") {
+//                 claims[key] = groups;
+//             } else if (key === "Roles") {
+//                 //claims[key] = roles;
+//             }
+//         }
+//         userArray.push(claims);
+//     }
+//     sendToClient("users", userArray);
+//     return columnsArray;
+//}
+
+function buildJSONArray(userList) {
+    var userArray = [];
+    var groups = [];
+    var roles = [];
+    var columnsArray = [];
+    var claimsMap = {};
+    var claims = {};
+
+    if (userList.length > 0) {
+        claimsMap = userList[0].getClaims();
+        for (var key in claimsMap) {
+            columnsArray.push(key);
+        }
+
+        for (var i in userList) {
+            var item = userList[i];
+            groups = item.getGroups();
+            claims = item.getClaims();
+            roles = item.getRoles();
+            for (var colName in claims) {
+                if (colName === "Groups") {
+                    claims[colName] = groups;
+                } else if (colName === "Roles") {
+                    claims[colName] = roles;
+                }
+            }
+            userArray.push(claims);
+        }
+    }
+
+    sendToClient("users", userArray);
+    return columnsArray;
+}
+
 function onGet(env) {
     var session = getSession();
-    var claimProfile = getUserListProfile();
+
+    var claimProfile = getClaimsInProfile("user-list-filter");
+    var requestedClaims = getClaimsInProfile("user-list-columns");
     var domains = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
-    getUserList(0, -1, "");
-    return {claimProfile: claimProfile, domains: domains};
+
+    var userList = getUserList(0, -1, "", requestedClaims);
+    var columns = buildJSONArray(userList);
+
+    sendToClient("columnList", columns);
+    sendToClient("selectedClaim", null);
+    sendToClient("selectedDomain", null);
+    sendToClient("action", null);
+    sendToClient("offset", null);
+    sendToClient("recordLimit", null);
+
+    var sortRowListCount = Object.keys(columns).length - 2;
+    var sortRowList = [];
+    for (var i=0; i<sortRowListCount; i++) {
+        var noSort = '';
+        if (columns[i] === "Groups" || columns[i] === "Roles") {
+            noSort = 'no-sort';
+        }
+        sortRowList.push({
+            "name" : columns[i],
+            "noSort" : noSort
+        });
+    }
+
+    return {claimProfile: claimProfile, domains: domains, sortRowList: sortRowList};
 }
 
 function onPost(env) {
     var session, action, claimUri, claimValue, domainName, recordLimit, offset;
     session = getSession();
+
     action = env.request.formParams['action'];
     claimUri = env.request.formParams["claim-uri"];
     claimValue = env.request.formParams["claim-filter"];
     domainName = env.request.formParams["domain-name"];
     recordLimit = parseInt(env.request.formParams["length-value"]);
     offset = parseInt(env.request.formParams["offset-value"]);
+
     sendToClient("selectedClaim", claimUri);
     sendToClient("selectedDomain", domainName);
     sendToClient("action", action);
     sendToClient("offset", offset);
     sendToClient("recordLimit", recordLimit);
     if(!recordLimit) {
-        recordLimit = -1
+        recordLimit = -1;
     }
-    var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName);
-    var claimProfile = getUserListProfile();
-    var domains = getDomainNames(env);
-    return {claimProfile: claimProfile, domains: domains, claimValue: claimValue};
-}
 
-function getFilteredList(offset, length, claimURI, claimValue, domainName){
-    var userList;
-    try {
-        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getFilteredList", [offset, length, claimURI, claimValue, domainName]);
-    } catch (e) {
-        return {errorMessage: 'list.error.retrieve.users'};
-    }
-    buildJSONArray(userList);
-    return userList;
-}
+    var claimProfile = getClaimsInProfile("user-list-filter");
+    var requestedClaims = getClaimsInProfile("user-list-columns");
 
-function getUserList(offset, length, domainName){
-    var userList;
-    try {
-        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getUserList", [offset, length, domainName]);
-    } catch (e) {
-        return {errorMessage: 'list.error.retrieve.users'};
-    }
-    buildJSONArray(userList);
-    return userList;
-}
+    var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName, requestedClaims);
+    var columns = buildJSONArray(userList);
+    sendToClient("columnList", columns);
 
-function getDomainNames(env) {
-    var domainNames;
-    try {
-        domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getDomainNames", []);
-    } catch (e) {
-        return {errorMessage: 'signup.error.retrieve.domain'};
-    }
-    return domainNames;
-}
-
-function getPrimaryDomainName(env) {
-    var primaryDomainName;
-    try {
-        primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-            "getPrimaryDomainName", []);
-    } catch (e) {
-        return {errorMessage: 'signup.error.retrieve.domain'};
-    }
-    return primaryDomainName;
-}
-
-function getUserListProfile () {
-    var claimProfile;
-    try {
-        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["user-list-filter"]);
-    } catch (e) {
-        return {errorMessage: profile + '.error.retrieve.claim'};
-    }
-    var claimForProfileEntry = claimProfile.claims;
-
-    return claimForProfileEntry;
-}
-
-function buildJSONArray(userList) {
-    var userArray = [];
-    var groups = [];
-    for (var i in userList) {
-        var item = userList[i];
-        groups = item.getGroups();
-        userArray.push({
-            "Username" : item.getUserId(),
-            "Status" : item.getState(),
-            "Groups" : groups,
-            "Roles" : "",
-            "UniqueId" : item.getUserUniqueId(),
-            "Domain" : item.getDomainName(),
+    var sortRowListCount = Object.keys(columns).length - 2;
+    var sortRowList = [];
+    for (var i=0; i<sortRowListCount; i++) {
+        var noSort = '';
+        if (columns[i] === "Groups" || columns[i] === "Roles") {
+            noSort = 'no-sort';
+        }
+        sortRowList.push({
+            "name" : columns[i],
+            "noSort" : noSort
         });
     }
-    sendToClient("users", userArray);
+
+    var domains = getDomainNames(env);
+    return {claimProfile: claimProfile, domains: domains, claimValue: claimValue, sortRowList: sortRowList};
 }

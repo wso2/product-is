@@ -16,6 +16,7 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
 import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
@@ -150,10 +151,12 @@ public interface IdentityStoreClientService {
     List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
                             String domainName) throws UserPortalUIException;
 
-    List<UserListBean> getFilteredList(int offset, int length, String claimURI, String claimValue,
-                                       String domainName) throws UserPortalUIException;
+    List<UserListBean> getFilteredList(int offset, int length, String claimURI,
+                                       String claimValue, String domainName,
+                                       List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 
-    List<UserListBean> getUserList(int offset, int length, String domainName) throws UserPortalUIException;
+    List<UserListBean> getUserList(int offset, int length, String domainName,
+            List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 
     /**
      * Add a group
