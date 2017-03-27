@@ -20,10 +20,19 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.wso2.carbon.identity.policy.password.validation.PasswordValidationService;
 import org.wso2.msf4j.Microservice;
+import org.wso2.msf4j.Request;
+import org.wso2.msf4j.util.BufferUtil;
 
-import javax.ws.rs.GET;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 /**
@@ -31,11 +40,20 @@ import javax.ws.rs.core.Response;
  */
 public class PasswordUtilityMicroService implements Microservice {
 
-    @GET
+    @POST
     @Path("/validatePassword")
-    public Response isValidPassword(@QueryParam("newPassword") String password) {
+    public Response isValidPassword(@Context Request password) throws UnsupportedEncodingException {
         PasswordValidationService passwordValidationService = null;
-        boolean isValidPassword = true;
+        boolean isValidPassword = false;
+        ByteBuffer fullContent = BufferUtil.merge(password.getFullMessageBody());
+        //TODO: Replace toString method, once a way to retrieve char[] without encoded values for special characters is
+        //found.
+        String passwordAsString = StandardCharsets.UTF_8.decode(fullContent).toString();
+        String decodedPassword = URLDecoder.decode(passwordAsString, StandardCharsets.UTF_8.toString());
+        char[] passwordCharArray = decodedPassword.toCharArray();
+        int index = IntStream.range(0, passwordCharArray.length).filter(i -> passwordCharArray[i] == '=')
+                .findFirst().orElse(-1);
+        char[] newArray = Arrays.copyOfRange(passwordCharArray, index + 1, passwordCharArray.length);
         BundleContext bundleContext = FrameworkUtil.getBundle(PasswordValidationService.class).getBundleContext();
         ServiceReference<PasswordValidationService> serviceReference =
                 bundleContext.getServiceReference(PasswordValidationService.class);
@@ -43,7 +61,7 @@ public class PasswordUtilityMicroService implements Microservice {
             passwordValidationService = bundleContext.getService(serviceReference);
         }
         if (passwordValidationService != null) {
-            isValidPassword = passwordValidationService.validatePassword(password);
+            isValidPassword = passwordValidationService.validatePassword(newArray);
         }
         return Response.ok(isValidPassword).build();
     }

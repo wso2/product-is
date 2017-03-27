@@ -114,7 +114,7 @@ function passwordStrengthScript() {
 function validateNewPassword() {
     var password = $("#newPassword").val();
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/admin-portal/root/apis/passwordUtil-micro-service/validatePassword",
         data: {newPassword: password},
         success: function (result) {
