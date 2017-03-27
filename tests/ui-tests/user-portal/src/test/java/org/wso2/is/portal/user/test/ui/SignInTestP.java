@@ -43,8 +43,8 @@ public class SignInTestP extends SelectDriver {
         driver.get(loginPage);
         String username = System.getProperty("username");
         String password = System.getProperty("password");
-        boolean loggd = loginPageAction.login(username, password);
-        Assert.assertTrue(loggd, "Loggin failed.");
+        boolean logged = loginPageAction.login(username, password);
+        Assert.assertTrue(logged, "Loggin failed.");
         Assert.assertEquals(driver.getCurrentUrl(), adminPage,
                 "This current page is not the admin user page.");
 
