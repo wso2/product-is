@@ -1,16 +1,19 @@
 $(function () {
-    $("#length .status-text").text("At least " + result.passwordMinLength + " characters");
-    if (result.isNumbersIncluded) {
-        $("#pnum .status-text").text("At least one number");
+    if (!result.regexvalidation) {
+        $("#length .status-text").text("At least " + result.passwordMinLength + " characters");
+        if (result.isNumbersIncluded) {
+            $("#pnum .status-text").text("At least one number");
+        }
+        if (result.isUpperCaseNeeded && result.isLowerCaseNeeded) {
+            $("#capital .status-text").text("At least one lowercase & one uppercase letter");
+        }
+        if (result.isSpecialCharacterNeeded) {
+            $("#spchar .status-text").text("At least one special character");
+        }
+        passwordStrengthScript();
     }
-    if (result.isUpperCaseNeeded && result.isLowerCaseNeeded) {
-        $("#capital .status-text").text("At least one lowercase & one uppercase letter");
-    }
-    if (result.isSpecialCharacterNeeded) {
-        $("#spchar .status-text").text("At least one special character");
-    }
-    passwordStrengthScript();
-    $('#newPassword').blur(function(){
+    showHidePassword();
+    $('#newPassword').blur(function () {
         validateNewPassword();
     });
 });
@@ -96,6 +99,8 @@ function passwordStrengthScript() {
     $("#newPassword").blur(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
+}
+function showHidePassword(){
     $('input[type=password]').after('<span class="hide-pass" title="Show/Hide Password"><i class="fw fw-view"></i>' +
         '</span>');
     var highPass = $('.hide-pass');
