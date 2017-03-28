@@ -61,8 +61,8 @@ public class UsernameRecoveryTest extends SelectDriver {
                 "This current page is not the username recovery page.");
     }
 
-    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadRecoveryPage()")
-    public void testUssernameRecovery() throws Exception {
+    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadRecoveryPage")
+    public void testUsernameRecovery() throws Exception {
         Map<String, String> attibuteMap = new HashMap<>();
         attibuteMap.put("givenname", "dinali");
         attibuteMap.put("lastname", "silva");
@@ -80,7 +80,7 @@ public class UsernameRecoveryTest extends SelectDriver {
                 "This current page is not the username recovery page.");
     }
 
-    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "testUssernameRecovery()")
+    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "testUsernameRecovery")
     public void backToSignIn() throws Exception {
         boolean result = usernameRecoveryPageAction.backToSignIn();
         Assert.assertTrue(result, "The user has not returned back to the sign in");

@@ -100,30 +100,3 @@ public class UsernameRecoveryPage {
     }
 
 }
-
-/*import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-*//**
- * Represents username recovery page.
- *//*
-public class UsernameRecoveryPage {
-
-    private static WebElement element = null;
-
-    public static WebElement btnBackSignIn(WebDriver driver) {
-        element = driver.findElement(By.id("back-sign-in"));
-        return element;
-    }
-
-    public static WebElement btnRecover(WebDriver driver) {
-        element = driver.findElement(By.id("recover"));
-        return element;
-    }
-
-    public static WebElement txtbxClaimLabel(WebDriver driver, String label) {
-        element = driver.findElement(By.id(label));
-        return element;
-    }
-}*/
