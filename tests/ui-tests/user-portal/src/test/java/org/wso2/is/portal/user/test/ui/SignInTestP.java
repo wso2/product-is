@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageActionP;
 
 /**
- * Created by wso2dinali on 22/3/17.
+ * UI test for Sign in Test.
  */
 public class SignInTestP extends SelectDriver {
 
@@ -40,7 +40,6 @@ public class SignInTestP extends SelectDriver {
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
     public void testLogin() throws Exception {
-        driver.get(loginPage);
         String username = System.getProperty("username");
         String password = System.getProperty("password");
         boolean logged = loginPageAction.login(username, password);
@@ -49,7 +48,6 @@ public class SignInTestP extends SelectDriver {
                 "This current page is not the admin user page.");
 
     }
-
     @AfterClass
     public void close() {
         driver.quit();

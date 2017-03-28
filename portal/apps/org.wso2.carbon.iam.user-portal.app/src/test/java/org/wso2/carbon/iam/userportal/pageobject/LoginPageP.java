@@ -20,7 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.Map;
 
@@ -32,6 +32,7 @@ public class LoginPageP {
     private Map<String, String> data;
     private WebDriver driver;
     private int timeout = 15;
+
 
     @FindBy(id = "domainSelector")
     @CacheLookup
@@ -61,12 +62,13 @@ public class LoginPageP {
     @CacheLookup
     private WebElement username2;
 
+
     public LoginPageP() {
     }
 
 
     public LoginPageP(WebDriver driver) {
-        this();
+        PageFactory.initElements(driver, this);
         this.driver = driver;
     }
 
@@ -120,152 +122,4 @@ public class LoginPageP {
         return username2;
     }
 
-
-    /**
-     * Set default value to Password Password field.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickPassword1Link() {
-        return clickPassword1Link(data.get("PASSWORD"));
-    }
-
-    /**
-     * Click on Password Link.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickPassword1Link(String passwordValue) {
-        password1.sendKeys(passwordValue);
-        return this;
-    }
-
-    /**
-     * Click on Password Link.
-     *
-     * @return the LoginPageP class instance.
-     */
-//    public LoginPageP clickPassword2Link() {
-//        password2.click();
-//        return this;
-//    }
-
-    /**
-     * Click on Sign In Button.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickSignInButton() {
-        signIn.click();
-        return this;
-    }
-
-    /**
-     * Click on Sign Up Link.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickSignUpLink() {
-        signUp.click();
-        return this;
-    }
-
-    /**
-     * Set default value to Username Text field.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickUsername1Link() {
-        return clickUsername1Link(data.get("USERNAME"));
-    }
-
-    /**
-     * Click on Username Link.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickUsername1Link(String usernameValue) {
-        username1.sendKeys(usernameValue);
-        return this;
-    }
-
-    /**
-     * Click on Username Link.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP clickUsername2Link() {
-        username2.click();
-        return this;
-    }
-
-    /**
-     * Fill every fields in the page.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP fill() {
-        setDomainDropDownListField();
-        clickUsername1Link();
-        clickPassword1Link();
-        return this;
-    }
-
-    /**
-     * Fill every fields in the page and submit it to target page.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP fillAndSubmit() {
-        fill();
-        return submit();
-    }
-
-    /**
-     * Set default value to Domain Drop Down List field.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP setDomainDropDownListField() {
-        return setDomainDropDownListField(data.get("DOMAIN"));
-    }
-
-    /**
-     * Set value to Domain Drop Down List field.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP setDomainDropDownListField(String domainValue) {
-        new Select(domain).selectByVisibleText(domainValue);
-        return this;
-    }
-
-    /**
-     * Submit the form to target page.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP submit() {
-        clickSignInButton();
-        return this;
-    }
-
-    /**
-     * Unset default value from Domain Drop Down List field.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP unsetDomainDropDownListField() {
-        return unsetDomainDropDownListField(data.get("DOMAIN"));
-    }
-
-    /**
-     * Unset value from Domain Drop Down List field.
-     *
-     * @return the LoginPageP class instance.
-     */
-    public LoginPageP unsetDomainDropDownListField(String domainValue) {
-        new Select(domain).deselectByVisibleText(domainValue);
-        return this;
-    }
 }

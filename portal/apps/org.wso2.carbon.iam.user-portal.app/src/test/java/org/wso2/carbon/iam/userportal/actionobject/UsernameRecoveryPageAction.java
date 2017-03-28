@@ -29,16 +29,46 @@ import java.util.List;
  */
 public class UsernameRecoveryPageAction {
 
-    private static UsernameRecoveryPage usernameRecoveryPage = new UsernameRecoveryPage();
 
-    public void recoverUsername(WebDriver driver, List<Attribute> attributes) {
-        for (Attribute attribute: attributes) {
-            usernameRecoveryPage.txtbxClaimLabel(driver, attribute.getAttributeName())
-                    .sendKeys(attribute.getAttributeValue());
+    WebDriver webDriver = null;
+    public UsernameRecoveryPageAction(WebDriver driver) {
+        webDriver = driver;
+    }
+
+    public boolean recoverUsername(List<Attribute> attributes) {
+        UsernameRecoveryPage usernameRecoveryPage = new UsernameRecoveryPage(webDriver);
+        boolean result = false;
+        try {
+            for (Attribute attribute: attributes) {
+                if (attribute.getAttributeName() == "givenname") {
+                    usernameRecoveryPage.getFirstName().sendKeys(attribute.getAttributeValue());
+                } else if (attribute.getAttributeName() == "lastname") {
+                    usernameRecoveryPage.getLastName().sendKeys(attribute.getAttributeValue());
+                } else if (attribute.getAttributeName() == "email") {
+                    usernameRecoveryPage.getEmail().sendKeys(attribute.getAttributeValue());
+                }
+            }
+            usernameRecoveryPage.getRecover().click();
+            result = true;
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            result = false;
         }
-        usernameRecoveryPage.btnRecover(driver).click();
+        return result;
     }
-    public void backToSignIn(WebDriver driver) {
-        usernameRecoveryPage.btnBackSignIn(driver).click();
+
+    public  boolean backToSignIn() {
+        UsernameRecoveryPage usernameRecoveryPage = new UsernameRecoveryPage(webDriver);
+        boolean result = false;
+        try {
+            usernameRecoveryPage.getBackToSignIn().click();
+            result = true;
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            result = false;
+        }
+        return result;
+
     }
+
 }

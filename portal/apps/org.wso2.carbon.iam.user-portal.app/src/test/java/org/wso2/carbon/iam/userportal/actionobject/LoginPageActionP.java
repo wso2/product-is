@@ -24,37 +24,70 @@ import org.wso2.carbon.iam.userportal.pageobject.LoginPageP;
 /**
  * Login page action for generated page objects using chrome plugin.
  */
-public class LoginPageActionP extends LoginPageP {
+public class LoginPageActionP {
 
+    WebDriver webDriver = null;
     public LoginPageActionP(WebDriver driver) {
-        super(driver);
+        webDriver = driver;
     }
 
     public boolean login(String username, String password) {
+        LoginPageP loginPage = new LoginPageP(webDriver);
         boolean result = false;
-        getUsername1().sendKeys(username);
-        getPassword1().sendKeys(password);
-        getSignIn().click();
+        try {
+            loginPage.getUsername1().sendKeys(username);
+            loginPage.getPassword1().sendKeys(password);
+            loginPage.getSignIn().click();
 
-        result = true;
-//        try {
-//            getUsername1().sendKeys(username);
-//            getPassword1().sendKeys(password);
-//            getSignIn().click();
-//
-//            result = true;
-//
-//        } catch (Exception e) {
-//            System.out.print(e.getMessage());
-//            result = false;
-//        }
+            result = true;
+
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            result = false;
+        }
         return result;
     }
 
-    public boolean clickPassword2Link() {
-        getPassword2().click();
-        return true;
+    public boolean signUp() {
+        LoginPageP loginPage = new LoginPageP(webDriver);
+        boolean result = false;
+        try {
+            loginPage.getSignUp().click();
+            result = true;
+
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            result = false;
+        }
+        return  result;
     }
 
+
+    public boolean forgetUsername() {
+        LoginPageP loginPage = new LoginPageP(webDriver);
+        boolean result = false;
+        try {
+            loginPage.getUsername2().click();
+            result = true;
+
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            result = false;
+        }
+        return result;
+    }
+     public boolean forgetPassword() {
+         LoginPageP loginPage = new LoginPageP(webDriver);
+         boolean result = false;
+         try {
+             loginPage.getPassword2().click();
+             result = true;
+
+         } catch (Exception e) {
+             System.out.print(e.getMessage());
+             result = false;
+         }
+         return result;
+     }
 
 }

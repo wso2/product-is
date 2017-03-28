@@ -20,6 +20,7 @@ package org.wso2.is.portal.user.test.ui;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
 
@@ -30,7 +31,7 @@ import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
  */
 public class SignInTest extends SelectDriver {
 
-    private static LoginPageAction loginPageAction = new LoginPageAction();
+    private static LoginPageAction loginPageAction;
     private static WebDriver driver;
     private static String loginPage = "https://" + System.getProperty("home")  + ":" +
             System.getProperty("port") + "/user-portal/login";
@@ -41,6 +42,12 @@ public class SignInTest extends SelectDriver {
     private static String passwordRecoveryPage = "https://" + System.getProperty("home")  + ":" +
             System.getProperty("port") + "/user-portal/recovery/password";
 
+
+    @BeforeClass
+    public void init() {
+        driver = selectDriver(System.getProperty("driver"));
+        loginPageAction = new LoginPageAction();
+    }
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
         driver = selectDriver(System.getProperty("driver"));
