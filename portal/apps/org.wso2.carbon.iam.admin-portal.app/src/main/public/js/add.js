@@ -38,6 +38,17 @@ function displayVals() {
         UUFClient.renderFragment("email-verification", fillingObject,
             "accountVerificationMethod-area", "OVERWRITE", callbacks);
     }
+    else if ($("#verificationSelector option:selected").text() === "With email verification and ask password from user") {
+        var fillingObject = {};
+        var callbacks = {
+            onSuccess: function () {
+            },
+            onFailure: function (e) {
+            }
+        };
+        UUFClient.renderFragment("ask-password", fillingObject,
+            "accountVerificationMethod-area", "OVERWRITE", callbacks);
+    }
 }
 document.getElementById("inputUsername").onblur = function() {userNameExists()};
 function userNameExists() {
@@ -97,8 +108,20 @@ $("#addUserForm").validate({
             required: true,
             noSpace: true
         },
-        inputUsername:{
+        inputUsername: {
             required: true
+        },
+        askPwdDuplicateEmail:{
+            equalTo: "#askPwdEmail",
+            required: {
+                depends: function (element) {
+                    return $("#askPwdEmail").is(":not(:blank)");
+                }
+            }
+        },
+        askPwdEmail: {
+            required: true,
+            noSpace: true
         }
     },
     messages: {
@@ -111,8 +134,14 @@ $("#addUserForm").validate({
         },
         inputUsername:{
             required: "Required to provide a username"
+        },
+        askPwdDuplicateEmail:{
+            equalTo: "These emails do not match.",
+            required: "Please re-enter the correct email."
+        },
+        askPwdEmail: {
+            required: "Required to provide the user's email."
         }
-
     }
 });
 

@@ -18,6 +18,7 @@ function onGet(env) {
 }
 
 function onPost(env) {
+
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
     var PasswordGenerationUtil = Java.type('org.wso2.is.portal.user.client.api.util.PasswordGenerationUtil');
@@ -31,28 +32,67 @@ function onPost(env) {
         isUpperCaseNeeded: isUpperCaseNeeded, isLowerCaseNeeded: isLowerCaseNeeded,
         isSpecialCharacterNeeded: isSpecialCharacterNeeded
     });
-    var claimMap = {};
-    var credentialMap = {};
-    var domain = null;
-    credentialMap["password"] = env.request.formParams['newPassword'];
-    claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
-    domain = env.request.formParams['domain'];
-    var registrationResult = userRegistration(claimMap, credentialMap, domain);
-    if (registrationResult.errorMessage) {
+
+
+    var optionSelector = env.request.formParams['verificationSelector'];
+
+    if (optionSelector === "with_password") {
+        var credentialMap = {};
+        var claimMap = {};
+        var domain = null;
+        Log.info("the selected option is with password");
+        credentialMap["password"] = env.request.formParams['newPassword'];
+        claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
+        domain = env.request.formParams['domain'];
+        var registrationResult = userRegistration(claimMap, credentialMap, domain);
+        if (registrationResult.errorMessage) {
+            return {
+                domainNames: domainNames, primaryDomainName: primaryDomainName,
+                errorMessage: registrationResult.errorMessage
+            };
+        }
+        else {
+            return {
+                domainNames: domainNames,
+                primaryDomainName: primaryDomainName,
+                message: registrationResult.message
+            };
+            //TODO:do a redirect to listing page once user added.
+            //sendRedirect(env.contextPath + '/users/list');
+        }
+    }
+    else if (optionSelector === "ask_password") {
+        var credentialMapAP = {};
+        var claimMapAP = {};
+        var domainAP = null;
+        var emailMapAP = {};
+        claimMapAP["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
+        claimMapAP["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
+        credentialMapAP["password"] = generatePassword(8);
+        Log.info("the generated password :"+ credentialMapAP["password"]);
+        domainAP = env.request.formParams['domain'];
+        emailMapAP["email"]  = env.request.formParams['askPwdEmail'];
+        Log.info("the given email is :"+ emailMapAP["email"]);
+        var addUserAskPasswordResult = userRegistrationWithAskPassword(claimMapAP, credentialMapAP, emailMapAP, domainAP);
         return {
-            domainNames: domainNames, primaryDomainName: primaryDomainName,
-            errorMessage: registrationResult.errorMessage
+            domainNames: domainNames, primaryDomainName: primaryDomainName
         };
     }
-    else {
+    else if (optionSelector === "otp") {
+
+        Log.info("the selected option is using OTP");
         return {
-            domainNames: domainNames,
-            primaryDomainName: primaryDomainName,
-            message: registrationResult.message
+            domainNames: domainNames, primaryDomainName: primaryDomainName
         };
-        //TODO:do a redirect to listing page once user added.
-        //sendRedirect(env.contextPath + '/users/list');
     }
+    else if (optionSelector === "email_or_phone") {
+
+        Log.info("the selected option is using email");
+        return {
+            domainNames: domainNames, primaryDomainName: primaryDomainName
+        };
+    }
+
 }
 
 function getDomainNames(env) {
@@ -93,4 +133,28 @@ function userRegistration(claimMap, credentialMap, domain) {
             errorMessage: message
         };
     }
+}
+
+function userRegistrationWithAskPassword(claimMap, credentialMap, emailMap, domain){
+    var result = userRegistration(claimMap, credentialMap, domain);
+    Log.info("the result of registration is :"+ result);
+    if (result) {
+        Log.info("Succcessfully added");
+        try {
+
+        } catch (e){
+
+        }
+    }
+
+}
+
+function generatePassword(length) {
+    var length = length,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
 }
