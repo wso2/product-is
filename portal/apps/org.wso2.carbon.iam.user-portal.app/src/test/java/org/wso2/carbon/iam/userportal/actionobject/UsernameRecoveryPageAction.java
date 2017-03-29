@@ -48,7 +48,6 @@ public class UsernameRecoveryPageAction extends UsernameRecoveryPage {
         }
         getRecover().click();
         return true;
-
     }
 
     public boolean backToSignIn() {
