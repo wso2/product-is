@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
         <groupId>org.wso2.is</groupId>
-        <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+        <artifactId>org.wso2.carbon.iam.admin-portal.feature</artifactId>
         <version>${carbon.is.version}</version>
         <type>test-jar</type>
         <scope>test</scope>

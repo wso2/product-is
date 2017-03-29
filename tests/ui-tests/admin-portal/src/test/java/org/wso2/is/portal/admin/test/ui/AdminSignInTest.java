@@ -23,36 +23,31 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
+import org.wso2.carbon.iam.adminportal.actionobject.AdminLoginPageAction;
 
 
 /**
  * Test for Sign-in in admin portal.
  */
-public class AdminSignInTest extends SelectDriver{
-    private static LoginPageAction loginPageAction;
+public class AdminSignInTest extends SelectDriver {
+    private static AdminLoginPageAction adminLoginPageAction;
 
     private static WebDriver driver;
-    private static String loginPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/user-portal/login";
+    private static String adminLoginPage = "https://" + System.getProperty("home") + ":" +
+            System.getProperty("port") + "/admin-portal/login";
     private static String adminPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/user-portal/";
-    private static String usernameRecoveryPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/user-portal/recovery/username";
-    private static String passwordRecoveryPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/user-portal/recovery/password";
-
+            System.getProperty("port") + "/admin-portal/";
     @BeforeClass
     public void init() {
         driver = selectDriver(System.getProperty("driver"));
-        loginPageAction = new LoginPageAction(driver);
+        adminLoginPageAction = new AdminLoginPageAction(driver);
     }
 
     @Test(groups = "AdminSignInTest")
     public void loadLoginPage() throws Exception {
 
-        driver.get(loginPage);
-        Assert.assertEquals(driver.getCurrentUrl(), loginPage,
+        driver.get(adminLoginPage);
+        Assert.assertEquals(driver.getCurrentUrl(), adminLoginPage,
                 "This current page is not the login page.");
     }
 
@@ -60,7 +55,7 @@ public class AdminSignInTest extends SelectDriver{
     public void testLogin() throws Exception {
         String username = System.getProperty("username");
         String password = System.getProperty("password");
-        boolean logged = loginPageAction.login(username, password);
+        boolean logged = adminLoginPageAction.adminLogin(username, password);
         Assert.assertTrue(logged, "Loggin failed.");
         Assert.assertEquals(driver.getCurrentUrl(), adminPage,
                 "This current page is not the admin user page.");
