@@ -27,7 +27,7 @@ public class PasswordHistoryBean implements Serializable {
 
     private static final long serialVersionUID = -2913500114444797062L;
     private boolean isEnabled = true;
-    private int minCountToAllowRepitition = 3;
+    private int minCountToAllowRepitition = 5;
     private int minAgeToAllowRepitition = 7;
     private String passwordHistoryDataStoreClass = null;
     private String hashingAlgorithm = "SHA-256";

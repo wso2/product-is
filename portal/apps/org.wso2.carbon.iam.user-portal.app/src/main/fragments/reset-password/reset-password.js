@@ -31,19 +31,19 @@ function updatePassword(username, oldPassword, newPassword, domain) {
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
         		errorCode = cause.getTargetException().getErrorCode();
-
+                var number = -1;
         		if (errorCode === "1000") {
-                    var count = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                    number = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                             "getHistoryCount", []);
-                    message = "Password You entered has already been used in last " + count + "Attempts";
+                    message = 'password.history.validation.error.1000';
                 } else if(errorCode === "1001") {
-                    var days = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                    number = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                     "getNumOfDays", []);
-                    message = "Password You entered has already been used in last " + days;
+                    message = 'password.history.validation.error.1001';
                 }
             }
         }
-        return {success: false, message: message};
+        return {success: false, message: message, number:number};
     }
 }
 
@@ -58,7 +58,7 @@ function onPost(env) {
         if (result.success) {
             return {success: true, message: result.message};
         } else {
-            return {success: false, message: result.message};
+            return {success: false, message: result.message, number: result.number};
         }
     }
 }

@@ -138,7 +138,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     /**
-     * This will be removed with new config model
+     * todo:This will be removed with new config model
      * @return
      */
     public int getHistoryCount () {
@@ -146,7 +146,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     /**
-     * This will be removed with new config model
+     * todo:This will be removed with new config model
      * @return
      */
     public int getNumOfDays() {
