@@ -24,20 +24,20 @@ import org.wso2.carbon.iam.userportal.pageobject.LoginPage;
 /**
  * Login page action for generated page objects using chrome plugin.
  */
-public class LoginPageAction {
+public class LoginPageAction extends LoginPage {
 
     WebDriver webDriver = null;
     public LoginPageAction(WebDriver driver) {
+        super(driver);
         webDriver = driver;
     }
 
     public boolean login(String username, String password) {
-        LoginPage loginPage = new LoginPage(webDriver);
         boolean result = false;
         try {
-            loginPage.getUsername1().sendKeys(username);
-            loginPage.getPassword1().sendKeys(password);
-            loginPage.getSignIn().click();
+            getUsername1().sendKeys(username);
+            getPassword1().sendKeys(password);
+            getSignIn().click();
 
             result = true;
 
@@ -49,10 +49,9 @@ public class LoginPageAction {
     }
 
     public boolean signUp() {
-        LoginPage loginPage = new LoginPage(webDriver);
         boolean result = false;
         try {
-            loginPage.getSignUp().click();
+            getSignUp().click();
             result = true;
 
         } catch (Exception e) {
@@ -64,10 +63,9 @@ public class LoginPageAction {
 
 
     public boolean forgetUsername() {
-        LoginPage loginPage = new LoginPage(webDriver);
         boolean result = false;
         try {
-            loginPage.getUsername2().click();
+            getUsername2().click();
             result = true;
 
         } catch (Exception e) {
@@ -77,10 +75,9 @@ public class LoginPageAction {
         return result;
     }
      public boolean forgetPassword() {
-         LoginPage loginPage = new LoginPage(webDriver);
          boolean result = false;
          try {
-             loginPage.getPassword2().click();
+            getPassword2().click();
              result = true;
 
          } catch (Exception e) {

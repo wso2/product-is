@@ -27,28 +27,28 @@ import java.util.List;
 /**
  * Action class for recoverying username.
  */
-public class UsernameRecoveryPageAction {
+public class UsernameRecoveryPageAction extends UsernameRecoveryPage {
 
 
     WebDriver webDriver = null;
     public UsernameRecoveryPageAction(WebDriver driver) {
+        super(driver);
         webDriver = driver;
     }
 
     public boolean recoverUsername(List<Attribute> attributes) {
-        UsernameRecoveryPage usernameRecoveryPage = new UsernameRecoveryPage(webDriver);
         boolean result = false;
         try {
             for (Attribute attribute: attributes) {
                 if (attribute.getAttributeName() == "givenname") {
-                    usernameRecoveryPage.getFirstName().sendKeys(attribute.getAttributeValue());
+                    getFirstName().sendKeys(attribute.getAttributeValue());
                 } else if (attribute.getAttributeName() == "lastname") {
-                    usernameRecoveryPage.getLastName().sendKeys(attribute.getAttributeValue());
+                    getLastName().sendKeys(attribute.getAttributeValue());
                 } else if (attribute.getAttributeName() == "email") {
-                    usernameRecoveryPage.getEmail().sendKeys(attribute.getAttributeValue());
+                    getEmail().sendKeys(attribute.getAttributeValue());
                 }
             }
-            usernameRecoveryPage.getRecover().click();
+            getRecover().click();
             result = true;
         } catch (Exception e) {
             System.out.print(e.getMessage());
@@ -58,10 +58,9 @@ public class UsernameRecoveryPageAction {
     }
 
     public  boolean backToSignIn() {
-        UsernameRecoveryPage usernameRecoveryPage = new UsernameRecoveryPage(webDriver);
         boolean result = false;
         try {
-            usernameRecoveryPage.getBackToSignIn().click();
+            getBackToSignIn().click();
             result = true;
         } catch (Exception e) {
             System.out.print(e.getMessage());

@@ -189,7 +189,7 @@
     </profiles>
     <properties>
         <import-packages>
-            org.wso2.is.user.portal.test.driver.*; version="${carbon.is.version}"
+            <!--org.wso2.is.user.portal.test.driver.*; version="${carbon.is.version}"-->
         </import-packages>
     </properties>
 

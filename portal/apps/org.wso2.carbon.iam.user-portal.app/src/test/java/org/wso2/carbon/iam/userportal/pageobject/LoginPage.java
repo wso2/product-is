@@ -25,7 +25,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.Map;
 
 /**
- * Created by wso2dinali on 22/3/17.
+ * Page object for the Login Page.
  */
 public class LoginPage {
 
