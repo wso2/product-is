@@ -72,15 +72,6 @@ public class LoginPage {
         this.driver = driver;
     }
 
-    public LoginPage(WebDriver driver, Map<String, String> data) {
-        this(driver);
-        this.data = data;
-    }
-
-    public LoginPage(WebDriver driver, Map<String, String> data, int timeout) {
-        this(driver, data);
-        this.timeout = timeout;
-    }
 
     public Map<String, String> getData() {
         return data;
