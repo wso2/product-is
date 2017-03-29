@@ -39,31 +39,27 @@ public class EditAdminUserPage {
     @CacheLookup
     private WebElement profileSelector;
 
-    @FindBy(id = "option-profile")
+    @FindBy(id = "default-email")
     @CacheLookup
-    private WebElement optionProfile;
+    private WebElement email1;
 
-    @FindBy(id = "email")
-    @CacheLookup
-    private WebElement email;
-
-    @FindBy(id = "email")
+    @FindBy(id = "employee-email")
     @CacheLookup
     private WebElement email2;
 
-    @FindBy(id = "givenname")
+    @FindBy(id = "default-givenname")
     @CacheLookup
-    private WebElement firstName;
+    private WebElement firstName1;
 
-    @FindBy(id = "givenname")
+    @FindBy(id = "employee-givenname")
     @CacheLookup
     private WebElement firstName2;
 
-    @FindBy(id = "lastname")
+    @FindBy(id = "default-lastname")
     @CacheLookup
     private WebElement lastName;
 
-    @FindBy(id = "telephone")
+    @FindBy(id = "default-telephone")
     @CacheLookup
     private WebElement telephone;
 
@@ -75,11 +71,11 @@ public class EditAdminUserPage {
     @CacheLookup
     private WebElement update2;
 
-    @FindBy(id = "username")
+    @FindBy(id = "default-username")
     @CacheLookup
-    private WebElement username;
+    private WebElement username1;
 
-    @FindBy(id = "username")
+    @FindBy(id = "employee-username")
     @CacheLookup
     private WebElement username2;
 
@@ -99,20 +95,16 @@ public class EditAdminUserPage {
         return profileSelector;
     }
 
-    public WebElement getOptionProfile() {
-        return optionProfile;
-    }
-
-    public WebElement getEmail() {
-        return email;
+    public WebElement getEmail1() {
+        return email1;
     }
 
     public WebElement getEmail2() {
         return email2;
     }
 
-    public WebElement getFirstName() {
-        return firstName;
+    public WebElement getFirstName1() {
+        return firstName1;
     }
 
     public WebElement getFirstName2() {
@@ -135,8 +127,8 @@ public class EditAdminUserPage {
         return update2;
     }
 
-    public WebElement getUsername() {
-        return username;
+    public WebElement getUsername1() {
+        return username1;
     }
 
     public WebElement getUsername2() {
@@ -151,13 +143,4 @@ public class EditAdminUserPage {
         this.driver = driver;
     }
 
-    public EditAdminUserPage(WebDriver driver, Map<String, String> data) {
-        this(driver);
-        this.data = data;
-    }
-
-    public EditAdminUserPage(WebDriver driver, Map<String, String> data, int timeout) {
-        this(driver, data);
-        this.timeout = timeout;
-    }
 }

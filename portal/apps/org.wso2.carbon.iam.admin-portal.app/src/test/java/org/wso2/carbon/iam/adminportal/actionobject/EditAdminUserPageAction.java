@@ -20,6 +20,7 @@ package org.wso2.carbon.iam.adminportal.actionobject;
 
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.wso2.carbon.iam.adminportal.pageobject.EditAdminUserPage;
 
 /**
@@ -33,17 +34,27 @@ public class EditAdminUserPageAction extends EditAdminUserPage {
         webDriver = driver;
     }
 
-    public boolean updateDefaultProfile(String email) {
-        getEmail().clear();
-        getEmail().sendKeys(email);
+    public boolean updateDefaultProfile(String email, String firstName) {
+        getEmail1().clear();
+        getEmail1().sendKeys(email);
+        getFirstName1().clear();
+        getFirstName1().sendKeys(firstName);
         getUpdate1().click();
         return true;
+    }
 
+    public boolean updateEmployeeProfile(String email, String firstName) {
+        getEmail2().clear();
+        getEmail2().sendKeys(email);
+        getFirstName2().clear();
+        getFirstName2().sendKeys(firstName);
+        getUpdate2().click();
+        return true;
     }
 
     public boolean selectEmployeeOption() {
-        getProfileSelector().clear();
-        getProfileSelector().click();
+        Select dropdown = new Select(getProfileSelector());
+        dropdown.selectByVisibleText("employee");
         getUpdate2().click();
         return true;
     }

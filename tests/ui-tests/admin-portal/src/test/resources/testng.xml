@@ -24,7 +24,7 @@
     <test name="wso2-identity-server-admin-portal-ui-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.is.portal.admin.test.ui.AdminSignInTest"/>
-            <class name="org.wso2.is.portal.admin.test.ui.AdminEditDefaultProfileTest"/>
+            <class name="org.wso2.is.portal.admin.test.ui.AdminEditProfileTest"/>
         </classes>
     </test>
 </suite>
