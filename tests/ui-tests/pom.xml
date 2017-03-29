@@ -16,5 +16,6 @@
 
     <modules>
         <module>user-portal</module>
+        <module>admin-portal</module>
     </modules>
 </project>
