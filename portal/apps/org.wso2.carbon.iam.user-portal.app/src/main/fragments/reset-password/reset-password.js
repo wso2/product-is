@@ -21,18 +21,18 @@ function updatePassword(username, oldPassword, newPassword, domain) {
         callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updatePassword", [username, oldPasswordChar, newPasswordChar, domain]);
 
-        return {success: true, message: "You have successfully updated the password"};
+        return {success: true, message: 'password.history.validation.success'};
     } catch (e) {
         var message = e.message;
         var errorCode = -1;
         var cause = e.getCause();
-        if (cause != null) {
+        if (cause !== null) {
             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
             if (cause instanceof java.lang.reflect.InvocationTargetException) {
                 message = cause.getTargetException().message;
-        		errorCode = cause.getTargetException().getErrorCode();
+                errorCode = cause.getTargetException().getErrorCode();
                 var number = -1;
-        		if (errorCode === "1000") {
+                if (errorCode === "1000") {
                     number = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                             "getHistoryCount", []);
                     message = 'password.history.validation.error.1000';
