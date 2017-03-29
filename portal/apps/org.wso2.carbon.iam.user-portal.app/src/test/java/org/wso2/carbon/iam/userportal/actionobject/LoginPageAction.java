@@ -33,58 +33,25 @@ public class LoginPageAction extends LoginPage {
     }
 
     public boolean login(String username, String password) {
-        boolean result = false;
-        try {
             getUsername1().sendKeys(username);
             getPassword1().sendKeys(password);
             getSignIn().click();
-
-            result = true;
-
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            result = false;
-        }
-        return result;
+        return true;
     }
 
     public boolean signUp() {
-        boolean result = false;
-        try {
-            getSignUp().click();
-            result = true;
-
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            result = false;
-        }
-        return  result;
+        getSignUp().click();
+        return  true;
     }
 
 
     public boolean forgetUsername() {
-        boolean result = false;
-        try {
-            getUsername2().click();
-            result = true;
-
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            result = false;
-        }
-        return result;
+        getUsername2().click();
+        return true;
     }
      public boolean forgetPassword() {
-         boolean result = false;
-         try {
-            getPassword2().click();
-             result = true;
-
-         } catch (Exception e) {
-             System.out.print(e.getMessage());
-             result = false;
-         }
-         return result;
+         getPassword2().click();
+         return true;
      }
 
 }

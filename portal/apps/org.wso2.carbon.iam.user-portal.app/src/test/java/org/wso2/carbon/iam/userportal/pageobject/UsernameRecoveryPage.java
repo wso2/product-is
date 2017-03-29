@@ -57,16 +57,6 @@ public class UsernameRecoveryPage {
         this.driver = driver;
     }
 
-    public UsernameRecoveryPage(WebDriver driver, Map<String, String> data) {
-        this(driver);
-        this.data = data;
-    }
-
-    public UsernameRecoveryPage(WebDriver driver, Map<String, String> data, int timeout) {
-        this(driver, data);
-        this.timeout = timeout;
-    }
-
     public Map<String, String> getData() {
         return data;
     }

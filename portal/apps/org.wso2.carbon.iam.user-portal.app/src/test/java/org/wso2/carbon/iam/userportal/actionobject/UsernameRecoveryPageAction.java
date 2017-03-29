@@ -29,45 +29,30 @@ import java.util.List;
  */
 public class UsernameRecoveryPageAction extends UsernameRecoveryPage {
 
-
     WebDriver webDriver = null;
+
     public UsernameRecoveryPageAction(WebDriver driver) {
         super(driver);
         webDriver = driver;
     }
 
     public boolean recoverUsername(List<Attribute> attributes) {
-        boolean result = false;
-        try {
-            for (Attribute attribute: attributes) {
-                if (attribute.getAttributeName() == "givenname") {
-                    getFirstName().sendKeys(attribute.getAttributeValue());
-                } else if (attribute.getAttributeName() == "lastname") {
-                    getLastName().sendKeys(attribute.getAttributeValue());
-                } else if (attribute.getAttributeName() == "email") {
-                    getEmail().sendKeys(attribute.getAttributeValue());
-                }
+        for (Attribute attribute : attributes) {
+            if (attribute.getAttributeName() == "givenname") {
+                getFirstName().sendKeys(attribute.getAttributeValue());
+            } else if (attribute.getAttributeName() == "lastname") {
+                getLastName().sendKeys(attribute.getAttributeValue());
+            } else if (attribute.getAttributeName() == "email") {
+                getEmail().sendKeys(attribute.getAttributeValue());
             }
-            getRecover().click();
-            result = true;
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            result = false;
         }
-        return result;
+        getRecover().click();
+        return true;
     }
 
-    public  boolean backToSignIn() {
-        boolean result = false;
-        try {
-            getBackToSignIn().click();
-            result = true;
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-            result = false;
-        }
-        return result;
-
+    public boolean backToSignIn() {
+        getBackToSignIn().click();
+        return true;
     }
 
 }

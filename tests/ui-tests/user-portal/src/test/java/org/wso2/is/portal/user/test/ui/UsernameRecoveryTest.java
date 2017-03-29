@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 public class UsernameRecoveryTest extends SelectDriver {
 
     private static UsernameRecoveryPageAction usernameRecoveryPageAction;
-    //private static LoginPageActionP loginPageAction;
 
     private static WebDriver driver;
 
@@ -91,10 +90,4 @@ public class UsernameRecoveryTest extends SelectDriver {
     public void close() {
         driver.quit();
     }
-
-
-
-
-
-
 }
