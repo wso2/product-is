@@ -57,6 +57,11 @@
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>jaxrs-delegates</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.datasources</groupId>
             <artifactId>org.wso2.carbon.datasource.core</artifactId>
         </dependency>
@@ -373,6 +378,72 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.security.wso2</groupId>
+            <artifactId>wss4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec.wso2</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+        </dependency>
+
+        <!-- gateway dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.resource</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
+            <artifactId>org.wso2.carbon.identity.auth.saml2.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
+            <artifactId>org.wso2.carbon.identity.authenticator.inbound.saml2sso</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</groupId>
+            <artifactId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>in-memory-connectors-test-artifact</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -549,6 +620,9 @@
                                     <srcFiles>
                                         <srcFile>
                                             ${basedir}/target/test-classes/dbscripts/identity-mgt/test-data.sql
+                                        </srcFile>
+                                        <srcFile>
+                                            ${basedir}/target/test-classes/dbscripts/identity-mgt/h2-gateway.sql
                                         </srcFile>
                                     </srcFiles>
                                     <onError>abort</onError>

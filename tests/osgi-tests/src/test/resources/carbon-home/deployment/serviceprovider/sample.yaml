@@ -1,0 +1,83 @@
+serviceProviderConfig:
+  name: "sample"
+  requestValidationConfig:
+    requestValidatorConfigs:
+      -
+          type: "SAML2SSO"
+          uniquePropertyName : "SPEntityId"
+          properties:
+            SPEntityId : "travelocity.com"
+            AssertionConsumerURLs:
+                - "http://localhost:8080/travelocity.com/home.jsp"
+            DefaultAssertionConsumerURL : "http://localhost:8080/travelocity.com/home.jsp"
+            Certificate : "MIICNTCCAZ6gAwIBAgIES343gjANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJV
+                           UzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoM
+                           BFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xMDAyMTkwNzAyMjZaFw0zNTAy
+                           MTMwNzAyMjZaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwN
+                           TW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0
+                           MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUp/oV1vWc8/TkQSiAvTousMzO
+                           M4asB2iltr2QKozni5aVFu818MpOLZIr8LMnTzWllJvvaA5RAAdpbECb+48FjbBe
+                           0hseUdN5HpwvnH/DW8ZccGvk53I6Orq7hLCv1ZHtuOCokghz/ATrhyPq+QktMfXn
+                           RS4HrKGJTzxaCcU7OQIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBPAwDQYJKoZIhvcN
+                           AQEFBQADgYEAW5wPR7cr1LAdq+IrR44iQlRG5ITCZXY9hI0PygLP2rHANh+PYfTm
+                           xbuOnykNGyhM6FjFLbW2uZHQTY1jMrPprjOrmyK5sjJRO4d1DeGHT/YnIjs9JogR
+                           Kv4XHECwLtIVdAbIdWHEtVZJyMSktcyysFcvuhPQK8Qc/E/Wq8uHSCo="
+            SendClaimsAlways : "true"
+            IdPInitSSOEnabled : "true"
+            AttributeConsumingServiceIndex : "2342342"
+            AuthnRequestSigned : "false"
+      -
+          type: "oidc"
+          uniquePropertyName : "key"
+          properties:
+              AssertionConsumerUrls:
+                  - "http://localhost:8080/playground/home.jsp"
+              key : "f3f43f43f43f43v4343gfddd"
+              secret : "ssdf232f23f32f32f32f32f32f"
+
+  claimConfig:
+   profile : "default"
+   dialectUri : "http://sample.sp.org/claims"
+   subjectClaimUri : "http://wso2.org/claims/fullname"
+
+  authenticationConfig:
+    authenticationStepConfigs :
+      -
+        step : 1
+        useLocalSubjectIdentifier : "true"
+        useDomainInLocalSubjectIdentifier : "true"
+        authStrategy : ""
+        executionStrategy : "single"
+        identityProviders :
+          -
+            identityProviderName : "myidp"
+            authenticatorName : "SAML2SSOAuthenticator"
+
+  responseBuildingConfig:
+    responseBuilderConfigs:
+      -
+        type: "SAML2SSO"
+        properties:
+          NotOnOrAfterPeriod : "5"
+          NameIdFormat : "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+          Certificate : "MIICNTCCAZ6gAwIBAgIES343gjANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJV
+                         UzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoM
+                         BFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xMDAyMTkwNzAyMjZaFw0zNTAy
+                         MTMwNzAyMjZaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwN
+                         TW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0
+                         MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUp/oV1vWc8/TkQSiAvTousMzO
+                         M4asB2iltr2QKozni5aVFu818MpOLZIr8LMnTzWllJvvaA5RAAdpbECb+48FjbBe
+                         0hseUdN5HpwvnH/DW8ZccGvk53I6Orq7hLCv1ZHtuOCokghz/ATrhyPq+QktMfXn
+                         RS4HrKGJTzxaCcU7OQIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBPAwDQYJKoZIhvcN
+                         AQEFBQADgYEAW5wPR7cr1LAdq+IrR44iQlRG5ITCZXY9hI0PygLP2rHANh+PYfTm
+                         xbuOnykNGyhM6FjFLbW2uZHQTY1jMrPprjOrmyK5sjJRO4d1DeGHT/YnIjs9JogR
+                         Kv4XHECwLtIVdAbIdWHEtVZJyMSktcyysFcvuhPQK8Qc/E/Wq8uHSCo="
+          AuthnResponseSigned : "true"
+          AttributeConsumingServiceIndex : "2342342"
+          SendClaimsAlways : "true"
+          AssertionEncrypted : "false"
+          SignatureAlgo : "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+          DigestAlgo : "http://www.w3.org/2000/09/xmldsig#sha1"
+          RequestedAudiences :
+            - "audience1"
+            - "audience2"
