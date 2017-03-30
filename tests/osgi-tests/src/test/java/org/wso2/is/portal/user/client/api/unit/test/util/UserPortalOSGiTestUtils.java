@@ -231,6 +231,10 @@ public class UserPortalOSGiTestUtils {
                 .groupId("org.wso2.carbon.identity.mgt")
                 .artifactId("org.wso2.carbon.identity.handler.event.account.lock")
                 .versionAsInProject());
+        optionList.add(mavenBundle()
+                .groupId("org.wso2.carbon.identity.mgt")
+                .artifactId("org.wso2.carbon.identity.policy.password")
+                .versionAsInProject());
 
         CarbonSysPropConfiguration sysPropConfiguration = new CarbonSysPropConfiguration();
         sysPropConfiguration.setCarbonHome(System.getProperty("carbon.home"));
