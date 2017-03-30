@@ -2,7 +2,7 @@
 
 function getPasscode(env) {
     try {
-        var passcode = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "persistPassCode",
+        var passcode = callOSGiService("org.wso2.is.portal.user.client.api.RecoveryMgtService", "persistPasscode",
             ["user1"]);
     } catch (e) {
         return {errorMessage: 'Error while generating the passcode'};
