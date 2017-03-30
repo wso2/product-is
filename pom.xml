@@ -118,6 +118,12 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.policy.password.feature</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.userstore</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt.store.connector.jdbc.feature</artifactId>
                 <version>${carbon.security.userstore.jdbc.version}</version>
@@ -194,6 +200,11 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.policy.password</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
                 <version>${carbon.security.version}</version>
@@ -246,6 +257,12 @@
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.foundation.ui</artifactId>
                 <version>${carbon.uuf.common.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
+                <version>${carbon.is.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -844,11 +861,11 @@
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <carbon.security.userstore.jdbc.version>0.1.2</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>0.1.33</org.wso2.carbon.identity.mgt.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.37-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.33</org.wso2.carbon.identity.recovery.server.feature.version>
-        <org.wso2.carbon.identity.commons.feature.version>0.1.23</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>0.1.23</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.37-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.commons.feature.version>0.1.24-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>0.1.24-SNAPSHOT</org.wso2.carbon.identity.commons.version>
         <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.15</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 
         <carbon.uuf.version>1.0.0-m13</carbon.uuf.version>

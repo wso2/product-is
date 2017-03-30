@@ -89,4 +89,12 @@ public interface RecoveryMgtService {
      */
     boolean verifyUsername(Map<String, String> userClaims) throws IdentityRecoveryException;
 
+    /**
+     * Pass pass code value to persist
+     *
+     * @param uniqueUserId selected user id
+     * @param passCode generated one time passcode
+     */
+    void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException;
+
 }

@@ -26,7 +26,7 @@ menus :
         link: ""
         icon: "fw-home"
       - text: "Users"
-        link: "/users"
+        link: "/users/list"
         icon: "fw fw-user"
       - text: "Groups"
         link: "/groups"
@@ -38,7 +38,6 @@ menus :
 errorPages:
   404: "/foundation/error/404"
   401: "/login"
-  500: "/error/custom"
   default: "/foundation/error/default"
 
 loginPageUri: "/login"
