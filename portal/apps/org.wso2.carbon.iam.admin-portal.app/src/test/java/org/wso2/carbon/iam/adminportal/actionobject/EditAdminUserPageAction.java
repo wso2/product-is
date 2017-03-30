@@ -35,27 +35,27 @@ public class EditAdminUserPageAction extends EditAdminUserPage {
     }
 
     public boolean updateDefaultProfile(String email, String firstName) {
-        getEmail1().clear();
-        getEmail1().sendKeys(email);
-        getFirstName1().clear();
-        getFirstName1().sendKeys(firstName);
-        getUpdate1().click();
+        getDefaultEmail().clear();
+        getDefaultEmail().sendKeys(email);
+        getDefaulFirstName().clear();
+        getDefaulFirstName().sendKeys(firstName);
+        getDefaultUpdate().click();
         return true;
     }
 
     public boolean updateEmployeeProfile(String email, String firstName) {
-        getEmail2().clear();
-        getEmail2().sendKeys(email);
-        getFirstName2().clear();
-        getFirstName2().sendKeys(firstName);
-        getUpdate2().click();
+        getEmployeeEmail().clear();
+        getEmployeeEmail().sendKeys(email);
+        getEmployeeFirstName().clear();
+        getEmployeeFirstName().sendKeys(firstName);
+        getEmployeeUpdate().click();
         return true;
     }
 
     public boolean selectEmployeeOption() {
         Select dropdown = new Select(getProfileSelector());
         dropdown.selectByVisibleText("employee");
-        getUpdate2().click();
+        getEmployeeUpdate().click();
         return true;
     }
 

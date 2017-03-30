@@ -23,6 +23,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.Map;
+
 /**
  * Page object for edit profile page.
  */
@@ -41,50 +42,47 @@ public class EditAdminUserPage {
 
     @FindBy(id = "default-email")
     @CacheLookup
-    private WebElement email1;
+    private WebElement defaultEmail;
 
     @FindBy(id = "employee-email")
     @CacheLookup
-    private WebElement email2;
+    private WebElement employeeEmail;
 
     @FindBy(id = "default-givenname")
     @CacheLookup
-    private WebElement firstName1;
+    private WebElement defaulFirstName;
 
     @FindBy(id = "employee-givenname")
     @CacheLookup
-    private WebElement firstName2;
+    private WebElement employeeFirstName;
 
     @FindBy(id = "default-lastname")
     @CacheLookup
-    private WebElement lastName;
+    private WebElement defaultLastName;
 
     @FindBy(id = "default-telephone")
     @CacheLookup
-    private WebElement telephone;
+    private WebElement defaultTelephone;
 
     @FindBy(id = "btn-default")
     @CacheLookup
-    private WebElement update1;
+    private WebElement defaultUpdate;
+
 
     @FindBy(id = "btn-employee")
     @CacheLookup
-    private WebElement update2;
+    private WebElement employeeUpdate;
 
     @FindBy(id = "default-username")
     @CacheLookup
-    private WebElement username1;
+    private WebElement defaultUsername;
 
     @FindBy(id = "employee-username")
     @CacheLookup
-    private WebElement username2;
+    private WebElement employeeUsername;
 
     public WebDriver getDriver() {
         return driver;
-    }
-
-    public int getTimeout() {
-        return timeout;
     }
 
     public WebElement getImage() {
@@ -95,48 +93,46 @@ public class EditAdminUserPage {
         return profileSelector;
     }
 
-    public WebElement getEmail1() {
-        return email1;
+    public WebElement getDefaultEmail() {
+        return defaultEmail;
     }
 
-    public WebElement getEmail2() {
-        return email2;
+    public WebElement getEmployeeEmail() {
+        return employeeEmail;
     }
 
-    public WebElement getFirstName1() {
-        return firstName1;
+    public WebElement getDefaulFirstName() {
+        return defaulFirstName;
     }
 
-    public WebElement getFirstName2() {
-        return firstName2;
+    public WebElement getEmployeeFirstName() {
+        return employeeFirstName;
     }
 
-    public WebElement getLastName() {
-        return lastName;
+    public WebElement getDefaultLastName() {
+        return defaultLastName;
     }
 
-    public WebElement getTelephone() {
-        return telephone;
+    public WebElement getDefaultTelephone() {
+        return defaultTelephone;
     }
 
-    public WebElement getUpdate1() {
-        return update1;
+    public WebElement getDefaultUpdate() {
+        return defaultUpdate;
     }
 
-    public WebElement getUpdate2() {
-        return update2;
+    public WebElement getEmployeeUpdate() {
+        return employeeUpdate;
     }
 
-    public WebElement getUsername1() {
-        return username1;
+    public WebElement getDefaultUsername() {
+        return defaultUsername;
     }
 
-    public WebElement getUsername2() {
-        return username2;
+    public WebElement getEmployeeUsername() {
+        return employeeUsername;
     }
 
-    public EditAdminUserPage() {
-    }
 
     public EditAdminUserPage(WebDriver driver) {
         PageFactory.initElements(driver, this);

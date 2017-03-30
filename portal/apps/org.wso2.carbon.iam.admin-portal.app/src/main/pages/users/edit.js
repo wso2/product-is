@@ -35,11 +35,10 @@ function getProfileNames() {
 
 function onGet(env) {
     var session = getSession();
-    var formId = "";
     var result = getProfileNames();
 
     if (result.success) {
-        return {profiles: result.profiles, actionId: formId};
+        return {profiles: result.profiles, actionId: ""};
     } else {
         return {errorMessage: result.message};
     }
@@ -47,8 +46,7 @@ function onGet(env) {
 
 function onPost(env) {
     var session = getSession();
-    var formId = "";
-    formId = env.request.queryString;
+    var formId = env.request.queryString;
     var result = getProfileNames();
 
     if (result.success) {
@@ -57,4 +55,3 @@ function onPost(env) {
         return {errorMessage: result.message};
     }
 }
-

@@ -50,13 +50,14 @@
 
                                         {{fragment "org.wso2.carbon.iam.portal.common.profile-image" profileName=this
                                                    actionId=actionId}}
-
                                         <br>
-                                        <div  id="profile-details">
+                                        <div id="profile-details">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 form-group">
-                                                <select class="selectpicker form-control" id="profileSelector">
+                                                <select class="selectpicker form-control"
+                                                        id="profileSelector">
                                                     {{#each profiles}}
-                                                        <option id="option-profile" action="{{this}}-profile-action"
+                                                        <option id="option-profile"
+                                                                action="{{this}}-profile-action"
                                                                 value="{{this}}">{{this}}</option>
                                                     {{/each}}
                                                 </select>
@@ -68,9 +69,12 @@
                                                 <div id="veiwProfileArea" class="veiwProfileArea">
                                                     <!-- Here is generated content for erro when user already exists -->
                                                     {{#each profiles}}
-                                                        <div id="{{this}}-form" class="{{this}} optionBox">
-                                                            {{fragment "org.wso2.carbon.iam.portal.common.profile-details"
-                                                                       profileName=this   actionId=actionId}}
+                                                        <div id="{{this}}-form"
+                                                             class="{{this}} optionBox">
+                                                            {{fragment
+                                                                    "org.wso2.carbon.iam.portal.common.profile-details"
+                                                                    profileName=this
+                                                                    actionId=actionId}}
                                                         </div>
                                                     {{/each}}
 
@@ -92,12 +96,12 @@
 
                                     </div>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     </div>
 
