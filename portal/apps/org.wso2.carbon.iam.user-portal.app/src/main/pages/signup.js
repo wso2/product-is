@@ -130,12 +130,41 @@ function authenticate(username, password, domain) {
     }
 }
 
+function isUserExists(username, usernameClaimUri, domain) {
+    var userClaims = {};
+    var isUserExists = false;
+    userClaims[usernameClaimUri] = username;
+    try {
+        isUserExists = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "isUserExist", [userClaims, domain]);
+        return {isUserExists: isUserExists};
+    } catch (e) {
+        return {errorMessage: 'signup.error.user.exist'};
+    }
+}
+
 function onGet(env) {
+
     var session = getSession();
     if (session) {
         sendRedirect(env.contextPath + env.config['loginRedirectUri']);
     }
-    return getProfile();
+
+/*    if (env.request.queryParams != null && env.request.queryParams.actionId != null &&
+        "usernameExists" === env.request.queryParams.actionId) {
+        var usernameClaimUri = env.request.queryParams.usernameClaimUri;
+        var username = env.request.queryParams.username;
+        var domain = env.request.queryParams.domain;
+        var userExistenceResult = isUserExists(username, usernameClaimUri, domain);
+        if (userExistenceResult.errorMessage) {
+            return {errorMessage: userExistenceResult.errorMessage};
+        }
+        else if (userExistenceResult.isUserExists) {
+            return {errorMessage: 'signup.error.retrieve.claim'};
+        }
+    } else {*/
+        return {profile: getProfile()};
+    //}
 }
 
 
@@ -148,6 +177,9 @@ function onPost(env) {
     var claimMap = {};
     var credentialMap = {};
     var domain = null;
+    var username;
+    var usernameClaimUri = "http://wso2.org/claims/username";
+
     formParams = env.request.formParams;
     for (var i in formParams) {
         if (i == "password") {
@@ -159,6 +191,20 @@ function onPost(env) {
             claimMap[i] = formParams[i];
         }
     }
+
+    username = claimMap["http://wso2.org/claims/username"];
+    if (!username) {
+        return;
+    }
+
+    var userExistenceResult = isUserExists(username, usernameClaimUri, domain);
+    if (userExistenceResult.errorMessage) {
+        return {errorMessage: userExistenceResult.errorMessage};
+    }
+    else if (userExistenceResult.isUserExists) {
+        return {errorMessage: 'signup.error.user.exist.message', profile: getProfile()};
+    }
+
 
     var registrationResult = userRegistration(claimMap, credentialMap, domain);
     if (registrationResult.errorMessage) {

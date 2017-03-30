@@ -157,3 +157,21 @@ $('#domainSelector').change(function () {
     var domain = $(this).val();
     $("#domainValue").val(domain);
 });
+
+function userNameExists(url) {
+    var username = document.getElementById('username').value;
+    if(!username){
+        return;
+    }
+    var usernameClaimUri = document.getElementById('username').name;
+    var domain = null;
+    if(document.getElementById('domainSelector')) {
+        domain = document.getElementById('domainSelector').value;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: {actionId: "usernameExists", username: username, usernameClaimUri: usernameClaimUri, domain: domain}
+    });
+}

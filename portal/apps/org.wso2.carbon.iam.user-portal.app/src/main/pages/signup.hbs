@@ -39,8 +39,9 @@
                             {{#if errorMessage}}
                                 <div class="alert alert-danger" role="alert">
                                     <i class="icon fw fw-error"></i><strong>{{i18n "signup.error.default"}}</strong>&nbsp;
-                                    {{i18nerrorMessage}}
-                                    <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                    {{i18n errorMessage}}
+                                    <button type="errorButton" class="close" aria-label="close" data-dismiss="alert"
+                                            onclick="location.href = '{{@contextPath}}/signup';">
                                         <span aria-hidden="true">
                                             <i class="fw fw-cancel"></i>
                                         </span>
@@ -50,21 +51,21 @@
 
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    {{#each usernameClaim}}
+                                    {{#each profile.usernameClaim}}
                                         </br><label class="control-label"
                                                     for={{claimLabel}}>{{i18n (stringFormat "%s%s" "claim." claimLabel)}}
                                         <span>*</span></label>
-                                        <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                        <input onblur="userNameExists('{{@contextPath}}/signup')" type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                 name={{claimURI}}
                                                         class="form-control"
                                                 id="username"
                                                 pattern={{#if regex}}{{regex}}{{/if}}
                                                         placeholder={{i18n "placeholder.username"}}
-                                                required/>
+                                                required />
                                     {{/each}}
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    {{#if domainNames}}
+                                    {{#if profile.domainNames}}
                                         </br><label class="control-label"
                                                     for="domain">{{i18n "signup.domain"}}</label></br>
                                         <input type="hidden" name="domainValue" id="domainValue"
@@ -77,6 +78,18 @@
                                     {{/if}}
                                 </div>
                             </div>
+
+                                {{#if userExistsErrorMessage}}
+                                        <div class="alert alert-danger">
+                                            {{i18n userExistsErrorMessage}}
+                                            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                                        <span aria-hidden="true">
+                                            <i class="fw fw-cancel"></i>
+                                        </span>
+                                            </button>
+                                        </div>
+                                {{/if}}
+
                             <div class="form-group">
                                 <div class="password_strength_meter ">
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
@@ -129,7 +142,7 @@
                             </div>
 
                             <div class="form-group">
-                                {{#each signupClaims}}
+                                {{#each profile.signupClaims}}
                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                         {{#if required}}
                                             <label class="control-label"
