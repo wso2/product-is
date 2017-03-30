@@ -27,4 +27,9 @@ limitations under the License.
             <class name="org.wso2.is.portal.user.client.api.unit.test.UUFUserTest"/>
         </classes>
     </test>
+    <!--<test name="wso2-identity-server-saml-tests" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.is.saml.SPInitTests"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 </suite>
