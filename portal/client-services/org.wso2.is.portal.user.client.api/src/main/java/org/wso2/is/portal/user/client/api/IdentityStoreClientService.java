@@ -75,6 +75,19 @@ public interface IdentityStoreClientService {
     UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName)
             throws UserPortalUIException;
 
+    /***
+     *
+     * @param userClaims
+     * @param credentials
+     * @param domainName
+     * @param enableAskPsw
+     * @return
+     * @throws UserPortalUIException
+     */
+    UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName,
+                           boolean enableAskPsw)
+            throws UserPortalUIException;
+
     /**
      * Check user existence in a specific domain.
      *

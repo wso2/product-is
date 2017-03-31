@@ -207,6 +207,44 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
     }
 
     @Override
+    public UUFUser addUser(Map<String, String> userClaims, Map<String, String> credentials, String domainName,
+                           boolean enableAskPsw)
+            throws UserPortalUIException {
+
+        UserBean userBean = new UserBean();
+        List<Claim> claimsList = new ArrayList<>();
+        List<Callback> credentialsList = new ArrayList<>();
+        User identityUser;
+
+        for (Map.Entry<String, String> credential : credentials.entrySet()) {
+            PasswordCallback passwordCallback = new PasswordCallback("password", false);
+            passwordCallback.setPassword(credential.getValue().toCharArray());
+            credentialsList.add(passwordCallback);
+        }
+
+        for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            Claim claim = new Claim();
+            claim.setClaimUri(entry.getKey());
+            claim.setValue(entry.getValue());
+            claimsList.add(claim);
+        }
+
+        userBean.setClaims(claimsList);
+        userBean.setCredentials(credentialsList);
+        userBean.setAskPasswordUsingEmailEnable(enableAskPsw);
+
+
+        try {
+            identityUser = getRealmService().getIdentityStore().addUser(userBean, domainName);
+        } catch (IdentityStoreException e) {
+            String error = "Error while adding user.";
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+        return new UUFUser(null, identityUser.getUniqueUserId(), identityUser.getDomainName());
+    }
+
+    @Override
     public boolean isUserExist(Map<String, String> userClaims, String domain) throws UserPortalUIException {
         List<Claim> claimsList = new ArrayList<>();
         boolean isUserExists;

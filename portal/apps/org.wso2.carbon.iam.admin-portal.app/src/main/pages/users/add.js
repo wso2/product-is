@@ -73,7 +73,9 @@ function onPost(env) {
         domainAP = env.request.formParams['domain'];
         emailMapAP["email"]  = env.request.formParams['askPwdEmail'];
         Log.info("the given email is :"+ emailMapAP["email"]);
-        var addUserAskPasswordResult = userRegistrationWithAskPassword(claimMapAP, credentialMapAP, emailMapAP, domainAP);
+        var enableAskPasswordUsingEmail = true;
+        var addUserAskPasswordResult = userRegistrationWithAskPassword(claimMapAP, credentialMapAP, domainAP,
+            enableAskPasswordUsingEmail);
         return {
             domainNames: domainNames, primaryDomainName: primaryDomainName
         };
@@ -135,17 +137,21 @@ function userRegistration(claimMap, credentialMap, domain) {
     }
 }
 
-function userRegistrationWithAskPassword(claimMap, credentialMap, emailMap, domain){
-    var result = userRegistration(claimMap, credentialMap, domain);
-    Log.info("the result of registration is :"+ result);
-    if (result) {
-        Log.info("Succcessfully added");
-        try {
+function userRegistrationWithAskPassword(claimMap, credentialMap, domain, enableAskPasswordUsingEmail){
+    Log.info("Succcessfully added");
+    try {
+        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                "addUser", [claimMap, credentialMap, domain, enableAskPasswordUsingEmail]);
+            return {userRegistration: userRegistrationResult, message: 'user.add.success.message'};
 
-        } catch (e){
-
-        }
+    } catch (e){
+        var message = "Error occurred while adding the user.";
+        Log.error(message, e);
+        return {
+            errorMessage: message
+        };
     }
+
 
 }
 
