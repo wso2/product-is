@@ -2,37 +2,14 @@ function onGet(env) {
     var session = getSession();
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
-    var PasswordGenerationUtil = Java.type('org.wso2.is.portal.user.client.api.util.PasswordGenerationUtil');
-    var passwordMinLength = PasswordGenerationUtil.getPasswordMinLength();
-    var isNumbersIncluded = PasswordGenerationUtil.isIncludeNumbers();
-    var isUpperCaseNeeded = PasswordGenerationUtil.isIncludeUpperCase();
-    var isLowerCaseNeeded = PasswordGenerationUtil.isIncludeLowerCase();
-    var isSpecialCharacterNeeded = PasswordGenerationUtil.isIncludeSymbols();
-    sendToClient("result", {
-        passwordMinLength: passwordMinLength, isNumbersIncluded: isNumbersIncluded,
-        isUpperCaseNeeded: isUpperCaseNeeded, isLowerCaseNeeded: isLowerCaseNeeded,
-        isSpecialCharacterNeeded: isSpecialCharacterNeeded
-    });
-
+    sendPasswordStrengthParameters();
     return {domainNames: domainNames, primaryDomainName: primaryDomainName};
 }
 
 function onPost(env) {
-
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
-    var PasswordGenerationUtil = Java.type('org.wso2.is.portal.user.client.api.util.PasswordGenerationUtil');
-    var passwordMinLength = PasswordGenerationUtil.getPasswordMinLength();
-    var isNumbersIncluded = PasswordGenerationUtil.isIncludeNumbers();
-    var isUpperCaseNeeded = PasswordGenerationUtil.isIncludeUpperCase();
-    var isLowerCaseNeeded = PasswordGenerationUtil.isIncludeLowerCase();
-    var isSpecialCharacterNeeded = PasswordGenerationUtil.isIncludeSymbols();
-    sendToClient("result", {
-        passwordMinLength: passwordMinLength, isNumbersIncluded: isNumbersIncluded,
-        isUpperCaseNeeded: isUpperCaseNeeded, isLowerCaseNeeded: isLowerCaseNeeded,
-        isSpecialCharacterNeeded: isSpecialCharacterNeeded
-    });
-
+    sendPasswordStrengthParameters();
 
     var optionSelector = env.request.formParams['verificationSelector'];
 
@@ -88,6 +65,27 @@ function onPost(env) {
 
 }
 
+function sendPasswordStrengthParameters() {
+    var PasswordPolicyConfigurationUtil = Java
+        .type('org.wso2.is.portal.user.client.api.util.PasswordPolicyConfigurationUtil');
+    var isRegexValidation = PasswordPolicyConfigurationUtil.isRegexValidation();
+    if (isRegexValidation === false) {
+        var passwordMinLength = PasswordPolicyConfigurationUtil.getPasswordMinLength();
+        var isNumbersIncluded = PasswordPolicyConfigurationUtil.isIncludeNumbers();
+        var isUpperCaseNeeded = PasswordPolicyConfigurationUtil.isIncludeUpperCase();
+        var isLowerCaseNeeded = PasswordPolicyConfigurationUtil.isIncludeLowerCase();
+        var isSpecialCharacterNeeded = PasswordPolicyConfigurationUtil.isIncludeSymbols();
+        sendToClient("result", {
+            passwordMinLength: passwordMinLength, isNumbersIncluded: isNumbersIncluded,
+            isUpperCaseNeeded: isUpperCaseNeeded, isLowerCaseNeeded: isLowerCaseNeeded,
+            isSpecialCharacterNeeded: isSpecialCharacterNeeded, regexvalidation: false
+        });
+    } else {
+        sendToClient("result", {
+            regexvalidation: true
+        });
+    }
+}
 function getDomainNames(env) {
     var domainNames;
     if (env.config.isDomainInLogin) {

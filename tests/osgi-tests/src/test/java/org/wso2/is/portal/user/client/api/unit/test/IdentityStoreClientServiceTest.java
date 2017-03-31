@@ -27,21 +27,25 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.kernel.utils.CarbonServerInfo;
 import org.wso2.is.portal.user.client.api.IdentityStoreClientService;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.bean.UserListBean;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 import org.wso2.is.portal.user.client.api.unit.test.util.UserPortalOSGiTestUtils;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
@@ -374,4 +378,64 @@ public class IdentityStoreClientServiceTest {
         boolean isUserExists = identityStoreClientService.isUserExist(userClaims, validSecodaryDomain);
         Assert.assertTrue(isUserExists, "User does not exist in the given domain");
     }
+
+    @Test(dependsOnGroups = {"addUsers"})
+    public void testListUsersByOffsetAndLength() throws UserPortalUIException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        ClaimConfigEntry claimConfig = new ClaimConfigEntry();
+        claimConfig.setClaimURI("http://wso2.org/claims/username");
+        claimConfig.setDisplayName("Username");
+        claimConfig.setDataType("text");
+
+        List<ClaimConfigEntry> requestedClaims = new ArrayList<>(Arrays.asList(claimConfig));
+        List<UserListBean> users = identityStoreClientService.listUsers(1, 2, PRIMARY_DOMAIN, requestedClaims);
+
+        Assert.assertNotNull(users, "Failed to list the users.");
+        Assert.assertTrue(!users.isEmpty() && users.size() == 2, "Number of users received in the response " +
+                "is invalid.");
+
+        Boolean isUsernameRetrieved = users.get(0).getClaims().containsKey("Username");
+
+        Assert.assertTrue(isUsernameRetrieved, "Failed to retrieve requested claim");
+    }
+
+    @Test(dependsOnGroups = {"addUsers"})
+    public void testFilterUserListByClaim() throws UserPortalUIException {
+        IdentityStoreClientService identityStoreClientService =
+                bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
+        Assert.assertNotNull(identityStoreClientService, "Failed to get IdentityStoreClientService instance");
+
+        String claimURI = "http://wso2.org/claims/givenname";
+        String claimValue = "user2*";
+
+        ClaimConfigEntry claimConfig = new ClaimConfigEntry();
+        claimConfig.setClaimURI("http://wso2.org/claims/givenname");
+        claimConfig.setDisplayName("GivenName");
+        claimConfig.setDataType("text");
+
+        List<ClaimConfigEntry> requestedClaims = new ArrayList<>(Arrays.asList(claimConfig));
+
+        List<UserListBean> users = identityStoreClientService.listUsersWithFilter(0, 3,
+                claimURI, claimValue, PRIMARY_DOMAIN, requestedClaims);
+
+        Assert.assertNotNull(users, "Failed to list the users.");
+
+        List<String> givenNames = users.stream()
+                .map(UserListBean -> new String(UserListBean.getClaims().get("GivenName")))
+                .collect(Collectors.toList());
+
+        Boolean filterApplied = true;
+
+        for (String givenName : givenNames) {
+            if (!givenName.contains("user2")) {
+                filterApplied = false;
+            }
+        }
+
+        Assert.assertTrue(filterApplied, "Filter is not properly applied when listing users");
+    }
+
 }

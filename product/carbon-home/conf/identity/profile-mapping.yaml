@@ -149,3 +149,48 @@ profiles:
    readonly: false
    regex: "*"
    dataType: "email"
+ -
+  profileName: "user-list-filter"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "Username"
+   required: true
+   readonly: true
+   regex: ".*"
+   defaultValue: "user1"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/givenname"
+   displayName: "First Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/lastname"
+   displayName: "Last Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/email"
+   displayName: "Email"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "email"
+ -
+  profileName: "user-list-columns"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "Username"
+   required: true
+   readonly: true
+   regex: ".*"
+   defaultValue: "user1"
+   dataType: "text"

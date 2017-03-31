@@ -21,10 +21,29 @@ function updatePassword(username, oldPassword, newPassword, domain) {
         callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updatePassword", [username, oldPasswordChar, newPasswordChar, domain]);
 
-        return {success: true, message: "You have successfully updated the password"};
+        return {success: true, message: 'password.update.success'};
     } catch (e) {
         var message = e.message;
-        return {success: false, message: message};
+        var errorCode = -1;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+                errorCode = cause.getTargetException().getErrorCode();
+                var number = -1;
+                if (errorCode === "1000") {
+                    number = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                            "getHistoryCount", []);
+                    message = 'password.history.validation.error.1000';
+                } else if(errorCode === "1001") {
+                    number = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+                    "getNumOfDays", []);
+                    message = 'password.history.validation.error.1001';
+                }
+            }
+        }
+        return {success: false, message: message, number:number};
     }
 }
 
@@ -39,7 +58,7 @@ function onPost(env) {
         if (result.success) {
             return {success: true, message: result.message};
         } else {
-            return {success: false, message: result.message};
+            return {success: false, message: result.message, number: result.number};
         }
     }
 }
