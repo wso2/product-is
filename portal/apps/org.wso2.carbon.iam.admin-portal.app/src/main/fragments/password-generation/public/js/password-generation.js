@@ -1,5 +1,5 @@
-function initScript() {
-    $("#accountVerification").ready(function () {
+$(function () {
+    if (!result.regexvalidation) {
         $("#length .status-text").text("At least " + result.passwordMinLength + " characters");
         if (result.isNumbersIncluded) {
             $("#pnum .status-text").text("At least one number");
@@ -10,7 +10,14 @@ function initScript() {
         if (result.isSpecialCharacterNeeded) {
             $("#spchar .status-text").text("At least one special character");
         }
+        passwordStrengthScript();
+    }
+    showHidePassword();
+    $('#newPassword').blur(function () {
+        validateNewPassword();
     });
+});
+function passwordStrengthScript() {
     $("#newPassword").on("focus keyup", function () {
         var score = 0;
         var a = $(this).val();
@@ -92,6 +99,8 @@ function initScript() {
     $("#newPassword").blur(function () {
         $(".password_strength_meter .popover").popover("hide");
     });
+}
+function showHidePassword(){
     $('input[type=password]').after('<span class="hide-pass" title="Show/Hide Password"><i class="fw fw-view"></i>' +
         '</span>');
     var highPass = $('.hide-pass');
@@ -104,6 +113,23 @@ function initScript() {
             $(this).find('i').removeClass("fw-view");
             $(this).find('i').addClass("fw-hide");
             $(this).parent().find('input[data-schemaformat=password]').attr('type', 'text');
+        }
+    });
+}
+function validateNewPassword() {
+    var password = $("#newPassword").val();
+    $.ajax({
+        type: "POST",
+        url: "/admin-portal/root/apis/passwordUtil-micro-service/validatePassword",
+        data: {newPassword: password},
+        success: function (result) {
+            if (result === "true") {
+                $("#passwordValidationError").hide();
+                $("#addUser").prop('disabled', false);
+            } else {
+                $("#passwordValidationError").show();
+                $("#addUser").prop('disabled', true);
+            }
         }
     });
 }

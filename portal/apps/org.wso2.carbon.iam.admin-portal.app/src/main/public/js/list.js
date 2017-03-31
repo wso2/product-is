@@ -1,99 +1,102 @@
 var moreGroups = [];
 $(document).ready(function() {
-    var username;
-    var colData = buildColumnHeadings(columnList);
-    var lastIndex = colData[0].length - 1;
-    var thisTable = $('#users-sample').DataTable({
-        wso2: true,
-        data: users,
-        columns: colData[0],
-        "columnDefs": [
-            {
-                "targets": 0,
-                "render": function (data, type, full, meta) {
-                    return '<div class="thumbnail icon">'+
-                    '<i class="square-element text fw fw-user" style="font-size: 0px;"></i>'+
-                    '</div>';
-                }
-            },
-            {
-                "targets": 1,
-                "render": function (data, type, full, meta) {
-                    username = data;
-                    return data;
-                }
-            },
-            {
-                "targets": parseInt(colData[1]),
-                "render": function (data, type, full, meta) {
-                    var stringData = String(data);
-                    var string = '';
-                    var moreString = '';
-                    if (stringData) {
-                        var array = stringData.split(',');
 
-                        var i;
-                        for (i = 0; i < 2; i++) {
-                            string = string + '<span class="label label-primary"><i class="fw fw-group"></i>' + array[i] + '</span>';
+    if (columnList) {
+        var colData = buildColumnHeadings(columnList);
+        var username;
+        var lastIndex = colData[0].length - 1;
+        var thisTable = $('#users-sample').DataTable({
+            wso2: true,
+            data: users,
+            columns: colData[0],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, full, meta) {
+                        return '<div class="thumbnail icon">'+
+                        '<i class="square-element text fw fw-user" style="font-size: 0px;"></i>'+
+                        '</div>';
+                    }
+                },
+                {
+                    "targets": 1,
+                    "render": function (data, type, full, meta) {
+                        username = data;
+                        return data;
+                    }
+                },
+                {
+                    "targets": parseInt(colData[1]),
+                    "render": function (data, type, full, meta) {
+                        var stringData = String(data);
+                        var string = '';
+                        var moreString = '';
+                        if (stringData) {
+                            var array = stringData.split(',');
+
+                            var i;
+                            for (i = 0; i < 2; i++) {
+                                string = string + '<span class="label label-primary"><i class="fw fw-group"></i>' + array[i] + '</span>';
+                            }
+                            var size = array.length;
+                            if (size > 2) {
+                                moreString = '<a data-target="#modalDelete" data-toggle="modal" class="open-more-modal" data-id="' + username + '">and ' + (size - 2) + ' more..</a>';
+                            }
+                            moreGroups = data;
                         }
-                        var size = array.length;
-                        if (size > 2) {
-                            moreString = '<a data-target="#modalDelete" data-toggle="modal" class="open-more-modal" data-id="' + username + '">and ' + (size - 2) + ' more..</a>';
-                        }
-                        moreGroups = data;
+
+                        return '<div>' + string + moreString +'</div>'
+                    }
+                },
+                {
+                    "targets": lastIndex,
+                        "render": function (data, type, full, meta) {
+                        return   '<a href="#" class="btn btn-default">'+
+                        '<span class="fw-stack">'+
+                                                '<i class="fw fw-edit fw-stack-1x"></i>'+
+                                            '</span>'+
+                        '</a>'+
+                        '<a href="#" class="btn btn-default">'+
+                        '<span class="fw-stack">'+
+                                                '<i class="fw fw-view fw-stack-1x"></i>'+
+                                            '</span>'+
+                        '</a>'+
+                        '<a href="#" data-click-event="remove-form" class="btn btn-default">'+
+                        '<span class="fw-stack">'+
+                                                '<i class="fw fw-delete fw-stack-1x"></i>'+
+                                            '</span>'+
+                        '</a>' +
+                        '<input type="hidden" name="userUniqueId" id="userUniqueId" value="' + data + '"/>';
+                    }
+                }
+            ],
+            "fnCreatedRow": function(nRow, aData, iDataIndex) {
+
+                $('td:eq(0)', nRow)
+                .attr('data-search', 'user')
+                .attr('data-display', 'user')
+                .addClass('remove-padding icon-only content-fill');
+
+                $(nRow).addClass(aData.Status);
+                var columns = buildDataArrays(aData, columnList);
+
+                for (i = 1; i < lastIndex-1; i++) {
+                    $('td:eq('+i+')', nRow)
+                        .attr('data-search', columns[i])
+                        .attr('data-display', columns[i])
+                        .attr('title', columns[i])
+                        .attr('title', 'tooltip')
+                        .attr('data-placement', 'bottom')
+                        .addClass('fade-edge remove-padding-top');
                     }
 
-                    return '<div>' + string + moreString +'</div>'
-                }
-            },
-            {
-                "targets": lastIndex,
-                    "render": function (data, type, full, meta) {
-                    return   '<a href="#" class="btn btn-default">'+
-                    '<span class="fw-stack">'+
-                                            '<i class="fw fw-edit fw-stack-1x"></i>'+
-                                        '</span>'+
-                    '</a>'+
-                    '<a href="#" class="btn btn-default">'+
-                    '<span class="fw-stack">'+
-                                            '<i class="fw fw-view fw-stack-1x"></i>'+
-                                        '</span>'+
-                    '</a>'+
-                    '<a href="#" data-click-event="remove-form" class="btn btn-default">'+
-                    '<span class="fw-stack">'+
-                                            '<i class="fw fw-delete fw-stack-1x"></i>'+
-                                        '</span>'+
-                    '</a>' +
-                    '<input type="hidden" name="userUniqueId" id="userUniqueId" value="' + data + '"/>';
-                }
+                    $('td:eq('+lastIndex+')', nRow).addClass('text-right content-fill text-left-on-grid-view no-wrap');
+                },
+                initComplete: function (){
+                $('.random-thumbs .thumbnail.icon').random_background_color();
             }
-        ],
-        "fnCreatedRow": function(nRow, aData, iDataIndex) {
-
-            $('td:eq(0)', nRow)
-            .attr('data-search', 'user')
-            .attr('data-display', 'user')
-            .addClass('remove-padding icon-only content-fill');
-
-            $(nRow).addClass(aData.Status);
-            var columns = buildDataArrays(aData, columnList);
-
-            for (i = 1; i < lastIndex-1; i++) {
-                $('td:eq('+i+')', nRow)
-                    .attr('data-search', columns[i])
-                    .attr('data-display', columns[i])
-                    .attr('title', columns[i])
-                    .attr('title', 'tooltip')
-                    .attr('data-placement', 'bottom')
-                    .addClass('fade-edge remove-padding-top');
-                }
-
-                $('td:eq('+lastIndex+')', nRow).addClass('text-right content-fill text-left-on-grid-view no-wrap');
-            },
-            initComplete: function (){
-            $('.random-thumbs .thumbnail.icon').random_background_color();
-        }
-    });
+        });
+    }
 
     //------------------ Customizations for datatables plugin ----------------------------------------//
 
@@ -301,19 +304,26 @@ $(document).on("click", ".open-more-modal", function () {
 });
 
 buildColumnHeadings = function(columns) {
-    var arrayString = '{ "data": null }';
+
     var columnCount = Object.keys(columns).length - 1;
     var groupIndex;
     var roleIndex;
+
+    var array = [];
+    var firstObject = { "data": null };
+    array.push(firstObject);
+
     for (var i = 0; i < columnCount; i ++) {
-        arrayString = arrayString + ',{"data": "' + columns[i] + '"}';
+        var obj = {"data" : columns[i]}
+        array.push(obj);
+
         if (columns[i] === "Groups") {
             groupIndex = i + 1;
         } else if (columns[i] === "Roles") {
             roleIndex = i + 1;
         }
     }
-    var array = JSON.parse('[' + arrayString + ']');
+
     return [array, groupIndex, roleIndex];
 }
 
@@ -332,7 +342,7 @@ getClaimUri = function() {
     var claimUri = $('#claimSelector').val();
     $('#claim-uri').val(claimUri);
     var selectedIndex = $("#claimSelector")[0].selectedIndex;
-    if (selectedIndex == 0) {
+    if (selectedIndex === 0) {
         $('#claim-filter').val("");
     }
 }

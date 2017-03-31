@@ -10,21 +10,16 @@ $(document).ready(function () {
     });
     $('#verificationSelector').change(displayVals);
 });
-function generateNewPassword(){
-    $.ajax({
-        type: "GET",
-        url: "/admin-portal/root/apis/identityStore-micro-service/generatePassword",
-        success: function (result) {
-            $("#newPassword").val(result);
-        }
-    });
-}
+$(window).load(function () {
+    jQuery.validator.addMethod("noSpace", function (value, element) {
+        return value.indexOf(" ") < 0 ;
+    }, "Please don't enter spaces");
+});
 function displayVals() {
     if ($("#verificationSelector option:selected").text() === "With password") {
         var fillingObject = {};
         var callbacks = {
             onSuccess: function () {
-                initScript();
             },
             onFailure: function (e) {
             }
@@ -99,7 +94,8 @@ $("#addUserForm").validate({
             }
         },
         newPassword: {
-            required: true
+            required: true,
+            noSpace: true
         },
         inputUsername:{
             required: true

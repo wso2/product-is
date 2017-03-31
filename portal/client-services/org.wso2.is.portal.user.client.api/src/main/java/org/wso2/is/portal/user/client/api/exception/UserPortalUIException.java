@@ -21,12 +21,27 @@ package org.wso2.is.portal.user.client.api.exception;
  */
 public class UserPortalUIException extends Exception {
 
+    private int errorCode = 0;
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
+
     public UserPortalUIException() {
         super();
     }
 
     public UserPortalUIException(String message) {
         super(message);
+    }
+
+    public UserPortalUIException(String message, int errorCode) {
+        super(message);
+        this.errorCode = errorCode;
     }
 
     public UserPortalUIException(String message, Throwable cause) {

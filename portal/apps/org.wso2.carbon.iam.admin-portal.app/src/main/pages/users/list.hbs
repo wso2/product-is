@@ -1,5 +1,6 @@
 {{secured}}
 {{layout "privilege"}}
+{{title (i18n "users.list") " | " @config.appName}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.data-tables"}}
 {{favicon "images/favicon.png" type="image/png"}}
 {{css "css/admin-portal.css"}}
@@ -34,6 +35,28 @@
         <div class="page-header">
             <h1>{{i18n "overview.users"}}</h1>
         </div>
+        {{#if errorMessage}}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon fw fw-error"></i><strong>{{i18n "list.action.failure"}}</strong>
+                {{i18n errorMessage}}
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+                </button>
+            </div>
+        {{/if}}
+        {{#if noRecordsMessage}}
+            <div class="alert alert-info" role="alert">
+                <i class="icon fw fw-error"></i><strong>{{i18n "list.action.info"}}</strong>
+                {{i18n noRecordsMessage}} {{claimValue}}
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+                </button>
+            </div>
+        {{/if}}
         <form class="form-horizontal" method="post" id="filterListForm">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                 <input type="hidden" id="action" name="action" value="filter-list">
@@ -44,13 +67,15 @@
                         <thead class="block">
                         <tr class="sort-row">
                             <th class="content-fill no-sort"></th>
-                            {{#each sortRowList}}
-                                {{#if noSort}}
-                                    <th class="{{noSort}}">{{name}}</th>
-                                {{else}}
-                                    <th>{{name}}</th>
-                                {{/if}}
-                            {{/each}}
+                            {{#if sortRowList}}
+                                {{#each sortRowList}}
+                                    {{#if noSort}}
+                                        <th class="{{noSort}}">{{name}}</th>
+                                    {{else}}
+                                        <th>{{name}}</th>
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
                             <th class="no-sort">{{i18n "list.actions"}}</th>
                         </tr>
 

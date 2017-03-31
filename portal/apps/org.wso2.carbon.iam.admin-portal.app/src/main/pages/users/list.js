@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-function getFilteredList(offset, length, claimURI, claimValue, domainName, requestedClaims){
+function getFilteredList(offset, length, claimURI, claimValue, domainName, requestedClaims) {
      var userList;
      try {
          userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-             "getFilteredList", [offset, length, claimURI, claimValue, domainName, requestedClaims]);
+             "listUsersWithFilter", [offset, length, claimURI, claimValue, domainName, requestedClaims]);
      } catch (e) {
          return {errorMessage: 'list.error.retrieve.users'};
      }
@@ -26,11 +26,11 @@ function getFilteredList(offset, length, claimURI, claimValue, domainName, reque
      return userList;
 }
 
-function getUserList(offset, length, domainName, requestedClaims){
+function getUserList(offset, length, domainName, requestedClaims) {
      var userList;
      try {
          userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-             "getUserList", [offset, length, domainName, requestedClaims]);
+             "listUsers", [offset, length, domainName, requestedClaims]);
      } catch (e) {
          return {errorMessage: 'list.error.retrieve.users'};
      }
@@ -44,7 +44,7 @@ function getDomainNames(env) {
          domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
              "getDomainNames", []);
      } catch (e) {
-         return {errorMessage: 'signup.error.retrieve.domain'};
+         sendError(500, "list.error.retrieve.domain");
      }
      return domainNames;
 }
@@ -55,7 +55,7 @@ function getPrimaryDomainName(env) {
          primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
              "getPrimaryDomainName", []);
      } catch (e) {
-         return {errorMessage: 'signup.error.retrieve.domain'};
+         sendError(500, "list.error.retrieve.domain");
      }
      return primaryDomainName;
 }
@@ -66,45 +66,12 @@ function getClaimsInProfile (profileName) {
          claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
              "getProfile", [profileName]);
      } catch (e) {
-         return {errorMessage: profile + '.error.retrieve.claim'};
+         sendError(500, "list.error.retrieve.profile");
      }
      var claimForProfileEntry = claimProfile.claims;
 
      return claimForProfileEntry;
 }
-
-//function buildJSONArray(userList) {
-//     var userArray = [];
-//     var groups = [];
-//     var roles = [];
-//     var columnsArray = {};
-//     var claimsMap = {};
-//     var claims = {};
-//
-//     claimsMap = userList[0].getClaims();
-//     var index = 0;
-//     for (var key in claimsMap) {
-//         columnsArray[index] = key;
-//         index++;
-//     }
-//
-//     for (var i in userList) {
-//         var item = userList[i];
-//         groups = item.getGroups();
-//         claims = item.getClaims();
-//         //roles = item.getRoles();
-//         for (var key in claims) {
-//             if (key === "Groups") {
-//                 claims[key] = groups;
-//             } else if (key === "Roles") {
-//                 //claims[key] = roles;
-//             }
-//         }
-//         userArray.push(claims);
-//     }
-//     sendToClient("users", userArray);
-//     return columnsArray;
-//}
 
 function buildJSONArray(userList) {
     var userArray = [];
@@ -147,30 +114,35 @@ function onGet(env) {
     var requestedClaims = getClaimsInProfile("user-list-columns");
     var domains = getDomainNames(env);
 
-    var userList = getUserList(0, -1, "", requestedClaims);
-    var columns = buildJSONArray(userList);
-
-    sendToClient("columnList", columns);
     sendToClient("selectedClaim", null);
     sendToClient("selectedDomain", null);
     sendToClient("action", null);
     sendToClient("offset", null);
     sendToClient("recordLimit", null);
 
-    var sortRowListCount = Object.keys(columns).length - 2;
-    var sortRowList = [];
-    for (var i=0; i<sortRowListCount; i++) {
-        var noSort = '';
-        if (columns[i] === "Groups" || columns[i] === "Roles") {
-            noSort = 'no-sort';
+    var userList = getUserList(0, -1, "", requestedClaims);
+    if (userList.errorMessage) {
+        sendToClient("columnList", null);
+        return {claimProfile: claimProfile, domains: domains, errorMessage: userList.errorMessage};
+    } else {
+        var columns = buildJSONArray(userList);
+        sendToClient("columnList", columns);
+        var sortRowListCount = Object.keys(columns).length - 2;
+        var sortRowList = [];
+        for (var i=0; i<sortRowListCount; i++) {
+            var noSort = '';
+            if (columns[i] === "Groups" || columns[i] === "Roles") {
+                noSort = 'no-sort';
+            }
+            sortRowList.push({
+                "name" : columns[i],
+                "noSort" : noSort
+            });
         }
-        sortRowList.push({
-            "name" : columns[i],
-            "noSort" : noSort
-        });
+
+        return {claimProfile: claimProfile, domains: domains, sortRowList: sortRowList};
     }
 
-    return {claimProfile: claimProfile, domains: domains, sortRowList: sortRowList};
 }
 
 function onPost(env) {
@@ -196,23 +168,37 @@ function onPost(env) {
     var claimProfile = getClaimsInProfile("user-list-filter");
     var requestedClaims = getClaimsInProfile("user-list-columns");
 
-    var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName, requestedClaims);
-    var columns = buildJSONArray(userList);
-    sendToClient("columnList", columns);
+    var columns = null;
 
-    var sortRowListCount = Object.keys(columns).length - 2;
-    var sortRowList = [];
-    for (var i=0; i<sortRowListCount; i++) {
-        var noSort = '';
-        if (columns[i] === "Groups" || columns[i] === "Roles") {
-            noSort = 'no-sort';
+    var userList = getFilteredList(offset, recordLimit, claimUri, claimValue, domainName, requestedClaims);
+    if (userList.errorMessage) {
+        sendToClient("columnList", columns);
+        return {claimProfile: claimProfile, domains: domains,
+                claimValue: claimValue, errorMessage: userList.errorMessage};
+    } else if (userList.length == 0) {
+        sendToClient("columnList", columns);
+        return {claimProfile: claimProfile, domains: domains,
+                claimValue: claimValue, noRecordsMessage: 'zero.results.list'};
+    } else {
+        var columns = buildJSONArray(userList);
+        sendToClient("columnList", columns);
+
+        var sortRowListCount = Object.keys(columns).length - 2;
+        var sortRowList = [];
+        for (var i=0; i<sortRowListCount; i++) {
+            var noSort = '';
+            if (columns[i] === "Groups" || columns[i] === "Roles") {
+                noSort = 'no-sort';
+            }
+            sortRowList.push({
+                "name" : columns[i],
+                "noSort" : noSort
+            });
         }
-        sortRowList.push({
-            "name" : columns[i],
-            "noSort" : noSort
-        });
+
+        var domains = getDomainNames(env);
+        return {claimProfile: claimProfile, domains: domains,
+                claimValue: claimValue, sortRowList: sortRowList};
     }
 
-    var domains = getDomainNames(env);
-    return {claimProfile: claimProfile, domains: domains, claimValue: claimValue, sortRowList: sortRowList};
 }

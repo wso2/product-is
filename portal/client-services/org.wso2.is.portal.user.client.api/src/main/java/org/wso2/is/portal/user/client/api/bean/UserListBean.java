@@ -23,29 +23,19 @@ import java.util.Map;
  */
 public class UserListBean {
 
-    private String userId;
-
     private String userUniqueId;
 
     private String domainName;
 
     private String state;
 
+    //List of groupname claim values
     private List<String> groups;
 
+    //List of role names
     private List<String> roles;
 
     private Map<String, String> claims;
-    
-    public UserListBean(){}
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getUserUniqueId() {
         return userUniqueId;
@@ -93,5 +83,9 @@ public class UserListBean {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String toString() {
+        return "User unique Id - " + userUniqueId + " : Domain Name - " + domainName + " : State - " + state;
     }
 }

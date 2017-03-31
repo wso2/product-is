@@ -7,6 +7,8 @@ apis:
     uri: "/profile-image-service/"
   - className: "org.wso2.is.portal.user.client.api.micro.IdentityStoreClientMicroService"
     uri: "/identityStore-micro-service/"
+  - className: "org.wso2.is.portal.user.client.api.micro.PasswordUtilityMicroService"
+    uri: "/passwordUtil-micro-service/"
 
 # Binding fragments into zones.
 # Modes:
