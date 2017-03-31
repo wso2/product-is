@@ -40,7 +40,6 @@ function onPost(env) {
         var credentialMap = {};
         var claimMap = {};
         var domain = null;
-        Log.info("the selected option is with password");
         credentialMap["password"] = env.request.formParams['newPassword'];
         claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
         domain = env.request.formParams['domain'];
@@ -69,27 +68,19 @@ function onPost(env) {
         claimMapAP["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
         claimMapAP["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
         credentialMapAP["password"] = generatePassword(8);
-        Log.info("the generated password :"+ credentialMapAP["password"]);
         domainAP = env.request.formParams['domain'];
         emailMapAP["email"]  = env.request.formParams['askPwdEmail'];
-        Log.info("the given email is :"+ emailMapAP["email"]);
-        var enableAskPasswordUsingEmail = true;
-        var addUserAskPasswordResult = userRegistrationWithAskPassword(claimMapAP, credentialMapAP, domainAP,
-            enableAskPasswordUsingEmail);
+        var addUserAskPasswordResult = userRegistrationWithAskPassword(claimMapAP, credentialMapAP, domainAP);
         return {
             domainNames: domainNames, primaryDomainName: primaryDomainName
         };
     }
     else if (optionSelector === "otp") {
-
-        Log.info("the selected option is using OTP");
         return {
             domainNames: domainNames, primaryDomainName: primaryDomainName
         };
     }
     else if (optionSelector === "email_or_phone") {
-
-        Log.info("the selected option is using email");
         return {
             domainNames: domainNames, primaryDomainName: primaryDomainName
         };
@@ -137,11 +128,10 @@ function userRegistration(claimMap, credentialMap, domain) {
     }
 }
 
-function userRegistrationWithAskPassword(claimMap, credentialMap, domain, enableAskPasswordUsingEmail){
-    Log.info("Succcessfully added");
+function userRegistrationWithAskPassword(claimMap, credentialMap, domain){
     try {
         var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-                "addUser", [claimMap, credentialMap, domain, enableAskPasswordUsingEmail]);
+                "addUser", [claimMap, credentialMap, domain]);
             return {userRegistration: userRegistrationResult, message: 'user.add.success.message'};
 
     } catch (e){
