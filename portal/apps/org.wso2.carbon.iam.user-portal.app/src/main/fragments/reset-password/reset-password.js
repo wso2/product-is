@@ -21,7 +21,7 @@ function updatePassword(username, oldPassword, newPassword, domain) {
         callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "updatePassword", [username, oldPasswordChar, newPasswordChar, domain]);
 
-        return {success: true, message: 'password.history.validation.success'};
+        return {success: true, message: 'password.update.success'};
     } catch (e) {
         var message = e.message;
         var errorCode = -1;
