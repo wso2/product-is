@@ -194,3 +194,32 @@ profiles:
    regex: ".*"
    defaultValue: "user1"
    dataType: "text"
+ -
+  profileName: "group"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/groupname"
+   displayName: "Group Name"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
+  -
+   claimURI: "http://wso2.org/claims/groupdescription"
+   displayName: "Group Description"
+   required: false
+   readonly: false
+   regex: "*"
+   dataType: "text"
+ -
+  profileName: "group-assign-users"
+  isAdminProfile: true
+  claims:
+  -
+   claimURI: "http://wso2.org/claims/username"
+   displayName: "Username"
+   required: true
+   readonly: false
+   regex: "*"
+   dataType: "text"
