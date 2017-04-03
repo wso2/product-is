@@ -222,25 +222,6 @@ function isUserInGroup(userId, groupId) {
     return {success: false, message: message};
 }
 
-// function addUsersToGroup(groupId, userIds) {
-//
-//     try {
-//         callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-//             "addUsersToGroup", [groupId, userIds]);
-//         return {success: true, message: "Users are assigned to group."};
-//     } catch (e) {
-//         var message = e.message;
-//         var cause = e.getCause();
-//         if (cause !== null) {
-//             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-//             if (cause instanceof java.lang.reflect.InvocationTargetException) {
-//                 message = cause.getTargetException().message;
-//             }
-//         }
-//     }
-//     return {success: false, message: message};
-// }
-
 function updateUsersInGroup(groupId, addUserIds, removeUserIds) {
 
     try {

@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-// function onGet(env) {
-//     var session = getSession();
-//     var domainNames = getDomainNames(env);
-//     var primaryDomainName = getPrimaryDomainName(env);
-//     return {domainNames: domainNames, primaryDomainName: primaryDomainName};
-// }
-//
-//
-// function onPost(env) {
-//     var groupName = env.request.formParams['input-groupName'];
-//     var groupDescription = env.request.formParams['input-groupDescription'];
-//     domain = env.request.formParams['domain'];
-//
-//     callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-//         "addGroup", [domain, groupName, groupDescription]);
-//
-//     return {success: true, message: "Group Added Successfully"};
-// }
-
 function getGroupProfile() {
     /**
      * Get the 'group' Profile

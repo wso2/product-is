@@ -117,7 +117,7 @@
                                                 class="form-control"
                                                 pattern={{#if regex}}{{regex}}{{/if}}
                                                         placeholder={{i18n (stringFormat "%s%s" "group.placeholder." claimLabel)}}
-                                                required/></br>
+                                        /></br>
                                     {{else}}
                                         <label class="control-label"
                                                for={{claimLabel}}>{{i18n (stringFormat "%s%s" "group.claim." claimLabel)}}</label>
@@ -196,7 +196,7 @@
                     </div>
                     <div id="accordion6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
                         <div class="panel-body">
-                            Assign roles
+                            {{i18n "assign.roles"}}
                         </div>
                     </div>
                 </div>
@@ -244,12 +244,6 @@
                                                                           name="length-value"
                                                                           class="short-input" value="500"/>
                                     </th>
-
-                                    <!--<th class="text-right content-fill text-left-on-grid-view no-wrap">-->
-                                    <!--<button class="btn btn-primary " id="filter-btn" type="submit">-->
-                                    <!--<i class="fw fw fw-search search-icon add-margin-right-1x"></i>-->
-                                    <!--</button>-->
-                                    <!--</th>-->
                                 </tr>
 
                                 </thead>

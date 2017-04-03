@@ -65,48 +65,6 @@ $(document).on('click', '.save', function () {
 
 });
 
-buildColumnHeadings = function (columns) {
-    var arrayString = '{ "data": null }';
-    var columnCount = Object.keys(columns).length - 1;
-    var groupIndex;
-    var roleIndex;
-    for (var i = 0; i < columnCount; i++) {
-        arrayString = arrayString + ',{"data": "' + columns[i] + '"}';
-        if (columns[i] === "Groups") {
-            groupIndex = i + 1;
-        } else if (columns[i] === "Roles") {
-            roleIndex = i + 1;
-        }
-    }
-    var array = JSON.parse('[' + arrayString + ']');
-    return [array, groupIndex, roleIndex];
-}
-
-buildDataArrays = function (aData, columns) {
-    var columnCount = Object.keys(columns).length - 1;
-    var data = [];
-    data[0] = null;
-
-    for (var i = 0; i < columnCount; i++) {
-        data[i + 1] = aData[columns[i.toString()]];
-    }
-    return data;
-}
-
-getClaimUri = function () {
-    var claimUri = $('#claimSelector').val();
-    $('#claim-uri').val(claimUri);
-    var selectedIndex = $("#claimSelector")[0].selectedIndex;
-    if (selectedIndex == 0) {
-        $('#claim-filter').val("");
-    }
-}
-
-getDomain = function () {
-    var domain = $('#domainSelector').val();
-    $('#domain-name').val(domain);
-}
-
 
 $(document).ready(function () {
     $('#domainSelector option[value=' + $('#domainSelector').attr('data-primary') + ']').prop('selected', 'selected');
