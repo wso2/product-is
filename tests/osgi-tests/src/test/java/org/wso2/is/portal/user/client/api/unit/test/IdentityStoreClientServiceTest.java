@@ -394,7 +394,7 @@ public class IdentityStoreClientServiceTest {
         List<UserListBean> users = identityStoreClientService.listUsers(1, 2, PRIMARY_DOMAIN, requestedClaims);
 
         Assert.assertNotNull(users, "Failed to list the users.");
-        Assert.assertTrue(!users.isEmpty() && users.size() == 2, "Number of users received in the response " +
+        Assert.assertTrue(!users.isEmpty() && users.size() == 1, "Number of users received in the response " +
                 "is invalid.");
 
         Boolean isUsernameRetrieved = users.get(0).getClaims().containsKey("Username");
