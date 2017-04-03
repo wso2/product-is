@@ -15,11 +15,19 @@
  */
 
 $(document).ready(function () {
+    $('.panel-extended').on('shown.bs.collapse', function (e,f) {
+        var elem = $(this).children().children('.in');
+
+        if($(elem).hasClass('in')){
+            $(elem).prev().find('input[type=radio]').prop('checked',true);
+        }
+    });
+
     $('.pw').hide();
-    if(passCode){
+    if(passcode){
 
         $("#newPassword").prop('type', 'password');
-        $('#newPassword').val(passCode);
+        $('#newPassword').val(passcode);
         $('#accordion2').collapse("show");
         $('.pw').show();
         $(".hide-pass").show();
@@ -46,3 +54,15 @@ $(document).on('click', '.hide-pass', function (e) {
         $(this).parent().find("input[type='password']").prop('type', 'text');
     }
 });
+
+window.setTimeout(function() {
+    $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 5000);
+
+window.setTimeout(function() {
+    $(".alert-danger").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 5000);

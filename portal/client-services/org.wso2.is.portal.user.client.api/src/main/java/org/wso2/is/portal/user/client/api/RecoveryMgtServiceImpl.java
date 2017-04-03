@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.common.util.IdentityUtils;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
@@ -66,6 +67,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
     private SecurityQuestionPasswordRecoveryManager securityQuestionPasswordRecoveryManager;
     private NotificationUsernameRecoveryManager notificationUsernameRecoveryManager;
+    private int maxLength = 6;
 
 
     @Activate
@@ -277,11 +279,11 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
      */
     @Override
     public String persistPasscode(String uniqueUserId) throws UserPortalUIException {
-        String passcode = null;
+        String passcode = IdentityUtils.getInstance().generatePasscode(maxLength);
         try {
-            passcode = AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId);
+            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passcode);
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException("Error while Processing the Passcode.");
+            throw new UserPortalUIException("Error while Processing the Passcode for user:" + uniqueUserId);
         }
         return passcode;
     }
