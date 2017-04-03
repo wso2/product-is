@@ -30,109 +30,109 @@ import java.util.Map;
 public class EditAdminUserPage {
     private Map<String, String> data;
     private WebDriver driver;
-    private int timeout = 15;
+    private int timeout = Integer.valueOf(System.getProperty("timeout"));
 
     @FindBy(id = "image")
     @CacheLookup
-    private WebElement image;
+    private WebElement imgImage;
 
     @FindBy(id = "profileSelector")
     @CacheLookup
-    private WebElement profileSelector;
+    private WebElement optionProfileSelector;
 
     @FindBy(id = "default-email")
     @CacheLookup
-    private WebElement defaultEmail;
+    private WebElement txtboxDefaultEmail;
 
     @FindBy(id = "employee-email")
     @CacheLookup
-    private WebElement employeeEmail;
+    private WebElement txtboxEmployeeEmail;
 
     @FindBy(id = "default-givenname")
     @CacheLookup
-    private WebElement defaulFirstName;
+    private WebElement txtboxDefaulFirstName;
 
     @FindBy(id = "employee-givenname")
     @CacheLookup
-    private WebElement employeeFirstName;
+    private WebElement txtboxEmployeeFirstName;
 
     @FindBy(id = "default-lastname")
     @CacheLookup
-    private WebElement defaultLastName;
+    private WebElement txtboxDefaultLastName;
 
     @FindBy(id = "default-telephone")
     @CacheLookup
-    private WebElement defaultTelephone;
+    private WebElement txtboxDefaultTelephone;
 
     @FindBy(id = "btn-default")
     @CacheLookup
-    private WebElement defaultUpdate;
+    private WebElement btnDefaultUpdate;
 
 
     @FindBy(id = "btn-employee")
     @CacheLookup
-    private WebElement employeeUpdate;
+    private WebElement btnEmployeeUpdate;
 
     @FindBy(id = "default-username")
     @CacheLookup
-    private WebElement defaultUsername;
+    private WebElement txtboxDefaultUsername;
 
     @FindBy(id = "employee-username")
     @CacheLookup
-    private WebElement employeeUsername;
+    private WebElement txtboxEmployeeUsername;
+
 
     public WebDriver getDriver() {
         return driver;
     }
 
-    public WebElement getImage() {
-        return image;
+    public WebElement getImgImage() {
+        return imgImage;
     }
 
-    public WebElement getProfileSelector() {
-        return profileSelector;
+    public WebElement getOptionProfileSelector() {
+        return optionProfileSelector;
     }
 
-    public WebElement getDefaultEmail() {
-        return defaultEmail;
+    public WebElement getTxtboxDefaultEmail() {
+        return txtboxDefaultEmail;
     }
 
-    public WebElement getEmployeeEmail() {
-        return employeeEmail;
+    public WebElement getTxtboxEmployeeEmail() {
+        return txtboxEmployeeEmail;
     }
 
-    public WebElement getDefaulFirstName() {
-        return defaulFirstName;
+    public WebElement getTxtboxDefaulFirstName() {
+        return txtboxDefaulFirstName;
     }
 
-    public WebElement getEmployeeFirstName() {
-        return employeeFirstName;
+    public WebElement getTxtboxEmployeeFirstName() {
+        return txtboxEmployeeFirstName;
     }
 
-    public WebElement getDefaultLastName() {
-        return defaultLastName;
+    public WebElement getTxtboxDefaultLastName() {
+        return txtboxDefaultLastName;
     }
 
-    public WebElement getDefaultTelephone() {
-        return defaultTelephone;
+    public WebElement getTxtboxDefaultTelephone() {
+        return txtboxDefaultTelephone;
     }
 
-    public WebElement getDefaultUpdate() {
-        return defaultUpdate;
+    public WebElement getBtnDefaultUpdate() {
+        return btnDefaultUpdate;
     }
 
-    public WebElement getEmployeeUpdate() {
-        return employeeUpdate;
+    public WebElement getBtnEmployeeUpdate() {
+        return btnEmployeeUpdate;
     }
 
-    public WebElement getDefaultUsername() {
-        return defaultUsername;
+    public WebElement getTxtboxDefaultUsername() {
+        return txtboxDefaultUsername;
     }
 
-    public WebElement getEmployeeUsername() {
-        return employeeUsername;
+    public WebElement getTxtboxEmployeeUsername() {
+        return txtboxEmployeeUsername;
     }
-
 
     public EditAdminUserPage(WebDriver driver) {
         PageFactory.initElements(driver, this);

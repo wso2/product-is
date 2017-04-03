@@ -30,36 +30,59 @@ import java.util.Map;
 public class AdminLoginPage {
     private Map<String, String> data;
     private WebDriver driver;
-    private int timeout = 15;
+    private int timeout = Integer.valueOf(System.getProperty("timeout"));
 
 
     @FindBy(id = "domainSelector")
     @CacheLookup
-    private WebElement domain;
-
+    private WebElement optionDomain;
 
     @FindBy(id = "password")
     @CacheLookup
-    private WebElement password;
+    private WebElement txtboxPassword;
 
     @FindBy(id = "forget-password")
     @CacheLookup
-    private WebElement forgetPassword;
+    private WebElement linkForgetPassword;
 
     @FindBy(id = "sign-in")
     @CacheLookup
-    private WebElement signIn;
+    private WebElement btnSignIn;
 
     @FindBy(id = "username")
     @CacheLookup
-    private WebElement username;
+    private WebElement txtboxUsername;
 
     @FindBy(id = "forget-username")
     @CacheLookup
-    private WebElement forgetUsername;
+    private WebElement linkForgetUsername;
 
+    public WebDriver getDriver() {
+        return driver;
+    }
 
-    public AdminLoginPage() {
+    public WebElement getOptionDomain() {
+        return optionDomain;
+    }
+
+    public WebElement getTxtboxPassword() {
+        return txtboxPassword;
+    }
+
+    public WebElement getLinkForgetPassword() {
+        return linkForgetPassword;
+    }
+
+    public WebElement getBtnSignIn() {
+        return btnSignIn;
+    }
+
+    public WebElement getTxtboxUsername() {
+        return txtboxUsername;
+    }
+
+    public WebElement getLinkForgetUsername() {
+        return linkForgetUsername;
     }
 
     public AdminLoginPage(WebDriver driver) {
@@ -77,36 +100,4 @@ public class AdminLoginPage {
         this.timeout = timeout;
     }
 
-
-    public WebDriver getDriver() {
-        return driver;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public WebElement getDomain() {
-        return domain;
-    }
-
-    public WebElement getPassword() {
-        return password;
-    }
-
-    public WebElement getForgetPassword() {
-        return forgetPassword;
-    }
-
-    public WebElement getSignIn() {
-        return signIn;
-    }
-
-    public WebElement getUsername() {
-        return username;
-    }
-
-    public WebElement getForgetUsername() {
-        return forgetUsername;
-    }
 }

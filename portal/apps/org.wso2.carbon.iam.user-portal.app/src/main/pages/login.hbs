@@ -86,12 +86,12 @@
                                 </div>
                             </div>
                             <p>{{i18n "forgot.your"}}&nbsp;<a
-                                    href="{{recoveryInfo.usernameRecoveryUrl}}"  >{{i18n "username"}}
-                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}">
+                                    href="{{recoveryInfo.usernameRecoveryUrl}}"  id="forget-username" >{{i18n "username"}}
+                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}" id="forget-password">
                                 {{i18n "password"}}</a>&nbsp;?
                             </p>
 
-                            <p class="hidden-xs hidden-sm">{{i18n "signup.message"}}<a
+                            <p class="hidden-xs hidden-sm" id="sign-up">{{i18n "signup.message"}}<a
                                     href="{{@contextPath}}/signup">&nbsp;{{i18n "signup.title"}}</a>
                             </p>
                         </form>

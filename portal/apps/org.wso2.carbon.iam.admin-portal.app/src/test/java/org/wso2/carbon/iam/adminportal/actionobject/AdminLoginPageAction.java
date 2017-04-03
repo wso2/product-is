@@ -36,9 +36,9 @@ public class AdminLoginPageAction extends AdminLoginPage {
     public boolean adminLogin(String username, String password) {
         boolean result = false;
         try {
-            getUsername().sendKeys(username);
-            getPassword().sendKeys(password);
-            getSignIn().click();
+            getTxtboxUsername().sendKeys(username);
+            getTxtboxPassword().sendKeys(password);
+            getBtnSignIn().click();
             result = true;
 
         } catch (Exception e) {

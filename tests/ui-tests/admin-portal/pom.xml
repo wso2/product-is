@@ -176,6 +176,10 @@
                                 <name>password</name>
                                 <value>admin</value>
                             </property>
+                            <property>
+                                <name>timeout</name>
+                                <value>50</value>
+                            </property>
                         </systemProperties>
                         <suiteXmlFiles>
                             <suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>

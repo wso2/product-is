@@ -82,7 +82,7 @@ public class AdminEditProfileTest extends SelectDriver {
         Assert.assertTrue(edited, "Edited the profile");
         Assert.assertEquals(driver.getCurrentUrl(), defaultProfilePage,
                 "This current page is not the edit default profile user page.");
-        String availableEmail = editAdminUserPageAction.getEmployeeEmail().getAttribute("value");
+        String availableEmail = editAdminUserPageAction.getTxtboxEmployeeEmail().getAttribute("value");
         Assert.assertEquals(availableEmail, email, "The entered value is not updated.");
 
     }
