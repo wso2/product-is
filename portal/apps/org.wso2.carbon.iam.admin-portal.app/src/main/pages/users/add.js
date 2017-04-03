@@ -29,6 +29,9 @@ function onPost(env) {
     else if (optionSelector === "ask_password") {
         credentialMap = {};
         claimMap["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
+        /*The password is going to store in recovery table and not exposed to customer. This will
+          be replaced after updating password.
+         */
         credentialMap["password"] = generatePassword(8);
         domain = env.request.formParams['domain'];
         registrationResult = userRegistration(claimMap, credentialMap, domain);
@@ -56,6 +59,7 @@ function onPost(env) {
         };
         //TODO:do a redirect to listing page once user added.
         //sendRedirect(env.contextPath + '/users/list');
+
     }
 
 }
@@ -121,6 +125,7 @@ function userRegistration(claimMap, credentialMap, domain) {
     }
 }
 
+// A random temporary password generation which will not expose to the user nor admin.
 function generatePassword(length) {
     var length = length,
         charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
