@@ -10,13 +10,21 @@ $(document).ready(function () {
     });
     $('#verificationSelector').change(displayVals);
 });
+
 $(window).load(function () {
     jQuery.validator.addMethod("noSpace", function (value, element) {
         return value.indexOf(" ") < 0 ;
     }, "Please don't enter spaces");
 });
+
+window.setTimeout(function () {
+    $(".alert-success").fadeTo(500, 0).slideUp(500, function () {
+        $(this).remove();
+    });
+}, 5000);
+
 function displayVals() {
-    if ($("#verificationSelector option:selected").value == "with_password") {
+    if ($("#verificationSelector").children(":selected").attr("id") == "with_password") {
         var fillingObject = {};
         var callbacks = {
             onSuccess: function () {
@@ -27,7 +35,7 @@ function displayVals() {
         UUFClient.renderFragment("password-generation", fillingObject,
             "accountVerificationMethod-area", "OVERWRITE", callbacks);
     }
-    else if ($("#verificationSelector option:selected").value === "email_or_phone") {
+    else if ($("#verificationSelector").children(":selected").attr("id") === "email_or_phone") {
         var fillingObject = {};
         var callbacks = {
             onSuccess: function () {
@@ -38,7 +46,7 @@ function displayVals() {
         UUFClient.renderFragment("email-verification", fillingObject,
             "accountVerificationMethod-area", "OVERWRITE", callbacks);
     }
-    else if ($("#verificationSelector option:selected").value === "ask_password") {
+    else if ($("#verificationSelector").children(":selected").attr("id") === "ask_password") {
         var fillingObject = {};
         var callbacks = {
             onSuccess: function () {

@@ -10,57 +10,52 @@ function onPost(env) {
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
     sendPasswordStrengthParameters();
+    var claimMap = {};
+    var domain = null;
+    var credentialMap;
+    var registrationResult;
+    claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
+    domain = env.request.formParams['domain'];
 
     var optionSelector = env.request.formParams['verificationSelector'];
 
     if (optionSelector === "with_password") {
-        var credentialMap = {};
-        var claimMap = {};
-        var domain = null;
+        credentialMap = {};
         credentialMap["password"] = env.request.formParams['newPassword'];
-        claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
-        domain = env.request.formParams['domain'];
-        var registrationResult = userRegistration(claimMap, credentialMap, domain);
-        if (registrationResult.errorMessage) {
-            return {
-                domainNames: domainNames, primaryDomainName: primaryDomainName,
-                errorMessage: registrationResult.errorMessage
-            };
-        }
-        else {
-            return {
-                domainNames: domainNames,
-                primaryDomainName: primaryDomainName,
-                message: registrationResult.message
-            };
-            //TODO:do a redirect to listing page once user added.
-            //sendRedirect(env.contextPath + '/users/list');
-        }
+
+        registrationResult = userRegistration(claimMap, credentialMap, domain);
+
     }
     else if (optionSelector === "ask_password") {
-        var credentialMapAP = {};
-        var claimMapAP = {};
-        var domainAP = null;
-        var emailMapAP = {};
-        claimMapAP["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
-        claimMapAP["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
-        credentialMapAP["password"] = generatePassword(8);
-        domainAP = env.request.formParams['domain'];
-        emailMapAP["email"]  = env.request.formParams['askPwdEmail'];
-        var addUserAskPasswordResult = userRegistrationWithAskPassword(claimMapAP, credentialMapAP, domainAP);
-        return {
-            domainNames: domainNames, primaryDomainName: primaryDomainName
-        };
+        credentialMap = {};
+        claimMap["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
+        credentialMap["password"] = generatePassword(8);
+        domain = env.request.formParams['domain'];
+        registrationResult = userRegistration(claimMap, credentialMap, domain);
+
     }
     else if (optionSelector === "otp") {
-        return {
-            domainNames: domainNames, primaryDomainName: primaryDomainName
-        };
+        registrationResult = null;
     }
     else if (optionSelector === "email_or_phone") {
+        registrationResult = null;
+    }
+
+
+    if (registrationResult.errorMessage) {
         return {
-            domainNames: domainNames, primaryDomainName: primaryDomainName
+            domainNames: domainNames, primaryDomainName: primaryDomainName,
+            errorMessage: registrationResult.errorMessage
         };
+    }
+    else {
+        return {
+            domainNames: domainNames,
+            primaryDomainName: primaryDomainName,
+            message: registrationResult.message
+        };
+        //TODO:do a redirect to listing page once user added.
+        //sendRedirect(env.contextPath + '/users/list');
     }
 
 }
@@ -124,23 +119,6 @@ function userRegistration(claimMap, credentialMap, domain) {
             errorMessage: message
         };
     }
-}
-
-function userRegistrationWithAskPassword(claimMap, credentialMap, domain){
-    try {
-        var userRegistrationResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-                "addUser", [claimMap, credentialMap, domain]);
-            return {userRegistration: userRegistrationResult, message: 'user.add.success.message'};
-
-    } catch (e){
-        var message = "Error occurred while adding the user.";
-        Log.error(message, e);
-        return {
-            errorMessage: message
-        };
-    }
-
-
 }
 
 function generatePassword(length) {
