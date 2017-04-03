@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-module("recovery-manager");
+ module("recovery-manager");
 
 function getClaims() {
     /**
@@ -34,7 +34,9 @@ function getClaims() {
         claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
     }
 
-    return claimProfileArray;
+    return {
+        "usernameRecoveryClaims": claimProfileArray
+    };
 }
 
 function generateClaimProfileMap(claimProfileEntry) {
@@ -56,10 +58,7 @@ function onGet(env) {
     try {
         var result = recoveryManager.isUsernameRecoveryPortalEnabled();
         if (result) {
-            var claimProfileArray = getClaims();
-            return {
-                "usernameRecoveryClaims": claimProfileArray
-            };
+            return getClaims();
         } else {
             return {isUsernameRecoveryDisabled: true};
         }
@@ -81,7 +80,7 @@ function onPost(env) {
     if (userRecovered) {
         sendRedirect(env.contextPath + '/recovery/complete?username=true');
     } else {
-        var claimProfileArray = getClaims();
-        return {errorMessage: 'username.error.invalid.username', "usernameRecoveryClaims" : claimProfileArray};
+        return {errorMessage: 'username.error.invalid.username'};
     }
 }
+
