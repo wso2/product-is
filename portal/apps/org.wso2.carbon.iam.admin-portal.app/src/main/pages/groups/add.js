@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-// function onGet(env) {
-//     var session = getSession();
-//     var domainNames = getDomainNames(env);
-//     var primaryDomainName = getPrimaryDomainName(env);
-//     return {domainNames: domainNames, primaryDomainName: primaryDomainName};
-// }
-//
-//
-// function onPost(env) {
-//     var groupName = env.request.formParams['input-groupName'];
-//     var groupDescription = env.request.formParams['input-groupDescription'];
-//     domain = env.request.formParams['domain'];
-//
-//     callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
-//         "addGroup", [domain, groupName, groupDescription]);
-//
-//     return {success: true, message: "Group Added Successfully"};
-// }
-
 function getProfile() {
     /**
      * Get the 'group' Profile
@@ -51,7 +32,7 @@ function getProfile() {
         claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
     }
 
-    // sendToClient("signupClaims", claimProfileArray); ToDo why?
+    sendToClient("groupClaims", claimProfileArray);
     return {
         "groupClaims": claimProfileArray
     };
@@ -79,7 +60,7 @@ function getDomainNames(env) {
             domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                 "getDomainNames", []);
         } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
+            return {errorMessage: 'group.error.retrieve.domain'};
         }
     }
     return domainNames;
@@ -92,7 +73,7 @@ function getPrimaryDomainName(env) {
             primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                 "getPrimaryDomainName", []);
         } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
+            return {errorMessage: 'group.error.retrieve.domain'};
         }
     }
     return primaryDomainName;
@@ -100,10 +81,31 @@ function getPrimaryDomainName(env) {
 
 function onGet(env) {
     try {
-        var domainNames = getDomainNames(env);
+
         var primaryDomainName = getPrimaryDomainName(env);
 
-        return {domainNames: domainNames, primaryDomainName: primaryDomainName, profile: getProfile()};
+        // userList
+        var requestedClaims = getClaimsInProfile("group-assign-users");
+        var domainNames = getDomainNames(env);
+
+        var userList = getUserList(0, -1, "", requestedClaims);
+        var columns = buildJSONArray(userList);
+
+        sendToClient("columnList", columns);
+        sendToClient("selectedClaim", null);
+        sendToClient("selectedDomain", null);
+        sendToClient("action", null);
+        sendToClient("offset", null);
+        sendToClient("recordLimit", null);
+
+        var sortRowList = [];
+
+        return {
+            primaryDomainName: primaryDomainName,
+            domainNames: domainNames,
+            profile: getProfile(),
+            sortRowList: sortRowList
+        };
     } catch (e) {
         return {errorMessage: 'group.add.error'};
     }
@@ -114,6 +116,8 @@ function onPost(env) {
     var claimMap = {};
     var domain = null;
     var formParams = null;
+    var ArrayList = Java.type('java.util.ArrayList');
+    var usersArray = new ArrayList();
     try {
         domain = env.request.formParams['domain'];
         formParams = env.request.formParams;
@@ -121,17 +125,37 @@ function onPost(env) {
             if (i.indexOf("http://wso2.org/claims") !== -1) {
                 claimMap[i] = formParams[i];
             }
+            else if(i.indexOf("userUniqueId") !== -1) {
+                usersArray.add(formParams[i]);
+            }
         }
 
         var addGroupResult = addGroup(claimMap, domain);
-        var domainNames = getDomainNames(env);
+        var assignUsersToGroup = addUsersToGroup(addGroupResult.addGroupResult.groupId, usersArray);
         var primaryDomainName = getPrimaryDomainName(env);
 
+        // userList
+        var requestedClaims = getClaimsInProfile("group-assign-users");
+        var domainNames = getDomainNames(env);
+
+        var userList = getUserList(0, -1, "", requestedClaims);
+        var columns = buildJSONArray(userList);
+
+        sendToClient("columnList", columns);
+        sendToClient("selectedClaim", null);
+        sendToClient("selectedDomain", null);
+        sendToClient("action", null);
+        sendToClient("offset", null);
+        sendToClient("recordLimit", null);
+
+        var sortRowList = [];
+
         return {
-            addGroupResult: addGroupResult,
-            domainNames: domainNames,
             primaryDomainName: primaryDomainName,
-            profile: getProfile()
+            domainNames: domainNames,
+            profile: getProfile(),
+            sortRowList: sortRowList,
+            addGroupResult: addGroupResult
         };
     } catch (e) {
         return {errorMessage: 'group.add.error'};
@@ -150,51 +174,16 @@ function addGroup(claimMap, domain) {
     }
 }
 
-function buildUIEntries(profileUIEntries) {
 
-    var uiEntries = [];
-    if (profileUIEntries) {
-        for (var i = 0; i < profileUIEntries.length > 0; i++) {
-            var entry = {
-                claimURI: profileUIEntries[i].claimConfigEntry.claimURI,
-                claimLabel: profileUIEntries[i].claimConfigEntry.claimURI.replace("http://wso2.org/claims/", ""),
-                displayName: profileUIEntries[i].claimConfigEntry.displayName,
-                value: (profileUIEntries[i].value ? profileUIEntries[i].value : ""),
-                readonly: ((profileUIEntries[i].claimConfigEntry.readonly &&
-                profileUIEntries[i].claimConfigEntry.readonly) ? "readonly" : ""),
-                required: ((profileUIEntries[i].claimConfigEntry.required &&
-                profileUIEntries[i].claimConfigEntry.required) ? "required" : ""),
-                requiredIcon: ((profileUIEntries[i].claimConfigEntry.required &&
-                profileUIEntries[i].claimConfigEntry.required) ? "*" : ""),
-                dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
-                    profileUIEntries[i].claimConfigEntry.dataType : "text"),
-                regex: (profileUIEntries[i].claimConfigEntry.regex ?
-                    profileUIEntries[i].claimConfigEntry.regex : ".*")
-            };
-            uiEntries.push(entry);
-        }
+function addUsersToGroup(groupId, userIdsList) {
+    try {
+        var assignUsersResult = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "addUsersToGroup", [groupId, userIdsList]);
+        return {assignUsersResult: assignUsersResult};
+    } catch (e) {
+        return {errorMessage: 'group.add.error'};
     }
-    return uiEntries;
 }
-
-// function getGroupProfileUIEntries() {
-//
-//     try {
-//         var profileUIEntries = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-//             "getProfile", ["group"]);
-//         return {success: true, profileUIEntries: profileUIEntries};
-//     } catch (e) {
-//         var message = e.message;
-//         var cause = e.getCause();
-//         if (cause !== null) {
-//             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-//             if (cause instanceof java.lang.reflect.InvocationTargetException) {
-//                 message = cause.getTargetException().message;
-//             }
-//         }
-//     }
-//     return {success: false, message: message};
-// }
 
 function updateGroupProfile(groupId, updatedClaims) {
 
@@ -215,35 +204,107 @@ function updateGroupProfile(groupId, updatedClaims) {
     return {success: false, message: message};
 }
 
-// function onPost(env) {
-//     var success = false;
-//     var message = "";
-//     var updatedClaims = env.request.formParams;
-//     var groupId = env.params.groupId;
-//     var result = updateGroupProfile(groupId, updatedClaims);
-//     success = result.success;
-//     message = result.message;
+function isUserInGroup(userId, groupId) {
+    try {
+        var isUserInGroup = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "isUserInGroup", [userId, groupId]);
+        return {success: true, isUserInGroup: isUserInGroup, message: "User is in group."};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
+}
+
+// function addUsersToGroup(groupId, userIds) {
 //
-//     if (env.params.profileName) {
-//
-//         var uiEntries = [];
-//         var result = getGroupProfileUIEntries(env.params.profileName, session.getUser().getUserId());
-//         if (result.success) {
-//             if (env.request.method != "POST") {
-//                 success = true;
+//     try {
+//         callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+//             "addUsersToGroup", [groupId, userIds]);
+//         return {success: true, message: "Users are assigned to group."};
+//     } catch (e) {
+//         var message = e.message;
+//         var cause = e.getCause();
+//         if (cause !== null) {
+//             //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+//             if (cause instanceof java.lang.reflect.InvocationTargetException) {
+//                 message = cause.getTargetException().message;
 //             }
-//             uiEntries = buildUIEntries(result.profileUIEntries);
-//         } else {
-//             success = false;
-//             message = result.message;
 //         }
-//
-//         return {
-//             success: success, uiEntries: uiEntries,
-//             message: message,
-//         };
 //     }
-//
-//     return {success: false, message: "Invalid profile name."};
+//     return {success: false, message: message};
 // }
+
+function updateUsersInGroup(groupId, addUserIds, removeUserIds) {
+
+    try {
+        callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "updateUsersInGroup", [groupId, addUserIds, removeUserIds]);
+        return {success: true, message: "Users are updated to group."};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
+}
+
+
+// UserList
+function getFilteredList(offset, length, claimURI, claimValue, domainName, requestedClaims) {
+    var userList;
+    try {
+        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getFilteredList", [offset, length, claimURI, claimValue, domainName, requestedClaims]);
+    } catch (e) {
+        return {errorMessage: 'list.error.retrieve.users'};
+    }
+
+    return userList;
+}
+
+function getUserList(offset, length, domainName, requestedClaims) {
+    var userList;
+    try {
+        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getUserListForAssignment", [offset, length, domainName, requestedClaims]);
+    } catch (e) {
+        return {errorMessage: 'list.error.retrieve.users'};
+    }
+
+    return userList;
+}
+
+function getClaimsInProfile(profileName) {
+    var claimProfile;
+    try {
+        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfile", [profileName]);
+    } catch (e) {
+        return {errorMessage: profile + '.error.retrieve.claim'};
+    }
+    var claimForProfileEntry = claimProfile.claims;
+
+    return claimForProfileEntry;
+}
+
+function buildJSONArray(userList) {
+    var columnsArray = [];
+    // columnsArray.push("profilepic", "username", "uniqueId");
+
+    sendToClient("users", userList);
+    return columnsArray;
+}
+
 

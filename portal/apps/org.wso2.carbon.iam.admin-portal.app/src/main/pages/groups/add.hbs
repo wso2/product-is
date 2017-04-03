@@ -4,8 +4,10 @@
 {{favicon "images/favicon.png" type="image/png"}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.data-tables"}}
 {{css "css/admin-portal.css"}}
 {{js "js/add-group.js"}}
+
 
 {{#fillZone "content"}}
 
@@ -144,9 +146,42 @@
                     </div>
                     <div id="accordion5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
                         <div class="panel-body">
-                            <div class="message message-info">
-                                <h4><i class="icon fw fw-info"></i>{{i18n "no-users.header"}}</h4>
-                            </div>
+
+                            <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table selected-users-dataTable"
+                                   id="selected-users-dataTable">
+                                    <thead class="block">
+                                    <tr class="filter-row-custom">
+                                        <th class="select-filter">
+                                        </th>
+                                        <th class="text-right content-fill text-left-on-grid-view no-wrap">
+                                            <button class="btn btn-primary " id="filter-btn" type="submit">
+                                                <i class="fw fw fw-search search-icon add-margin-right-1x"></i>
+                                            </button>
+                                        </th>
+                                    </tr>
+
+                                    </thead>
+                                    <tbody>
+
+                                    <!-- Handlebars Template Appends Here -->
+                                    </tbody>
+                                </table>
+                            </table>
+
+                            <!-- button -->
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="input-group input-wrap has-form-control-btn">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target="#modalDelete">
+                                                {{i18n "assign.users"}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- /button -->
                         </div>
                     </div>
                 </div>
@@ -165,13 +200,87 @@
                         </div>
                     </div>
                 </div>
+
+                <button class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup">{{i18n "groups.add.button"}}</button>
+
             </div>
+
+
             <!-- /collapse -->
-            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup"
-                   id="addGroup"
-                   value={{i18n "groups.add.button"}}/>
+
 
         </form>
+
+        <!-- modal -->
+        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content clearfix">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i
+                                class="fw fw-cancel"></i></button>
+                        <h3 class="modal-title" id="deleteModalLabel">{{i18n "assign.users"}}</h3>
+                    </div>
+                    <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
+                        <div class="body-wrapper">
+                            <div class="page-header">
+                                <h1>{{i18n "overview.users"}}</h1>
+                            </div>
+                            <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table user-select-dataTable"
+                                   id="groups-table">
+                                <thead class="block">
+                                <tr class="sort-row">
+                                    <th class="content-fill no-sort"></th>
+                                    <th class="no-sort">{{i18n "list.actions"}}</th>
+                                </tr>
+
+                                <tr class="filter-row-custom">
+                                    <th class="select-filter">
+                                    </th>
+                                    <th data-for="Start"><input type="number" id="offset-value"
+                                                                name="offset-value" class="short-input"
+                                                                value="0"/></th>
+                                    <th data-for="Maximum Records"><input type="number" id="length-value"
+                                                                          name="length-value"
+                                                                          class="short-input" value="500"/>
+                                    </th>
+
+                                    <!--<th class="text-right content-fill text-left-on-grid-view no-wrap">-->
+                                        <!--<button class="btn btn-primary " id="filter-btn" type="submit">-->
+                                            <!--<i class="fw fw fw-search search-icon add-margin-right-1x"></i>-->
+                                        <!--</button>-->
+                                    <!--</th>-->
+                                </tr>
+
+                                </thead>
+                                <tbody>
+
+                                <!-- Handlebars Template Appends Here -->
+                                </tbody>
+                            </table>
+                            <form class="form-horizontal" method="post" id="filterListForm">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                    <input type="hidden" id="action" name="action" value="filter-list">
+                                    <input type="hidden" id="claim-uri" name="claim-uri" value="">
+                                    <input type="hidden" id="domain-name" name="domain-name" value="">
+                                    <div class="row">
+
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form class="form-horizontal" method="post" id="filterListForm1">
+                            <button type="button" class="btn btn-primary save">{{i18n "save"}}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">{{i18n "cancel"}}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /modal -->
 
 
     </div>

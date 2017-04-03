@@ -17,9 +17,11 @@
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
+import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.is.portal.user.client.api.bean.GroupListUserBean;
 import org.wso2.is.portal.user.client.api.bean.UUFGroup;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.bean.UserListBean;
@@ -42,8 +44,7 @@ public interface IdentityStoreClientService {
      * @return authentication context
      * @throws UserPortalUIException Authentication Failure
      */
-    UUFUser authenticate(String username, char[] password, String domain)
-            throws UserPortalUIException;
+    UUFUser authenticate(String username, char[] password, String domain) throws UserPortalUIException;
 
     /**
      * Update user password.
@@ -106,8 +107,7 @@ public interface IdentityStoreClientService {
      */
     void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
 
-    void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws
-            UserPortalUIException;
+    void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
 
     /**
      * Get list of user claims by user id.
@@ -139,24 +139,23 @@ public interface IdentityStoreClientService {
 
     /**
      * List users by claim
-     * @param claimUri claim uri for filtering
+     *
+     * @param claimUri   claim uri for filtering
      * @param claimValue claim value
-     * @param offset starting point of user list
-     * @param length number of users to be returned
+     * @param offset     starting point of user list
+     * @param length     number of users to be returned
      * @param domainName domain name
      * @return list of users
      * @throws UserPortalUIException
      */
-    List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
-                            String domainName) throws UserPortalUIException;
+    List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length, String domainName)
+            throws UserPortalUIException;
 
-    List<UserListBean> listUsersWithFilter(int offset, int length, String claimURI,
-                                           String claimValue, String domainName,
-                                           List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
+    List<UserListBean> listUsersWithFilter(int offset, int length, String claimURI, String claimValue,
+            String domainName, List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 
-    List<UserListBean> listUsers(int offset, int length, String domainName,
-                                 List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
-
+    List<UserListBean> listUsers(int offset, int length, String domainName, List<ClaimConfigEntry> requestedClaims)
+            throws UserPortalUIException;
 
     /**
      * Add a group
@@ -225,7 +224,12 @@ public interface IdentityStoreClientService {
      * @param updatedClaimsMap claims with values to be updated.
      * @throws UserPortalUIException
      */
-    void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap)
+    void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
+
+    List<UserListBean> getUserList(int offset, int length, String domainName, List<ClaimConfigEntry> requestedClaims)
             throws UserPortalUIException;
+
+    List<GroupListUserBean> getUserListForAssignment(int offset, int length, String domainName,
+            List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 }
 
