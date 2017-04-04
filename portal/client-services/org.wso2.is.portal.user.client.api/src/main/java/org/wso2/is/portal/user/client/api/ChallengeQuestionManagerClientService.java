@@ -87,7 +87,21 @@ public interface ChallengeQuestionManagerClientService {
     void deleteChallengeQuestionForUser(String userUniqueId, String questionId, String questionSetId)
             throws IdentityRecoveryException, IdentityStoreException, UserNotFoundException, UserPortalUIException;
 
+    /**
+     * Get challenge questions answered by user for recovery
+     * @param userUniqueId user ID
+     * @return List of challenge question(s) answered by user
+     * @throws IdentityRecoveryException
+     * @throws IdentityStoreException
+     * @throws UserNotFoundException
+     */
     List<UserChallengeAnswer> getChallengeAnswersOfUser(String userUniqueId) throws IdentityRecoveryException,
+            IdentityStoreException, UserNotFoundException;
+
+
+
+
+    boolean isQuestionBasedPwdRecoveryEnabled() throws IdentityRecoveryException,
             IdentityStoreException, UserNotFoundException;
 
     int getMinimumNoOfChallengeQuestionsToAnswer() throws IdentityRecoveryException;

@@ -16,10 +16,12 @@
 
 package org.wso2.is.portal.user.client.api;
 
+import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
+import org.wso2.is.portal.user.client.api.bean.UserListBean;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
 
 import java.util.List;
@@ -92,7 +94,7 @@ public interface IdentityStoreClientService {
      * @return meta data of user existence check
      * @throws UserPortalUIException
      */
-    Map<String, String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException;
+    List<String> isUserExist(Map<String, String> userClaims) throws UserPortalUIException;
 
     /**
      * Update user claims by user id.
@@ -114,7 +116,7 @@ public interface IdentityStoreClientService {
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 
     /**
-     * Get list of domain names.
+     * Get list of domain names
      *
      * @return Domain name List
      * @throws UserPortalUIException
@@ -122,10 +124,30 @@ public interface IdentityStoreClientService {
     Set<String> getDomainNames() throws UserPortalUIException;
 
     /**
-     * Get primary domain name.
+     * Get primary domain name
      *
      * @return Primary domain name
      * @throws UserPortalUIException
      */
     String getPrimaryDomainName() throws UserPortalUIException;
+
+    /**
+     * List users by claim
+     * @param claimUri claim uri for filtering
+     * @param claimValue claim value
+     * @param offset starting point of user list
+     * @param length number of users to be returned
+     * @param domainName domain name
+     * @return list of users
+     * @throws UserPortalUIException
+     */
+    List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
+                            String domainName) throws UserPortalUIException;
+
+    List<UserListBean> listUsersWithFilter(int offset, int length, String claimURI,
+                                           String claimValue, String domainName,
+                                           List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
+
+    List<UserListBean> listUsers(int offset, int length, String domainName,
+                                 List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 }

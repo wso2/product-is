@@ -1,0 +1,88 @@
+{{secured}}
+{{layout "privilege"}}
+{{title (i18n "users.add.header") " | " @config.appName}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
+{{css "css/admin-portal.css"}}
+{{js "js/add.js"}}
+
+{{#fillZone "content"}}
+    <div class="body-wrapper">
+        {{#if message}}
+            <div class="alert alert-success" role="alert">
+                <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
+                {{i18n message}}
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+                </button>
+            </div>
+        {{/if}}
+        {{#if errorMessage}}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon fw fw-error"></i><strong>{{i18n "user.add.failure"}}</strong>
+                <span>{{i18n errorMessage}}</span>
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+            <span aria-hidden="true">
+                <i class="fw fw-cancel"></i>
+            </span>
+                </button>
+            </div>
+        {{/if}}
+        <div class="page-header">
+            <h1>{{i18n "users.add.header"}}</h1>
+        </div>
+        <form class="form-horizontal" role="form" method="post" id="addUserForm">
+            {{#if domainNames}}
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                        <input type="hidden" name="domain" id="domain"
+                               class="form-control"/>
+                        <label for="domainSelector" class="control-label">{{i18n "users.add.domain"}}
+                            <span class="requiredAstrix"> *</span></label>
+                        <select class="form-control" id="domainSelector"
+                                data-primary="{{primaryDomainName}}">
+                            {{#each domainNames}}
+                                <option value={{this}}>{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            {{/if}}
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                    <label for="inputUsername" class="control-label">{{i18n "users.add.username"}}
+                        <span class="requiredAstrix"> *</span></label>
+                    <input class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"
+                           type="text">
+                    {{#defineZone "userExistsError-area"}}
+                        <div id="userExistsError">
+                            <!-- Here is generated content for error when user already exists -->
+                        </div>
+                    {{/defineZone}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                    <label for="verificationSelector" class="control-label">{{i18n "users.add.selectMethod"}}
+                        <span class="requiredAstrix"> *</span></label>
+                    <select class="form-control" id="verificationSelector" name="verificationSelector">
+                        <option name="withPassword" value="with_password" id="with_password">{{i18n "users.add.select.with.password"}}</option>
+                        <option name="askPassword" value="ask_password" id="ask_password">{{i18n "users.add.select.with.email.and.askPassword"}}</option>
+                        <option name="otp" value="otp" id="otp">{{i18n "users.add.select.with.otp.and.askPassword"}}</option>
+                        <option name="emailOrPhone" value="email_or_phone" id="email_or_phone">{{i18n "users.add.select.with.email.or.phone"}}</option>
+                    </select>
+                </div>
+            </div>
+
+            {{#defineZone "accountVerificationMethod-area"}}
+                <!-- Here is generated content for different account verification ui's when adding a user -->
+            {{/defineZone}}
+            <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addUser" id="addUser"
+                   value="Add User"/>
+        </form>
+    </div>
+{{/fillZone}}

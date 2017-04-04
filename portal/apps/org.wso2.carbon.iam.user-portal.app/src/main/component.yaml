@@ -34,4 +34,4 @@ config:
   loginRedirectUri: "/"
   loginPageUri: "/login"
   isDomainInLogin: true
-
+  domainSeparator: "/"

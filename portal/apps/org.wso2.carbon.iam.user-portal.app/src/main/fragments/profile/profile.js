@@ -31,9 +31,9 @@ function buildUIEntries(profileUIEntries) {
                 requiredIcon: ((profileUIEntries[i].claimConfigEntry.required &&
                 profileUIEntries[i].claimConfigEntry.required) ? "*" : ""),
                 dataType: (profileUIEntries[i].claimConfigEntry.dataType ?
-                profileUIEntries[i].claimConfigEntry.dataType : "text"),
+                    profileUIEntries[i].claimConfigEntry.dataType : "text"),
                 regex: (profileUIEntries[i].claimConfigEntry.regex ?
-                profileUIEntries[i].claimConfigEntry.regex : ".*")
+                    profileUIEntries[i].claimConfigEntry.regex : ".*")
             };
             uiEntries.push(entry);
         }

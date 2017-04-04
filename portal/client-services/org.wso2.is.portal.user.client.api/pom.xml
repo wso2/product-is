@@ -17,18 +17,6 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <parent>
         <groupId>org.wso2.is</groupId>
@@ -70,6 +58,10 @@
             <artifactId>msf4j-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-all</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
@@ -82,6 +74,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.policy.password</artifactId>
         </dependency>
     </dependencies>
 
@@ -98,9 +94,10 @@
             org.wso2.carbon.identity.claim.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.uuf.spi.auth.*,
             org.wso2.carbon.kernel.utils.*,
-            org.wso2.msf4j;version="${msf4j.import.version.range}",
+            org.wso2.msf4j.*;version="${msf4j.import.version.range}",
             javax.ws.rs.*;version="${javax.ws.rs.import.version.range}",
-            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version.range}"
+            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.policy.password.*;version="${org.wso2.carbon.identity.mgt.version.range}"
         </import.package>
         <!--//todo set versions-->
         <export.package>

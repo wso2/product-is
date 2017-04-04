@@ -46,7 +46,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Inject;
 
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
@@ -153,15 +152,15 @@ public class ChallengeQuestionManagerClientServiceTest {
 
         users.add(user);
 
-        /*try {
+       /* try {
             challengeQuestionManagerClientService.setChallengeQuestionForUser(users.get(0).getUserId(),
                     challengeQuestions.get(0).getQuestionId(),
-                    challengeQuestions.get(0).getQuestionSetId(), "Answer1", "challengeQAdd");
+                    challengeQuestions.get(0).getQuestionSetId(), "Answer1");
         } catch (IdentityStoreException | UserNotFoundException | IdentityRecoveryException e) {
             throw new UserPortalUIException("Test Failure. Error when setting challenge questions for the user.");
         }
-        LOGGER.info("Test Passed. Successfully set challenge questions for the user.");
-        List<UserChallengeAnswer> userChallengeAnswers = challengeQuestionManagerClientService
+        LOGGER.info("Test Passed. Successfully set challenge questions for the user.");*/
+        /*UserChallengeAnswer[] userChallengeAnswers = challengeQuestionManagerClientService
                 .getChallengeAnswersOfUser(users.get(0).getUserId());
 
         Assert.assertNotNull(userChallengeAnswers, "Failed to set challenge questions for the user.");

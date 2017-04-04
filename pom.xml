@@ -96,6 +96,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.handler.event.account.lock</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.mgt.feature</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
@@ -109,6 +114,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.claim.feature</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.policy.password.feature</artifactId>
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
                 <type>zip</type>
             </dependency>
@@ -189,6 +200,11 @@
                 <version>${org.wso2.carbon.identity.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.mgt</groupId>
+                <artifactId>org.wso2.carbon.identity.policy.password</artifactId>
+                <version>${org.wso2.carbon.identity.mgt.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.security.caas</groupId>
                 <artifactId>org.wso2.carbon.security.caas</artifactId>
                 <version>${carbon.security.version}</version>
@@ -241,6 +257,12 @@
                 <groupId>org.wso2.carbon.uuf.common</groupId>
                 <artifactId>org.wso2.carbon.uuf.common.foundation.ui</artifactId>
                 <version>${carbon.uuf.common.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
+                <version>${carbon.is.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
@@ -355,6 +377,43 @@
                 <artifactId>xalan</artifactId>
                 <version>${xalan.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-api</artifactId>
+                <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>htmlunit-driver</artifactId>
+                <version>${org.seleniumhq.selenium.unitdriver.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-chrome-driver</artifactId>
+                <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-support</artifactId>
+                <version>${org.seleniumhq.selenium.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>${org.apache.commons.exec.version}</version>
+                <scope>test</scope>
+            </dependency>
+
 
             <!-- Other Dependencies-->
             <dependency>
@@ -708,6 +767,12 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.iam.admin-portal.feature</artifactId>
+                <version>${carbon.is.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>org.wso2.msf4j.feature</artifactId>
                 <version>${msf4j.version}</version>
@@ -750,6 +815,42 @@
                 <artifactId>org.wso2.carbon.uuf.renderablecreator.html.feature</artifactId>
                 <version>${carbon.uuf.version}</version>
                 <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.lcm</groupId>
+                <artifactId>org.wso2.carbon.lcm.core.feature</artifactId>
+                <version>${org.wso2.carbon.lcm.version}</version>
+                <type>zip</type>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.h2database.wso2</groupId>
+                        <artifactId>h2-database-engine</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.lcm</groupId>
+                <artifactId>org.wso2.carbon.lcm.sql.feature</artifactId>
+                <version>${org.wso2.carbon.lcm.version}</version>
+                <type>zip</type>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.h2database.wso2</groupId>
+                        <artifactId>h2-database-engine</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+                <artifactId>org.wso2.carbon.email.mgt.server.feature</artifactId>
+                <type>zip</type>
+                <version>${org.wso2.carbon.identity.event.handler.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.event.handler.notification</groupId>
+                <artifactId>org.wso2.carbon.event.handler.notification.server.feature</artifactId>
+                <type>zip</type>
+                <version>${org.wso2.carbon.identity.event.handler.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -796,20 +897,20 @@
 
         <project.scm.id>wso2-scm-server</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <carbon.security.userstore.jdbc.version>0.1.1</carbon.security.userstore.jdbc.version>
-        <org.wso2.carbon.identity.mgt.version>0.1.16</org.wso2.carbon.identity.mgt.version>
+        <carbon.security.userstore.jdbc.version>0.1.2</carbon.security.userstore.jdbc.version>
+        <org.wso2.carbon.identity.mgt.version>0.1.37-SNAPSHOT</org.wso2.carbon.identity.mgt.version>
         <carbon.osgi.test.util.version>5.1.0</carbon.osgi.test.util.version>
-        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.16</org.wso2.carbon.identity.recovery.server.feature.version>
-        <org.wso2.carbon.identity.commons.feature.version>0.1.17</org.wso2.carbon.identity.commons.feature.version>
-        <org.wso2.carbon.identity.commons.version>0.1.17</org.wso2.carbon.identity.commons.version>
-        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.6</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
+        <org.wso2.carbon.identity.recovery.server.feature.version>0.1.37-SNAPSHOT</org.wso2.carbon.identity.recovery.server.feature.version>
+        <org.wso2.carbon.identity.commons.feature.version>0.1.24-SNAPSHOT</org.wso2.carbon.identity.commons.feature.version>
+        <org.wso2.carbon.identity.commons.version>0.1.24-SNAPSHOT</org.wso2.carbon.identity.commons.version>
+        <org.wso2.carbon.identity.inbound.provisioning.scim2.version>2.0.15</org.wso2.carbon.identity.inbound.provisioning.scim2.version>
 
-        <carbon.uuf.version>1.0.0-m12</carbon.uuf.version>
-        <carbon-uuf-maven-plugin.version>1.0.0-m10</carbon-uuf-maven-plugin.version>
-        <carbon.uuf.common.version>1.0.0-m3</carbon.uuf.common.version>
-        <carbon.security.version>1.0.0</carbon.security.version>
+        <carbon.uuf.version>1.0.0-m13</carbon.uuf.version>
+        <carbon-uuf-maven-plugin.version>1.0.0-m11</carbon-uuf-maven-plugin.version>
+        <carbon.uuf.common.version>1.0.0-m5</carbon.uuf.common.version>
+        <carbon.security.version>1.0.1</carbon.security.version>
         <carbon.metrics.version>2.0.0</carbon.metrics.version>
-
+        <org.wso2.carbon.lcm.version>1.0.0</org.wso2.carbon.lcm.version>
 
         <!--3rd party related properties-->
         <commons-beanutils.wso2.version>1.8.0.wso2v1</commons-beanutils.wso2.version>
@@ -870,6 +971,7 @@
         <msf4j.version>2.1.0</msf4j.version>
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
         <org.wso2.carbon.deployment.version>5.0.0</org.wso2.carbon.deployment.version>
+        <org.wso2.carbon.identity.event.handler.version>1.0.7</org.wso2.carbon.identity.event.handler.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>
@@ -919,6 +1021,15 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
 
         <javax.ws.rs.import.version.range>[2.0.0, 3.0.0)</javax.ws.rs.import.version.range>
+
+        <!-- Selenium -->
+        <org.seleniumhq.selenium.version>3.0.1</org.seleniumhq.selenium.version>
+        <org.seleniumhq.selenium.unitdriver.version>2.23.2</org.seleniumhq.selenium.unitdriver.version>
+        <!-- Test jar plugins -->
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
+
+        <org.apache.commons.exec.version>1.3</org.apache.commons.exec.version>
 
     </properties>
 
@@ -1149,6 +1260,12 @@
             <name>Jayanga Kaushalya</name>
             <id>jayangak</id>
             <email>jayangak AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Denuwanthi De Silva</name>
+            <id>denuwanthi</id>
+            <email>denuwanthi AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
     </developers>

@@ -24,7 +24,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <version>6.0.0-SNAPSHOT</version>
     <artifactId>user-portal-osgi-tests</artifactId>
     <name>WSO2 User Portal - OSGi Tests</name>
     <description>OSGi Tests for WSO2 User Portal</description>
@@ -79,6 +78,10 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.handler.event.account.lock</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.claim</artifactId>
         </dependency>
         <dependency>
@@ -118,6 +121,10 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.is.portal.user.client.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.policy.password</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.org.yaml</groupId>
@@ -476,7 +483,10 @@
                                             </executiondata>
                                             <structure name="Identity Server Tests">
                                                 <classfiles>
-                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/target/classes" />
+                                                    <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/target/classes">
+                                                        <exclude name="**/*Exception.class" />
+                                                        <exclude name="**/*Constants.class" />
+                                                    </fileset>
                                                 </classfiles>
                                                 <sourcefiles encoding="UTF-8">
                                                     <fileset dir="../../portal/client-services/org.wso2.is.portal.user.client.api/src" />
@@ -509,6 +519,44 @@
                                 <goals>
                                     <goal>generate-depends-file</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <version>1.4.191</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <url>
+                                jdbc:h2:file:${basedir}/target/test-classes/carbon-home/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000;MV_STORE=FALSE
+                            </url>
+                            <username>wso2carbon</username>
+                            <password>wso2carbon</password>
+                            <driver>org.h2.Driver</driver>
+                        </configuration>
+                        <executions>
+                            <!--Create the database-->
+                            <execution>
+                                <id>create-database</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <srcFiles>
+                                        <srcFile>
+                                            ${basedir}/target/test-classes/dbscripts/identity-mgt/test-data.sql
+                                        </srcFile>
+                                    </srcFiles>
+                                    <onError>abort</onError>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

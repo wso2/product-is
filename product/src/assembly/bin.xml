@@ -37,7 +37,7 @@
                 <exclude>**/identity/store-config.yaml</exclude>
                 <exclude>**/identity/claim-mapping.yaml</exclude>
                 <exclude>**/identity/profile-mapping.yaml</exclude>
-                <exclude>**/identity/identity-management.yaml</exclude>
+                <!--exclude>**/identity/identity-management.yaml</exclude-->
                 <exclude>**/identity/challenge-questions/en_US.yaml</exclude>
                 <exclude>**/transports/netty-transports.yml</exclude>
             </excludes>
@@ -83,6 +83,11 @@
         <fileSet>
             <directory>carbon-home/deployment</directory>
             <outputDirectory>deployment</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/conf/email</directory>
+            <outputDirectory>conf/email</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
     </fileSets>

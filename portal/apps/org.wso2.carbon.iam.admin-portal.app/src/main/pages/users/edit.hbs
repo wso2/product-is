@@ -1,0 +1,108 @@
+{{secured}}
+{{layout "privilege"}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{title "Edit User Profile | " @config.appName}}
+{{css "css/admin-portal.css"}}
+{{js "js/update-profile.js"}}
+
+{{#fillZone "content"}}
+    {{#if errorMessage}}
+        <div class="alert alert-danger" role="alert" xmlns="http://www.w3.org/1999/html">
+            <i class="icon fw fw-error"></i><strong>{{i18n "user.profile.update.error"}}</strong>
+            <span>{{i18n errorMessage}}
+            </span>
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+            <span aria-hidden="true">
+                <i class="fw fw-cancel"></i>
+            </span>
+            </button>
+        </div>
+    {{/if}}
+
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "update.header"}}</h1>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                    <div class="panel with-nav-tabs panel-default">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#editProfile" data-toggle="tab" class="fw fw-user">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="#editGroups" data-toggle="tab" class="fw fw-depend">Groups</a>
+                                </li>
+                                <li>
+                                    <a href="#editRoles" data-toggle="tab" class="fw fw-worker">Roles</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="editProfile">
+                                    <!-- The all-profile fragment is loaded-->
+                                    <div>
+
+                                        <br class="settings-content">
+
+                                        {{fragment "org.wso2.carbon.iam.portal.common.profile-image" profileName=this
+                                                   actionId=actionId}}
+                                        <br>
+                                        <div id="profile-details">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 form-group">
+                                                <select class="selectpicker form-control"
+                                                        id="profileSelector">
+                                                    {{#each profiles}}
+                                                        <option id="option-profile"
+                                                                action="{{this}}-profile-action"
+                                                                value="{{this}}">{{this}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <br>
+                                            {{#defineZone "veiwProfileArea"}}
+                                                <div id="veiwProfileArea" class="veiwProfileArea">
+                                                    <!-- Here is generated content for erro when user already exists -->
+                                                    {{#each profiles}}
+                                                        <div id="{{this}}-form"
+                                                             class="{{this}} optionBox">
+                                                            {{fragment
+                                                                    "org.wso2.carbon.iam.portal.common.profile-details"
+                                                                    profileName=this
+                                                                    actionId=actionId}}
+                                                        </div>
+                                                    {{/each}}
+
+                                                </div>
+                                            {{/defineZone}}
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane " id="editGroups">
+                                    <div>
+                                        <!-- page content -->
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane " id="editRoles">
+                                    <div>
+                                        <!-- page content -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{{/fillZone}}
