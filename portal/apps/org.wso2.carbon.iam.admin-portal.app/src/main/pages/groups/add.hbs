@@ -112,7 +112,9 @@
                                         <label class="control-label"
                                                for={{claimLabel}}>{{i18n (stringFormat "%s%s" "group.claim." claimLabel)}}
                                             <span>*</span></label>
-                                        <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                        <input onblur="groupNameExists
+                                                ('{{@contextPath}}/root/apis/identityStore-micro-service/groupExists')"
+                                                type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                 name={{claimURI}} id={{claimLabel}}
                                                 class="form-control"
                                                 pattern={{#if regex}}{{regex}}{{/if}}
