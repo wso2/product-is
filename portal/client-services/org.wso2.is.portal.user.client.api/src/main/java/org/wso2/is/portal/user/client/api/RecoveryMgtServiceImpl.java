@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wso2.carbon.identity.common.util.IdentityUtils;
+import org.wso2.carbon.identity.common.util.UtilServiceImpl;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
@@ -279,7 +279,8 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
      */
     @Override
     public String persistPasscode(String uniqueUserId) throws UserPortalUIException {
-        String passcode = IdentityUtils.getInstance().generatePasscode(maxLength);
+
+        String passcode = UtilServiceImpl.getInstance().generatePasscode(maxLength);
         try {
             AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passcode);
         } catch (IdentityRecoveryException e) {
