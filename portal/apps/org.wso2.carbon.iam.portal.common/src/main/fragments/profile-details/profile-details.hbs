@@ -30,7 +30,7 @@
         <div class="form-group">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
                 <label class="control-label" for="{{claimURI}}">{{displayName}}<span>{{requiredIcon}}</span></label>
-                    <input type="{{dataType}}" name="{{claimURI}}" id="{{claimLabel}}" class="form-control"
+                    <input type="{{dataType}}" name="{{claimURI}}" id="{{profile}}-{{claimLabel}}" class="form-control"
                            maxlength="250" value="{{value}}" {{readonly}} {{required}}
                            pattern="{{regex}}"  />
                     {{#if emailVerify}}
