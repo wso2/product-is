@@ -89,9 +89,7 @@ function buildJSONArray(userList) {
 
         for (var i in userList) {
             var item = userList[i];
-            groups = item.getGroups();
             claims = item.getClaims();
-            roles = item.getRoles();
             for (var colName in claims) {
                 if (colName === "Groups") {
                     claims[colName] = groups;

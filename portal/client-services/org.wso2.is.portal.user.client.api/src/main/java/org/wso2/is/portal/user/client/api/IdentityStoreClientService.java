@@ -17,9 +17,12 @@
 package org.wso2.is.portal.user.client.api;
 
 import org.wso2.carbon.identity.claim.mapping.profile.ClaimConfigEntry;
+import org.wso2.carbon.identity.mgt.bean.GroupBean;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
+import org.wso2.is.portal.user.client.api.bean.GroupListUserBean;
+import org.wso2.is.portal.user.client.api.bean.UUFGroup;
 import org.wso2.is.portal.user.client.api.bean.UUFUser;
 import org.wso2.is.portal.user.client.api.bean.UserListBean;
 import org.wso2.is.portal.user.client.api.exception.UserPortalUIException;
@@ -41,8 +44,7 @@ public interface IdentityStoreClientService {
      * @return authentication context
      * @throws UserPortalUIException Authentication Failure
      */
-    UUFUser authenticate(String username, char[] password, String domain)
-            throws UserPortalUIException;
+    UUFUser authenticate(String username, char[] password, String domain) throws UserPortalUIException;
 
     /**
      * Update user password.
@@ -105,6 +107,8 @@ public interface IdentityStoreClientService {
      */
     void updateUserProfile(String uniqueUserId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
 
+    void updateGroupProfile(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
+
     /**
      * Get list of user claims by user id.
      *
@@ -114,6 +118,8 @@ public interface IdentityStoreClientService {
      * @throws UserPortalUIException
      */
     List<Claim> getClaimsOfUser(String uniqueUserId, List<MetaClaim> metaClaims) throws UserPortalUIException;
+
+    List<Claim> getClaimsOfGroup(String uniqueGroupId, List<MetaClaim> metaClaims) throws UserPortalUIException;
 
     /**
      * Get list of domain names
@@ -133,21 +139,97 @@ public interface IdentityStoreClientService {
 
     /**
      * List users by claim
-     * @param claimUri claim uri for filtering
+     *
+     * @param claimUri   claim uri for filtering
      * @param claimValue claim value
-     * @param offset starting point of user list
-     * @param length number of users to be returned
+     * @param offset     starting point of user list
+     * @param length     number of users to be returned
      * @param domainName domain name
      * @return list of users
      * @throws UserPortalUIException
      */
-    List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length,
-                            String domainName) throws UserPortalUIException;
+    List<UUFUser> listUsers(String claimUri, String claimValue, int offset, int length, String domainName)
+            throws UserPortalUIException;
 
-    List<UserListBean> listUsersWithFilter(int offset, int length, String claimURI,
-                                           String claimValue, String domainName,
-                                           List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
+    List<UserListBean> listUsersWithFilter(int offset, int length, String claimURI, String claimValue,
+            String domainName, List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 
-    List<UserListBean> listUsers(int offset, int length, String domainName,
-                                 List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
+    List<UserListBean> listUsers(int offset, int length, String domainName, List<ClaimConfigEntry> requestedClaims)
+            throws UserPortalUIException;
+
+    /**
+     * Add a group
+     *
+     * @param group      object with claims of the group
+     * @param domainName domain where the group should be added
+     * @return uniquegrouid and other attributes of the created group
+     * @throws UserPortalUIException
+     */
+    UUFGroup addGroup(GroupBean group, String domainName) throws UserPortalUIException;
+
+    /**
+     * Add a group to the given domain
+     *
+     * @param groupClaims claims of the group
+     * @param domainName  domain where the group should be added
+     * @return uniquegrouid and other attributes of the created group
+     * @throws UserPortalUIException
+     */
+    UUFGroup addGroup(Map<String, String> groupClaims, String domainName) throws UserPortalUIException;
+
+    /**
+     * Check whether a group exist with given claims.
+     *
+     * @param groupClaims claim for existence check
+     * @param domain      domain to be checked
+     * @return True if group exists
+     * @throws UserPortalUIException
+     */
+    boolean isGroupExist(Map<String, String> groupClaims, String domain) throws UserPortalUIException;
+
+    /**
+     * Add a set of users to a group.
+     *
+     * @param groupId unique ID of the group
+     * @param userIds unique IDs of the users to be added to the group
+     * @throws UserPortalUIException
+     */
+    void addUsersToGroup(String groupId, List<String> userIds) throws UserPortalUIException;
+
+    /**
+     * Update a group with combination of addition and removal.
+     *
+     * @param groupId       unique ID of the group to be updated
+     * @param addingUsers   List of user IDs to be added to group
+     * @param removingUsers List of user IDs to be removed from group
+     * @throws UserPortalUIException
+     */
+    void updateUsersInGroup(String groupId, List<String> addingUsers, List<String> removingUsers)
+            throws UserPortalUIException;
+
+    /**
+     * Check whether a user is in a group.
+     *
+     * @param userId  unique ID of the user
+     * @param groupId unique ID of the group
+     * @return True if user belongs to the group
+     * @throws UserPortalUIException
+     */
+    boolean isUserInGroup(String userId, String groupId) throws UserPortalUIException;
+
+    /**
+     * Update the group with the given unique group id
+     *
+     * @param uniqueGroupId    unique ID of the group to be updated
+     * @param updatedClaimsMap claims with values to be updated.
+     * @throws UserPortalUIException
+     */
+    void updateGroup(String uniqueGroupId, Map<String, String> updatedClaimsMap) throws UserPortalUIException;
+
+    List<UserListBean> getUserList(int offset, int length, String domainName, List<ClaimConfigEntry> requestedClaims)
+            throws UserPortalUIException;
+
+    List<GroupListUserBean> getUserListForAssignment(int offset, int length, String domainName,
+            List<ClaimConfigEntry> requestedClaims) throws UserPortalUIException;
 }
+

@@ -39,8 +39,8 @@ function displayVals() {
             "accountVerificationMethod-area", "OVERWRITE", callbacks);
     }
 }
-document.getElementById("inputUsername").onblur = function() {userNameExists()};
-function userNameExists() {
+document.getElementById("inputUsername").onblur = function() {usernameExists()};
+function usernameExists() {
     var username = document.getElementById('inputUsername').value;
     if (!username) {
         return;

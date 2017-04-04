@@ -40,7 +40,6 @@ import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
 import org.wso2.carbon.identity.recovery.mapping.RecoveryConfig;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.model.UserChallengeAnswer;
-import org.wso2.carbon.identity.recovery.password.AdminForcePasswordResetManager;
 import org.wso2.carbon.identity.recovery.password.NotificationPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.password.SecurityQuestionPasswordRecoveryManager;
 import org.wso2.carbon.identity.recovery.username.NotificationUsernameRecoveryManager;
@@ -278,11 +277,11 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
      */
     @Override
     public void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException {
-        try {
-            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passCode);
-        } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException("Error while storing the Pass Code: " + passCode);
-        }
+//        try {
+//            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passCode);
+//        } catch (IdentityRecoveryException e) {
+//            throw new UserPortalUIException("Error while storing the Pass Code: " + passCode);
+//        }
     }
 
     public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
