@@ -41,6 +41,14 @@
             <classifier>uuf-component</classifier>
         </dependency>
 
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.portal.common</artifactId>
+            <version>${carbon.is.version}</version>
+            <type>zip</type>
+            <classifier>uuf-component</classifier>
+        </dependency>
+
         <!--UUF Themes-->
         <dependency>
             <groupId>org.wso2.carbon.uuf.common</groupId>
@@ -53,6 +61,14 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.recovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
         </dependency>
     </dependencies>
 
@@ -82,6 +98,35 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <!--includes><include>**/src/test/**</include></includes-->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.wso2.carbon.uuf.maven</groupId>
                 <artifactId>carbon-uuf-maven-plugin</artifactId>
                 <version>${carbon-uuf-maven-plugin.version}</version>
@@ -99,6 +144,7 @@
                                     org.wso2.is.portal.user.client.api,
                                     org.wso2.is.portal.user.client.api.micro,
                                     org.wso2.is.portal.user.client.api.bean,
+                                    org.wso2.is.portal.user.client.api.util,
                                     org.wso2.carbon.identity.recovery.*
                                 </Import-Package>
                             </instructions>

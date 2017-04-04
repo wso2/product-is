@@ -73,21 +73,21 @@
                                     <label for="password" class="control-label">{{i18n "password"}}</label>
 
                                     <div class="input-group input-wrap">
-                                        <input type="password" name="password" class="form-control" id="password">
+                                        <input type="password" name="password" class="form-control" id="password" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                     <button type="submit"
-                                            class="btn btn-default btn-primary add-margin-right-2x">{{i18n "login.title"}}</button>
+                                            class="btn btn-default btn-primary add-margin-right-2x" id="sign-in">{{i18n "login.title"}}</button>
                                     <!--not yet implemented-->
                                     <!--<button type="submit" class="btn btn-default btn-secondary hidden-xs hidden-sm">Go Back</button>-->
                                 </div>
                             </div>
                             <p>{{i18n "forgot.your"}}&nbsp;<a
-                                    href="{{recoveryInfo.usernameRecoveryUrl}}">{{i18n "username"}}
-                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}">
+                                    href="{{recoveryInfo.usernameRecoveryUrl}}" id="forget-username">{{i18n "username"}}
+                            </a>&nbsp;{{i18n "or"}}&nbsp;<a href="{{recoveryInfo.passwordRecoveryUrl}}" id="forget-password">
                                 {{i18n "password"}}</a>&nbsp;?
                             </p>
 
