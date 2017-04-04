@@ -46,4 +46,8 @@ public class GroupListUserBean {
     public void setPicture(String picture) {
         this.picture = picture;
     }
+
+    public String toString() {
+        return "User name - " + username + " : User Id - " + uid + " : Picture - " + picture;
+    }
 }

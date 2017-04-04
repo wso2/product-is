@@ -72,8 +72,8 @@ $(document).ready(function () {
     $("#domain").val(primaryDomain);
 });
 
-function groupNameExists() {
-    var groupName = document.getElementById('input-groupname').value;
+function groupNameExists(url) {
+    var groupName = document.getElementById('groupname').value;
     if (!groupName) {
         return;
     }
@@ -84,7 +84,7 @@ function groupNameExists() {
     }
     $.ajax({
         type: "GET",
-        url: "/admin-portal/root/apis/identityStore-micro-service/groupExists",
+        url: url,
         data: {groupName: groupName, groupNameClaimUri: groupNameClaimUri, domain: domain},
         success: function (data) {
             if (data === "true") {
@@ -178,12 +178,12 @@ function createAssignedUserTable(userList) {
 
 $("#addGroupForm").validate({
     rules: {
-        inputGroupName: {
+        groupname: {
             required: true
         }
     },
     messages: {
-        inputUsername: {
+        groupname: {
             required: "Required to provide a group name"
         }
 

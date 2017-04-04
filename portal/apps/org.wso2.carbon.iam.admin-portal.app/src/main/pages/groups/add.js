@@ -23,7 +23,7 @@ function getProfile() {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["group"]);
     } catch (e) {
-        return {errorMessage: 'group.error.retrieve.claim'};
+        return {success: false, errorMessage: 'group.error.retrieve.claim'};
     }
     var claimForProfileEntry = claimProfile.claims;
     var claimProfileArray = [];
@@ -34,7 +34,8 @@ function getProfile() {
 
     sendToClient("groupClaims", claimProfileArray);
     return {
-        "groupClaims": claimProfileArray
+        success: true,
+        groupClaims: claimProfileArray
     };
 }
 
@@ -99,11 +100,16 @@ function onGet(env) {
         sendToClient("recordLimit", null);
 
         var sortRowList = [];
+        var profile = getProfile();
+
+        if (!profile.success) {
+            return {errorMessage: profile.errorMessage}
+        }
 
         return {
             primaryDomainName: primaryDomainName,
             domainNames: domainNames,
-            profile: getProfile(),
+            profile: profile,
             sortRowList: sortRowList
         };
     } catch (e) {
@@ -125,7 +131,7 @@ function onPost(env) {
             if (i.indexOf("http://wso2.org/claims") !== -1) {
                 claimMap[i] = formParams[i];
             }
-            else if(i.indexOf("userUniqueId") !== -1) {
+            else if (i.indexOf("userUniqueId") !== -1) {
                 usersArray.add(formParams[i]);
             }
         }

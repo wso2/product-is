@@ -71,4 +71,9 @@ public class GroupBean {
     public void setDomainName(String domainName) {
         this.domainName = domainName;
     }
+
+    public String toString() {
+        return "Group name - " + groupName + " : Group Description - " + groupDescription + " : Group Id - " + groupId +
+                " : Domain name - " + domainName;
+    }
 }

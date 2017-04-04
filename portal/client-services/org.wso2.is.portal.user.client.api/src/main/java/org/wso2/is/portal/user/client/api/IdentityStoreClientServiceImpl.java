@@ -51,10 +51,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * Identity store client service implementation.
@@ -318,7 +321,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         try {
             getRealmService().getIdentityStore().updateGroupClaims(uniqueGroupId, updatedClaims, null);
         } catch (IdentityStoreException | GroupNotFoundException e) {
-            String error = "Failed to updated group profile.";
+            String error =
+                    "Failed to updated group profile for group:" + uniqueGroupId + " with claims" + updatedClaimsMap
+                            .entrySet().stream().map(Map.Entry::toString).collect(joining(";", "[", "]"));
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -329,13 +334,13 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         List<Claim> claimList = null;
 
         if (StringUtils.isNullOrEmpty(uniqueUserId)) {
-            throw new UserPortalUIException("Invalid unique user id.");
+            throw new UserPortalUIException("Invalid unique user id :" + uniqueUserId);
         }
         if (metaClaims != null && !metaClaims.isEmpty()) {
             try {
                 claimList = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
             } catch (IdentityStoreException | UserNotFoundException e) {
-                String error = "Failed to get claims of the user.";
+                String error = "Failed to get claims of the user :" + uniqueUserId;
                 LOGGER.error(error, e);
                 throw new UserPortalUIException(error);
             }
@@ -350,13 +355,13 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         List<Claim> claimList = null;
 
         if (StringUtils.isNullOrEmpty(uniqueGroupId)) {
-            throw new UserPortalUIException("Invalid unique group id.");
+            throw new UserPortalUIException("Invalid unique group id :" + uniqueGroupId);
         }
         if (metaClaims != null && !metaClaims.isEmpty()) {
             try {
                 claimList = getRealmService().getIdentityStore().getClaimsOfGroup(uniqueGroupId, metaClaims);
             } catch (IdentityStoreException | GroupNotFoundException e) {
-                String error = "Failed to get claims of the user.";
+                String error = "Failed to get claims of the user :" + uniqueGroupId;
                 LOGGER.error(error, e);
                 throw new UserPortalUIException(error);
             }
@@ -569,18 +574,21 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         Group groupResult = null;
         org.wso2.carbon.identity.mgt.bean.GroupBean groupBean = new org.wso2.carbon.identity.mgt.bean.GroupBean();
-        List<Claim> claimsList = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
-            Claim claim = new Claim("http://wso2.org/claims", entry.getKey(), entry.getValue());
-            claimsList.add(claim);
-        }
+        List<Claim> claimsList = groupClaims.entrySet().stream()
+                .filter(entry -> !StringUtils.isNullOrEmpty(entry.getKey()))
+                .map(entry -> new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
         groupBean.setClaims(claimsList);
 
         try {
             groupResult = getRealmService().getIdentityStore().addGroup(groupBean, domainName);
         } catch (IdentityStoreException e) {
-            String error = "Error while adding groups.";
+            groupClaims.entrySet().stream().map(Map.Entry::toString).collect(joining(";", "[", "]"));
+            String error =
+                    "Error while adding group with claims :" + groupClaims.entrySet().stream().map(Map.Entry::toString)
+                            .collect(joining(";", "[", "]")) + "in domain" + domainName;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -589,19 +597,18 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
     @Override
     public boolean isGroupExist(Map<String, String> groupClaims, String domain) throws UserPortalUIException {
-        List<Claim> claimsList = new ArrayList<>();
         boolean isGroupExists;
-        for (Map.Entry<String, String> entry : groupClaims.entrySet()) {
-            Claim claim = new Claim();
-            claim.setClaimUri(entry.getKey());
-            claim.setValue(entry.getValue());
-            claimsList.add(claim);
-        }
+        List<Claim> claimsList = groupClaims.entrySet().stream()
+                .filter(entry -> !StringUtils.isNullOrEmpty(entry.getKey()))
+                .map(entry -> new Claim(IdentityMgtConstants.CLAIM_ROOT_DIALECT, entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
 
         try {
             isGroupExists = getRealmService().getIdentityStore().isGroupExist(claimsList, domain);
         } catch (IdentityStoreException e) {
-            String error = "Error while checking whether the group exists.";
+            String error =
+                    "Error while checking whether the group exists with claims :" + groupClaims.entrySet().stream()
+                            .map(Map.Entry::toString).collect(joining(";", "[", "]")) + " in domain" + domain;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -614,7 +621,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         try {
             getRealmService().getIdentityStore().updateUsersOfGroup(groupId, userIds);
         } catch (IdentityStoreException e) {
-            String error = "Error while adding the users to group : " + groupId;
+            String error = "Error while adding the users: " + userIds.toString() + " to group : " + groupId;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -671,7 +678,9 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         try {
             getRealmService().getIdentityStore().updateGroupClaims(uniqueGroupId, updatedClaims);
         } catch (IdentityStoreException | GroupNotFoundException e) {
-            String error = "Failed to updated group profile.";
+            String error =
+                    "Failed to update group profile for group:" + uniqueGroupId + "with claims" + updatedClaimsMap
+                            .entrySet().stream().map(Map.Entry::toString).collect(joining(";", "[", "]"));
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -687,7 +696,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         try {
             users = getRealmService().getIdentityStore().listUsers(offset, length, domainName);
         } catch (IdentityStoreException e) {
-            String error = "Error while retrieving users";
+            String error = "Error while retrieving users from domain" + domainName;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -705,7 +714,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         try {
             users = getRealmService().getIdentityStore().listUsers(offset, length, domainName);
         } catch (IdentityStoreException e) {
-            String error = "Error while retrieving users";
+            String error = "Error while retrieving users from domain " + domainName;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }
@@ -718,8 +727,8 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
         List<GroupListUserBean> userList = new ArrayList<>();
 
         List<MetaClaim> metaClaims = requestedClaims.stream()
-                .map(claimConfigEntry -> new MetaClaim("", claimConfigEntry.getClaimURI()))
-                .collect(Collectors.toList());
+                .map(claimConfigEntry -> new MetaClaim(IdentityMgtConstants.CLAIM_ROOT_DIALECT,
+                        claimConfigEntry.getClaimURI())).collect(Collectors.toList());
 
         for (User userEntry : users) {
             List<Claim> userClaims;
@@ -733,9 +742,14 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             }
 
             GroupListUserBean listEntry = new GroupListUserBean();
-            listEntry.setPicture(null);           //set profile picture to be shown.
+            listEntry.setPicture(null);           //ToDo set profile picture to be shown.
             listEntry.setUid(userEntry.getUniqueUserId());
-            listEntry.setUsername(userClaims.get(0).getValue());
+
+            Optional<String> username = userClaims.stream()
+                    .filter(claim -> ((IdentityMgtConstants.CLAIM_ROOT_DIALECT + "/username")
+                            .equals(claim.getClaimUri()))).map(Claim::getValue).findFirst();
+
+            listEntry.setUsername(username.get());
 
             userList.add(listEntry);
         }
