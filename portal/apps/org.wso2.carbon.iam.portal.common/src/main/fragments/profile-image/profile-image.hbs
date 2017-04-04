@@ -7,9 +7,9 @@
                 <div class="square-element setbgcolor">
                     <a id="image-edit" class="sub-icon" title="Edit"><i class="fw fw-camera fw-lg"></i></a>
                     {{#if profileImage}}
-                        <img class="profile-thumb" src="/user-portal/root/apis/profile-image-service/image?userid={{userId}}" alt="profileimage">
+                        <img class="profile-thumb" id="profile-image" src="/user-portal/root/apis/profile-image-service/image?userid={{userId}}" alt="profileimage">
                     {{else}}
-                        <div class="user-name-icon">{{usernameChar}}</div>
+                        <div class="user-name-icon" id="profile-name-icon">{{usernameChar}}</div>
                     {{/if}}
                 </div>
             </div>
