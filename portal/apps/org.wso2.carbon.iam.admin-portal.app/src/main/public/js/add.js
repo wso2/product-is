@@ -27,17 +27,17 @@ function displayVals() {
 
     switch ($("#verificationSelector").children(":selected").attr("id")) {
         case "with_password" :
-            returnObjects("password-generation");
+            replaceUIFragment("password-generation");
             break;
         case "email_or_phone" :
-            returnObjects("email-verification");
+            replaceUIFragment("email-verification");
             break;
         case "ask_password" :
-            returnObjects("ask-password");
+            replaceUIFragment("ask-password");
     }
 }
 
-function returnObjects(option) {
+function replaceUIFragment(option) {
     var fillingObject = {};
     var callbacks = {
         onSuccess: function () {
