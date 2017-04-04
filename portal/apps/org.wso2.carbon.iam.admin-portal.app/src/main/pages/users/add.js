@@ -14,37 +14,29 @@ function onPost(env) {
     var domain = null;
     var credentialMap;
     var registrationResult;
+    var optionSelector = env.request.formParams['verificationSelector'];
     claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
     domain = env.request.formParams['domain'];
-
-    var optionSelector = env.request.formParams['verificationSelector'];
-
-    if (optionSelector === "with_password") {
-        credentialMap = {};
-        credentialMap["password"] = env.request.formParams['newPassword'];
-
-        registrationResult = userRegistration(claimMap, credentialMap, domain);
-
+    switch (optionSelector) {
+        case "with_password" :
+            credentialMap = {};
+            credentialMap["password"] = env.request.formParams['newPassword'];
+            registrationResult = userRegistration(claimMap, credentialMap, domain);
+            break;
+        case "ask_password" :
+            credentialMap = {};
+            claimMap["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
+            /*The password is going to store in recovery table and not exposed to customer. This will
+             be replaced after updating password.
+             */
+            credentialMap["password"] = generatePassword(8);
+            registrationResult = userRegistration(claimMap, credentialMap, domain);
+            break;
+        case "otp" :
+            break;
+        case "email_or_phone" :
+            break;
     }
-    else if (optionSelector === "ask_password") {
-        credentialMap = {};
-        claimMap["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
-        /*The password is going to store in recovery table and not exposed to customer. This will
-          be replaced after updating password.
-         */
-        credentialMap["password"] = generatePassword(8);
-        domain = env.request.formParams['domain'];
-        registrationResult = userRegistration(claimMap, credentialMap, domain);
-
-    }
-    else if (optionSelector === "otp") {
-        registrationResult = null;
-    }
-    else if (optionSelector === "email_or_phone") {
-        registrationResult = null;
-    }
-
-
     if (registrationResult.errorMessage) {
         return {
             domainNames: domainNames, primaryDomainName: primaryDomainName,
@@ -57,11 +49,7 @@ function onPost(env) {
             primaryDomainName: primaryDomainName,
             message: registrationResult.message
         };
-        //TODO:do a redirect to listing page once user added.
-        //sendRedirect(env.contextPath + '/users/list');
-
     }
-
 }
 
 function sendPasswordStrengthParameters() {
