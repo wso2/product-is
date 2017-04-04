@@ -8,29 +8,29 @@
 {{js "js/add.js"}}
 
 {{#fillZone "content"}}
-    {{#if message}}
-        <div class="alert alert-success" role="alert">
-            <i class="icon fw fw-success"></i><strong>{{i18n "user.add.success"}}</strong>
-            <span>{{i18n message}}</span>
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+    <div class="body-wrapper">
+        {{#if message}}
+            <div class="alert alert-success" role="alert">
+                <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
+                {{i18n message}}
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
                 <span aria-hidden="true">
                     <i class="fw fw-cancel"></i>
                 </span>
-            </button>
-        </div>
-    {{/if}}
-    {{#if errorMessage}}
-        <div class="alert alert-danger" role="alert">
-            <i class="icon fw fw-error"></i><strong>{{i18n "user.add.failure"}}</strong>
-            <span>{{i18n errorMessage}}</span>
-            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                </button>
+            </div>
+        {{/if}}
+        {{#if errorMessage}}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon fw fw-error"></i><strong>{{i18n "user.add.failure"}}</strong>
+                <span>{{i18n errorMessage}}</span>
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
             <span aria-hidden="true">
                 <i class="fw fw-cancel"></i>
             </span>
-            </button>
-        </div>
-    {{/if}}
-    <div class="body-wrapper">
+                </button>
+            </div>
+        {{/if}}
         <div class="page-header">
             <h1>{{i18n "users.add.header"}}</h1>
         </div>
@@ -69,11 +69,11 @@
                 <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                     <label for="verificationSelector" class="control-label">{{i18n "users.add.selectMethod"}}
                         <span class="requiredAstrix"> *</span></label>
-                    <select class="form-control" id="verificationSelector">
-                        <option>{{i18n "users.add.select.with.password"}}</option>
-                        <option>{{i18n "users.add.select.with.email.and.askPassword"}}</option>
-                        <option>{{i18n "users.add.select.with.otp.and.askPassword"}}</option>
-                        <option>{{i18n "users.add.select.with.email.or.phone"}}</option>
+                    <select class="form-control" id="verificationSelector" name="verificationSelector">
+                        <option name="withPassword" value="with_password" id="with_password">{{i18n "users.add.select.with.password"}}</option>
+                        <option name="askPassword" value="ask_password" id="ask_password">{{i18n "users.add.select.with.email.and.askPassword"}}</option>
+                        <option name="otp" value="otp" id="otp">{{i18n "users.add.select.with.otp.and.askPassword"}}</option>
+                        <option name="emailOrPhone" value="email_or_phone" id="email_or_phone">{{i18n "users.add.select.with.email.or.phone"}}</option>
                     </select>
                 </div>
             </div>

@@ -11,12 +11,32 @@ function onPost(env) {
     var primaryDomainName = getPrimaryDomainName(env);
     sendPasswordStrengthParameters();
     var claimMap = {};
-    var credentialMap = {};
     var domain = null;
-    credentialMap["password"] = env.request.formParams['newPassword'];
+    var credentialMap;
+    var registrationResult;
+    var optionSelector = env.request.formParams['verificationSelector'];
     claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
     domain = env.request.formParams['domain'];
-    var registrationResult = userRegistration(claimMap, credentialMap, domain);
+    switch (optionSelector) {
+        case "with_password" :
+            credentialMap = {};
+            credentialMap["password"] = env.request.formParams['newPassword'];
+            registrationResult = userRegistration(claimMap, credentialMap, domain);
+            break;
+        case "ask_password" :
+            credentialMap = {};
+            claimMap["http://wso2.org/claims/email"] = env.request.formParams['askPwdEmail'];
+            /*The password is going to store in recovery table and not exposed to customer. This will
+             be replaced after updating password.
+             */
+            credentialMap["password"] = generatePassword(8);
+            registrationResult = userRegistration(claimMap, credentialMap, domain);
+            break;
+        case "otp" :
+            break;
+        case "email_or_phone" :
+            break;
+    }
     if (registrationResult.errorMessage) {
         return {
             domainNames: domainNames, primaryDomainName: primaryDomainName,
@@ -29,8 +49,6 @@ function onPost(env) {
             primaryDomainName: primaryDomainName,
             message: registrationResult.message
         };
-        //TODO:do a redirect to listing page once user added.
-        //sendRedirect(env.contextPath + '/users/list');
     }
 }
 
@@ -93,4 +111,15 @@ function userRegistration(claimMap, credentialMap, domain) {
             errorMessage: message
         };
     }
+}
+
+// A random temporary password generation which will not expose to the user nor admin.
+function generatePassword(length) {
+    var length = length,
+        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
 }
