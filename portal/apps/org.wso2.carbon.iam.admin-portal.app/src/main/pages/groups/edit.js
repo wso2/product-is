@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-function getGroupProfile() {
+function getProfile() {
     /**
      * Get the 'group' Profile
      */
@@ -23,7 +23,7 @@ function getGroupProfile() {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
             "getProfile", ["group"]);
     } catch (e) {
-        return {errorMessage: profile + '.error.retrieve.claim'};
+        return {success: false, errorMessage: 'group.error.retrieve.claim'};
     }
     var claimForProfileEntry = claimProfile.claims;
     var claimProfileArray = [];
@@ -32,9 +32,26 @@ function getGroupProfile() {
         claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
     }
 
+    sendToClient("groupClaims", claimProfileArray);
     return {
-        "groupClaims": claimProfileArray
+        success: true,
+        groupClaims: claimProfileArray
     };
+}
+
+function generateClaimProfileMap(claimProfileEntry) {
+    var claimProfileMap = {};
+    claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
+    claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
+    if (claimProfileEntry.getDefaultValue()) {
+        claimProfileMap["defaultValue"] = claimProfileEntry.getDefaultValue();
+    }
+    claimProfileMap["claimLabel"] = claimProfileEntry.getClaimURI().replace("http://wso2.org/claims/", "");
+    claimProfileMap["required"] = claimProfileEntry.getRequired();
+    claimProfileMap["regex"] = claimProfileEntry.getRegex();
+    claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
+    claimProfileMap["dataType"] = claimProfileEntry.getDataType();
+    return claimProfileMap;
 }
 
 function getDomainNames(env) {
@@ -44,7 +61,7 @@ function getDomainNames(env) {
             domainNames = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                 "getDomainNames", []);
         } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
+            return {errorMessage: 'group.error.retrieve.domain'};
         }
     }
     return domainNames;
@@ -57,17 +74,47 @@ function getPrimaryDomainName(env) {
             primaryDomainName = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
                 "getPrimaryDomainName", []);
         } catch (e) {
-            return {errorMessage: 'signup.error.retrieve.domain'};
+            return {errorMessage: 'group.error.retrieve.domain'};
         }
     }
     return primaryDomainName;
 }
 
 function onGet(env) {
-    var domainNames = getDomainNames(env);
-    var primaryDomainName = getPrimaryDomainName(env);
+    try {
 
-    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+        var primaryDomainName = getPrimaryDomainName(env);
+
+        // userList
+        var requestedClaims = getClaimsInProfile("group-assign-users");
+        var domainNames = getDomainNames(env);
+
+        var userList = getUserList(0, -1, "", requestedClaims);
+        var columns = buildJSONArray(userList);
+
+        sendToClient("columnList", columns);
+        sendToClient("selectedClaim", null);
+        sendToClient("selectedDomain", null);
+        sendToClient("action", null);
+        sendToClient("offset", null);
+        sendToClient("recordLimit", null);
+
+        var sortRowList = [];
+        var profile = getProfile();
+
+        if (!profile.success) {
+            return {errorMessage: profile.errorMessage}
+        }
+
+        return {
+            primaryDomainName: primaryDomainName,
+            domainNames: domainNames,
+            profile: profile,
+            sortRowList: sortRowList
+        };
+    } catch (e) {
+        return {errorMessage: 'group.add.error'};
+    }
 }
 
 function onPost(env) {
@@ -97,4 +144,74 @@ function updateGroup(groupUniqueID, claimMap) {
         "updateGroup", [groupUniqueID, claimMap]);
     return updateGroupResult;
 
+}
+
+function getUserList(offset, length, domainName, requestedClaims) {
+    var userList;
+    try {
+        userList = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "getUserListForAssignment", [offset, length, domainName, requestedClaims]);
+    } catch (e) {
+        return {errorMessage: 'list.error.retrieve.users'};
+    }
+
+    return userList;
+}
+
+function getClaimsInProfile(profileName) {
+    var claimProfile;
+    try {
+        claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfile", [profileName]);
+    } catch (e) {
+        return {errorMessage: profile + '.error.retrieve.claim'};
+    }
+    var claimForProfileEntry = claimProfile.claims;
+
+    return claimForProfileEntry;
+}
+
+function buildJSONArray(userList) {
+    var columnsArray = [];
+    // columnsArray.push("profilepic", "username", "uniqueId");
+
+    sendToClient("users", userList);
+    return columnsArray;
+}
+
+function isUserInGroup(userId, groupId) {
+    try {
+        var isUserInGroup = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "isUserInGroup", [userId, groupId]);
+        return {success: true, isUserInGroup: isUserInGroup, message: "User is in group."};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
+}
+
+function updateUsersInGroup(groupId, addUserIds, removeUserIds) {
+
+    try {
+        callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+            "updateUsersInGroup", [groupId, addUserIds, removeUserIds]);
+        return {success: true, message: "Users are updated to group."};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
 }

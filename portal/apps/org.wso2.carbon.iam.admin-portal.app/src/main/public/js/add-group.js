@@ -190,4 +190,18 @@ $("#addGroupForm").validate({
     }
 });
 
+$("#editGroupForm").validate({
+    rules: {
+        groupname: {
+            required: true
+        }
+    },
+    messages: {
+        groupname: {
+            required: "Required to provide a group name"
+        }
+
+    }
+});
+
 
