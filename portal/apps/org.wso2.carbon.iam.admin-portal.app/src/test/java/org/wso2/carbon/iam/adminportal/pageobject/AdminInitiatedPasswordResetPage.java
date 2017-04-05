@@ -16,15 +16,14 @@
 
 package org.wso2.carbon.iam.adminportal.pageobject;
 
-
-import java.util.List;
-import java.util.Map;
-
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.Map;
 
 public class AdminInitiatedPasswordResetPage {
     private Map<String, String> data;

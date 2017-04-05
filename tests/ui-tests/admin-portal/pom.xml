@@ -158,7 +158,7 @@
                             </property>
                             <property>
                                 <name>pathToChromeDriver</name>
-                                <value>/home/wso2dinali/Downloads/chrome/chromedriver</value>
+                                <value>/home/hasanthi/Downloads/chrome/chromedriver</value>
                             </property>
                             <property>
                                 <name>home</name>
