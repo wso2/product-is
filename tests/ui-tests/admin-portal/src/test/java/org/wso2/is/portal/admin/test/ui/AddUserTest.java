@@ -27,17 +27,11 @@ import org.wso2.carbon.iam.adminportal.actionobject.AdminLoginPageAction;
 /***
  *  Test class for add user - with password scenario
  */
-public class AddUserTest extends SelectDriver {
+public class AddUserTest extends UIBaseTest {
     private static AdminLoginPageAction adminLoginPageAction;
     private static AddNewUserPageAction addNewUserPageAction;
 
     private static WebDriver driver;
-    private static String adminLoginPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/login";
-    private static String adminPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/";
-    private static String addUserPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/users/add";
 
     @BeforeClass
     public void init() {

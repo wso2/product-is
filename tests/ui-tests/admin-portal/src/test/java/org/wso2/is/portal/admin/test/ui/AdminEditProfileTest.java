@@ -25,25 +25,16 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.adminportal.actionobject.AdminLoginPageAction;
 import org.wso2.carbon.iam.adminportal.actionobject.EditAdminUserPageAction;
+import org.wso2.is.portal.admin.test.ui.bean.AdminPortalURLBean;
 
 /**
  * Test for edit Default profile.
  */
-public class AdminEditProfileTest extends SelectDriver {
+public class AdminEditProfileTest extends UIBaseTest {
     private static AdminLoginPageAction  adminLoginPageAction;
     private static EditAdminUserPageAction editAdminUserPageAction;
 
     private static WebDriver driver;
-    private static String adminLoginPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/login";
-    private static String adminPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/";
-    private static String editAdminPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/users/edit";
-    private static String defaultProfilePage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/users/edit?default#default";
-    private static String employeeProfilePage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/users/edit?employee#employee";
 
     @BeforeClass
     public void init() {
@@ -54,8 +45,8 @@ public class AdminEditProfileTest extends SelectDriver {
     @Test(groups = "AdminEditDefaultProfileTest")
     public void loadLoginPage() throws Exception {
 
-        driver.get(adminLoginPage);
-        Assert.assertEquals(driver.getCurrentUrl(), adminLoginPage,
+        driver.get(AdminPortalURLBean.getAdminLoginPage());
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminLoginPage(),
                 "This current page is not the login page.");
     }
 
@@ -65,22 +56,22 @@ public class AdminEditProfileTest extends SelectDriver {
         String password = System.getProperty("password");
         boolean logged = adminLoginPageAction.adminLogin(username, password);
         Assert.assertTrue(logged, "Loggin failed.");
-        Assert.assertEquals(driver.getCurrentUrl(), adminPage,
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminPage(),
                 "This current page is not the admin user page.");
 
     }
 
     @Test(groups = "AdminEditDefaultProfileTest", dependsOnMethods = "testLogin")
     public void editDefaultProfile() throws Exception {
-        driver.get(editAdminPage);
-        Assert.assertEquals(driver.getCurrentUrl(), editAdminPage,
+        driver.get(AdminPortalURLBean.getEditAdminPage());
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getEditAdminPage(),
                 "This current page is not the edit user page.");
 
         String email = "admin@wso2.com";
         String firstName = "dinali";
         boolean edited = editAdminUserPageAction.updateDefaultProfile(email, firstName);
         Assert.assertTrue(edited, "Edited the profile");
-        Assert.assertEquals(driver.getCurrentUrl(), defaultProfilePage,
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getDefaultProfilePage(),
                 "This current page is not the edit default profile user page.");
         String availableEmail = editAdminUserPageAction.getTxtboxEmployeeEmail().getAttribute("value");
         Assert.assertEquals(availableEmail, email, "The entered value is not updated.");
@@ -89,13 +80,13 @@ public class AdminEditProfileTest extends SelectDriver {
 
     @Test(groups = "AdminEditDefaultProfileTest", dependsOnMethods = "editDefaultProfile")
     public void changeProfiles() throws Exception {
-        driver.get(editAdminPage);
-        Assert.assertEquals(driver.getCurrentUrl(), editAdminPage,
+        driver.get(AdminPortalURLBean.getEditAdminPage());
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getEditAdminPage(),
                 "This current page is not the edit user page.");
 
         boolean changed = editAdminUserPageAction.selectEmployeeOption();
         Assert.assertTrue(changed, "Selected is not the Employee profile");
-        Assert.assertEquals(driver.getCurrentUrl(), employeeProfilePage,
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getEmployeeProfilePage(),
                 "This current page is not the edit employee profile user page.");
     }
 

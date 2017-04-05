@@ -24,19 +24,17 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.adminportal.actionobject.AdminLoginPageAction;
+import org.wso2.is.portal.admin.test.ui.bean.AdminPortalURLBean;
 
 
 /**
  * Test for Sign-in in admin portal.
  */
-public class AdminSignInTest extends SelectDriver {
+public class AdminSignInTest extends UIBaseTest {
     private static AdminLoginPageAction adminLoginPageAction;
 
     private static WebDriver driver;
-    private static String adminLoginPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/login";
-    private static String adminPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/";
+
     @BeforeClass
     public void init() {
         driver = selectDriver(System.getProperty("driver"));
@@ -46,8 +44,8 @@ public class AdminSignInTest extends SelectDriver {
     @Test(groups = "AdminSignInTest")
     public void loadLoginPage() throws Exception {
 
-        driver.get(adminLoginPage);
-        Assert.assertEquals(driver.getCurrentUrl(), adminLoginPage,
+        driver.get(AdminPortalURLBean.getAdminLoginPage());
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminLoginPage(),
                 "This current page is not the login page.");
     }
 
@@ -57,7 +55,7 @@ public class AdminSignInTest extends SelectDriver {
         String password = System.getProperty("password");
         boolean logged = adminLoginPageAction.adminLogin(username, password);
         Assert.assertTrue(logged, "Loggin failed.");
-        Assert.assertEquals(driver.getCurrentUrl(), adminPage,
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminPage(),
                 "This current page is not the admin user page.");
 
     }

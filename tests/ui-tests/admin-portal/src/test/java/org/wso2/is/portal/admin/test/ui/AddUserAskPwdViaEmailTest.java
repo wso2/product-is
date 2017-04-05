@@ -25,22 +25,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.adminportal.actionobject.AdminLoginPageAction;
 import org.wso2.carbon.iam.adminportal.actionobject.AskPwdViaEmailPageAction;
+import org.wso2.is.portal.admin.test.ui.bean.AdminPortalURLBean;
+
 import java.util.UUID;
 
 /***
  *  Test class for add user - ask password via email scenario.
  */
-public class AddUserAskPwdViaEmailTest extends SelectDriver {
+public class AddUserAskPwdViaEmailTest extends UIBaseTest {
     private static AdminLoginPageAction  adminLoginPageAction;
     private static AskPwdViaEmailPageAction askPwdViaEmailPageAction;
 
     private static WebDriver driver;
-    private static String adminLoginPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/login";
-    private static String adminPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/";
-    private static String addUserPage = "https://" + System.getProperty("home") + ":" +
-            System.getProperty("port") + "/admin-portal/users/add";
 
     @BeforeClass
     public void init() {
@@ -51,28 +47,28 @@ public class AddUserAskPwdViaEmailTest extends SelectDriver {
 
     @Test(groups = "AddUserAskPwdViaEmailTest")
     public void loginPage() throws Exception {
-        driver.get(adminLoginPage);
-        Assert.assertEquals(driver.getCurrentUrl(), adminLoginPage,
+        driver.get(AdminPortalURLBean.getAdminLoginPage());
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminLoginPage(),
                 "This current page is not the login page.");
         String username = System.getProperty("username");
         String password = System.getProperty("password");
         boolean logged = adminLoginPageAction.adminLogin(username, password);
-        Assert.assertEquals(driver.getCurrentUrl(), adminPage,
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminPage(),
                 "This current page is not the admin user page.");
     }
 
 
     @Test(groups = "AddUserAskPwdViaEmailTest", dependsOnMethods = "loginPage")
     public void testAddCorrectUser() throws Exception {
-        driver.get(addUserPage);
-        Assert.assertEquals(driver.getCurrentUrl(), addUserPage,
+        driver.get(AdminPortalURLBean.getAddUserPage());
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAddUserPage(),
                 "This current page is not the add user page.");
         String username = UUID.randomUUID().toString();
         String email = "sample@wso2.com";
         String confirmEmail = "sample@wso2.com";
         boolean added = askPwdViaEmailPageAction.addUserAskPwdViaEmail(username, email, confirmEmail);
         Assert.assertTrue(added, "The user is not added correctly");
-        Assert.assertEquals(driver.getCurrentUrl(), addUserPage,
+        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAddUserPage(),
                 "This current page is not the add user page.");
     }
 
