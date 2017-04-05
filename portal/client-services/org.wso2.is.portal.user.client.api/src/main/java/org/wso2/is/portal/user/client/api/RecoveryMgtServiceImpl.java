@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.common.util.UtilServiceImpl;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
@@ -66,6 +67,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
     private SecurityQuestionPasswordRecoveryManager securityQuestionPasswordRecoveryManager;
     private NotificationUsernameRecoveryManager notificationUsernameRecoveryManager;
+    private int maxLength = 6;
 
 
     @Activate
@@ -273,16 +275,18 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
      * Pass pass code value to persist
      *
      * @param uniqueUserId selected user id
-     * @param passCode generated one time password
      * @throws UserPortalUIException
      */
     @Override
-    public void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException {
+    public String persistPasscode(String uniqueUserId) throws UserPortalUIException {
+
+        String passcode = UtilServiceImpl.getInstance().generatePasscode(maxLength);
         try {
-            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passCode);
+            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passcode);
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException("Error while storing the Pass Code: " + passCode);
+            throw new UserPortalUIException("Error while Processing the Passcode for user:" + uniqueUserId);
         }
+        return passcode;
     }
 
     public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
