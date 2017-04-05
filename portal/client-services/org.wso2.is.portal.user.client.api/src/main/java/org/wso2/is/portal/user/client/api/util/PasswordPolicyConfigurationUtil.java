@@ -16,8 +16,7 @@
 package org.wso2.is.portal.user.client.api.util;
 
 
-import org.wso2.carbon.identity.policy.password.history.bean.PasswordPolicyBean;
-
+import org.wso2.carbon.identity.policy.password.pattern.bean.PasswordPolicyBean;
 
 /**
  * This is a utility class to get password policy configuration details

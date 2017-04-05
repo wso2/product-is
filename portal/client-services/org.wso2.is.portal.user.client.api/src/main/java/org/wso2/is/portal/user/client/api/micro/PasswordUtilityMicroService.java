@@ -18,7 +18,7 @@ package org.wso2.is.portal.user.client.api.micro;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
-import org.wso2.carbon.identity.policy.password.validation.PasswordValidationService;
+import org.wso2.carbon.identity.policy.password.pattern.validation.PasswordValidationService;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.util.BufferUtil;
