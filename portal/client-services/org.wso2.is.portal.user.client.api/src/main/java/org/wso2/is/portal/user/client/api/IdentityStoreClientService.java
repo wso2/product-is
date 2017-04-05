@@ -208,6 +208,15 @@ public interface IdentityStoreClientService {
             throws UserPortalUIException;
 
     /**
+     * Get the claims of a group, given the group unique id.
+     * @param groupId
+     * @return
+     * @throws UserPortalUIException
+     */
+    List<Claim> getClaimsOfGroup(String groupId)
+            throws UserPortalUIException;
+
+    /**
      * Check whether a user is in a group.
      *
      * @param userId  unique ID of the user

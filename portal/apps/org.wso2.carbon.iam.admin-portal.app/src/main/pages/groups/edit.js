@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-function getProfile() {
+function getClaimsOfGroup(groupId) {
     /**
      * Get the 'group' Profile
      */
     var claimProfile;
     try {
         claimProfile = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
-            "getProfile", ["group"]);
+            "getGroupClaimEntries", [groupId]);
     } catch (e) {
         return {success: false, errorMessage: 'group.error.retrieve.claim'};
     }
-    var claimForProfileEntry = claimProfile.claims;
+    var claimForProfileUIEntryList = claimProfile;
     var claimProfileArray = [];
 
-    for (var i = 0; i < claimForProfileEntry.length; i++) {
-        claimProfileArray[i] = generateClaimProfileMap(claimForProfileEntry[i]);
+    for (var i = 0; i < claimForProfileUIEntryList.length; i++) {
+        claimProfileArray[i] = generateClaimProfileMap(claimForProfileUIEntryList[i]);
     }
 
     sendToClient("groupClaims", claimProfileArray);
@@ -39,7 +39,10 @@ function getProfile() {
     };
 }
 
-function generateClaimProfileMap(claimProfileEntry) {
+
+
+function generateClaimProfileMap(claimProfileUIEntry) {
+    var claimProfileEntry = claimProfileUIEntry.getClaimConfigEntry();
     var claimProfileMap = {};
     claimProfileMap["displayName"] = claimProfileEntry.getDisplayName();
     claimProfileMap["claimURI"] = claimProfileEntry.getClaimURI();
@@ -51,6 +54,7 @@ function generateClaimProfileMap(claimProfileEntry) {
     claimProfileMap["regex"] = claimProfileEntry.getRegex();
     claimProfileMap["readonly"] = claimProfileEntry.getReadonly();
     claimProfileMap["dataType"] = claimProfileEntry.getDataType();
+    claimProfileMap["value"] = claimProfileUIEntry.getValue();
     return claimProfileMap;
 }
 
@@ -83,6 +87,7 @@ function getPrimaryDomainName(env) {
 function onGet(env) {
     try {
 
+        var groupUniqueID = env.request.queryParams['groupId'];
         var primaryDomainName = getPrimaryDomainName(env);
 
         // userList
@@ -100,7 +105,7 @@ function onGet(env) {
         sendToClient("recordLimit", null);
 
         var sortRowList = [];
-        var profile = getProfile();
+        var profile = getClaimsOfGroup(groupUniqueID);
 
         if (!profile.success) {
             return {errorMessage: profile.errorMessage}

@@ -114,6 +114,7 @@
                                                 ('{{@contextPath}}/root/apis/identityStore-micro-service/groupExists')"
                                                 type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                name={{claimURI}} id={{claimLabel}}
+                                               value={{value}}
                                                class="form-control"
                                                pattern={{#if regex}}{{regex}}{{/if}}
                                                        placeholder={{i18n (stringFormat "%s%s" "group.placeholder." claimLabel)}}
@@ -123,6 +124,7 @@
                                                for={{claimLabel}}>{{i18n (stringFormat "%s%s" "group.claim." claimLabel)}}</label>
                                         <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
                                                 name={{claimURI}} id={{claimLabel}}
+                                                value={{value}}
                                                 class="form-control"
                                                 pattern={{#if regex}}{{regex}}{{/if}}
                                                         placeholder={{i18n (stringFormat "%s%s" "group.placeholder." claimLabel)}} /></br>

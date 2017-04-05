@@ -560,6 +560,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
             groupResult = getRealmService().getIdentityStore().addGroup(group, domainName);
+            LOGGER.info("Group added with id:" + groupResult.getUniqueGroupId());
 
         } catch (IdentityStoreException e) {
             String error = "Error while adding the group to domain : " + domainName;
@@ -584,6 +585,7 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
 
         try {
             groupResult = getRealmService().getIdentityStore().addGroup(groupBean, domainName);
+            LOGGER.info("Group added with id:" + groupResult.getUniqueGroupId());
         } catch (IdentityStoreException e) {
             groupClaims.entrySet().stream().map(Map.Entry::toString).collect(joining(";", "[", "]"));
             String error =
@@ -635,6 +637,23 @@ public class IdentityStoreClientServiceImpl implements IdentityStoreClientServic
             getRealmService().getIdentityStore().updateUsersOfGroup(groupId, addingUsers, removingUsers);
         } catch (IdentityStoreException e) {
             String error = "Error while updating the users in group : " + groupId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        }
+    }
+
+    @Override
+    public List<Claim> getClaimsOfGroup(String groupId)
+            throws UserPortalUIException {
+
+        try {
+            return getRealmService().getIdentityStore().getClaimsOfGroup(groupId);
+        } catch (IdentityStoreException e) {
+            String error = "Error while retrieving the group : " + groupId;
+            LOGGER.error(error, e);
+            throw new UserPortalUIException(error);
+        } catch (GroupNotFoundException e) {
+            String error = "No group exist with ID : " + groupId;
             LOGGER.error(error, e);
             throw new UserPortalUIException(error);
         }

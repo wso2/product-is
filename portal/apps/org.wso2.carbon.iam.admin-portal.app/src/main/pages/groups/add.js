@@ -155,11 +155,16 @@ function onPost(env) {
         sendToClient("recordLimit", null);
 
         var sortRowList = [];
+        var profile = getProfile();
+
+        if (!profile.success) {
+            return {errorMessage: profile.errorMessage}
+        }
 
         return {
             primaryDomainName: primaryDomainName,
             domainNames: domainNames,
-            profile: getProfile(),
+            profile: profile,
             sortRowList: sortRowList,
             addGroupResult: addGroupResult
         };
