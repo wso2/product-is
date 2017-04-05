@@ -1,19 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
--->
+Skip to content
+        This repository
+        Search
+        Pull requests
+        Issues
+        Gist
+        @DMHP
+        Sign out
+        Unwatch 68
+        Star 60
+        Fork 213 wso2/product-is
+        Code  Issues 19  Pull requests 29  Projects 0  Wiki  Pulse  Graphs
+        Branch: 6.0.x-C5_m5 Find file Copy pathproduct-is/portal/client-services/org.wso2.is.portal.user.client.api/pom.xml
+        7abbd5e  29 minutes ago
+        @DMHP DMHP reverting the commit
+        3 contributors @IndunilRathnayake @DMHP @denuwanthi
+        RawBlameHistory
+        114 lines (102 sloc)  4.61 KB
+        <?xml version="1.0" encoding="utf-8"?>
+        <!--
+          ~ Copyright (c) 2016, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+          ~
+          ~ Licensed under the Apache License, Version 2.0 (the "License");
+          ~ you may not use this file except in compliance with the License.
+          ~ You may obtain a copy of the License at
+          ~
+          ~ http://www.apache.org/licenses/LICENSE-2.0
+          ~
+          ~ Unless required by applicable law or agreed to in writing, software
+          ~ distributed under the License is distributed on an "AS IS" BASIS,
+          ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+          ~ See the License for the specific language governing permissions and
+          ~ limitations under the License.
+        -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -41,12 +59,12 @@
 
         <!-- Carbon Dependencies-->
         <dependency>
-            <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.identity.commons</groupId>
             <artifactId>org.wso2.carbon.identity.commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
@@ -62,6 +80,10 @@
             <artifactId>msf4j-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-all</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
@@ -75,6 +97,10 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.mgt</groupId>
+            <artifactId>org.wso2.carbon.identity.policy.password</artifactId>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -84,16 +110,17 @@
             javax.security.*,
             org.apache.commons.lang3.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
-            org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.common.*;version="${org.wso2.carbon.identity.commons.version}",
+            org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.claim.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.claim.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.claim.mapping.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.uuf.spi.auth.*,
             org.wso2.carbon.kernel.utils.*,
-            org.wso2.msf4j;version="${msf4j.import.version.range}",
+            org.wso2.msf4j.*;version="${msf4j.import.version.range}",
             javax.ws.rs.*;version="${javax.ws.rs.import.version.range}",
-            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version.range}"
+            org.wso2.carbon.identity.recovery.*;version="${org.wso2.carbon.identity.mgt.version.range}",
+            org.wso2.carbon.identity.policy.password.*;version="${org.wso2.carbon.identity.mgt.version.range}"
         </import.package>
         <!--//todo set versions-->
         <export.package>
@@ -107,3 +134,5 @@
     </properties>
 
 </project>
+        Contact GitHub API Training Shop Blog About
+        © 2017 GitHub, Inc. Terms Privacy Security Status Help
