@@ -20,7 +20,7 @@ package org.wso2.is.portal.user.client.api.bean;
  * TODO: Add annotations once migrated to C5
  */
 public class PasswordPolicyBean {
-   /* private boolean includeUpperCase = true;
+    private boolean includeUpperCase = true;
     private boolean includeLowerCase = true;
     private boolean includeNumbers = true;
     private boolean includeSymbols = true;
@@ -28,13 +28,7 @@ public class PasswordPolicyBean {
     private int maxLength = 50;
 
     public int getMaxLength() {
-
-
-
-
-
         return maxLength;
-
     }
 
     public void setMaxLength(int maxLength) {
@@ -79,5 +73,5 @@ public class PasswordPolicyBean {
 
     public void setIncludeSymbols(boolean includeSymbols) {
         this.includeSymbols = includeSymbols;
-    }*/
+    }
 }

@@ -12,8 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *//*
-
+ */
 package org.wso2.is.portal.user.client.api.micro;
 
 import org.osgi.framework.BundleContext;
@@ -36,11 +35,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-*/
 /**
  * This is the micorservice to handle password utility services
- *//*
-
+ */
 public class PasswordUtilityMicroService implements Microservice {
 
     @POST
@@ -70,4 +67,3 @@ public class PasswordUtilityMicroService implements Microservice {
     }
 
 }
-*/

@@ -12,18 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *//*
-
+ */
 package org.wso2.is.portal.user.client.api.util;
 
 
 import org.wso2.carbon.identity.policy.password.pattern.bean.PasswordPolicyBean;
 
-*/
 /**
  * This is a utility class to get password policy configuration details
- *//*
-
+ */
 public class PasswordPolicyConfigurationUtil {
 
     public static boolean isRegexValidation() {
@@ -61,4 +58,3 @@ public class PasswordPolicyConfigurationUtil {
     }
 }
 
-*/
