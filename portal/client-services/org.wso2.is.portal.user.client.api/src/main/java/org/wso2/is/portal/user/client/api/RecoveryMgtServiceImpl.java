@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.identity.common.base.passcode.PasscodeGenerator;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.User;
 import org.wso2.carbon.identity.mgt.claim.Claim;
@@ -66,6 +67,22 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
     private SecurityQuestionPasswordRecoveryManager securityQuestionPasswordRecoveryManager;
     private NotificationUsernameRecoveryManager notificationUsernameRecoveryManager;
+    private PasscodeGenerator passcodeGenerator = new DefaultPasscodeGenerator();
+    private static final int MAX_LENGTH = 6;
+
+    @Reference(
+            name = "PasscodeGeneratorService",
+            service = PasscodeGenerator.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetPasscodeGeneratorService")
+    protected void setPasscodeGeneratorService(PasscodeGenerator passcodeGenerator) {
+        this.passcodeGenerator = passcodeGenerator;
+    }
+
+    protected void unsetPasscodeGeneratorService(PasscodeGenerator passcodeGenerator) {
+        this.passcodeGenerator = new DefaultPasscodeGenerator();
+    }
 
 
     @Activate
@@ -273,15 +290,15 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
      * Pass pass code value to persist
      *
      * @param uniqueUserId selected user id
-     * @param passCode generated one time password
      * @throws UserPortalUIException
      */
     @Override
-    public void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException {
+    public void persistPassCode(String uniqueUserId) throws UserPortalUIException {
         try {
-            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passCode);
+            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId,
+                    passcodeGenerator.generatePasscode(MAX_LENGTH));
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException("Error while storing the Pass Code: " + passCode);
+            throw new UserPortalUIException("Error while storing the Pass Code");
         }
     }
 

@@ -93,8 +93,7 @@ public interface RecoveryMgtService {
      * Pass pass code value to persist
      *
      * @param uniqueUserId selected user id
-     * @param passCode generated one time passcode
      */
-    void persistPassCode(String uniqueUserId, String passCode) throws UserPortalUIException;
+    void persistPassCode(String uniqueUserId) throws UserPortalUIException;
 
 }
