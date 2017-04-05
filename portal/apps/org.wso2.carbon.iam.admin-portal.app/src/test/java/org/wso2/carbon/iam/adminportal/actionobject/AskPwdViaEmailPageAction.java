@@ -18,25 +18,30 @@
 
 package org.wso2.carbon.iam.adminportal.actionobject;
 
-
 import org.openqa.selenium.WebDriver;
-import org.wso2.carbon.iam.adminportal.pageobject.AdminLoginPage;
+import org.openqa.selenium.support.ui.Select;
+import org.wso2.carbon.iam.adminportal.pageobject.AskPwdViaEmailPage;
+
 /**
- * Action Object for admin login page.
+ * Action object for Ask password via email page.
  */
-public class AdminLoginPageAction extends AdminLoginPage {
+public class AskPwdViaEmailPageAction extends AskPwdViaEmailPage {
 
     WebDriver webDriver = null;
 
-    public AdminLoginPageAction(WebDriver driver) {
+    public AskPwdViaEmailPageAction(WebDriver driver) {
         super(driver);
         webDriver = driver;
     }
 
-    public boolean adminLogin(String username, String password) {
-            getTxtboxUsername().sendKeys(username);
-            getTxtboxPassword().sendKeys(password);
-            getBtnSignIn().click();
-            return true;
+    public boolean addUserAskPwdViaEmail(String username, String email, String confirmEmail) {
+        getTxtBoxUsername().sendKeys(username);
+        Select dropdown = new Select(getOptionSelectMethod());
+        dropdown.selectByVisibleText("With email verification and ask password from user");
+        getTxtBoxUsersEmail().sendKeys(email);
+        getTxtBoxConfirmEmail().sendKeys(confirmEmail);
+        getBtnAddUser().click();
+        return true;
     }
+
 }

@@ -57,4 +57,28 @@ public class IdentityStoreClientMicroService implements Microservice {
 
         return Response.ok(isUserExists).build();
     }
+
+    @GET
+    @Path("/groupExists")
+    public Response getGroupExistence(@QueryParam("groupname") String groupname,
+            @QueryParam("groupNameClaimUri") String groupNameClaimUri,
+            @QueryParam("domain") String domain) throws UserPortalUIException {
+        IdentityStoreClientService identityStoreClientService = null;
+        boolean isGroupExists = false;
+        Map<String, String> groupClaims = new HashMap<>();
+        groupClaims.put(groupNameClaimUri, groupname);
+
+        BundleContext bundleContext = FrameworkUtil.getBundle(IdentityStoreClientService.class).getBundleContext();
+        ServiceReference<IdentityStoreClientService> serviceReference =
+                bundleContext.getServiceReference(IdentityStoreClientService.class);
+        if (serviceReference != null) {
+            identityStoreClientService = bundleContext.getService(serviceReference);
+        }
+
+        if (identityStoreClientService != null) {
+            isGroupExists = identityStoreClientService.isGroupExist(groupClaims, domain);
+        }
+
+        return Response.ok(isGroupExists).build();
+    }
 }

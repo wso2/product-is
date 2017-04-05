@@ -10,36 +10,48 @@ $(document).ready(function () {
     });
     $('#verificationSelector').change(displayVals);
 });
+
 $(window).load(function () {
     jQuery.validator.addMethod("noSpace", function (value, element) {
         return value.indexOf(" ") < 0 ;
     }, "Please don't enter spaces");
 });
+
+window.setTimeout(function () {
+    $(".alert-success").fadeTo(500, 0).slideUp(500, function () {
+        $(this).remove();
+    });
+}, 5000);
+
 function displayVals() {
-    if ($("#verificationSelector option:selected").text() === "With password") {
-        var fillingObject = {};
-        var callbacks = {
-            onSuccess: function () {
-            },
-            onFailure: function (e) {
-            }
-        };
-        UUFClient.renderFragment("password-generation", fillingObject,
-            "accountVerificationMethod-area", "OVERWRITE", callbacks);
-    }
-    else if ($("#verificationSelector option:selected").text() === "With email/phone verification") {
-        var fillingObject = {};
-        var callbacks = {
-            onSuccess: function () {
-            },
-            onFailure: function (e) {
-            }
-        };
-        UUFClient.renderFragment("email-verification", fillingObject,
-            "accountVerificationMethod-area", "OVERWRITE", callbacks);
+
+    switch ($("#verificationSelector").children(":selected").attr("id")) {
+        case "with_password" :
+            replaceUIFragment("password-generation");
+            break;
+        case "email_or_phone" :
+            replaceUIFragment("email-verification");
+            break;
+        case "ask_password" :
+            replaceUIFragment("ask-password");
     }
 }
+
+function replaceUIFragment(option) {
+    var fillingObject = {};
+    var callbacks = {
+        onSuccess: function () {
+        },
+        onFailure: function (e) {
+        }
+    };
+    UUFClient.renderFragment(option, fillingObject,
+        "accountVerificationMethod-area", "OVERWRITE", callbacks);
+    return;
+}
+
 document.getElementById("inputUsername").onblur = function() {userNameExists()};
+
 function userNameExists() {
     var username = document.getElementById('inputUsername').value;
     if (!username) {
@@ -83,6 +95,7 @@ function userNameExists() {
         }
     });
 }
+
 $("#addUserForm").validate({
     rules: {
         confirmPassword: {
@@ -97,8 +110,20 @@ $("#addUserForm").validate({
             required: true,
             noSpace: true
         },
-        inputUsername:{
+        inputUsername: {
             required: true
+        },
+        txtBoxAskPwdViaEmailDuplicate:{
+            equalTo: "#txtBoxAskPwdViaEmail",
+            required: {
+                depends: function (element) {
+                    return $("#txtBoxAskPwdViaEmail").is(":not(:blank)");
+                }
+            }
+        },
+        txtBoxAskPwdViaEmail: {
+            required: true,
+            noSpace: true
         }
     },
     messages: {
@@ -111,9 +136,13 @@ $("#addUserForm").validate({
         },
         inputUsername:{
             required: "Required to provide a username"
+        },
+        txtBoxAskPwdViaEmailDuplicate:{
+            equalTo: "email and confirm email does not match.",
+            required: "Please re-enter the correct email."
+        },
+        txtBoxAskPwdViaEmail: {
+            required: "Required to provide the user's email."
         }
-
     }
 });
-
-
