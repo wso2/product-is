@@ -296,7 +296,8 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     public String persistPasscode(String uniqueUserId) throws UserPortalUIException {
         String passcode = passcodeGenerator.generatePasscode(MAX_LENGTH);
         try {
-            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passcode);
+            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId,
+                    -                    passcodeGenerator.generatePasscode(MAX_LENGTH));
         } catch (IdentityRecoveryException e) {
             throw new UserPortalUIException("Error while Processing the Passcode for user:" + uniqueUserId);
         }
