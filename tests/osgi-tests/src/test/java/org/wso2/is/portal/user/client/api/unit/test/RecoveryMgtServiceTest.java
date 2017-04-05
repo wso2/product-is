@@ -213,27 +213,13 @@ public class RecoveryMgtServiceTest {
         Assert.assertEquals(result, false, "There should not be any user recovered.");
     }
 
-    @Test(groups = "persistPassCode")
+    @Test(groups = "persistPasscode")
     public void testPersistOTP() throws UserPortalUIException, IdentityRecoveryException {
-        recoveryMgtService.persistPassCode("user1", "otp1");
+        recoveryMgtService.persistPasscode("user1");
         UserRecoveryDataStore userRecoveryDataStore = JDBCRecoveryDataStore.getInstance();
         UserRecoveryData userRecoveryData = userRecoveryDataStore.loadByUserUniqueId("user1");
         bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
         Assert.assertNotNull(userRecoveryData, "Failed to persist OTP");
-    }
-
-    @Test(groups = "invalidateOldPassCode")
-    public void testInvalidateOldPassCode() throws IdentityRecoveryException {
-        UserRecoveryData userRecoveryData = null;
-        try {
-            recoveryMgtService.persistPassCode("user2", "otp2");
-            recoveryMgtService.persistPassCode("user2", "otp3");
-            UserRecoveryDataStore userRecoveryDataStore = JDBCRecoveryDataStore.getInstance();
-            userRecoveryData = userRecoveryDataStore.loadByUserUniqueId("user2");
-            bundleContext.getService(bundleContext.getServiceReference(IdentityStoreClientService.class));
-        } catch (UserPortalUIException e) {
-            Assert.assertNull(userRecoveryData, "Failed to overwirte the existing Pass Code");
-        }
     }
 
     private void addUser(Map<String, String> userClaims, Map<String, String> credentials) throws UserPortalUIException {
