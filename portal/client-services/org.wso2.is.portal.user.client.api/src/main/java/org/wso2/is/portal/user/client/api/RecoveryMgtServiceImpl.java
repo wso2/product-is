@@ -293,16 +293,18 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
      * @throws UserPortalUIException
      */
     @Override
-    public void persistPassCode(String uniqueUserId) throws UserPortalUIException {
+    public String persistPasscode(String uniqueUserId) throws UserPortalUIException {
+        String passcode = passcodeGenerator.generatePasscode(MAX_LENGTH);
         try {
-            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId,
-                    passcodeGenerator.generatePasscode(MAX_LENGTH));
+            AdminForcePasswordResetManager.getInstance().persistPasscode(uniqueUserId, passcode);
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException("Error while storing the Pass Code");
+            throw new UserPortalUIException("Error while Processing the Passcode for user:" + uniqueUserId);
         }
+        return passcode;
     }
 
     public NotificationUsernameRecoveryManager getNotificationUsernameRecoveryManager() {
         return notificationUsernameRecoveryManager;
     }
+
 }
