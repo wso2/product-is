@@ -20,7 +20,7 @@ import org.wso2.carbon.identity.common.base.passcode.PasscodeGenerator;
 import java.security.SecureRandom;
 
 /**
- * Default implementation for passcode generation
+ * Default implementation for passcode generation.
  */
 public class DefaultPasscodeGenerator implements PasscodeGenerator {
 

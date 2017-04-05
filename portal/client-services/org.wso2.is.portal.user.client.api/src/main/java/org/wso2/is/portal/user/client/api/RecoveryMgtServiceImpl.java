@@ -81,7 +81,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     }
 
     protected void unsetPasscodeGeneratorService(PasscodeGenerator passcodeGenerator) {
-        this.passcodeGenerator = null;
+        this.passcodeGenerator = new DefaultPasscodeGenerator();
     }
 
 
