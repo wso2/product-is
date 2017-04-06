@@ -41,6 +41,10 @@
 
         <!-- Carbon Dependencies-->
         <dependency>
+            <groupId>org.wso2.carbon.identity.commons</groupId>
+            <artifactId>org.wso2.carbon.identity.commons</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
             <artifactId>org.wso2.carbon.identity.mgt</artifactId>
         </dependency>
@@ -88,6 +92,7 @@
             javax.security.*,
             org.apache.commons.lang3.*,
             org.slf4j.*;version="${slf4j.import.version.range}",
+            org.wso2.carbon.identity.common.*;version="${org.wso2.carbon.identity.commons.version}",
             org.wso2.carbon.identity.mgt.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.claim.service.*;version="${org.wso2.carbon.identity.mgt.version.range}",
             org.wso2.carbon.identity.claim.exception.*;version="${org.wso2.carbon.identity.mgt.version.range}",
