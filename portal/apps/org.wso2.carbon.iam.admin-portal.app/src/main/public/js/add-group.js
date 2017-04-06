@@ -1,6 +1,15 @@
 var moreGroups = [];
 $(document).ready(function () {
 
+    $('#domainSelector option[value=' + $('#domainSelector').attr('data-primary') + ']').prop('selected', 'selected');
+    var primaryDomain = $('#domainSelector').val();
+    $("#domain").val(primaryDomain);
+
+    //hide the no users added message when users exists
+    if($('#selected-users-dataTable > tbody > tr').length > 0){
+       $('.no-users').hide();
+    }
+
     var userArray = users;
     var thisTable = $('#groups-table').DataTable({
         wso2: true,
@@ -22,14 +31,12 @@ $(document).ready(function () {
                 "targets": 1,
                 "render": function (data, type, full, meta) {
                     return '<div>' + data + '</div>';
-
                 }
             },
             {
                 "targets": 2,
                 "render": function (data, type, full, meta) {
                     return '<input class="uid" type="hidden" name="userUniqueId" id="userUniqueId" value="' + data + '"/>';
-                    //
                 }
             }
         ],
@@ -45,6 +52,22 @@ $(document).ready(function () {
             $('.random-thumbs .thumbnail.icon').random_background_color();
         }
     });
+
+    //Disable modal add users button
+    $('.save').prop("disabled",true);
+
+
+    //TODO remove when the new datatable plugin is updated in UUF
+    $("li button[data-click-event='toggle-list-view']").parent().hide();
+    $("li button i.fw-sort").parent('button').hide();
+
+    thisTable.rows().every(function () {
+        $(this.node()).attr('data-type','selectable');
+    });
+    $('#groups-table').addClass('table-selectable');
+    var button = $("button[data-click-event='toggle-select']");
+    $(button).closest('li').siblings('.select-all-btn').show();
+    $(button).hide();
 });
 
 //------------------ Customizations for datatables plugin ----------------------------------------//
@@ -65,11 +88,13 @@ $(document).on('click', '.save', function () {
 
 });
 
-
-$(document).ready(function () {
-    $('#domainSelector option[value=' + $('#domainSelector').attr('data-primary') + ']').prop('selected', 'selected');
-    var primaryDomain = $('#domainSelector').val();
-    $("#domain").val(primaryDomain);
+//Enable/disable modal add user button
+$(document).on('click', '.user-select-dataTable tr[data-type="selectable"], #groups-table_wrapper .select-all-btn button', function () {
+    if($('.user-select-dataTable').find('.DTTT_selected').length > 0){
+        $('.save').prop("disabled",false);
+    }else{
+        $('.save').prop("disabled",true);
+    }
 });
 
 function groupNameExists(url) {
@@ -151,11 +176,9 @@ function createAssignedUserTable(userList) {
             {
                 "targets": 3,
                 "render": function (data, type, full, meta) {
-                    return '<a href="#" data-click-event="remove-form" class="btn btn-default">' +
-                        '<span class="fw-stack">' +
-                        '<i class="fw fw-circle-outline fw-stack-2x"></i>' +
-                        '<i class="fw fw-delete fw-stack-1x"></i>' +
-                        '</span>' +
+                    // TODO user remove from selected list
+                    return '<a href="#" data-click-event="remove-form" class="pull-right add-padding-right-2x">' +
+                        // '<i class="fw fw-cancel"></i>' +
                         '</a>';
                 }
             }
@@ -173,6 +196,14 @@ function createAssignedUserTable(userList) {
         }
     });
 
+    //hide the no users added message when users exists
+    if($('#selected-users-dataTable > tbody > tr').length > 0){
+        $('.no-users').hide();
+    }
+
+    //TODO remove when the new datatable plugin is updated in UUF
+    $("li button[data-click-event='toggle-list-view']").parent().hide();
+    $("li button i.fw-sort").parent('button').hide();
 }
 
 

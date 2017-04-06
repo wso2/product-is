@@ -94,6 +94,6 @@ public interface RecoveryMgtService {
      *
      * @param uniqueUserId selected user id
      */
-    String persistPasscode(String uniqueUserId) throws UserPortalUIException;
+    void persistPassCode(String uniqueUserId) throws UserPortalUIException;
 
 }
