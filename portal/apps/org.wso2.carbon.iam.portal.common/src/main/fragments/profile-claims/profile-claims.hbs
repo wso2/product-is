@@ -1,0 +1,17 @@
+{{#each uiEntries}}
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+            <label class="control-label" for="{{claimURI}}">{{displayName}}<span>{{requiredIcon}}</span></label>
+            <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}} name="{{claimURI}}" id="{{claimLabel}}"
+                                                                          class="form-control"
+                                                                          maxlength="250" {{required}}
+                                                                          pattern="{{regex}}"/>
+            {{#if emailVerify}}
+                <a class="pull-right">verify</a>
+            {{/if}}
+            {{#if mobileVerify}}
+                <a class="pull-right">verify</a>
+            {{/if}}
+        </div>
+    </div>
+{{/each}}
