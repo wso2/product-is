@@ -587,3 +587,52 @@ display: none; }
 .optionBox {
     display: none;
 }
+.row-sample {
+    border: 2px dashed #aaa;
+    cursor: pointer;
+}
+.row-sample .thumbnail {
+    max-width: 60px;
+    min-width: 60px;
+    border: 1px dashed #aaa;
+}
+.row-sample .thumbnail.icon {
+    background-color: #aaa;
+    float: left;
+}
+.row-sample .text-sample {
+    line-height: 60px;
+    color: #777;
+}
+.select-modal .modal-content {
+    background-color: #fff;
+    color:#333;
+}
+.select-modal .modal-header {
+    border-bottom: 1px solid #eee;
+}
+.select-modal .modal-footer {
+    border-top: 1px solid #eee;
+}
+.select-modal .modal-header .close{
+    color: #888;
+}
+.thumbnail.icon{
+    background-color: #34495e;
+}
+
+/* TODO remove when the new datatable plugin is updated in UUF */
+.list-table.table-selectable:not(.grid-view)>tbody>tr.DTTT_selected td:not(.dataTables_empty) {
+     background: #C7C7C7 !important;
+     color: #000;
+}
+
+.list-table > thead > tr > th, .list-table > tbody > tr > td {
+      border-bottom: 5px solid #fff;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus,
+.pagination>.active>a:hover, .pagination>.active>span:hover {
+    background-color: #888;
+    border-color: #888;
+}
