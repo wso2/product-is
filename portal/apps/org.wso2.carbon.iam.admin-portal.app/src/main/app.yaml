@@ -23,17 +23,17 @@ menus :
   - name: "main"
     items:
       - text: "Overview"
-        link: ""
-        icon: "fw-home"
+        link: "/"
+        icon: "fw fw-display"
       - text: "Users"
         link: "/users/list"
         icon: "fw fw-user"
       - text: "Groups"
-        link: "/groups"
-        icon: "fw fw-user"
+        link: "/groups/"
+        icon: "fw fw-group"
       - text: "Roles"
         link: ""
-        icon: "fw fw-user"
+        icon: "fw fw-google-docs"
 
 errorPages:
   404: "/foundation/error/404"
