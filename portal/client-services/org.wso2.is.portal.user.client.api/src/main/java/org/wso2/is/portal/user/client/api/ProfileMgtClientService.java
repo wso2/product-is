@@ -56,6 +56,15 @@ public interface ProfileMgtClientService {
     List<ProfileUIEntry> getProfileEntries(String profileName, String uniqueUserId) throws UserPortalUIException;
 
     /**
+     * Get the claims with values of a given group as per 'group' profile.
+     *
+     * @param uniqueGroupId
+     * @return
+     * @throws UserPortalUIException
+     */
+    public List<ProfileUIEntry> getGroupClaimEntries(String uniqueGroupId) throws UserPortalUIException;
+  
+    /**
      * Get the claims set of a profile when given only the profile name
      * @param profileName name of the profile
      * @return List of ProfileUIEntry

@@ -1,0 +1,217 @@
+{{secured}}
+{{layout "privilege"}}
+{{title (i18n "groups.add.header") " | " @config.appName}}
+{{favicon "images/favicon.png" type="image/png"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.uuf-client"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
+{{fragment "org.wso2.carbon.uuf.common.foundation.ui.data-tables"}}
+{{css "css/admin-portal.css"}}
+{{js "js/add-group.js"}}
+
+{{#fillZone "usernavbar"}}
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="/admin-portal/groups/">
+                    <i class="fw fw-left fw-helper fw-helper-circle-outline"></i>
+                    {{i18n "go.back"}}
+                </a>
+            </li>
+        </ul>
+    </div>
+{{/fillZone}}
+
+{{#fillZone "content"}}
+
+    <div class="body-wrapper">
+        <div class="page-header">
+            <h1>{{i18n "groups.add.header"}}</h1>
+        </div>
+
+        {{#if errorMessage}}
+            <div class="alert alert-danger" role="alert">
+                <i class="icon fw fw-error"></i><strong>{{i18n "group.add.error.default"}}</strong>&nbsp;
+                {{i18n errorMessage}}
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                    <span aria-hidden="true">
+                        <i class="fw fw-cancel"></i>
+                    </span>
+                </button>
+            </div>
+        {{else if addGroupResult}}
+            <div class="alert alert-success" role="alert">
+                <i class="icon fw fw-success"></i><strong>{{i18n "group.added.successfully.default"}}</strong>
+                <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+                </button>
+            </div>
+        {{/if}}
+
+        <form class="form-horizontal" role="form" method="post" id="addGroupForm">
+            <!-- collapse -->
+            <div id="group-2" class="panel-group panel-extended add-margin-bottom-2x" role="tablist"
+                 aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading flex-container collapsed" role="tab" id="heading4" data-toggle="collapse"
+                         data-parent="#group-2" href="#accordion4" aria-controls="accordion4">
+                        <i class="fw fw-document fw-2x add-padding-right-1x"></i>
+                        <h4 class="panel-title flex-item">
+                            <span class="heading">{{i18n "groups.general.details"}}</span>
+                        </h4>
+                        <div class="status flex-item"></div>
+                    </div>
+                    <div id="accordion4" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading4">
+                        <div class="panel-body remove-padding-bottom">
+                            {{#if domainNames}}
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        <input type="hidden" name="domain" id="domain"
+                                               class="form-control"/>
+                                        <label for="domainSelector" class="control-label">{{i18n "groups.add.domain"}}
+                                            <span class="requiredAstrix"> *</span></label>
+                                        <select class="form-control" id="domainSelector"
+                                                data-primary="{{primaryDomainName}}">
+                                            {{#each domainNames}}
+                                                <option value={{this}}>{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                            {{/if}}
+                            {{#each profile.groupClaims}}
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                        {{#if required}}
+                                            <label class="control-label"
+                                                   for={{claimLabel}}>{{i18n (stringFormat "%s%s" "group.claim." claimLabel)}}
+                                                <span>*</span></label>
+                                            <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                                    name={{claimURI}} id={{claimLabel}}
+                                                    class="form-control"
+                                                    pattern={{#if regex}}{{regex}}{{/if}}
+                                                            placeholder={{i18n (stringFormat "%s%s" "group.placeholder." claimLabel)}}
+                                            />
+                                        {{else}}
+                                            <label class="control-label"
+                                                   for={{claimLabel}}>{{i18n (stringFormat "%s%s" "group.claim." claimLabel)}}</label>
+                                            <input type={{#if dataType}}{{dataType}}{{else}}"text"{{/if}}
+                                                    name={{claimURI}} id={{claimLabel}}
+                                                    class="form-control"
+                                                    pattern={{#if regex}}{{regex}}{{/if}}
+                                                            placeholder={{i18n (stringFormat "%s%s" "group.placeholder." claimLabel)}} /></br>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{else}}
+                                {{log "No Defined Claims for the 'group profile'!" level="error"}}
+                                <p class="empty">{{i18n "group.add.no.content"}}</p>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading flex-container collapsed" role="tab" id="heading5" data-toggle="collapse"
+                         data-parent="#group-2" href="#accordion5" aria-controls="accordion5">
+                        <i class="fw fw-user fw-2x"></i>
+                        <h4 class="panel-title flex-item">
+                            <span class="heading">{{i18n "assign.users"}}</span>
+                        </h4>
+                        <div class="status flex-item"></div>
+                    </div>
+                    <div id="accordion5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
+                        <div class="panel-body">
+                            {{fragment "org.wso2.carbon.uuf.common.foundation.ui.message"
+                                msgClass="info"
+                                class="no-users"
+                                icon="fw fw-info"
+                                msgTitle=(i18n 'no.assigned.users')
+                                msgBody=(i18n 'no-users.added.body')
+                                }}
+                            <div class="add-padding-bottom-2x">
+                                <div class="icon row-sample" data-toggle="modal" data-target="#modalDelete" data-click-event="toggle-select">
+                                <span class="thumbnail icon">
+                                    <i class="square-element text fw fw-user"></i>
+                                </span>
+                                    <span class="text-sample add-padding-left-2x"><i class="fw fw-add "></i> {{i18n "add.users"}}</span>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table selected-users-dataTable"
+                                   id="selected-users-dataTable">
+                                <tbody>
+                                <!-- Handlebars Template Appends Here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- TODO assign roles -->
+                <!--<div class="panel panel-default">
+                    <div class="panel-heading flex-container collapsed" role="tab" id="heading6" data-toggle="collapse"
+                         data-parent="#group-2" href="#accordion6" aria-controls="accordion6">
+                        <i class="fw fw-google-docs fw-2x add-padding-right-1x"></i>
+                        <h4 class="panel-title flex-item">
+                            <span class="heading">{{i18n "assign.roles"}}</span>
+                        </h4>
+                        <div class="status flex-item"></div>
+                    </div>
+                    <div id="accordion6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+                        <div class="panel-body">
+                            {{i18n "assign.roles"}}
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <!-- /collapse -->
+            <button class="btn btn-primary add-margin-bottom-3x" type="submit" name="addGroup" id="addGroup">{{i18n "groups.add.button"}}</button>
+        </form>
+
+        <!-- modal -->
+        <div class="modal fade select-modal" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDemo">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content clearfix">
+                    <div class="body-wrapper">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i
+                                    class="fw fw-cancel"></i></button>
+                            <h3 class="modal-title" id="deleteModalLabel">{{i18n "add.users"}}</h3>
+                        </div>
+                        </br>
+                        <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
+                            <!--TODO add records to show functionality-->
+                            <!--<div class="show-records">-->
+                                <!--<span>Show Records from </span><input type="number" id="offset-value" name="offset-value" class="short-input" value="0"/><span> to</span>-->
+                                <!--<input type="number" id="length-value" name="length-value" class="short-input" value="500"/>-->
+                            <!--</div>-->
+                            <!--</br>-->
+                            <table class="table table-striped table-hover table-responsive list-table display responsive nowrap data-table user-select-dataTable"
+                                   id="groups-table">
+                                <tbody>
+                                <!-- Handlebars Template Appends Here -->
+                                </tbody>
+                            </table>
+                            <form class="form-horizontal" method="post" id="filterListForm">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                    <input type="hidden" id="action" name="action" value="filter-list">
+                                    <input type="hidden" id="claim-uri" name="claim-uri" value="">
+                                    <input type="hidden" id="domain-name" name="domain-name" value="">
+                                    <div class="row">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <form class="form-horizontal" method="post" id="filterListForm1">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{i18n "cancel"}}</button>
+                                <button type="button" class="btn btn-primary save" data-dismiss="modal">{{i18n "add.users"}}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /modal -->
+    </div>
+
+{{/fillZone}}

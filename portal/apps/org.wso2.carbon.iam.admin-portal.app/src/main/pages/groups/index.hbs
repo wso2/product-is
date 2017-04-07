@@ -1,12 +1,28 @@
 {{secured}}
 {{layout "privilege"}}
 {{favicon "images/favicon.png" type="image/png"}}
-{{title "Users | " @config.appName}}
+{{title "Groups | " @config.appName}}
 {{css "css/admin-portal.css"}}
+
+{{#fillZone "usernavbar"}}
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="active">
+                <a href="add">
+                    <span class="icon fw-stack">
+                    <i class="fw fw-add fw-helper fw-helper-circle-outline"></i>
+                    </span>
+                    {{i18n "groups.add.header"}}
+                </a>
+            </li>
+        </ul>
+    </div><!--/.nav-collapse -->
+{{/fillZone}}
 
 {{#fillZone "content"}}
     <div class="body-wrapper">
         <div class="container-fluid">
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="page-header">
@@ -16,6 +32,9 @@
                         <h4><i class="icon fw fw-info"></i>{{i18n "no-groups.header"}}</h4>
                         <p>{{i18n "no-groups.body"}}</p>
                     </div>
+                    <a href="add" class="btn btn-primary">
+                        {{i18n "groups.add.header"}}
+                    </a>
                 </div>
             </div>
         </div>

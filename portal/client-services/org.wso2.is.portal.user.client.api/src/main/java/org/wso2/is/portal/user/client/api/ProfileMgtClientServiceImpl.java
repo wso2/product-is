@@ -30,6 +30,7 @@ import org.wso2.carbon.identity.claim.service.ProfileMgtService;
 import org.wso2.carbon.identity.mgt.RealmService;
 import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.claim.MetaClaim;
+import org.wso2.carbon.identity.mgt.exception.GroupNotFoundException;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
@@ -103,9 +104,8 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         Set<String> profileNames;
         try {
             profileNames = getProfileMgtService().getProfiles().entrySet().stream()
-                                                 .filter(profile -> !profile.getValue().isAdminProfile())
-                                                 .map(Map.Entry::getKey)
-                                                 .collect(Collectors.toSet());
+                    .filter(profile -> !profile.getValue().isAdminProfile()).map(Map.Entry::getKey)
+                    .collect(Collectors.toSet());
         } catch (ProfileMgtServiceException e) {
             String error = "Failed to retrieve profile names.";
             LOGGER.error(error, e);
@@ -147,16 +147,15 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
 
         List<MetaClaim> metaClaims = profileEntry.getClaims().stream()
                 .map(claimConfigEntry -> new MetaClaim(IdentityMgtConstants.CLAIM_ROOT_DIALECT,
-                        claimConfigEntry.getClaimURI()))
-                .collect(Collectors.toList());
+                        claimConfigEntry.getClaimURI())).collect(Collectors.toList());
 
         List<Claim> claims;
         try {
             claims = getRealmService().getIdentityStore().getClaimsOfUser(uniqueUserId, metaClaims);
         } catch (IdentityStoreException e) {
             LOGGER.error(String.format("Failed to get the user claims for user - %s", uniqueUserId), e);
-            throw new UserPortalUIException(String.format("Failed to get the user claims for the profile - %s",
-                    profileName));
+            throw new UserPortalUIException(
+                    String.format("Failed to get the user claims for the profile - %s", profileName));
         } catch (UserNotFoundException e) {
             String error = String.format("Invalid user - %s", uniqueUserId);
             if (LOGGER.isDebugEnabled()) {
@@ -166,21 +165,63 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         }
 
         if (claims.isEmpty()) {
-            return profileEntry.getClaims().stream()
-                    .map(claimConfigEntry -> new ProfileUIEntry(claimConfigEntry, null))
+            return profileEntry.getClaims().stream().map(claimConfigEntry -> new ProfileUIEntry(claimConfigEntry, null))
                     .collect(Collectors.toList());
         }
 
-        return profileEntry.getClaims().stream()
-                .map(claimConfigEntry -> {
-                    Optional<Claim> optional = claims.stream()
-                            .filter(claim -> claim.getClaimUri().equals(claimConfigEntry.getClaimURI()))
-                            .findAny();
-                    if (optional.isPresent()) {
-                        return new ProfileUIEntry(claimConfigEntry, optional.get().getValue());
-                    }
-                    return new ProfileUIEntry(claimConfigEntry, null);
-                }).collect(Collectors.toList());
+        return profileEntry.getClaims().stream().map(claimConfigEntry -> {
+            Optional<Claim> optional = claims.stream()
+                    .filter(claim -> claim.getClaimUri().equals(claimConfigEntry.getClaimURI())).findAny();
+            if (optional.isPresent()) {
+                return new ProfileUIEntry(claimConfigEntry, optional.get().getValue());
+            }
+            return new ProfileUIEntry(claimConfigEntry, null);
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProfileUIEntry> getGroupClaimEntries(String uniqueGroupId)
+            throws UserPortalUIException {
+
+        //get all the claims of the group profile as some of the claims may not have been filled yet.
+        ProfileEntry profileEntry = getProfile("group");
+
+        if (profileEntry.getClaims().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<MetaClaim> metaClaims = profileEntry.getClaims().stream()
+                .map(claimConfigEntry -> new MetaClaim(IdentityMgtConstants.CLAIM_ROOT_DIALECT,
+                        claimConfigEntry.getClaimURI())).collect(Collectors.toList());
+
+        List<Claim> claims;
+        try {
+            claims = getRealmService().getIdentityStore().getClaimsOfGroup(uniqueGroupId, metaClaims);
+        } catch (IdentityStoreException e) {
+            LOGGER.error(String.format("Failed to get the user claims for group - %s", uniqueGroupId), e);
+            throw new UserPortalUIException(
+                    String.format("Failed to get the group claims for the profile - group"));
+        } catch (GroupNotFoundException e) {
+            String error = String.format("Invalid group - %s", uniqueGroupId);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(error, e);
+            }
+            throw new UserPortalUIException(error);
+        }
+
+        if (claims.isEmpty()) {
+            return profileEntry.getClaims().stream().map(claimConfigEntry -> new ProfileUIEntry(claimConfigEntry, null))
+                    .collect(Collectors.toList());
+        }
+
+        return profileEntry.getClaims().stream().map(claimConfigEntry -> {
+            Optional<Claim> optional = claims.stream()
+                    .filter(claim -> claim.getClaimUri().equals(claimConfigEntry.getClaimURI())).findAny();
+            if (optional.isPresent()) {
+                return new ProfileUIEntry(claimConfigEntry, optional.get().getValue());
+            }
+            return new ProfileUIEntry(claimConfigEntry, null);
+        }).collect(Collectors.toList());
     }
 
     @Override
