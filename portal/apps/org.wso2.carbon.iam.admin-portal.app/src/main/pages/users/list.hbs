@@ -58,7 +58,7 @@
             </div>
         {{/if}}
         <form class="form-horizontal" method="post" id="filterListForm">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <input type="hidden" id="action" name="action" value="filter-list">
                 <input type="hidden" id="claim-uri" name="claim-uri" value="">
                 <input type="hidden" id="domain-name" name="domain-name" value="">
@@ -80,25 +80,6 @@
                         </tr>
 
                         <tr class="filter-row-custom">
-                            <th class="select-filter">
-                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                    <select class="form-control" id="claimSelector" onChange="getClaimUri()">
-                                        <option value="">{{i18n "option.select.claim"}}</option>
-                                        {{#each claimProfile}}
-                                            <option name="claim-uri-{{claimURI}}" id="claim-uri-{{claimURI}}" value="{{claimURI}}">{{displayName}}</option>
-                                        {{/each}}
-                                    </select>
-                                    {{#if claimValue}}
-                                        <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Claim value" value="{{claimValue}}"/>
-                                    {{else}}
-                                        <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Claim value"/>
-                                    {{/if}}
-                                </div>
-                            </th>
-                            <th data-for="Start"><input type="number" id="offset-value" name="offset-value" class="short-input" value="0" /></th>
-                            <th data-for="Maximum Records"><input type="number" id="length-value" name="length-value" class="short-input" value="500" /></th>
-                            <th data-for="Office" class="select-filter"></th>
-                            <th data-for="Age" class="select-filter"></th>
                             <th>
                                 <select class="form-control" id="domainSelector" name="domainSelector" onChange="getDomain()">
                                     {{#each domains}}
@@ -106,10 +87,29 @@
                                     {{/each}}
                                 </select>
                             </th>
-                            <th class="text-right content-fill text-left-on-grid-view no-wrap">
+                            <th class="select-filter remove-padding-left">
+                                <select class="form-control" id="claimSelector" onChange="getClaimUri()">
+                                    <option value="">{{i18n "option.select.claim"}}</option>
+                                    {{#each claimProfile}}
+                                        <option name="claim-uri-{{claimURI}}" id="claim-uri-{{claimURI}}" value="{{claimURI}}">{{displayName}}</option>
+                                    {{/each}}
+                                </select>
+                            </th>
+                            <th class="select-filter remove-padding-left">
+                                {{#if claimValue}}
+                                    <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Claim value" value="{{claimValue}}"/>
+                                {{else}}
+                                    <input class="form-control" type="text" id="claim-filter" name="claim-filter" placeholder="Claim value"/>
+                                {{/if}}
+                            </th>
+                            <th class="text-right content-fill text-left-on-grid-view no-wrap remove-padding-left">
                                 <button class="btn btn-primary " id="filter-btn" type="submit">
                                     <i class="fw fw fw-search search-icon add-margin-right-1x"></i>
+                                    <span class="hidden-xs">Search</span>
                                 </button>
+                            </th>
+                            <th colspan="3" class="text-right">Show records from <input type="number" id="offset-value" name="offset-value" class="short-input" value="0" /> to
+                                <input type="number" id="length-value" name="length-value" class="short-input" value="500" />
                             </th>
                         </tr>
                         <tr class="bulk-action-row" id="bulk-row">
@@ -138,7 +138,7 @@
                                         <a class="btn square-element bulk-element-disable" data-click-event="disable-selected-rows">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-ring fw-stack-2x"></i>
-                                    <i class="fw fw-disable fw-stack-1x"></i>
+                                    <i class="fw fw-block fw-stack-1x"></i>
                                 </span>
                                             {{i18n "bulk.action.disable"}}
                                         </a>
