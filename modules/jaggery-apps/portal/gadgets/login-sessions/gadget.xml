@@ -177,11 +177,12 @@
                     cookie = obj.cookie;
                     userName = obj.user;
                     if (cookie != null) {
-                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/index.jag?cookie=" + cookie + "&user=" + userName;
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/index.jag";
 
                         $.ajax({
-                            type:"GET",
-                            url:str
+                            type:"POST",
+                            url:str,
+                            data: {cookie : cookie, user : userName}
 
                         }).done(function (data) {
                             drawPage(data);
