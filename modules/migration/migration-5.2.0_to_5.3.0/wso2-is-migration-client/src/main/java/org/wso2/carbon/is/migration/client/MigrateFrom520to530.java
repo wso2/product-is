@@ -20,6 +20,9 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.claim.metadata.mgt.util.ClaimConstants;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
@@ -37,32 +40,34 @@ import org.wso2.carbon.is.migration.bean.Claim;
 import org.wso2.carbon.is.migration.bean.MappedAttribute;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.util.ResourceUtil;
+import org.wso2.carbon.user.api.Tenant;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.util.DatabaseUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
+import org.xml.sax.SAXException;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import javax.xml.namespace.QName;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.InputStream;
-import java.io.IOException;
 
 @SuppressWarnings("unchecked")
 public class MigrateFrom520to530 implements MigrationClient {
@@ -178,6 +183,14 @@ public class MigrateFrom520to530 implements MigrationClient {
         String migratePermissionData = System.getProperty("migratePermissionData");
         String migrateChallengeQuestionData = System.getProperty("migrateChallengeQuestionData");
         String migrateResidentIdpMetadata = System.getProperty("migrateResidentIdpMetaData");
+        String migrateOIDCScopeData = System.getProperty("migrateOIDCScopeData");
+
+        // to decide whether we need to migrate active tenants only.
+        String migrateActiveTenants = System.getProperty("migrateActiveTenantsOnly");
+        boolean migrateActiveTenantsOnly = Boolean.parseBoolean(migrateActiveTenants);
+        if (migrateActiveTenantsOnly) {
+            log.info("Migrate Active Tenants Only option enabled.");
+        }
 
         if (Boolean.parseBoolean(migrateIdentityDB)) {
             selectiveMigration = true;
@@ -191,12 +204,12 @@ public class MigrateFrom520to530 implements MigrationClient {
         }
         if (Boolean.parseBoolean(migrateClaimData)) {
             selectiveMigration = true;
-            migrateClaimData();
+            migrateClaimData(migrateActiveTenantsOnly);
             log.info("Migrated the Claim management data");
         }
         if (Boolean.parseBoolean(migrateEmailTemplateData)) {
             selectiveMigration = true;
-            migrateEmailTemplateData();
+            migrateEmailTemplateData(migrateActiveTenantsOnly);
             log.info("Migrated the Email template data");
         }
 
@@ -208,42 +221,57 @@ public class MigrateFrom520to530 implements MigrationClient {
 
         if (Boolean.parseBoolean(migrateChallengeQuestionData)) {
             selectiveMigration = true;
-            migrateChallengeQuestionData();
+            migrateChallengeQuestionData(migrateActiveTenantsOnly);
             log.info("Migrated the Challenge Question data.");
         }
 
         if (Boolean.parseBoolean(migrateResidentIdpMetadata)) {
             selectiveMigration = true;
-            migrateResidentIdpMetadata();
+            migrateResidentIdpMetadata(migrateActiveTenantsOnly);
             log.info("Migrated the Resident IDP metadata.");
         }
 
-        if(!selectiveMigration) {
+        if (Boolean.parseBoolean(migrateOIDCScopeData)) {
+            selectiveMigration = true;
+            copyOIDCScopeData(migrateActiveTenantsOnly);
+            log.info("Migrated OIDC Scope data.");
+        }
+
+        if (!selectiveMigration) {
             migrateIdentityDB();
-            migrateClaimData();
+            migrateClaimData(migrateActiveTenantsOnly);
             migratePermissionData();
-            migrateEmailTemplateData();
-            migrateChallengeQuestionData();
-            migrateResidentIdpMetadata();
-            log.info("Migrated the identity and user database");
+            migrateEmailTemplateData(migrateActiveTenantsOnly);
+            migrateChallengeQuestionData(migrateActiveTenantsOnly);
+            migrateResidentIdpMetadata(migrateActiveTenantsOnly);
+            copyOIDCScopeData(migrateActiveTenantsOnly);
+            log.info("Migration completed from IS 5.2.0 to IS 5.3.0");
         }
     }
 
-    public void migrateResidentIdpMetadata() throws Exception {
+    public void migrateResidentIdpMetadata(boolean migrateActiveTenantsOnly) throws Exception {
 
-        new ResidentIdpMetadataManager().migrateResidentIdpMetaData();
+        new ResidentIdpMetadataManager().migrateResidentIdpMetaData(migrateActiveTenantsOnly);
     }
 
-    public void migrateEmailTemplateData() throws Exception {
+    public void migrateEmailTemplateData(boolean migrateActiveTenantsOnly) throws Exception {
 
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
-        registryDataManager.migrateEmailTemplates();
+        registryDataManager.migrateEmailTemplates(migrateActiveTenantsOnly);
     }
 
-    public void migrateChallengeQuestionData() throws Exception {
+    public void migrateChallengeQuestionData(boolean migrateActiveTenantsOnly) throws Exception {
 
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
-        registryDataManager.migrateChallengeQuestions();
+        registryDataManager.migrateChallengeQuestions(migrateActiveTenantsOnly);
+    }
+
+    /*
+        Copies the oidc-config file and add it as a registry resource
+     */
+    public void copyOIDCScopeData(boolean migrateActiveTenantsOnly) throws Exception {
+
+        RegistryDataManager.getInstance().copyOIDCScopeData(migrateActiveTenantsOnly);
     }
 
     public void migrateIdentityDB() throws Exception {
@@ -261,7 +289,7 @@ public class MigrateFrom520to530 implements MigrationClient {
         migrationDatabaseCreator.executeUmMigrationScript();
     }
 
-    public boolean migrateClaimData() {
+    public boolean migrateClaimData(boolean migrateActiveTenantsOnly) {
         List<Claim> claims = new ArrayList<>();
         Connection umConnection = null;
 
@@ -295,6 +323,11 @@ public class MigrateFrom520to530 implements MigrationClient {
             // URI, the validation should be false.
             Map<String, Map<String, List<String>>> data = new HashMap<>();
 
+            List<Integer> inactiveTenants = new ArrayList<>();
+            if (migrateActiveTenantsOnly) {
+                inactiveTenants = getInactiveTenants();
+            }
+
             while (dialects.next()) {
                 //Keep the list of claim URI against domain Qualified Mapped Attribute
                 Map<String, List<String>> mappedAttributes = new HashMap<>();
@@ -302,6 +335,12 @@ public class MigrateFrom520to530 implements MigrationClient {
                 int dialectId = dialects.getInt("UM_ID");
                 String dialectUri = dialects.getString("UM_DIALECT_URI");
                 int tenantId = dialects.getInt("UM_TENANT_ID");
+
+                if (migrateActiveTenantsOnly && inactiveTenants.contains(tenantId)) {
+                    log.info("Inactive tenant : " + tenantId + " , " +
+                            "Skipping claim data migration for dialect : " + dialectUri);
+                    continue;
+                }
 
                 loadMappedAttributeStatement = umConnection.prepareStatement(SQLConstants.LOAD_MAPPED_ATTRIBUTE);
                 loadMappedAttributeStatement.setInt(1, dialectId);
@@ -321,9 +360,9 @@ public class MigrateFrom520to530 implements MigrationClient {
                     int displayOrder = claimResultSet.getInt("UM_DISPLAY_ORDER");
                     int readOnly = claimResultSet.getInt("UM_READ_ONLY");
 
-                    boolean isRequired = required == 1 ? true : false;
-                    boolean isSupportedByDefault = supportedByDefault == 1 ? true : false;
-                    boolean isReadOnly = readOnly == 1 ? true : false;
+                    boolean isRequired = required == 1;
+                    boolean isSupportedByDefault = supportedByDefault == 1;
+                    boolean isReadOnly = readOnly == 1;
 
                     Claim claimDTO = new Claim(claimURI, displayTag, description, regEx, isSupportedByDefault, isRequired, displayOrder, isReadOnly,
                             tenantId, dialectUri);
@@ -571,8 +610,8 @@ public class MigrateFrom520to530 implements MigrationClient {
     }
 
     /**
-    * Select permission entries in UM_PERMISSION Table
-    */
+     * Select permission entries in UM_PERMISSION Table
+     */
     private ResultSet selectExistingPermissions(String permission, Connection umConnection) throws SQLException {
         PreparedStatement selectPermissions = umConnection.prepareStatement(SQLConstants.SELECT_PERMISSION);
         selectPermissions.setString(1, permission);
@@ -626,7 +665,7 @@ public class MigrateFrom520to530 implements MigrationClient {
         countPermissions.setInt(3, isAllowed);
         countPermissions.setInt(4, tenantId);
         countPermissions.setInt(5, domainId);
-        countPermissions.addBatch();
+
         ResultSet countRS = countPermissions.executeQuery();
         if (countRS.next()) {
             int numberOfRows = countRS.getInt(1);
@@ -733,5 +772,23 @@ public class MigrateFrom520to530 implements MigrationClient {
         } finally {
             IdentityDatabaseUtil.closeConnection(umConnection);
         }
+    }
+
+
+    private List<Integer> getInactiveTenants() {
+        List<Integer> inactiveTenants = new ArrayList<>();
+        try {
+            Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+            for (Tenant tenant : tenants) {
+                if (!tenant.isActive()) {
+                    inactiveTenants.add(tenant.getId());
+                }
+            }
+        } catch (UserStoreException e) {
+            log.error("Error while getting inactive tenant details. Assuming zero inactive tenants.");
+            return new ArrayList<>();
+        }
+
+        return inactiveTenants;
     }
 }
