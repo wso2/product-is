@@ -36,7 +36,7 @@ $(document).ready(function() {
 
                             var i;
                             for (i = 0; i < 2; i++) {
-                                string = string + '<span class="label label-primary"><i class="fw fw-group"></i>' + array[i] + '</span>';
+                                string = string + '<span class="label label-group add-margin-right-1x"><i class="fw fw-group"></i> ' + array[i] + '</span>';
                             }
                             var size = array.length;
                             if (size > 2) {
@@ -51,17 +51,17 @@ $(document).ready(function() {
                 {
                     "targets": lastIndex,
                         "render": function (data, type, full, meta) {
-                        return   '<a href="#" class="btn btn-default">'+
+                        return   '<a href="#" class="btn grey-link">'+
                         '<span class="fw-stack">'+
                                                 '<i class="fw fw-edit fw-stack-1x"></i>'+
                                             '</span>'+
                         '</a>'+
-                        '<a href="#" class="btn btn-default">'+
+                        '<a href="#" class="btn grey-link">'+
                         '<span class="fw-stack">'+
                                                 '<i class="fw fw-view fw-stack-1x"></i>'+
                                             '</span>'+
                         '</a>'+
-                        '<a href="#" data-click-event="remove-form" class="btn btn-default">'+
+                        '<a href="#" data-click-event="remove-form" class="btn grey-link">'+
                         '<span class="fw-stack">'+
                                                 '<i class="fw fw-delete fw-stack-1x"></i>'+
                                             '</span>'+
