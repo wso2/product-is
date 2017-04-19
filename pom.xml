@@ -224,13 +224,13 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
-                <artifactId>org.wso2.carbon.identity.sso.saml.server.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</artifactId>
                 <version>${carbon.identity.saml.inbound.version}</version>
                 <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.authenticator.outbound.saml2sso.feature</artifactId>
                 <version>${carbon.identity.saml.outbound.version}</version>
                 <type>zip</type>
             </dependency>

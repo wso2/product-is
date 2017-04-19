@@ -200,12 +200,12 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
-            <artifactId>org.wso2.carbon.identity.sso.saml.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</groupId>
-            <artifactId>org.wso2.carbon.identity.application.authenticator.samlsso.server.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.authenticator.outbound.saml2sso.feature</artifactId>
             <type>zip</type>
         </dependency>
         <!--Other Dependencies-->
@@ -509,7 +509,7 @@
                                     <version>${carbon.identity.auth.saml2.common.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.sso.saml.server.feature</id>
+                                    <id>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</id>
                                     <version>${carbon.identity.saml.inbound.version}</version>
                                 </feature>
                                 <feature>
@@ -706,7 +706,7 @@
                                     <version>${carbon.identity.auth.saml2.common.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.sso.saml.server.feature</id>
+                                    <id>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</id>
                                     <version>${carbon.identity.saml.inbound.version}</version>
                                 </feature>
                                 <feature>
