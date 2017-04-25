@@ -77,7 +77,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
 		super.init(TestUserMode.SUPER_TENANT_USER);
 		String carbonHome = Utils.getResidentCarbonHome();
-		String identityXMLFile = getISResourceLocation() + File.separator  + "identity-original-530.xml";
+		String identityXMLFile = getISResourceLocation() + File.separator  + "identity-original-530-cache-enabled.xml";
 		File defaultIdentityXml = new File(carbonHome + File.separator
 				+ "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
 				+ "identity.xml");
