@@ -117,7 +117,7 @@
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--User Profile Management Test Cases-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>-->
             <!--SCIM Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
@@ -132,14 +132,14 @@
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
 
-            <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>-->
 
             <!--Workflow Management test case-->
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
 
             <!--Identity Provider Management Test Cases-->
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
-            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />-->
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorBaseTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
