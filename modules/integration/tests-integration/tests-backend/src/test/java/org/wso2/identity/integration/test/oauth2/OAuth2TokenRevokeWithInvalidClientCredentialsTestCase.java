@@ -86,6 +86,10 @@ public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         Object obj = JSONValue.parse(rd);
+
+        Assert.assertNotNull(obj, "Returned error response should have produced a valid JSON.");
+        Assert.assertNotNull(((JSONObject) obj).get("error"), "Returned error response should have 'error' defined.");
+
         String errorMessage = ((JSONObject) obj).get("error").toString();
         EntityUtils.consume(response.getEntity());
         Assert.assertEquals(OAuth2Constant.INVALID_CLIENT, errorMessage,
