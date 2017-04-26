@@ -36,6 +36,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -68,10 +70,24 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
             "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
 	private Tomcat tomcat;
+	private ServerConfigurationManager serverConfigurationManager;
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
+		super.init(TestUserMode.SUPER_TENANT_USER);
+		String carbonHome = Utils.getResidentCarbonHome();
+		String identityXMLFile = getISResourceLocation() + File.separator  + "identity-original-530-cache-enabled.xml";
+		File defaultIdentityXml = new File(carbonHome + File.separator
+				+ "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
+				+ "identity.xml");
+		serverConfigurationManager = new ServerConfigurationManager(isServer);
+		File srcFile = new File(identityXMLFile);
+		serverConfigurationManager = new ServerConfigurationManager(isServer);
+		serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
+				defaultIdentityXml, true);
+		serverConfigurationManager.restartForcefully();
+		//serverConfigurationManager.applyConfiguration(srcFile);
 		super.init(TestUserMode.SUPER_TENANT_USER);
 		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
@@ -93,6 +109,9 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 		logManger = null;
 		consumerKey = null;
 		accessToken = null;
+
+		serverConfigurationManager.restoreToLastConfiguration();
+		serverConfigurationManager = null;
 	}
 
 	@Test(alwaysRun = true, description = "Deploy playground application")
