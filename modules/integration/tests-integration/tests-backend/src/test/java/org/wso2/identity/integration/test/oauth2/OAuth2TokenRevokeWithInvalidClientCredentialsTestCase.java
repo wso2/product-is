@@ -28,6 +28,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -35,6 +36,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
@@ -48,6 +50,9 @@ import java.util.ArrayList;
 public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/revoke";
+    private static final String TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/token";
+    private static final String SCOPE_PRODUCTION = "PRODUCTION";
+    private static final String GRANT_TYPE_PASSWORD = "password";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -57,26 +62,57 @@ public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth
     }
 
     /**
-     * This tests written for test for token revocation after cache timed out CARBON-15028
-     * This test needed two APIM nodes with clustering enabled
-     * During the test one node is use to generate the token and other node use to revoke the token
-     * After cache timeout new token should issued after it revoked
+     * This test is written to test for token revocation with invalid client id , secrets and access tokens.
      *
      * @throws Exception
      */
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
-    @Test(description = "Revoke token with invalid sending of client credentials.")
-    public void testRevokeTokenAfterCacheTimedOut() throws Exception {
-        String clientKey = "dummyConsumerKey";
-        String clientSecret = "dummyConsumerSecret";
-        String accessToken = "dummyAccessToken";
+    @Test(description = "Revoke token with invalid credentials.")
+    public void testRevokeToken() throws Exception {
+        //Application utils
+        OAuthConsumerAppDTO appDto = createApplication();
+        consumerKey = appDto.getOauthConsumerKey();
+        consumerSecret = appDto.getOauthConsumerSecret();
+        String errorMessage = null;
+        //request for token
+        String token = requestAccessToken(consumerKey, consumerSecret, TOKEN_API_ENDPOINT);
+
+        //Revoke access token with invalid format of client credentials
+        errorMessage = revokeToken(token, getInvalidBase64EncodedString(consumerKey, consumerSecret));
+        Assert.assertEquals(OAuth2Constant.INVALID_CLIENT, errorMessage,
+                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
+                        + "error code");
+
+        //client credentials been null
+        errorMessage = revokeToken(token, null);
+        Assert.assertEquals(OAuth2Constant.INVALID_CLIENT, errorMessage,
+                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
+                        + "error code");
+
+        //revoke with invalid client key
+        errorMessage = revokeToken(token, "dummyConsumerKey" + consumerSecret);
+        Assert.assertEquals(OAuth2Constant.INVALID_CLIENT, errorMessage,
+                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
+                        + "error code");
+
+        //token is required parameter in request
+        errorMessage = revokeToken(null, getBase64EncodedString(consumerKey, consumerSecret));
+        //The request is missing a required parameter as per spec.
+        Assert.assertEquals(OAuth2Constant.INVALID_REQUEST, errorMessage,
+                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
+                        + "error code");
+
+    }
+
+    public String revokeToken(String accessToken, String clientCredentials) throws Exception {
 
         //Revoke access token
+        String errorMessage = null;
         ArrayList<NameValuePair> postParameters;
         HttpClient client = new DefaultHttpClient();
         HttpPost httpRevoke = new HttpPost(REVOKE_TOKEN_API_ENDPOINT);
         //Generate revoke token post request
-        httpRevoke.setHeader("Authorization", "Basic " + getInvalidBase64EncodedString(clientKey, clientSecret));
+        httpRevoke.setHeader("Authorization", "Basic " + clientCredentials);
         httpRevoke.setHeader("Content-Type", "application/x-www-form-urlencoded");
         postParameters = new ArrayList<NameValuePair>();
         postParameters.add(new BasicNameValuePair("token", accessToken));
@@ -90,17 +126,72 @@ public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth
         Assert.assertNotNull(obj, "Returned error response should have produced a valid JSON.");
         Assert.assertNotNull(((JSONObject) obj).get("error"), "Returned error response should have 'error' defined.");
 
-        String errorMessage = ((JSONObject) obj).get("error").toString();
+        errorMessage = ((JSONObject) obj).get("error").toString();
         EntityUtils.consume(response.getEntity());
-        Assert.assertEquals(OAuth2Constant.INVALID_CLIENT, errorMessage,
-                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
-                        + "error code");
+        return errorMessage;
 
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
+    }
+
+    /**
+     * Request access token from the given token generation endpoint
+     *
+     * @param consumerKey    consumer key of the application
+     * @param consumerSecret consumer secret of the application
+     * @param backendUrl     token generation API endpoint
+     * @return token
+     * @throws Exception if something went wrong when requesting token
+     */
+    private String requestAccessToken(String consumerKey, String consumerSecret, String backendUrl) throws Exception {
+        ArrayList<NameValuePair> postParameters;
+        HttpClient client = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(backendUrl);
+        //generate post request
+        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        postParameters = new ArrayList<NameValuePair>();
+        postParameters.add(new BasicNameValuePair("username", "admin"));
+        postParameters.add(new BasicNameValuePair("password", "admin"));
+        postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
+        postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
+        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+        HttpResponse response = client.execute(httpPost);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        //Get access token from the response
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(responseString);
+        return json.get("access_token").toString();
+    }
+
+    /**
+     * Create Application with the given app configurations
+     *
+     * @return OAuthConsumerAppDTO
+     * @throws Exception
+     */
+    public OAuthConsumerAppDTO createApplication() throws Exception {
+        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
+        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
+                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+        return createApplication(appDTO);
+    }
+
+    /**
+     * Get base64 encoded string of consumer key and secret
+     *
+     * @param consumerKey    consumer key of the application
+     * @param consumerSecret consumer secret of the application
+     * @return base 64 encoded string
+     */
+    private static String getBase64EncodedString(String consumerKey, String consumerSecret) {
+        return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
     }
 
     /**

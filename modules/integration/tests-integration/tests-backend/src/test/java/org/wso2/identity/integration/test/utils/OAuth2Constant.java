@@ -77,6 +77,7 @@ public final class OAuth2Constant {
     public static final String INVALID_GRANT_ERROR = "invalid_grant";
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
     public static final String INVALID_CLIENT = "invalid_client";
+    public static final String INVALID_REQUEST = "invalid_request";
 
     public static final class PlaygroundAppPaths {
 
