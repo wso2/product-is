@@ -37,12 +37,12 @@
 
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase" />
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase" />
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase" />
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase" />
-            <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase" />
-            <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase" />
+            <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>-->
@@ -65,7 +65,7 @@
             <!--<package name="org.wso2.identity.integration.test.application.mgt"/>-->
         </packages>
         <classes>
-            <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase" />
+            <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase"/>
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimMetadataManagementServiceTestCase"/>
@@ -79,7 +79,7 @@
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>-->
 
-            <class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>
 
 
             <!--User Store Test Cases-->
@@ -97,7 +97,9 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRegexCallbackUrlTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantCacheDisabledTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeAfterCacheTimeOutTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeWithInvalidClientCredentialsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceErrorResponseTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAdminServiceTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
@@ -117,7 +119,6 @@
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--User Profile Management Test Cases-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <!--SCIM Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
@@ -129,8 +130,8 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
+           <!-- <class name="org.wso2.identity.integration.test.saml.SPMetaDataTenantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
 
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
@@ -139,7 +140,6 @@
 
             <!--Identity Provider Management Test Cases-->
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
-            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorBaseTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
@@ -148,6 +148,8 @@
             <!-- Request path authenticator test cases-->
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorInvalidUserTestCase" />
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.IDENTITY4604RequestPathAuthWithSAMLSSO" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
         </classes>
     </test>
 
@@ -162,6 +164,8 @@
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
         </classes>
     </test>
 </suite>

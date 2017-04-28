@@ -19,10 +19,14 @@
 
 package org.wso2.carbon.is.migration;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.util.Utils;
@@ -33,14 +37,24 @@ import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.user.api.Tenant;
+import org.wso2.carbon.user.api.UserStoreException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 import static org.wso2.carbon.context.RegistryType.SYSTEM_CONFIGURATION;
@@ -55,6 +69,8 @@ public class RegistryDataManager {
     private static RegistryDataManager instance = new RegistryDataManager();
 
     private static final Log log = LogFactory.getLog(RegistryDataManager.class);
+
+    private static final String SCOPE_RESOURCE_PATH = "/oidc";
 
     private static final String EMAIL_TEMPLATE_OLD_REG_LOCATION = "/identity/config/emailTemplate";
     private static final String EMAIL_TEMPLATE_NEW_REG_LOCATION_ROOT = "/identity/email/";
@@ -104,7 +120,7 @@ public class RegistryDataManager {
         return instance;
     }
 
-    public void migrateEmailTemplates() throws Exception {
+    public void migrateEmailTemplates(boolean migrateActiveTenantsOnly) throws Exception {
 
         //migrating super tenant configurations
         try {
@@ -117,6 +133,10 @@ public class RegistryDataManager {
         //migrating tenant configurations
         Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
         for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Email Templates migration!!!!");
+                continue;
+            }
             try {
                 startTenantFlow(tenant);
                 IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
@@ -187,7 +207,7 @@ public class RegistryDataManager {
     }
 
 
-    public void migrateChallengeQuestions() throws Exception {
+    public void migrateChallengeQuestions(boolean migrateActiveTenantsOnly) throws Exception {
         //migrating super tenant configurations
         try {
             migrateChallengeQuestionsForTenant();
@@ -199,6 +219,10 @@ public class RegistryDataManager {
         //migrating tenant configurations
         Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
         for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping challenge question migration!!!!");
+                continue;
+            }
             try {
                 startTenantFlow(tenant);
                 IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
@@ -286,6 +310,107 @@ public class RegistryDataManager {
         PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         carbonContext.setTenantId(tenant.getId());
         carbonContext.setTenantDomain(tenant.getDomain());
+    }
+
+    public void copyOIDCScopeData(boolean migrateActiveTenantsOnly) throws Exception {
+
+        // since copying oidc-config file for super tenant is handled by the OAuth component we only need to handle
+        // this in migrated tenants.
+        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping copying OIDC Scopes Data !!!!");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
+                initiateOIDCScopes();
+                log.info("OIDC Scope data migrated for tenant : " + tenant.getDomain());
+            } catch (RegistryException | FileNotFoundException e) {
+                log.error("Error while migrating OIDC Scope data for tenant:  " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+
+    private void initiateOIDCScopes() throws RegistryException, FileNotFoundException, IdentityException {
+
+        Map<String, String> scopes = loadScopeConfigFile();
+        Registry registry = PrivilegedCarbonContext.getThreadLocalCarbonContext().getRegistry(SYSTEM_CONFIGURATION);
+        if(!registry.resourceExists(SCOPE_RESOURCE_PATH)) {
+            Resource resource = registry.newResource();
+                for (Map.Entry<String, String> entry : scopes.entrySet()) {
+                    resource.setProperty(entry.getKey(), entry.getValue());
+            }
+
+            registry.put("/oidc", resource);
+        }
+    }
+
+    private static Map<String, String> loadScopeConfigFile() throws FileNotFoundException, IdentityException {
+
+        Map<String, String> scopes = new HashMap<>();
+        String carbonHome = System.getProperty("carbon.home");
+        String confXml = Paths.get(carbonHome,
+                new String[]{"repository", "conf", "identity", "oidc-scope-config.xml"}).toString();
+        File configfile = new File(confXml);
+        if(!configfile.exists()) {
+            String errMsg = "OIDC scope-claim Configuration File is not present at: " + confXml;
+            throw new FileNotFoundException(errMsg);
+        }
+
+        XMLStreamReader parser = null;
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(configfile);
+            parser = XMLInputFactory.newInstance().createXMLStreamReader(stream);
+            StAXOMBuilder builder = new StAXOMBuilder(parser);
+            OMElement documentElement = builder.getDocumentElement();
+            Iterator iterator = documentElement.getChildElements();
+
+            while(iterator.hasNext()) {
+                OMElement omElement = (OMElement)iterator.next();
+                String configType = omElement.getAttributeValue(new QName("id"));
+                scopes.put(configType, loadClaimConfig(omElement));
+            }
+        } catch (XMLStreamException ex) {
+            throw IdentityException.error("Error while loading scope config.", ex);
+        } finally {
+            try {
+                if(parser != null) {
+                    parser.close();
+                }
+
+                if(stream != null) {
+                    IdentityIOStreamUtils.closeInputStream(stream);
+                }
+            } catch (XMLStreamException ex) {
+                log.error("Error while closing XML stream", ex);
+            }
+
+        }
+
+        return scopes;
+    }
+
+    private static String loadClaimConfig(OMElement configElement) {
+        StringBuilder claimConfig = new StringBuilder();
+        Iterator it = configElement.getChildElements();
+
+        while(it.hasNext()) {
+            OMElement element = (OMElement)it.next();
+            if("Claim".equals(element.getLocalName())) {
+                String commaSeparatedClaimNames = element.getText();
+                if(StringUtils.isNotBlank(commaSeparatedClaimNames)) {
+                    claimConfig.append(commaSeparatedClaimNames.trim());
+                }
+            }
+        }
+
+        return claimConfig.toString();
     }
 
 
