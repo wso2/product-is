@@ -36,12 +36,12 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -345,5 +345,33 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotEquals(oldAccessToken, accessToken, "Access token not revoked from authorization code reusing");
         testAuthzCodeResend();
     }
+
+	@Test(groups = "wso2.is",
+	      description = "Invalid authorization code",
+	      dependsOnMethods = "testRegisterApplication")
+	public void testInvalidAuthzCode() throws Exception {
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
+				OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+		urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME,
+				"authorizationinvalidcode12345678"));
+		urlParameters.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+		HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+		request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
+		request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
+				.encodeBase64String((consumerKey + ":" + consumerSecret).getBytes()).trim());
+		request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+		HttpResponse response = client.execute(request);
+
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+		Object obj = JSONValue.parse(rd);
+		String errorMessage = ((JSONObject) obj).get("error").toString();
+		EntityUtils.consume(response.getEntity());
+		Assert.assertEquals(OAuth2Constant.INVALID_GRANT_ERROR, errorMessage,
+				"Invalid authorization code should have " + "produced error code : "
+						+ OAuth2Constant.INVALID_GRANT_ERROR);
+	}
 
 }
