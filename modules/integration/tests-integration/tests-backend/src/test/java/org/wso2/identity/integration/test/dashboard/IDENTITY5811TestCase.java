@@ -28,8 +28,8 @@ import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class IDENTITY5811TestCase extends ISIntegrationTest {
-    private static final String IMAGE_URL_1 = "https://localhost:9443/dashboard/img/designer-sprite.png";
-    private static final String IMAGE_URL_2 = "https://localhost:9443/dashboard/img/dummy-grid.png";
+    private static final String IMAGE_URL_1 = "https://localhost:9853/dashboard/img/designer-sprite.png";
+    private static final String IMAGE_URL_2 = "https://localhost:9853/dashboard/img/dummy-grid.png";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final int HTTP_OK_STATUS_CODE = 200;
 

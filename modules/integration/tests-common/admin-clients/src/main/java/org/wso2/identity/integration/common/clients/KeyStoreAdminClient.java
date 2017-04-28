@@ -19,8 +19,10 @@
 package org.wso2.identity.integration.common.clients;
 
 import org.apache.axiom.om.util.Base64;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceStub;
 import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
 import org.wso2.carbon.security.mgt.stub.keystore.AddKeyStore;
 import org.wso2.carbon.security.mgt.stub.keystore.DeleteStore;
@@ -38,6 +40,7 @@ import org.wso2.carbon.security.mgt.stub.keystore.xsd.KeyStoreData;
 import org.wso2.carbon.security.mgt.stub.keystore.xsd.PaginatedKeyStoreData;
 
 import java.io.ByteArrayInputStream;
+import java.rmi.RemoteException;
 import java.security.KeyStore;
 import java.util.Enumeration;
 
@@ -53,6 +56,19 @@ public class KeyStoreAdminClient {
         endPoint = backEndURL + serviceName;
         stub = new KeyStoreAdminServiceStub(endPoint);
         AuthenticateStubUtil.authenticateStub(sessionCookie, stub);
+
+    }
+
+    public KeyStoreAdminClient(String backEndUrl, String userName, String password)
+            throws RemoteException {
+        this.endPoint = backEndUrl + serviceName;
+        try {
+            stub = new KeyStoreAdminServiceStub(endPoint);
+        } catch (AxisFault axisFault) {
+            log.error("Error on initializing stub : " + axisFault.getMessage());
+            throw new RemoteException("Error on initializing stub : ", axisFault);
+        }
+        AuthenticateStub.authenticateStub(userName, password, stub);
 
     }
 
