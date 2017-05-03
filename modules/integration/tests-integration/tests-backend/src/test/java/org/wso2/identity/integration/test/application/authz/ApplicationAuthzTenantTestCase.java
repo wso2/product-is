@@ -43,14 +43,13 @@ import java.net.URL;
 
 public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
 
-
     public static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
     public static final String HTTP_REDIRECT = "HTTP-Redirect";
     public static final String AZ_TEST_TENANT_USER = "azTestTenantUser";
     public static final String AZ_TEST_TENANT_USER_PW = "azTest123";
     public static final String NON_AZ_TEST_TENANT_USER = "nonAzTestTenantUser";
     public static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest123";
-    public static final String TENANT_DOMAIN = "@wso2.com";
+    public static final String WSO2_DOMAIN = "@wso2.com";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTenantTestCase.class);
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
@@ -60,8 +59,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String POLICY_ID = "spTenantAuthPolicy";
     private static final String POLICY =
-
-
             "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"" + POLICY_ID + "\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable\" Version=\"1.0\">\n" +
                     "    <Target>\n" +
                     "        <AnyOf>\n" +
@@ -87,7 +84,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
                     "    </Rule>\n" +
                     "    <Rule Effect=\"Deny\" RuleId=\"denyall\"/>\n" +
                     "</Policy>";
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -123,7 +119,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
 
     }
 
-
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
@@ -143,8 +138,7 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
         Thread.sleep(10000);
     }
 
-
-    @Test(alwaysRun = true, description = "Testing authorized tenant user login", groups = "wso2.is")
+    @Test(alwaysRun = true, description = "Test authorized tenant user login by evaluating the policy", groups = "wso2.is")
     public void testAuthorizedSAMLSSOLogin() {
 
         try {
@@ -156,7 +150,7 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
                             httpClientAzUser);
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    AZ_TEST_TENANT_USER + TENANT_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
+                    AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
             EntityUtils.consume(response.getEntity());
 
             response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
@@ -174,7 +168,7 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
         }
     }
 
-    @Test(alwaysRun = true, description = "Testing unauthorized tenant user login", groups = "wso2.is")
+    @Test(alwaysRun = true, description = "Test unauthorized tenant user login by evaluating the policy", groups = "wso2.is")
     public void testUnauthorizedSAMLSSOLogin() {
 
         try {
@@ -183,7 +177,7 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    NON_AZ_TEST_TENANT_USER + TENANT_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
+                    NON_AZ_TEST_TENANT_USER + WSO2_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
             String redirectUrl = Utils.getRedirectUrl(response);
             EntityUtils.consume(response.getEntity());
             response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
@@ -194,6 +188,5 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
             Assert.fail("Authorization negative test failed for " + AZ_TEST_TENANT_USER, e);
         }
     }
-
 
 }
