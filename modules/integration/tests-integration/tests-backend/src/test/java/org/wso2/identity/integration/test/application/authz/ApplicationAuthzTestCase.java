@@ -111,14 +111,14 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
                     "    </Rule>\n" +
                     "    <Rule Effect=\"Deny\" RuleId=\"denyall\"/>\n" +
                     "</Policy>";
-    private ApplicationManagementServiceClient applicationManagementServiceClient;
-    private SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    private EntitlementPolicyServiceClient entitlementPolicyClient;
+    protected ApplicationManagementServiceClient applicationManagementServiceClient;
+    protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
+    protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    protected EntitlementPolicyServiceClient entitlementPolicyClient;
 
-    private HttpClient httpClientAzUser;
-    private HttpClient httpClientNonAzUser;
-    private Tomcat tomcatServer;
+    protected HttpClient httpClientAzUser;
+    protected HttpClient httpClientNonAzUser;
+    protected Tomcat tomcatServer;
 
 
     @BeforeClass(alwaysRun = true)
@@ -141,9 +141,9 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         createRole(AZ_TEST_ROLE);
         createUser(AZ_TEST_USER, AZ_TEST_USER_PW, new String[]{AZ_TEST_ROLE});
         createUser(NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, new String[0]);
-        createApplication();
-        createSAMLApp();
-        setupXACMLPolicy();
+        createApplication(APPLICATION_NAME);
+        createSAMLApp(APPLICATION_NAME,true, true, true);
+        setupXACMLPolicy(POLICY_ID, POLICY);
 
         //Starting tomcat
         log.info("Starting Tomcat");
@@ -155,18 +155,18 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
 
     }
 
-    private void setupXACMLPolicy()
+    protected void setupXACMLPolicy(String policyId, String xacmlPolicy)
             throws InterruptedException, RemoteException, EntitlementPolicyAdminServiceEntitlementException {
 
         PolicyDTO policy = new PolicyDTO();
-        policy.setPolicy(POLICY);
+        policy.setPolicy(xacmlPolicy);
         policy.setPolicy(policy.getPolicy().replaceAll(">\\s+<", "><").trim());
         policy.setVersion("3.0");
-        policy.setPolicyId(POLICY_ID);
+        policy.setPolicyId(policyId);
         entitlementPolicyClient.addPolicy(policy);
         Thread.sleep(5000); // waiting for the policy to deploy
         entitlementPolicyClient
-                .publishPolicies(new String[]{POLICY_ID}, new String[]{"PDP Subscriber"}, "CREATE", true, null, 1);
+                .publishPolicies(new String[]{policyId}, new String[]{"PDP Subscriber"}, "CREATE", true, null, 1);
 
     }
 
@@ -176,7 +176,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         deleteUser(AZ_TEST_USER);
         deleteUser(NON_AZ_TEST_USER);
         deleteRole(AZ_TEST_ROLE);
-        deleteApplication();
+        deleteApplication(APPLICATION_NAME);
         entitlementPolicyClient.removePolicy(POLICY_ID);
 
         ssoConfigServiceClient = null;
@@ -242,7 +242,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         }
     }
 
-    private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
+    protected HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         HttpPost post = new HttpPost(url);
@@ -252,7 +252,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         return httpClientAzUser.execute(post);
     }
 
-    private String extractDataFromResponse(HttpResponse response) throws IOException {
+    protected String extractDataFromResponse(HttpResponse response) throws IOException {
 
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
@@ -266,18 +266,18 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
     }
 
 
-    private void createApplication() throws Exception {
+    protected void createApplication(String applicationName) throws Exception {
 
         ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(APPLICATION_NAME);
+        serviceProvider.setApplicationName(applicationName);
         serviceProvider.setDescription("This is a test Service Provider for AZ test");
         applicationManagementServiceClient.createApplication(serviceProvider);
 
-        serviceProvider = applicationManagementServiceClient.getApplication(APPLICATION_NAME);
+        serviceProvider = applicationManagementServiceClient.getApplication(applicationName);
 
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        requestConfig.setInboundAuthKey(APPLICATION_NAME);
+        requestConfig.setInboundAuthKey(applicationName);
 
 
         InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
@@ -292,13 +292,13 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 
-    private void deleteApplication() throws Exception {
+    protected void deleteApplication(String applicationName) throws Exception {
 
-        applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
-        ssoConfigServiceClient.removeServiceProvider(APPLICATION_NAME);
+        applicationManagementServiceClient.deleteApplication(applicationName);
+        ssoConfigServiceClient.removeServiceProvider(applicationName);
     }
 
-    private void createRole(String roleName) {
+    protected void createRole(String roleName) {
 
         log.info("Creating role " + roleName);
         try {
@@ -308,7 +308,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         }
     }
 
-    private void deleteRole(String roleName) {
+    protected void deleteRole(String roleName) {
 
         log.info("Deleting role " + roleName);
         try {
@@ -318,7 +318,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         }
     }
 
-    private void createUser(String username, String password, String[] roles) {
+    protected void createUser(String username, String password, String[] roles) {
 
         log.info("Creating User " + username);
         try {
@@ -329,7 +329,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
 
     }
 
-    private void deleteUser(String username) {
+    protected void deleteUser(String username) {
 
         log.info("Deleting User " + username);
         try {
@@ -339,19 +339,19 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         }
     }
 
-    private void createSAMLApp()
+    protected void createSAMLApp(String applicationName, boolean singleLogout, boolean signResponse, boolean signAssertion)
             throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(APPLICATION_NAME);
+        samlssoServiceProviderDTO.setIssuer(applicationName);
         samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(ACS_URL,
-                APPLICATION_NAME)});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, APPLICATION_NAME));
+                applicationName)});
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, applicationName));
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
+        samlssoServiceProviderDTO.setDoSingleLogout(singleLogout);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
+        samlssoServiceProviderDTO.setDoSignResponse(signResponse);
+        samlssoServiceProviderDTO.setDoSignAssertions(signAssertion);
         ssoConfigServiceClient.addServiceProvider(samlssoServiceProviderDTO);
     }
 
