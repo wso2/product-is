@@ -139,54 +139,46 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
     }
 
     @Test(alwaysRun = true, description = "Test authorized tenant user login by evaluating the policy", groups = "wso2.is")
-    public void testAuthorizedSAMLSSOLogin() {
+    public void testAuthorizedTenantSAMLSSOLogin() throws Exception {
 
-        try {
+        HttpResponse response;
+        response =
+                Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME, HTTP_REDIRECT), USER_AGENT,
+                        httpClientAzUser);
+        String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
+        EntityUtils.consume(response.getEntity());
 
-            HttpResponse response;
+        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                httpClientAzUser);
+        String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
 
-            response =
-                    Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME, HTTP_REDIRECT), USER_AGENT,
-                            httpClientAzUser);
-            String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
-            EntityUtils.consume(response.getEntity());
+        response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
+                .SAML_RESPONSE_PARAM, samlResponse);
+        String resultPage = extractDataFromResponse(response);
 
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    httpClientAzUser);
-            String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+        Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_TENANT_USER),
+                "SAML SSO Login should be successful and page should have a message \"You are logged in as\" " + AZ_TEST_TENANT_USER);
 
-            response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
-                    .SAML_RESPONSE_PARAM, samlResponse);
-            String resultPage = extractDataFromResponse(response);
-
-            Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_TENANT_USER),
-                    "SAML SSO Login failed for " + AZ_TEST_TENANT_USER);
-        } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + AZ_TEST_TENANT_USER, e);
-        }
     }
 
     @Test(alwaysRun = true, description = "Test unauthorized tenant user login by evaluating the policy", groups = "wso2.is")
-    public void testUnauthorizedSAMLSSOLogin() {
+    public void testUnauthorizedTenantSAMLSSOLogin() throws Exception {
 
-        try {
-            HttpResponse response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME,
-                    HTTP_REDIRECT), USER_AGENT, httpClientNonAzUser);
+        HttpResponse response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME,
+                HTTP_REDIRECT), USER_AGENT, httpClientNonAzUser);
 
-            String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    NON_AZ_TEST_TENANT_USER + WSO2_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
-            String redirectUrl = Utils.getRedirectUrl(response);
-            EntityUtils.consume(response.getEntity());
-            response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
-            String responseString = extractDataFromResponse(response);
-            Assert.assertTrue(responseString.contains("Authorization Failed"),
-                    "User " + AZ_TEST_TENANT_USER + " was authorized");
-        } catch (Exception e) {
-            Assert.fail("Authorization negative test failed for " + AZ_TEST_TENANT_USER, e);
-        }
+        String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                NON_AZ_TEST_TENANT_USER + WSO2_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
+        String redirectUrl = Utils.getRedirectUrl(response);
+        EntityUtils.consume(response.getEntity());
+        response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
+        String responseString = extractDataFromResponse(response);
+        Assert.assertTrue(responseString.contains("Authorization Failed"),
+                "SAML SSO Login should be unsuccessful and page should have a message \"Authorization failed for\" " + NON_AZ_TEST_TENANT_USER);
+
     }
 
 }

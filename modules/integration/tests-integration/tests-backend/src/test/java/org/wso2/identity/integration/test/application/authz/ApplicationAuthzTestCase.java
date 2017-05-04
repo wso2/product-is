@@ -140,7 +140,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         createUser(AZ_TEST_USER, AZ_TEST_USER_PW, new String[]{AZ_TEST_ROLE});
         createUser(NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, new String[0]);
         createApplication(APPLICATION_NAME);
-        createSAMLApp(APPLICATION_NAME,true, true, true);
+        createSAMLApp(APPLICATION_NAME, true, true, true);
         setupXACMLPolicy(POLICY_ID, POLICY);
 
         //Starting tomcat
@@ -189,55 +189,46 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
 
 
     @Test(alwaysRun = true, description = "Testing authorized user login", groups = "wso2.is")
-    public void testAuthorizedSAMLSSOLogin() {
+    public void testAuthorizedSAMLSSOLogin() throws Exception {
 
-        try {
-            HttpResponse response;
+        HttpResponse response;
+        response =
+                Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME, HTTP_REDIRECT), USER_AGENT,
+                        httpClientAzUser);
 
-            response =
-                    Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME, HTTP_REDIRECT), USER_AGENT,
-                            httpClientAzUser);
+        String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                AZ_TEST_USER, AZ_TEST_USER_PW, httpClientAzUser);
+        EntityUtils.consume(response.getEntity());
 
-            String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    AZ_TEST_USER, AZ_TEST_USER_PW, httpClientAzUser);
-            EntityUtils.consume(response.getEntity());
+        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                httpClientAzUser);
+        String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
 
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    httpClientAzUser);
-            String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+        response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
+                .SAML_RESPONSE_PARAM, samlResponse);
+        String resultPage = extractDataFromResponse(response);
 
-            response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
-                    .SAML_RESPONSE_PARAM, samlResponse);
-            String resultPage = extractDataFromResponse(response);
+        Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_USER),
+                "SAML SSO Login should be successful and page should have a message \"You are logged in as\" " + AZ_TEST_USER);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_USER),
-                    "SAML SSO Login failed for " + AZ_TEST_USER);
-        } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + AZ_TEST_USER, e);
-        }
     }
 
     @Test(alwaysRun = true, description = "Testing unauthorized user login", groups = "wso2.is")
-    public void testUnauthorizedSAMLSSOLogin() {
+    public void testUnauthorizedSAMLSSOLogin() throws Exception {
 
-        try {
-            HttpResponse response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME,
-                            HTTP_REDIRECT), USER_AGENT,
-                    httpClientNonAzUser);
+        HttpResponse response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME,
+                HTTP_REDIRECT), USER_AGENT, httpClientNonAzUser);
+        String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, httpClientNonAzUser);
+        String redirectUrl = Utils.getRedirectUrl(response);
+        EntityUtils.consume(response.getEntity());
+        response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
+        String responseString = extractDataFromResponse(response);
+        Assert.assertTrue(responseString.contains("Authorization Failed"),
+                "SAML SSO Login should be unsuccessful and page should have a message \"Authorization failed for\" " + NON_AZ_TEST_USER);
 
-            String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                    NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, httpClientNonAzUser);
-            String redirectUrl = Utils.getRedirectUrl(response);
-            EntityUtils.consume(response.getEntity());
-            response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
-            String responseString = extractDataFromResponse(response);
-            Assert.assertTrue(responseString.contains("Authorization Failed"),
-                    "User " + AZ_TEST_USER + " was authorized");
-        } catch (Exception e) {
-            Assert.fail("Authorization negative test failed for " + AZ_TEST_USER, e);
-        }
     }
 
     protected HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
@@ -296,45 +287,32 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
         ssoConfigServiceClient.removeServiceProvider(applicationName);
     }
 
-    protected void createRole(String roleName) {
+    protected void createRole(String roleName) throws Exception {
 
         log.info("Creating role " + roleName);
-        try {
-            remoteUSMServiceClient.addRole(roleName, new String[0], null);
-        } catch (Exception e) {
-            Assert.fail("Error while creating the role " + roleName, e);
-        }
+        remoteUSMServiceClient.addRole(roleName, new String[0], null);
+
     }
 
-    protected void deleteRole(String roleName) {
+    protected void deleteRole(String roleName) throws Exception {
 
         log.info("Deleting role " + roleName);
-        try {
-            remoteUSMServiceClient.deleteRole(roleName);
-        } catch (Exception e) {
-            Assert.fail("Error while deleting the role " + roleName, e);
-        }
+        remoteUSMServiceClient.deleteRole(roleName);
+
     }
 
-    protected void createUser(String username, String password, String[] roles) {
+    protected void createUser(String username, String password, String[] roles) throws Exception {
 
         log.info("Creating User " + username);
-        try {
-            remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
-        } catch (Exception e) {
-            Assert.fail("Error while creating the user", e);
-        }
+        remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
 
     }
 
-    protected void deleteUser(String username) {
+    protected void deleteUser(String username) throws Exception {
 
         log.info("Deleting User " + username);
-        try {
-            remoteUSMServiceClient.deleteUser(username);
-        } catch (Exception e) {
-            Assert.fail("Error while deleting the user", e);
-        }
+        remoteUSMServiceClient.deleteUser(username);
+
     }
 
     protected void createSAMLApp(String applicationName, boolean singleLogout, boolean signResponse, boolean signAssertion)
