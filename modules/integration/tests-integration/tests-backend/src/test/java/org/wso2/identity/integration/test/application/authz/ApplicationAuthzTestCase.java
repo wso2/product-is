@@ -64,12 +64,12 @@ import java.util.List;
 
 public class ApplicationAuthzTestCase extends ISIntegrationTest {
 
-    public static final String AZ_TEST_ROLE = "azTestRole";
-    public static final String HTTP_REDIRECT = "HTTP-Redirect";
-    public static final String AZ_TEST_USER = "azTestUser";
-    public static final String AZ_TEST_USER_PW = "azTest123";
-    public static final String NON_AZ_TEST_USER = "nonAzTestUser";
-    public static final String NON_AZ_TEST_USER_PW = "nonAzTest123";
+    private static final String AZ_TEST_ROLE = "azTestRole";
+    private static final String HTTP_REDIRECT = "HTTP-Redirect";
+    private static final String AZ_TEST_USER = "azTestUser";
+    private static final String AZ_TEST_USER_PW = "azTest123";
+    private static final String NON_AZ_TEST_USER = "nonAzTestUser";
+    private static final String NON_AZ_TEST_USER_PW = "nonAzTest123";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTestCase.class);
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
@@ -84,8 +84,6 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String POLICY_ID = "spAuthPolicy";
     private static final String POLICY =
-
-
             "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"spAuthPolicy\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable\" Version=\"1.0\">\n" +
                     "    <Target>\n" +
                     "        <AnyOf>\n" +

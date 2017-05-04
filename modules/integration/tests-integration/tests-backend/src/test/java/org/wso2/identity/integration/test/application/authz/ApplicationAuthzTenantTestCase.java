@@ -43,13 +43,13 @@ import java.net.URL;
 
 public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
 
-    public static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
-    public static final String HTTP_REDIRECT = "HTTP-Redirect";
-    public static final String AZ_TEST_TENANT_USER = "azTestTenantUser";
-    public static final String AZ_TEST_TENANT_USER_PW = "azTest123";
-    public static final String NON_AZ_TEST_TENANT_USER = "nonAzTestTenantUser";
-    public static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest123";
-    public static final String WSO2_DOMAIN = "@wso2.com";
+    private static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
+    private static final String HTTP_REDIRECT = "HTTP-Redirect";
+    private static final String AZ_TEST_TENANT_USER = "azTestTenantUser";
+    private static final String AZ_TEST_TENANT_USER_PW = "azTest123";
+    private static final String NON_AZ_TEST_TENANT_USER = "nonAzTestTenantUser";
+    private static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest123";
+    private static final String WSO2_DOMAIN = "@wso2.com";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTenantTestCase.class);
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
