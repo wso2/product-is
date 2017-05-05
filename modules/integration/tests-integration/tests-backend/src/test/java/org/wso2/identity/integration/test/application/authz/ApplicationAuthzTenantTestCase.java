@@ -41,6 +41,9 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.io.File;
 import java.net.URL;
 
+/**
+ * Test class to test tenant authorization based on XACML policy.
+ */
 public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
 
     private static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
@@ -86,10 +89,9 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
                     "</Policy>";
 
     @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+    public void init() throws Exception {
 
         super.init(TestUserMode.TENANT_ADMIN);
-
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient =
@@ -98,7 +100,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
                 new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
-
         httpClientAzUser = new DefaultHttpClient();
         httpClientNonAzUser = new DefaultHttpClient();
 
@@ -116,7 +117,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
         URL resourceUrl = getClass()
                 .getResource(File.separator + "samples" + File.separator + "travelocity.com-saml-tenantwithoutsigning.war");
         Utils.startTomcat(tomcatServer, "/" + APPLICATION_NAME, resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -149,18 +149,14 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
         EntityUtils.consume(response.getEntity());
-
         response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 httpClientAzUser);
         String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
-
         response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
                 .SAML_RESPONSE_PARAM, samlResponse);
         String resultPage = extractDataFromResponse(response);
-
         Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_TENANT_USER),
-                "SAML SSO Login should be successful and page should have a message \"You are logged in as\" " + AZ_TEST_TENANT_USER);
-
+                "SAML SSO Login should be successful and page should have a message \"You are logged in as " + AZ_TEST_TENANT_USER + "\"");
     }
 
     @Test(alwaysRun = true, description = "Test unauthorized tenant user login by evaluating the policy", groups = "wso2.is")
@@ -168,7 +164,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
 
         HttpResponse response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME,
                 HTTP_REDIRECT), USER_AGENT, httpClientNonAzUser);
-
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 NON_AZ_TEST_TENANT_USER + WSO2_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
@@ -177,8 +172,6 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
         response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
         String responseString = extractDataFromResponse(response);
         Assert.assertTrue(responseString.contains("Authorization Failed"),
-                "SAML SSO Login should be unsuccessful and page should have a message \"Authorization failed for\" " + NON_AZ_TEST_TENANT_USER);
-
+                "SAML SSO Login should be unsuccessful and page should have a message \"Authorization failed for " + NON_AZ_TEST_TENANT_USER + "\"");
     }
-
 }
