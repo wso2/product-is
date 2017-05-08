@@ -57,9 +57,9 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "travelocity.com-saml-tenantwithoutsigning";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String ACS_URL = "http://localhost:"+CommonConstants.DEFAULT_TOMCAT_PORT+"/%s/home.jsp";
+    private static final String COMMON_AUTH_URL = "https://localhost:"+CommonConstants.IS_DEFAULT_HTTPS_PORT+"/commonauth";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:"+CommonConstants.DEFAULT_TOMCAT_PORT+"/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String POLICY_ID = "spTenantAuthPolicy";
     private static final String POLICY =
             "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"" + POLICY_ID + "\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable\" Version=\"1.0\">\n" +
