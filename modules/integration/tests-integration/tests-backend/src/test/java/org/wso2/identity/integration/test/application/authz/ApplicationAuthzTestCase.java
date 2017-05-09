@@ -21,48 +21,30 @@ package org.wso2.identity.integration.test.application.authz;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
-import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ApplicationAuthzTestCase extends ISIntegrationTest {
+public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
 
     private static final String AZ_TEST_ROLE = "azTestRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
@@ -71,17 +53,7 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
     private static final String NON_AZ_TEST_USER = "nonAzTestUser";
     private static final String NON_AZ_TEST_USER_PW = "nonAzTest123";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTestCase.class);
-    // SAML Application attributes
-    private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "travelocity.com";
-    private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
-    private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
-    private static final String NAMEID_FORMAT =
-            "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String POLICY_ID = "spAuthPolicy";
     private static final String POLICY =
             "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"spAuthPolicy\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable\" Version=\"1.0\">\n" +
@@ -109,15 +81,6 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
                     "    </Rule>\n" +
                     "    <Rule Effect=\"Deny\" RuleId=\"denyall\"/>\n" +
                     "</Policy>";
-    protected ApplicationManagementServiceClient applicationManagementServiceClient;
-    protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    protected EntitlementPolicyServiceClient entitlementPolicyClient;
-
-    protected HttpClient httpClientAzUser;
-    protected HttpClient httpClientNonAzUser;
-    protected Tomcat tomcatServer;
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -230,105 +193,4 @@ public class ApplicationAuthzTestCase extends ISIntegrationTest {
                 "SAML SSO Login should be unsuccessful and page should have a message \"Authorization failed for\" " + NON_AZ_TEST_USER);
 
     }
-
-    protected HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        HttpPost post = new HttpPost(url);
-        post.setHeader("User-Agent", USER_AGENT);
-        urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
-        post.setEntity(new UrlEncodedFormEntity(urlParameters));
-        return httpClientAzUser.execute(post);
-    }
-
-    protected String extractDataFromResponse(HttpResponse response) throws IOException {
-
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-        StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-        rd.close();
-        return result.toString();
-    }
-
-
-    protected void createApplication(String applicationName) throws Exception {
-
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(applicationName);
-        serviceProvider.setDescription("This is a test Service Provider for AZ test");
-        applicationManagementServiceClient.createApplication(serviceProvider);
-
-        serviceProvider = applicationManagementServiceClient.getApplication(applicationName);
-
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        requestConfig.setInboundAuthKey(applicationName);
-
-
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                new InboundAuthenticationRequestConfig[]{requestConfig});
-
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-
-        LocalAndOutboundAuthenticationConfig outboundAuthConfig = new LocalAndOutboundAuthenticationConfig();
-        outboundAuthConfig.setEnableAuthorization(true);
-        serviceProvider.setLocalAndOutBoundAuthenticationConfig(outboundAuthConfig);
-        applicationManagementServiceClient.updateApplicationData(serviceProvider);
-    }
-
-    protected void deleteApplication(String applicationName) throws Exception {
-
-        applicationManagementServiceClient.deleteApplication(applicationName);
-        ssoConfigServiceClient.removeServiceProvider(applicationName);
-    }
-
-    protected void createRole(String roleName) throws Exception {
-
-        log.info("Creating role " + roleName);
-        remoteUSMServiceClient.addRole(roleName, new String[0], null);
-
-    }
-
-    protected void deleteRole(String roleName) throws Exception {
-
-        log.info("Deleting role " + roleName);
-        remoteUSMServiceClient.deleteRole(roleName);
-
-    }
-
-    protected void createUser(String username, String password, String[] roles) throws Exception {
-
-        log.info("Creating User " + username);
-        remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
-
-    }
-
-    protected void deleteUser(String username) throws Exception {
-
-        log.info("Deleting User " + username);
-        remoteUSMServiceClient.deleteUser(username);
-
-    }
-
-    protected void createSAMLApp(String applicationName, boolean singleLogout, boolean signResponse, boolean signAssertion)
-            throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
-
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(applicationName);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(ACS_URL,
-                applicationName)});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, applicationName));
-        samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
-        samlssoServiceProviderDTO.setDoSingleLogout(singleLogout);
-        samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
-        samlssoServiceProviderDTO.setDoSignResponse(signResponse);
-        samlssoServiceProviderDTO.setDoSignAssertions(signAssertion);
-        ssoConfigServiceClient.addServiceProvider(samlssoServiceProviderDTO);
-    }
-
 }
