@@ -44,7 +44,7 @@ import java.net.URL;
 /**
  * Test class to test tenant authorization based on XACML policy.
  */
-public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
+public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTestCase {
 
     private static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
@@ -54,12 +54,7 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
     private static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest123";
     private static final String WSO2_DOMAIN = "@wso2.com";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTenantTestCase.class);
-    // SAML Application attributes
-    private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "travelocity.com-saml-tenantwithoutsigning";
-    private static final String ACS_URL = "http://localhost:"+CommonConstants.DEFAULT_TOMCAT_PORT+"/%s/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:"+CommonConstants.IS_DEFAULT_HTTPS_PORT+"/commonauth";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:"+CommonConstants.DEFAULT_TOMCAT_PORT+"/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String POLICY_ID = "spTenantAuthPolicy";
     private static final String POLICY =
             "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"" + POLICY_ID + "\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable\" Version=\"1.0\">\n" +
@@ -89,7 +84,7 @@ public class ApplicationAuthzTenantTestCase extends ApplicationAuthzTestCase {
                     "</Policy>";
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    public void testInit() throws Exception {
 
         super.init(TestUserMode.TENANT_ADMIN);
         ConfigurationContext configContext = ConfigurationContextFactory
