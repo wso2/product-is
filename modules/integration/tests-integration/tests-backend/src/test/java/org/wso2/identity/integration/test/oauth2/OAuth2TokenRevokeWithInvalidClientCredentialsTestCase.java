@@ -90,9 +90,15 @@ public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth
                         + "error code");
 
         //revoke with invalid client key
-        errorMessage = revokeToken(token, "dummyConsumerKey" + consumerSecret);
-        Assert.assertEquals(OAuth2Constant.INVALID_CLIENT, errorMessage,
-                "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
+        errorMessage = revokeToken(token, getBase64EncodedString("dummyConsumerKey", consumerSecret));
+        Assert.assertEquals(OAuth2Constant.UNAUTHORIZED_CLIENT, errorMessage,
+                "Invalid consumer key in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
+                        + "error code");
+
+        //revoke with invalid client secret
+        errorMessage = revokeToken(token, getBase64EncodedString(consumerKey, "dummyConsumerSecret"));
+        Assert.assertEquals(OAuth2Constant.UNAUTHORIZED_CLIENT, errorMessage,
+                "Invalid consumer secret in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
                         + "error code");
 
         //token is required parameter in request
