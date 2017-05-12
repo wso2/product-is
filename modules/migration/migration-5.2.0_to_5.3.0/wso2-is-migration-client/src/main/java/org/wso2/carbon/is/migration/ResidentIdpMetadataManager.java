@@ -127,7 +127,7 @@ public class ResidentIdpMetadataManager {
                 // write the missing properties to the DB
                 idpMetaDataDAO.addIdpMetaData(idpMetaDataToAdd);
             } catch (Exception ex) {
-                log.error("Error while migrating IDP metadata of tenant : " + tenant.getDomain());
+                log.error("Error while migrating IDP metadata of tenant : " + tenant.getDomain(), ex);
             }
         }
     }
