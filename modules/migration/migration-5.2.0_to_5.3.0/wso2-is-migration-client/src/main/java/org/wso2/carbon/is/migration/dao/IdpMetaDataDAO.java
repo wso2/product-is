@@ -52,7 +52,7 @@ public class IdpMetaDataDAO {
     public int getResidentIdpId(int tenantId) throws ISMigrationException {
 
         // we use the IDP table to find the resident idp id.
-        String sql = "SELECT ID FROM IDP WHERE NAME=\"LOCAL\" AND TENANT_ID=?";
+        String sql = "SELECT ID FROM IDP WHERE NAME='LOCAL' AND TENANT_ID=?";
 
         PreparedStatement prepStmt = null;
         ResultSet rs = null;
