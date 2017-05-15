@@ -125,12 +125,11 @@ public class IdpMetaDataDAO {
                 prepStmt.setString(3, idpMetaData.getValue());
                 prepStmt.setString(4, idpMetaData.getDisplayName());
                 prepStmt.setInt(5, idpMetaData.getTenantId());
-                prepStmt.addBatch();
+                prepStmt.executeUpdate();
             }
-
-            prepStmt.executeBatch();
             connection.commit();
         } catch (SQLException e) {
+            IdentityDatabaseUtil.rollBack(connection);
             throw new ISMigrationException("Error while inserting default resident idp property values.", e);
         } finally {
             IdentityDatabaseUtil.closeStatement(prepStmt);
