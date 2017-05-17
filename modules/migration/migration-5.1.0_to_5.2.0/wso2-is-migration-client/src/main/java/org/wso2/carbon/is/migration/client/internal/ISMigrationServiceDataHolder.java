@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.is.migration.internal;
+package org.wso2.carbon.is.migration.client.internal;
 
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
@@ -29,6 +29,8 @@ public class ISMigrationServiceDataHolder {
 
     //Tenant registry loader which is used to load tenant registry
     private static TenantRegistryLoader tenantRegLoader;
+    private static String identityOracleUser;
+    private static String umOracleUser;
 
 
     /**
@@ -85,4 +87,30 @@ public class ISMigrationServiceDataHolder {
         tenantRegLoader = service;
     }
 
-}
+    /**
+     * This method is used to get the user when the database is oracle
+     *
+     * @return oracleUser user of the oracle database
+     */
+    public static String getIdentityOracleUser() {
+        return identityOracleUser;
+    }
+
+    /**
+     * This method is used to set the user when the user when the database is oracle
+     *
+     * @param identityOracleUser
+     */
+    public static void setIdentityOracleUser(String identityOracleUser) {
+        ISMigrationServiceDataHolder.identityOracleUser = identityOracleUser;
+    }
+
+    public static String getUmOracleUser() {
+        return umOracleUser;
+    }
+
+    public static void setUmOracleUser(String umOracleUser) {
+        ISMigrationServiceDataHolder.umOracleUser = umOracleUser;
+    }
+
+    }

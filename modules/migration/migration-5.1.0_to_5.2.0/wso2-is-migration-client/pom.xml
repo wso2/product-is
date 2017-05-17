@@ -90,13 +90,16 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.is.migration.internal
+                            org.wso2.carbon.is.migration.client.internal
                         </Private-Package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
                             org.apache.commons.logging; version="${version.commons.logging}",
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version}",
+                            javax.naming,
+                            javax.sql,
+                            org.wso2.carbon.utils.dbcreator; version="${carbon.kernel.version}"
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.is.migration.internal;
+package org.wso2.carbon.is.migration.client.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.identity.core.util.IdentityCoreInitializedEvent;
+import org.wso2.carbon.is.migration.MigrationDatabaseCreator;
 import org.wso2.carbon.is.migration.RegistryDataManager;
+import org.wso2.carbon.is.migration.client.MigrateFrom510to520;
 import org.wso2.carbon.user.core.service.RealmService;
 
 
@@ -53,6 +55,8 @@ public class ISMigrationServiceComponent {
                     log.info("Migration Client will migrate active tenants only.");
                 }
                 RegistryDataManager.getInstance().copyOIDCScopeData(migrateActiveTenantsOnly);
+                log.info("--------DATABASE MIGRATION STARTED--------");
+                new MigrateFrom510to520().databaseMigration();
 
             } catch (Exception ex) {
                 log.error("Error while migrating OIDC Scope file.", ex);
