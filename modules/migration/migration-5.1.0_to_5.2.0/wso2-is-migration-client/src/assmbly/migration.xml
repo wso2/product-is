@@ -35,6 +35,20 @@
                 <include>db2.sql</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../scripts/um
+            </directory>
+            <outputDirectory>wso2is-${pom.version}-migration/dbscripts/migration-5.1.0_to_5.2.0</outputDirectory>
+            <includes>
+                <include>h2.sql</include>
+                <include>mysql.sql</include>
+                <include>oracle.sql</include>
+                <include>mssql.sql</include>
+                <include>postgresql.sql</include>
+                <include>db2.sql</include>
+            </includes>
+        </fileSet>
     </fileSets>
     <files>
         <file>
