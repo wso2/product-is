@@ -19,6 +19,8 @@ package org.wso2.identity.integration.common.clients.oauth;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
+import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2ClientApplicationDTO;
+import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2IntrospectionResponseDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
@@ -28,18 +30,28 @@ import java.rmi.RemoteException;
 public class Oauth2TokenValidationClient {
 
     OAuth2TokenValidationServiceStub oAuth2TokenValidationServiceStub;
-	private final String serviceName = "OAuth2TokenValidationService";
+    private final String serviceName = "OAuth2TokenValidationService";
 
-	public Oauth2TokenValidationClient(String backendURL, String sessionCookie) throws AxisFault {
+    public Oauth2TokenValidationClient(String backendURL, String sessionCookie) throws AxisFault {
 
         String endPoint = backendURL + serviceName;
         oAuth2TokenValidationServiceStub = new OAuth2TokenValidationServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, oAuth2TokenValidationServiceStub);
-	}
+    }
 
-    public OAuth2TokenValidationResponseDTO validateToken(OAuth2TokenValidationRequestDTO reqDto) throws RemoteException{
+    public OAuth2TokenValidationResponseDTO validateToken(OAuth2TokenValidationRequestDTO reqDto)
+            throws RemoteException {
         return oAuth2TokenValidationServiceStub.validate(reqDto);
     }
 
-    
-  }
+    public OAuth2ClientApplicationDTO findOAuthConsumerIfTokenIsValid(OAuth2TokenValidationRequestDTO reqDto)
+            throws RemoteException {
+        return oAuth2TokenValidationServiceStub.findOAuthConsumerIfTokenIsValid(reqDto);
+    }
+
+    public OAuth2IntrospectionResponseDTO buildIntrospectionResponse(OAuth2TokenValidationRequestDTO reqDto)
+            throws RemoteException {
+        return oAuth2TokenValidationServiceStub.buildIntrospectionResponse(reqDto);
+    }
+
+}
