@@ -66,6 +66,8 @@ public class MobileGrant extends AbstractAuthorizationGrantHandler  {
                 // if valid set authorized mobile number as grant user
                 AuthenticatedUser mobileUser = new AuthenticatedUser();
                 mobileUser.setUserName(mobileNumber);
+                mobileUser.setAuthenticatedSubjectIdentifier(mobileNumber);
+                mobileUser.setFederatedUser(true);
                 oAuthTokenReqMessageContext.setAuthorizedUser(mobileUser);
                 oAuthTokenReqMessageContext.setScope(oAuthTokenReqMessageContext.getOauth2AccessTokenReqDTO().getScope());
             } else{
@@ -152,6 +154,10 @@ public class MobileGrant extends AbstractAuthorizationGrantHandler  {
         }
 
         return false;
+    }
+
+    public boolean isOfTypeApplicationUser() throws IdentityOAuth2Exception {
+        return true;
     }
 
 }
