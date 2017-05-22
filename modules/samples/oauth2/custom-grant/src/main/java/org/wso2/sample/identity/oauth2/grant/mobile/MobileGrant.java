@@ -156,6 +156,7 @@ public class MobileGrant extends AbstractAuthorizationGrantHandler  {
         return false;
     }
 
+    @Override
     public boolean isOfTypeApplicationUser() throws IdentityOAuth2Exception {
         return true;
     }
