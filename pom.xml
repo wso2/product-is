@@ -41,6 +41,7 @@
         <module>modules/social-authenticators</module>
         <module>modules/provisioning-connectors</module>
         <module>modules/local-authenticators</module>
+        <module>modules/oauth2-grant-types</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
         <module>modules/samples</module>
@@ -1326,6 +1327,13 @@
                 <version>${identity.local.auth.fido.version}</version>
             </dependency>
 
+            <!-- OAuth2 Grant Type extensions -->
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.oauth2.grantType.jwt</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth2.grant.jwt</artifactId>
+                <version>${identity.oauth2.jwt.bearer.grant.version}</version>
+            </dependency>
+
             <!--
                 Dependencies from this point is used in p2 profile gen, added here to get them updated along with
                 versions plugin (version plugin only reads the dependencies in dependencyManagement,
@@ -1560,6 +1568,9 @@
         <identity.local.auth.basicauth.version>5.3.1</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.6</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.0</identity.local.auth.iwa.version>
+
+        <!-- OAuth2 Grant Type extensions -->
+        <identity.oauth2.jwt.bearer.grant.version>1.0.5</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.0.1</identity.metadata.saml.version>
