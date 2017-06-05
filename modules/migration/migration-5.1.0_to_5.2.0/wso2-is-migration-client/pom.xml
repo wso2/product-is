@@ -90,7 +90,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.is.migration.internal
+                            org.wso2.carbon.is.migration.client.internal
                         </Private-Package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
