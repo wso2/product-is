@@ -151,7 +151,7 @@ function validateEmpty(fldname) {
 function reloadGrid() {
     $.ajax({
                url: "/portal/gadgets/user_profile/index.jag",
-               type: "GET",
+               type: "POST",
                data: "&cookie=" + cookie + "&user=" + userName,
                success: function (data) {
 json = $.parseJSON(data);
@@ -205,7 +205,7 @@ function drawFIDORegistration() {
 
 $.ajax({
            url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
-           type: "GET",
+           type: "POST",
            data: "&cookie=" + cookie + "&action=idPList",
            success: function (data) {
 
