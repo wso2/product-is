@@ -32,6 +32,8 @@
     String code_verifier = null;
     String code_challenge = null;
     String implicitResponseType = null;
+    String acr_values = "";
+    String amr_values = "";
 
     boolean isOIDCLogoutEnabled = false;
     boolean isOIDCSessionEnabled = false;
@@ -410,6 +412,17 @@
                             <td><input type="radio" name="form_post" value="yes">Yes &nbsp;
                                 <input type="radio" name="form_post" value="no" checked>No
                             </td>
+                        </tr>
+
+                        <tr id="acr">
+                            <td>Authentication Context Class/LoA</td>
+                            <td><input type="text" style="width: 350px" name="acr_values"
+                                       value="<%=acr_values%>"></td>
+                        </tr>
+                        <tr id="amr">
+                            <td>Authentication Method Reference</td>
+                            <td><input type="text" style="width: 350px"  name="amr_values"
+                                       value="<%=amr_values%>"></td>
                         </tr>
 
                         <tr>
