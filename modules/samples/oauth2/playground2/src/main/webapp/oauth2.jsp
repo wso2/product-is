@@ -17,12 +17,15 @@
     String grantType = null;
     String code_verifier = null;
     String code_challenge = null;
+    String acr_values = "";
+    String amr_values = "";
+
+    String consumerKeyDefault = "";
 
     boolean isOIDCLogoutEnabled = false;
     boolean isOIDCSessionEnabled = false;
 
     OAuthAuthzResponse authzResponse = null;
-
     try {
         String reset = request.getParameter(OAuth2Constants.RESET_PARAM);
         if (reset != null && Boolean.parseBoolean(reset)) {
@@ -38,6 +41,11 @@
             session.removeAttribute(OAuth2Constants.OIDC_SESSION_IFRAME_ENDPOINT);
             session.removeAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER);
             session.removeAttribute(OAuth2Constants.OAUTH2_USE_PKCE);
+        }
+
+        consumerKeyDefault = (String)session.getAttribute(OAuth2Constants.CONSUMER_KEY);
+        if(consumerKeyDefault == null) {
+            consumerKeyDefault = "";
         }
 
         sessionState = request.getParameter(OAuth2Constants.SESSION_STATE);
@@ -250,7 +258,7 @@
 
                         <tr>
                             <td><label>Client Id : </label></td>
-                            <td><input type="text" id="consumerKey" name="consumerKey" style="width:350px"></td>
+                            <td><input type="text" id="consumerKey" name="consumerKey" style="width:350px" value="<%=consumerKeyDefault%>"></td>
                         </tr>
 
                         <tr id="clientsecret" style="display:none">
@@ -335,6 +343,17 @@
                             <td><input type="radio" name="form_post" value="yes">Yes &nbsp;
                                 <input type="radio" name="form_post" value="no" checked>No
                             </td>
+                        </tr>
+
+                        <tr id="acr">
+                            <td>Authentication Context Class/LoA</td>
+                            <td><input type="text" style="width: 350px" name="acr_values"
+                                       value="<%=acr_values%>"></td>
+                        </tr>
+                        <tr id="amr">
+                            <td>Authentication Method Reference</td>
+                            <td><input type="text" style="width: 350px"  name="amr_values"
+                                       value="<%=amr_values%>"></td>
                         </tr>
 
                         <tr>
@@ -540,7 +559,7 @@
 
     function pkceChangeVisibility(jQuery ) {
         if ($("#grantType").val() == "<%=OAuth2Constants.OAUTH2_GRANT_TYPE_CODE%>" &&
-                $("input[name='use_pkce']:checked")[0].value == "yes") {
+            $("input[name='use_pkce']:checked")[0].value == "yes") {
             $("#pkceMethod").show();
             $("#pkceChallenge").show();
             $("#pkceVerifier").show();
