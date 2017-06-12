@@ -123,7 +123,7 @@ function deleteUserAccountConnection(delUser) {
 function reloadGrid() {
     $.ajax({
         url: "/portal/gadgets/connected_accounts/index.jag",
-        type: "GET",
+        type: "POST",
         data: "&cookie=" + cookie + "&action=list",
         success: function (data) {
             var resp = $.parseJSON(data);
@@ -203,7 +203,7 @@ function changeDropDownMenu() {
 function reloadFedGrid(json) {
     $.ajax({
         url: "/portal/gadgets/connected_accounts/index.jag",
-        type: "GET",
+        type: "POST",
         data: "&cookie=" + cookie + "&username=" + userName + "&action=associatedIdList",
         success: function (data) {
             var resp = $.parseJSON(data);

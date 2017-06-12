@@ -207,6 +207,12 @@
             </includes>
         </fileSet>
 
+        <!--copy the oauth2 grant type extensions -->
+        <fileSet>
+            <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
 
         <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
         <fileSet>
