@@ -33,9 +33,10 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test class to test token validation after service provider is SaaS-disabled.
@@ -58,7 +59,7 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
     private Oauth2TokenValidationClient oauth2TokenValidationClient;
 
     @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+    public void init() throws Exception {
 
         AutomationContext tenantContext = new AutomationContext("IDENTITY", TestUserMode.TENANT_ADMIN);
 
@@ -95,19 +96,27 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
         ServiceProvider serviceProvider = applicationManagementServiceClient.getApplication(SERVICE_PROVIDER_NAME);
         serviceProvider.setSaasApp(false);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
-        //at application update, token validation is done in async mode which may take some time at the server,
-        // hence adding a thread sleep....
-        Thread.sleep(500);
         OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
         OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
                 OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
         accessTokenDTO.setIdentifier(superTenantAccessToken);
         accessTokenDTO.setTokenType(TOKEN_TYPE);
         requestDTO.setAccessToken(accessTokenDTO);
-        OAuth2TokenValidationResponseDTO responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
-        assertEquals(responseDTO.getValid(), true,
-                "Token validation should be successful for the users of same tenant when " +
-                        "service provider is SaaS-disabled");
+        OAuth2TokenValidationResponseDTO responseDTO;
+        //at application update, token validation is done in async mode which may take some time at the server,
+        // hence polling until tokens are invalidated...
+        boolean tokenState = false;
+        int count = 10;
+        while (count > 0 && !tokenState) {
+            responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
+            if (responseDTO.getValid()) {
+                tokenState = true;
+            }
+            Thread.sleep(50);
+            count--;
+        }
+        assertTrue(tokenState, "Token validation should be successful for the users of same tenant" +
+                " when service provider is SaaS-disabled");
     }
 
     @Test(alwaysRun = true, description = "Test the validation of tokens issued to other tenants when " +
@@ -117,36 +126,32 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
         ServiceProvider serviceProvider = applicationManagementServiceClient.getApplication(SERVICE_PROVIDER_NAME);
         serviceProvider.setSaasApp(false);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
-        //at application update, token validation is done in async mode which may take some time at the server,
-        // hence adding a thread sleep....
-        Thread.sleep(500);
         OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
         OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
                 OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
         accessTokenDTO.setIdentifier(tenantAccessToken);
         accessTokenDTO.setTokenType(TOKEN_TYPE);
         requestDTO.setAccessToken(accessTokenDTO);
-        OAuth2TokenValidationResponseDTO responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
-        assertEquals(responseDTO.getValid(), false,
-                "Token validation should fail for users of other tenants when " +
-                        "service provider is SaaS-disabled");
+        OAuth2TokenValidationResponseDTO responseDTO;
+        //at application update, token revocation is done in async mode which may take some time at the server,
+        // hence polling until tokens are invalidated...
+        boolean tokenState = true;
+        int count = 10;
+        while (count > 0 && tokenState) {
+            responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
+            if (!responseDTO.getValid()) {
+                tokenState = false;
+            }
+            Thread.sleep(50);
+            count--;
+        }
+        assertFalse(tokenState, "Token validation should fail for the users of other tenants" +
+                " when service provider is SaaS-disabled");
     }
 
     @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception {
+    public void clear() throws Exception {
         deleteApplication();
         removeOAuthApplicationData();
-
-        consumerKey = null;
-        consumerSecret = null;
-        tenantAccessToken = null;
-        superTenantAccessToken = null;
-        tokenEndpointUrl = null;
-        adminUsername = null;
-        adminPassword = null;
-        tenantAdminUsername = null;
-        tenantAdminPassword = null;
-        applicationManagementServiceClient = null;
-        oauth2TokenValidationClient = null;
     }
 }

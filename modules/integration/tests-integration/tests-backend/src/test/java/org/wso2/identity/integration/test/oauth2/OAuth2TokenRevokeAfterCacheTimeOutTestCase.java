@@ -97,8 +97,8 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
      * @param accessToken    access token to be revoked
      * @throws Exception if something went wrong when requesting token
      */
-    public static void revokeAccessToken(String consumerKey, String consumerSecret,
-                                         String accessToken, String backendUrl) throws Exception {
+    public void revokeAccessToken(String consumerKey, String consumerSecret,
+                                  String accessToken, String backendUrl) throws Exception {
         ArrayList<NameValuePair> postParameters;
         HttpClient client = new DefaultHttpClient();
         HttpPost httpRevoke = new HttpPost(backendUrl);

@@ -410,8 +410,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
      * @return token
      * @throws Exception if something went wrong when requesting token
      */
-    public static String requestAccessToken(String consumerKey, String consumerSecret,
-                                            String backendUrl, String username, String password) throws Exception {
+    public String requestAccessToken(String consumerKey, String consumerSecret,
+                                     String backendUrl, String username, String password) throws Exception {
         List<NameValuePair> postParameters;
         HttpClient client = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(backendUrl);
@@ -430,7 +430,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         //Get access token from the response
         JSONParser parser = new JSONParser();
         JSONObject json = (JSONObject) parser.parse(responseString);
-        return json.get("access_token").toString();
+        Object accessToken = json.get("access_token");
+        if (accessToken == null) {
+            throw new Exception("Error occurred while requesting access token. Access token not found in json response");
+        }
+        return accessToken.toString();
     }
 
     /**
@@ -440,7 +444,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
      * @param consumerSecret consumer secret of the application
      * @return base 64 encoded string
      */
-    public static String getBase64EncodedString(String consumerKey, String consumerSecret) {
+    public String getBase64EncodedString(String consumerKey, String consumerSecret) {
         return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
     }
 }
