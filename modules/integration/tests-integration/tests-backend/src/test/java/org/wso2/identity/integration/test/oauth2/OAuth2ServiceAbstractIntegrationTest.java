@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -27,7 +28,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -54,9 +59,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected String consumerKey;
 	protected String consumerSecret;
 
-	private final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProver";
-	private final static String SERVICE_PROVIDER_DESC = "Playground Service Prover";
+	protected final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProvider";
+	private final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
 	private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+	private static final String GRANT_TYPE_PASSWORD = "password";
+	private static final String SCOPE_PRODUCTION = "PRODUCTION";
 	private final static int TOMCAT_PORT = 8490;
 
 	protected ApplicationManagementServiceClient appMgtclient;
@@ -393,4 +400,51 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		return tomcat;
 	}
+
+    /**
+     * Request access token from the given token generation endpoint
+     *
+     * @param consumerKey    consumer key of the application
+     * @param consumerSecret consumer secret of the application
+     * @param backendUrl     token generation API endpoint
+     * @return token
+     * @throws Exception if something went wrong when requesting token
+     */
+    public String requestAccessToken(String consumerKey, String consumerSecret,
+                                     String backendUrl, String username, String password) throws Exception {
+        List<NameValuePair> postParameters;
+        HttpClient client = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(backendUrl);
+        //generate post request
+        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        postParameters = new ArrayList<NameValuePair>();
+        postParameters.add(new BasicNameValuePair("username", username));
+        postParameters.add(new BasicNameValuePair("password", password));
+        postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
+        postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
+        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+        HttpResponse response = client.execute(httpPost);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        //Get access token from the response
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(responseString);
+        Object accessToken = json.get("access_token");
+        if (accessToken == null) {
+            throw new Exception("Error occurred while requesting access token. Access token not found in json response");
+        }
+        return accessToken.toString();
+    }
+
+    /**
+     * Get base64 encoded string of consumer key and secret
+     *
+     * @param consumerKey    consumer key of the application
+     * @param consumerSecret consumer secret of the application
+     * @return base 64 encoded string
+     */
+    public String getBase64EncodedString(String consumerKey, String consumerSecret) {
+        return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
+    }
 }
