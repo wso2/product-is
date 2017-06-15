@@ -106,13 +106,13 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
         //at application update, token validation is done in async mode which may take some time at the server,
         // hence polling until tokens are invalidated...
         boolean tokenState = false;
-        int count = 10;
+        int count = 50;
         while (count > 0 && !tokenState) {
             responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
             if (responseDTO.getValid()) {
                 tokenState = true;
             }
-            Thread.sleep(50);
+            Thread.sleep(100);
             count--;
         }
         assertTrue(tokenState, "Token validation should be successful for the users of same tenant" +
@@ -136,13 +136,13 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
         //at application update, token revocation is done in async mode which may take some time at the server,
         // hence polling until tokens are invalidated...
         boolean tokenState = true;
-        int count = 10;
+        int count = 50;
         while (count > 0 && tokenState) {
             responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
             if (!responseDTO.getValid()) {
                 tokenState = false;
             }
-            Thread.sleep(50);
+            Thread.sleep(100);
             count--;
         }
         assertFalse(tokenState, "Token validation should fail for the users of other tenants" +
