@@ -45,6 +45,8 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
 
     private static final String TOKEN_API_ENDPOINT = "/oauth2/token";
     private static final String TOKEN_TYPE = "bearer";
+    private static final int MAX_WAIT_TIME = 20000;
+    private static final int INTERVAL = 100;
 
     private String consumerKey;
     private String consumerSecret;
@@ -106,14 +108,14 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
         //at application update, token validation is done in async mode which may take some time at the server,
         // hence polling until tokens are invalidated...
         boolean tokenState = false;
-        int count = 50;
-        while (count > 0 && !tokenState) {
+        int currentWaitTime = 0;
+        while (currentWaitTime <= MAX_WAIT_TIME && !tokenState) {
             responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
             if (responseDTO.getValid()) {
                 tokenState = true;
             }
-            Thread.sleep(100);
-            count--;
+            Thread.sleep(INTERVAL);
+            currentWaitTime += INTERVAL;
         }
         assertTrue(tokenState, "Token validation should be successful for the users of same tenant" +
                 " when service provider is SaaS-disabled");
@@ -136,14 +138,14 @@ public class OAuth2SaaSAppTokenRevocationTestCase extends OAuth2ServiceAbstractI
         //at application update, token revocation is done in async mode which may take some time at the server,
         // hence polling until tokens are invalidated...
         boolean tokenState = true;
-        int count = 50;
-        while (count > 0 && tokenState) {
+        int currentWaitTime = 0;
+        while (currentWaitTime <= MAX_WAIT_TIME && tokenState) {
             responseDTO = oauth2TokenValidationClient.validateToken(requestDTO);
             if (!responseDTO.getValid()) {
                 tokenState = false;
             }
-            Thread.sleep(100);
-            count--;
+            Thread.sleep(INTERVAL);
+            currentWaitTime += INTERVAL;
         }
         assertFalse(tokenState, "Token validation should fail for the users of other tenants" +
                 " when service provider is SaaS-disabled");
