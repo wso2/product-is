@@ -146,6 +146,21 @@
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>copy-custom-oauth-grant</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/test-classes/samples</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>custom-grant</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+
                     <execution>
                         <id>copy-playground2</id>
                         <phase>compile</phase>
@@ -601,6 +616,12 @@
             <artifactId>playground2</artifactId>
             <version>${project.version}</version>
             <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>custom-grant</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.is</groupId>
