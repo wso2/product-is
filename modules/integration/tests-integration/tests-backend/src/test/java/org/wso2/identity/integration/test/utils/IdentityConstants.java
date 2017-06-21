@@ -24,5 +24,7 @@ public class IdentityConstants {
         APPLICATION_MANAGEMENT,
         IDENTITY_PROVIDER_MGT,
         SAML_SSO_CONFIG,
+        OAUTH_CONFIG,
+        REMOTE_USER_STORE_MANAGEMENT
     }
 }
