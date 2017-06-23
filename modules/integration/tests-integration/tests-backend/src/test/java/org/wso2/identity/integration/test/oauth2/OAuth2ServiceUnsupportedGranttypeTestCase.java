@@ -71,7 +71,7 @@ public class OAuth2ServiceUnsupportedGranttypeTestCase extends OAuth2ServiceAbst
     }
 
     @Test(groups = "wso2.is",
-            description = "Unsupported grant type", dependsOnMethods = "testRegisterApplication")
+            description = "Unsupported grant type")
     public void testUnsupportedGrantype() throws Exception {
 
         OAuthConsumerAppDTO appDto = createApplication();
