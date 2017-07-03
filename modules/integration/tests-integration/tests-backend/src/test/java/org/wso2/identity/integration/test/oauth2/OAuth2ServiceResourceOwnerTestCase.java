@@ -173,7 +173,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair("password", "admin"));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + "invalid:" +
+        request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + "invalid:" + 
 				consumerSecret).getBytes()).trim());
         request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
