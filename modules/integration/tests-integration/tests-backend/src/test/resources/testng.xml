@@ -103,6 +103,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceErrorResponseTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAdminServiceTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
 
             <!--OIDC Test Cases-->
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSOTestCase"/>
