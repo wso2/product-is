@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceStub;
 import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceUserProfileExceptionException;
+import org.wso2.carbon.identity.user.profile.stub.types.AssociatedAccountDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 
 import java.rmi.RemoteException;
@@ -135,5 +136,16 @@ public class UserProfileMgtServiceClient {
 
     public boolean isReadOnlyUserStore() throws RemoteException, UserProfileMgtServiceUserProfileExceptionException {
         return userProfileMgtServiceStub.isReadOnlyUserStore();
+    }
+
+    public void addFedIdpAccountAssociation(String idpName,
+                                            String idpAssociatedId) throws Exception{
+
+        userProfileMgtServiceStub.associateID(idpName, idpAssociatedId);
+    }
+
+    public AssociatedAccountDTO[] getAssociatedFedUserAccountIds() throws Exception {
+
+        return userProfileMgtServiceStub.getAssociatedIDs();
     }
 }
