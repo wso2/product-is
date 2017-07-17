@@ -104,7 +104,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     }
 
     @AfterClass(alwaysRun = true)
-    public void atEnd() throws LifecycleException {
+    public void atEnd() throws Exception {
+
+        deleteApplication();
+        removeOAuthApplicationData();
 
         tomcat.stop();
         tomcat.destroy();
