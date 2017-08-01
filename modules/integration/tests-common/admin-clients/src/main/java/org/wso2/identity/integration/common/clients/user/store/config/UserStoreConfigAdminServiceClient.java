@@ -19,12 +19,14 @@
 package org.wso2.identity.integration.common.clients.user.store.config;
 
 import org.apache.axis2.AxisFault;
+import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdminServiceIdentityUserStoreMgtException;
 import org.wso2.carbon.identity.user.store.configuration.stub.UserStoreConfigAdminServiceStub;
 import org.wso2.carbon.identity.user.store.configuration.stub.api.Properties;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
 
+import java.rmi.RemoteException;
 
 public class UserStoreConfigAdminServiceClient {
 
@@ -171,5 +173,16 @@ public class UserStoreConfigAdminServiceClient {
         userStoreDTO.setDomainId(domainId);
         userStoreDTO.setProperties(properties);
         return userStoreDTO;
+    }
+
+    /**
+     * Get secondary realm configurations.
+     * @return Array of secondary user stores.
+     * @throws RemoteException
+     * @throws UserStoreConfigAdminServiceIdentityUserStoreMgtException
+     */
+    public UserStoreDTO[] getSecondaryRealmConfigurations() throws RemoteException,
+            UserStoreConfigAdminServiceIdentityUserStoreMgtException {
+        return stub.getSecondaryRealmConfigurations();
     }
 }

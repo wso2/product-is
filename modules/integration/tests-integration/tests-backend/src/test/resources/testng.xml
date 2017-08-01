@@ -47,6 +47,7 @@
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>-->
             <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
+            <class name="org.wso2.identity.integration.test.user.store.config.MultipleUserStoreTestCase" />
         </classes>
     </test>
 
