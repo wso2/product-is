@@ -1720,6 +1720,12 @@
                                     <version>${carbon.identity.auth.version}</version>
                                 </feature>
 
+                                <!-- captcha for tomcat filter  -->
+			        <feature>
+                                    <id>org.wso2.carbon.identity.captcha.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>

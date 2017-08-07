@@ -77,6 +77,8 @@ public final class OAuth2Constant {
     public static final String INVALID_GRANT_ERROR = "invalid_grant";
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
     public static final String INVALID_CLIENT = "invalid_client";
+    public static final String TRAVELOCITY_APP_CONTEXT_ROOT = "/travelocity.com";
+    public static final String OAUTH2_GRANT_TYPE_SAML2_BEARER = "urn:ietf:params:oauth:grant-type:saml2-bearer";
 
     public static final class PlaygroundAppPaths {
 
