@@ -297,6 +297,14 @@
             </UserInfoEndpointResponseBuilder>
             <SkipUserConsent>false</SkipUserConsent>
         </OpenIDConnect>
+
+        <!-- Configs related to OAuth2 token persistence -->
+    		<TokenPersistence>
+    				<Enable>true</Enable>
+    				<PoolSize>0</PoolSize>
+    				<RetryCount>5</RetryCount>
+    		</TokenPersistence>
+
     </OAuth>
 
     <MultifactorAuthentication>
