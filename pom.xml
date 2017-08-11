@@ -377,6 +377,36 @@
             <email>lahiruc AT wso2.com</email>
             <organization>WSO2</organization>
         </developer>
+        <developer>
+            <name>Dinali Dabarera</name>
+            <id>Dinali</id>
+            <email>dinali AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Nilasini Thirunavukaarasu</name>
+            <id>Nilasini</id>
+            <email>nilasini AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Sathya Bandara</name>
+            <id>Sathya</id>
+            <email>sathya AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Supun Priyadarshana</name>
+            <id>Supun</id>
+            <email>supunp AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
+        <developer>
+            <name>Thilina Madumal</name>
+            <id>Thilina</id>
+            <email>thilinamad AT wso2.com</email>
+            <organization>WSO2</organization>
+        </developer>
     </developers>
 
 
