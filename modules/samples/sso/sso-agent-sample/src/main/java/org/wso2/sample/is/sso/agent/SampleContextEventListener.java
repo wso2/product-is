@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509KeyStoreCredential;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -47,6 +48,13 @@ public class SampleContextEventListener implements ServletContextListener {
             } else if(servletContextEvent.getServletContext().getContextPath().contains("avis.com")) {
                 properties.load(servletContextEvent.getServletContext().
                         getResourceAsStream("/WEB-INF/classes/avis.properties"));
+            } else {
+                String resourcePath = "/WEB-INF/classes" + servletContextEvent.getServletContext().getContextPath() +
+                                      ".properties";
+                InputStream resourceStream = servletContextEvent.getServletContext().getResourceAsStream(resourcePath);
+                if (resourceStream != null) {
+                    properties.load(servletContextEvent.getServletContext().getResourceAsStream(resourcePath));
+                }
             }
             InputStream keyStoreInputStream = servletContextEvent.getServletContext().
                     getResourceAsStream("/WEB-INF/classes/wso2carbon.jks");
