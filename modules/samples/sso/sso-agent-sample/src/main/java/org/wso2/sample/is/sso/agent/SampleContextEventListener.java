@@ -25,7 +25,6 @@ import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509KeyStoreCredential;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
