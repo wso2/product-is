@@ -4,6 +4,7 @@ package org.wso2.carbon.is.migration.client;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.OAuth2Scope;
 import org.wso2.carbon.is.migration.bean.OAuth2ScopeBinding;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
@@ -120,6 +121,40 @@ public class MigrateIdentityDB {
             }
         }
     }
+
+    private void executeIdentityPostMigrationScript() throws Exception {
+
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            String databaseType = DatabaseCreator.getDatabaseType(this.conn);
+
+            String dbscriptName = SQLConstants
+                    .getQuery(SQLConstants.DBSpecificQuerie.IDN_OAUTH2_SCOPE_TABLE_SCOPE_KEY_SET_NULL, databaseType);
+
+            executeSQLScript(dbscriptName);
+            conn.commit();
+
+
+            if (log.isTraceEnabled()) {
+                log.trace("Migration script executed successfully.");
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to execute the migration script. " + e.getMessage();
+            log.fatal(msg, e);
+            throw new Exception(msg, e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Failed to close database connection.", e);
+            }
+        }
+    }
+
+
     protected String getIdentityDbScriptLocation(String databaseType, String from, String to) {
 
         String scriptName = databaseType + ".sql";

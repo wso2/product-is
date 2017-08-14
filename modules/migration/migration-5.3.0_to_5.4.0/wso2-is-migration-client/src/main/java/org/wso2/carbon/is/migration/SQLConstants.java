@@ -19,6 +19,8 @@ package org.wso2.carbon.is.migration;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Holds the SQL queries and related constants
@@ -97,5 +99,42 @@ public class SQLConstants {
     //Insert permission for role
     public static final String INSERT_ROLES_WITH_PERMISSION = "INSERT INTO UM_ROLE_PERMISSION (UM_PERMISSION_ID," +
             "UM_ROLE_NAME, UM_IS_ALLOWED, UM_TENANT_ID, UM_DOMAIN_ID) VALUES (?, ?, ?,?, ?)";
+
+
+    public enum DatabaseTypes {
+        oracle, mssql, mysql, postgresql, h2, db2
+    }
+
+    private static final Map<String, Map<DatabaseTypes, String>> dbSpecificQueries  =new HashMap() ;
+
+    public enum DBSpecificQuerie{
+        IDN_OAUTH2_SCOPE_TABLE_SCOPE_KEY_SET_NULL ;
+    }
+
+    public static String getQuery(DBSpecificQuerie dbSpecificQuerie, String databaseType){
+        Map<DatabaseTypes, String> databaseTypesStringMap = dbSpecificQueries.get(dbSpecificQuerie);
+        String sqlQuery = databaseTypesStringMap.get(databaseType);
+        return sqlQuery ;
+    }
+
+    static{
+
+        Map scopeKeySetNullQueryMap  =new HashMap();
+
+        scopeKeySetNullQueryMap.put(DatabaseTypes.mysql, "ALTER TABLE IDN_OAUTH2_SCOPE MODIFY "
+                                                                           + "SCOPE_KEY VARCHAR (100) NULL");
+        scopeKeySetNullQueryMap.put(DatabaseTypes.oracle, "ALTER TABLE IDN_OAUTH2_SCOPE MODIFY "
+                                                                            + "SCOPE_KEY VARCHAR2 (100) NULL");
+        scopeKeySetNullQueryMap.put(DatabaseTypes.mssql, "ALTER TABLE IDN_OAUTH2_SCOPE ALTER "
+                                                                           + "COLUMN SCOPE_KEY VARCHAR (100) NULL");
+        scopeKeySetNullQueryMap.put(DatabaseTypes.db2, "ALTER TABLE IDN_OAUTH2_SCOPE ALTER "
+                                                                         + "COLUMN SCOPE_KEY SET NULL");
+        scopeKeySetNullQueryMap.put(DatabaseTypes.h2, "ALTER TABLE IDN_OAUTH2_SCOPE ALTER "
+                                                                        + "COLUMN SCOPE_KEY VARCHAR (100) NULL");
+        scopeKeySetNullQueryMap.put(DatabaseTypes.postgresql, "ALTER TABLE IDN_OAUTH2_SCOPE "
+                                                                                + "ALTER COLUMN SCOPE_KEY SET NULL");
+
+        dbSpecificQueries.put(DBSpecificQuerie.IDN_OAUTH2_SCOPE_TABLE_SCOPE_KEY_SET_NULL.toString(), scopeKeySetNullQueryMap);
+    }
 
 }
