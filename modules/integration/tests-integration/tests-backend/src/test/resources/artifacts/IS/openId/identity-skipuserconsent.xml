@@ -21,12 +21,12 @@
 
 	<JDBCPersistenceManager>
 		<DataSource>
-			<!-- Include a data source name (jndiConfigName) from the set of data 
+			<!-- Include a data source name (jndiConfigName) from the set of data
 				sources defined in master-datasources.xml -->
 			<Name>jdbc/WSO2CarbonDB</Name>
 		</DataSource>
-		<!-- If the identity database is created from another place and if it is 
-			required to skip schema initialization during the server start up, set the 
+		<!-- If the identity database is created from another place and if it is
+			required to skip schema initialization during the server start up, set the
 			following property to "true". -->
 		<!-- <SkipDBSchemaCreation>false</SkipDBSchemaCreation> -->
 	</JDBCPersistenceManager>
@@ -67,7 +67,7 @@
 		<!-- Expiry time of the OpenID RememberMe token in minutes -->
 		<OpenIDRememberMeExpiry>7200</OpenIDRememberMeExpiry>
 		<!-- Multifactor Authentication configuration -->
-	        <UseMultifactorAuthentication>false</UseMultifactorAuthentication>	
+	        <UseMultifactorAuthentication>false</UseMultifactorAuthentication>
         	<!-- To enable or disable openid dumb mode -->
         	<DisableOpenIDDumbMode>false</DisableOpenIDDumbMode>
 		<!-- remember me session timeout in seconds -->
@@ -87,7 +87,7 @@
 		<AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
 		<!-- Default validity period for application access tokens in seconds -->
 		<UserAccessTokenDefaultValidityPeriod>3600</UserAccessTokenDefaultValidityPeriod>
-		<!-- Validity period for refresh token -->		
+		<!-- Validity period for refresh token -->
 		<RefreshTokenValidityPeriod>84600</RefreshTokenValidityPeriod>
 		<!-- Timestamp skew in seconds -->
 		<TimestampSkew>300</TimestampSkew>
@@ -100,7 +100,7 @@
 		<!-- Supported Client Autnetication Methods -->
 		<ClientAuthHandlers>
 		    <ClientAuthHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.clientauth.BasicAuthClientAuthHandler</ClientAuthHandlerImplClass>
-		</ClientAuthHandlers>		
+		</ClientAuthHandlers>
 		<!-- Supported Response Types -->
 		<SupportedResponseTypes>
 		    <SupportedResponseType>
@@ -150,18 +150,18 @@
 			<UserName>false</UserName>
 		</EnableAssertions>
 
-		<!-- This should be set to true when using multiple user stores and keys 
-			should saved into different tables according to the user store. By default 
-			all the application keys are saved in to the same table. UserName Assertion 
+		<!-- This should be set to true when using multiple user stores and keys
+			should saved into different tables according to the user store. By default
+			all the application keys are saved in to the same table. UserName Assertion
 			should be 'true' to use this. -->
 		<EnableAccessTokenPartitioning>false</EnableAccessTokenPartitioning>
-		<!-- user store domain names and mapping to new table name. eg: if you 
-			provide 'A:foo.com', foo.com should be the user store domain name and 'A' 
-			represent the relavant mapping of token store table, i.e. tokens will be 
+		<!-- user store domain names and mapping to new table name. eg: if you
+			provide 'A:foo.com', foo.com should be the user store domain name and 'A'
+			represent the relavant mapping of token store table, i.e. tokens will be
 			added to a table called IDN_OAUTH2_ACCESS_TOKEN_A. -->
 		<AccessTokenPartitioningDomains><!-- A:foo.com, B:bar.com -->
 		</AccessTokenPartitioningDomains>
-		<AuthorizationContextTokenGeneration>		
+		<AuthorizationContextTokenGeneration>
 			<Enabled>false</Enabled>
 			<TokenGeneratorImplClass>org.wso2.carbon.identity.oauth2.authcontext.JWTTokenGenerator</TokenGeneratorImplClass>
 			<ClaimsRetrieverImplClass>org.wso2.carbon.identity.oauth2.authcontext.DefaultClaimsRetriever</ClaimsRetrieverImplClass>
@@ -185,6 +185,14 @@
                          <UserInfoEndpointResponseBuilder>org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder</UserInfoEndpointResponseBuilder>
                          <SkipUserConsent>false</SkipUserConsent>
                 </OpenIDConnect>
+
+		<!-- Configs related to OAuth2 token persistence -->
+		<TokenPersistence>
+				<Enable>true</Enable>
+				<PoolSize>0</PoolSize>
+				<RetryCount>5</RetryCount>
+		</TokenPersistence>
+
 	</OAuth>
 
 	<MultifactorAuthentication>
@@ -224,7 +232,7 @@
 
 	<EntitlementSettings>
 		<!-- Uncomment this to enable on-demand policy loading -->
-		<!--OnDemandPolicyLoading> <Enable>true</Enable> <MaxInMemoryPolicies>100</MaxInMemoryPolicies> 
+		<!--OnDemandPolicyLoading> <Enable>true</Enable> <MaxInMemoryPolicies>100</MaxInMemoryPolicies>
 			</OnDemandPolicyLoading -->
 		<DecisionCaching>
 			<Enable>true</Enable>

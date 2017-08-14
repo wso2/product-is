@@ -87,9 +87,17 @@
 		<SupportedResponseTypes>token,code</SupportedResponseTypes>
 		<!-- Supported Grant Types -->
 		<SupportedGrantTypes>authorization_code,password,refresh_token,client_credentials</SupportedGrantTypes>
-		<OAuthCallbackHandlers>		
+		<OAuthCallbackHandlers>
 				<OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
 		</OAuthCallbackHandlers>
+
+		<!-- Configs related to OAuth2 token persistence -->
+		<TokenPersistence>
+				<Enable>true</Enable>
+				<PoolSize>0</PoolSize>
+				<RetryCount>5</RetryCount>
+		</TokenPersistence>
+
 	</OAuth>
 
 	<MultifactorAuthentication>
@@ -108,7 +116,7 @@
     	<SSOService>
     	    <IdentityProviderURL>https://localhost:9853/samlsso</IdentityProviderURL>
     	</SSOService>
-    	
+
     	<EntitlementSettings>
 	<!-- Uncomment this to enable on-demand policy loading -->
                 <!--OnDemandPolicyLoading>

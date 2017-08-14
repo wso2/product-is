@@ -294,6 +294,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.inbound.provisioning.scim:org.wso2.carbon.identity.scim.feature:${identity.inbound.provisioning.scim.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.inbound.provisioning.scim2:org.wso2.carbon.identity.scim2.server.feature:${identity.inbound.provisioning.scim2.version}
+                                </featureArtifactDef>
                                 <!-- Features related to Cloud Identity -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt.feature:${carbon.identity.framework.version}
@@ -671,6 +674,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
                                     <version>${identity.inbound.provisioning.scim.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.scim2.server.feature.group</id>
+                                    <version>${identity.inbound.provisioning.scim2.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.mex.server.feature.group</id>
@@ -1152,6 +1159,10 @@
                                     <version>${identity.inbound.provisioning.scim.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.scim2.server.feature.group</id>
+                                    <version>${identity.inbound.provisioning.scim2.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.mex.server.feature.group</id>
                                     <version>${identity.inbound.auth.sts.version}</version>
                                 </feature>
@@ -1562,6 +1573,10 @@
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
                                     <version>${identity.inbound.provisioning.scim.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.scim2.server.feature.group</id>
+                                    <version>${identity.inbound.provisioning.scim2.version}</version>
+                                </feature>
 
                                 <!-- Features required for Cloud Identity -->
                                 <feature>
@@ -1703,6 +1718,12 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
+                                </feature>
+
+                                <!-- captcha for tomcat filter  -->
+			        <feature>
+                                    <id>org.wso2.carbon.identity.captcha.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
                                 </feature>
 
                             </features>
