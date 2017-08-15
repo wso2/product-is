@@ -54,6 +54,7 @@ public class SCIMServiceProviderUserTestCase {
     public static final String PASSWORD = "password1";
     public static final String ADMIN_ROLE = "admin";
     public static final String SCIM_ME_ENDPOINT = "Users/me";
+    public static final String SCIM_USER_ENDPOINT = "Users";
     String scimUserId = null;
     private User provider_userInfo;
     UserManagementClient userMgtClient;
@@ -62,10 +63,11 @@ public class SCIMServiceProviderUserTestCase {
     String backendUrl = null;
     String sessionCookie = null;
     private SCIMClient scimClient;
+    private AutomationContext automationContext = null;
 
     @BeforeClass(alwaysRun = true)
     public void initiate() throws Exception {
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         provider_userInfo = automationContext.getContextTenant().getContextUser();
         backendUrl = automationContext.getContextUrls().getBackEndUrl();
         scim_url = backendUrl.substring(0, 22) + "/wso2/scim/";
@@ -155,6 +157,36 @@ public class SCIMServiceProviderUserTestCase {
         } catch (Exception e) {
             log.error("Failed to retrieve information of user through /me endpoint.", e);
             Assert.fail("Failed to retrieve information of user through /me endpoint.");
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Get Admin User via SCIM", dependsOnMethods = {"getUser"})
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    public void getAdminUser() {
+        //create a apache wink ClientHandler to intercept and identify response messages
+        SCIMResponseHandler responseHandler = new SCIMResponseHandler();
+        responseHandler.setSCIMClient(scimClient);
+        //set the handler in wink client config
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.handlers(new ClientHandler[]{responseHandler});
+        //create a wink rest client with the above config
+        try {
+            RestClient restClient = new RestClient(clientConfig);
+            User userInfo = new User();
+            userInfo.setUserName(this.automationContext.getSuperTenant().getTenantAdmin().getUserName());
+            userInfo.setPassword(this.automationContext.getSuperTenant().getTenantAdmin().getPassword());
+            BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(userInfo);
+            //create resource endpoint to get admin user information.
+            Resource userResource = restClient.resource(scim_url + SCIM_USER_ENDPOINT);
+            String response = userResource.header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo
+                    .getAuthorizationHeader())
+                    .contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).get(String
+                            .class);
+            Assert.assertTrue(response.contains(
+                    "\"userName\":\"" + automationContext.getSuperTenant().getTenantAdmin().getUserName() + "\""));
+        } catch (Exception e) {
+            log.error("Failed to retrieve admin user information through /User endpoint.", e);
+            Assert.fail("Failed to retrieve admin user information through /User endpoint.");
         }
     }
 
