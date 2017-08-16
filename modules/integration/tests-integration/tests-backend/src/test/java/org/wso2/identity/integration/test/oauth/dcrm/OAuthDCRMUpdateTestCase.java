@@ -38,6 +38,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+/**
+ * OAuth2 DCRM Update process test case
+ */
 public class OAuthDCRMUpdateTestCase {
 
     private HttpClient client;
@@ -72,22 +78,26 @@ public class OAuthDCRMUpdateTestCase {
         grantTypes.add("authorization_code");
         grantTypes.add("implicit");
 
+        JSONArray redirecturi = new JSONArray();
+        redirecturi.add("http://UpdatedApp.com");
+
         obj.put(OAuthDCRMConstants.CLIENT_NAME, serviceProvider.getClientName());
         obj.put(OAuthDCRMConstants.CLIENT_ID, serviceProvider.getClientID());
         obj.put(OAuthDCRMConstants.CLIENT_SECRET, serviceProvider.getClientSecret());
         obj.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
-        obj.put(OAuthDCRMConstants.REDIRECT_URIS, "http://UpdatedApp.com");
+        obj.put(OAuthDCRMConstants.REDIRECT_URIS, redirecturi);
 
         StringEntity entity = new StringEntity(obj.toJSONString());
 
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider update request failed");
+        assertNotNull(response, "Service Provider update request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
 
@@ -97,7 +107,15 @@ public class OAuthDCRMUpdateTestCase {
             gt.add((String) gtObj);
         }
 
-        Assert.assertEquals(gt, grantTypes);
+        assertEquals(gt, grantTypes, "Grant types are not updated.");
+
+        JSONArray redirectURIResponse = (JSONArray) jsonObject.get(OAuthDCRMConstants.REDIRECT_URIS);
+        List<String> redirectURIs = new ArrayList<>();
+        for (Object uri:redirectURIResponse) {
+            redirectURIs.add((String) uri);
+        }
+
+        assertEquals(redirectURIs, redirecturi, "Redirect URIs are not updated.");
     }
 
     @Test(alwaysRun = true, description = "Update request with invalid endpoint URL")
@@ -125,17 +143,20 @@ public class OAuthDCRMUpdateTestCase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider update request failed");
+        assertNotNull(response, "Service Provider update request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
         String error = (String) jsonObject.get(OAuthDCRMConstants.ERROR);
         String errorDescription = (String) jsonObject.get(OAuthDCRMConstants.ERROR_DESCRIPTION);
-        Assert.assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED);
-        Assert.assertEquals(errorDescription, "Error occurred while reading the existing service provider.");
+        assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED, "Invalid error code has been " +
+                "returned in the response. Should have produced: " + OAuthDCRMConstants.BACKEND_FAILED);
+        assertEquals(errorDescription, "Error occurred while reading the existing service provider.",
+                "Error response contains and invalid format of error description");
 
     }
 
@@ -164,17 +185,20 @@ public class OAuthDCRMUpdateTestCase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider update request failed");
+        assertNotNull(response, "Service Provider update request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
         String error = (String) jsonObject.get(OAuthDCRMConstants.ERROR);
         String errorDescription = (String) jsonObject.get(OAuthDCRMConstants.ERROR_DESCRIPTION);
-        Assert.assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED);
-        Assert.assertEquals(errorDescription, "The included client ID is not a valid value");
+        assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED, "Invalid error code has been returned " +
+                "in the response. Should have produced: " + OAuthDCRMConstants.BACKEND_FAILED);
+        assertEquals(errorDescription, "The included client ID is not a valid value",
+                "Error response contains and invalid format of error description");
     }
 
     @Test(alwaysRun = true, description = "Update request with invalid client secret")
@@ -202,17 +226,20 @@ public class OAuthDCRMUpdateTestCase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider update request failed");
+        assertNotNull(response, "Service Provider update request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
         String error = (String) jsonObject.get(OAuthDCRMConstants.ERROR);
         String errorDescription = (String) jsonObject.get(OAuthDCRMConstants.ERROR_DESCRIPTION);
-        Assert.assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED);
-        Assert.assertEquals(errorDescription, "The included client secret is not a valid value");
+        assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED, "Invalid error code has been returned " +
+                "in the response. Should have produced: " + OAuthDCRMConstants.BACKEND_FAILED);
+        assertEquals(errorDescription, "The included client secret is not a valid value",
+                "Error response contains and invalid format of error description");
     }
 
     @Test(alwaysRun = true, description = "Update request without grant type")
@@ -235,11 +262,12 @@ public class OAuthDCRMUpdateTestCase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider update request failed");
+        assertNotNull(response, "Service Provider update request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
 
@@ -249,7 +277,8 @@ public class OAuthDCRMUpdateTestCase {
             gt.add((String) grantType);
         }
 
-        Assert.assertEquals(gt.get(0), "authorization_code");
+        assertEquals(gt.get(0), "authorization_code", "Grant type is not updated with " +
+                "authorization_code");
     }
 
     @Test(alwaysRun = true, description = "Update request with invalid grant type")
@@ -276,16 +305,19 @@ public class OAuthDCRMUpdateTestCase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider update request failed");
+        assertNotNull(response, "Service Provider update request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
         String error = (String) jsonObject.get(OAuthDCRMConstants.ERROR);
         String errorDescription = (String) jsonObject.get(OAuthDCRMConstants.ERROR_DESCRIPTION);
-        Assert.assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED);
-        Assert.assertEquals(errorDescription, "Error occurred while reading the updated service provider");
+        assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED, "Invalid error code has been returned " +
+                "in the response. Should have produced: " + OAuthDCRMConstants.BACKEND_FAILED);
+        assertEquals(errorDescription, "Error occurred while reading the updated service provider",
+                "Error response contains and invalid format of error description");
     }
 }

@@ -34,6 +34,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+/**
+ * OAuth2 DCRM Delete process test case
+ */
 public class OAuthDCRMDeleteTestCase {
 
     private HttpClient client;
@@ -62,8 +68,9 @@ public class OAuthDCRMDeleteTestCase {
         request.addHeader(HttpHeaders.AUTHORIZATION, OAuthDCRMConstants.AUTHORIZATION);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider Delete request failed");
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 204);
+        assertNotNull(response, "Service Provider Delete request failed");
+        assertEquals(response.getStatusLine().getStatusCode(), 204, "Service provider has not " +
+                "been deleted successfully");
     }
 
     @Test(alwaysRun = true, description = "Delete service provider request with invalid client id")
@@ -74,18 +81,19 @@ public class OAuthDCRMDeleteTestCase {
         request.addHeader(HttpHeaders.AUTHORIZATION, OAuthDCRMConstants.AUTHORIZATION);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider Delete request failed");
-
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 405);
+        assertNotNull(response, "Service Provider Delete request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object object = JSONValue.parse(rd);
-        Assert.assertNotNull(object, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(object, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) object;
         String error = (String) jsonObject.get(OAuthDCRMConstants.ERROR);
         String errorDescription = (String) jsonObject.get(OAuthDCRMConstants.ERROR_DESCRIPTION);
-        Assert.assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED);
-        Assert.assertEquals(errorDescription, "Error occurred while reading the existing service provider.");
+        assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED, "Invalid error code has been returned " +
+                "in the response. Should have produced: " + OAuthDCRMConstants.BACKEND_FAILED);
+        assertEquals(errorDescription, "Error occurred while reading the existing service provider.",
+                "Error response contains and invalid format of error description");
     }
 }

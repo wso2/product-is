@@ -26,6 +26,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -35,6 +36,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+/**
+ * OAuth2 DCRM Read process test case
+ */
 public class OAuthDCRMReadTestCase extends ISIntegrationTest {
 
     private HttpClient client;
@@ -54,6 +61,11 @@ public class OAuthDCRMReadTestCase extends ISIntegrationTest {
         serviceProvider = serviceProviderRegister.register(object.toJSONString());
     }
 
+    @AfterClass(alwaysRun = true)
+    public void atEnd() {
+
+    }
+
     @Test(alwaysRun = true, description = "Read service provider")
     public void testReadServiceProvider() throws IOException {
 
@@ -62,32 +74,37 @@ public class OAuthDCRMReadTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, OAuthDCRMConstants.AUTHORIZATION);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider read request failed");
+        assertNotNull(response, "Service Provider read request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object obj = JSONValue.parse(rd);
-        Assert.assertNotNull(obj, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(obj, "Returned response should have produced a valid JSON");
 
         JSONObject jsonObject = (JSONObject) obj;
 
-        Assert.assertEquals((String) jsonObject.get(OAuthDCRMConstants.CLIENT_NAME), serviceProvider.getClientName());
-        Assert.assertEquals((String) jsonObject.get(OAuthDCRMConstants.CLIENT_ID), serviceProvider.getClientID());
-        Assert.assertEquals((String) jsonObject.get(OAuthDCRMConstants.CLIENT_SECRET),
-                serviceProvider.getClientSecret());
+        assertEquals((String) jsonObject.get(OAuthDCRMConstants.CLIENT_NAME), serviceProvider.getClientName(),
+                "Response contains an invalid client Name");
+        assertEquals((String) jsonObject.get(OAuthDCRMConstants.CLIENT_ID), serviceProvider.getClientID(),
+                "Response contains an invalid client ID");
+        assertEquals((String) jsonObject.get(OAuthDCRMConstants.CLIENT_SECRET),
+                serviceProvider.getClientSecret(), "Response contains an invalid client secret");
 
         JSONArray grantTypes = (JSONArray) jsonObject.get(OAuthDCRMConstants.GRANT_TYPES);
         List<String> gt = new ArrayList<>();
         for (Object grantType:grantTypes) {
             gt.add((String) grantType);
         }
-        Assert.assertEquals(gt, serviceProvider.getGrantTypes());
+        assertEquals(gt, serviceProvider.getGrantTypes(), "Returned grant types differ from the " +
+                "registered grant types.");
 
         JSONArray redirectURIs = (JSONArray) jsonObject.get(OAuthDCRMConstants.REDIRECT_URIS);
         List<String> ruri = new ArrayList<>();
         for (Object redirectURI:redirectURIs) {
             ruri.add((String) redirectURI);
         }
-        Assert.assertEquals(ruri, serviceProvider.getRedirectUris());
+        assertEquals(ruri, serviceProvider.getRedirectUris(), "Returned redirect URIs differ from the " +
+                "registered redirect URIs.");
     }
 
     @Test(alwaysRun = true, description = "Read request with an invalid client ID")
@@ -97,16 +114,19 @@ public class OAuthDCRMReadTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, OAuthDCRMConstants.AUTHORIZATION);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider read request failed");
+        assertNotNull(response, "Service Provider read request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object obj = JSONValue.parse(rd);
-        Assert.assertNotNull(obj, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(obj, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) obj;
         String error = (String) jsonObject.get(OAuthDCRMConstants.ERROR);
         String errorDescription = (String) jsonObject.get(OAuthDCRMConstants.ERROR_DESCRIPTION);
-        Assert.assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED);
-        Assert.assertEquals(errorDescription, "Error occurred while reading the existing service provider.");
+        assertEquals(error, OAuthDCRMConstants.BACKEND_FAILED, "Invalid error code has been " +
+                "returned in the response. Should have produced: " + OAuthDCRMConstants.BACKEND_FAILED);
+        assertEquals(errorDescription, "Error occurred while reading the existing service provider.",
+                "Error response contains and invalid format of error description");
     }
 }

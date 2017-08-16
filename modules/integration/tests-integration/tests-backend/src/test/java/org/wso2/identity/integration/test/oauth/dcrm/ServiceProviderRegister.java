@@ -34,6 +34,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import static org.testng.Assert.assertNotNull;
+
+/**
+ * Register a new OAuth service provider
+ */
 public class ServiceProviderRegister {
     public ServiceProvider register (String body) throws Exception {
 
@@ -53,11 +58,12 @@ public class ServiceProviderRegister {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        Assert.assertNotNull(response, "Service Provider registration request failed");
+        assertNotNull(response, "Service Provider registration request failed");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         Object obj = JSONValue.parse(rd);
-        Assert.assertNotNull(obj, "Returned response should have produced a valid JSON.");
+        rd.close();
+        assertNotNull(obj, "Returned response should have produced a valid JSON.");
 
         JSONObject jsonObject = (JSONObject) obj;
 
