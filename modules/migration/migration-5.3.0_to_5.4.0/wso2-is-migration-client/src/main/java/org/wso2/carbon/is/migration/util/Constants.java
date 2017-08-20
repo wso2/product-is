@@ -20,11 +20,13 @@ public class Constants {
 
 
     public static final String MIGRATION_LOG_PREFIX = "IS530:540 MIGRATION >> ";
+    public static final String MIGRATION_CONTINUE_ON_ERROR_WARN = "IS530:540 MIGRATION >> Continue even with errors "
+                                                             + "because of "
+                                                      + "continueOnError=true";
 
     public static final String VERSION_5_3_0 = "5.3.0";
     public static final String VERSION_5_4_0 = "5.4.0";
 
-    public enum DatabaseTypes {
-        oracle, mssql, mysql, postgresql, h2, db2
-    }
+    public static final int SUPER_TENANT_ID = -1234 ;
+
 }

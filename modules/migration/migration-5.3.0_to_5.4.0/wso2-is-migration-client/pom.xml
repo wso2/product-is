@@ -118,6 +118,10 @@
                             org.apache.commons.logging; version="${version.commons.logging}",
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version}",
                         </Import-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.is.migration.client.internal,
+                            org.wso2.carbon.is.migration.*;version="${project.version}"
+                        </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>

@@ -4,6 +4,8 @@ package org.wso2.carbon.is.migration.client;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
+import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.OAuth2Scope;
 import org.wso2.carbon.is.migration.bean.OAuth2ScopeBinding;
@@ -21,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -34,58 +37,76 @@ public class MigrateIdentityDB {
     private static final Log log = LogFactory.getLog(MigrateIdentityDB.class);
 
     private DataSource dataSource;
+    private boolean continueOnError;
+    private boolean noBatchUpdate;
 
     private Connection conn = null;
     private Statement statement;
     private String delimiter = ";";
 
-    public MigrateIdentityDB(DataSource dataSource, DataSource umDataSource) {
+    public MigrateIdentityDB(DataSource dataSource, boolean continueOnError, boolean noBatchUpdate) {
         this.dataSource = dataSource;
-    }
-
-    public void migrateIdentityDB() throws Exception {
-
-        if (!ResourceUtil.isSchemaMigrated(dataSource)) {
-            executeIdentityMigrationScript();
-        } else {
-            log.info("Identity schema is already migrated");
-        }
-        migrateOAuth2ScopeData();
+        this.continueOnError = continueOnError;
+        this.noBatchUpdate = noBatchUpdate;
     }
 
 
-    private void migrateOAuth2ScopeData() throws Exception {
-        conn = dataSource.getConnection();
-        List<OAuth2ScopeBinding> oAuth2ScopeBindingList = new ArrayList<>();
+    /**
+     * Migrating oath2 scopes binding to a separate table.
+     *
+     * @throws Exception
+     */
+    public void migrateOAuth2ScopeData() throws Exception {
 
-        IDNOAuth2ScopeDAO idnoAuth2ScopeDAO = IDNOAuth2ScopeDAO.getInstance();
+        log.info(Constants.MIGRATION_LOG_PREFIX + "Migration starting OAuth2 Scope Bindings to the new table.");
 
-        List<OAuth2Scope> oAuth2ScopeRoles = idnoAuth2ScopeDAO.getOAuth2ScopeRoles(conn);
+        try {
+            List<OAuth2ScopeBinding> oAuth2ScopeBindingList = new ArrayList<>();
 
-        if(!oAuth2ScopeRoles.isEmpty()) {
-            for (OAuth2Scope oAuth2ScopeRole : oAuth2ScopeRoles) {
-                String roleString = oAuth2ScopeRole.getRoleString();
-                if (StringUtils.isNotBlank(roleString)) {
-                    String[] roleStringArray = roleString.split(",");
-                    for (String role : roleStringArray) {
-                        oAuth2ScopeBindingList.add(new OAuth2ScopeBinding(oAuth2ScopeRole.getScopeId(), role));
+            IDNOAuth2ScopeDAO idnoAuth2ScopeDAO = IDNOAuth2ScopeDAO.getInstance();
+
+            List<OAuth2Scope> oAuth2ScopeRoles = idnoAuth2ScopeDAO.getOAuth2ScopeRoles(conn);
+
+            if (!oAuth2ScopeRoles.isEmpty()) {
+                for (OAuth2Scope oAuth2ScopeRole : oAuth2ScopeRoles) {
+                    String roleString = oAuth2ScopeRole.getRoleString();
+                    if (StringUtils.isNotBlank(roleString)) {
+                        String[] roleStringArray = roleString.split(",");
+                        for (String role : roleStringArray) {
+                            oAuth2ScopeBindingList.add(new OAuth2ScopeBinding(oAuth2ScopeRole.getScopeId(), role));
+                        }
                     }
                 }
-            }
-            IDNOAuth2ScopeBindingDAO idnoAuth2ScopeBindingDAO = IDNOAuth2ScopeBindingDAO.getInstance();
-            idnoAuth2ScopeBindingDAO.addOAuth2ScopeBinding(oAuth2ScopeBindingList);
+                IDNOAuth2ScopeBindingDAO idnoAuth2ScopeBindingDAO = IDNOAuth2ScopeBindingDAO.getInstance();
+                idnoAuth2ScopeBindingDAO.addOAuth2ScopeBinding(oAuth2ScopeBindingList, continueOnError);
 
-            idnoAuth2ScopeDAO.updateOAuth2ScopeBinding(oAuth2ScopeRoles);
+                idnoAuth2ScopeDAO.updateOAuth2ScopeBinding(oAuth2ScopeRoles);
+                log.info(Constants.MIGRATION_LOG_PREFIX + "OAuth2 Scope Bindings Successfully migrated.");
+            } else {
+                log.info(Constants.MIGRATION_LOG_PREFIX + "No Oauth2 Scopes found.");
+            }
+        } catch (Exception e) {
+            log.error(e);
+            if(!continueOnError){
+                log.warn(Constants.MIGRATION_CONTINUE_ON_ERROR_WARN);
+                throw e;
+            }
         }
     }
 
     /**
-     * Execute Migration Script
+     * Migrating Identity DB with some schema changes in sql files.
      *
      * @throws Exception
      */
-    private void executeIdentityMigrationScript() throws Exception {
+    public void migrateIdentityDB() throws Exception {
 
+        if (ResourceUtil.isSchemaMigrated(dataSource)) {
+            log.info(Constants.MIGRATION_LOG_PREFIX + "Identity Database will not be executed because of the schema "
+                     + "is already migrated within previous starting.");
+            return ;
+        }
+        log.info(Constants.MIGRATION_LOG_PREFIX + "Executing Identity Migration Scripts.");
         try {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -94,24 +115,27 @@ public class MigrateIdentityDB {
                 ResourceUtil.setMySQLDBName(conn);
             }
             statement = conn.createStatement();
-            DatabaseMetaData meta = conn.getMetaData();
-            String schema = null;
-            if ("oracle".equals(databaseType)) {
-                schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
-            }
 
             String dbscriptName = getIdentityDbScriptLocation(databaseType, Constants.VERSION_5_3_0, Constants
                     .VERSION_5_4_0);
             executeSQLScript(dbscriptName);
             conn.commit();
-            if (log.isTraceEnabled()) {
-                log.trace("Migration script executed successfully.");
+            log.info(Constants.MIGRATION_LOG_PREFIX + "Identity DB Migration script executed successfully.");
+
+        } catch (Exception e) {
+            log.error(e);
+            if(!continueOnError){
+                log.warn(Constants.MIGRATION_CONTINUE_ON_ERROR_WARN);
+                throw e;
             }
-        } catch (SQLException e) {
-            String msg = "Failed to execute the migration script. " + e.getMessage();
-            log.fatal(msg, e);
-            throw new Exception(msg, e);
         } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Failed to close database statement.", e);
+            }
             try {
                 if (conn != null) {
                     conn.close();
@@ -122,35 +146,29 @@ public class MigrateIdentityDB {
         }
     }
 
-    private void executeIdentityPostMigrationScript() throws Exception {
+    public void identityDBPostMigrationScript() throws Exception {
+
+        log.info(Constants.MIGRATION_LOG_PREFIX + " Executing Identity Post Migration Scripts.");
+        Connection connection = IdentityDatabaseUtil.getDBConnection();
+        PreparedStatement prepStmt = null;
+
+        String databaseType = DatabaseCreator.getDatabaseType(connection);
+        String query = SQLConstants
+                .getQuery(SQLConstants.DBSpecificQuerie.IDN_OAUTH2_SCOPE_TABLE_SCOPE_KEY_SET_NULL, databaseType);
 
         try {
-            conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-            String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-
-            String dbscriptName = SQLConstants
-                    .getQuery(SQLConstants.DBSpecificQuerie.IDN_OAUTH2_SCOPE_TABLE_SCOPE_KEY_SET_NULL, databaseType);
-
-            executeSQLScript(dbscriptName);
-            conn.commit();
-
-
-            if (log.isTraceEnabled()) {
-                log.trace("Migration script executed successfully.");
+            prepStmt = connection.prepareStatement(query);
+            prepStmt.execute();
+            connection.commit();
+            log.info(Constants.MIGRATION_LOG_PREFIX +  "Identity Post Migration Scripts executed successfully.");
+        } catch (Exception e) {
+            log.error(e);
+            if(!continueOnError){
+                throw new ISMigrationException("Error while adding OAuth2ScopeBinding, " , e);
             }
-        } catch (SQLException e) {
-            String msg = "Failed to execute the migration script. " + e.getMessage();
-            log.fatal(msg, e);
-            throw new Exception(msg, e);
         } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                log.error("Failed to close database connection.", e);
-            }
+            IdentityDatabaseUtil.closeStatement(prepStmt);
+            IdentityDatabaseUtil.closeConnection(connection);
         }
     }
 

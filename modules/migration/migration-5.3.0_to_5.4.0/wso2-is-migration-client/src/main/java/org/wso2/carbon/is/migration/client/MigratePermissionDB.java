@@ -19,18 +19,20 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 
-/**
- * Created by harshat on 8/7/17.
- */
+
 public class MigratePermissionDB {
 
     private static final Log log = LogFactory.getLog(MigratePermissionDB.class);
     private static final String RESOURCES_XML = "/resources.xml";
 
     private DataSource umDataSource;
+    private boolean continueOnError;
+    private boolean noBatchUpdate;
 
-    public MigratePermissionDB(DataSource umDataSource) {
+    public MigratePermissionDB(DataSource umDataSource, boolean continueOnError, boolean noBatchUpdate) {
         this.umDataSource = umDataSource;
+        this.continueOnError = continueOnError;
+        this.noBatchUpdate = noBatchUpdate;
     }
 
     /**

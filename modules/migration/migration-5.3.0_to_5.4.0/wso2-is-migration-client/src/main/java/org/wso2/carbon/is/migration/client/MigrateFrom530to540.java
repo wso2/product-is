@@ -25,16 +25,11 @@ import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.util.Constants;
-import org.wso2.carbon.user.api.Tenant;
-import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.util.DatabaseUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -173,40 +168,54 @@ public class MigrateFrom530to540 implements MigrationClient {
      */
     public void databaseMigration() throws Exception {
 
+        log.info(Constants.MIGRATION_LOG_PREFIX + "Database migration process started for the following parameters.");
+
         boolean selectiveMigration = false;
         String migrateIdentityDB = System.getProperty("migrateIdentityDB");
         String migrateClaimData = System.getProperty("migrateClaimData");
         String migratePermissionData = System.getProperty("migratePermissionData");
+        String continueOnErrorDB = System.getProperty("continueOnError");
+        String noBatchUpdateDB = System.getProperty("noBatchUpdate");
+
+        log.info(Constants.MIGRATION_LOG_PREFIX + "migrateIdentityDB : " + migrateIdentityDB);
+        log.info(Constants.MIGRATION_LOG_PREFIX + "migrateClaimData : " + migrateClaimData);
+        log.info(Constants.MIGRATION_LOG_PREFIX + "migratePermissionData : " + migratePermissionData);
+        log.info(Constants.MIGRATION_LOG_PREFIX + "continueOnError : " + continueOnErrorDB);
+        log.info(Constants.MIGRATION_LOG_PREFIX + "noBatchUpdate : " + noBatchUpdateDB);
 
 
-        String migrateActiveTenants = System.getProperty("migrateActiveTenantsOnly");
-        boolean migrateActiveTenantsOnly = Boolean.parseBoolean(migrateActiveTenants);
-        if (migrateActiveTenantsOnly) {
-            log.info("Migrate Active Tenants Only option enabled.");
-        }
+        boolean continueOnError = Boolean.parseBoolean(continueOnErrorDB) ;
+        boolean noBatchUpdate = Boolean.parseBoolean(noBatchUpdateDB) ;
+
+        MigrateIdentityDB migrateIdentity = new MigrateIdentityDB(dataSource,continueOnError,noBatchUpdate);
+        MigrateClaimDB migrateClaimDB = new MigrateClaimDB(continueOnError,noBatchUpdate);
+        MigratePermissionDB migratePermissionDB = new MigratePermissionDB(dataSource, continueOnError,noBatchUpdate);
+
 
         if (Boolean.parseBoolean(migrateIdentityDB)) {
             selectiveMigration = true;
-            new MigrateIdentityDB(dataSource, umDataSource).migrateIdentityDB();
-            log.info("Migrated the identity database schema");
+            migrateIdentity.migrateIdentityDB();
+            migrateIdentity.migrateOAuth2ScopeData();
+            migrateIdentity.identityDBPostMigrationScript();
         }
+
         if (Boolean.parseBoolean(migrateClaimData)) {
             selectiveMigration = true;
-            new MigrateClaimDB().migrateClaimData(migrateActiveTenantsOnly);
-            log.info("Migrated the Claim management data");
+            migrateClaimDB.migrateClaimData();
         }
+
         if (Boolean.parseBoolean(migratePermissionData)) {
             selectiveMigration = true;
-
-            log.info("Migrated the Permission data");
+            migratePermissionDB.migratePermissionData();
         }
 
         if (!selectiveMigration) {
-            new MigrateIdentityDB(dataSource, umDataSource).migrateIdentityDB();
-            new MigrateClaimDB().migrateClaimData(migrateActiveTenantsOnly);
-            new MigratePermissionDB(dataSource).migratePermissionData();
+            migrateIdentity.migrateIdentityDB();
+            migrateIdentity.migrateOAuth2ScopeData();
+            migrateIdentity.identityDBPostMigrationScript();
 
-            log.info("Migration completed from IS 5.3.0 to IS 5.4.0");
+            migrateClaimDB.migrateClaimData();
+            migratePermissionDB.migratePermissionData();
         }
 
     }

@@ -42,6 +42,7 @@ public class ResourceUtil {
     private static final Log log = LogFactory.getLog(ResourceUtil.class);
 
     public static String setMySQLDBName(Connection conn) throws SQLException {
+
         PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
         ResultSet rs = ps.executeQuery();
         String name = null;
@@ -53,7 +54,6 @@ public class ResourceUtil {
         }
         return name;
     }
-
 
     public static boolean isSchemaMigrated(DataSource dataSource) throws Exception {
 

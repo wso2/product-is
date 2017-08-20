@@ -34,6 +34,7 @@ import org.wso2.carbon.identity.claim.metadata.mgt.model.LocalClaim;
 import org.wso2.carbon.identity.claim.metadata.mgt.util.ClaimConstants;
 import org.wso2.carbon.identity.claim.metadata.mgt.util.ClaimMetadataUtils;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.util.Constants;
 import org.wso2.carbon.is.migration.util.FileBasedClaimBuilder;
 import org.wso2.carbon.is.migration.util.ResourceUtil;
 import org.wso2.carbon.user.api.Claim;
@@ -61,11 +62,21 @@ public class MigrateClaimDB implements ClaimMetadataStore {
     private static final Log log = LogFactory
             .getLog(org.wso2.carbon.identity.claim.metadata.mgt.DefaultClaimMetadataStore.class);
 
+    private boolean continueOnError;
+    private boolean noBatchUpdate;
+
+    private int tenantId;
+
     private ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
     private CacheBackedLocalClaimDAO localClaimDAO = new CacheBackedLocalClaimDAO(new LocalClaimDAO());
     private CacheBackedExternalClaimDAO externalClaimDAO = new CacheBackedExternalClaimDAO(new ExternalClaimDAO());
 
     private static ClaimConfig claimConfig;
+
+    public MigrateClaimDB(boolean continueOnError, boolean noBatchUpdate) {
+        this.continueOnError = continueOnError;
+        this.noBatchUpdate = noBatchUpdate;
+    }
 
     static {
         try {
@@ -79,23 +90,23 @@ public class MigrateClaimDB implements ClaimMetadataStore {
         }
     }
 
-    int tenantId;
 
-    public boolean migrateClaimData(boolean migrateActiveTenantsOnly) {
 
-        migrateClaimData(-1234);
+    public void migrateClaimData() throws UserStoreException, ClaimMetadataException {
+        this.tenantId = Constants.SUPER_TENANT_ID ;
+        migrateClaimData(Constants.SUPER_TENANT_ID);
 
         List<Tenant> tenants = ResourceUtil.getTenants();
         for(Tenant tenant: tenants){
+            this.tenantId = tenant.getId();
             migrateClaimData(tenant.getId());
         }
 
-        return true ;
     }
 
 
     
-    public void migrateClaimData(int tenantId) {
+    public void migrateClaimData(int tenantId) throws UserStoreException, ClaimMetadataException {
 
         if (claimConfig.getClaims() != null) {
 
@@ -107,8 +118,12 @@ public class MigrateClaimDB implements ClaimMetadataStore {
                 realm = ISMigrationServiceDataHolder.getRealmService().getTenantUserRealm(tenantId);
                 primaryDomainName = realm.getRealmConfiguration().getUserStoreProperty
                         (UserCoreConstants.RealmConfig.PROPERTY_DOMAIN_NAME);
-            } catch (UserStoreException e) {
-                log.error("Error while retrieving primary userstore domain name", e);
+            } catch (Exception e) {
+                log.error("Error while retrieving primary userstore domain name, ", e);
+                if(continueOnError){
+                    throw e ;
+                }
+                return ;
             }
 
 
@@ -169,8 +184,11 @@ public class MigrateClaimDB implements ClaimMetadataStore {
 
                     try {
                         localClaimDAO.addLocalClaim(localClaim, tenantId);
-                    } catch (ClaimMetadataException e) {
+                    } catch (Exception e) {
                         log.error("Error while adding local claim " + claimURI, e);
+                        if(!continueOnError){
+                            throw e ;
+                        }
                     }
 
                 } else {
@@ -186,7 +204,9 @@ public class MigrateClaimDB implements ClaimMetadataStore {
                     claimDialectDAO.addClaimDialect(claimDialect, tenantId);
                 } catch (ClaimMetadataException e) {
                     log.error("Error while adding claim dialect " + claimDialectURI, e);
-                    continue;
+                    if(!continueOnError){
+                        throw e;
+                    }
                 }
 
             }
@@ -208,6 +228,9 @@ public class MigrateClaimDB implements ClaimMetadataStore {
                     } catch (ClaimMetadataException e) {
                         log.error("Error while adding external claim " + claimURI + " to dialect " + claimDialectURI,
                                 e);
+                        if(!continueOnError){
+                            throw e ;
+                        }
                     }
 
                 }

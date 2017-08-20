@@ -7,6 +7,7 @@ import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.OAuth2Scope;
 import org.wso2.carbon.is.migration.bean.OAuth2ScopeBinding;
+import org.wso2.carbon.is.migration.util.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,9 +17,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by harshat on 8/13/17.
- */
+
 public class IDNOAuth2ScopeBindingDAO {
 
     private static Log log = LogFactory.getLog(IDNOAuth2ScopeBindingDAO.class);
@@ -32,13 +31,15 @@ public class IDNOAuth2ScopeBindingDAO {
         return idnoAuth2ScopeBindingDAO;
     }
 
-    public void addOAuth2ScopeBinding(List<OAuth2ScopeBinding> oAuth2ScopeBindingList) throws
+    public void addOAuth2ScopeBinding(List<OAuth2ScopeBinding> oAuth2ScopeBindingList, boolean continueOnError) throws
                                                                         ISMigrationException {
 
+        log.info(Constants.MIGRATION_LOG_PREFIX + " call addOAuth2ScopeBinding.");
         Connection connection = IdentityDatabaseUtil.getDBConnection();
         PreparedStatement prepStmt = null;
 
         String query = SQLConstants.ADD_SCOPE_BINDINGS;
+
         try {
             prepStmt = connection.prepareStatement(query);
 
@@ -50,9 +51,12 @@ public class IDNOAuth2ScopeBindingDAO {
 
             prepStmt.executeBatch();
             connection.commit();
-
-        } catch (SQLException e) {
-            throw new ISMigrationException("Error while adding OAuth2ScopeBinding " , e);
+            log.info(Constants.MIGRATION_LOG_PREFIX +  "");
+        } catch (Exception e) {
+            log.error(e);
+            if(!continueOnError){
+                throw new ISMigrationException("Error while adding OAuth2ScopeBinding, " , e);
+            }
         } finally {
             IdentityDatabaseUtil.closeStatement(prepStmt);
             IdentityDatabaseUtil.closeConnection(connection);
