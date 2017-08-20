@@ -17,70 +17,80 @@
  */
 package org.wso2.identity.integration.test.oauth.dcrm;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.testng.Assert;
-import org.wso2.identity.integration.test.oauth.dcrm.bean.ServiceProvider;
+import org.wso2.carbon.identity.application.common.model.xsd.*;
+import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.test.oauth.dcrm.bean.ServiceProviderDataHolder;
 import org.wso2.identity.integration.test.oauth.dcrm.util.OAuthDCRMConstants;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
-import static org.testng.Assert.assertNotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Register a new OAuth service provider
  */
 public class ServiceProviderRegister {
-    public ServiceProvider register (String body) throws Exception {
+    public ServiceProviderDataHolder register (ApplicationManagementServiceClient appMgtService,
+                                               OauthAdminClient adminClient) throws Exception {
+
+        ServiceProviderDataHolder serviceProviderDataHolder = new ServiceProviderDataHolder();
 
         ServiceProvider serviceProvider = new ServiceProvider();
-        HttpClient client = new DefaultHttpClient();
-        HttpPost request = new HttpPost(OAuthDCRMConstants.CLIENT_CONFIGURATION_ENDPOINT);
+        serviceProvider.setApplicationName(OAuthDCRMConstants.APPLICATION_NAME);
+        appMgtService.createApplication(serviceProvider);
 
-        request.addHeader(HttpHeaders.AUTHORIZATION, OAuthDCRMConstants.AUTHORIZATION);
-        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+        appDTO.setApplicationName(OAuthDCRMConstants.APPLICATION_NAME);
+        appDTO.setGrantTypes(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+        appDTO.setCallbackUrl(OAuthDCRMConstants.REDIRECT_URI);
+        appDTO.setOAuthVersion(OAuthDCRMConstants.OAUTH_VERSION);
 
-        StringEntity entity;
-        try {
-            entity = new StringEntity(body);
-        } catch (UnsupportedEncodingException e) {
-            throw new Exception("Generation of entity from the given request body is failed.", e);
-        }
-        request.setEntity(entity);
+        adminClient.registerOAuthApplicationData(appDTO);
 
-        HttpResponse response = client.execute(request);
-        assertNotNull(response, "Service Provider registration request failed");
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        Object obj = JSONValue.parse(rd);
-        rd.close();
-        assertNotNull(obj, "Returned response should have produced a valid JSON.");
-
-        JSONObject jsonObject = (JSONObject) obj;
-
-        serviceProvider.setClientName((String) jsonObject.get(OAuthDCRMConstants.CLIENT_NAME));
-        serviceProvider.setClientID((String) jsonObject.get(OAuthDCRMConstants.CLIENT_ID));
-        serviceProvider.setClientSecret((String) jsonObject.get(OAuthDCRMConstants.CLIENT_SECRET));
-
-        JSONArray grantTypes = (JSONArray) jsonObject.get(OAuthDCRMConstants.GRANT_TYPES);
-        for (Object grantType:grantTypes) {
-            serviceProvider.addGrantType((String) grantType);
+        OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
+        String consumerKey = null;
+        String consumerSecret = null;
+        for (OAuthConsumerAppDTO appDto : appDtos) {
+            if (appDto.getApplicationName().equals(OAuthDCRMConstants.APPLICATION_NAME)) {
+                consumerKey = appDto.getOauthConsumerKey();
+                consumerSecret = appDto.getOauthConsumerSecret();
+            }
         }
 
-        JSONArray redirectURIs = (JSONArray) jsonObject.get(OAuthDCRMConstants.REDIRECT_URIS);
-        for (Object redirectURI:redirectURIs) {
-            serviceProvider.addRedirectUri((String) redirectURI);
+        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
+        List<InboundAuthenticationRequestConfig> inboundAuthenticationRequestConfigs =
+                new ArrayList<>();
+
+        InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig =
+                new InboundAuthenticationRequestConfig();
+        if (consumerKey != null) {
+            inboundAuthenticationRequestConfig.setInboundAuthKey(consumerKey);
+            inboundAuthenticationRequestConfig.setInboundAuthType("oauth2");
+            if (consumerSecret != null && !consumerSecret.isEmpty()) {
+                Property property = new Property();
+                property.setName("oauthConsumerSecret");
+                property.setValue(consumerSecret);
+                Property[] properties = { property };
+                inboundAuthenticationRequestConfig.setProperties(properties);
+            }
         }
 
-        return serviceProvider;
+        ServiceProvider createdServiceProvider = appMgtService
+                .getApplication(OAuthDCRMConstants.APPLICATION_NAME);
+        inboundAuthenticationRequestConfigs.add(inboundAuthenticationRequestConfig);
+
+        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(inboundAuthenticationRequestConfigs
+                .toArray(new InboundAuthenticationRequestConfig[inboundAuthenticationRequestConfigs.size()]));
+        createdServiceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
+        appMgtService.updateApplicationData(createdServiceProvider);
+
+        serviceProviderDataHolder.setClientName(appDTO.getApplicationName());
+        serviceProviderDataHolder.setClientID(consumerKey);
+        serviceProviderDataHolder.setClientSecret(consumerSecret);
+        serviceProviderDataHolder.addGrantType(appDTO.getGrantTypes());
+        serviceProviderDataHolder.addRedirectUri(appDTO.getCallbackUrl());
+
+        return serviceProviderDataHolder;
     }
 }

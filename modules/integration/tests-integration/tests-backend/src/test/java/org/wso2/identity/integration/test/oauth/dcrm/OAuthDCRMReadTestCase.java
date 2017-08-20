@@ -25,12 +25,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.oauth.dcrm.bean.ServiceProvider;
+import org.wso2.identity.integration.test.oauth.dcrm.bean.ServiceProviderDataHolder;
 import org.wso2.identity.integration.test.oauth.dcrm.util.OAuthDCRMConstants;
 import java.io.*;
 import java.util.ArrayList;
@@ -46,24 +47,24 @@ public class OAuthDCRMReadTestCase extends ISIntegrationTest {
 
     private HttpClient client;
     private ServiceProviderRegister serviceProviderRegister;
-    private ServiceProvider serviceProvider;
+    private ServiceProviderDataHolder serviceProvider;
+    private OauthAdminClient adminClient;
+    private ApplicationManagementServiceClient appMgtService;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+        super.init();
+        appMgtService = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        adminClient = new OauthAdminClient(backendURL, sessionCookie);
         client = new DefaultHttpClient();
         serviceProviderRegister = new ServiceProviderRegister();
-
-        JSONObject object = new JSONObject();
-        object.put(OAuthDCRMConstants.CLIENT_NAME, "ReadApp");
-        object.put(OAuthDCRMConstants.GRANT_TYPES, "implicit");
-        object.put(OAuthDCRMConstants.REDIRECT_URIS, "http://ReadApp.com");
-
-        serviceProvider = serviceProviderRegister.register(object.toJSONString());
+        serviceProvider = serviceProviderRegister.register(appMgtService, adminClient);
     }
 
     @AfterClass(alwaysRun = true)
-    public void atEnd() {
-
+    public void atEnd() throws Exception {
+        adminClient.removeOAuthApplicationData(serviceProvider.getClientID());
+        appMgtService.deleteApplication(serviceProvider.getClientName());
     }
 
     @Test(alwaysRun = true, description = "Read service provider")

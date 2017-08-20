@@ -34,4 +34,12 @@ public class OAuthDCRMConstants {
 
     public static final String INVALID_CLIENT_ID = "invalid_client_id";
     public static final String INVALID_CLIENT_SECRET = "invalid_client_secret";
+
+    public static final String APPLICATION_NAME = "TestApp";
+    public static final String REDIRECT_URI = "http://TestApp.com";
+
+    public static final String OAUTH_VERSION = "OAuth-2.0";
+
+    public static final String GRANT_TYPE_IMPLICIT = "implicit";
+
 }

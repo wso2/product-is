@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.oauth.dcrm.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceProvider {
+public class ServiceProviderDataHolder {
     private String clientName;
     private String clientID;
     private String clientSecret;
