@@ -47,6 +47,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
 
 
     private static final String LOGIN_PERMISSION = "/permission/admin/login";
+    private static final String SET_CHALLENGE_QUESTIONS_PERMISSION = "/permission/admin/configure/security/questions";
 
     private static final String SUPER_TENANT = "carbon.super";
     private static final String WSO2_TENANT = "wso2.com";
@@ -238,7 +239,8 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
         try {
             // assign them login permissions via testRole
             log.info("Creating " + LOGIN_ROLE + " role and assigning to created users.");
-            userMgtClient.addRole(LOGIN_ROLE, new String[]{BOB_USERNAME}, new String[]{LOGIN_PERMISSION}, false);
+            userMgtClient.addRole(LOGIN_ROLE, new String[]{BOB_USERNAME}, new String[]{LOGIN_PERMISSION,
+                    SET_CHALLENGE_QUESTIONS_PERMISSION}, false);
 
         } catch (Exception ex) {
             fail("Exception when  assigning roles with login permission to users.");
