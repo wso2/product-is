@@ -27,10 +27,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.claim.ClaimMapping;
 import org.wso2.carbon.user.core.claim.inmemory.ClaimConfig;
-import org.wso2.carbon.utils.CarbonUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +57,6 @@ public class FileBasedClaimBuilder {
     public FileBasedClaimBuilder(int tenantId) {
         this.tenantId = tenantId;
     }
-
 
 
     /**
@@ -189,14 +185,15 @@ public class FileBasedClaimBuilder {
                     inStream = url.openStream();
                 } else {
                     warningMessage = "Bundle context could not find resource " + CLAIM_CONFIG +
-                            " or user does not have sufficient permission to access the resource.";
+                                     " or user does not have sufficient permission to access the resource.";
                 }
             } else {
-                if ((url = org.wso2.carbon.user.core.claim.inmemory.FileBasedClaimBuilder.class.getClassLoader().getResource(CLAIM_CONFIG)) != null) {
+                if ((url = org.wso2.carbon.user.core.claim.inmemory.FileBasedClaimBuilder.class.getClassLoader()
+                        .getResource(CLAIM_CONFIG)) != null) {
                     inStream = url.openStream();
                 } else {
                     warningMessage = "ClaimBuilder could not find resource " + CLAIM_CONFIG +
-                            " or user does not have sufficient permission to access the resource.";
+                                     " or user does not have sufficient permission to access the resource.";
                 }
             }
         }

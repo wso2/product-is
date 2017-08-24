@@ -5,16 +5,11 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.SQLConstants;
-import org.wso2.carbon.is.migration.bean.OAuth2Scope;
 import org.wso2.carbon.is.migration.bean.OAuth2ScopeBinding;
 import org.wso2.carbon.is.migration.util.Constants;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,10 +26,10 @@ public class IDNOAuth2ScopeBindingDAO {
         return idnoAuth2ScopeBindingDAO;
     }
 
-    public void addOAuth2ScopeBinding(List<OAuth2ScopeBinding> oAuth2ScopeBindingList, boolean continueOnError) throws
-                                                                        ISMigrationException {
+    public void addOAuth2ScopeBinding(List<OAuth2ScopeBinding> oAuth2ScopeBindingList, boolean continueOnError)
+            throws ISMigrationException {
 
-        log.info(Constants.MIGRATION_LOG_PREFIX + " call addOAuth2ScopeBinding.");
+        log.info(Constants.MIGRATION_LOG + " call addOAuth2ScopeBinding.");
         Connection connection = IdentityDatabaseUtil.getDBConnection();
         PreparedStatement prepStmt = null;
 
@@ -51,16 +46,15 @@ public class IDNOAuth2ScopeBindingDAO {
 
             prepStmt.executeBatch();
             connection.commit();
-            log.info(Constants.MIGRATION_LOG_PREFIX +  "");
+            log.info(Constants.MIGRATION_LOG + "");
         } catch (Exception e) {
             log.error(e);
-            if(!continueOnError){
-                throw new ISMigrationException("Error while adding OAuth2ScopeBinding, " , e);
+            if (!continueOnError) {
+                throw new ISMigrationException("Error while adding OAuth2ScopeBinding, ", e);
             }
         } finally {
             IdentityDatabaseUtil.closeStatement(prepStmt);
             IdentityDatabaseUtil.closeConnection(connection);
         }
     }
-
 }

@@ -7,7 +7,6 @@ import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.ISMigrationException;
 import org.wso2.carbon.is.migration.SQLConstants;
 import org.wso2.carbon.is.migration.bean.OAuth2Scope;
-import org.wso2.carbon.is.migration.bean.OAuth2ScopeBinding;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +31,7 @@ public class IDNOAuth2ScopeDAO {
     }
 
     public List<OAuth2Scope> getOAuth2ScopeRoles(Connection connection) throws
-                                                                                                        ISMigrationException {
+                                                                        ISMigrationException {
 
         List<OAuth2Scope> oAuth2ScopeList = new ArrayList<>();
 
@@ -57,11 +56,13 @@ public class IDNOAuth2ScopeDAO {
             throw new ISMigrationException("Error while retrieving  OAuth2Scope", e);
         } finally {
             IdentityDatabaseUtil.closeResultSet(rs);
-            if(statement != null) {
+            if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException var2) {
-                    log.error("Database error. Could not close statement. Continuing with others. - " + var2.getMessage(), var2);
+                    log.error(
+                            "Database error. Could not close statement. Continuing with others. - " + var2.getMessage(),
+                            var2);
                 }
             }
         }
@@ -69,7 +70,7 @@ public class IDNOAuth2ScopeDAO {
     }
 
     public void updateOAuth2ScopeBinding(List<OAuth2Scope> oAuth2ScopeList) throws
-                                                                                       ISMigrationException {
+                                                                            ISMigrationException {
 
         Connection connection = IdentityDatabaseUtil.getDBConnection();
         PreparedStatement prepStmt = null;
@@ -81,21 +82,18 @@ public class IDNOAuth2ScopeDAO {
             for (OAuth2Scope oAuth2Scope : oAuth2ScopeList) {
                 prepStmt.setString(1, oAuth2Scope.getScopeKey());
                 prepStmt.setString(2, (oAuth2Scope.getDescription() == null ? oAuth2Scope.getName() : oAuth2Scope
-                        .getDescription()) );
+                        .getDescription()));
                 prepStmt.setString(3, oAuth2Scope.getScopeId());
                 prepStmt.addBatch();
             }
 
             prepStmt.executeBatch();
             connection.commit();
-
         } catch (SQLException e) {
-            throw new ISMigrationException("Error while update OAuth2ScopeBinding" , e);
+            throw new ISMigrationException("Error while update OAuth2ScopeBinding", e);
         } finally {
             IdentityDatabaseUtil.closeStatement(prepStmt);
             IdentityDatabaseUtil.closeConnection(connection);
         }
     }
-
-
 }

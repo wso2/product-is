@@ -2,11 +2,19 @@ package org.wso2.carbon.is.migration.bean;
 
 
 public class OAuth2ScopeBinding {
-    private String scopeId ;
-    private String scopeBinding ;
+    private String scopeId;
+    private String scopeBinding;
 
     public OAuth2ScopeBinding(String scopeId, String scopeBinding) {
         this.scopeId = scopeId;
+        this.scopeBinding = scopeBinding;
+    }
+
+    public String getScopeBinding() {
+        return scopeBinding;
+    }
+
+    public void setScopeBinding(String scopeBinding) {
         this.scopeBinding = scopeBinding;
     }
 
@@ -16,13 +24,5 @@ public class OAuth2ScopeBinding {
 
     public void setScopeId(String scopeId) {
         this.scopeId = scopeId;
-    }
-
-    public String getScopeBinding() {
-        return scopeBinding;
-    }
-
-    public void setScopeBinding(String scopeBinding) {
-        this.scopeBinding = scopeBinding;
     }
 }

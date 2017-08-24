@@ -36,5 +36,4 @@ public interface MigrationClient {
      * @throws SQLException
      */
     public void databaseMigration() throws Exception;
-
 }

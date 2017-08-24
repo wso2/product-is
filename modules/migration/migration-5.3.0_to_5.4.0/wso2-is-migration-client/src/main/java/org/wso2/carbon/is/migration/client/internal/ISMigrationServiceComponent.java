@@ -25,8 +25,7 @@ import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * @scr.component name="org.wso2.carbon.is.migration.client" immediate="true"
- * @scr.reference name="realm.service"
- * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
+ * @scr.reference name="realm.service" interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
  * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  */
 
@@ -38,28 +37,29 @@ public class ISMigrationServiceComponent {
     /**
      * Method to activate bundle.
      *
-     * @param context OSGi component context.
+     * @param context
+     *         OSGi component context.
      */
     protected void activate(ComponentContext context) {
         try {
             ISMigrationServiceDataHolder.setIdentityOracleUser(System.getProperty("identityOracleUser"));
             ISMigrationServiceDataHolder.setUmOracleUser(System.getProperty("umOracleUser"));
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("WSO2 IS migration bundle is activated");
             }
         } catch (Throwable e) {
             log.error("Error while initiating Migration component", e);
         }
-
     }
 
     /**
      * Method to deactivate bundle.
      *
-     * @param context OSGi component context.
+     * @param context
+     *         OSGi component context.
      */
     protected void deactivate(ComponentContext context) {
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("WSO2 IS migration bundle is deactivated");
         }
     }
@@ -68,10 +68,11 @@ public class ISMigrationServiceComponent {
     /**
      * Method to set realm service.
      *
-     * @param realmService service to get tenant data.
+     * @param realmService
+     *         service to get tenant data.
      */
     protected void setRealmService(RealmService realmService) {
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Setting RealmService to WSO2 IS Migration component");
         }
         ISMigrationServiceDataHolder.setRealmService(realmService);
@@ -80,7 +81,8 @@ public class ISMigrationServiceComponent {
     /**
      * Method to unset realm service.
      *
-     * @param realmService service to get tenant data.
+     * @param realmService
+     *         service to get tenant data.
      */
     protected void unsetRealmService(RealmService realmService) {
         if (log.isDebugEnabled()) {
@@ -98,29 +100,28 @@ public class ISMigrationServiceComponent {
         /* reference IdentityCoreInitializedEvent service to guarantee that this component will wait until identity core
          is started */
     }
-//
-//    /**
-//     * Method to set claim service.
-//     *
-//     * @param claimService service to get tenant data.
-//     */
-//    protected void setClaimService(ClaimMetadataManagementService claimService) {
-//        if(log.isDebugEnabled()) {
-//            log.debug("Setting claimService to WSO2 IS Migration component");
-//        }
-//        ISMigrationServiceDataHolder.setClaimMetadataManagementService(claimService);
-//    }
-//
-//    /**
-//     * Method to unset claim service.
-//     *
-//     * @param claimService service to get tenant data.
-//     */
-//    protected void unsetClaimService(ClaimMetadataManagementService claimService) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("Unsetting claimService from WSO2 IS Migration component");
-//        }
-//        ISMigrationServiceDataHolder.setClaimMetadataManagementService(null);
-//    }
-
+    //
+    //    /**
+    //     * Method to set claim service.
+    //     *
+    //     * @param claimService service to get tenant data.
+    //     */
+    //    protected void setClaimService(ClaimMetadataManagementService claimService) {
+    //        if(log.isDebugEnabled()) {
+    //            log.debug("Setting claimService to WSO2 IS Migration component");
+    //        }
+    //        ISMigrationServiceDataHolder.setClaimMetadataManagementService(claimService);
+    //    }
+    //
+    //    /**
+    //     * Method to unset claim service.
+    //     *
+    //     * @param claimService service to get tenant data.
+    //     */
+    //    protected void unsetClaimService(ClaimMetadataManagementService claimService) {
+    //        if (log.isDebugEnabled()) {
+    //            log.debug("Unsetting claimService from WSO2 IS Migration component");
+    //        }
+    //        ISMigrationServiceDataHolder.setClaimMetadataManagementService(null);
+    //    }
 }

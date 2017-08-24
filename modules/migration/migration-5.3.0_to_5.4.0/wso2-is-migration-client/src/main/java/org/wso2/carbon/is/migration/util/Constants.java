@@ -19,14 +19,39 @@ package org.wso2.carbon.is.migration.util;
 public class Constants {
 
 
-    public static final String MIGRATION_LOG_PREFIX = "IS530:540 MIGRATION >> ";
+
+    public static final String CARBON_HOME = "carbon.home" ;
+
+
+
+    public static final String MIGRATION_LOG = "Identity Server 5.3.0 to 5.4.0 Migration Process : ";
     public static final String MIGRATION_CONTINUE_ON_ERROR_WARN = "IS530:540 MIGRATION >> Continue even with errors "
-                                                             + "because of "
-                                                      + "continueOnError=true";
+                                                                  + "because of "
+                                                                  + "continueOnError=true";
 
     public static final String VERSION_5_3_0 = "5.3.0";
     public static final String VERSION_5_4_0 = "5.4.0";
 
-    public static final int SUPER_TENANT_ID = -1234 ;
+    public static final int SUPER_TENANT_ID = -1234;
 
+    public class MigrationScriptConstants {
+
+        public static final String MIGRATION_HOME = "migration-resource" ;
+        public static final String MIGRATION_DB_SCRIPTS = "dbscripts" ;
+        public static final String MIGRATION_DATA = "data" ;
+        public static final String SQL_SCRIPT_FILE_EXTENSION = ".sql" ;
+
+    }
+
+    public class MigrationParameterConstants{
+
+        public static final String MIGRATE_IDENTITY_SCHEMA = "migrateIdentitySchema";
+        public static final String MIGRATE_IDENTITY_DATA = "migrateIdentityData";
+
+        public static final String MIGRATE_UM_SCHEMA = "migrateUMSchema";
+        public static final String MIGRATE_UM_DATA = "migrateUMData";
+
+        public static final String MIGRATION_CONTINUE_ON_ERROR = "continueOnError";
+        public static final String MIGRATION_BATCH_EXECUTION = "batchExecution";
+    }
 }

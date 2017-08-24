@@ -20,16 +20,17 @@ import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 
 
-public class MigratePermissionDB {
+public class PermissionDBMigrator {
 
-    private static final Log log = LogFactory.getLog(MigratePermissionDB.class);
-    private static final String RESOURCES_XML = "/resources.xml";
+    private static final Log log = LogFactory.getLog(PermissionDBMigrator.class);
+    private static final String RESOURCES_XML = "/modules/migration/migration-5.3.0_to_5.4.0/migration-resources/data"
+                                                + "/resources.xml";
 
     private DataSource umDataSource;
     private boolean continueOnError;
     private boolean noBatchUpdate;
 
-    public MigratePermissionDB(DataSource umDataSource, boolean continueOnError, boolean noBatchUpdate) {
+    public PermissionDBMigrator(DataSource umDataSource, boolean continueOnError, boolean noBatchUpdate) {
         this.umDataSource = umDataSource;
         this.continueOnError = continueOnError;
         this.noBatchUpdate = noBatchUpdate;
@@ -63,7 +64,6 @@ public class MigratePermissionDB {
             log.error("Error while migrating permission data", e);
         } finally {
             IdentityDatabaseUtil.closeConnection(umConnection);
-
         }
     }
 
@@ -84,7 +84,6 @@ public class MigratePermissionDB {
         }
         return doc;
     }
-
 
 
     /**
@@ -218,7 +217,6 @@ public class MigratePermissionDB {
     }
 
 
-
     /**
      * Add new permission to role in UM_ROLE_PERMISSION Table if not exists
      */
@@ -253,6 +251,4 @@ public class MigratePermissionDB {
             IdentityDatabaseUtil.closeConnection(umConnection);
         }
     }
-
-
 }

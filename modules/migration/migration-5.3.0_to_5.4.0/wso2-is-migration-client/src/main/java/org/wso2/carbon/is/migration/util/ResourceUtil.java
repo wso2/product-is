@@ -15,15 +15,19 @@
 */
 package org.wso2.carbon.is.migration.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
+import org.wso2.carbon.is.migration.ISMigrationException;
+import org.wso2.carbon.is.migration.MigrationException;
 import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -46,7 +50,7 @@ public class ResourceUtil {
         PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
         ResultSet rs = ps.executeQuery();
         String name = null;
-        if(rs.next()){
+        if (rs.next()) {
             name = rs.getString(1);
             ps = conn.prepareStatement("SET @databasename = ?;");
             ps.setString(1, name);
@@ -66,7 +70,7 @@ public class ResourceUtil {
             if ("oracle".equals(databaseType)) {
                 schema = ISMigrationServiceDataHolder.getIdentityOracleUser();
             }
-            ResultSet res = meta.getTables(null, schema, "IDN_OAUTH2_SCOPE_BINDING", new String[]{"TABLE"});
+            ResultSet res = meta.getTables(null, schema, "IDN_OAUTH2_SCOPE_BINDING", new String[] { "TABLE" });
             boolean schemaMigrated = false;
             if (res.next()) {
                 schemaMigrated = true;
@@ -99,12 +103,15 @@ public class ResourceUtil {
         try {
             Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
             tenantList = Arrays.asList(tenants);
-
         } catch (UserStoreException e) {
             log.error("Error occurred while reading tenant list.");
-
         }
         return tenantList;
     }
+
+
+
+
+
 
 }

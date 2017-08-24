@@ -47,7 +47,8 @@ public class ISMigrationServiceDataHolder {
     /**
      * Method to set registry RegistryService.
      *
-     * @param service registryService.
+     * @param service
+     *         registryService.
      */
     public static void setRegistryService(RegistryService service) {
         registryService = service;
@@ -65,7 +66,8 @@ public class ISMigrationServiceDataHolder {
     /**
      * Method to set registry RealmService.
      *
-     * @param service RealmService.
+     * @param service
+     *         RealmService.
      */
     public static void setRealmService(RealmService service) {
         realmService = service;
@@ -83,7 +85,8 @@ public class ISMigrationServiceDataHolder {
     /**
      * This method used to set TenantRegistryLoader
      *
-     * @param service Tenant registry loader for load tenant registry
+     * @param service
+     *         Tenant registry loader for load tenant registry
      */
     public static void setTenantRegLoader(TenantRegistryLoader service) {
         tenantRegLoader = service;
@@ -119,7 +122,8 @@ public class ISMigrationServiceDataHolder {
         return claimMetadataManagementService;
     }
 
-    public static void setClaimMetadataManagementService(ClaimMetadataManagementService claimMetadataManagementService) {
+    public static void setClaimMetadataManagementService(ClaimMetadataManagementService
+                                                                 claimMetadataManagementService) {
         ISMigrationServiceDataHolder.claimMetadataManagementService = claimMetadataManagementService;
     }
 }
