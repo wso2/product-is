@@ -42,6 +42,7 @@
 <tr>
 <td style="text-align:center;width:100%">        						
 <a href="oauth2.jsp?reset=true"><img src="images/import.png" /></a>
+<a href="oauth2-dcrm.jsp?reset=true"><img src="images/manage.png"></a>
 </td>
 </tr>
 
