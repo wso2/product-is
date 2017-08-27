@@ -12,23 +12,39 @@
         <link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all"/>
         <link rel="stylesheet" type="text/css" href="style.css" media="all"/>
 
+        <style type='text/css'>
+            label {
+                width: 100px;
+            }
+        </style>
+
         <script type="text/javascript">
             function setVisibility() {
                 var dcrmMethod = document.getElementById("dcrmMethod").value;
 
-                if (dcrmMethod == 'read') {
+                if (dcrmMethod == 'create') {
+                    document.getElementById("clientNametr").style.display = "";
+                    document.getElementById("clientIdtr").style.display = "none";
                     document.getElementById("clientSecrettr").style.display = "none";
+                    document.getElementById("grantTypetr").style.display = "";
+                    document.getElementById("redirectUritr").style.display = "";
+                }
+                if (dcrmMethod == 'read') {
                     document.getElementById("clientNametr").style.display = "none";
+                    document.getElementById("clientIdtr").style.display = "";
+                    document.getElementById("clientSecrettr").style.display = "none";
                     document.getElementById("grantTypetr").style.display = "none";
                     document.getElementById("redirectUritr").style.display = "none";
                 } else if (dcrmMethod == 'update') {
-                    document.getElementById("clientSecrettr").style.display = "";
                     document.getElementById("clientNametr").style.display = "";
+                    document.getElementById("clientIdtr").style.display = "";
+                    document.getElementById("clientSecrettr").style.display = "";
                     document.getElementById("grantTypetr").style.display = "";
                     document.getElementById("redirectUritr").style.display = "";
                 } else if (dcrmMethod == 'delete') {
-                    document.getElementById("clientSecrettr").style.display = "none";
                     document.getElementById("clientNametr").style.display = "none";
+                    document.getElementById("clientIdtr").style.display = "";
+                    document.getElementById("clientSecrettr").style.display = "none";
                     document.getElementById("grantTypetr").style.display = "none";
                     document.getElementById("redirectUritr").style.display = "none";
                 }
@@ -56,6 +72,7 @@
                         <td>
                             <select id="dcrmMethod" name="dcrmMethod" onchange="setVisibility();">
                                 <option selected disabled hidden>Choose here</option>
+                                <option value="<%=OAuth2Constants.CREATE%>">Create</option>
                                 <option value="<%=OAuth2Constants.READ%>">Read</option>
                                 <option value="<%=OAuth2Constants.UPDATE%>">Update</option>
                                 <option value="<%=OAuth2Constants.DELETE%>">Delete</option>
@@ -66,7 +83,7 @@
                         <td><label>Client Name</label></td>
                         <td><input type="text" id="clientName" name="clientName" style="width:350px"></td>
                     </tr>
-                    <tr>
+                    <tr id="clientIdtr" style="...">
                         <td><label>Client Id</label></td>
                         <td><input type="text" id="clientId" name="clientId" style="width:350px"></td>
                     </tr>

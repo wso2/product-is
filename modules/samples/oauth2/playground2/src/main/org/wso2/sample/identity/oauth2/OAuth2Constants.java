@@ -52,6 +52,7 @@ public final class OAuth2Constants {
     public static final String OAUTH2_RESPONSE_MODE = "response_mode";
 
     //OAuth DCRM specific constants
+    public static final String CREATE = "create";
     public static final String READ = "read";
     public static final String UPDATE = "update";
     public static final String DELETE = "delete";

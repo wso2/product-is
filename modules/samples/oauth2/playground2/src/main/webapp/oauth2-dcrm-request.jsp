@@ -1,18 +1,19 @@
 <%@ page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
-<%@ page import="org.apache.http.client.methods.HttpGet" %>
 <%@ page import="org.apache.http.HttpHeaders" %>
 <%@ page import="org.apache.http.HttpResponse" %>
-<%@ page import="org.apache.http.client.HttpClient" %>
-<%@ page import="org.apache.http.impl.client.DefaultHttpClient" %>
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="org.json.simple.JSONValue" %>
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="java.util.Objects" %>
 <%@ page import="org.json.simple.JSONArray" %>
-<%@ page import="org.apache.http.client.methods.HttpPut" %>
 <%@ page import="org.apache.http.entity.StringEntity" %>
+<%@ page import="org.apache.http.client.HttpClient" %>
+<%@ page import="org.apache.http.impl.client.DefaultHttpClient" %>
 <%@ page import="org.apache.http.client.methods.HttpDelete" %>
+<%@ page import="org.apache.http.client.methods.HttpGet" %>
+<%@ page import="org.apache.http.client.methods.HttpPut" %>
+<%@ page import="org.apache.http.client.methods.HttpPost" %>
 <%
     String method = request.getParameter(OAuth2Constants.DCRM_METHOD);
     String clientId = request.getParameter(OAuth2Constants.CLIENT_ID);
@@ -23,7 +24,7 @@
     String deleteConfirmation = null;
 
     HttpClient client = new DefaultHttpClient();
-    BufferedReader reader = null;
+    BufferedReader reader;
     JSONObject jsonObject = null;
 
     try {
@@ -41,7 +42,38 @@
                 deleteConfirmation = "Application has not been successfully deleted.";
             }
         } else {
-            if (Objects.equals(method, OAuth2Constants.READ)) {
+            if (Objects.equals(method, OAuth2Constants.CREATE)) {
+                HttpPost httpPost = new HttpPost(OAuth2Constants.CLIENT_CONFIGURATION_ENDPOINT);
+                httpPost.addHeader(HttpHeaders.AUTHORIZATION, OAuth2Constants.AUTHORIZATION);
+                httpPost.addHeader(HttpHeaders.CONTENT_TYPE, OAuth2Constants.CONTENT_TYPE);
+
+                JSONObject object = new JSONObject();
+                JSONArray grantTypeArray = new JSONArray();
+                JSONArray redirectUriArray = new JSONArray();
+
+                String[] gtList = grantTypes.split(",");
+                for (String str : gtList) {
+                    grantTypeArray.add(str);
+                }
+                String[] rList = redirectUris.split(",");
+                for (String str : rList) {
+                    redirectUriArray.add(str);
+                }
+
+                object.put(OAuth2Constants.DCRMMetaData.CLIENT_NAME, clientName);
+                object.put(OAuth2Constants.DCRMMetaData.GRANT_TYPES, grantTypeArray);
+                object.put(OAuth2Constants.DCRMMetaData.REDIRECT_URIS, redirectUriArray);
+
+                StringEntity entity = new StringEntity(object.toJSONString());
+                httpPost.setEntity(entity);
+
+                HttpResponse createResponse = client.execute(httpPost);
+                reader = new BufferedReader(new InputStreamReader(createResponse.getEntity().getContent()));
+                Object obj = JSONValue.parse(reader);
+                reader.close();
+                jsonObject = (JSONObject) obj;
+
+            } else if (Objects.equals(method, OAuth2Constants.READ)) {
                 HttpGet httpGet = new HttpGet(OAuth2Constants.CLIENT_CONFIGURATION_ENDPOINT + clientId);
                 httpGet.addHeader(HttpHeaders.AUTHORIZATION, OAuth2Constants.AUTHORIZATION);
                 HttpResponse readResponse = client.execute(httpGet);
@@ -57,20 +89,20 @@
                 httpPut.addHeader(HttpHeaders.CONTENT_TYPE, OAuth2Constants.CONTENT_TYPE);
 
                 JSONObject object = new JSONObject();
-                object.put(OAuth2Constants.DCRMMetaData.CLIENT_ID, clientId);
-                object.put(OAuth2Constants.DCRMMetaData.CLIENT_SECRET, clientSecret);
-                object.put(OAuth2Constants.DCRMMetaData.CLIENT_NAME, clientName);
-
                 JSONArray grantTypeArray = new JSONArray();
+                JSONArray rUriArray = new JSONArray();
+
                 String[] gtList = grantTypes.split(",");
                 for (String str : gtList) {
                     grantTypeArray.add(str);
                 }
-                JSONArray rUriArray = new JSONArray();
                 String[] rList = redirectUris.split(",");
                 for (String str : rList) {
                     rUriArray.add(str);
                 }
+                object.put(OAuth2Constants.DCRMMetaData.CLIENT_ID, clientId);
+                object.put(OAuth2Constants.DCRMMetaData.CLIENT_SECRET, clientSecret);
+                object.put(OAuth2Constants.DCRMMetaData.CLIENT_NAME, clientName);
                 object.put(OAuth2Constants.DCRMMetaData.GRANT_TYPES, grantTypeArray);
                 object.put(OAuth2Constants.DCRMMetaData.REDIRECT_URIS, rUriArray);
 
@@ -140,7 +172,13 @@
 
         <form>
             <table class="user_pass_table" width="100%">
-                <%if (Objects.equals(method, OAuth2Constants.READ) || Objects.equals(method, OAuth2Constants.UPDATE)) {%>
+                <%if (Objects.equals(method, OAuth2Constants.DELETE)) {%>
+                    <tbody>
+                        <tr>
+                            <td><p><%=deleteConfirmation%></p></td>
+                        </tr>
+                    </tbody>
+                <%} else {%>
                     <tbody>
                         <tr>
                             <td><label>Client Name </label></td>
@@ -161,12 +199,6 @@
                         <tr>
                             <td><label>Redirect URIs </label></td>
                             <td><p><%=redirectUris%></p></td>
-                        </tr>
-                    </tbody>
-                <%} else if (Objects.equals(method, OAuth2Constants.DELETE)) {%>
-                    <tbody>
-                        <tr>
-                            <td><p><%=deleteConfirmation%></p></td>
                         </tr>
                     </tbody>
                 <%}%>
