@@ -1544,7 +1544,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.8.77</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.8.79</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.3</identity.carbon.auth.saml2.version>
@@ -1646,7 +1646,7 @@
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
-        <carbon.kernel.version>4.4.16</carbon.kernel.version>
+        <carbon.kernel.version>4.4.17</carbon.kernel.version>
         <carbon.commons.version>4.5.10</carbon.commons.version>
         <carbon.dashboards.version>2.0.3</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
