@@ -21,7 +21,6 @@ package org.wso2.sample.identity.oauth2.grant.password;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.identity.oauth.common.exception.InvalidOAuthClientException;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
@@ -39,8 +38,7 @@ public class ModifiedAccessTokenPasswordGrant extends PasswordGrantHandler {
     private static Log log = LogFactory.getLog(ModifiedAccessTokenPasswordGrant.class);
 
     @Override
-    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws
-            IdentityOAuth2Exception, InvalidOAuthClientException {
+    public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
 
         // calling super
         OAuth2AccessTokenRespDTO tokenRespDTO =  super.issue(tokReqMsgCtx);
