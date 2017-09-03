@@ -152,6 +152,11 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.IDENTITY4604RequestPathAuthWithSAMLSSO" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
+
+            <!--OAuth 2.0 DCRM API test cases-->
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMCreateTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMReadTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMDeleteTestCase"/>
         </classes>
     </test>
 
