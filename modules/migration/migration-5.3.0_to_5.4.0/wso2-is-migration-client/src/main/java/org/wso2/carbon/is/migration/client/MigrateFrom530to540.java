@@ -24,8 +24,8 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.is.migration.ISMigrationException;
-import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.util.Constants;
+import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.service.v530.util.Constants;
 import org.wso2.carbon.user.core.util.DatabaseUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 

@@ -107,11 +107,11 @@
         <pre><![CDATA[
 
     <transport name="http" class="org.wso2.carbon.server.transports.http.HttpTransport">
-        <parameter name="port">9763</parameter>
+        <config name="port">9763</config>
     </transport>
 
     <transport name="https" class="org.wso2.carbon.server.transports.http.HttpsTransport">
-        <parameter name="port">9443</parameter>
+        <config name="port">9443</config>
     </transport>
 ]]></pre>
 

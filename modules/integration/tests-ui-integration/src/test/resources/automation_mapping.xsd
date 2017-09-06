@@ -467,7 +467,7 @@
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element type="xs:string" name="name"/>
-                                                                <xs:element name="parameter" maxOccurs="unbounded"
+                                                                <xs:element name="config" maxOccurs="unbounded"
                                                                             minOccurs="0">
                                                                     <xs:complexType>
                                                                         <xs:simpleContent>
@@ -501,7 +501,7 @@
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element type="xs:string" name="name"/>
-                                                                <xs:element name="parameter" maxOccurs="unbounded"
+                                                                <xs:element name="config" maxOccurs="unbounded"
                                                                             minOccurs="0">
                                                                     <xs:complexType>
                                                                         <xs:simpleContent>
@@ -535,7 +535,7 @@
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element type="xs:string" name="name"/>
-                                                                <xs:element name="parameter" maxOccurs="unbounded"
+                                                                <xs:element name="config" maxOccurs="unbounded"
                                                                             minOccurs="0">
                                                                     <xs:complexType>
                                                                         <xs:simpleContent>
@@ -569,7 +569,7 @@
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element type="xs:string" name="name"/>
-                                                                <xs:element name="parameter" maxOccurs="unbounded"
+                                                                <xs:element name="config" maxOccurs="unbounded"
                                                                             minOccurs="0">
                                                                     <xs:complexType>
                                                                         <xs:simpleContent>
@@ -603,7 +603,7 @@
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element type="xs:string" name="name"/>
-                                                                <xs:element name="parameter" maxOccurs="unbounded"
+                                                                <xs:element name="config" maxOccurs="unbounded"
                                                                             minOccurs="0">
                                                                     <xs:complexType>
                                                                         <xs:simpleContent>

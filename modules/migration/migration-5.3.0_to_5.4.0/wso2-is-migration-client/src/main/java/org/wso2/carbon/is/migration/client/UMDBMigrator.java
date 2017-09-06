@@ -3,9 +3,9 @@ package org.wso2.carbon.is.migration.client;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.is.migration.client.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.util.Constants;
-import org.wso2.carbon.is.migration.util.ResourceUtil;
+import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.service.v530.util.Constants;
+import org.wso2.carbon.is.migration.service.v530.util.ResourceUtil;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
 import java.io.BufferedReader;

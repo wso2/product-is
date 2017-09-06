@@ -17,7 +17,7 @@
   ~ under the License.
   -->
 <assembly>
-    <id>migration</id>
+    <id>config</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -27,7 +27,7 @@
             <directory>
                 ../scripts/identity
             </directory>
-            <outputDirectory>wso2is-${pom.version}-migration/dbscripts/identity/migration-5.3.0_to_5.4.0</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}-config/dbscripts/identity/config-5.3.0_to_5.4.0</outputDirectory>
             <includes>
                 <include>h2.sql</include>
                 <include>mysql.sql</include>
@@ -43,7 +43,7 @@
             <source>
                 target/org.wso2.carbon.is.migrate.client-${pom.version}.jar
             </source>
-            <outputDirectory>wso2is-${pom.version}-migration/dropins/</outputDirectory>
+            <outputDirectory>wso2is-${pom.version}-config/dropins/</outputDirectory>
         </file>
     </files>
 </assembly>

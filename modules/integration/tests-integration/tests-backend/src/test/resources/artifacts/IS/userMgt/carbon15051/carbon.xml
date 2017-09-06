@@ -259,12 +259,12 @@
         <!-- This axis2 xml is used in createing the configuration context by the FE server
          calling to BE server -->
         <clientAxis2XmlLocation>${carbon.home}/repository/conf/axis2/axis2_client.xml</clientAxis2XmlLocation>
-        <!-- If this parameter is set, the ?wsdl on an admin service will not give the admin service wsdl. -->
+        <!-- If this config is set, the ?wsdl on an admin service will not give the admin service wsdl. -->
         <HideAdminServiceWSDLs>true</HideAdminServiceWSDLs>
 
-        <!--WARNING-Use With Care! Uncommenting bellow parameter would expose all AdminServices in HTTP transport.
+        <!--WARNING-Use With Care! Uncommenting bellow config would expose all AdminServices in HTTP transport.
         With HTTP transport your credentials and data routed in public channels are vulnerable for sniffing attacks.
-        Use bellow parameter ONLY if your communication channels are confirmed to be secured by other means -->
+        Use bellow config ONLY if your communication channels are confirmed to be secured by other means -->
         <!--HttpAdminServices>*</HttpAdminServices-->
 
     </Axis2Config>
@@ -429,7 +429,7 @@
 
     <!--
        Configuration for handling different types of file upload & other file uploading related
-       config parameters.
+       config configs.
        To map all actions to a particular FileUploadExecutor, use
        <Action>*</Action>
     -->
@@ -480,7 +480,7 @@
        In order to plug in a processor to handle a special request, simply add an entry to this
        section.
 
-       The value of the Item element is the first parameter in the query string(e.g. ?wsdl)
+       The value of the Item element is the first config in the query string(e.g. ?wsdl)
        which needs special processing
 
        The value of the Class element is a class which implements

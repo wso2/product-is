@@ -24,39 +24,39 @@
     <!-- ================================================= -->
     <!-- Parameters -->
     <!-- ================================================= -->
-    <parameter name="hotdeployment">true</parameter>
-    <parameter name="hotupdate">true</parameter>
-    <parameter name="enableMTOM" locked="false">optional</parameter>
-    <parameter name="cacheAttachments">true</parameter>
-    <parameter name="attachmentDIR">work/mtom</parameter>
-    <parameter name="sizeThreshold">4000</parameter>
+    <config name="hotdeployment">true</config>
+    <config name="hotupdate">true</config>
+    <config name="enableMTOM" locked="false">optional</config>
+    <config name="cacheAttachments">true</config>
+    <config name="attachmentDIR">work/mtom</config>
+    <config name="sizeThreshold">4000</config>
 
-    <parameter name="EnableChildFirstClassLoading">${childfirstCL}</parameter>
+    <config name="EnableChildFirstClassLoading">${childfirstCL}</config>
 
     <!--
-    The exposeServiceMetadata parameter decides whether the metadata (WSDL, schema, policy) of
+    The exposeServiceMetadata config decides whether the metadata (WSDL, schema, policy) of
     the services deployed on Axis2 should be visible when ?wsdl, ?wsdl2, ?xsd, ?policy requests
     are received.
-    This parameter can be defined in the axi2.xml file, in which case this will be applicable
+    This config can be defined in the axi2.xml file, in which case this will be applicable
     globally, or in the services.xml files, in which case, it will be applicable to the
-    Service groups and/or services, depending on the level at which the parameter is declared.
-    This value of this parameter defaults to true.
+    Service groups and/or services, depending on the level at which the config is declared.
+    This value of this config defaults to true.
     -->
-    <parameter name="exposeServiceMetadata">true</parameter>
+    <config name="exposeServiceMetadata">true</config>
 
     <!--If turned on with use the Accept header of the request to determine the contentType of the
     response-->
-    <parameter name="httpContentNegotiation">true</parameter>
+    <config name="httpContentNegotiation">true</config>
 
     <!--
     Defines how the persistence of WS-ReliableMessaging is handled
 
     Possible value are: inmemory & persistent
     -->
-    <!-- Following parameter will completely disable REST handling in both the servlets-->
-    <parameter name="disableREST" locked="false">false</parameter>
+    <!-- Following config will completely disable REST handling in both the servlets-->
+    <config name="disableREST" locked="false">false</config>
 
-    <parameter name="Sandesha2StorageManager">inmemory</parameter>
+    <config name="Sandesha2StorageManager">inmemory</config>
 
     <!-- This deployment interceptor will be called whenever before a module is initialized or
      service is deployed -->
@@ -64,56 +64,56 @@
 
     <!-- setting servicePath. contextRoot is defined in the carbon.xml file -->
     <!-- modification of this variable should be accompanied by the change in 'ServerURL' in carbon.xml file -->
-    <parameter name="servicePath">services</parameter>
+    <config name="servicePath">services</config>
 
     <!--the directory in which .aar services are deployed inside axis2 repository-->
-    <parameter name="ServicesDirectory">axis2services</parameter>
+    <config name="ServicesDirectory">axis2services</config>
 
     <!--the directory in which modules are deployed inside axis2 repository-->
-    <parameter name="ModulesDirectory">axis2modules</parameter>
+    <config name="ModulesDirectory">axis2modules</config>
 
-    <parameter name="userAgent" locked="true">
+    <config name="userAgent" locked="true">
         WSO2 Identity Server-5.3.0
-    </parameter>
-    <parameter name="server" locked="true">
+    </config>
+    <config name="server" locked="true">
         WSO2 Identity Server-5.3.0
-    </parameter>
+    </config>
 
     <!-- ========================================================================-->
 
     <!--During a fault, stacktrace can be sent with the fault message. The following flag will control -->
     <!--that behaviour.-->
-    <parameter name="sendStacktraceDetailsWithFaults">false</parameter>
+    <config name="sendStacktraceDetailsWithFaults">false</config>
 
     <!--If there aren't any information available to find out the fault reason, we set the message of the expcetion-->
     <!--as the faultreason/Reason. But when a fault is thrown from a service or some where, it will be -->
     <!--wrapped by different levels. Due to this the initial exception message can be lost. If this flag-->
     <!--is set then, Axis2 tries to get the first exception and set its message as the faultreason/Reason.-->
-    <parameter name="DrillDownToRootCauseForFaultReason">false</parameter>
+    <config name="DrillDownToRootCauseForFaultReason">false</config>
 
     <!--Set the flag to true if you want to enable transport level session mangment-->
-    <parameter name="manageTransportSession">true</parameter>
+    <config name="manageTransportSession">true</config>
 
     <!-- Synapse Configuration file -->
-    <parameter name="SynapseConfig.ConfigurationFile" locked="false">
+    <config name="SynapseConfig.ConfigurationFile" locked="false">
         ./repository/deployment/server/synapse-configs
-    </parameter>
+    </config>
 
-    <!-- Synapse Home parameter -->
-    <parameter name="SynapseConfig.HomeDirectory" locked="false">.</parameter>
+    <!-- Synapse Home config -->
+    <config name="SynapseConfig.HomeDirectory" locked="false">.</config>
 
     <!-- Resolve root used to resolve synapse references like schemas inside a WSDL -->
-    <parameter name="SynapseConfig.ResolveRoot" locked="false">.</parameter>
+    <config name="SynapseConfig.ResolveRoot" locked="false">.</config>
 
-    <!-- Synapse Server name parameter -->
-    <parameter name="SynapseConfig.ServerName" locked="false">WSO2 Carbon Server</parameter>
+    <!-- Synapse Server name config -->
+    <config name="SynapseConfig.ServerName" locked="false">WSO2 Carbon Server</config>
 
     <!--By default, JAXWS services are created by reading annotations. WSDL and schema are generated-->
     <!--using a separate WSDL generator only when ?wsdl is called. Therefore, even if you engage-->
     <!--policies etc.. to AxisService, it doesn't appear in the WSDL. By setting the following property-->
     <!--to true, you can create the AxisService using the generated WSDL and remove the need for a-->
     <!--WSDL generator. When ?wsdl is called, WSDL is generated in the normal way.-->
-    <parameter name="useGeneratedWSDLinJAXWS">${jaxwsparam}</parameter>
+    <config name="useGeneratedWSDLinJAXWS">${jaxwsparam}</config>
 
     <!-- Deployer for the dataservice. -->
     <!--<deployer extension="dbs" directory="dataservices" class="org.wso2.dataservices.DBDeployer"/>-->
@@ -236,40 +236,40 @@
            Uncomment the following if you are deploying this within an application server. You
            need to specify the HTTP port of the application server
         -->
-        <parameter name="port">10173</parameter>
+        <config name="port">10173</config>
 
         <!--
        Uncomment the following to enable any proxy like Apache2 mod_proxy or any load balancer. The port on the proxy server like Apache is 80
        in this case.
         -->
-        <!--<parameter name="proxyPort">80</parameter>-->
+        <!--<config name="proxyPort">80</config>-->
     </transportReceiver>
 
     <!--Please uncomment this in Multiple Instance Scenario if you want to use NIO Transport Recievers and 
  	Remove the current transport REceivers in axis2.xml -->
     <!--transportReceiver name="http" class="org.apache.synapse.transport.nhttp.HttpCoreNIOListener">
-        <parameter name="port" locked="false">8280</parameter>
-        <parameter name="non-blocking" locked="false">true</parameter>
+        <config name="port" locked="false">8280</config>
+        <config name="non-blocking" locked="false">true</config>
     </transportReceiver>
     
     <transportReceiver name="https" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSSLListener">
-        <parameter name="port" locked="false">8243</parameter>
-        <parameter name="non-blocking" locked="false">true</parameter>
-        <parameter name="keystore" locked="false">
+        <config name="port" locked="false">8243</config>
+        <config name="non-blocking" locked="false">true</config>
+        <config name="keystore" locked="false">
             <KeyStore>
                 <Location>repository/resources/security/wso2carbon.jks</Location>
                 <Type>JKS</Type>
                 <Password>wso2carbon</Password>
                 <KeyPassword>wso2carbon</KeyPassword>
             </KeyStore>
-        </parameter>
-        <parameter name="truststore" locked="false">
+        </config>
+        <config name="truststore" locked="false">
             <TrustStore>
                 <Location>repository/resources/security/client-truststore.jks</Location>
                 <Type>JKS</Type>
                 <Password>wso2carbon</Password>
             </TrustStore>
-        </parameter>
+        </config>
     </transportReceiver-->
 
 
@@ -279,13 +279,13 @@
            Uncomment the following if you are deploying this within an application server. You
            need to specify the HTTPS port of the application server
         -->
-        <parameter name="port">9853</parameter>
+        <config name="port">9853</config>
 
         <!--
        Uncomment the following to enable any proxy like Apache2 mod_proxy or any load balancer. The port on a proxy server like Apache is 443
        in this case.
         -->
-        <!--<parameter name="proxyPort">443</parameter>-->
+        <!--<config name="proxyPort">443</config>-->
     </transportReceiver>
 
     <!--
@@ -294,7 +294,7 @@
     -->
     <!--<transportReceiver name="tcp"
                        class="org.apache.axis2.transport.tcp.TCPServer">
-        <parameter name="port">6667</parameter>
+        <config name="port">6667</config>
     </transportReceiver>-->
 
     <!--
@@ -310,71 +310,71 @@
       after setting up your JMS environment (e.g. ActiveMQ)
     -->
     <!--<transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
-        <parameter name="myTopicConnectionFactory">
-        	<parameter name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-        	<parameter name="java.naming.provider.url">tcp://localhost:61616</parameter>
-        	<parameter name="transport.jms.ConnectionFactoryJNDIName">TopicConnectionFactory</parameter>
-        </parameter>
+        <config name="myTopicConnectionFactory">
+        	<config name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</config>
+        	<config name="java.naming.provider.url">tcp://localhost:61616</config>
+        	<config name="transport.jms.ConnectionFactoryJNDIName">TopicConnectionFactory</config>
+        </config>
 
-        <parameter name="myQueueConnectionFactory">
-        	<parameter name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-        	<parameter name="java.naming.provider.url">tcp://localhost:61616</parameter>
-        	<parameter name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</parameter>
-        </parameter>
+        <config name="myQueueConnectionFactory">
+        	<config name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</config>
+        	<config name="java.naming.provider.url">tcp://localhost:61616</config>
+        	<config name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</config>
+        </config>
 
-        <parameter name="default">
-        	<parameter name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-        	<parameter name="java.naming.provider.url">tcp://localhost:61616</parameter>
-        	<parameter name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</parameter>
-        </parameter>
+        <config name="default">
+        	<config name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</config>
+        	<config name="java.naming.provider.url">tcp://localhost:61616</config>
+        	<config name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</config>
+        </config>
     </transportReceiver>-->
 
     <!--Uncomment this and configure as appropriate for JMS transport support with Apache Qpid -->
     <!--transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
-        <parameter name="myTopicConnectionFactory" locked="false">
-            <parameter name="java.naming.factory.initial" locked="false">org.apache.qpid.jndi.PropertiesFileInitialContextFactory</parameter>
-            <parameter name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</parameter>
-            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">TopicConnectionFactory</parameter>
-            <parameter name="transport.jms.ConnectionFactoryType" locked="false">topic</parameter>
-        </parameter>
+        <config name="myTopicConnectionFactory" locked="false">
+            <config name="java.naming.factory.initial" locked="false">org.apache.qpid.jndi.PropertiesFileInitialContextFactory</config>
+            <config name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</config>
+            <config name="transport.jms.ConnectionFactoryJNDIName" locked="false">TopicConnectionFactory</config>
+            <config name="transport.jms.ConnectionFactoryType" locked="false">topic</config>
+        </config>
 
-        <parameter name="myQueueConnectionFactory" locked="false">
-            <parameter name="java.naming.factory.initial" locked="false">org.apache.qpid.jndi.PropertiesFileInitialContextFactory</parameter>
-            <parameter name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</parameter>
-            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
-            <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
-        </parameter>
+        <config name="myQueueConnectionFactory" locked="false">
+            <config name="java.naming.factory.initial" locked="false">org.apache.qpid.jndi.PropertiesFileInitialContextFactory</config>
+            <config name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</config>
+            <config name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</config>
+            <config name="transport.jms.ConnectionFactoryType" locked="false">queue</config>
+        </config>
 
-        <parameter name="default" locked="false">
-            <parameter name="java.naming.factory.initial" locked="false">org.apache.qpid.jndi.PropertiesFileInitialContextFactory</parameter>
-            <parameter name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</parameter>
-            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
-            <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
-        </parameter>
+        <config name="default" locked="false">
+            <config name="java.naming.factory.initial" locked="false">org.apache.qpid.jndi.PropertiesFileInitialContextFactory</config>
+            <config name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</config>
+            <config name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</config>
+            <config name="transport.jms.ConnectionFactoryType" locked="false">queue</config>
+        </config>
     </transportReceiver-->
 
     <!--Uncomment this and configure as appropriate for JMS transport support with WSO2 MB 2.x.x -->
     <!--transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
-        <parameter name="myTopicConnectionFactory" locked="false">
-           <parameter name="java.naming.factory.initial" locked="false">org.wso2.andes.jndi.PropertiesFileInitialContextFactory</parameter>
-            <parameter name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</parameter>
-            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">TopicConnectionFactory</parameter>
-            <parameter name="transport.jms.ConnectionFactoryType" locked="false">topic</parameter>
-        </parameter>
+        <config name="myTopicConnectionFactory" locked="false">
+           <config name="java.naming.factory.initial" locked="false">org.wso2.andes.jndi.PropertiesFileInitialContextFactory</config>
+            <config name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</config>
+            <config name="transport.jms.ConnectionFactoryJNDIName" locked="false">TopicConnectionFactory</config>
+            <config name="transport.jms.ConnectionFactoryType" locked="false">topic</config>
+        </config>
 
-        <parameter name="myQueueConnectionFactory" locked="false">
-            <parameter name="java.naming.factory.initial" locked="false">org.wso2.andes.jndi.PropertiesFileInitialContextFactory</parameter>
-            <parameter name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</parameter>
-            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
-           <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
-        </parameter>
+        <config name="myQueueConnectionFactory" locked="false">
+            <config name="java.naming.factory.initial" locked="false">org.wso2.andes.jndi.PropertiesFileInitialContextFactory</config>
+            <config name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</config>
+            <config name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</config>
+           <config name="transport.jms.ConnectionFactoryType" locked="false">queue</config>
+        </config>
 
-        <parameter name="default" locked="false">
-            <parameter name="java.naming.factory.initial" locked="false">org.wso2.andes.jndi.PropertiesFileInitialContextFactory</parameter>
-            <parameter name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</parameter>
-            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
-            <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
-        </parameter>
+        <config name="default" locked="false">
+            <config name="java.naming.factory.initial" locked="false">org.wso2.andes.jndi.PropertiesFileInitialContextFactory</config>
+            <config name="java.naming.provider.url" locked="false">repository/conf/jndi.properties</config>
+            <config name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</config>
+            <config name="transport.jms.ConnectionFactoryType" locked="false">queue</config>
+        </config>
     </transportReceiver-->
 
 
@@ -392,55 +392,55 @@
                      class="org.apache.axis2.transport.jms.JMSSender"/>-->
     <transportSender name="http"
                      class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
-        <parameter name="PROTOCOL">HTTP/1.1</parameter>
-        <parameter name="Transfer-Encoding">chunked</parameter>
-        <!-- This parameter has been added to overcome problems encounted in SOAP action parameter -->
-        <parameter name="OmitSOAP12Action">true</parameter>
+        <config name="PROTOCOL">HTTP/1.1</config>
+        <config name="Transfer-Encoding">chunked</config>
+        <!-- This config has been added to overcome problems encounted in SOAP action config -->
+        <config name="OmitSOAP12Action">true</config>
     </transportSender>
     <transportSender name="https"
                      class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
-        <parameter name="PROTOCOL">HTTP/1.1</parameter>
-        <parameter name="Transfer-Encoding">chunked</parameter>
-        <!-- This parameter has been added to overcome problems encounted in SOAP action parameter -->
-        <parameter name="OmitSOAP12Action">true</parameter>
+        <config name="PROTOCOL">HTTP/1.1</config>
+        <config name="Transfer-Encoding">chunked</config>
+        <!-- This config has been added to overcome problems encounted in SOAP action config -->
+        <config name="OmitSOAP12Action">true</config>
     </transportSender>
 
-    <!-- To enable mail transport sender, ncomment the following and change the parameters
+    <!-- To enable mail transport sender, ncomment the following and change the configs
          accordingly-->
     <!--<transportSender name="mailto"
                      class="org.apache.axis2.transport.mail.MailTransportSender">
-        <parameter name="mail.smtp.from">wso2demomail@gmail.com</parameter>
-        <parameter name="mail.smtp.user">wso2demomail</parameter>
-        <parameter name="mail.smtp.password">mailpassword</parameter>
-        <parameter name="mail.smtp.host">smtp.gmail.com</parameter>
+        <config name="mail.smtp.from">wso2demomail@gmail.com</config>
+        <config name="mail.smtp.user">wso2demomail</config>
+        <config name="mail.smtp.password">mailpassword</config>
+        <config name="mail.smtp.host">smtp.gmail.com</config>
 
-        <parameter name="mail.smtp.port">587</parameter>
-        <parameter name="mail.smtp.starttls.enable">true</parameter>
-        <parameter name="mail.smtp.auth">true</parameter>
+        <config name="mail.smtp.port">587</config>
+        <config name="mail.smtp.starttls.enable">true</config>
+        <config name="mail.smtp.auth">true</config>
     </transportSender>-->
 
     <!--Please uncomment this in Multiple Instance Scenario if you want to use NIO sender -->
     <!--  
     <transportSender name="http" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSender">
-        <parameter name="non-blocking" locked="false">true</parameter>
+        <config name="non-blocking" locked="false">true</config>
     </transportSender>
     <transportSender name="https" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSSLSender">
-        <parameter name="non-blocking" locked="false">true</parameter>
-        <parameter name="keystore" locked="false">
+        <config name="non-blocking" locked="false">true</config>
+        <config name="keystore" locked="false">
             <KeyStore>
                 <Location>repository/resources/security/wso2carbon.jks</Location>
                 <Type>JKS</Type>
                 <Password>wso2carbon</Password>
                 <KeyPassword>wso2carbon</KeyPassword>
             </KeyStore>
-        </parameter>
-        <parameter name="truststore" locked="false">
+        </config>
+        <config name="truststore" locked="false">
             <TrustStore>
                 <Location>repository/resources/security/client-truststore.jks</Location>
                 <Type>JKS</Type>
                 <Password>wso2carbon</Password>
             </TrustStore>
-        </parameter>
+        </config>
     </transportSender>
 	-->
 
@@ -604,11 +604,11 @@
                 enable="false">
 
         <!--
-           This parameter indicates whether the cluster has to be automatically initalized
+           This config indicates whether the cluster has to be automatically initalized
            when the AxisConfiguration is built. If set to "true" the initialization will not be
            done at that stage, and some other party will have to explictly initialize the cluster.
         -->
-        <parameter name="AvoidInitiation">true</parameter>
+        <config name="AvoidInitiation">true</config>
 
         <!--
            The membership scheme used in this setup. The only values supported at the moment are
@@ -623,36 +623,36 @@
                     is deemed to have left the cluster, it will be detected by the Group Membership
                     Service (GMS) using a TCP ping mechanism.
         -->
-        <parameter name="membershipScheme">multicast</parameter>
-        <!--<parameter name="licenseKey">xxx</parameter>-->
-        <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
+        <config name="membershipScheme">multicast</config>
+        <!--<config name="licenseKey">xxx</config>-->
+        <!--<config name="mgtCenterURL">http://localhost:8081/mancenter/</config>-->
 
         <!--
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-        <parameter name="domain">wso2.carbon.domain</parameter>
+        <config name="domain">wso2.carbon.domain</config>
 
         <!-- The multicast address to be used -->
-        <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
+        <!--<config name="mcastAddress">228.0.0.4</config>-->
 
         <!-- The multicast port to be used -->
-        <parameter name="mcastPort">45564</parameter>
+        <config name="mcastPort">45564</config>
 
-        <parameter name="mcastTTL">100</parameter>
+        <config name="mcastTTL">100</config>
 
-        <parameter name="mcastTimeout">60</parameter>
+        <config name="mcastTimeout">60</config>
 
         <!--
            The IP address of the network interface to which the multicasting has to be bound to.
            Multicasting would be done using this interface.
         -->
         <!--
-            <parameter name="mcastBindAddress">127.0.0.1</parameter>
+            <config name="mcastBindAddress">127.0.0.1</config>
         -->
         <!-- The host name or IP address of this member -->
 
-        <parameter name="localMemberHost">127.0.0.1</parameter>
+        <config name="localMemberHost">127.0.0.1</config>
 
         <!--
             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
@@ -660,14 +660,14 @@
             is the address to which this member is bound to.
         -->
         <!--
-        <parameter name="localMemberBindAddress">127.0.0.1</parameter>
+        <config name="localMemberBindAddress">127.0.0.1</config>
         -->
 
         <!--
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-        <parameter name="localMemberPort">4000</parameter>
+        <config name="localMemberPort">4000</config>
 
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
@@ -675,17 +675,17 @@
             is the port to which this member is bound to.
         -->
         <!--
-        <parameter name="localMemberBindPort">4001</parameter>
+        <config name="localMemberBindPort">4001</config>
         -->
 
         <!--
         Properties specific to this member
         -->
-        <parameter name="properties">
+        <config name="properties">
             <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
             <property name="subDomain" value="worker"/>
-        </parameter>
+        </config>
 
         <!--
            The list of static or well-known members. These entries will only be valid if the

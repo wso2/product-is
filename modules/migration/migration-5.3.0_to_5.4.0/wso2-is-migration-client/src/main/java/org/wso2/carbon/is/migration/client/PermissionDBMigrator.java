@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.SQLConstants;
-import org.wso2.carbon.is.migration.util.ResourceUtil;
+import org.wso2.carbon.is.migration.service.v530.util.ResourceUtil;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;

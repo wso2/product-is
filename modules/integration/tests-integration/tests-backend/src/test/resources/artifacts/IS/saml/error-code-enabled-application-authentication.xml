@@ -156,15 +156,15 @@
     </Sequences>
 
     <!--
-            AuthenticationEndpointQueryParams are the request parameters
+            AuthenticationEndpointQueryParams are the request configs
             that would be sent to the AuthenticationEndpoint.
             'action' defines the behaviour: if 'include', only the defined
-            parameters would be included in the request.
-            If 'exclude' specified, all the parameters received by the
+            configs would be included in the request.
+            If 'exclude' specified, all the configs received by the
             Authentication Framework would be sent in the request except
             the ones specified.
             'sessionDataKey', 'type', 'relyingParty', 'sp' and 'authenticators'
-            parameters will be always sent. They should not be specified here.
+            configs will be always sent. They should not be specified here.
         -->
     <AuthenticationEndpointQueryParams action="exclude">
         <AuthenticationEndpointQueryParam name="username"/>

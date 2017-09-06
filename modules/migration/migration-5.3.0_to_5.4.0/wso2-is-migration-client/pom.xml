@@ -110,7 +110,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.is.migration.client.internal
+                            org.wso2.carbon.is.config.internal
                         </Private-Package>
                         <Import-Package>
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
@@ -119,8 +119,8 @@
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version}",
                         </Import-Package>
                         <Export-Package>
-                            !org.wso2.carbon.is.migration.client.internal,
-                            org.wso2.carbon.is.migration.*;version="${project.version}"
+                            !org.wso2.carbon.is.config.internal,
+                            org.wso2.carbon.is.config.*;version="${project.version}"
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
@@ -131,14 +131,14 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>migration</id>
+                        <id>config</id>
                         <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/assmbly/migration.xml</descriptor>
+                                <descriptor>src/assmbly/config.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>

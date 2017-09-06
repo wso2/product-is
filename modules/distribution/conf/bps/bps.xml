@@ -65,7 +65,7 @@
     <!-- External Service invocation timeout. Default value is 60000ms -->
     <!--<tns:ExternalServiceTimeOut value="60000"/>-->
 
-    <!-- MultithreadedHttpConnectionManager tuning parameters -->
+    <!-- MultithreadedHttpConnectionManager tuning configs -->
     <!--<tns:MultithreadedHttpConnectionManagerConfig>
         <tns:maxConnectionsPerHost value="20"/>
         <tns:maxTotalConnections value="100"/>
@@ -89,7 +89,7 @@
     </tns:Schedules>-->
 
     <!-- By default all the BPEL packages are read from the file system. If you need to Synchronize
-    the file system bpel repository with set the following parameter to true. This will check the
+    the file system bpel repository with set the following config to true. This will check the
     timestamp of the BPEL packages in the file system against the BPEL packages in the registry. If
     they do not match then the BPEL package in the registry is copied to the file system. -->
     <!--<tns:SyncWithRegistry>false</tns:SyncWithRegistry>-->
