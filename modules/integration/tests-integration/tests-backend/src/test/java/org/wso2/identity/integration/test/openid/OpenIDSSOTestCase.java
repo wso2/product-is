@@ -470,9 +470,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private void resetISConfiguration() throws Exception{
         log.info("Replacing identity.xml with default configurations");
 
-        File defaultIdentityXML = new File(getISResourceLocation()
-                + File.separator + "openId" + File.separator
-                + "identity-default.xml");
+        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
 
         serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
         serverConfigurationManager.restartGracefully();
