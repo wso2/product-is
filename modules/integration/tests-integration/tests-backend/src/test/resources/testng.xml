@@ -126,6 +126,7 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2TestSuiteTestCase" />
             <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
