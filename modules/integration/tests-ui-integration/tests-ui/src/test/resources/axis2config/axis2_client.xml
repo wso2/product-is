@@ -18,60 +18,60 @@
     <!-- ================================================= -->
     <!-- Parameters -->
     <!-- ================================================= -->
-    <parameter name="hotdeployment">true</parameter>
-    <parameter name="hotupdate">false</parameter>
-    <parameter name="enableMTOM">false</parameter>
+    <config name="hotdeployment">true</config>
+    <config name="hotupdate">false</config>
+    <config name="enableMTOM">false</config>
 
     <!-- commons-http-client defaultMaxConnPerHost -->
-    <parameter name="defaultMaxConnPerHost">500</parameter>
+    <config name="defaultMaxConnPerHost">500</config>
     <!-- commons-http-client maxTotalConnections -->
-    <parameter name="maxTotalConnections">15000</parameter>
+    <config name="maxTotalConnections">15000</config>
 
     <!--If turned on with use the Accept header of the request to determine the contentType of the
     response-->
-    <parameter name="httpContentNegotiation">false</parameter>
+    <config name="httpContentNegotiation">false</config>
 
     <!--During a fault, stacktrace can be sent with the fault message. The following flag will control -->
     <!--that behaviour.-->
-    <parameter name="sendStacktraceDetailsWithFaults">true</parameter>
+    <config name="sendStacktraceDetailsWithFaults">true</config>
 
     <!--If there aren't any information available to find out the fault reason, we set the message of the exception-->
     <!--as the faultreason/Reason. But when a fault is thrown from a service or some where, it will be -->
     <!--wrapped by different levels. Due to this the initial exception message can be lost. If this flag-->
     <!--is set then, Axis2 tries to get the first exception and set its message as the faultreason/Reason.-->
-    <parameter name="DrillDownToRootCauseForFaultReason">false</parameter>
+    <config name="DrillDownToRootCauseForFaultReason">false</config>
 
     <!--This is the user name and password of admin console-->
-    <parameter name="userName">admin</parameter>
-    <parameter name="password">axis2</parameter>
+    <config name="userName">admin</config>
+    <config name="password">axis2</config>
 
-    <!--To override repository/services you need to uncomment following parameter and value SHOULD be absolute file path.-->
+    <!--To override repository/services you need to uncomment following config and value SHOULD be absolute file path.-->
     <!--ServicesDirectory only works on the following cases-->
     <!---File based configurator and in that case the value should be a file URL (http:// not allowed)-->
     <!---When creating URL Based configurator with URL “file://”  -->
     <!--- War based configurator with expanded case , -->
 
     <!--All the other scenarios it will be ignored.-->
-    <!--<parameter name="ServicesDirectory">service</parameter>-->
-    <!--To override repository/modules you need to uncomment following parameter and value SHOULD be absolute file path-->
-    <!--<parameter name="ModulesDirectory">modules</parameter>-->
+    <!--<config name="ServicesDirectory">service</config>-->
+    <!--To override repository/modules you need to uncomment following config and value SHOULD be absolute file path-->
+    <!--<config name="ModulesDirectory">modules</config>-->
 
     <!--Following params will set the proper context paths for invocations. All the endpoints will have a commons context-->
-    <!--root which can configured using the following contextRoot parameter-->
-    <!--<parameter name="contextRoot">axis2</parameter>-->
+    <!--root which can configured using the following contextRoot config-->
+    <!--<config name="contextRoot">axis2</config>-->
 
-    <!--Our HTTP endpoints can handle both REST and SOAP. Following parameters can be used to distinguish those endpoints-->
-    <!--<parameter name="servicePath">services</parameter>-->
-    <!--<parameter name="restPath">rest</parameter>-->
+    <!--Our HTTP endpoints can handle both REST and SOAP. Following configs can be used to distinguish those endpoints-->
+    <!--<config name="servicePath">services</config>-->
+    <!--<config name="restPath">rest</config>-->
 
-    <!-- Following parameter will completely disable REST handling in Axis2-->
-    <parameter name="disableREST" locked="false">false</parameter>
+    <!-- Following config will completely disable REST handling in Axis2-->
+    <config name="disableREST" locked="false">false</config>
 
     <!--POJO deployer , this will alow users to drop .class file and make that into a service-->
     <deployer extension=".class" directory="pojo" class="org.apache.axis2.deployment.POJODeployer"/>
 
-    <!-- Following parameter will set the host name for the epr-->
-    <!--<parameter name="hostname" locked="true">myhost.com</parameter>-->
+    <!-- Following config will set the host name for the epr-->
+    <!--<config name="hostname" locked="true">myhost.com</config>-->
 
     <!-- ================================================= -->
     <!-- Message Receivers -->
@@ -155,19 +155,19 @@
     <!-- ================================================= -->
     <transportReceiver name="http"
                        class="org.apache.axis2.transport.http.SimpleHTTPServer">
-        <parameter name="port">6071</parameter>
+        <config name="port">6071</config>
         <!--If you want to give your own host address for EPR generation-->
-        <!--uncomment following parameter , and set as you required.-->
-        <!--<parameter name="hostname">http://myApp.com/ws</parameter>-->
+        <!--uncomment following config , and set as you required.-->
+        <!--<config name="hostname">http://myApp.com/ws</config>-->
     </transportReceiver>
 
     <!--Uncomment if you want to have TCP transport support-->
     <!--<transportReceiver name="tcp"
                        class="org.apache.axis2.transport.tcp.TCPServer">
-        <parameter name="port">6061</parameter>-->
+        <config name="port">6061</config>-->
     <!--If you want to give your own host address for EPR generation-->
-    <!--uncomment following parameter , and set as you required.-->
-    <!--<parameter name="hostname">tcp://myApp.com/ws</parameter>-->
+    <!--uncomment following config , and set as you required.-->
+    <!--<config name="hostname">tcp://myApp.com/ws</config>-->
     <!--</transportReceiver>-->
 
     <!-- ================================================= -->
@@ -182,17 +182,17 @@
                      class="org.apache.axis2.transport.local.LocalTransportSender"/>
     <transportSender name="http"
                      class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
-        <parameter name="PROTOCOL">HTTP/1.1</parameter>
-        <parameter name="Transfer-Encoding">chunked</parameter>
-        <parameter name="SO_TIMEOUT">60000</parameter>
-        <parameter name="CONNECTION_TIMEOUT">60000</parameter>
+        <config name="PROTOCOL">HTTP/1.1</config>
+        <config name="Transfer-Encoding">chunked</config>
+        <config name="SO_TIMEOUT">60000</config>
+        <config name="CONNECTION_TIMEOUT">60000</config>
     </transportSender>
     <transportSender name="https"
                      class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
-        <parameter name="PROTOCOL">HTTP/1.1</parameter>
-        <parameter name="Transfer-Encoding">chunked</parameter>
-        <parameter name="SO_TIMEOUT">60000</parameter>
-        <parameter name="CONNECTION_TIMEOUT">60000</parameter>
+        <config name="PROTOCOL">HTTP/1.1</config>
+        <config name="Transfer-Encoding">chunked</config>
+        <config name="SO_TIMEOUT">60000</config>
+        <config name="CONNECTION_TIMEOUT">60000</config>
     </transportSender>
     <!--<transportSender name="java"-->
     <!--class="org.apache.axis2.transport.java.JavaTransportSender"/>-->

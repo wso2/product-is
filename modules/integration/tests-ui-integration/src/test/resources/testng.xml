@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="IdentityUITestSuite">
-    <parameter name="useDefaultListeners" value="false"/>
+    <config name="useDefaultListeners" value="false"/>
 
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>

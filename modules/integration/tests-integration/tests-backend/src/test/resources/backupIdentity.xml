@@ -137,7 +137,7 @@
 		<!--TokenValidators>
 			<TokenValidator type="bearer" class="org.wso2.carbon.identity.oauth2.validators.DefaultOAuth2TokenValidator"/>
 		</TokenValidators-->
-		<!-- Assertions can be used to embedd parameters into access token. -->
+		<!-- Assertions can be used to embedd configs into access token. -->
 		<EnableAssertions>
 			<UserName>false</UserName>
 		</EnableAssertions>

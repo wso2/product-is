@@ -160,7 +160,7 @@
 
         <!-- Following user manager is used by Identity Server (IS) as its default user manager.
              IS will do token replacement when building the product. Therefore do not change the syntax.
-             If "kdcEnabled" parameter is true, IS will allow service principle management.
+             If "kdcEnabled" config is true, IS will allow service principle management.
              Thus "ServicePasswordJavaRegEx", "ServiceNameJavaRegEx" properties control the service name format and
              service password formats. In case if user core cache domain is needed to identify uniquely set property
              <Property name="UserCoreCacheIdentifier">domain</Property>

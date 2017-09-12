@@ -207,8 +207,8 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
-                    <!--<parameter name="-DportOffset" value="410" />-->
-                    <!--<parameter name="cmdArg" value="debug 5005" />-->
+                    <!--<config name="-DportOffset" value="410" />-->
+                    <!--<config name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
                     <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>

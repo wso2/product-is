@@ -15,11 +15,11 @@
         <transports>
             <transport>https</transport>
         </transports>
-        <parameter name="ServiceClass" locked="false">
+        <config name="ServiceClass" locked="false">
             org.wso2.sample.user.store.manager.CustomUserStoreManager
-        </parameter>
-        <parameter name="DoAuthentication" locked="true">false</parameter>
-        <parameter name="DoAuthorization" locked="true">false</parameter>
+        </config>
+        <config name="DoAuthentication" locked="true">false</config>
+        <config name="DoAuthorization" locked="true">false</config>
         <excludeOperations>
             <operation>isHandle</operation>
             <operation>isAuthenticated</operation>
@@ -28,6 +28,6 @@
             <operation>isDisabled</operation>
         </excludeOperations>
     </service>
-    <parameter name="adminService" locked="true">true</parameter>
-    <parameter name="hiddenService" locked="true">true</parameter>
+    <config name="adminService" locked="true">true</config>
+    <config name="hiddenService" locked="true">true</config>
 </serviceGroup>

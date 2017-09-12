@@ -121,32 +121,32 @@
                     </xs:schema>
                 </wsdl:types>
                 <wsdl:message name="echoStringArraysRequest">
-                    <wsdl:part name="parameters" element="ns:echoStringArrays"/>
+                    <wsdl:part name="configs" element="ns:echoStringArrays"/>
                 </wsdl:message>
                 <wsdl:message name="echoStringArraysResponse">
-                    <wsdl:part name="parameters" element="ns:echoStringArraysResponse"/>
+                    <wsdl:part name="configs" element="ns:echoStringArraysResponse"/>
                 </wsdl:message>
                 <wsdl:message name="echoOMElementRequest">
-                    <wsdl:part name="parameters" element="ns:echoOMElement"/>
+                    <wsdl:part name="configs" element="ns:echoOMElement"/>
                 </wsdl:message>
                 <wsdl:message name="echoOMElementResponse">
-                    <wsdl:part name="parameters" element="ns:echoOMElementResponse"/>
+                    <wsdl:part name="configs" element="ns:echoOMElementResponse"/>
                 </wsdl:message>
                 <wsdl:message name="echoIntRequest">
-                    <wsdl:part name="parameters" element="ns:echoInt"/>
+                    <wsdl:part name="configs" element="ns:echoInt"/>
                 </wsdl:message>
                 <wsdl:message name="echoIntResponse">
-                    <wsdl:part name="parameters" element="ns:echoIntResponse"/>
+                    <wsdl:part name="configs" element="ns:echoIntResponse"/>
                 </wsdl:message>
                 <wsdl:message name="throwAxisFaultRequest"/>
                 <wsdl:message name="throwAxisFaultResponse">
-                    <wsdl:part name="parameters" element="ns:throwAxisFaultResponse"/>
+                    <wsdl:part name="configs" element="ns:throwAxisFaultResponse"/>
                 </wsdl:message>
                 <wsdl:message name="echoStringRequest">
-                    <wsdl:part name="parameters" element="ns:echoString"/>
+                    <wsdl:part name="configs" element="ns:echoString"/>
                 </wsdl:message>
                 <wsdl:message name="echoStringResponse">
-                    <wsdl:part name="parameters" element="ns:echoStringResponse"/>
+                    <wsdl:part name="configs" element="ns:echoStringResponse"/>
                 </wsdl:message>
                 <wsdl:portType name="echoPortType">
                     <wsdl:operation name="echoStringArrays">
@@ -336,7 +336,7 @@
                 </wsdl:service>
             </wsdl:definitions>
         </publishWSDL>
-        <parameter name="enablePublishWSDLSafeMode">true</parameter>
+        <config name="enablePublishWSDLSafeMode">true</config>
     </proxy>
     <sequence name="fault">
         <log level="full">
