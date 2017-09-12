@@ -777,9 +777,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         identityXml = new File(Utils.getResidentCarbonHome() + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
                 ".xml");
-        File identityXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
-                + "original-identity.xml");
+        File identityXmlToCopy = new File(getISResourceLocation() + File.separator + "default-identity.xml");
 
         serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy,
                 identityXml, true);

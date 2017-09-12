@@ -682,8 +682,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
         String carbonHome = CarbonUtils.getCarbonHome();
 
-        String defaultIdentityXml = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "identit_original.xml";
+        String defaultIdentityXml = getISResourceLocation() + File.separator + "default-identity.xml";
         File defaultIdentityXmlLocation = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
         try {
