@@ -88,6 +88,9 @@
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
+            <excludes>
+                <exclude>informix.sql</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>
