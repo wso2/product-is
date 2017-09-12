@@ -9,6 +9,7 @@
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    final String YES = "yes";
     try {
 
         String consumerKey = request.getParameter(OAuth2Constants.CONSUMER_KEY);
@@ -30,15 +31,14 @@
         String scope = request.getParameter(OAuth2Constants.SCOPE);
         String callBackUrl = request.getParameter(OAuth2Constants.CALL_BACK_URL);
 
-        boolean usePKCE = usePKCEParameter != null && "yes".equals(usePKCEParameter);
+        boolean usePKCE = usePKCEParameter != null && YES.equals(usePKCEParameter);
         if(usePKCE) {
             session.setAttribute(OAuth2Constants.OAUTH2_USE_PKCE, usePKCE);
         }
-        boolean formPostMode = "yes".equals(formPostParameter);
+        boolean formPostMode = YES.equals(formPostParameter);
         if (formPostMode) {
             session.setAttribute(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
         }
-
 
         // By default IS does not validate scope. To validate we need to write a callback handler.
         if (scope == null || scope.trim().length() == 0) {
