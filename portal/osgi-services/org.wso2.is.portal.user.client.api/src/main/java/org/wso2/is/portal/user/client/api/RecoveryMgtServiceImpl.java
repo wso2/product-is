@@ -63,7 +63,6 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     private RecoveryConfig recoveryConfig;
     private RealmService realmService;
     private NotificationPasswordRecoveryManager notificationPasswordRecoveryManager;
-
     private SecurityQuestionPasswordRecoveryManager securityQuestionPasswordRecoveryManager;
     private NotificationUsernameRecoveryManager notificationUsernameRecoveryManager;
 
