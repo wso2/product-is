@@ -34,6 +34,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 
 import java.io.BufferedReader;
@@ -45,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SCIM2TestSuiteTestCase extends AbstractIdentityFederationTestCase {
+public class SCIM2TestSuiteTestCase extends ISIntegrationTest {
 
     private static final int TOMCAT_8490 = 8490;
     private Map<Integer, Tomcat> tomcatServers;
@@ -65,7 +66,7 @@ public class SCIM2TestSuiteTestCase extends AbstractIdentityFederationTestCase {
         runTestSuite();
     }
 
-    @DataProvider(name = "test1")
+    @DataProvider(name = "scim2-compliance")
     public Object[][] results() {
 
         String[][] resultArray = new String[25][2];
@@ -77,7 +78,7 @@ public class SCIM2TestSuiteTestCase extends AbstractIdentityFederationTestCase {
     }
 
     // This test will run 25 times
-    @Test(dataProvider = "test1")
+    @Test(dataProvider = "scim2-compliance")
     public void testResults(String status, String name) {
 
         System.out.println(status + " " + name);
@@ -122,7 +123,7 @@ public class SCIM2TestSuiteTestCase extends AbstractIdentityFederationTestCase {
 
         List<NameValuePair> postParameters;
         HttpClient client = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost("http://localhost:" + "8490" + "/scimproxycompliance/compliance2/test2");
+        HttpPost httpPost = new HttpPost("http://localhost:" + "8080" + "/scimproxycompliance/compliance2/test2");
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
         postParameters = new ArrayList<NameValuePair>();
         postParameters.add(new BasicNameValuePair("url", "https://localhost:9853/scim2"));
