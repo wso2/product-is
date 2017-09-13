@@ -163,7 +163,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.mgt</groupId>
-            <artifactId>org.wso2.carbon.identity.recovery.feature</artifactId>
+            <artifactId>org.wso2.carbon.identity.recovery.server.feature</artifactId>
             <type>zip</type>
         </dependency>
 
@@ -175,6 +175,11 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.carbon.iam.user-portal.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.iam.admin-portal.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -434,6 +439,10 @@
                                     <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.iam.admin-portal.feature</id>
+                                    <version>${carbon.is.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.jndi.feature</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -486,8 +495,8 @@
                                     <version>${carbon.security.userstore.jdbc.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.recovery.feature</id>
-                                    <version>${org.wso2.carbon.identity.recovery.feature.version}</version>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>
@@ -631,6 +640,10 @@
                                     <version>${carbon.is.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.iam.admin-portal.feature.group</id>
+                                    <version>${carbon.is.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.jndi.feature.group</id>
                                     <version>${carbon.jndi.version}</version>
                                 </feature>
@@ -683,8 +696,8 @@
                                     <version>${org.wso2.carbon.identity.commons.feature.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.recovery.feature</id>
-                                    <version>${org.wso2.carbon.identity.recovery.feature.version}</version>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature</id>
+                                    <version>${org.wso2.carbon.identity.recovery.server.feature.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.caas.feature</id>

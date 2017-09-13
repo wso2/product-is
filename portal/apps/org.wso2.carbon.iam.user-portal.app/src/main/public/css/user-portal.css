@@ -205,10 +205,6 @@
         font-size: 4.5em;
         font-weight: 400;
     }
-    .signup-claim {
-        margin-bottom: 15px;
-    }
-
 }
 @media (max-width: 991px) {
     .data-container, .error-details-container {
@@ -371,12 +367,6 @@
     font-weight: bold;
     color: #F27B21;
 }
-
-.signup-claim:nth-child(odd) {
-    clear: both;
-    margin-bottom: 15px;
-}
-
 /* show/hide password */
 .hide-pass {
     float: right;
@@ -520,6 +510,7 @@ label.error {
     color: #d9534f;
     font-weight: 500;
 }
+
 .well {
     border:none;
 }
