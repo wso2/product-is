@@ -138,7 +138,7 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
     public ChallengeQuestionsResponse getUserChallengeQuestionAtOnce(String userUniqueId) throws UserPortalUIException {
         if (securityQuestionPasswordRecoveryManager == null || realmService == null || recoveryConfig == null) {
             throw new UserPortalUIException("Challenge question recovery manager or Realm service or recovery " +
-                    "congiguration is not " + "available.");
+                    "configuration is not available.");
         }
         User user;
         try {

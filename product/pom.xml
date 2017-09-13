@@ -97,6 +97,31 @@
             <type>zip</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.gateway</groupId>
+            <artifactId>org.wso2.carbon.identity.gateway.resource.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
+            <artifactId>org.wso2.carbon.identity.auth.saml2.common.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
+            <artifactId>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.authenticator.outbound.saml2sso</groupId>
+            <artifactId>org.wso2.carbon.identity.authenticator.outbound.saml2sso.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.inbound.provisioning.scim2</groupId>
             <artifactId>org.wso2.carbon.identity.inbound.provisioning.scim2.provider.feature</artifactId>
             <type>zip</type>
@@ -323,6 +348,17 @@
                                     </outputDirectory>
                                     <includes>**/h2.sql</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.gateway</groupId>
+                                    <artifactId>org.wso2.carbon.identity.gateway.feature</artifactId>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/resources/dbscripts
+                                    </outputDirectory>
+                                    <includes>**/h2.sql</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -486,6 +522,26 @@
                                 <feature>
                                     <id>org.wso2.carbon.event.handler.notification.server.feature</id>
                                     <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.auth.saml2.common.feature</id>
+                                    <version>${carbon.identity.auth.saml2.common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</id>
+                                    <version>${carbon.identity.saml.inbound.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.outbound.saml2sso.feature</id>
+                                    <version>${carbon.identity.saml.outbound.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -674,6 +730,26 @@
                                 <feature>
                                     <id>org.wso2.carbon.event.handler.notification.server.feature</id>
                                     <version>${org.wso2.carbon.identity.event.handler.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.gateway.resource.feature</id>
+                                    <version>${carbon.identity.gateway.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.auth.saml2.common.feature</id>
+                                    <version>${carbon.identity.auth.saml2.common.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.inbound.saml2sso.feature</id>
+                                    <version>${carbon.identity.saml.inbound.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.outbound.saml2sso.feature</id>
+                                    <version>${carbon.identity.saml.outbound.version}</version>
                                 </feature>
                             </features>
                         </configuration>
