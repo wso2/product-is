@@ -58,7 +58,8 @@ var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(userName);
 
         for each (var f in fieldValues){
             var paramName = f.*::['claimUri'].text().toString();
-            if (paramName == ENCODING_CLAIM_URL || paramName == QR_CODE_URL || paramName == SECRET_KEY || paramName == REFRESH_KEY) {
+            if (paramName == ENCODING_CLAIM_URL || paramName == QR_CODE_URL || paramName == SECRET_KEY ||
+                paramName == REFRESH_KEY) {
             	continue;
             }
             var value = request.getParameter(paramName);
