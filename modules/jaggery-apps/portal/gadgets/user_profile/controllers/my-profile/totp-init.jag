@@ -35,7 +35,9 @@ function init(){
     }
     var userName = request.getParameter("user");
     try{
-        log.info("Calling the web service .... url "+serverUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("Calling the web service url "+serverUrl);
+        }
         var result = callWSReturnJSON(webService, serverUrl, "urn:initTOTP", new Array(userName));
         print(result);
     }

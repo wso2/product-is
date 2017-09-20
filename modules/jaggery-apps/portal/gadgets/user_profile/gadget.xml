@@ -283,7 +283,7 @@ drawFIDORegistration();
 
         }
 
-        function resetTOTP(){
+    function resetTOTP(){
 			 var str = "/portal/gadgets/user_profile/controllers/my-profile/totp-reset.jag";
 			 $.ajax({
 			      url:str,
