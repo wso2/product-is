@@ -383,6 +383,7 @@
                             <descriptors>
                                 <descriptor>src/assembly/dist.xml</descriptor>
                             </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                     <execution>
@@ -397,6 +398,21 @@
                             </filters>
                             <descriptors>
                                 <descriptor>src/assembly/bin.xml</descriptor>
+                            </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>src-doc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>${basedir}/src/assembly/filter.properties</filter>
+                            </filters>
+                            <descriptors>
                                 <descriptor>src/assembly/src.xml</descriptor>
                                 <descriptor>src/assembly/docs.xml</descriptor>
                             </descriptors>
