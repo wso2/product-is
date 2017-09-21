@@ -542,7 +542,7 @@
         <Resource context="/scim2/Bulk" secured="true"  http-method="all">
             <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
         </Resource>
-        <Resource context="(.*)/api/identity/oauth/dcr/(.*)" secured="true" http-method="all">
+        <Resource context="(.*)/api/identity/oauth2/dcr/(.*)" secured="true" http-method="all">
             <Permissions>/permission/admin/manage/identity/applicationmgt</Permissions>
         </Resource>
     </ResourceAccessControl>
@@ -558,7 +558,7 @@
             <Context>/oauth2</Context>
             <Context>/scim2</Context>
             <Context>/api/identity/entitlement</Context>
-            <Context>/api/identity/oauth/dcr/v1.0</Context>
+            <Context>/api/identity/oauth2/dcr/v1.0</Context>
         </WebApp>
         <Servlet>
             <Context>/identity/(.*)</Context>
