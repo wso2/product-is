@@ -1573,7 +1573,7 @@
 
         <authenticator.totp.version>2.0.6</authenticator.totp.version>
         <authenticator.office365.version>1.0.0</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.8</authenticator.smsotp.version>
+        <authenticator.smsotp.version>2.0.9</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.8</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.6</authenticator.twitter.version>
         <authenticator.x509.version>2.0.2</authenticator.x509.version>
