@@ -507,9 +507,41 @@
         <Resource context="(.*)/api/identity/entitlement/(.*)" secured="true" http-method="all">
             <Permissions>/permission/admin/manage/identity/pep</Permissions>
         </Resource>
-        <Resource context="(.*)/IdentityApplicationManagementService(.*)" secured="true"
-                  http-method="all">
-            <Permissions>/permission/admin/manage/identity/attributequery</Permissions>
+        <Resource context="/scim2/Users" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Groups" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/rolemgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Users/*" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Groups/*" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/rolemgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"    http-method="GET">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true" http-method="DELETE">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"    http-method="PUT">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"   http-method="PATCH">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/ServiceProviderConfig" secured="false" http-method="all">
+            <Permissions></Permissions>
+        </Resource>
+        <Resource context="/scim2/ResourceType" secured="false" http-method="all">
+            <Permissions></Permissions>
+        </Resource>
+        <Resource context="/scim2/Bulk" secured="true"  http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/identity/oauth2/dcr/(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/applicationmgt</Permissions>
         </Resource>
     </ResourceAccessControl>
 
@@ -522,7 +554,9 @@
             <Context>/api/identity/user/v0.9</Context>
             <Context>/api/identity/recovery/v0.9</Context>
             <Context>/oauth2</Context>
+            <Context>/scim2</Context>
             <Context>/api/identity/entitlement</Context>
+            <Context>/api/identity/oauth2/dcr/v1.0</Context>
         </WebApp>
         <Servlet>
             <Context>/identity/(.*)</Context>
