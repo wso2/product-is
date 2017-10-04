@@ -6,6 +6,7 @@
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
 <%
     String code = null;
     String accessToken = null;
@@ -17,6 +18,7 @@
     String grantType = null;
     String code_verifier = null;
     String code_challenge = null;
+    String implicitResponseType = null;
 
     boolean isOIDCLogoutEnabled = false;
     boolean isOIDCSessionEnabled = false;
@@ -47,6 +49,7 @@
 
         error = request.getParameter(OAuth2Constants.ERROR);
         grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
+        implicitResponseType = (String) session.getAttribute(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
         if (StringUtils.isNotBlank(request.getHeader(OAuth2Constants.REFERER)) &&
                 request.getHeader(OAuth2Constants.REFERER).contains("rpIFrame")) {
             /**
@@ -122,6 +125,7 @@
 
             var grantType = document.getElementById("grantType").value;
             var scope = document.getElementById("scope").value;
+            var implicitResponseType = document.getElementById("response_type").value;
 
             document.getElementById("logutep").style.display = "none";
             document.getElementById("sessionep").style.display = "none";
@@ -147,6 +151,10 @@
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
                 document.getElementById("formPost").style.display = "";
+
+                if (scope.indexOf("openid") > -1) {
+                    document.getElementById("implicitRespType").style.display = "";
+                }
             } else if ('password' == grantType) {
                 document.getElementById("clientsecret").style.display = "";
                 document.getElementById("callbackurltr").style.display = "none";
@@ -183,6 +191,41 @@
                 }
             }
             return "";
+        }
+
+        function getIDtoken() {
+            var fragment = window.location.hash.substring(1);
+            var arrParams = fragment.split("&");
+            for (var i = 0; i < arrParams.length; i++) {
+                var urlParameters = arrParams[i].split("=");
+
+                if (urlParameters[0] == "id_token") {
+                    var idToken = urlParameters[1];
+                    return idToken;
+                }
+            }
+            return "";
+        }
+
+        function getDecodedIDToken() {
+            var idToken = getIDtoken();
+            if (idToken) {
+                var decodedIdToken = atob(idToken.split(".")[1]);
+                return decodedIdToken;
+            }
+            return "";
+        }
+
+        function makeList(data) {
+            document.write('<tbody>');
+            for (var i in data) {
+                document.write('<div><tr><td><label id="idtokenList">')
+                document.write(i);
+                document.write('</label></td><td>');
+                document.write(data[i]);
+                document.write('</td></tr></div>');
+            }
+            document.write('</tbody>');
         }
 
     </script>
@@ -273,6 +316,19 @@
                         <tr>
                             <td><label>Scope : </label></td>
                             <td><input type="text" id="scope" name="scope" onchange="setVisibility();">
+                            </td>
+                        </tr>
+                        <tr id="implicitRespType" style="display: none">
+                            <td><label>Implicit Response Type: </label></td>
+                            <td>
+                                <select id="response_type" name="response_type">
+                                    <option value="<%=OpenIDConnectConstants.ID_TOKEN%>" selected="selected">
+                                        ID token Only
+                                    </option>
+                                    <option value="<%=OpenIDConnectConstants.ID_TOKEN_TOKEN%>">ID token &
+                                        Access Token
+                                    </option>
+                                </select>
                             </td>
                         </tr>
 
@@ -480,7 +536,60 @@
                 </form>
             </div>
             <%} %>
-
+            <% } else if (OpenIDConnectConstants.ID_TOKEN.equals(implicitResponseType)) {
+            %>
+            <div>
+                <table class="user_pass_table">
+                    <tbody>
+                    <tr>
+                        <td><h5>ID Token:</h5></td>
+                        <td><input id="idToken" name="idToken" style="width:800px"/>
+                            <script type="text/javascript">
+                                document.getElementById("idToken").value = getIDtoken();
+                            </script>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <script type="text/javascript">
+                            var decodedIdToken = JSON.parse(getDecodedIDToken());
+                            makeList(decodedIdToken);
+                        </script>
+                    </tr>
+                    </tbody>
+                </table>
+                <%session.invalidate();%>
+            </div>
+            <% } else if (OpenIDConnectConstants.ID_TOKEN_TOKEN.equals(implicitResponseType)) {%>
+            <div>
+                <table class="user_pass_table">
+                    <tbody>
+                    <tr>
+                        <td><label><h5>Access Token :</h5></label></td>
+                        <td><input id="accessToken" name="accessToken" style="width:350px"/>
+                            <script type="text/javascript">
+                                document.getElementById("accessToken").value = getAcceesToken();
+                            </script>
+                    </tr>
+                    <tr>
+                        <td><h5>ID Token:</h5></td>
+                        <td><input id="idToken" name="idToken" style="width:800px"/>
+                            <script type="text/javascript">
+                                document.getElementById("idToken").value = getIDtoken();
+                            </script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <script type="text/javascript">
+                            var decodedIdToken = JSON.parse(getDecodedIDToken());
+                            makeList(decodedIdToken);
+                        </script>
+                    </tr>
+                    </tbody>
+                </table>
+                <%session.invalidate();%>
+            </div>
             <% } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT.equals(grantType)) {%>
             <div>
                 <form action="oauth2-access-resource.jsp" id="loginForm" method="post">

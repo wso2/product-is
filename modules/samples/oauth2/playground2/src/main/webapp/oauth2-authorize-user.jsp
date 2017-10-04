@@ -6,6 +6,8 @@
 <%@page import="org.apache.oltu.oauth2.common.message.types.GrantType" %>
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
 <%@ page import="org.wso2.sample.identity.oauth2.OAuthPKCEAuthenticationRequestBuilder" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
+<%@ page import="java.util.UUID" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -29,6 +31,7 @@
         String authzGrantType = request.getParameter(OAuth2Constants.OAUTH2_GRANT_TYPE);
         String scope = request.getParameter(OAuth2Constants.SCOPE);
         String callBackUrl = request.getParameter(OAuth2Constants.CALL_BACK_URL);
+        String implicitRespType = request.getParameter(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
 
         boolean usePKCE = usePKCEParameter != null && "yes".equals(usePKCEParameter);
         if(usePKCE) {
@@ -71,7 +74,17 @@
     }
 
     OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
-    if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE) {
+    if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT)) {
+        if (scope.equals(OAuth2Constants.SCOPE_OPENID)) {
+            if (implicitRespType.equals(OpenIDConnectConstants.ID_TOKEN) ||
+                    implicitRespType.equals(OpenIDConnectConstants.ID_TOKEN_TOKEN)) {
+                authzGrantType = implicitRespType;
+                oAuthPKCEAuthenticationRequestBuilder.setParameter(OpenIDConnectConstants.NONCE,
+                        UUID.randomUUID().toString());
+                session.setAttribute(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE, implicitRespType);
+            }
+        }
+    } else if ((authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE)) {
         oAuthPKCEAuthenticationRequestBuilder = oAuthPKCEAuthenticationRequestBuilder.setPKCECodeChallenge(PKCECodeChallenge, PKCECodeChallengeMethod);
     }
 
