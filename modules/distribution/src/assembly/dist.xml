@@ -17,6 +17,7 @@
  ~ under the License.
  -->
 <assembly>
+    <id>WSO2 Identity Server - Dist</id>
     <formats>
         <format>zip</format>
     </formats>

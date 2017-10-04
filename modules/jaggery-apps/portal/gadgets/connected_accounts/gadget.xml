@@ -96,7 +96,6 @@
                     cookie = obj.cookie;
                     userName = obj.user;
                     reloadGrid();
-                    reloadFedGrid();
                 };
                 ws.onclose = function () {
                     console.log("web Socket onclose. ");
