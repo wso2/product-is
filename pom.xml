@@ -1505,11 +1505,11 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.8.145</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.8.146</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.3</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.3.16</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.3.18</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>5.5.17</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.2</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.13</identity.agent.sso.version>
@@ -1534,7 +1534,7 @@
         <identity.governance.version>1.0.23</identity.governance.version>
         <carbon.identity.auth.version>1.1.9</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.8</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.0.14</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.0.15</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>1.0.1</identity.app.authz.xacml.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -1544,10 +1544,10 @@
         <!-- Authenticator Properties -->
         <identity.outbound.auth.oidc.version>5.1.5</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.0</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.7</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.8</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
-        <social.authenticator.facebook.version>5.1.9</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.1.10</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.1.5</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.3</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.3</social.authenticator.yahoo.version>
