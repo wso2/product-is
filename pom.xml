@@ -1330,6 +1330,38 @@
                 <version>${identity.oauth2.jwt.bearer.grant.version}</version>
             </dependency>
 
+            <!-- Other Connectors packed with IS -->
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.emailotp.connector</artifactId>
+                <version>${authenticator.emailotp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.smsotp</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.smsotp.connector</artifactId>
+                <version>${authenticator.smsotp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
+                <version>${authenticator.twitter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.office365.connector</artifactId>
+                <version>${authenticator.office365.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.totp</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.totp.connector</artifactId>
+                <version>${authenticator.totp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector</artifactId>
+                <version>${authenticator.x509.version}</version>
+            </dependency>
+
             <!--
                 Dependencies from this point is used in p2 profile gen, added here to get them updated along with
                 versions plugin (version plugin only reads the dependencies in dependencyManagement,
@@ -1570,13 +1602,12 @@
         <identity.metadata.saml.version>1.0.2</identity.metadata.saml.version>
 
         <!-- Connectors -->
-
-        <authenticator.totp.version>2.0.6</authenticator.totp.version>
+        <authenticator.totp.version>2.0.9</authenticator.totp.version>
         <authenticator.office365.version>1.0.0</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.9</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.8</authenticator.emailotp.version>
-        <authenticator.twitter.version>1.0.6</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.2</authenticator.x509.version>
+        <authenticator.twitter.version>1.0.7</authenticator.twitter.version>
+        <authenticator.x509.version>2.0.3</authenticator.x509.version>
 
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
