@@ -172,4 +172,9 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
         </classes>
     </test>
+    <test name="is-tests-jaggery" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.jaggery.JaggerySessionDestroyedListenersTestCase"/>
+        </classes>
+    </test>
 </suite>

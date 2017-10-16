@@ -1,0 +1,15 @@
+<%
+var caramel;
+
+(function () {
+    if ("change" == request.getQueryString()) {
+        session.invalidate();
+        session = request.getSession(true);
+        sessionId = session.getId();
+    }
+    session = request.getSession(false);
+    session.put('name', 'wso2')
+    print("ReadOnlyTestApp updated session successfully");
+}());
+%>
+
