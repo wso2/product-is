@@ -42,8 +42,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
-                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector
-                                    </artifactId>
+                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
                                     <version>${authenticator.twitter.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
