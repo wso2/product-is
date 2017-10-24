@@ -206,7 +206,7 @@ function reloadGrid() {
     $.ajax({
                url: "/portal/gadgets/user_profile/index.jag",
                type: "POST",
-               data: "&cookie=" + cookie + "&user=" + userName,
+               data: {cookie : cookie, user : userName},
                success: function (data) {
 json = $.parseJSON(data);
 drawPage();
@@ -227,7 +227,7 @@ function deleteFIDOToken(deviceRemarks){
         $.ajax({
                    url: "/portal/gadgets/connected_accounts/index.jag",
                    type: "POST",
-                   data: "&cookie=" + cookie + "&username=" + username + "&idPId=" + idPId + "&action=fedDelete",
+                   data: {cookie : cookie, username : username, idPId : idPId, action : "fedDelete"},
                    success: function (data) {
                        var resp = $.parseJSON(data);
                        if (resp.success == true) {
@@ -260,7 +260,7 @@ function drawFIDORegistration() {
 $.ajax({
            url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
            type: "POST",
-           data: "&cookie=" + cookie + "&action=idPList",
+           data: {cookie : cookie, action : "idPList"},
            success: function (data) {
 
 var deviceMetadata = null;
