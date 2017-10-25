@@ -231,6 +231,29 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 "No SAML2 Assertion found for the SAML2 request.");
     }
 
+    @Test(alwaysRun = true, description = "Test PassiveSTS SAML2 Assertion with WReply URL in passive-sts request",
+            dependsOnMethods = {"testPassiveSAML2Assertion"})
+    public void testPassiveSAML2AssertionWithoutWReply() throws Exception {
+        String passiveParams = "?wa=wsignin1.0&wtrealm=PassiveSTSSampleApp";
+        String wreqParam = "&wreq=%3Cwst%3ARequestSecurityToken+xmlns%3Awst%3D%22http%3A%2F%2Fdocs.oasis-open.org"
+                + "%2Fws-sx%2Fws-trust%2F200512%22%3E%3Cwst%3ATokenType%3Ehttp%3A%2F%2Fdocs.oasis-open.org"
+                + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
+                + "%3ARequestSecurityToken%3E";
+
+        HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
+        HttpResponse response = client.execute(request);
+
+        Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null.");
+        int responseCode = response.getStatusLine().getStatusCode();
+        Assert.assertEquals(responseCode, 200, "Invalid Response.");
+
+        HttpEntity entity = response.getEntity();
+        String responseString = EntityUtils.toString(entity, "UTF-8");
+
+        Assert.assertTrue(responseString.contains("urn:oasis:names:tc:SAML:2.0:assertion"),
+                "No SAML2 Assertion found for the SAML2 request without WReply in passive-sts request.");
+    }
+
     @Test(alwaysRun = true, description = "Test Soap fault in case invalid WReply URL", dependsOnMethods = {
             "testSendLoginRequestPost" })
     public void testPassiveSAML2AssertionForInvalidWReply() throws Exception {
