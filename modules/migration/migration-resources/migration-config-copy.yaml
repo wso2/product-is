@@ -1,0 +1,147 @@
+currentVersion: "5.0.0"
+targetVersion: "5.4.0"
+
+continueOnError: "true"
+batchUpdate: "true"
+ignoreForInactiveTenants: "true"
+
+versions:
+ -
+  version: "5.0.0-SP1"
+  migrationSteps:
+   -
+    migrator: "SchemaMigrator"
+    parameters:
+      dir: "phase1"
+      schema: "identity"
+ -
+  version: "5.1.0"
+  migratorConfigs:
+   -
+    migrator: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    migrator: "SchemaMigrator"
+    order: 2
+    parameters:
+      location: "step1"
+      schema: "um"
+   -
+    migrator: "IdentityDataMigrator"
+    order: 3
+    parameters:
+      schema: "identity"
+   -
+    migrator: "SchemaMigrator"
+    order: 4
+    parameters:
+      location: "step2"
+      schema: "identity"
+   -
+    migrator: "UMDataMigrator"
+    order: 5
+    parameters:
+      schema: "um"
+   -
+    migrator: "RegistryDataMigrator"
+    order: 6
+    parameters:
+      schema: "um"
+   -
+    migrator: "IdentityDataCleaner"
+    order: 7
+    parameters:
+      schema: "identity"
+
+ -
+  version: "5.2.0"
+  migratorConfigs:
+   -
+    migrator: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    migrator: "SchemaMigrator"
+    order: 2
+    parameters:
+      location: "step1"
+      schema: "um"
+
+
+ -
+  version: "5.3.0"
+  migratorConfigs:
+   -
+    migrator: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    migrator: "ClaimDataMigrator"
+    order: 2
+    parameters:
+      schema: "identity"
+   -
+    migrator: "PermissionDataMigrator"
+    order: 3
+    parameters:
+      schema: "identity"
+   -
+    migrator: "EmailTemplateDataMigrator"
+    order: 4
+    parameters:
+      schema: "identity"
+
+   -
+    migrator: "ChallengeQuestionDataMigrator"
+    order: 5
+    parameters:
+      schema: "identity"
+   -
+    migrator: "ResidentIdpMetadataMigrator"
+    order: 6
+    parameters:
+      schema: "identity"
+   -
+    migrator: "OIDCScopeDataMigrator"
+    order: 7
+    parameters:
+      schema: "identity"
+
+
+ -
+  version: "5.4.0"
+  migrationSteps:
+   -
+    migrator: "SchemaMigrator"
+    parameters:
+      path: "step1"
+      schema: "identity"
+   -
+    migrator: "SchemaMigrator"
+    parameters:
+      path: "step1"
+      schema: "um"
+   -
+    migrator: "ClaimDataMigrator"
+    parameters:
+      schema: "identity"
+   -
+    migrator: "PermissionDataMigrator"
+    parameters:
+      schema: "identity"
+   -
+    migrator: "OAuthDataMigrator"
+    parameters:
+      schema: "identity"
+   -
+    migrator: "SchemaMigrator"
+    parameters:
+      location: "step2"
+      schema: "identity"

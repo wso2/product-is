@@ -1,0 +1,99 @@
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<permissions>
+    <permission old="/permission/admin/configure/security">
+        <new>/permission/admin/manage/identity</new>
+    </permission>
+    <permission old="/permission/admin/manage/modify/service">
+        <new>/permission/admin/manage/identity/keystoremgt/view</new>
+        <new>/permission/admin/manage/identity/securitymgt</new>
+        <new>/permission/admin/manage/identity/rolemgt/view</new>
+    </permission>
+    <permission old="/permission/admin/configure/security/usermgt/users">
+        <new>/permission/admin/manage/identity/usermgt/create</new>
+        <new>/permission/admin/manage/identity/identitymgt/delete</new>
+    </permission>
+    <permission old="/permission/admin/configure/security/usermgt/passwords">
+        <new>/permission/admin/manage/identity/usermgt/update</new>
+        <new>/permission/admin/manage/identity/usermgt/delete</new>
+        <new>/permission/admin/manage/identity/usermgt/view</new>
+        <new>/permission/admin/manage/identity/usermgt/list</new>
+        <new>/permission/admin/manage/identity/identitymgt/update</new>
+    </permission>
+    <permission old="/permission/admin/configure/security/usermgt">
+        <new>/permission/admin/manage/identity/usermgt</new>
+    </permission>
+    <permission old="/permission/admin/configure/security/usermgt/profiles">
+        <new>/permission/admin/manage/identity/userprofile</new>
+        <new>/permission/admin/manage/identity/usermgt/list</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/publish">
+        <new>/permission/admin/manage/identity/entitlement/pap/subscriber/create</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/subscriber/delete</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/subscriber/create</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/subscriber/view</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/subscriber/list</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/publish</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/subscriber/update</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/demote">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/demote</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/enable">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/enable</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/view">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/view</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/list</new>
+        <new>/permission/admin/manage/identity/entitlement/pdp/view</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/add">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/create</new>
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/update</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/order">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/order</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/delete">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/delete</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/rollback">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/rollback</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/edit">
+        <new>/permission/admin/manage/identity/entitlement/pap/policy/update</new>
+    </permission>
+    <permission old="/permission/admin/configure/security/usermgt/">
+        <new>/permission/admin/manage/identity/userstore/count/view</new>
+    </permission>
+    <permission old="/permission/admin/configure/security/rolemgt">
+        <new>/permission/admin/manage/identity/rolemgt/view</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/pdp/manage">
+        <new>/permission/admin/manage/identity/entitlement/pdp/manage</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/policy/manage/test">
+        <new>/permission/admin/manage/identity/entitlement/pdp/test</new>
+    </permission>
+    <permission old="/permission/admin/configure/entitlement/pdp/view">
+        <new>/permission/admin/manage/identity/entitlement/pdp/view</new>
+    </permission>
+    <permission old="/permission/admin/manage/identity/pep">
+        <new>/permission/admin/manage/identity/applicationmgt</new>
+    </permission>
+</permissions>
