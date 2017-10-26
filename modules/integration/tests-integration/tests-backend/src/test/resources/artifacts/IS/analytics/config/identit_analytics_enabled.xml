@@ -459,4 +459,79 @@
     <!--Cookies>
         <Cookie name="commonAuthId" domain="localhost" httpOnly="true" secure="true" />
     </Cookies-->
+
+    <ResourceAccessControl>
+        <Resource context="(.*)/api/identity/user/(.*)" secured="true" http-method="all"/>
+        <Resource context="(.*)/api/identity/recovery/(.*)" secured="true" http-method="all"/>
+        <Resource context="(.*)/.well-known(.*)" secured="true" http-method="all"/>
+        <Resource context="(.*)/identity/register(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/applicationmgt/delete</Permissions>
+        </Resource>
+        <Resource context="(.*)/identity/connect/register(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/applicationmgt/create</Permissions>
+        </Resource>
+        <Resource context="(.*)/oauth2/introspect(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/applicationmgt/view</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/identity/entitlement/(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/pep</Permissions>
+        </Resource>
+        <Resource context="/scim2/Users" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Groups" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/rolemgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Users/*" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Groups/*" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/rolemgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"    http-method="GET">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true" http-method="DELETE">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"    http-method="PUT">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"   http-method="PATCH">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/ServiceProviderConfig" secured="false" http-method="all">
+            <Permissions></Permissions>
+        </Resource>
+        <Resource context="/scim2/ResourceType" secured="false" http-method="all">
+            <Permissions></Permissions>
+        </Resource>
+        <Resource context="/scim2/Bulk" secured="true"  http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/identity/oauth2/dcr/(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/applicationmgt</Permissions>
+        </Resource>
+    </ResourceAccessControl>
+
+    <ClientAppAuthentication>
+        <Application name="dashboard" hash="66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"/>
+    </ClientAppAuthentication>
+
+    <TenantContextsToRewrite>
+        <WebApp>
+            <Context>/api/identity/user/v0.9</Context>
+            <Context>/api/identity/recovery/v0.9</Context>
+            <Context>/oauth2</Context>
+            <Context>/scim2</Context>
+            <Context>/api/identity/entitlement</Context>
+            <Context>/api/identity/oauth2/dcr/v1.0</Context>
+        </WebApp>
+        <Servlet>
+            <Context>/identity/(.*)</Context>
+        </Servlet>
+    </TenantContextsToRewrite>
+
+    <!-- Server Synchronization Tolerance Configuration in seconds -->
+    <ClockSkew>300</ClockSkew>
 </Server>

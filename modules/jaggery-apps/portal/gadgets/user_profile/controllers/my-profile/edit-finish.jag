@@ -7,6 +7,10 @@ var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUt
 
 var i18n = session.get("i18n");
 
+var ENCODING_CLAIM_URL = "http://wso2.org/claims/identity/encoding";
+var QR_CODE_URL = "http://wso2.org/claims/identity/qrcodeurl";
+var SECRET_KEY = "http://wso2.org/claims/identity/secretkey";
+var REFRESH_KEY = "http://wso2.org/claims/identity/refreshsecretkey";
 function edit(){
 var cookie = session.get('auth-cookie');
 if(cookie == null){
@@ -54,6 +58,10 @@ var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(userName);
 
         for each (var f in fieldValues){
             var paramName = f.*::['claimUri'].text().toString();
+            if (paramName == ENCODING_CLAIM_URL || paramName == QR_CODE_URL || paramName == SECRET_KEY ||
+                paramName == REFRESH_KEY) {
+            	continue;
+            }
             var value = request.getParameter(paramName);
 
             var isValid = validate(value, f);

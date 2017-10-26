@@ -17,6 +17,7 @@
  ~ under the License.
  -->
 <assembly>
+    <id>WSO2 Identity Server - Bin</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -88,6 +89,9 @@
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
+            <excludes>
+                <exclude>informix.sql</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>
@@ -190,6 +194,15 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>api#identity#oauth2#v1.0.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#oauth2#dcr#v1.0.war</include>
             </includes>
         </fileSet>
 

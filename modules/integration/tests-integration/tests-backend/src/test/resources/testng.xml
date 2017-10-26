@@ -105,6 +105,10 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
+            <!--
+                https://wso2.org/jira/browse/IDENTITY-6829 Need to fix this and comment out the test case ASAP.
+            -->
+            <!--<class name="org.wso2.identity.integration.test.oauth2.IDENTITY6777OAuth2TokenExpiryTestCase"/>-->
 
             <!--OIDC Test Cases-->
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSOTestCase"/>
@@ -132,7 +136,7 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
-           <!-- <class name="org.wso2.identity.integration.test.saml.SPMetaDataTenantTestCase"/>-->
+            <!-- <class name="org.wso2.identity.integration.test.saml.SPMetaDataTenantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
 
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
@@ -162,6 +166,7 @@
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
         </classes>
     </test>
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">

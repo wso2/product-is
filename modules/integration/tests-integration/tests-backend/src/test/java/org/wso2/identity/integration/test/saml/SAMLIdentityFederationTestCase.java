@@ -28,6 +28,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.opensaml.xml.util.Base64;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -296,6 +297,12 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
         Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
+        String decodedSAMLResponse = new String(Base64.decode(samlResponse));
+        Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received" +
+                ".");
+        Assert.assertTrue(decodedSAMLResponse.contains("AuthenticatingAuthority"), "AuthenticatingAuthority is not " +
+                "received.");
+
         boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
         Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
     }
@@ -468,7 +475,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private Property[] getSAML2SSOAuthnConfigProperties() {
 
-        Property[] properties = new Property[13];
+        Property[] properties = new Property[14];
         Property property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
         property.setValue("samlFedIdP");
@@ -530,6 +537,11 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         property = new Property();
         property.setName("AttributeConsumingServiceIndex");
         properties[12] = property;
+
+        property = new Property();
+        property.setName(IdentityConstants.Authenticator.SAML2SSO.RESPONSE_AUTHN_CONTEXT_CLASS_REF);
+        property.setValue("as_response");
+        properties[13] = property;
 
         return properties;
     }

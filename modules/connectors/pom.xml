@@ -41,9 +41,8 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
-                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector
-                                    </artifactId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
+                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
                                     <version>${authenticator.twitter.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
@@ -157,8 +156,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
-                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.totp.connector
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.totp</groupId>
+                                    <artifactId>
+                                        org.wso2.carbon.extension.identity.authenticator.totp.connector
                                     </artifactId>
                                     <version>${authenticator.totp.version}</version>
                                     <type>jar</type>
@@ -230,7 +230,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.totp</groupId>
                                     <artifactId>
                                         org.wso2.carbon.extension.identity.authenticator.totp.endpoint
                                     </artifactId>
@@ -245,16 +245,32 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download_x509certificateauthenticationendpoint_war</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <artifactId>
+                                        org.wso2.carbon.extension.identity.authenticator.x509Certificate.endpoint
+                                    </artifactId>
+                                    <version>${authenticator.x509.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>x509certificateauthenticationendpoint.war</destFileName>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/war
+                                    </outputDirectory>
+                                    <includes>**/*.war</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <authenticator.totp.version>2.0.1</authenticator.totp.version>
-        <authenticator.office365.version>1.0.0</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.6</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.3</authenticator.emailotp.version>
-        <authenticator.twitter.version>1.0.5</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.1</authenticator.x509.version>
-    </properties>
 </project>
