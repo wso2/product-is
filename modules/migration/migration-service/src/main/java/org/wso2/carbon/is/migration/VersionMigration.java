@@ -1,5 +1,7 @@
 package org.wso2.carbon.is.migration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.is.migration.config.Config;
 import org.wso2.carbon.is.migration.config.Version;
 import org.wso2.carbon.is.migration.config.MigratorConfig;
@@ -12,10 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class VersionMigration {
-
+    private static final Log log = LogFactory.getLog(VersionMigration.class);
     public void migrate() throws MigrationClientException {
         List<Migrator> migrators = getMigrators();
         for (Migrator migrator : migrators) {
+            log.info(Constant.MIGRATION_LOG + "Version : " + getCurrentVersion() +", Migration Step : " + migrator
+                    .getClass().getSimpleName
+                    () + " "
+                     + "starting........................... ");
             migrator.migrate();
         }
     }

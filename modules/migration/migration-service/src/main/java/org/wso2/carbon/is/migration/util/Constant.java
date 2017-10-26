@@ -10,5 +10,5 @@ public class Constant {
 
     public static final String CARBON_HOME = "carbon.home" ;
     public static final int SUPER_TENANT_ID = -1234;
-    public static final String MIGRATION_LOG = "Identity Server 5.3.0 to 5.4.0 Migration Process : ";
+    public static final String MIGRATION_LOG = " WSO2 Product Migration Service Task : ";
 }

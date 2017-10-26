@@ -180,21 +180,25 @@ public class ClaimDataMigrator extends Migrator{
                 if (entry.getValue() != null) {
                     for (Map.Entry<String, List<String>> claimEntry : entry.getValue().entrySet()) {
                         String mappedAttribute = claimEntry.getKey();
-                        attributes.add(mappedAttribute.trim());
-                        if (claimEntry.getValue() != null && claimEntry.getValue().size() > 1) {
-                            isSuccess = false;
+                        if(mappedAttribute != null) {
+                            attributes.add(mappedAttribute.trim());
+                            if (claimEntry.getValue() != null && claimEntry.getValue().size() > 1) {
+                                isSuccess = false;
 
-                            report.append(count + ")  Duplicate Mapped Attribute found for dialect :" + dialect +
-                                          " | Mapped Attribute :" + mappedAttribute + " | " +
-                                          "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :" + tenantDomain);
-                            report.append("\n\n");
-                            if (log.isDebugEnabled()) {
-                                log.debug("Duplicate Mapped Attribute found for dialect :" + dialect +
-                                          " | Mapped Attribute :" + mappedAttribute + " | " +
-                                          "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :" + tenantDomain);
+                                report.append(count + ")  Duplicate Mapped Attribute found for dialect :" + dialect +
+                                              " | Mapped Attribute :" + mappedAttribute + " | " +
+                                              "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :"
+                                              + tenantDomain);
+                                report.append("\n\n");
+                                if (log.isDebugEnabled()) {
+                                    log.debug("Duplicate Mapped Attribute found for dialect :" + dialect +
+                                              " | Mapped Attribute :" + mappedAttribute + " | " +
+                                              "Relevant Claims : " + claimEntry.getValue() + " | Tenant Domain :"
+                                              + tenantDomain);
+                                }
+
+                                count++;
                             }
-
-                            count++;
                         }
                     }
 
