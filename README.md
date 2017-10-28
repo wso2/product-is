@@ -154,11 +154,24 @@ Project Resources
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: dev@wso2.org
 
+
+Building the distribution from source
+=========================================
+
+1. Install Java7 or above
+2. Install Apache Maven 3.x.x(https://maven.apache.org/download.cgi#)
+3. Get a clone from https://github.com/wso2/product-is.git or download the source 
+4. Run the one of the below maven commands from product-is directory, 
+    - `mvn clean install` (To build the binary and source distributions with the tests)
+    - `mvn clean install -Dmaven.test.skip=true` (To build the binary and source distribution, without running any of 
+    the unit/integration tests)
+5. You can find the **wso2is-5.4.0-SNAPSHOT.zip** binary distribution in product-is/modules/distribution/target directory.
+
     
 Installation and Running
 ========================
 
-1. Extract the downloaded zip file
+1. Extract the downloaded/built binary distribution zip file
 2. Run the wso2server.sh or wso2server.bat file in the /bin directory
 3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
 4. User dashboard is available at https://localhost:9443/dashboard
