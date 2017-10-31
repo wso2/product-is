@@ -50,8 +50,9 @@ public class Config {
             } catch (MigrationClientException e) {
                 log.error("Error while loading migration configs.", e);
             }
+            log.info(Constant.MIGRATION_LOG + "Successfully loaded the config file.");
         }
-        log.info(Constant.MIGRATION_LOG + "Successfully loaded the config file.");
+
         return Config.config;
     }
 
@@ -127,4 +128,6 @@ public class Config {
     public void setIgnoreForInactiveTenants(boolean ignoreForInactiveTenants) {
         this.ignoreForInactiveTenants = ignoreForInactiveTenants;
     }
+
+
 }
