@@ -39,7 +39,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
@@ -48,12 +47,10 @@ import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -91,21 +88,17 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private static final String profileName = "default";
     private static final String TENANT_DOMAIN = "registrymount.com";
-    private static final String TENANT_ADMIN_USERNAME = "admin@registrymount.com";
-    private static final String TENANT_ADMIN_PASSWORD = "admin";
-    private static final String TENANT_ADMIN_TENANT_AWARE_USERNAME = "admin";
+    private static final String TENANT_ADMIN_USERNAME = "admin@email.com@registrymount.com";
+    private static final String TENANT_ADMIN_PASSWORD = "adminPassword";
+    private static final String TENANT_ADMIN_TENANT_AWARE_USERNAME = "admin@email.com";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private TenantManagementServiceClient tenantServiceClient;
     private AuthenticatorClient logManger;
-    private ServerConfigurationManager serverConfigurationManager;
     private String artifact = "travelocity.com-registrymount";
 
     private HttpClient httpClient;
-    private Tomcat tomcatServer;
-
-    private File registryXml;
 
     private String resultPage;
 
@@ -115,28 +108,16 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         logManger = new AuthenticatorClient(backendURL);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        registryXml = new File(Utils.getResidentCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "registry.xml");
-        File registryXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
-                + "registry.xml");
 
-        serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy,
-                registryXml, true);
-        serverConfigurationManager.restartGracefully();
-        super.init();
         tenantServiceClient = new TenantManagementServiceClient( isServer.getContextUrls().getBackEndUrl(),
                 sessionCookie);
         tenantServiceClient.addTenant(TENANT_DOMAIN, TENANT_ADMIN_TENANT_AWARE_USERNAME, TENANT_ADMIN_PASSWORD,
-                TENANT_ADMIN_USERNAME, "Registry", "Mount");
+                TENANT_ADMIN_TENANT_AWARE_USERNAME, "Registry", "Mount");
 
         sessionCookie = this.logManger.login(TENANT_ADMIN_USERNAME, TENANT_ADMIN_PASSWORD, isServer.getInstance()
                 .getHosts().get(profileName));
 
-        configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
-                        , null);
+        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient =
                 new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
         ssoConfigServiceClient =
@@ -146,16 +127,8 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
         createApplication();
 
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = getTomcat();
-
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + artifact + ".war");
-        startTomcat(tomcatServer, "/" + artifact, resourceUrl.getPath());
-
         ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
-        serverConfigurationManager.restartGracefully();
     }
 
     @AfterClass(alwaysRun = true)
@@ -165,14 +138,9 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         applicationManagementServiceClient =
                 new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
         deleteApplication();
-        serverConfigurationManager.restoreToLastConfiguration(true);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         httpClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is")
@@ -199,29 +167,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + artifact, e);
         }
-    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
     }
 
     private String extractDataFromResponse(HttpResponse response, String key, int token)
