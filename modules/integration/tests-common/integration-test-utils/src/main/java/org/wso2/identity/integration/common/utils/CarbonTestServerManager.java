@@ -45,14 +45,9 @@ public class CarbonTestServerManager extends TestServerManager {
         super(context, carbonZip);
     }
 
-    public String startServer() throws IOException, AutomationFrameworkException {
-        String carbonHome;
-        try {
-            carbonHome = super.startServer();
-        } catch (XPathExpressionException e) {
-            throw new AutomationFrameworkException("Failed to startup server.", e);
-        }
+    public String startServer() throws AutomationFrameworkException {
 
+        String carbonHome = super.startServer();
         System.setProperty("carbon.home", carbonHome);
         return carbonHome;
     }
