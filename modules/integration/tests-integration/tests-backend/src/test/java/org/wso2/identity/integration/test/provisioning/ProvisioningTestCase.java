@@ -31,7 +31,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
@@ -49,8 +48,8 @@ import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.listeners.IdentityServersDeployer;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
@@ -64,7 +63,6 @@ import java.util.Map;
 
 public class ProvisioningTestCase extends ISIntegrationTest {
 
-    private String servicesUrl = "https://localhost:%s/services/";
     private MultipleServersManager manager;
     private Map<Integer, UserManagementClient> userMgtServiceClients;
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
@@ -75,8 +73,6 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     String scim_url_0;
     String scim_url_1;
     String scim_url_2;
-    String serviceEndPoint = null;
-    String backendUrl = null;
 
     protected static final String userName = "testProvisioningUser1";
     protected static final String userName2 = "testProvisioningUser2";
@@ -88,10 +84,8 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     private static final String phone_number = "0112145300";
 
     public static final String SAMPLE_IDENTITY_PROVIDER_NAME = "sample";
-    public static final String PORT_OFFSET_PARAM = "-DportOffset";
 
     public static final int DEFAULT_PORT = 9853;
-    public static final int adminUserId = 0;
     public static final int PORT_OFFSET_0 = 0;
     public static final int PORT_OFFSET_1 = 1;
     public static final int PORT_OFFSET_2 = 2;
@@ -103,15 +97,14 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
 
-        userMgtServiceClients = new HashMap<Integer, UserManagementClient>();
-        identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
-        applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
-        automationContextMap = new HashMap<Integer, AutomationContext>();
+        userMgtServiceClients = new HashMap<>();
+        identityProviderMgtServiceClients = new HashMap<>();
+        applicationManagementServiceClients = new HashMap<>();
+        automationContextMap = new HashMap<>();
         manager = new MultipleServersManager();
 
         automationContextMap.put(PORT_OFFSET_0, isServer);
-
-        startOtherCarbonServers();
+        automationContextMap.putAll(IdentityServersDeployer.getThreadLocalAutomationContextMap());
 
         createServiceClientsForServers(sessionCookie, PORT_OFFSET_0, new CommonConstants.AdminClients[]{
                 CommonConstants.AdminClients.APPLICATION_MANAGEMENT_SERVICE_CLIENT, CommonConstants.AdminClients.IDENTITY_PROVIDER_MGT_SERVICE_CLIENT });
@@ -143,9 +136,6 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 identityProviderMgtServiceClient.deleteIdP("sample");
             }
         }
-
-        manager.stopAllServers();
-
     }
 
 
@@ -403,34 +393,6 @@ public class ProvisioningTestCase extends ISIntegrationTest {
             }
         }
         return false;
-    }
-
-    /**
-     * Start additional carbon servers
-     *
-     * @throws Exception
-     */
-    private void startOtherCarbonServers() throws Exception {
-
-        Map<String, String> startupParameterMap1 = new HashMap<String, String>();
-        startupParameterMap1.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_1));
-
-        AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-        automationContextMap.put(PORT_OFFSET_1, context1);
-
-        CarbonTestServerManager server1 = new CarbonTestServerManager(context1, System.getProperty("carbon.zip"),
-                                                                      startupParameterMap1);
-
-        Map<String, String> startupParameterMap2 = new HashMap<String, String>();
-        startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_2));
-
-        AutomationContext context2 = new AutomationContext("IDENTITY", "identity003", TestUserMode.SUPER_TENANT_ADMIN);
-        automationContextMap.put(PORT_OFFSET_2, context2);
-
-        CarbonTestServerManager server2 = new CarbonTestServerManager(context2, System.getProperty("carbon.zip"),
-                                                                      startupParameterMap2);
-
-        manager.startServers(server1, server2);
     }
 
     //TODO: Need to remove
