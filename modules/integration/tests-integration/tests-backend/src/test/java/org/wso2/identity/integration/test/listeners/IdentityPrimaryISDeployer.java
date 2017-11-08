@@ -44,7 +44,6 @@ public class IdentityPrimaryISDeployer implements ISuiteListener {
     private static final Log log = LogFactory.getLog(IdentityPrimaryISDeployer.class);
 
     private TestServerManager serverManager;
-    private String executionEnvironment;
     private Map<String, String> primayISParameters = new HashMap<>();
     private AutomationContext automationContext;
 
@@ -61,34 +60,30 @@ public class IdentityPrimaryISDeployer implements ISuiteListener {
             // Initializing automation context.
             try {
                 automationContext = new AutomationContext();
-                executionEnvironment = automationContext.getConfigurationValue(ContextXpathConstants.EXECUTION_ENVIRONMENT);
                 serverManager = new TestServerManager(automationContext, null, primayISParameters);
             } catch (XPathExpressionException ex) {
-                throw new AutomationFrameworkException("Error while initializing automation context.", ex);
+                stopTestExecution("Error while initializing automation context.", ex);
             }
 
-            //Start the server if the execution environment is STANDALONE.
-            if (executionEnvironment.equalsIgnoreCase(ExecutionEnvironment.STANDALONE.name())) {
-                String carbonHome = serverManager.startServer(primayISParameters.get(IdentityListenerConstants.CONF_LOCATION));
-                System.setProperty(ExtensionConstants.CARBON_HOME, carbonHome);
-            }
+            // Start the server and set CARBON_HOME system property.
+            String carbonHome = serverManager.startServer(primayISParameters.get(
+                    IdentityListenerConstants.CONF_LOCATION));
+            System.setProperty(ExtensionConstants.CARBON_HOME, carbonHome);
         } catch (AutomationFrameworkException ex) {
-            handleException("Error while initializing the Automation Context", ex);
+            stopTestExecution("Error while initializing the Automation Context", ex);
         }
     }
 
     @Override
     public void onFinish(ISuite iSuite) {
         try {
-            if (executionEnvironment.equalsIgnoreCase(ExecutionEnvironment.STANDALONE.name())) {
-                serverManager.stopServer();
-            }
+            serverManager.stopServer();
         } catch (AutomationFrameworkException ex) {
-            handleException("Failed to stop the carbon server.", ex);
+            stopTestExecution("Failed to stop the carbon server.", ex);
         }
     }
 
-    private void initParameters(ISuite iSuite) {
+    private void initParameters(ISuite iSuite) throws AutomationFrameworkException {
         primayISParameters.put(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND, iSuite.getParameter(
                 ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND));
         primayISParameters.put(ExtensionConstants.SERVER_STARTUP_SETUP_COMMAND, iSuite.getParameter(
@@ -98,16 +93,12 @@ public class IdentityPrimaryISDeployer implements ISuiteListener {
         // for primaryIS deployment.
         String relativeConfLocation = iSuite.getParameter(IdentityListenerConstants.CONF_LOCATION_PARAMETER);
         if(StringUtils.isNotEmpty(relativeConfLocation)){
-            try {
-                primayISParameters.put(IdentityListenerConstants.CONF_LOCATION,
-                        FrameworkExtensionUtils.getResourceLocation(relativeConfLocation));
-            } catch (AutomationFrameworkException e) {
-                e.printStackTrace();
-            }
+            primayISParameters.put(IdentityListenerConstants.CONF_LOCATION,
+                    FrameworkExtensionUtils.getResourceLocation(relativeConfLocation));
         }
     }
 
-    private static void handleException(String msg, Exception e) {
+    private static void stopTestExecution(String msg, Exception e) {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
     }

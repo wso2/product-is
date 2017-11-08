@@ -31,28 +31,20 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.integration.common.utils.FileManager;
-import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
-import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.listeners.IdentityServersDeployer;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,8 +52,8 @@ import java.util.Map;
 
 public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" + "" +
-            ".HTTPBinding=HTTP-Redirect";
+    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity" +
+            ".com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
@@ -82,32 +74,25 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     private static final String email = "samlFederatedUser1@wso2.com";
     private static final String profileName = "default";
     private static String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
-    private ServerConfigurationManager serverConfigurationManager;
+    // Introduced this to make the test work with ChangeACSUrlTestCase.
+    private String COMMON_AUTH_URL_CHANGED = "https://localhost:%s/commonauth1";
+
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.initTest();
-        // Apply file based configurations
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        applyConfigurationsForPrimaryIS();
-        // Start secondary IS server
-        Map<String, String> startupParameters = new HashMap<>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext secondaryISServer = new AutomationContext("IDENTITY", "identity002", TestUserMode
-                .SUPER_TENANT_ADMIN);
-        startCarbonServer(PORT_OFFSET_1, secondaryISServer, startupParameters);
-        // Deploy webapp in Tomcat
-        super.startTomcat(TOMCAT_8490);
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
+        automationContextMap.putAll(IdentityServersDeployer.getThreadLocalAutomationContextMap());
+
         // Create service clients
         super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants
                 .ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(getSecondaryISURI(), secondaryISServer
-                .getContextTenant().getContextUser().getUserName(), secondaryISServer.getContextTenant()
-                .getContextUser().getPassword());
+        AutomationContext secondaryIS = automationContextMap.get(PORT_OFFSET_1);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(getSecondaryISURI(),
+                secondaryIS.getContextTenant().getContextUser().getUserName(),
+                secondaryIS.getContextTenant().getContextUser().getPassword());
+
         // Create user in secondary IS server
         createUserInSecondaryIS();
     }
@@ -115,16 +100,11 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
+        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
         deleteUserInSecondaryIS();
-
         remoteUSMServiceClient = null;
-
-        super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8490);
         super.stopHttpClient();
-
-        removeConfigurationsFromPrimaryIS();
     }
 
     @Test(priority = 1, groups = "wso2.is", description = "Check create service provider in secondary IS")
@@ -134,9 +114,10 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(serviceProvider, "Failed to create service provider 'secondarySP' in secondary IS");
-        // Set SAML configurations
+        // Set SAML configurations.
+        // Here COMMON_AUTH_URL_CHANGED is used as ACS Url in order to make this test work with ChangeACSUrlTestCase.
         updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME, String.format
-                (COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
+                (COMMON_AUTH_URL_CHANGED, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
         // Set claim configurations
         serviceProvider.getClaimConfig().setLocalClaimDialect(false);
         serviceProvider.getClaimConfig().setClaimMappings(getClaimMappingsForSPInSecondaryIS());
@@ -337,64 +318,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         }
 
         return attributeMap;
-    }
-
-    protected void applyConfigurationsForPrimaryIS() throws IOException, AutomationUtilException {
-
-        File samlSPXml = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS"
-                + File.separator + "saml" + File.separator + "filebasedspidpconfigs" + File.separator + "saml-sp.xml");
-        copyToIdentity(samlSPXml, "service-providers");
-
-        File samlIdPXml = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator +
-                "IS" + File.separator + "saml" + File.separator + "filebasedspidpconfigs" + File.separator +
-                "saml-idp.xml");
-        copyToIdentity(samlIdPXml, "identity-providers");
-
-        File ssoIdPConfigXml = new File(Utils.getResidentCarbonHome() + File.separator + "repository" + File
-                .separator + "conf" + File.separator + "identity" + File.separator + "sso-idp-config.xml");
-        File ssoIdPConfigXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
-                .separator + "IS" + File.separator + "saml" + File.separator + "filebasedspidpconfigs" + File
-                .separator + "saml-sp-sso-idp-config.xml");
-
-        serverConfigurationManager.applyConfiguration(ssoIdPConfigXmlToCopy, ssoIdPConfigXml, false, true);
-    }
-
-    protected void removeConfigurationsFromPrimaryIS() throws IOException, AutomationUtilException {
-
-        removeFromIdentity("saml-sp.xml", "service-providers");
-        removeFromIdentity("saml-idp.xml", "identity-providers");
-
-        File ssoIdPConfigXml = new File(Utils.getResidentCarbonHome() + File.separator + "repository" + File
-                .separator + "conf" + File.separator + "identity" + File.separator + "sso-idp-config.xml");
-        File ssoIdPConfigXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
-                .separator + "IS" + File.separator + "saml" + File.separator + "filebasedspidpconfigs" + File
-                .separator + "original-sso-idp-config.xml");
-
-        serverConfigurationManager.applyConfiguration(ssoIdPConfigXmlToCopy, ssoIdPConfigXml, false, true);
-    }
-
-    protected void copyToIdentity(File sourceFile, String targetDirectory) throws IOException {
-
-        String identityConfigPath = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "identity";
-        if (StringUtils.isNotBlank(targetDirectory)) {
-            identityConfigPath = identityConfigPath.concat(File.separator + targetDirectory);
-        }
-        FileManager.copyResourceToFileSystem(sourceFile.getAbsolutePath(), identityConfigPath, sourceFile.getName());
-    }
-
-    protected void removeFromIdentity(String fileName, String targetDirectory) throws IOException {
-
-        String identityConfigPath = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "identity";
-        if (StringUtils.isNotBlank(targetDirectory)) {
-            identityConfigPath = identityConfigPath.concat(File.separator + targetDirectory);
-        }
-
-        File file = new File(identityConfigPath + File.separator + fileName);
-        if (file.exists()) {
-            FileManager.deleteFile(file.getAbsolutePath());
-        }
     }
 
     protected void createUserInSecondaryIS() {

@@ -30,9 +30,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
@@ -40,17 +37,13 @@ import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
-import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.listeners.IdentityServersDeployer;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,12 +51,9 @@ import java.util.Map;
 
 public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity-changeACS";
-    private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondaryChangeACSSP";
-    private static final String IDENTITY_PROVIDER_NAME = "ChangeACSIdP";
-    private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
+    private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "primaryIS";
     private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
-    private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlChangeACSSP";
+    private static final String SECONDARY_IS_SAML_ISSUER_NAME = "is-sp-saml";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
@@ -79,82 +69,21 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private String usrName = "admin";
     private String usrPwd = "admin";
 
-    private File applicationAuthenticationXml;
-    private ServerConfigurationManager serverConfigurationManager;
-
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.initTest();
-        applicationAuthenticationXml = new File(Utils.getResidentCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "application-authentication.xml");
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
-                + "application-authentication-changed-acs.xml");
+        automationContextMap.putAll(IdentityServersDeployer.getThreadLocalAutomationContextMap());
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, false);
-
-        serverConfigurationManager.restartGracefully();
-
-        super.initTest();
-
-        Map<String, String> startupParameters = new HashMap<String, String>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(PORT_OFFSET_1, context, startupParameters);
-
-        super.startTomcat(TOMCAT_8490);
-
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
-
-
-        super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
-                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-
-        //create identity provider in primary IS
-        IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
-
-        FederatedAuthenticatorConfig saml2SSOAuthnConfig = new FederatedAuthenticatorConfig();
-        saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfig.setDisplayName("samlsso");
-        saml2SSOAuthnConfig.setEnabled(true);
-        saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
-        identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
-        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
-
-        super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
-
-        //create service provider in primary IS
-        super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-
-        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-
-        updateServiceProviderWithSAMLConfigs(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL, serviceProvider);
-
-        AuthenticationStep authStep = new AuthenticationStep();
-        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
-        idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
-        authStep.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{idP});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(new AuthenticationStep[]{authStep});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType(AUTHENTICATION_TYPE);
-
-        updateServiceProvider(PORT_OFFSET_0, serviceProvider);
+        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants
+                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
 
         //create service provider in secondary IS
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
         updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME, String.format
                 (COMMON_AUTH_URL_CHANGED, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
-
         updateServiceProvider(PORT_OFFSET_1, serviceProvider);
     }
 
@@ -186,28 +115,9 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
-        super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
-
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8490);
-
         super.stopHttpClient();
-
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator +
-                "application-authentication-default.xml");
-
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, false);
-
-        serverConfigurationManager.restartGracefully();
-
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
@@ -321,74 +231,6 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         samlssoServiceProviderDTO.setEnableAttributeProfile(true);
         samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         return samlssoServiceProviderDTO;
-    }
-
-    private Property[] getSAML2SSOAuthnConfigProperties() {
-
-        Property[] properties = new Property[13];
-        Property property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
-        property.setValue("samlChangeACSIdP");
-        properties[0] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.SP_ENTITY_ID);
-        property.setValue("samlChangeACSSP");
-        properties[1] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9854/samlsso");
-        properties[2] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_REQ_SIGNED);
-        property.setValue("false");
-        properties[3] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_ENABLED);
-        property.setValue("true");
-        properties[4] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL);
-        properties[5] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED);
-        property.setValue("false");
-        properties[6] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_RESP_SIGNED);
-        property.setValue("false");
-        properties[7] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_USER_ID_IN_CLAIMS);
-        property.setValue("false");
-        properties[8] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_ENCRYPTION);
-        property.setValue("false");
-        properties[9] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_SIGNING);
-        property.setValue("false");
-        properties[10] = property;
-
-        property = new Property();
-        property.setName("commonAuthQueryParams");
-        properties[11] = property;
-
-        property = new Property();
-        property.setName("AttributeConsumingServiceIndex");
-        properties[12] = property;
-
-        return properties;
     }
 
     public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {

@@ -44,7 +44,6 @@ public class IdentityServersDeployer implements ISuiteListener{
 
     private static final Log log = LogFactory.getLog(IdentityServersDeployer.class);
 
-    private Map<String, String> additionalISParameters = new HashMap<>();
     private MultipleServersManager serversManager = new MultipleServersManager();
     private Map<Integer, AutomationContext> automationContextMap = new HashMap<>();
 
@@ -57,12 +56,10 @@ public class IdentityServersDeployer implements ISuiteListener{
 
     @Override
     public void onStart(ISuite iSuite) {
-
-        initParameters(iSuite);
         try {
-            startCarbonServers(getIdentityServersParams());
+            startCarbonServers(getIdentityServersParams(iSuite));
         } catch (AutomationFrameworkException ex) {
-            handleException("Error while starting additional ISs.", ex);
+            stopTestExecution("Error while starting additional ISs.", ex);
         }
 
         // Set unmodifiable automationContextMap to threadLocal variable in order to be accessed within test classes.
@@ -74,7 +71,7 @@ public class IdentityServersDeployer implements ISuiteListener{
         try {
             serversManager.stopAllServers();
         } catch (AutomationFrameworkException ex) {
-            handleException("Error while stopping additional ISs", ex);
+            stopTestExecution("Error while stopping additional ISs", ex);
         } finally {
             testSuiteThreadLocal.remove();
         }
@@ -109,10 +106,9 @@ public class IdentityServersDeployer implements ISuiteListener{
             }
             automationContextMap.put(ISparam.getPortOffset(), automationContext);
 
-            // Create CarbonTestServerManger and add it to the servers arrays
+            // Create CarbonTestServerManger and add it to the servers array.
             carbonServers[index] = new CarbonTestServerManager(automationContext, System.getProperty
                     (ExtensionConstants.SYSTEM_PROPERTY_CARBON_ZIP_LOCATION), startupParams);
-
             index++;
         }
         serversManager.startServers(carbonServers);
@@ -160,57 +156,41 @@ public class IdentityServersDeployer implements ISuiteListener{
         }
     }
 
-    private void initParameters(ISuite iSuite) {
+    private IdentityServerParamsBean[] getIdentityServersParams(ISuite iSuite) throws AutomationFrameworkException {
+        int ISsCount;
+        String[] portOffsets;
+        String[] productGroupNames;
+        String[] instanceNames;
+        String[] testUserModes;
 
-        String requiredISCount = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_COUNT_PARAMETER);
-        String portOffsets = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_PORT_OFFSETS_PARAMETER);
-        String productGroupNames = iSuite.getParameter(
-                IdentityListenerConstants.ADDITIONAL_IS_PROUDUCT_GROUP_NAMES_PARAMETER);
-        String instanceNames = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_INSTANCE_NAMES_PARAMETER);
-        String testUserModes = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_TEST_USER_MODES_PARAMETER);
-        // Validate additional ISs deployment parameters.
-        try{
-            // requiredISCount parameter value need to be a number.
-            int ISsCount = Integer.parseInt(requiredISCount);
-            // Number of portOffsets, instanceNames, and testUserModes should be equal to the requiredIScount.
-            if (ISsCount !=  portOffsets.split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR)
-                    .length ||
-                    ISsCount != instanceNames.split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR)
-                            .length ||
-                    ISsCount != testUserModes.split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR)
-                    .length ) {
-                handleException("Incorrect additional ISs deployment parameters.");
-            }
-        } catch (Exception ex) {
-            handleException("Incorrect formats of additional ISs deployment parameters.", ex);
+        // AdditionalIsCount should be a number.
+        try {
+            ISsCount = Integer.parseInt(iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_COUNT_PARAMETER));
+        } catch (NumberFormatException ex) {
+            throw new AutomationFrameworkException(IdentityListenerConstants.ADDITIONAL_IS_COUNT_PARAMETER + " should" +
+                    " be a number.", ex);
         }
-        // Set additional ISs parameters.
-        additionalISParameters.put(IdentityListenerConstants.ADDITIONAL_IS_COUNT_PARAMETER, requiredISCount);
-        additionalISParameters.put(IdentityListenerConstants.ADDITIONAL_IS_PORT_OFFSETS_PARAMETER, portOffsets);
-        additionalISParameters.put(IdentityListenerConstants.ADDITIONAL_IS_PROUDUCT_GROUP_NAMES_PARAMETER,
-                productGroupNames);
-        additionalISParameters.put(IdentityListenerConstants.ADDITIONAL_IS_INSTANCE_NAMES_PARAMETER, instanceNames);
-        additionalISParameters.put(IdentityListenerConstants.ADDITIONAL_IS_TEST_USER_MODES_PARAMETER, testUserModes);
-    }
 
-    private IdentityServerParamsBean[] getIdentityServersParams(){
-
-        int ISsCount = Integer.parseInt(additionalISParameters.get(
-                IdentityListenerConstants.ADDITIONAL_IS_COUNT_PARAMETER));
+        // Additional ISs deployment parameters should be not null and each parameter values count should be equal to
+        // number of additional ISs count.
         IdentityServerParamsBean[] identityServersParams = new IdentityServerParamsBean[ISsCount];
-
-        String[] portOffsets = additionalISParameters
-                .get(IdentityListenerConstants.ADDITIONAL_IS_PORT_OFFSETS_PARAMETER)
-                .split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR);
-        String[] productGroupNames = additionalISParameters
-                .get(IdentityListenerConstants.ADDITIONAL_IS_PROUDUCT_GROUP_NAMES_PARAMETER)
-                .split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR);
-        String[] instanceNames = additionalISParameters
-                .get(IdentityListenerConstants.ADDITIONAL_IS_INSTANCE_NAMES_PARAMETER)
-                .split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR);
-        String[] testUserModes = additionalISParameters
-                .get(IdentityListenerConstants.ADDITIONAL_IS_TEST_USER_MODES_PARAMETER)
-                .split(IdentityListenerConstants.ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR);
+        try {
+            portOffsets = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_PORT_OFFSETS_PARAMETER)
+                    .split(IdentityListenerConstants.PARAMETER_SEPARATOR);
+            productGroupNames = iSuite.getParameter(
+                    IdentityListenerConstants.ADDITIONAL_IS_PROUDUCT_GROUP_NAMES_PARAMETER)
+                    .split(IdentityListenerConstants.PARAMETER_SEPARATOR);
+            instanceNames = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_INSTANCE_NAMES_PARAMETER)
+                    .split(IdentityListenerConstants.PARAMETER_SEPARATOR);
+            testUserModes = iSuite.getParameter(IdentityListenerConstants.ADDITIONAL_IS_TEST_USER_MODES_PARAMETER)
+                    .split(IdentityListenerConstants.PARAMETER_SEPARATOR);
+            if (ISsCount != portOffsets.length || ISsCount != productGroupNames.length
+                    || ISsCount != instanceNames.length || ISsCount != testUserModes.length) {
+                throw new AutomationFrameworkException("Incorrect additional ISs deployment parameters.");
+            }
+        } catch (NullPointerException ex) {
+            throw new AutomationFrameworkException("Additional ISs deployment parameters cannot be null.", ex);
+        }
 
         Map<String, TestUserMode> testUserModeMap = TestFrameworkUtils.getTestUserModeMap();
 
@@ -221,7 +201,7 @@ public class IdentityServersDeployer implements ISuiteListener{
             try {
                 ISParamsBean.setPortOffset(Integer.parseInt(portOffsets[index]));
             } catch (NumberFormatException ex) {
-                handleException(portOffsets[index] + "is not a valid port offset.");
+                stopTestExecution(portOffsets[index] + "is not a valid port offset.");
             }
 
             ISParamsBean.setProducGroupName(productGroupNames[index]);
@@ -232,7 +212,7 @@ public class IdentityServersDeployer implements ISuiteListener{
             if (testUserMode != null) {
                 ISParamsBean.setTestUserMode(testUserModeMap.get(testUserModes[index]));
             } else {
-                handleException("Test User Mode: " + testUserModes[index] + " is not a supported user mode type.");
+                stopTestExecution("Test User Mode: " + testUserModes[index] + " is not a supported user mode type.");
             }
 
             // Set additional identity servers parameters.
@@ -242,12 +222,12 @@ public class IdentityServersDeployer implements ISuiteListener{
         return identityServersParams;
     }
 
-    private static void handleException(String msg, Exception e) {
+    private static void stopTestExecution(String msg, Exception e) {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
     }
 
-    private static void handleException(String msg) {
+    private static void stopTestExecution(String msg) {
         log.error(msg);
         throw new RuntimeException(msg);
     }

@@ -35,5 +35,4 @@ public class IdentityListenerConstants {
     public static final String ADDITIONAL_IS_PROUDUCT_GROUP_NAMES_PARAMETER = "additionalISProductGroupNames";
     public static final String ADDITIONAL_IS_INSTANCE_NAMES_PARAMETER = "additionalISInstanceNames";
     public static final String ADDITIONAL_IS_TEST_USER_MODES_PARAMETER = "additionalISTestUserModes";
-    public static final String ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR = ",";
 }

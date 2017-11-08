@@ -18,7 +18,7 @@
 
 <!--Following IDP is required for the SAMLFederationWithFileBasedSPAndIDPTestCase-->
 <IdentityProvider>
-    <IdentityProviderName>secondaryIS</IdentityProviderName>
+    <IdentityProviderName>SHARED_secondaryIS</IdentityProviderName>
     <DisplayName></DisplayName>
     <IdentityProviderDescription></IdentityProviderDescription>
     <Alias>secondaryIS</Alias>

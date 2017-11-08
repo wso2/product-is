@@ -25,7 +25,7 @@
     <parameter name="-DportOffset" value="410"/>
     <parameter name="-Dsetup" value="true"/>
     <!--Here considers the resources directory as the root directory.-->
-    <parameter name="confLocation" value="artifacts/IS/CommonConfigs/readOnlyLdap/conf"/>
+    <parameter name="confLocation" value="artifacts/IS/CommonConfigs/readOnlyLdap/repository"/>
 
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>

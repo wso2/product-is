@@ -31,25 +31,18 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbstractIntegrationTest {
-    private String consumerKey;
-    private String consumerSecret;
     private static final String TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/token";
     private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/revoke";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init();
-        setSystemproperties();
-        changeISConfiguration();
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        setSystemproperties();
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
     }
 
     /**
@@ -65,8 +58,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
     public void testRevokeTokenAfterCacheTimedOut() throws Exception {
         //Application utils
         OAuthConsumerAppDTO appDto = createApplication();
-        consumerKey = appDto.getOauthConsumerKey();
-        consumerSecret = appDto.getOauthConsumerSecret();
+        Assert.assertNotNull(appDto, "Application creation failed.");
         //request for token
         String token = requestAccessToken(consumerKey, consumerSecret, TOKEN_API_ENDPOINT,
                 "admin", "admin");
@@ -82,10 +74,10 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
         deleteApplication();
-        resetISConfiguration();
+        removeOAuthApplicationData();
         consumerKey = null;
+        consumerSecret = null;
     }
 
     /**
@@ -109,37 +101,5 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
         postParameters.add(new BasicNameValuePair("token", accessToken));
         httpRevoke.setEntity(new UrlEncodedFormEntity(postParameters));
         client.execute(httpRevoke);
-    }
-
-    /**
-     * Change the server configuration to reduce the idle cache time out for 1 minute
-     *
-     * @throws Exception
-     */
-    private void changeISConfiguration() throws Exception {
-        log.info("Replacing repository/conf/tomcat/carbon/WEB-INF/web.xml reducing idle cache timeout");
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        File webXml = new File(carbonHome + File.separator
-                               + "repository" + File.separator + "conf" + File.separator + "tomcat" + File.separator
-                               + "carbon" + File.separator + "WEB-INF" + File.separator + "web.xml");
-        File configuredWebXml = new File(getISResourceLocation()
-                                              + File.separator + "oauth" + File.separator
-                                              + "web.xml");
-
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredWebXml, webXml, true);
-        serverConfigurationManager.restartGracefully();
-    }
-
-    /**
-     * Restore  the server configuration
-     *
-     * @throws Exception
-     */
-    private void resetISConfiguration() throws Exception{
-        log.info("Replacing default configurations");
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.restoreToLastConfiguration();
     }
 }

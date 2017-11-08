@@ -25,12 +25,14 @@
     <parameter name="-DportOffset" value="410"/>
     <parameter name="-Dsetup" value="true"/>
     <!--Here considers the resources directory as the root directory.-->
-    <parameter name="confLocation" value="artifacts/IS/CommonConfigs/readWriteLdap/conf"/>
+    <parameter name="confLocation" value="artifacts/IS/CommonConfigs/readWriteLdap/repository"/>
 
     <!--Parameters to deploy tomcat applications-->
     <parameter name="tomcatPort" value="8490"/>
-    <parameter name="tomcatWebAppsUrls" value="travelocity.com-registrymount"/>
-    <parameter name="tomcatWebAppsLocations" value="samples/travelocity.com-registrymount.war"/>
+    <parameter name="tomcatWebAppsUrls"
+               value="travelocity.com-registrymount,travelocity.com,default-travelocity.com,playground2"/>
+    <parameter name="tomcatWebAppsLocations"
+               value="samples/travelocity.com-registrymount.war,samples/travelocity.com.war,samples/default-travelocity.com.war,samples/playground2.war"/>
 
     <!--Parameters required for additionalIS deployments.-->
     <parameter name="additionalISCount" value="1"/>
@@ -62,12 +64,21 @@
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
-            <!--TODO fix the test-->
-            <!--<class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>-->
-            <!--TODO fix the test-->
-            <!--<class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>-->
-            <!--TODO fix the test-->
+            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
+            <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
+            <!--TODO fix the test. Tables are not getting created in the h2 Secondary User-Store-->
             <!--<class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />-->
+            <!--TODO works individually, doesn't pass the tests when with other tests calsses together-->
+            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase" />-->
+            <!--TODO works individually, doesn't pass the tests when with other tests calsses together-->
+            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase" />-->
+            <!--TODO works individually, doesn't pass the tests when with other tests calsses together-->
+            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeAfterCacheTimeOutTestCase" />-->
+            <!--TODO works individually, doesn't pass the tests when with other tests calsses together-->
+            <!--<class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance" />-->
+            <!--TODO need to fix the tests, tests fail-->
+            <!--<class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase" />-->
         </classes>
     </test>
 </suite>

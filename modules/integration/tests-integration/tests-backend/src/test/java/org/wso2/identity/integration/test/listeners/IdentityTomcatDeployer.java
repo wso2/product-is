@@ -70,7 +70,7 @@ public class IdentityTomcatDeployer implements ISuiteListener{
                 startTomcat(tomcatServer, tomcatAppUrls.split(IdentityListenerConstants.PARAMETER_SEPARATOR),
                         tomcatAppLocations.split(IdentityListenerConstants.PARAMETER_SEPARATOR));
             } catch (AutomationFrameworkException ex) {
-                handleException("Error while starting the tomcat server.", ex);
+                stopTestExecution("Error while starting the tomcat server.", ex);
             }
         }
     }
@@ -81,7 +81,7 @@ public class IdentityTomcatDeployer implements ISuiteListener{
             tomcatServer.stop();
             tomcatServer.destroy();
         } catch (LifecycleException ex) {
-            handleException("Error while stopping tomcat server.", ex);
+            stopTestExecution("Error while stopping tomcat server.", ex);
         }
     }
 
@@ -135,9 +135,9 @@ public class IdentityTomcatDeployer implements ISuiteListener{
             }
         } else {
             throw new AutomationFrameworkException("Number of " + IdentityListenerConstants
-                    .ADDITIONAL_IS_PARAMETER_VALUE_SEPARATOR +
-                    " separated " + IdentityListenerConstants.TOMCAT_APPLICATIONS_LOCATIONS_PARAMETER + " and "
-                    + IdentityListenerConstants.TOMCAT_APPLICATIONS_URLS_PARAMETER + "should be equal.");
+                    .PARAMETER_SEPARATOR + " separated " +
+                    IdentityListenerConstants.TOMCAT_APPLICATIONS_LOCATIONS_PARAMETER + " and " +
+                    IdentityListenerConstants.TOMCAT_APPLICATIONS_URLS_PARAMETER + "should be equal.");
         }
 
         try {
@@ -147,7 +147,7 @@ public class IdentityTomcatDeployer implements ISuiteListener{
         }
     }
 
-    private static void handleException(String msg, Exception e) {
+    private static void stopTestExecution(String msg, Exception e) {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
     }

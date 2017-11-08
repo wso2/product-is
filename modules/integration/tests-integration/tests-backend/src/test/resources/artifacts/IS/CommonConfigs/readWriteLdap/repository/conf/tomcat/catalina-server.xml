@@ -88,12 +88,18 @@
 
             <Host name="localhost" unpackWARs="true" deployOnStartup="false" autoDeploy="false"
                   appBase="${carbon.home}/repository/deployment/server/webapps/">
+
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve"/>
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="${carbon.home}/repository/logs"
                        prefix="http_access_" suffix=".log"
                        pattern="combined"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
+
+		<!-- Authentication and Authorization valve for the rest apis and we can configure context for this in identity.xml  -->
+                <Valve className="org.wso2.carbon.identity.auth.valve.AuthenticationValve"/>
+                <Valve className="org.wso2.carbon.identity.authz.valve.AuthorizationValve"/>
+                <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
             </Host>
         </Engine>
     </Service>

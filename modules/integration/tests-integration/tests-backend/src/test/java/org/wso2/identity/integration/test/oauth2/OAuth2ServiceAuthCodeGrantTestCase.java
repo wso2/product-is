@@ -17,7 +17,6 @@
 */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -37,16 +36,12 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,26 +64,11 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
-	private Tomcat tomcat;
-	private ServerConfigurationManager serverConfigurationManager;
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
-		super.init(TestUserMode.SUPER_TENANT_USER);
-		String carbonHome = Utils.getResidentCarbonHome();
-		String identityXMLFile = getISResourceLocation() + File.separator  + "identity-original-530-cache-enabled.xml";
-		File defaultIdentityXml = new File(carbonHome + File.separator
-				+ "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-				+ "identity.xml");
-		serverConfigurationManager = new ServerConfigurationManager(isServer);
-		File srcFile = new File(identityXMLFile);
-		serverConfigurationManager = new ServerConfigurationManager(isServer);
-		serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
-				defaultIdentityXml, true);
-		serverConfigurationManager.restartForcefully();
-		//serverConfigurationManager.applyConfiguration(srcFile);
-		super.init(TestUserMode.SUPER_TENANT_USER);
+		super.init(TestUserMode.SUPER_TENANT_ADMIN);
 		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();
@@ -104,38 +84,14 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 	public void atEnd() throws Exception {
 		deleteApplication();
 		removeOAuthApplicationData();
-		stopTomcat(tomcat);
 
 		logManger = null;
 		consumerKey = null;
+		consumerSecret = null;
 		accessToken = null;
-
-		File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-
-		String carbonHome = Utils.getResidentCarbonHome();
-		File identityXml = new File(carbonHome + File.separator
-				+ "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-				+ "identity.xml");
-		serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
-		serverConfigurationManager.restartGracefully();
-		serverConfigurationManager = null;
 	}
 
-	@Test(alwaysRun = true, description = "Deploy playground application")
-	public void testDeployPlaygroundApp() {
-		try {
-			tomcat = getTomcat();
-			URL resourceUrl =
-			                  getClass().getResource(File.separator + "samples" + File.separator +
-			                                                 "playground2.war");
-			startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-
-		} catch (Exception e) {
-			Assert.fail("Playground application deployment failed.", e);
-		}
-	}
-
-	@Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods = "testDeployPlaygroundApp")
+	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		OAuthConsumerAppDTO appDto = createApplication();
@@ -148,7 +104,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 	}
 
     @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
-            = "testRegisterApplication") public void testSendAuthorozedPostForError() throws Exception {
+            = "testRegisterApplication")
+	public void testSendAuthorozedPostForError() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
@@ -380,5 +337,4 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 				"Invalid authorization code should have " + "produced error code : "
 						+ OAuth2Constant.INVALID_GRANT_ERROR);
 	}
-
 }
