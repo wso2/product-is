@@ -33,7 +33,7 @@
     <url>http://wso2.org/projects/identity</url>
 
     <modules>
-        <!--<module>modules/migration/migration-5.2.0_to_5.3.0/wso2-is-migration-client</module>-->
+        <module>modules/migration/migration-5.2.0_to_5.3.0/wso2-is-migration-client</module>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/connectors</module>
@@ -1525,6 +1525,29 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>wso2-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration> <!-- add this to disable checking -->
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
