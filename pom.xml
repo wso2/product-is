@@ -33,7 +33,7 @@
     <url>http://wso2.org/projects/identity</url>
 
     <modules>
-        <module>modules/migration/migration-5.2.0_to_5.3.0/wso2-is-migration-client</module>
+        <!--<module>modules/migration/migration-5.2.0_to_5.3.0/wso2-is-migration-client</module>-->
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/connectors</module>
