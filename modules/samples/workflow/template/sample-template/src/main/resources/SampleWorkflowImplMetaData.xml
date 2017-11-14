@@ -1,0 +1,16 @@
+<met:MetaData xmlns:met="http://metadata.bean.mgt.workflow.identity.carbon.wso2.org">
+    <met:WorkflowImpl>
+        <met:WorkflowImplId>SampleWorkflow</met:WorkflowImplId>
+        <met:WorkflowImplName>SampleWorkflow</met:WorkflowImplName>
+        <met:WorkflowImplDescription>Sample Workflow</met:WorkflowImplDescription>
+        <met:TemplateId>SampleTemplate</met:TemplateId>
+        <met:ParametersMetaData>
+            <met:ParameterMetaData Name="BPSProfile" InputType="Select" isRequired="true" isInputDataRequired="true">
+                <met:DisplayName>BPS Profile(Server Profile Name)</met:DisplayName>
+            </met:ParameterMetaData>
+            <met:ParameterMetaData Name="HTSubject" InputType="Select" isRequired="true" isInputDataRequired="true">
+                <met:DisplayName>Task Subject(Approval task subject to display)</met:DisplayName>
+            </met:ParameterMetaData>
+        </met:ParametersMetaData>
+    </met:WorkflowImpl>
+</met:MetaData>
