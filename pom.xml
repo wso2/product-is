@@ -1570,15 +1570,15 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.10.22</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.10.33</carbon.identity.framework.version>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.3</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.3.41</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.5.108</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.3.44</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>5.5.128</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.2</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.13</identity.agent.sso.version>
-        <identity.inbound.auth.sts.version>5.2.8</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.2.9</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
         <identity.carbon.auth.mutual.ssl.version>5.1.2</identity.carbon.auth.mutual.ssl.version>
         <identity.user.account.association.version>5.1.4</identity.user.account.association.version>
