@@ -12,7 +12,6 @@ How to run:
 
 concerns:
 * In authorization code type it will send PKCE headers related to token binding. So for normal usage don't use this grant type unless you have token binding supported IS version.
-* Here Oauthorization grant type is to check authorization code and it won't bind other tokens(access token and refresh token will be normal tokens)
 
 
 
