@@ -60,3 +60,4 @@ if ($_REQUEST['work'] == "sent") {
     </form>
 <?php }
 include "/opt/lampp/htdocs/password/layout/footer.php"; ?>
+

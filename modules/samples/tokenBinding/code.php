@@ -9,11 +9,6 @@
         <div><input type="text" name="client_id" class="form-control" placeholder="client ID"></br> </div>
 
     </div>
-    <!--    <div class="form-group">-->
-    <!--        <label>Client Secret</label>-->
-    <!--        <div> <input type="text" name="client_secret" class="form-control" placeholder="client secret" ></br> </div>-->
-    <!---->
-    <!--    </div>-->
     <div class="form-group">
         <label>Grant type</label>
         <div><input type="text" name="grant_type" class="form-control" placeholder="grant type" value="code"></br>
