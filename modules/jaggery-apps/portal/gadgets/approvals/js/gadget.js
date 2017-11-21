@@ -378,7 +378,7 @@ function getList(engine, serverCookie) {
     $.ajax({
         url: "/portal/gadgets/approvals/controllers/approvals/ht-client.jag",
         type: "POST",
-        data: "&cookie=" + serverCookie + "&endPoint=" + accessingEngine + "&user=" + userName,
+        data: {cookie : serverCookie, endPoint : accessingEngine, user : userName},
         success: function (data) {
             if (data == "") {
                 drawNoServerErrorpage('Error occurred while retrieving human resource tasks.<br>Please try again. ');
@@ -401,7 +401,7 @@ function getFormDetails(id, state) {
     $.ajax({
         url: "/portal/gadgets/approvals/controllers/approvals/form-client.jag",
         type: "POST",
-        data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&endPoint=" + accessingEngine + "&user=" + userName,
+        data: {cookie : serverList[serverIndex].cookie, id : id, endPoint : accessingEngine, user : userName},
         success: function (data) {
 
             if (state == "RESERVED" || state == "READY") {
@@ -426,7 +426,7 @@ function getCompletedState(oldData, id) {
     $.ajax({
         url: "/portal/gadgets/approvals/controllers/approvals/getState-client.jag",
         type: "POST",
-        data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&endPoint=" + accessingEngine + "&user=" + userName,
+        data: {cookie : serverList[serverIndex].cookie, id : id, endPoint : accessingEngine, user : userName},
         success: function (data) {
             var obj = $.parseXML(data);
             var inXML = $.parseXML(obj.getElementsByTagNameNS("http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803", "taskData")[0].textContent);
@@ -451,7 +451,7 @@ function complete(command, id) {
     $.ajax({
         url: "/portal/gadgets/approvals/controllers/approvals/approve-client.jag",
         type: "POST",
-        data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&command=" + command + "&endPoint=" + accessingEngine + "&user=" + userName,
+        data: {cookie : serverList[serverIndex].cookie, id : id, command : command, endPoint : accessingEngine, user : userName},
         success: function (data) {
             getFormDetails(id, "COMPLETED");
         },
@@ -470,7 +470,7 @@ function start(requestType, id) {
     $.ajax({
         url: "/portal/gadgets/approvals/controllers/approvals/start-release-suspend-client.jag",
         type: "POST",
-        data: "&cookie=" + serverList[serverIndex].cookie + "&id=" + id + "&requestType=" + requestType + "&endPoint=" + accessingEngine + "&user=" + userName,
+        data: {cookie : serverList[serverIndex].cookie, id : id, requestType : requestType, endPoint : accessingEngine, user : userName},
         success: function (data) {
             if (requestType == "claim") {
                 getFormDetails(id, "RESERVED");

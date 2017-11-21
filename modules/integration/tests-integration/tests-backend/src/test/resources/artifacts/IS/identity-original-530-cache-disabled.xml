@@ -553,12 +553,12 @@
 
     <TenantContextsToRewrite>
         <WebApp>
-            <Context>/api/identity/user/v0.9</Context>
-            <Context>/api/identity/recovery/v0.9</Context>
-            <Context>/oauth2</Context>
-            <Context>/scim2</Context>
-            <Context>/api/identity/entitlement</Context>
-            <Context>/api/identity/oauth2/dcr/v1.0</Context>
+            <Context>/api/identity/user/v0.9/</Context>
+            <Context>/api/identity/recovery/v0.9/</Context>
+            <Context>/oauth2/</Context>
+            <Context>/scim2/</Context>
+            <Context>/api/identity/entitlement/</Context>
+            <Context>/api/identity/oauth2/dcr/v1.0/</Context>
         </WebApp>
         <Servlet>
             <Context>/identity/(.*)</Context>
