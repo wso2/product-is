@@ -1,0 +1,60 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+var serverUrl2 = util.getServerUrl();
+var adminServerURL = serverUrl2+"/CAAdminService";
+serverUrl = serverUrl + "/CAClientService.CAClientServiceHttpsSoap12Endpoint";
+
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function sendCSR(csr){
+
+    var result = callWSReturnJSON(webService, serverUrl, "xsd:addCsr", new Array(csr));
+    return result;
+
+}
+
+function getCSRList(){
+    var result = callWSReturnJSON(webService, serverUrl, "xsd:getCsrList");
+    return result;
+}
+
+function getCSR(serialNo){
+    var result = callWSReturnJSON(webService, serverUrl, "xsd:getCsr", new Array(serialNo));
+    return result;
+}
+
+function getCertificate(serialNo){
+    var result = callWSReturnJSON(webService, adminServerURL, "xsd:getPubCert", new Array(serialNo));
+    return result;
+}
+
+function getUserProfile(username, profileName){
+
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getUserProfile", new Array(username, profileName));
+    result.return.fieldValues = util.sortNumber(result.return.fieldValues, 'displayOrder', true, true);
+
+    for(var x = 0; x < result.return.fieldValues.length; x++){
+        var obj = result.return.fieldValues[x];
+        if(obj.required === "false"){
+            obj.required = "";
+        }
+
+        if(obj.readOnly === "false"){
+           obj.readOnly = "";
+        }
+    }
+
+
+    return result;
+
+}
+
+
+%>

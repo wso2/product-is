@@ -1,0 +1,18 @@
+{
+	"EnableSAMLSSOLogin" : "true",
+	"saml_config" : {
+		"SAML.IdPUrl" : "samlsso",
+		"SAML.IssuerID" : "wso2.my.dashboard",
+		"SAML.LogoutUrl" : "logout",
+		"SAML.EnableResponseSigning" : "true",
+		"SAML.EnableAssertionSigning" : "true",
+		"SAML.EnableRequestSigning" : "true",
+		"SAML.SSOAgentCredentialImplClass" : "org.wso2.carbon.identity.sso.agent.saml.SSOAgentKeyStoreCredential",
+		"SAML.KeyStorePassword" : "wso2carbon",
+		"SAML.IdPCertAlias" : "wso2carbon",
+		"SAML.PrivateKeyAlias": "wso2carbon",
+		"SAML.PrivateKeyPassword" : "wso2carbon",
+		"SAML.KeyStore" : "{carbon.home}/repository/resources/security/wso2carbon.jks"
+		
+	}
+}

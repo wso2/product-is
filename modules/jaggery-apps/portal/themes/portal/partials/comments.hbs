@@ -1,0 +1,17 @@
+<ul>
+    {{#each .}}
+        <li>
+            <p class="tab-review">{{description}}</p>
+
+            <p class="tab-reviewer">{{authorUserName}} <span>12 Feb, 2013</span></p>
+        </li>
+    {{/each}}
+</ul>
+<div id="tab-review-box" class="row">
+    <div class="span9">
+        <textarea class="span9 content"></textarea>
+        <button class="btn btn-primary" type="subbmit">
+            {{t "Add Comment"}}
+        </button>
+    </div>
+</div>

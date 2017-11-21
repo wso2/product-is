@@ -1,0 +1,66 @@
+POST /services/wso2carbon-sts HTTP/1.1
+        Content-Type: application/soap+xml; charset=UTF-8; action="http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue"
+        User-Agent: Axis2
+        Host: localhost:9446
+        Transfer-Encoding: chunked
+
+        943
+        ---------------------------------------------------------------
+        1 9  0.1491 (0.0010)  C>SV3.1(2387)  application_data
+        ---------------------------------------------------------------
+        <?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+    <soapenv:Header xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+        <wsse:Security
+                xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                soapenv:mustUnderstand="true">
+            <wsu:Timestamp
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="Timestamp-1">
+                <wsu:Created>2012-06-04T09:15:05.115Z</wsu:Created>
+                <wsu:Expires>2012-06-04T09:20:05.115Z</wsu:Expires>
+            </wsu:Timestamp>
+            <wsse:UsernameToken
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="UsernameToken-2">
+                <wsse:Username>admin</wsse:Username>
+                <wsse:Password
+                        Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">
+                    admin
+                </wsse:Password>
+            </wsse:UsernameToken>
+        </wsse:Security>
+        <wsa:To>https://localhost:9446/services/wso2carbon-sts</wsa:To>
+        <wsa:ReplyTo>
+            <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+            </wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:MessageID>urn:uuid:29619c31-b24d-44a8-90a2-629a404f596a</wsa:MessageID>
+        <wsa:Action>http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue</wsa:Action>
+    </soapenv:Header>
+    <soapenv:Body>
+        <wst:RequestSecurityToken xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wst:RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</wst:RequestType>
+            <wst:Lifetime>
+                <wsu:Created
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    2012-06-04T09:15:04.443Z
+                </wsu:Created>
+                <wsu:Expires
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    2012-06-04T09:20:04.443Z
+                </wsu:Expires>
+            </wst:Lifetime>
+            <wst:TokenType>http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0
+            </wst:TokenType>
+            <wst:KeyType>http://schemas.xmlsoap.org/ws/2005/02/trust/Bearer</wst:KeyType>
+            <wst:Claims xmlns:wsp="http://schemas.xmlsoap.org/ws/2005/02/trust"
+                        wsp:Dialect="http://wso2.org">
+                <wsid:ClaimType xmlns:wsid="http://schemas.xmlsoap.org/ws/2005/05/identity"
+                                Uri="http://wso2.org/claims/givenname"/>
+                <wsid:ClaimType xmlns:wsid="http://schemas.xmlsoap.org/ws/2005/05/identity"
+                                Uri="http://wso2.org/claims/emailaddress"/>
+            </wst:Claims>
+        </wst:RequestSecurityToken>
+    </soapenv:Body>
+</soapenv:Envelope>

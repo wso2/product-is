@@ -1,0 +1,30 @@
+<%
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+getUser();
+function getUser(){
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+ try{
+
+var IDPServiceClient = require('controllers/identity-management/IdentityProviderServiceClient.jag');
+var profileServiceClient = require('controllers/identity-management/UserProfileMgtServiceClient.jag');
+
+
+var fieldValues = IDPServiceClient.getPrimaryOpenID(user);
+fieldValues.primary = IDPServiceClient.getPrimaryOpenID(user).return;
+fieldValues.associatedID = profileServiceClient.getAssociatedIDs().return;
+log.debug(fieldValues);
+
+print( fieldValues );
+    }catch(e){
+print(e);
+        log.error(e);
+            }
+
+}
+
+%>

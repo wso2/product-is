@@ -1,0 +1,151 @@
+<%
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+var serverUrl2 = serverUrl + "/SAML2SSOAuthenticationService";
+var identityServerUrl = identityUtil.getServerURL(getServicePath() + "/SAML2SSOAuthenticationService", true, true);
+var ws = require('ws');
+var webService = new ws.WSRequest();
+var carbon = require('carbon');
+var PERMISSION_EXECUTE = "ui.execute";
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+
+function login(request){
+    var result = callWSReturnJSON(webService, serverUrl2, "urn:login", new Array(request));
+    var isAuthenticated = result.return;
+    log.debug("Is Authenticated : " + isAuthenticated);
+    if(isAuthenticated){
+        //Adding the session id
+        var adminSession = webService.getResponseHeader("Set-Cookie");
+        adminSessionCopy = adminSession;
+        session.put("auth-cookie", adminSession);
+    }
+
+    var userName = multitenantUtils.getTenantAwareUsername(session.get("loggedInUser"));
+    var tenantDomain = multitenantUtils.getTenantDomain(session.get("loggedInUser"));
+    session.remove("loggedInUser");
+    var perm = "/permission/admin/manage/humantask/viewtasks";
+
+    if (checkAuthorizationForUser(userName, perm, tenantDomain)) {
+        getBPSSessions(request);
+    } else {
+        session.put("listProfiles", "\"list\" : []");
+    }
+    return isAuthenticated;
+
+}
+
+function getBPSSessions(request){
+    var profiles = new XML(getProfileList());
+    var ns = "http://mgt.workflow.identity.carbon.wso2.org/xsd";
+    var hostArray = profiles.*::["return"];
+    var profileOutputJson = "\"list\" : [";
+    for(var i=0;i<hostArray.length();i++){
+        var webService2 = new ws.WSRequest();
+        var host = hostArray[i].*::workerHostURL[0].text();
+        var profileName = hostArray[i].*::profileName[0].text();
+        if (identityServerUrl.equals(host + "/SAML2SSOAuthenticationService") || identityServerUrl.equals
+                (host + "SAML2SSOAuthenticationService")) {
+            if (profileOutputJson != "\"list\" : [") {
+                profileOutputJson = profileOutputJson + ",";
+            }
+
+            profileOutputJson = profileOutputJson + "{\"host\" : \"" + host + "\", \"profile\" : \"" + profileName +
+                    "\", \"cookie\" : \"" + session.get("auth-cookie") + "\"}";
+            continue;
+
+        }
+        try {
+            var result = callWSReturnJSON(webService2, host + "/SAML2SSOAuthenticationService", "urn:login", new Array(request));
+            var isAuthenticated = result.return;
+            if (java.lang.Boolean.parseBoolean(isAuthenticated)) {
+                if(profileOutputJson != "\"list\" : ["){
+                    profileOutputJson = profileOutputJson + ",";
+                }
+
+                profileOutputJson = profileOutputJson + "{\"host\" : \"" + host + "\", \"profile\" : \"" + profileName + "\", \"cookie\" : \"" + webService2.getResponseHeader("Set-Cookie") + "\"}";
+            }
+        }catch (e){
+            if (log.isDebugEnabled()) {
+                log.debug(e);
+            }
+            log.error("Error while authenticating from external workflow engine.");
+        }
+    }
+    profileOutputJson = profileOutputJson + "]";
+    session.put("listProfiles", profileOutputJson);
+}
+
+function getProfileList(){
+
+    try{
+
+        var ws = require("ws");
+        var version = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "urn:listBPSProfiles";
+        var payload = "<xsd:listBPSProfiles xmlns:xsd=\"http://impl.workflow.identity.carbon.wso2.org/xsd\" />";
+        options["HTTPHeaders"] = [{name: "cookie", value: adminSessionCopy}];
+
+        var result;
+        try {
+            version.open(options,serverUrl + "/WorkflowImplAdminService.WorkflowImplAdminServiceHttpsSoap11Endpoint/", false);
+            version.send(payload);
+            result =version.responseE4X;
+        } catch (e) {
+            log.info(e.toString());
+            return e.toString();
+
+        }
+        return result;
+    }catch(e){
+        if (log.isDebugEnabled()) {
+            log.debug(e);
+        }
+        log.error("Error while retrieving workflow engine list.");
+    }
+}
+
+var checkAuthorizationForUser = function (userName, permission, tenantDomain) {
+    var isUserAuthorized = false;
+    var PrivilegedCarbonContext = Packages.org.wso2.carbon.context.PrivilegedCarbonContext;
+
+    try {
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
+        var realmService = carbon.server.osgiService('org.wso2.carbon.user.core.service.RealmService');
+        var tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
+        var userRealm = realmService.getTenantUserRealm(tenantId);
+        isUserAuthorized = userRealm.getAuthorizationManager().isUserAuthorized(userName, permission, PERMISSION_EXECUTE);
+    } finally {
+        PrivilegedCarbonContext.endTenantFlow();
+    }
+
+    if (!isUserAuthorized) {
+        var errorMessage = "Un-authorized!!!. User:" + userName + " does not have permission:" + permission;
+        if (log.isDebugEnabled()) {
+            log.debug(errorMessage);
+        }
+    }
+    return isUserAuthorized;
+
+};
+
+function getServicePath() {
+    var path = "/conf/site.json";
+    var file = new File(path);
+    file.open("r");
+    var json = "";
+
+    json = file.readAll();
+    file.close();
+    var jsonConf = parse(json);
+    return jsonConf.proxy.servicePath;
+};
+
+%>

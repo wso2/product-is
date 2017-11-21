@@ -1,0 +1,30 @@
+<%
+
+var log = new Log();
+var userName = session.get("user");
+var identityClient = require('IdentityProviderServiceClient.jag');
+
+var i18n = session.get("i18n");
+
+add();
+
+function add(){
+    try{
+
+var idpID = request.getParameter("idpID");
+var associatedID = request.getParameter("associateID");
+var profileManager = require("UserProfileMgtServiceClient.jag");
+
+profileManager.associateID(idpID, associatedID);
+
+    }
+    catch(e){
+        log.error(e);
+        response.sendRedirect("../../index.jag?e=1&error=" + e);
+
+    }
+
+}
+
+
+%>

@@ -1,0 +1,71 @@
+This sample demonstrates how to consume SCIM Rest Endpoints in WSO2 Identity Server from a JAVA client application
+based on HttpClient.
+
+Steps to run the sample:
+------------------------
+1. Start the Identity Server, using the startup script found in the [IS_Home]/bin folder.
+(Use wso2server.sh for Linux and wso2server.bat for Windows)
+2. Make sure you have installed Apache Ant.
+3. Refer the client.properties file for SCIM user endpoint, group endpoint URLs, username and password.
+Modify it if the default configuration to run the sample are different.
+
+Preparing the sample:
+--------------------
+1. Copy the "scim-provisioning" folder to the Identity Server's samples folder [wso2is-{version}/samples/]
+2. Run the command "ant" from inside of the "scim-provisioning" folder [wso2is-{version}/samples/scim-provisioning].
+
+Sample for creating a user:
+---------------------------
+4. Run the command: 'ant create-user' at this directory level in command line and observe the json message sent to
+the SCIM endpoint, the response status and the SCIM response printed in the command line output.
+
+You will notice that the new user is created in Identity Server.
+
+If you wish, you can modify the org.wso2.scim.sample.user.CreateUser class to add more attributes to the creating user
+and observe the output in the commandline.
+
+Sample for creating a group:
+----------------------------
+5. Run the command: 'ant create-group' at this directory level in command line and observe the json message sent to
+the SCIM endpoint, the response status and the SCIM response are printed in the command line output.
+
+You will notice that the new group is created in the Identity Server and the user created in step 4 is added to the group.
+
+Sample for updating user identity information:
+----------------------------------------------
+6. Run the command: 'ant update-user' at this directory level in command line and observe the json message sent to
+the SCIM endpoint, the response status and the SCIM response are printed in the command line output.
+
+You will notice that the user created in the step 4 above, is updated with new attribute values for: display name and work email.
+
+If you wish, you can modify the org.wso2.scim.sample.user.UpdateUser class to add more attributes to user
+and observe the output in the commandline.
+
+Sample for updating group:
+--------------------------
+7.  Run the command: 'ant update-group' at this directory level in command line and observe the json message sent to
+the SCIM endpoint, the response status and the SCIM response are printed in the command line output.
+
+You will notice that the group created in the step 5 above, is updated with new attribute values for: display name.
+
+Sample for deleting user:
+--------------------------
+8. Run the command: 'ant delete-user' at this directory level in command line and observe the response status
+and the SCIM response printed in the command line output.
+
+You will notice that the user created in step 4 above is now deleted in Identity Server.
+
+Sample for deleting group:
+---------------------------
+9. Run the command: 'ant delete-group' at this directory level in command line and observe the response status
+and the SCIM response printed in the command line output. If the
+
+You will notice that the group created in step 5 above is now deleted in Identity Server.
+
+10. Provisioning SCIM operations to other SCIM providers.
+---------------------------------------------------------
+
+You can also observe the provisioning of above SCIM operations to other SCIM providers - such as other
+Identity Server nodes by configuring SCIM providers in the current Identity Server node, as described in the documentation
+which can be found at: http://docs.wso2.org/wiki/display/IS530/Registering+SCIM+Providers
+

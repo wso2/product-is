@@ -1,0 +1,85 @@
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="KmarketBluePolicy" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-overrides" Version="1.0">
+   <Target>
+      <AnyOf>
+         <AllOf>
+            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PRIMARY/blue</AttributeValue>
+               <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+            </Match>
+         </AllOf>
+      </AnyOf>
+   </Target>
+   <Rule Effect="Deny" RuleId="total-amount">
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+               <AttributeDesignator AttributeId="http://kmarket.com/id/totalAmount" Category="http://kmarket.com/category" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">100</AttributeValue>
+         </Apply>
+      </Condition>
+    <AdviceExpressions>
+    <AdviceExpression AdviceId="deny-liquor-medicine-advice" AppliesTo="Deny">
+    <AttributeAssignmentExpression AttributeId="urn:oasis:names:tc:xacml:2.0:example:attribute:text">
+	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">You are not allowed to do more than $100 purchase
+    from KMarket on-line trading system</AttributeValue>
+	</AttributeAssignmentExpression>
+    </AdviceExpression>
+    </AdviceExpressions>
+   </Rule>
+   <Rule Effect="Deny" RuleId="deny-liquor-medicine">
+   <Target>
+      <AnyOf>
+         <AllOf>
+            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Liquor</AttributeValue>
+               <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+            </Match>
+         </AllOf>
+         <AllOf>
+            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Medicine</AttributeValue>
+               <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+            </Match>
+         </AllOf>
+      </AnyOf>
+   </Target>
+  <AdviceExpressions>
+    <AdviceExpression AdviceId="deny-liquor-medicine-advice" AppliesTo="Deny">
+    <AttributeAssignmentExpression AttributeId="urn:oasis:names:tc:xacml:2.0:example:attribute:text">
+	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">You are not allowed to buy Liquor or Medicine
+    from KMarket on-line trading system</AttributeValue>
+	</AttributeAssignmentExpression>
+    </AdviceExpression>
+    </AdviceExpressions>
+   </Rule>
+   <Rule Effect="Deny" RuleId="max-drink-amount">
+   <Target>
+      <AnyOf>
+         <AllOf>
+            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+               <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Drink</AttributeValue>
+               <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+            </Match>
+         </AllOf>
+      </AnyOf>
+   </Target>
+      <Condition>
+         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+               <AttributeDesignator AttributeId="http://kmarket.com/id/amount" Category="http://kmarket.com/category" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+            </Apply>
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
+         </Apply>
+      </Condition>
+    <AdviceExpressions>
+    <AdviceExpression AdviceId="max-drink-amount-advice" AppliesTo="Deny">
+    <AttributeAssignmentExpression AttributeId="urn:oasis:names:tc:xacml:2.0:example:attribute:text">
+	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">You are not allowed to buy more tha 10 Drinks
+    from KMarket on-line trading system</AttributeValue>
+	</AttributeAssignmentExpression>
+    </AdviceExpression>
+    </AdviceExpressions>
+   </Rule>
+    <Rule RuleId="permit-rule" Effect="Permit"/>    
+</Policy>

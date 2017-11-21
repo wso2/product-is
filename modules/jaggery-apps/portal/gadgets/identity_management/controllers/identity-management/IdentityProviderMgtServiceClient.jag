@@ -1,0 +1,78 @@
+<%
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/IdentityProviderMgtService";
+
+var cookie = session.get('auth-cookie');
+
+getIDPList();
+
+function getIDPList() {
+    try {
+
+
+        var ws = require("ws");
+
+        var idpServiceClient = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.2;
+        options.action = "urn:getAllIdPs";
+        options["HTTPHeaders"] = [
+            {name:"cookie", value:cookie}
+        ];
+        var payload = '<mgt:getAllIdPs xmlns:mgt="http://mgt.idp.carbon.wso2.org"/>';
+        var result;
+
+
+        try {
+            idpServiceClient.open(options, serverUrl, false);
+            idpServiceClient.send(payload);
+            result = idpServiceClient;
+
+            var resultJSON = E4XtoJSON(result.responseE4X);
+
+            return getIDPNameLIst(resultJSON);
+
+
+        } catch (e) {
+            log.error(e.toString());
+            return e.toString();
+        }
+
+
+        print(fieldValues);
+    } catch (e) {
+        print(e);
+        log.error(e);
+    }
+
+}
+
+
+function getIDPNameLIst(resultJSON) {
+    
+    var idpNameLIst = {};
+
+    if (resultJSON != "") {
+
+        if (Object.prototype.toString.call(resultJSON.return) === '[object Array]') {
+            idpNameLIst.idpNames = [];
+            for (var i in resultJSON.return) {
+                idpNameLIst.idpNames[i] = resultJSON.return[i].identityProviderName;
+            }
+        }
+        else {
+            idpNameLIst.idpNames = resultJSON.return.identityProviderName;
+        }
+    }
+
+    return idpNameLIst;
+
+}
+
+
+
+%>

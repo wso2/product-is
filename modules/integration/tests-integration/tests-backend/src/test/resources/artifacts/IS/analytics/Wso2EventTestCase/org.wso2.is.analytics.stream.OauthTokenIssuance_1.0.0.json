@@ -1,0 +1,70 @@
+{
+  "name": "org.wso2.is.analytics.stream.OauthTokenIssuance",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "tenantId",
+      "type": "INT"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "user",
+      "type": "STRING"
+    },
+    {
+      "name": "tenantDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "userstoreDomain",
+      "type": "STRING"
+    },
+    {
+      "name": "clientId",
+      "type": "STRING"
+    },
+    {
+      "name": "grantType",
+      "type": "STRING"
+    },
+    {
+      "name": "tokenId",
+      "type": "STRING"
+    },
+    {
+      "name": "authzScopes",
+      "type": "STRING"
+    },
+    {
+      "name": "unAuthzScopes",
+      "type": "STRING"
+    },
+    {
+      "name": "isSuccess",
+      "type": "BOOL"
+    },
+    {
+      "name": "errorCode",
+      "type": "STRING"
+    },
+    {
+      "name": "errorMsg",
+      "type": "STRING"
+    },
+    {
+      "name": "accessTokenValidityMillis",
+      "type": "LONG"
+    },
+    {
+      "name": "refreshTokenValidityMillis",
+      "type": "LONG"
+    },
+    {
+      "name": "issuedTime",
+      "type": "LONG"
+    }
+  ]
+}

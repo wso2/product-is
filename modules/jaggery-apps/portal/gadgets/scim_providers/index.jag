@@ -1,0 +1,23 @@
+<%
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+getUser();
+function getUser(){
+
+session.put('auth-cookie', cookie);
+
+ try{
+
+var selfReg = require('controllers/my-profile/profileClient.jag');
+var fieldValues = selfReg.getUserProfile('admin', 'default');
+
+print( fieldValues );
+    }catch(e){
+print(e);
+        log.error(e);
+            }
+
+}
+
+%>

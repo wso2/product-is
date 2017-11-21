@@ -1,0 +1,42 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/IdentityProviderAdminService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function getAllOpenIds(userName){
+    var userNameWithoutDomain = userName;
+    var domain = session.get("domainName");
+    if(domain != null && domain === constants.SUPPER_TENANT_DOMAIN){
+        userName = userName + "@" + domain;
+    }
+
+    return callWSReturnJSON(webService, serverUrl, "urn:getAllOpenIDs", new Array(userName));
+}
+
+
+function removeOpenId(payload){
+    callWSInOnly(webService, serverUrl, "urn:removeOpenID", payload);
+}
+
+function addOpenID(payload){
+    callWSInOnly(webService, serverUrl, "urn:addOpenID", payload);
+}
+
+function getPrimaryOpenID(userName){
+    var userNameWithoutDomain = userName;
+    var domain = session.get("domainName");
+    if(domain != null && domain === constants.SUPPER_TENANT_DOMAIN){
+        userName = userName + "@" + domain;
+    }
+
+    return callWSReturnJSON(webService, serverUrl, "urn:getPrimaryOpenID", new Array(userName));
+}
+
+%>

@@ -1,0 +1,70 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/UserProfileMgtService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function getAllOpenIds(userName){
+    var userNameWithoutDomain = userName;
+    var domain = session.get("domainName");
+    if(domain != null && domain === constants.SUPPER_TENANT_DOMAIN){
+        userName = userName + "@" + domain;
+    }
+
+    return callWSReturnJSON(webService, serverUrl, "urn:getAllOpenIDs", new Array(userName));
+}
+
+
+function removeAssociateID(idpID, associatedID){
+
+var req =       <mgt:removeAssociateID xmlns:mgt="http://mgt.profile.user.identity.carbon.wso2.org">
+         <mgt:idpID></mgt:idpID>
+         <mgt:associatedID></mgt:associatedID>
+      </mgt:removeAssociateID>;
+req.*::idpID.setChildren(idpID);
+req.*::associatedID.setChildren(associatedID);
+
+callWSInOnly(webService, serverUrl, "urn:removeAssociateID", req);
+}
+
+function associateID(idpID, associatedID){
+
+var req =   <mgt:associateID xmlns:mgt="http://mgt.profile.user.identity.carbon.wso2.org">
+         <mgt:idpID></mgt:idpID>
+         <mgt:associatedID></mgt:associatedID>
+      </mgt:associateID>;
+req.*::idpID.setChildren(idpID);
+req.*::associatedID.setChildren(associatedID);
+
+log.debug(req);
+
+callWSInOnly(webService, serverUrl, "urn:associateID", req);
+}
+
+function getAssociatedIDs(){
+var userName = session.get("user");
+
+var log = new Log();
+    var userNameWithoutDomain = userName;
+    var domain = session.get("domainName");
+    if(domain != null && domain === constants.SUPPER_TENANT_DOMAIN){
+        userName = userName + "@" + domain;
+    }
+
+
+
+var req = <mgt:getAssociatedIDs xmlns:mgt="http://mgt.profile.user.identity.carbon.wso2.org">
+                           <mgt:userName></mgt:userName>
+                        </mgt:getAssociatedIDs>;
+req.*::userName.setChildren(userName);
+return callWSReturnJSON(webService, serverUrl, "urn:getAssociatedIDs", null, req);
+
+}
+
+%>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+
+    <display-name>Password Recovery Sample</display-name>
+
+    <servlet>
+        <servlet-name>ForwardingServlet</servlet-name>
+        <servlet-class>ForwardingServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AccountRecoverCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.RecoverUsernameController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AccountSetupCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.AccountSetupController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SingUpCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.SelfSignupController
+        </servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EditUserCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.UserProfileController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SecurityQuestionSetupCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.SecurityQuestionSetupController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AccountOverviewCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.AccountOverviewController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SingUpConfirmCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.SelfSignupConfirmationController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecoverByNotificationCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.RecoverByNotificationController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ValidationCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.UserInfoValidationController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AccountSetupValidationCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.AccountSetupValidationController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.VerificationController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.UpdateController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PasswordSetupCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.PasswordSetupController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecoverByQnACtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.RecoverByQnAController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>QnAProcessorCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.QnAProcessorController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserInfoViewCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.UserInfoViewController
+        </servlet-class>
+    </servlet>
+    <!--<servlet>-->
+    <!--<servlet-name>UserProfileVerifyCtrl</servlet-name>-->
+    <!--<servlet-class>org.wso2.sample.inforecovery.controller.UserProfileVerifyController</servlet-class>-->
+    <!--</servlet>-->
+    <servlet>
+        <servlet-name>ValidateByEmailCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.VerificationByEmailController
+        </servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>IndexCtrl</servlet-name>
+        <servlet-class>org.wso2.sample.inforecovery.controller.IndexController</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ValidationCtrl</servlet-name>
+        <url-pattern>/validate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountSetupValidationCtrl</servlet-name>
+        <url-pattern>/validateAccountSetup</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyCtrl</servlet-name>
+        <url-pattern>/verify</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCtrl</servlet-name>
+        <url-pattern>/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PasswordSetupCtrl</servlet-name>
+        <url-pattern>/passwordSetup</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SecurityQuestionSetupCtrl</servlet-name>
+        <url-pattern>/setupSecurityQuestions</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecoverByQnACtrl</servlet-name>
+        <url-pattern>/recoverQnA</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecoverByNotificationCtrl</servlet-name>
+        <url-pattern>/recoverNotification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QnAProcessorCtrl</servlet-name>
+        <url-pattern>/qnaProcessor</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserInfoViewCtrl</servlet-name>
+        <url-pattern>/userInfoView</url-pattern>
+    </servlet-mapping>
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>UserProfileVerifyCtrl</servlet-name>-->
+    <!--<url-pattern>/confirmValidation</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <servlet-mapping>
+        <servlet-name>ValidateByEmailCtrl</servlet-name>
+        <url-pattern>/validateByEmail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SingUpCtrl</servlet-name>
+        <url-pattern>/signup</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditUserCtrl</servlet-name>
+        <url-pattern>/editUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountOverviewCtrl</servlet-name>
+        <url-pattern>/accountOverview</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SingUpConfirmCtrl</servlet-name>
+        <url-pattern>/confirmReg</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountRecoverCtrl</servlet-name>
+        <url-pattern>/recoverAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>IndexCtrl</servlet-name>
+        <url-pattern>/infoRecover/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountSetupCtrl</servlet-name>
+        <url-pattern>/accountSetup/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ForwardingServlet</servlet-name>
+        <url-pattern>/samlsso</url-pattern>
+        <url-pattern>/token</url-pattern>
+        <url-pattern>/openid</url-pattern>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Configure following to suite your environment before building the sample -->
+
+    <filter>
+        <filter-name>SSOFilter</filter-name>
+        <filter-class>org.wso2.carbon.identity.sso.agent.SSOAgentFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SSOFilter</filter-name>
+        <url-pattern>/home.jsp</url-pattern>
+        <url-pattern>/samlsso</url-pattern>
+        <url-pattern>/token</url-pattern>
+        <url-pattern>/openid</url-pattern>
+        <url-pattern>/logout</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>SampleContextEventListener</listener-class>
+    </listener>
+
+    <error-page>
+        <exception-type>org.wso2.carbon.identity.sso.agent.exception.SSOAgentException
+        </exception-type>
+        <location>/errors.jsp</location>
+    </error-page>
+
+    <context-param>
+        <param-name>carbonServerUrl</param-name>
+        <param-value>https://localhost:9443/</param-value>
+    </context-param>
+    <context-param>
+        <param-name>trustStorePath</param-name>
+        <param-value>/client-truststore.jks</param-value>
+    </context-param>
+    <context-param>
+        <param-name>accessUsername</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+    <context-param>
+        <param-name>accessPassword</param-name>
+        <param-value>admin</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>captchaDisable</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <!--<login-config>-->
+    <!--&lt;!&ndash;<auth-method>FORM</auth-method>&ndash;&gt;-->
+    <!--<realm-name>Example Form-Based Authentication Area</realm-name>-->
+    <!--<form-login-config>-->
+    <!--<form-login-page>/login.jsp</form-login-page>-->
+    <!--<form-error-page>/errors.jsp</form-error-page>-->
+    <!--</form-login-config>-->
+    <!--</login-config>-->
+</web-app>

@@ -1,0 +1,189 @@
+* {	padding: 0; margin: 0; vertical-align: top; }
+
+body {
+	font: 18px/1.5em "proxima-nova", Helvetica, Arial, sans-serif;
+}
+
+a {	color: #069; }
+a:hover { color: #28b; }
+
+h2 {
+	margin-top: 15px;
+	font: normal 32px "omnes-pro", Helvetica, Arial, sans-serif;
+}
+
+h3 {
+	margin-left: 30px;
+	font: normal 26px "omnes-pro", Helvetica, Arial, sans-serif;
+	color: #666;
+}
+
+p {
+	margin-top: 10px;
+}
+
+button {
+	font-size: 18px;
+	padding: 1px 7px;
+}
+
+input {
+	font-size: 18px;
+}
+
+input[type=checkbox] {
+	margin: 7px;
+}
+
+#header {
+	position: relative;
+	width: 900px;
+	margin: auto;
+}
+
+#header h2 {
+	margin-left: 10px;
+	vertical-align: middle;
+	font-size: 42px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #000;
+}
+
+#tooltip {
+ position: absolute;
+ font: normal 10px "omnes-pro", Helvetica, Arial, sans-serif;
+ display: none;
+ border: 0.5px solid #fdd;
+ padding: 0.5px;
+ background-color: #fee;
+ opacity: 0.80;
+}
+
+.demo-container {
+	box-sizing: border-box;
+	width: 250px;
+	height: 150px;
+	padding: 20px 15px 15px 15px;
+	border: 1px solid #ddd;
+	background: #fff;
+	background: linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
+	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+	-o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	-ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.demo-placeholder {
+	position:absolute;
+	top:36px;
+	bottom:14px;
+	width: 100%;
+	font-size: 14px;
+	line-height: 1.2em;
+}
+
+.legend table {
+	border-spacing: 5px;
+}
+#optionPanel{
+	height: 36px;
+    position: relative;
+	padding: 0 4px 0 20px;
+}
+
+#optionsLeft {
+    float: left;
+}
+
+#optionsRight {
+    float: right;
+}
+#optionPanel label {
+    display: inline-block;
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    padding: 2px 10px 0 4px;
+	font-size:1em;
+}
+.btn-success {
+
+    background: none repeat scroll 0 0 #16A085!important;
+    color: #FFFFFF;
+    text-shadow: none!important;
+}
+.btn {
+    background-image: none!important;
+}
+	
+.icon-chevron-down {
+    background-image: url("../img/glyphicons-halflings.png");
+    background-position: -313px -121px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 12px;
+    line-height: 14px;
+    margin-top: 1px;
+    vertical-align: text-top;
+    width: 14px;
+}
+[class^="icon-"], [class*=" icon-"] {
+    background-image: url("/portal/img/glyphicons-halflings.png");
+    background-position: 14px 14px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 14px;
+    line-height: 14px;
+    margin-top: 1px;
+    vertical-align: text-top;
+    width: 14px;
+}
+span.configureChart {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+}
+.gadgetInnerWrapper{
+	
+}
+.series-toggle{
+	font-size:11px!important;
+	line-height:11px;
+    background-clip: padding-box;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    float: left;
+    left: 0;
+    list-style: none outside none;
+    margin: 2px 0 0;
+    min-width: 160px;
+    padding: 5px 0;
+    position: absolute;
+    top: 100%;
+    z-index: 1000;
+}
+.btn-small, .btn-small a,.btn-group > .btn-small{
+	font-size:11px!important;
+}
+.clearfix{
+	clear:both;
+}
+.series-toggle li{
+	padding:0 4px;
+}
+a.dropdown-toggle{
+	color:#333333;
+}
+.btn-group.open .dropdown-toggle{
+	 background: none repeat scroll 0 0 #16A085!important;
+    color: #FFFFFF;
+    text-shadow: none!important;
+}

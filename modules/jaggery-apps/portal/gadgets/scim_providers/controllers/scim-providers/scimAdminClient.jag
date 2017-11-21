@@ -1,0 +1,31 @@
+<%
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/SCIMConfigAdminService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function getMySCIMProviders(consumerId){
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getAllUserProviders", consumerId ? new Array(consumerId) : new Array(""));
+    return result;
+}
+
+function addUserSCIMProvider(payload){
+    callWSInOnly(webService, serverUrl, "urn:addUserProvider", payload);
+}
+
+
+function deleteUserSCIMProvider(payload){
+    callWSInOnly(webService, serverUrl, "urn:deleteUserProvider", payload );
+}
+
+function updateUserSCIMProvider(payload){
+    callWSInOnly(webService, serverUrl, "urn:updateUserProvider", payload);
+}
+
+
+%>

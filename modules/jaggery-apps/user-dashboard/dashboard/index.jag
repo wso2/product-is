@@ -1,0 +1,731 @@
+<%
+include("util/constants.jag");
+
+var user = session.get('user');
+var log = new Log();
+var util = require("util/utility.jag");
+var authzFailure = request.getParameter("authz_failure");
+
+util.setServerURL("true");
+
+if (user == null) {
+    if (authzFailure != null) {
+        response.sendRedirect("login.jag?authz_failure=" + authzFailure);
+    } else {
+        response.sendRedirect("login.jag");
+    }
+}
+
+var httpsCoreUrl = application.get(SERVER_CORE_URL);
+if (httpsCoreUrl === 'null' || httpsCoreUrl == null || httpsCoreUrl.length <= 0) {
+    httpsCoreUrl = '';
+}
+
+var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
+if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.length <= 0) {
+    proxyContextPath = '';
+}
+
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Dashboard | Identity Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <!-- END imports needed for gadget rendering -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/font-awesome-ie7.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" type="text/css" href="css/navigation.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.gridster.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/portal-dashboard-designer.css"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/dialog_bx.css"/>
+    <script>
+        var isServerURL = "<%=httpsCoreUrl%>";
+        var isProxyContextPath = "<%=proxyContextPath%>";
+    </script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/jquery-ui-1.10.1.custom.min.js"></script>
+    <script src="js/jquery.gridster.with-extras.min.js"></script>
+    <script src="js/handlebars.js"></script>
+    <script src="<%=proxyContextPath%>/portal/themes/portal/js/shindig.js"></script>
+    <script src="js/UESContainer.js"></script>
+    <script src="js/portal-dashboard-designer.js"></script>
+    <script src="js/d_modal.js"></script>
+    <script src="js/d_main.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="<%=proxyContextPath%>/portal/themes/portal/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"
+          href="img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"
+          href="img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+
+
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="navbar-inner">
+
+        <div class="container-fluid">
+
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+
+            <a class="brand" href="#"></a>
+
+            <div class="nav-collapse collapse">
+                <ul class="nav pull-right">
+
+                    <li>
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i>
+                        <%=session.get(LOGGED_IN_USER) %> <b class="caret"></b></a>
+                        <ul class="dropdown-menu dropdown-account" role="menu"
+                        aria-labelledby="dLabel">
+                            <li>
+                                <a href="<%=proxyContextPath%>/dashboard/samlsso.jag?logout=true"><i class="icon-signout"></i> Sign
+                                    out</a>
+                            </li>                        <%
+                                if (session.get("connected-accounts") != null) {
+                                var connectedAccounts = session.get("connected-accounts");
+                                if (connectedAccounts.length > 0) { %>
+                                        <div class="dropdown_separator"><span class="switch_to_div">Switch To :
+                                        </span></div>
+                                    <%
+                                    for (var i in connectedAccounts) {
+                                        var connectedAccount = connectedAccounts[i].username;
+                                        if('PRIMARY' != connectedAccounts[i].domain) {
+                                            connectedAccount =  connectedAccounts[i].domain + "/" + connectedAccount;
+                                        }
+                                        if('carbon.super' != connectedAccounts[i].tenantDomain) {
+                                            connectedAccount =  connectedAccount + '@' + connectedAccounts[i].tenantDomain;
+                                        }
+                                        %>
+                                            <li class="associated_accounts">
+                                                <a href="javascript:void(0)" onclick="switchAccount('<%= connectedAccount %>');">
+                                                    <i class="icon-user pdR2p"></i><%= connectedAccount %>
+                                                </a>
+                                            </li>
+                                    <%
+                                    }
+                                }
+                                } else {
+                                    log.debug("No connections");
+                                }
+                                %>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <div class="navbar-inner sub-navbar-designer">
+
+        <div class="container-fluid">
+
+            <a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar"> <span class="icon-bar"></span>
+                <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+
+            <div class="row-fluid">
+
+                <div class="span5">
+                    <input id="inp-designer-title" type="text" value="dashboard">
+                </div>
+                <div class="span7">
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="icon-plus"></i> Add
+                                    Block <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-share">
+                                    <form>
+                                        <li>
+                                            <h4>Define gadget size in grid</h4>
+
+                                        </li>
+                                        <li>
+
+                                            <div id="dummy-gadget-wrapper">
+                                                <div id="dummy-gadget-container" class="ui-widget-content">
+                                                    <div id="dummy-gadget" class="ui-widget-content">
+                                                        <div id="dummy-size">
+                                                            1x1
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <button id="btn-add-dummy-gadget" class="btn btn-primary">
+                                                Add Empty Block
+                                            </button>
+                                        </li>
+                                    </form>
+                                </ul>
+
+                            </li>
+
+                            <li id="btn-save">
+                                <a href="#"><i class="icon-save"></i> Save</a>
+                            </li>
+                            <li>
+                                <a id="btn-exit-editor" href="#"><i class="icon-signout"></i> Exit Editor</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <div class="navbar-inner sub-navbar-designer-view">
+
+        <div class="container-fluid">
+
+            <a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar"> <span class="icon-bar"></span>
+                <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+
+
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+
+<div class="row-fluid">
+
+<div class="span12">
+<input type="hidden" value="design" id="inp-view-mode"/>
+<input type="hidden" value="dashboard" id="inp-dashboard"/>
+<%=session.get(LOGGED_IN_USER)%>
+
+<div id="gridster-cont" class="container-fluid">
+<div id="dashboardName"><i class="icon-th-large"></i> <span></span></div>
+<div class="layouts_grid" id="layouts_grid">
+<input type="hidden" id="inp-layout" value="grid">
+<ul>
+<div id="grid-guides"></div>
+
+
+<li class="layout_block static" data-sizey="1" data-sizex="2" data-col="1" data-row="1"
+    data-url="" data-wid="35" data-prefs="{}" data-title="">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="designer-placeholder">
+
+    </div>
+
+    <button class="btn btn-add-gadget">Add Gadget</button>
+
+</li>
+
+<li class="layout_block static" data-sizey="1" data-sizex="2" data-col="3" data-row="1"
+    data-url="" data-wid="36" data-prefs="{}" data-title="">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="designer-placeholder">
+
+    </div>
+
+    <button class="btn btn-add-gadget">Add Gadget</button>
+
+</li>
+
+<li class="layout_block static" data-sizey="1" data-sizex="1" data-col="5" data-row="1"
+    data-url="" data-wid="37" data-prefs="{}" data-title="">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="designer-placeholder">
+
+    </div>
+
+    <button class="btn btn-add-gadget">Add Gadget</button>
+
+</li>
+
+<li class="layout_block static" data-sizey="1" data-sizex="1" data-col="6" data-row="1"
+    data-url="" data-wid="38" data-prefs="{}" data-title="">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+
+    <div class="designer-placeholder">
+
+    </div>
+
+    <button class="btn btn-add-gadget">Add Gadget</button>
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="2"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/user_profile/gadget.xml" data-wid="39" data-prefs="{}"
+    data-title="User Profiles">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample1" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="3" data-row="2"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/user_auth_apps/gadget.xml" data-wid="40" data-prefs="{}"
+    data-title="Authorized Apps">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="3"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/account-recovery/gadget.xml" data-wid="41" data-prefs="{}"
+    data-title="Account Recovery">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="3"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/connected_accounts/gadget.xml" data-wid="42" data-prefs="{}"
+    data-title="Manage Associated User Accounts & Federated IDs">
+    <div class="grid_header">
+        <h3></h3>
+        <span class="grid_header_controls">
+            <a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+            <a class="expand-widget"><i class="icon-resize-full"></i></a>
+            <a class="shrink-widget"><i class="icon-resize-small"></i></a>
+            <a class="close-widget" href="#"><i class="icon-remove"></i></a>
+        </span>
+    </div>
+    <div class="gadget-pref-cont"></div>
+    <div class="add-gadget-item"></div>
+</li>
+
+<!--<li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="3"-->
+    <!--data-url="<%=httpsCoreUrl%>/portal/gadgets/identity_management/gadget.xml" data-wid="42" data-prefs="{}"-->
+    <!--data-title="Social Login">-->
+    <!--<div class="grid_header">-->
+        <!--<h3></h3>-->
+            		<!--<span class="grid_header_controls">-->
+                		<!--<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>-->
+                		<!--<a class="expand-widget"><i class="icon-resize-full"></i></a>-->
+                		<!--<a class="shrink-widget"><i class="icon-resize-small"></i></a>-->
+                		<!--<a class="close-widget" href="#"><i class="icon-remove"></i></a>-->
+            		<!--</span>-->
+    <!--</div>-->
+    <!--<div class="gadget-pref-cont">-->
+
+    <!--</div>-->
+
+    <!--<div class="add-gadget-item">-->
+
+    <!--</div>-->
+
+
+<!--</li>-->
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="3" data-row="3"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/pwd_change/gadget.xml" data-wid="43" data-prefs="{}"
+    data-title="Change Password">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+
+    <div class="add-gadget-item">
+
+    </div>
+
+
+</li>
+
+<li id ="sample4" class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="2"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/scim_providers/gadget.xml" data-wid="44" data-prefs="{}"
+    data-title="SCIM Providers">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample2" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+
+    <div class="add-gadget-item">
+
+    </div>
+
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="4"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/login-sessions/gadget.xml" data-wid="46" data-prefs="{}"
+    data-title="New Topic">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample1" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="5" data-row="2"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/approvals/gadget.xml" data-wid="45" data-prefs="{}"
+    data-title="New Topic">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample1" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="1" data-row="4"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/my-login-sessions/gadget.xml" data-wid="47" data-prefs="{}"
+    data-title="My Login Sessions">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample1" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
+<!--
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="0" data-row="0"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/backup_otp/gadget.xml" data-wid="46" data-prefs="{}"
+    data-title="Generate and Download SMS OTP Backup Codes">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample1" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li> 
+-->
+
+</ul>
+</div>
+
+</div>
+<!-- /container -->
+<!-- Modal -->
+<div id="modal-add-gadget" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel"
+     aria-hidden="true">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        <i class="icon-remove"></i>
+    </button>
+    <div id="store-gadget-div"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script id="widget-template" type="text/x-handlebars-template">
+    <li class="layout_block">
+        <div class="grid_header">
+            <input class="gadget-title-txt">
+            <span class="grid_header_controls">
+                <a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                <a class="expand-widget"><i class="icon-resize-full"></i></a>
+                <a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                <a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            </span>
+        </div>
+        <div class="gadget-pref-cont">
+
+        </div>
+        <div class="designer-placeholder">
+
+        </div>
+        <div class="add-gadget-item">
+
+        </div>
+        <button class="btn btn-add-gadget">Add Gadget</button>
+
+    </li>
+</script>
+
+<script id="widget-template2" type="text/x-handlebars-template">
+    <li class="layout_block" data-wid="{{wid}}" data-url="{{url}}" data-prefs="{{prefs}}">
+        <div class="grid_header">
+            <input class="gadget-title-txt">
+            <span class="grid_header_controls">
+                <a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                <a class="expand-widget"><i class="icon-resize-full"></i></a>
+                <a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                <a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            </span>
+        </div>
+        <div class="gadget-pref-cont">
+
+        </div>
+        <div class="add-gadget-item">
+
+        </div>
+
+    </li>
+</script>
+
+<script id="widget-template-blank2" type="text/x-handlebars-template">
+    <li class="layout_block" data-url="{{url}}" data-row="{{y}}" data-col="{{x}}" data-sizex="{{width}}"
+        data-sizey="{{height}}" data-wid="{{wid}}" data-prefs="{{prefs}}">
+        <div class="grid_header">
+            <input class="gadget-title-txt">
+            <span class="grid_header_controls">
+                <a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                <a class="expand-widget"><i class="icon-resize-full"></i></a>
+                <a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                <a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            </span>
+        </div>
+        <div class="gadget-pref-cont">
+
+        </div>
+        <div class="add-gadget-item">
+
+        </div>
+    </li>
+</script>
+
+<script>
+
+
+function switchAccount(user) {
+    $.ajax({
+               url: "userAssociationHandler.jag",
+               type: "POST",
+               data: "&user=" + user,
+               success: function (data) {
+                   var resp = $.parseJSON(data);
+                   if (resp.success == true) {
+                       window.location = ('index.jag');
+                   } else {
+                       if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                           window.location = 'logout.jag';
+                       } else {
+                           message({content: 'Error occurred while switching user account.', type: 'error',
+                           cbk: function () {}});
+                       }
+                   }
+               },
+               error: function (e) {
+                   message({content: 'Error occurred while switching user account.', type: 'error', cbk: function () {
+                   }});
+               }
+           });
+}
+
+    $(function () {
+
+            UESContainer.inlineClient.subscribe('org.wso2.is.dashboard', function(topic, data, subscriberData) {
+var element = "#"+data.id;
+
+checkAuthentication(element);
+//$(element).click();
+
+});
+
+    });
+
+function checkAuthentication(element) {
+
+ var str = "authenticationHandler.jag";
+                        $.ajax({
+                            type:"GET",
+                            url:str
+
+                        })
+                                .done(function (data) {
+$(element).click();
+                                })
+                                .fail(function () {
+window.location=('index.jag');
+
+                                })
+                                .always(function () {
+
+                                });
+
+
+}
+</script>
+ <div id="message"></div>
+</body>
+</html>
+

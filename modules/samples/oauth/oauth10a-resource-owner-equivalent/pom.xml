@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ~ Copyright (c) 2009-2013, WSO2 Inc. (http://www.wso2.org) All Rights
+	Reserved. ~ ~ Licensed under the Apache License, Version 2.0 (the "License"); 
+	~ you may not use this file except in compliance with the License. ~ You 
+	may obtain a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 
+	~ ~ Unless required by applicable law or agreed to in writing, software ~ 
+	distributed under the License is distributed on an "AS IS" BASIS, ~ WITHOUT 
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ~ See the 
+	License for the specific language governing permissions and ~ limitations 
+	under the License. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>wso2is-identity-samples-oauth10a</artifactId>
+        <version>5.4.0-SNAPSHOT</version>
+    </parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>oauth10a-resource-owner-equivalent</artifactId>
+	<name>WSO2 Carbon - OAuth10a Resource Owner Equivalent</name>
+	<description>Sample for OAuth2 Resource Owner Password Grant Type equivalent flow in OAuth1.0a</description>
+	<url>http://wso2.org</url>
+	<repositories>
+		<repository>
+			<id>wso2-nexus</id>
+			<name>WSO2 internal Repository</name>
+			<url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+		</repository>
+
+        <!-- Moved to nexus repo -->
+		<!--<repository>-->
+            <!--<id>wso2-maven2-repository</id>-->
+            <!--<url>http://dist.wso2.org/maven2</url>-->
+	    <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>apache-Incubating-repo</id>-->
+            <!--<name>Maven Incubating Repository</name>-->
+            <!--<url>http://people.apache.org/repo/m2-incubating-repository</url>-->
+	    <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>apache-maven2-repo</id>-->
+            <!--<name>Apache Maven2 Repository</name>-->
+            <!--<url>http://repo1.maven.org/maven2/</url>-->
+        <!--</repository>-->
+		<!--<repository>-->
+            <!--<id>twitter4j.org</id>-->
+            <!--<name>twitter4j.org Repository</name>-->
+			<!--<url>http://twitter4j.org/maven2</url>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+			<!--</releases>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+		<!--<repository>-->
+            <!--<id>oauth</id>-->
+            <!--<url>http://oauth.googlecode.com/svn/code/maven</url>-->
+	    <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>googlecollection</id>-->
+            <!--<url>http://repo1.maven.org/maven2</url>-->
+		<!--</repository>-->
+	</repositories>
+
+	<!--<pluginRepositories>-->
+		<!--<pluginRepository>-->
+			<!--<id>wso2-maven2-repository</id>-->
+			<!--<url>http://dist.wso2.org/maven2</url>-->
+		<!--</pluginRepository>-->
+	<!--</pluginRepositories>-->
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.axis2.wso2</groupId>
+			<artifactId>axis2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gdata.wso2</groupId>
+			<artifactId>gdata-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+			<artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
+    </dependencies>
+</project>

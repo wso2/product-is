@@ -1,0 +1,81 @@
+<%
+var log = new Log();
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+getUser();
+function getUser() {
+    session.put('auth-cookie', cookie);
+    session.put('user', user);
+
+    try {
+        var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(user);
+        var tenantDomain = multitenantUtils.getTenantDomain(user);
+
+        var client = require('controllers/account_recovery/identityMgtClient.jag');
+        // get all challenge questions for a user based on his tenantDomain and locale
+        var fieldValues = client.getChallengeQuestionsForUser(tenantAwareUserName, tenantDomain);
+        var userChallenges = client.getUserChallengeAnswers(tenantAwareUserName, tenantDomain);
+        fieldValues.selectedChalanges = userChallenges.return;
+
+        // Get User Challenges
+        var selectedChallenges = {};
+        var count = 0;
+        if (userChallenges.return != null) {
+            if (userChallenges.return.constructor === Array) {
+                for (var i in userChallenges.return) {
+                    selectedChallenges[userChallenges.return[i].question.questionSetId] = userChallenges.return[i];
+                    count++;
+                }
+            } else if (userChallenges.return.constructor === Object) {
+                selectedChallenges[userChallenges.return.question.questionSetId] = userChallenges.return;
+                count++;
+            }
+        }
+        var orderedChallanges = {};
+
+        if (fieldValues.return != null) {
+            if (fieldValues.return.constructor === Array) {
+                for (var i in fieldValues.return) {
+                    if (orderedChallanges[fieldValues.return[i].questionSetId] == undefined) {
+                        orderedChallanges[fieldValues.return[i].questionSetId] = [];
+                    }
+                    if (count > 0 && selectedChallenges[fieldValues.return[i].questionSetId] != undefined) {
+                        if (selectedChallenges[fieldValues.return[i].questionSetId].question.question == fieldValues.return[i].question) {
+                            fieldValues.return[i].selected = "true";
+                            fieldValues.return[i].answer = selectedChallenges[fieldValues.return[i].questionSetId].answer;
+                        }
+                    }else {
+                        fieldValues.return[i].selected = "false";
+                        fieldValues.return[i].answer = "";
+                    }
+                    orderedChallanges[fieldValues.return[i].questionSetId].push(fieldValues.return[i]);
+                }
+            } else if (fieldValues.return.constructor === Object) {
+                if (orderedChallanges[fieldValues.return.questionSetId] == undefined) {
+                    orderedChallanges[fieldValues.return.questionSetId] = [];
+                }
+                if (count > 0 && selectedChallenges[fieldValues.return.questionSetId] != undefined) {
+                    if (selectedChallenges[fieldValues.return.questionSetId].question.question == fieldValues.return.question) {
+                        fieldValues.return.selected = "true";
+                        fieldValues.return.answer = selectedChallenges[fieldValues.return.questionSetId].answer;
+                    }
+                }
+                else {
+                    fieldValues.return.selected = "false";
+                    fieldValues.return.answer = "";
+                }
+                orderedChallanges[fieldValues.return.questionSetId].push(fieldValues.return);
+            }
+        }
+
+        print(orderedChallanges);
+    } catch (e) {
+        print(e);
+        log.error(e);
+    }
+
+}
+
+%>

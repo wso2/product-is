@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">azone</string>
+    <string name="action_settings">Sign in</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_after_login">AfterLoginActivity</string>
+    <string name="title_activity_test1">Test1</string>
+    <string name="title_activity_temp">TempActivity</string>
+
+</resources>

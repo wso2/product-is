@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project name="playground-app-seperation" default="default" basedir="../../../../../../">
+    <description>
+        This script builds war file for the playground2 app for combinations of consumer type and openid attribute
+        exchange
+    </description>
+    <!-- set global properties for this build -->
+    <property name="build" location="${basedir}/target/test-classes/samples"/>
+    <property name="playground2.webapp" location="${basedir}/target/test-classes/samples/playground2"/>
+    <property name="playground2.webapp.webinf" location="${playground2.webapp}/WEB-INF"/>
+    <property name="playground2.webapp.classes" location="${playground2.webapp}/WEB-INF/classes"/>
+    <property name="playground2.webapp.lib" location="${playground2.webapp}/WEB-INF/lib"/>
+    <property name="oauth.properties" location="${basedir}/src/test/resources/artifacts/IS/oauth/"/>
+    <property name="openid.properties.default" location="${oauth.properties}/playground2"/>
+
+    <target name="default">
+        <delete
+                file="${playground2.webapp.webinf}/web.xml"/>
+        <copy file="${openid.properties.default}/web.xml"
+              tofile="${playground2.webapp.webinf}/web.xml"/>
+        <war destfile="${build}/playground2.war"
+             webxml="${playground2.webapp}/WEB-INF/web.xml">
+            <fileset
+                    dir="${playground2.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib dir="${playground2.webapp.lib}/" />
+            <classes
+                    dir="${playground2.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+</project>

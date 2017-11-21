@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="IdentityUITestSuite">
+    <parameter name="useDefaultListeners" value="false"/>
+
+    <listeners>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
+    </listeners>
+
+    <test name="TestUI - Identity">
+        <classes>
+            <class name="org.wso2.identity.ui.integration.test.LoginTestCase"/>
+            <class name="org.wso2.identity.ui.integration.test.login.ISLoginTestCase"/>
+            <class name="org.wso2.identity.ui.integration.test.user.mgt.RoleCreationTestCase"/>
+            <class name="org.wso2.identity.ui.integration.test.policy.ui.SimplePolicyEditorTestCase"/>
+        </classes>
+    </test>
+</suite>

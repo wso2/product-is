@@ -1,0 +1,105 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>Welcome to WSO2 Identity Server v3.2.0!</title>
+        <link href="css/is-docs.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <h1>Welcome to WSO2 Identity Server, v3.2.0</h1>
+
+        <h2>@buildNumber@ - WSO2 Identity Server , v3.2.0 Released!</h2>
+
+        <p>[<a
+                href="http://wso2.org/downloads/identity">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release-notes.html">Release Note</a>]
+        </p>
+
+        <p>WSO2 Identity Server is an open source Identity and Entitlement management server having
+            support for OpenID, Information Cards, XACML and SAML 2.0.
+        </p>
+
+        <p>This is based on revolutionary the WSO2 Carbon framework, Middleware a la carte'.</p>
+
+        <p>All the major features have been developed as pluggable Carbon components.</p>
+
+        <h2>New Features In This Release</h2>
+        <ul>
+            <li>OAuth support</li>
+            <li>SAML 2.0 based Single Sign-on support</li>
+            <li>Support for bulk-user import</li>
+            <li>Various bug fixes and enhancements including architectural improvements
+                to Apache Axis2, Apache Rampart, Apache Sandesha2 , WSO2 Carbon and
+                other projects
+            </li>
+        </ul>
+
+
+        <h2>Key Features</h2>
+        <ul>
+            <li>Entitlement Engine with XACML 2.0 support</li>
+            <li>Claim based Security Token Service with SAML 1.1/SAML 2.0 support</li>
+            <li>Information cards support for SAML 1.1/2.0</li>
+            <li>OpenID Provider</li>
+            <li>Extension points for SAML assertion handling</li>
+            <li>XMPP based multi-factor authentication</li>
+            <li>Improved User Management</li>
+            <li>Claim Management</li>
+            <li>User Profiles and Profile Management</li>
+            <li>XKMS</li>
+            <li>Separable front-end and back-end - a single front-end server can be used to
+                administer several back-end servers
+            </li>
+            <li>Information Cards provider supporting Managed Information Cards backed by user name
+                / password and self-issued cards
+            </li>
+            <li>Multi-factor authentication with Information Cards</li>
+        </ul>
+
+
+        <h2>Open Source Components of WSO2 Identity Server</h2>
+        <ul>
+            <li>WSO2 Carbon</li>
+            <li>Apache Axis2 (SOAP)</li>
+            <li>Apache Axiom (High performance XML Object Model)</li>
+            <li>Apache Rampart/Apache WSS4J (WS-Security, WS-SecureConversation)</li>
+            <li>Apache Rahas(WS-Trust)</li>
+            <li>WS-Addressing implementation in Axis2</li>
+            <li>Apache Neethi (WS-Policy)</li>
+            <li>WS-SecurityPolicy implementation in Axis2</li>
+            <li>Apache XML Schema</li>
+            <li>OpenID4Java</li>
+            <li>SunXACML</li>
+            <li>OpenSAML2</li>
+        </ul>
+
+        <h2>WSO2 Identity Server , Documentation</h2>
+
+        <p>See the
+            <a href="index_docs.html">full list of documents</a>
+            with instructions on installation, administration and running samples with
+            WSO2 Identity Server , v3.2.0
+        </p>
+        <a></a>
+
+        <h3></h3>
+
+    </body>
+</html>

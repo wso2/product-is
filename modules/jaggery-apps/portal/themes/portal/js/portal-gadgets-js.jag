@@ -1,0 +1,6 @@
+<%
+response.contentType = 'text/javascript';
+var gadgets = require('/portal.js').config().portalGadgets;
+var js = 'var portalGadgets = ' + stringify(gadgets);
+print(js);
+%>

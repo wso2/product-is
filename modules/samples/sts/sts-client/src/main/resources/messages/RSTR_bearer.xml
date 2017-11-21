@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+    <soapenv:Header xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+        <wsse:Security
+                xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                soapenv:mustUnderstand="true">
+            <wsu:Timestamp
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="Timestamp-19">
+                <wsu:Created>2012-06-04T09:15:06.040Z</wsu:Created>
+                <wsu:Expires>2012-06-04T09:20:06.040Z</wsu:Expires>
+            </wsu:Timestamp>
+        </wsse:Security>
+        <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:MessageID>urn:uuid:b09cd07f-a222-4903-9a2e-cdf10ee57262</wsa:MessageID>
+        <wsa:Action>urn:IssueTokenResponse</wsa:Action>
+        <wsa:RelatesTo>urn:uuid:29619c31-b24d-44a8-90a2-629a404f596a</wsa:RelatesTo>
+    </soapenv:Header>
+    <soapenv:Body>
+        <wst:RequestSecurityTokenResponse xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wst:TokenType>
+                http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0
+            </wst:TokenType>
+            <wst:RequestedAttachedReference>
+                <wsse:SecurityTokenReference
+                        xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                    <wsse:Reference URI="#urn:uuid:E203530B2CF89754F11338801306048"
+                                    ValueType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0"/>
+                </wsse:SecurityTokenReference>
+            </wst:RequestedAttachedReference>
+            <wst:RequestedUnattachedReference>
+                <wsse:SecurityTokenReference
+                        xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                    <wsse:Reference URI="urn:uuid:E203530B2CF89754F11338801306048"
+                                    ValueType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0"/>
+                </wsse:SecurityTokenReference>
+            </wst:RequestedUnattachedReference>
+            <wst:Lifetime>
+                <wsu:Created
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    2012-06-04T09:15:06.025Z
+                </wsu:Created>
+                <wsu:Expires
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    2012-06-04T09:20:06.025Z
+                </wsu:Expires>
+            </wst:Lifetime>
+            <wst:RequestedSecurityToken>
+                <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                                ID="urn:uuid:E203530B2CF89754F11338801306048"
+                                IssueInstant="2012-06-04T09:15:06.025Z" Version="2.0">
+                    <saml:Issuer>localhost</saml:Issuer>
+                    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <ds:SignedInfo>
+                            <ds:CanonicalizationMethod
+                                    Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                            <ds:SignatureMethod
+                                    Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                            <ds:Reference URI="#urn:uuid:E203530B2CF89754F11338801306048">
+                                <ds:Transforms>
+                                    <ds:Transform
+                                            Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                                    <ds:Transform
+                                            Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                        <ec:InclusiveNamespaces
+                                                xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                PrefixList="ds saml xs"/>
+                                    </ds:Transform>
+                                </ds:Transforms>
+                                <ds:DigestMethod
+                                        Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                <ds:DigestValue>spvrLj0pAW/ZMurQS0nyBD/eph8=</ds:DigestValue>
+                            </ds:Reference>
+                        </ds:SignedInfo>
+                        <ds:SignatureValue>
+                            OM75pvUu62JSnHSRWaMd4D0drBrYpFIiV7RYEcEDr/b1HDyqhrel75SWkTot8sV24lQShgaQ/EswHx1nh2f3xlGD+JKIqi6LVCP/45/vQDq2Ims4kOInZdJVu16jrIPida9OYNYOUSuDTICjUo3c+Sn4Mf1gIOd+BOAROjYxdLA=
+                        </ds:SignatureValue>
+                        <ds:KeyInfo>
+                            <ds:X509Data>
+                                <ds:X509Certificate>
+                                    MIICNTCCAZ6gAwIBAgIES343gjANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoMBFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xMDAyMTkwNzAyMjZaFw0zNTAyMTMwNzAyMjZaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUp/oV1vWc8/TkQSiAvTousMzOM4asB2iltr2QKozni5aVFu818MpOLZIr8LMnTzWllJvvaA5RAAdpbECb+48FjbBe0hseUdN5HpwvnH/DW8ZccGvk53I6Orq7hLCv1ZHtuOCokghz/ATrhyPq+QktMfXnRS4HrKGJTzxaCcU7OQIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCBPAwDQYJKoZIhvcNAQEFBQADgYEAW5wPR7cr1LAdq+IrR44iQlRG5ITCZXY9hI0PygLP2rHANh+PYfTmxbuOnykNGyhM6FjFLbW2uZHQTY1jMrPprjOrmyK5sjJRO4d1DeGHT/YnIjs9JogRKv4XHECwLtIVdAbIdWHEtVZJyMSktcyysFcvuhPQK8Qc/E/Wq8uHSCo=
+                                </ds:X509Certificate>
+                            </ds:X509Data>
+                        </ds:KeyInfo>
+                    </ds:Signature>
+                    <saml:Subject>
+                        <saml:NameID
+                                Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">
+                            admin
+                        </saml:NameID>
+                        <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"/>
+                    </saml:Subject>
+                    <saml:Conditions NotBefore="2012-06-04T09:15:06.025Z"
+                                     NotOnOrAfter="2012-06-04T09:20:06.025Z"/>
+                    <saml:AuthnStatement AuthnInstant="2012-06-04T09:15:06.025Z">
+                        <saml:AuthnContext>
+                            <saml:AuthnContextClassRef>
+                                urn:oasis:names:tc:SAML:2.0:ac:classes:Password
+                            </saml:AuthnContextClassRef>
+                        </saml:AuthnContext>
+                    </saml:AuthnStatement>
+                    <saml:AttributeStatement>
+                        <saml:Attribute Name="Email"
+                                        NameFormat="http://wso2.org/claims/emailaddress">
+                            <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                                                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                 xsi:type="xs:string">admin@wso2.com
+                            </saml:AttributeValue>
+                        </saml:Attribute>
+                        <saml:Attribute Name="First Name"
+                                        NameFormat="http://wso2.org/claims/givenname">
+                            <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                                                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                 xsi:type="xs:string">admin
+                            </saml:AttributeValue>
+                        </saml:Attribute>
+                    </saml:AttributeStatement>
+                </saml:Assertion>
+            </wst:RequestedSecurityToken>
+        </wst:RequestSecurityTokenResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

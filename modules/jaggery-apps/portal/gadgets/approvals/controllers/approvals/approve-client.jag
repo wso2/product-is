@@ -1,0 +1,84 @@
+<%
+
+/*
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+include("../wsUtil.jag");
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var id = request.getParameter("id");
+var command = request.getParameter("command");
+var endPoint = request.getParameter("endPoint");
+var user = request.getParameter("user");
+
+callService();
+function callService() {
+    session.put('auth-cookie', cookie);
+    try {
+        var ws = require("ws");
+
+        var version1 = new ws.WSRequest();
+        var options1 = new Array();
+        options1.useSOAP = 1.1;
+        options1.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/start";
+
+        var payload1 = "<ns:start xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"><ns:identifier>" + id +
+                "</ns:identifier></ns:start>";
+
+        options1["HTTPHeaders"] = [{name: "cookie", value: cookie}];
+        var result1;
+        try {
+
+            version1.open(options1, endPoint, false);
+            version1.send(payload1);
+
+        } catch (e) {
+
+            log.error(e.toString());
+            return e.toString();
+
+        }
+
+        var version = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/complete";
+        var payload = "<ns:complete xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\">" +
+                "<ns:identifier>" + id + "</ns:identifier><ns:taskData>" +
+                "<![CDATA[<sch:ApprovalCBData xmlns:sch=\"http://ht.bpel.mgt.workflow.identity.carbon.wso2.org/wsdl/schema\"><approvalStatus>" + command + "</approvalStatus></sch:ApprovalCBData>]]>" +
+                "</ns:taskData></ns:complete>";
+
+        options["HTTPHeaders"] = [{name: "cookie", value: cookie}];
+        var result;
+        try {
+            version.open(options, endPoint, false);
+            version.send(payload);
+        } catch (e) {
+            log.error(e.toString());
+            return e.toString();
+        }
+        print(result);
+    } catch (e) {
+        print(e);
+        log.error(e);
+    }
+
+}
+
+
+%>

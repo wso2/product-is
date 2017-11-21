@@ -1,0 +1,46 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/UserProfileMgtService";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+function updateProfile(payload){
+	callWSInOnly(webService, serverUrl, "urn:setUserProfile", payload );
+}
+
+
+function getProfileFieldsForInternalStore(){
+	var result = callWSReturnXML(webService, serverUrl, "urn:getProfileFieldsForInternalStore", null);
+	return result;
+}
+
+function getUserProfile(username, profileName){
+
+	var tenantAwareUserName = multitenantUtils.getTenantAwareUsername(username);
+	var result = callWSReturnJSON(webService, serverUrl, "urn:getUserProfile", new Array(tenantAwareUserName, profileName));
+	result.return.fieldValues = util.sortNumber(result.return.fieldValues, 'displayOrder', true, true);
+
+	for(var x = 0; x < result.return.fieldValues.length; x++){
+		var obj = result.return.fieldValues[x];
+        if(obj.required === "false"){
+            obj.required = "";
+        }
+
+        if(obj.readOnly === "false"){
+           obj.readOnly = "";
+        }
+    }
+
+
+    return result;
+
+}
+
+%>

@@ -1,0 +1,58 @@
+<%
+
+var log = new Log();
+include("/util/constants.jag");
+var util = require("/util/utility.jag");
+var userAccountConnectorClient = require('/controllers/account-connection/userAccountAssociationClient.jag');
+var userInfoClient = require('/controllers/login-logout/loggedUserInfoAdminClient.jag');
+var i18n = util.initI18N();
+var user = request.getParameter("user");
+
+if(user != null && user.trim().length > 0){
+    try {
+        var result = userAccountConnectorClient.switchLoggedInUser(user);
+        if(result == true){
+            session.put(LOGGED_IN_USER, user);
+
+            var userInfo = userInfoClient.getUserInfo();
+            session.put(UI_USER_PERMISSIONS, userInfo.UIPermissionOfUser);
+
+            var header = util.generateHeader(true, i18n);
+            header = parse(stringify(header));
+            session.put(USER_HEADER, header);
+
+            //Get connected Accounts
+            var connectedAccounts = userAccountConnectorClient.getAccountAssociationsOfUser();
+            if(connectedAccounts != null && connectedAccounts.length > 0){
+                session.put(CONNECTED_ACCOUNTS, connectedAccounts);
+            } else {
+                session.remove(CONNECTED_ACCOUNTS);
+            }
+
+            print('{"success":true}');
+        } else {
+            print('{"success":false}');
+        }
+    } catch (e) {
+        print(getErrorMessage(e.message));
+    }
+} else {
+    print('{"success":false, "message":"Invalid user name"}');
+}
+
+function getErrorMessage(message) {
+    if (message != null && message.length > 0) {
+        if (message.indexOf('401 Error: Unauthorized') > -1) {
+            return '{"success":false, "reLogin":true}';
+        } else {
+            var msg = message.split(':');
+            if (msg.length > 0) {
+                return '{"success":false, "message":"' + msg[1] + '"}';
+            }
+        }
+    }
+    return '{"success":false, "message":null}';
+}
+
+
+%>

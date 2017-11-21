@@ -1,0 +1,12 @@
+This sample demonstrates how to use RemoteUserManagement web services API exposed by carbon, to write a client application
+to handle user management functionality of WSO2 Identity Server externally.
+
+Steps to run the sample:
+
+1. Start the Identity Server using the startup script found in the [IS_Home]/bin folder.
+(Use wso2server.sh for Linux and wso2server.bat for Windows)
+2. Make sure you have installed Apache Ant.
+3. Modify the client.properties file if the default configuration to run the sample are different. 
+4. Run the command 'ant' at this directory level in command line and observe the different user management
+operations performed remotely.
+5. More information about the sample can be found in the Identity Server documentation.

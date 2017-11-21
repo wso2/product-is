@@ -1,0 +1,83 @@
+<!--
+  ~ Copyright WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<UserManager>
+	<Realm>
+		<Configuration>
+			<AddAdmin>true</AddAdmin>
+			<AdminRole>admin</AdminRole>
+			<AdminUser>
+				<UserName>admin</UserName>
+				<Password>admin</Password>
+			</AdminUser>
+			<EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
+			<Property name="isCascadeDeleteEnabled">true</Property>
+			<Property name="initializeNewClaimManager">true</Property>
+			<Property name="dataSource">jdbc/WSO2CarbonDB</Property>
+		</Configuration>
+		<!--  This is the default configuration -->
+		<UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager">
+			<Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>
+			<Property name="ConnectionURL">ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}</Property>
+			<Property name="ConnectionName">uid=admin,ou=system</Property>
+			<Property name="ConnectionPassword">admin</Property>
+			<Property name="AnonymousBind">false</Property>
+			<Property name="UserSearchBase">ou=Users,dc=wso2,dc=org</Property>
+			<Property name="UserEntryObjectClass">identityPerson</Property>
+			<Property name="UserNameAttribute">uid</Property>
+			<Property name="UserNameSearchFilter">(&amp;(objectClass=person)(uid=?))</Property>
+			<Property name="UserNameListFilter">(objectClass=person)</Property>
+			<Property name="DisplayNameAttribute"/>
+			<Property name="ReadGroups">true</Property>
+			<Property name="WriteGroups">true</Property>
+			<Property name="GroupSearchBase">ou=Groups,dc=wso2,dc=org</Property>
+			<Property name="GroupEntryObjectClass">groupOfNames</Property>
+			<Property name="GroupNameAttribute">cn</Property>
+			<Property name="GroupNameSearchFilter">(&amp;(objectClass=groupOfNames)(cn=?))</Property>
+			<Property name="GroupNameListFilter">(objectClass=groupOfNames)</Property>
+			<Property name="MembershipAttribute">member</Property>
+			<Property name="BackLinksEnabled">false</Property>
+			<Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+			<Property name="UsernameJavaScriptRegEx">^[\S]{3,30}$</Property>
+			<Property name="UsernameJavaRegExViolationErrorMsg">Username pattern policy violated</Property>
+			<Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
+			<Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
+			<Property name="PasswordJavaRegExViolationErrorMsg">Password length should be within 5 to 30 characters</Property>
+			<Property name="RolenameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+			<Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
+			<Property name="SCIMEnabled">true</Property>
+			<Property name="IsBulkImportSupported">false</Property>
+			<Property name="EmptyRolesAllowed">true</Property>
+			<Property name="PasswordHashMethod">PLAIN_TEXT</Property>
+			<Property name="MultiAttributeSeparator">,</Property>
+			<Property name="MaxUserNameListLength">100</Property>
+			<Property name="MaxRoleNameListLength">100</Property>
+			<Property name="kdcEnabled">false</Property>
+			<Property name="defaultRealmName">WSO2.ORG</Property>
+			<Property name="UserRolesCacheEnabled">true</Property>
+			<Property name="ConnectionPoolingEnabled">false</Property>
+			<Property name="LDAPConnectionTimeout">5000</Property>
+			<Property name="ReadTimeout"/>
+			<Property name="RetryAttempts"/>
+		</UserStoreManager>
+
+		<AuthorizationManager class="org.wso2.carbon.user.core.authorization.JDBCAuthorizationManager">
+			<Property name="AdminRoleManagementPermissions">/permission</Property>
+			<Property name="AuthorizationCacheEnabled">true</Property>
+			<Property name="GetAllRolesOfUserEnabled">false</Property>
+		</AuthorizationManager>
+	</Realm>
+</UserManager>

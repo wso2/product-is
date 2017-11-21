@@ -1,0 +1,128 @@
+<%
+include("constants.jag");
+
+var log = new Log();
+var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
+
+/*
+ * Function to update server url information
+ */
+function setServerURL() {
+    var serverUrl = stringify(application.get(SERVER_URL));
+    if(serverUrl === 'null' || serverUrl == null || serverUrl.length <= 0){
+        //Server URL is not specified in the jaggery.conf, therefore using the service url mentioned in the carbon.conf
+        var carbon = require('carbon');
+        var serverConfigService = carbon.server.osgiService('org.wso2.carbon.base.api.ServerConfigurationService');
+        var configContextService = carbon.server.osgiService('org.wso2.carbon.utils.ConfigurationContextService');
+        var configContext = configContextService.getServerConfigContext();
+
+        mgtTransport = "https";
+
+        var path = "/conf/site.json";
+        var file = new File(path);
+        file.open("r");
+        var json = "";
+
+        json = file.readAll();
+        file.close();
+        var jsonConf = parse(json);
+
+        var hostName = '';
+
+        //retrieving site configuration for overiding ui urls
+        var proxyConfHost = jsonConf.proxy.proxyHost;
+        var fidoAppId = jsonConf.fido.appId;
+
+
+
+        if ( proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0 ){
+            //overriding carbon proxy settings configuration not available for ui urls
+            hostName = serverConfigService.getFirstProperty("HostName");
+        } else {
+            //proxy settings available for ui urls
+            if (log.isDebugEnabled()) {
+                log.debug("site configuration ui url overiding available - Proxy Host Name : " + proxyConfHost);
+            }
+            hostName = proxyConfHost;
+        }
+
+        var mgtHostName = serverConfigService.getFirstProperty("MgtHostName");
+
+        var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
+
+        var httpsPort;
+        var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
+        if ( proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <= 0 ){
+            //overriding carbon proxy settings configuration not available for ui urls
+            //retrieve https proxy port
+            var httpsProxyPort = CarbonUtils.getTransportProxyPort(configContext, "https");
+            if (httpsProxyPort < 0 || httpsProxyPort == null) {
+                //proxy port not configured
+                //retrieve http port instead
+                httpsPort = CarbonUtils.getTransportPort(configContext, "https");
+                if (log.isDebugEnabled()) {
+                    log.debug("proxy port not configured");
+                }
+            } else {
+                httpsPort = httpsProxyPort;
+            }
+        } else {
+            //proxy settings available for ui urls
+            if (log.isDebugEnabled()) {
+                log.debug("site configuration ui url overiding available - Proxy Port : " + proxyConfPort);
+            }
+            httpsPort = proxyConfPort;
+        }
+
+        var proxyContextPath = '';
+        var proxyConfContextPath = jsonConf.proxy.proxyContextPath;
+        if ( proxyConfContextPath == null || proxyConfContextPath === '' || proxyConfContextPath === 'null' || proxyConfContextPath.length <= 0 ){
+            //overriding carbon proxy settings configuration not available for ui urls
+            proxyContextPath = serverConfigService.getFirstProperty(PROXY_CONTEXT_PATH);
+        } else {
+            //proxy settings available for ui urls
+            if (log.isDebugEnabled()) {
+                log.debug("site configuration ui url overiding available - Proxy Port : " + proxyConfPort);
+            }
+            proxyContextPath = proxyConfContextPath;
+        }
+
+        if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath === '' || proxyContextPath.length <= 0 ){
+            proxyContextPath = "";
+        } else {
+            if (proxyContextPath.indexOf('/') != 0) {
+                proxyContextPath = '/' + proxyContextPath;
+            }
+        }
+
+        //create server service url
+        serverUrl = identityServerURL.getServerURL("", true, true) + "/services";
+
+        //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
+        var serverCoreUrl = identityServerURL.getServerURL("", true, false);
+
+        //set server url infomation
+        application.put(MGT_HOST_NAME, mgtHostName);
+        application.put(MGT_TRANSPORT, mgtTransport);
+        application.put(HTTPS_PORT, httpsPort);
+        application.put(SERVER_URL, serverUrl);
+        application.put(SERVER_CORE_URL, serverCoreUrl);
+        application.put(PROXY_CONTEXT_PATH, proxyContextPath);
+        application.put(FIDO_APP_ID, fidoAppId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Host Name       :" + hostName);
+            log.debug("Https port      :" + httpsPort);
+            log.debug("Server Url      :" + serverUrl);
+            log.debug("Server Core Url :" + serverCoreUrl);
+            log.debug("Proxy Context Path :" + proxyContextPath);
+        }
+    }
+}
+
+function getFidoAppId(){
+    setServerURL();
+    return application.get(FIDO_APP_ID);
+}
+
+%>

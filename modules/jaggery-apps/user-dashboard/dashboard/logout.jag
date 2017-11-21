@@ -1,0 +1,14 @@
+<%
+
+var log = new Log();
+
+var user = session.get('user');
+if (user == null) {
+    response.sendRedirect("login.jag");
+}
+
+log.info("Session invalidated for user '" + session.get('user') +"'" );
+session.invalidate();
+response.sendRedirect("login.jag");
+
+%>

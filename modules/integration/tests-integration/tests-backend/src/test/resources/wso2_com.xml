@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
+    <Property name="driverName">org.h2.Driver</Property>
+    <Property name="url">jdbc:h2:repository/database/WSO2CARBON_DB</Property>
+    <Property name="userName">wso2carbon</Property>
+    <Property name="password">wso2carbon</Property>
+    <Property name="Disabled">false</Property>
+    <Property name="MaxUserNameListLength">100</Property>
+    <Property name="MaxRoleNameListLength">100</Property>
+    <Property name="UserRolesCacheEnabled">true</Property>
+    <Property name="PasswordDigest">SHA-256</Property>
+    <Property name="ReadGroups">true</Property>
+    <Property name="ReadOnly">false</Property>
+    <Property name="IsEmailUserName">false</Property>
+    <Property name="DomainCalculation">default</Property>
+    <Property name="StoreSaltedPassword">true</Property>
+    <Property name="WriteGroups">true</Property>
+    <Property name="UserNameUniqueAcrossTenants">false</Property>
+    <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
+    <Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
+    <Property name="UsernameJavaRegEx">^[\S]{5,30}$</Property>
+    <Property name="UsernameJavaScriptRegEx">^[\S]{5,30}$</Property>
+    <Property name="RolenameJavaRegEx">^[\S]{5,30}$</Property>
+    <Property name="RolenameJavaScriptRegEx">^[\S]{5,30}$</Property>
+    <Property name="SCIMEnabled">false</Property>
+    <Property name="DomainName">wso2.com</Property>
+    <Property name="Description">Test multiple user stores</Property>
+</UserStoreManager>

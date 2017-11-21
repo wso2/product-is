@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Greg-suite-initializer">
+    <parameter name="useDefaultListeners" value="false"/>
+    <listeners>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformTestManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformReportManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformExecutionManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformSuiteManager"/>
+        <listener class-name="org.wso2.carbon.automation.core.PlatformAnnotationTransferManager"/>
+    </listeners>
+    <test name="InitializedAndSetupServer" preserve-order="true" parallel="false">
+        <classes>
+            <!--<class name="org.wso2.identity.integration.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.org.wso2.carbon.identity.ui.test.ServerStartupTestCase"/>
+-->
+        </classes>
+    </test>
+</suite>

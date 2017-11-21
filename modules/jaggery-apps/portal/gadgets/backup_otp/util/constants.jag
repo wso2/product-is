@@ -1,0 +1,23 @@
+<%
+
+var DEFAULT_CLAIM_URL = "http://wso2.org/claims";
+var OPENID_REG_CLAIM_URL = "http://schema.openid.net/2007/05/claims";
+var UI_USER_PERMISSIONS = "user-permissions";
+var UI_COMPONENTS = "ui-components";
+
+var SMS_OTP_CLAIM_URL = "http://wso2.org/claims/otpbackupcodes";
+var OTP_COUNT=10;
+
+var LOGGED_IN_USER = "user";
+var USER_NAME = "user.name";
+var USER_HEADER = "user-header";
+
+var I18N = "i18n";
+var SERVER_URL = "serverUrl";
+
+var AUTH_CONFIG_PARSED = "auth.config.parsed";
+var SAML_ENABLED = "saml.enabled";
+
+var SAML_RESPONSE = "saml.response";
+var SAML_PROPERTIES = "saml.config"
+%>

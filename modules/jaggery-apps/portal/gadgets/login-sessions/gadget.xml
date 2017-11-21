@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="Account Recovery" >
+        <Require feature="pubsub-2"/>
+    </ModulePrefs>
+    <Content type="html" view="default">
+        <![CDATA[
+
+        <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+
+	    <script src="js/jquery.min.js" type="text/javascript"></script>
+	    <script type="text/javascript" src="serverinfo.jag"></script>
+        <script>
+            var headID = document.getElementsByTagName("head")[0];
+            var cssNode = document.createElement('link');
+            cssNode.type = 'text/css';
+            cssNode.rel = 'stylesheet';
+            cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/login-sessions/js/ui/font-awesome/css/font-awesome.min.css';
+            headID.appendChild(cssNode);
+        </script>
+	<script>
+		$(function() {
+			$('.max_view').click(function() {
+				 gadgets.Hub.publish('org.wso2.is.dashboard', {
+                            msg : 'A message from My profile',
+                            id: "login_sessions .expand-widget"
+                        });
+			});
+		});
+
+
+	</script>
+        <div class='icon-th-list icon-th-list-user icon-marketing-styles'></div>
+    View or Kill Login Sessions.
+    <p><a class='btn btn-default max_view' href=''>View details</a></p>
+        ]]>
+    </Content>
+
+    <Content type="html" view="home">
+        <![CDATA[
+        <script type="text/javascript" src="/portal/csrf.js"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/modal.js"></script>
+        <script type="text/javascript" src="js/gadget.js"></script>
+        <script type="text/javascript" src="serverinfo.jag"></script>
+
+        <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+
+        <script>
+            var headID = document.getElementsByTagName("head")[0];
+            var cssNode = document.createElement('link');
+            cssNode.type = 'text/css';
+            cssNode.rel = 'stylesheet';
+            cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/login-sessions/js/ui/font-awesome/css/font-awesome.min.css';
+            headID.appendChild(cssNode);
+
+            function terminate(sessionId) {
+                $.ajax({
+                    type:"GET",
+                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/server.jag?sessionId=" + sessionId
+
+                }).done(function (data) {
+                    var options = {"title" : "Terminate Session", "content":data,buttons:[{
+                                        name:"OK",cssClass:"btn btn-primary",cbk:function() {
+                                            $('#messageModal').modal('hide');
+                                            location.reload();
+                                        }}]
+                                  }
+                    validate(options);
+                    return data;
+                }).fail(function () {
+                    console.log('error');
+                }).always(function () {
+                    console.log('completed');
+                });
+            }
+
+            function validate(params) {
+
+	            var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+		        "  <div class=\"modal-dialog\">\n" +
+		        "    <div class=\"modal-content\">\n" +
+		        "      <div class=\"modal-header\">\n" +
+		        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+		        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+		        "      </div>\n" +
+		        "      <div class=\"modal-body\">\n" +
+		        "        <p>One fine body&hellip;</p>\n" +
+		        "      </div>\n" +
+		        "      <div class=\"modal-footer\">\n" +
+		        "      </div>\n" +
+		        "    </div>\n" +
+		        "  </div>\n" +
+		        "</div>";
+	    	    $("#message").append(element);
+                messageDisplay(params);
+
+	        }
+
+	        var messageDisplay = function (params) {
+                $('#messageModal').html($('#confirmation-data').html());
+                if(params.title == undefined){
+                   $('#messageModal h3.modal-title').html('Dashboard');
+                }else{
+                   $('#messageModal h3.modal-title').html(params.title);
+                }
+                $('#messageModal div.modal-body').html(params.content);
+                if(params.buttons != undefined){
+                   //$('#messageModal a.btn-primary').hide();
+                   $('#messageModal div.modal-footer').html('');
+                   for(var i=0;i<params.buttons.length;i++){
+                       $('#messageModal div.modal-footer').append($('<a class="btn '+params.buttons[i].cssClass+'">'+params.buttons[i].name+'</a>').click(params.buttons[i].cbk));
+                   }
+                }else{
+                   $('#messageModal a.btn-primary').html('OK').click(function() {
+                       $('#messageModal').modal('hide');
+                   });
+                }
+                $('#messageModal a.btn-other').hide();
+                $('#messageModal').modal();
+            };
+
+            function search() {
+                var username = document.getElementById("username").value;
+                $.ajax({
+                    type:"GET",
+                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/index.jag?username=" + username
+
+                }).done(function (data) {
+                   drawPage(data);
+                }).fail(function () {
+                    console.log('error');
+                }).always(function () {
+                    console.log('completed');
+                });
+            }
+
+        </script>
+
+        <script type="text/javascript">
+            var cookie = null;
+            var json = null;
+            var userName = null;
+            var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
+
+            $(function WindowLoad(event) {
+                url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
+                ws = new WebSocket(url);
+
+                ws.onopen = function () {
+                    console.log("web Socket onopen. ");
+                    ws.send("First Message open");
+                };
+                //send message to server
+                //   setTimeout(function () {
+                //     ws.send("First Message - - -");
+                //}, 50);
+
+                //event handler for the message event in the case of text frames
+                ws.onmessage = function (event) {
+                    var obj = $.parseJSON(event.data);
+                    cookie = obj.cookie;
+                    userName = obj.user;
+                    if (cookie != null) {
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/login-sessions/index.jag";
+
+                        $.ajax({
+                            type:"POST",
+                            url:str,
+                            data: {cookie : cookie, user : userName}
+
+                        }).done(function (data) {
+                            drawPage(data);
+
+                        }).fail(function () {
+                            console.log('error');
+
+                        }).always(function () {
+                            console.log('completed');
+                        });
+                    }
+                };
+                ws.onclose = function () {
+                    console.log("web Socket onclose. ");
+                };
+            });
+
+            function drawPage(data) {
+                var top =
+            "    <div class=\"container\">\n" +
+            "        <div class=\"row\">\n" +
+            "            <div class=\"col-md-6\">\n" +
+            "                <h4>Search User</h4>\n" +
+            "                <div id=\"custom-search-input\">\n" +
+            "                    <div style = 'width: 400px;' class=\"input-group col-md-12\">\n" +
+            "                        <input type=\"text\" class=\"form-control input-lg\" placeholder=\"Username\" style = 'height: 40px; font-size: 25px;' id=username />\n" +
+            "                        <span class=\"input-group-btn\">\n" +
+            "                            <button onclick='search()' class=\"btn btn-info btn-lg\" type=\"button\">\n" +
+            "                                <i class=\"glyphicon glyphicon-search\"></i>\n" +
+            "                            </button>\n" +
+            "                        </span>\n" +
+            "                    </div>\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "    </div>\n" +
+            "    <div class=\"col-lg-12 content-section\">\n" +
+            "        <table class=\"table table-bordered\">\n" +
+            "            <thead>\n" +
+            "                <tr>\n" +
+            "                    <th class='txtAlnCen width30p'>User Name</th>\n" +
+            "                    <th class='txtAlnCen width30p'>IP Address</th>\n" +
+            "                    <th class='txtAlnCen width30p'>User Agent</th>\n" +
+            "                    <th class='txtAlnCen width30p'>Started Time</th>\n" +
+            "                    <th class='txtAlnCen'>Actions</th>\n" +
+            "                </tr>\n" +
+            "            </thead>\n" +
+            "            <tbody>\n";
+
+
+            var jsonData = JSON.parse(data);
+            var middle = "";
+            for (var i = 0; i < jsonData.length; i++){
+                middle = middle + "<tr>\n" +
+                         "<td>" + jsonData[i].userName + "</td>\n" +
+                         "<td>" + jsonData[i].IP + "</td>\n" +
+                         "<td>" + jsonData[i].userAgent + "</td>\n" +
+                         "<td>" + jsonData[i].startTimestamp + "</td>\n" +
+                         "<td>" + ' <input class="btn btn-primary" type="button" value="Terminate" onclick="terminate(\''+ jsonData[i].sessionId +'\')"> '  + "</td>\n" +
+                         "</tr>";
+            }
+                $("#gadgetBody").empty();
+                $("#gadgetBody").append(top + middle);
+            }
+
+        function cancel(){
+           gadgets.Hub.publish('org.wso2.is.dashboard', {
+                        msg:'A message from User profile',
+                        id:"login_sessions  .shrink-widget"
+           });
+
+        }
+
+
+        </script>
+
+
+        <form id="gadgetForm" class="form-horizontal">
+            <div id="gadgetBody"></div>
+	    <div id="message"></div>
+        </form>
+
+        ]]>
+    </Content>
+</Module>

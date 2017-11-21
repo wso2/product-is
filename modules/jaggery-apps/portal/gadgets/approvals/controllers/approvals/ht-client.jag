@@ -1,0 +1,108 @@
+<%
+/*
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+include("../wsUtil.jag");
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+var endPoint = request.getParameter("endPoint");
+accessService();
+function accessService() {
+
+    try {
+
+        var ws = require("ws");
+        var version = new ws.WSRequest();
+        var version2 = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/simpleQuery";
+        var payload = "<ns:simpleQuery xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"" +
+                " xmlns:ns1=\"http://docs.oasis-open" +
+                ".org/ns/bpel4people/ws-humantask/types/200803\"><ns:simpleQueryInput> " +
+                "<ns1:status>COMPLETED</ns1:status><ns1:status>RESERVED</ns1:status>" +
+                "<ns1:pageSize>100000</ns1:pageSize> <ns1:pageNumber>0</ns1:pageNumber> " +
+                "<ns1:simpleQueryCategory>ASSIGNED_TO_ME</ns1:simpleQueryCategory></ns:simpleQueryInput></ns:simpleQuery>";
+
+        var payload2 = "<ns:simpleQuery xmlns:ns=\"http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803\"" +
+                " xmlns:ns1=\"http://docs.oasis-open" +
+                ".org/ns/bpel4people/ws-humantask/types/200803\"><ns:simpleQueryInput> " +
+                "<ns1:pageSize>100000</ns1:pageSize> <ns1:pageNumber>0</ns1:pageNumber> " +
+                "<ns1:simpleQueryCategory>CLAIMABLE</ns1:simpleQueryCategory></ns:simpleQueryInput></ns:simpleQuery>";
+        options["HTTPHeaders"] = [{name: "cookie", value: cookie}];
+        var result;
+        var finalResult = "{\"taskSimpleQueryResultSet\" : {\"row\" : [";
+        try {
+            version.open(options, endPoint, false);
+            version2.open(options, endPoint, false);
+            version.send(payload);
+            var result1 = version.responseE4X;
+            version2.send(payload2);
+            var result2 = version2.responseE4X;
+            var assignedToMeList,b;
+            if (stringify(E4XtoJSON(result1).taskSimpleQueryResultSet) != undefined) {
+                assignedToMeList = parse(stringify(E4XtoJSON(result1).taskSimpleQueryResultSet));
+            }
+            if (stringify(E4XtoJSON(result2).taskSimpleQueryResultSet) != undefined) {
+                claimableList = parse(stringify(E4XtoJSON(result2).taskSimpleQueryResultSet));
+            }
+            if (assignedToMeList.row != undefined) {
+                if (assignedToMeList.row.length == null) {
+                    finalResult = finalResult + stringify(assignedToMeList.row);
+                    if (claimableList.row != undefined) {
+                        finalResult = finalResult + " , ";
+                    }
+                } else {
+                    for (var i=0;i<assignedToMeList.row.length;i++){
+                        finalResult = finalResult + stringify(assignedToMeList.row[i]);
+                        if (i < assignedToMeList.row.length - 1) {
+                            finalResult = finalResult + " , ";
+                        } else if (claimableList.row != undefined) {
+                            finalResult = finalResult + " , ";
+                        }
+                    }
+                }
+            }
+            if (claimableList.row  != undefined) {
+                if (claimableList.row.length == null) {
+                    finalResult = finalResult + stringify(claimableList.row);
+                } else {
+                    for (var i=0;i<claimableList.row.length;i++){
+                        finalResult = finalResult + stringify(claimableList.row[i]);
+                        if (i < claimableList.row.length - 1) {
+                            finalResult = finalResult + " , ";
+                        }
+                    }
+                }
+            }
+            finalResult = finalResult + "], \"pages\" : \"1\"}}";
+        } catch (e) {
+            log.error(e.toString());
+            return e.toString();
+        }
+        print(finalResult);
+    } catch (e) {
+        print(e);
+        log.error(e);
+    }
+
+}
+
+
+%>

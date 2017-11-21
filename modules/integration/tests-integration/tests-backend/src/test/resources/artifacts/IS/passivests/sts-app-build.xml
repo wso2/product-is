@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project name="sts-app-seperation" default="default" basedir="../../../../../../">
+    <description>
+        This script builds war file for the passive sts sample app by removing slf4j libs and changing respective ports
+    </description>
+    <!-- set global properties for this build -->
+    <property name="build" location="${basedir}/target/test-classes/samples"/>
+    <property name="sts.webapp" location="${basedir}/target/test-classes/samples/PassiveSTSSampleApp"/>
+    <property name="sts.webapp.webinf" location="${sts.webapp}/WEB-INF"/>
+    <property name="sts.webapp.classes" location="${sts.webapp}/WEB-INF/classes"/>
+    <property name="sts.webapp.lib" location="${sts.webapp}/WEB-INF/lib"/>
+    <property name="oauth.properties" location="${basedir}/src/test/resources/artifacts/IS/passivests/"/>
+    <property name="openid.properties.default" location="${oauth.properties}/PassiveSTSSampleApp"/>
+
+    <target name="default">
+        <delete file="${sts.webapp.webinf}/web.xml"/>
+        <copy file="${openid.properties.default}/web.xml" tofile="${sts.webapp.webinf}/web.xml"/>
+        <war destfile="${build}/PassiveSTSSampleApp.war" webxml="${sts.webapp}/WEB-INF/web.xml">
+            <fileset dir="${sts.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib dir="${sts.webapp.lib}/" />
+            <classes dir="${sts.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+
+    <target name="clear-slf4j-libs">
+        <delete file="${sts.webapp.lib}/jul-to-slf4j-1.6.1.jar"/>
+        <delete file="${sts.webapp.lib}/log4j-over-slf4j-1.6.1.jar"/>
+        <delete file="${sts.webapp.lib}/jcl-over-slf4j-1.6.1.jar"/>
+        <delete file="${sts.webapp.lib}/slf4j-api-1.6.1.jar"/>
+
+        <!--
+        The release build env make the web apps have a SLF4J jar file with a different version.
+        This is a temp fix to make the release build work
+        -->
+        <delete file="${sts.webapp.lib}/jul-to-slf4j-1.7.5.jar"/>
+        <delete file="${sts.webapp.lib}/log4j-over-slf4j-1.7.5.jar"/>
+        <delete file="${sts.webapp.lib}/jcl-over-slf4j-1.7.5.jar"/>
+        <delete file="${sts.webapp.lib}/slf4j-api-1.7.5.jar"/>
+    </target>
+</project>

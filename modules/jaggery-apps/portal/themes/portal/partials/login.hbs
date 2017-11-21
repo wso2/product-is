@@ -1,0 +1,36 @@
+<!-- Modal -->
+<div id="modal-login" class="modal hide fade modal-blue" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="icon-remove"></i>
+        </button>
+
+        <div>
+            <form id="form-login" action="" method="post">
+                <fieldset>
+
+                    <h2>{{t "Sign in"}}</h2>
+
+                    <div id="login-alert" class="alert alert-error">
+
+                    </div>
+
+                    <input id="inp-login-username" type="text" name="username" class="span3 required" placeholder="{{t "Username"}}">
+                    <input id="inp-login-password" type="password" name="password" class="span3 required" placeholder="{{t "Password"}}">
+                    <input id="inp-login-path" type="hidden" name="path" value="{{path}}">
+
+                    <label class="checkbox">
+                        <input name="remember" type="checkbox">
+                        {{t "Remember me"}} </label>
+                    <hr class="emboss">
+
+                    <a href="#" id="btn-login" class="btn btn-primary btn-large"> {{t "Sign in"}} </a><span class="help-inline"><a
+                        href="#">{{t "Forgot your password"}}?</a></span>
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

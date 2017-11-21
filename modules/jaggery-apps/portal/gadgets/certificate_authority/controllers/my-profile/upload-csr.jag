@@ -1,0 +1,35 @@
+<%
+
+var log = new Log();
+var userName = session.get("user");
+var caClient = require('ca-client.jag');
+include("../wsUtil.jag");
+
+var i18n = session.get("i18n");
+
+
+function uploadCSR() {
+
+    var cookie = session.get('auth-cookie');
+    if(cookie == null){
+        var cookie = request.getParameter("cookie");
+        session.put('auth-cookie', cookie);
+    }
+    if(userName==null){
+        var cookie = request.getParameter("user");
+        session.put('user', cookie);
+    }
+
+    var csr = decodeURIComponent(request.getParameter("csr"));
+    var result;
+
+    try {
+     result = caClient.sendCSR(csr);
+    } catch (e) {
+        return e.toString();
+    }
+
+   print(result);
+}
+uploadCSR();
+%>

@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="My Profile">
+    <Require feature="pubsub-2"/>
+</ModulePrefs>
+<Content type="html" view="default">
+    <![CDATA[
+
+    <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="serverinfo.jag"></script>
+    <script>
+        var headID = document.getElementsByTagName("head")[0];
+        var cssNode = document.createElement('link');
+        cssNode.type = 'text/css';
+        cssNode.rel = 'stylesheet';
+        cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/user_profile/js/ui/font-awesome/css/font-awesome.min.css';
+        headID.appendChild(cssNode);
+    </script>
+    <script>
+        $(function () {
+            $('.max_view').click(function () {
+                gadgets.Hub.publish('org.wso2.is.dashboard', {
+                    msg: 'A message from My profile',
+                    id: "user_profile  .expand-widget"
+                });
+            });
+        });
+    </script>
+
+    <div class='icon-user icon-user-dashboard icon-marketing-styles'></div>
+    Update your profile or add multiple user profiles.
+    <p><a class='btn btn-default max_view' href=''>View details</a></p>
+    ]]>
+</Content>
+
+<Content type="html" view="home">
+    <![CDATA[
+    <script type="text/javascript" src="/portal/csrf.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/main.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/modal.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/gadget.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/qrCodeGenerator.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/u2f-api.js" type="text/javascript"></script>
+    <script type="text/javascript" src="serverinfo.jag"></script>
+
+    <script type="text/javascript" src="../wso2-dev/js/jquery.numberformatter-1.2.3.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../wso2-dev/js/jquery.dependClass-0.1.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../wso2-dev/js/jquery.slider.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../themes/portal/js/UESContainer.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+
+    <script>
+        var headID = document.getElementsByTagName("head")[0];
+        var cssNode = document.createElement('link');
+        cssNode.type = 'text/css';
+        cssNode.rel = 'stylesheet';
+        cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/user_profile/js/ui/font-awesome/css/font-awesome.min.css';
+        headID.appendChild(cssNode);
+    </script>
+
+    <script type="text/javascript">
+        var cookie = null;
+        var json = null;
+        var userName = null;
+        var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
+
+        $(function WindowLoad(event) {
+            url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
+            ws = new WebSocket(url);
+
+            ws.onopen = function () {
+                console.log("web Socket onopen. ");
+                ws.send("First Message open");
+            };
+            ws.onmessage = function (event) {
+                var obj = $.parseJSON(event.data);
+                cookie = obj.cookie;
+                userName = obj.user;
+                if (cookie != null) {
+                    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/index.jag";
+
+                    $.ajax({
+                        type: "POST",
+                        url: str,
+                        data: {cookie : cookie, user : userName}
+
+                    })
+                            .done(function (data) {
+                                json = $.parseJSON(data);
+                                drawPage();
+
+                            })
+                            .fail(function () {
+                                console.log('error');
+
+                            })
+                            .always(function () {
+                                console.log('completed');
+                            });
+                }
+            };
+            ws.onclose = function () {
+                console.log("web Socket onclose. ");
+            };
+        });
+
+        function submitUpdate() {
+
+            var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/edit-finish.jag";
+            $.ajax({
+                url: str,
+                type: "POST",
+                data: $('#gadgetForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+            })
+                    .done(function (data) {
+                        cancel();
+                        //message({content:'Successfully saved changes to the profile',type:'info', cbk:function(){} });
+
+                    })
+                    .fail(function () {
+                        message({content: 'Error while updating Profile', type: 'error', cbk: function () {
+                        } });
+
+                    })
+                    .always(function () {
+                        console.log('completed');
+                    });
+
+        }
+
+        //fido client code
+        var request;
+        var loggedInUser;
+
+        function talkToDevice() {
+            var req = JSON.parse(request).return;
+            var regRequest = JSON.parse(req).registerRequests;
+            var authRequest = JSON.parse(req).authenticateRequests;
+            setTimeout(function () {
+                u2f.register(regRequest, authRequest,
+                        function (data) {
+                            var form = document.getElementById('fidoForm');
+                            var reg = document.getElementById('tokenResponse');
+                            if (data.errorCode) {
+
+
+                                if (data.errorCode == "4") {
+                                    message({content: 'Device already registered', type: 'info', cbk: function () {
+                                    } });
+
+                                }
+                                else {
+                                    message({content: 'Error while registering the device', type: 'error', cbk: function () {
+                                    } });
+                                }
+                                return;
+                            }
+                            reg.value = JSON.stringify(data);
+                            var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-finish.jag";
+                            $.ajax({
+                                url: str,
+                                type: "POST",
+                                data: $('#fidoForm').serialize() + "&profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+                            })
+                                    .done(function (data) {
+                                        message({content: 'Device registered successfully ', type: 'info', cbk: function () {
+                                        } });
+							drawFIDORegistration();
+                                    })
+                                    .fail(function () {
+                                        message({content: 'Error while updating Profile', type: 'error', cbk: function () {
+                                        } });
+
+                                    });
+                        });
+            }, 1000);
+
+        }
+
+
+        function removeFIDO(deviceRemarks) {
+            var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+                    "  <div class=\"modal-dialog\">\n" +
+                    "    <div class=\"modal-content\">\n" +
+                    "      <div class=\"modal-header\">\n" +
+                    "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+                    "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+                    "      </div>\n" +
+                    "      <div class=\"modal-body\">\n" +
+                    "        <p>One fine body&hellip;</p>\n" +
+                    "      </div>\n" +
+                    "      <div class=\"modal-footer\">\n" +
+                    "      </div>\n" +
+                    "    </div>\n" +
+                    "  </div>\n" +
+                    "</div>";
+            $("#message").append(element);
+ var msg = "You are about to remove device registered on '" + deviceRemarks + "'. Do you want to proceed?";
+    message({content: msg, type: 'confirm', okCallback: function () {
+
+            var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-remove.jag";
+            $.ajax({
+                url: str,
+                type: "POST",
+                data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName + "&deviceRemarks=" + deviceRemarks
+            })
+                    .done(function (data) {
+
+drawFIDORegistration();
+
+                    })
+                    .fail(function () {
+                        message({content: 'Error while updating Profile', type: 'error', cbk: function () {
+                        } });
+
+                    })
+                    .always(function () {
+                        console.log('completed');
+                    });
+    }, cancelCallback: function () {
+    }});
+
+        }
+
+    function startFIDO() {
+            var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+                    "  <div class=\"modal-dialog\">\n" +
+                    "    <div class=\"modal-content\">\n" +
+                    "      <div class=\"modal-header\">\n" +
+                    "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+                    "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+                    "      </div>\n" +
+                    "      <div class=\"modal-body\">\n" +
+                    "        <p>One fine body&hellip;</p>\n" +
+                    "      </div>\n" +
+                    "      <div class=\"modal-footer\">\n" +
+                    "      </div>\n" +
+                    "    </div>\n" +
+                    "  </div>\n" +
+                    "</div>";
+            $("#message").append(element);
+
+            var str = "/portal/gadgets/user_profile/controllers/my-profile/fido-start.jag";
+            $.ajax({
+                url: str,
+                type: "POST",
+                data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName
+            })
+                    .done(function (data) {
+
+                        request = data;
+                        talkToDevice();
+
+                    })
+                    .fail(function () {
+                        message({content: 'Error while updating Profile', type: 'error', cbk: function () {
+                        } });
+
+                    })
+                    .always(function () {
+                        console.log('completed');
+                    });
+
+        }
+
+    function resetTOTP(){
+			 var str = "/portal/gadgets/user_profile/controllers/my-profile/totp-reset.jag";
+			 $.ajax({
+			      url:str,
+			      type:"POST",
+			      data:"&cookie=" + cookie + "&user=" + userName
+			 })
+			          .done(function (data) {
+			                removeQRCode();
+                            document.getElementById('qrContainer').style.display = 'none';
+			          })
+			          .fail(function () {
+			                message({content:'error while resetting totp',type:'error', cbk:function(){} });
+
+			          })
+			          .always(function () {
+			                console.log('totp reseted');
+			          });
+			 }
+
+    function initiateTOTP(){
+			 var str = "/portal/gadgets/user_profile/controllers/my-profile/totp-init.jag";
+			 $.ajax({
+			     url:str,
+			     type:"POST",
+			     data:"&cookie=" + cookie + "&user=" + userName
+			 })
+			         .done(function (data) {
+			              loadQRCode(data);
+                            toggleFunction();
+			         })
+			         .fail(function () {
+			              message({content:'error while resetting totp',type:'error', cbk:function(){} });
+
+			         })
+			         .always(function () {
+			                console.log('totp initiated');
+			                        });
+			 }
+
+	function refreshSecretKey(){
+			 var str = "/portal/gadgets/user_profile/controllers/my-profile/totp-refresh.jag";
+			 $.ajax({
+			      url:str,
+			      type:"POST",
+			      data:"&cookie=" + cookie + "&user=" + userName
+			 })
+			            .done(function (data) {
+			                   getSecretKey(data);
+			            })
+			            .fail(function () {
+			                   message({content:'error while resetting secret key',type:'error', cbk:function(){} });
+
+			            })
+			            .always(function () {
+			                   console.log('secret key reseted');
+			            });
+			 }
+
+    </script>
+
+
+    <form id="gadgetForm" class="form-horizontal">
+        <div id="gadgetBody" style="text-align: center;width: 40%;margin: auto;"></div>
+        <div id="message"></div>
+    </form>
+    <form id="fidoForm">
+        <div id="message"></div>
+        <input type="hidden" id="tokenResponse" name="tokenResponse" value=""/>
+    </form>
+
+    ]]>
+</Content>
+</Module>

@@ -1,0 +1,2 @@
+{"schemas":[],"name":{"familyName":"(username)","givenName":"scimUser"},"userName":"scimUser","password":"hasinitg",
+"emails":[{"primary":true,"value":"hasini_home.com","type":"home"},{"value":"hasini_work.com","type":"work"}]}

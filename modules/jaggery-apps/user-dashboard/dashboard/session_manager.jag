@@ -1,0 +1,13 @@
+<%
+var log = new Log();
+var cookie = session.get('auth-cookie');
+var bpsJson = session.get('listProfiles');
+var user = session.get('user');
+var jsonString = '{ ' + bpsJson + ',"cookie":"' +cookie+'","user":"'+user+'"}';
+webSocket.ontext = function (data) {
+    var ws = this;
+    setTimeout(function () {
+     ws.send(jsonString);
+    }, 0);
+};
+%>

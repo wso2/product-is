@@ -1,0 +1,42 @@
+<%
+
+var log = new Log();
+var userName = session.get("user");
+var identityClient = require('IdentityProviderServiceClient.jag');
+
+var i18n = session.get("i18n");
+
+function add(){
+    try{
+    	
+ //       try{
+  //          require('../../authenticationHandler.jag');
+//
+  //      }catch(e){
+    //        log.error(e);
+      //      response.sendRedirect("login.jag?e=1&error=AuthenticationFail");
+        //    return;
+        //}
+
+       // var openIdUri = request.getParameter("id");
+        var openIdUri = "Isara_karunarathna";
+        var req =  <xsd:addOpenID xmlns:xsd="http://org.apache.axis2/xsd">
+                           <xsd:openID></xsd:openID>
+                        </xsd:addOpenID>;
+        req.*::openID.setChildren(openIdUri);
+
+
+        log.debug(req);
+        identityClient.addOpenID(req);
+       // response.sendRedirect("../../openId.jag?s=1&sMsg=openid_removed");
+    }
+    catch(e){
+        log.error(e);
+        response.sendRedirect("../../index.jag?e=1&error=" + e);
+
+    }
+
+}
+
+
+%>

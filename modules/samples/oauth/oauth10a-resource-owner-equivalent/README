@@ -1,0 +1,43 @@
+This client demonstrates the following steps:
+
+1. Registring an OAuth1.0a application using OAuthAdminService SOAP API.
+
+2. Requesting OAuth1.0a request token credentials using OAuth1.0a request token endpoint.
+
+3. Authorizing the request token issued in the previous step using OAuthService SOAP API.
+
+4. Requesting access token credentials using using OAuth1.0a access token endpoint.
+
+Follow the below steps to run the client.
+
+1. Open the maven project in a IDE.
+
+2. Add the lib folder to the project's classpath.
+
+3. Confgure the following values in the Main class
+
+    // Identity server service URL
+    private static final String IDENTITY_SERVER = "https://localhost:9443/";
+
+    // Resource Server URL
+    private static final String RESOURCE_SERVER_URL = "http://localhost:8280/services/echo";
+
+    // User invoking the service
+    // This user has to be registered in the system
+    private static final String ADMIN_USER_NAME = "admin";
+
+    //User password
+    private static final  String ADMIN_PASSWORD = "admin";
+
+    // Resource owner user name
+    private static final String RESOURCE_OWNER_USER_NAME = "admin";
+
+    // Resource owner password
+    private static final String RESOURCE_OWNER_PASSWORD = "admin";
+
+    // Application name to be used when registering the client
+    private static final String APPLICATION_NAME = "DemoApp1";
+
+The application is registered to the ADMIN_USER_NAME since that is the credentials used to authenticate to the admin service.
+The APPLICATION_NAME has to be unique to the registered user.
+Therefore each time this client is run with the same ADMIN_USER_NAME the APPLICATION_NAME has to be changed.

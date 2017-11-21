@@ -1,0 +1,66 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            88:52:bd:6d:90:41:b0:c6
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=LK, ST=Western, O=WSO2 Lanka (Pvt) Ltd., OU=Security, CN=WSO2 Identity Solution CA/emailAddress=identity-dev@wso2.org
+        Validity
+            Not Before: Sep 30 11:28:21 2007 GMT
+            Not After : Sep 12 11:28:21 2018 GMT
+        Subject: C=LK, ST=Western, L=Colombo, O=WSO2, OU=Identity Solution, CN=samplerp
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:91:96:59:22:39:0e:cc:7c:be:61:0e:66:40:0d:
+                    06:7e:1d:9c:35:64:e5:ba:e3:07:5e:17:b8:56:38:
+                    59:d6:b5:b6:19:c4:91:fc:69:7e:25:18:3c:11:ae:
+                    27:06:4e:5d:a4:d6:50:4a:88:87:a4:18:3e:23:9a:
+                    52:4d:fa:2f:1c:d7:9b:7e:51:ad:09:a3:49:35:5d:
+                    fd:3b:71:21:37:15:25:ac:fc:32:fc:ec:80:d0:57:
+                    0d:42:4d:79:d3:6a:1a:bd:b1:d7:1e:02:ef:c3:a5:
+                    cb:68:c8:50:65:15:d6:c3:ba:b7:e5:a5:7d:b5:2c:
+                    9a:46:af:c4:2c:81:c9:dd:03
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                A5:2E:BC:4C:A4:65:A7:27:FD:52:62:2C:EE:64:7B:A6:AA:D2:A5:5D
+            X509v3 Authority Key Identifier: 
+                keyid:D8:D0:1F:05:85:16:3B:CE:3B:04:45:99:18:3C:30:06:DB:26:07:6B
+
+            Netscape CA Revocation Url: 
+                http://ca.is.wso2.org/ca-crl.pem
+    Signature Algorithm: sha1WithRSAEncryption
+        93:4a:e2:df:75:50:c5:b2:97:75:68:4c:93:40:75:40:7b:12:
+        83:7d:c1:67:de:8f:e7:f2:f9:57:a0:9f:7f:ab:6c:55:35:7d:
+        34:87:1a:0f:7e:76:51:58:c6:1d:d9:5e:f2:35:e9:93:a4:08:
+        b2:ff:b2:a3:ed:d9:b5:94:c7:8a:75:05:85:b6:4c:36:7e:5a:
+        79:fe:cd:a8:77:7c:fc:e1:a1:d9:92:77:34:b9:7c:75:3a:c2:
+        59:80:e4:2c:b5:0f:83:ac:5e:3e:07:d5:ca:1e:ec:e5:86:3a:
+        f8:43:01:31:d0:4c:15:cf:42:8f:ba:5b:e5:5a:9e:e4:a7:f5:
+        f6:6e
+-----BEGIN CERTIFICATE-----
+MIIDODCCAqGgAwIBAgIJAIhSvW2QQbDGMA0GCSqGSIb3DQEBBQUAMIGcMQswCQYD
+VQQGEwJMSzEQMA4GA1UECBMHV2VzdGVybjEeMBwGA1UEChMVV1NPMiBMYW5rYSAo
+UHZ0KSBMdGQuMREwDwYDVQQLEwhTZWN1cml0eTEiMCAGA1UEAxMZV1NPMiBJZGVu
+dGl0eSBTb2x1dGlvbiBDQTEkMCIGCSqGSIb3DQEJARYVaWRlbnRpdHktZGV2QHdz
+bzIub3JnMB4XDTA3MDkzMDExMjgyMVoXDTE4MDkxMjExMjgyMVowbzELMAkGA1UE
+BhMCTEsxEDAOBgNVBAgTB1dlc3Rlcm4xEDAOBgNVBAcTB0NvbG9tYm8xDTALBgNV
+BAoTBFdTTzIxGjAYBgNVBAsTEUlkZW50aXR5IFNvbHV0aW9uMREwDwYDVQQDEwhz
+YW1wbGVycDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAkZZZIjkOzHy+YQ5m
+QA0Gfh2cNWTluuMHXhe4VjhZ1rW2GcSR/Gl+JRg8Ea4nBk5dpNZQSoiHpBg+I5pS
+TfovHNebflGtCaNJNV39O3EhNxUlrPwy/OyA0FcNQk1502oavbHXHgLvw6XLaMhQ
+ZRXWw7q35aV9tSyaRq/ELIHJ3QMCAwEAAaOBrTCBqjAJBgNVHRMEAjAAMCwGCWCG
+SAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4E
+FgQUpS68TKRlpyf9UmIs7mR7pqrSpV0wHwYDVR0jBBgwFoAU2NAfBYUWO847BEWZ
+GDwwBtsmB2swLwYJYIZIAYb4QgEEBCIWIGh0dHA6Ly9jYS5pcy53c28yLm9yZy9j
+YS1jcmwucGVtMA0GCSqGSIb3DQEBBQUAA4GBAJNK4t91UMWyl3VoTJNAdUB7EoN9
+wWfej+fy+Vegn3+rbFU1fTSHGg9+dlFYxh3ZXvI16ZOkCLL/sqPt2bWUx4p1BYW2
+TDZ+Wnn+zah3fPzhodmSdzS5fHU6wlmA5Cy1D4OsXj4H1coe7OWGOvhDATHQTBXP
+Qo+6W+VanuSn9fZu
+-----END CERTIFICATE-----

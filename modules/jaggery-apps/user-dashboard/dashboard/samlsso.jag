@@ -1,0 +1,84 @@
+<%
+
+include("util/constants.jag");
+var util = require("util/utility.jag");
+var log = new Log();
+var samlConfig = application.get(SAML_PROPERTIES);
+var sso = require("sso");
+var sessionId = session.getId();
+var encodedSAMLRequest;
+var postUrl;
+var issuer;
+var authzFailure;
+if(samlConfig!=null){
+    postUrl = samlConfig['SAML.IdPUrl'];
+    issuer = samlConfig['SAML.IssuerID'];
+}
+else{
+    response.sendRedirect("login.jag");
+}
+
+
+if(request.getParameter("login") === 'true'){
+    authzFailure = request.getParameter("authz_failure");
+    encodedSAMLRequest = sso.client.getEncodedSAMLAuthRequest(issuer);
+}else if(request.getParameter("logout") === 'true'){
+    try {
+        var ws = require("ws");
+        var wsRequest = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "http://sso.saml2.authenticator.identity.carbon.wso2.org/logout";
+        options.mep = 'in-only';
+        var payload1 = "<sso:logout xmlns:sso=\"http://sso.saml2.authenticator.identity.carbon.wso2.org\"/>";
+        options["HTTPHeaders"] = [{name: "cookie", value: session.get("auth-cookie")}];
+        wsRequest.open(options, util.getServerUrl() + "/SAML2SSOAuthenticationService", false);
+        wsRequest.send(payload1);
+    } catch (e) {
+        log.error(e.toString());
+    }
+    var user = session.get(LOGGED_IN_USER);
+    authzFailure = request.getParameter("authz_failure");
+    session.put(AUTHZ_FAILURE,authzFailure);
+    sso_sessions = application.get('sso_sessions'),
+    encodedSAMLRequest = sso.client.getEncodedSAMLLogoutRequest(user, sso_sessions[sessionId], issuer);
+}
+
+%>
+
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+
+</head>
+<body>
+
+<div>
+
+<p>You are now being redirected to Identity Server. If the
+redirection fails, please click on the button below.</p>
+<form method="POST" action="<%=postUrl%>">
+<p>
+   <input type="hidden" name="SAMLRequest" value="<%= encodedSAMLRequest %>"/>
+   <input type="hidden" name="SSOAuthSessionID" value="<%= sessionId %>"/>
+    <% if (authzFailure === 'true') { %>
+   <input type="hidden" name="authz_failure" value="<%=authzFailure%>"/>
+    <%}%>
+   <button type="submit">Redirect manually</button>
+</p>
+</form>
+</div>
+<script type = "text/javascript" >
+	document.forms[0].submit();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<iframe style="visibility: hidden;height: 0;width: 0;" src="{{storeLoginURL}}"></iframe>
+
+<script id="layout-template" type="text/x-handlebars-template">
+	<hr>
+	<h4 id="myModalLabel">Choose a layout</h4>
+
+	<div class="row-fluid">
+	<div class="span3">
+
+	<div class="designer-layouts designer-layouts-3 designer-layouts-selected" data-layout="grid">
+	</div>
+	</div>
+	<div class="span3">
+	<div class="designer-layouts designer-layouts-2" data-layout="columns"></div>
+	</div>
+	<div class="span3">
+	<div class="designer-layouts designer-layouts-1" data-layout="rows"></div>
+	</div>
+	<div class="span3">
+	<div class="designer-layouts designer-layouts-4" data-layout="composite"></div>
+	</div>
+	<input type="hidden" id="inp-layout" value="grid">
+	</div>
+</script>
+
+<!-- Element where elFinder will be created (REQUIRED) -->
+<ul id="ulNewSite" class="nav nav-pills">
+	<li class="dropdown">
+		<a id="newSite" href="#" data-toggle="dropdown" class="dropdown-toggle">Create<b class="caret"></b></a>
+		<ul class="dropdown-menu" id="menu-new-app">
+			<li></li>
+			<li>
+				<a href="#" data-app="dashboard"><span class="elfinder-button-icon elfinder-button-icon-dashboardapp"></span> Dashboard</a>
+			</li>
+			<li>
+				<a href="#" data-app="blank"><span class="elfinder-button-icon elfinder-button-icon-blankapp"></span> Microsite</a>
+			</li>
+		</ul>
+	</li>
+</ul>
+<input type="hidden" id="inp-sel-length" value="0">
+<div id="elfinder"></div>
+
+<!-- Modal -->
+<div id="modal-new-app" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-body">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+		<div id="new-app-alert" class="alert alert-error"></div>
+		<div>
+
+			<form id="form-new-app" class="form-horizontal">
+
+				<div class="row-fluid">
+					<div class="span5">
+						<h4 class="form-app-title-label">{{t "Insert Dashboard Title"}}</h4>
+					</div>
+					<div class="span7">
+						<input name="siteName" type="text" id="inp-title" class="required input-xlarge span11 appName appUnique">
+					</div>
+
+				</div>
+
+			</form>
+		</div>
+		<div id="modal-layout-selection">
+
+		</div>
+
+	</div>
+
+	<div class="modal-footer">
+
+		<button id="btn-new-app" class="btn btn-primary">
+			{{t "Create new app"}}
+		</button>
+	</div>
+</div>
+
+<!-- Modal -->
+<div id="modal-publish" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			<i class="icon-remove"></i>
+		</button>
+		<h3>{{t "Publish Settings"}}</h3>
+	</div>
+
+	<div class="modal-body">
+
+		<form id="form-publish-app" class="form-horizontal">
+			<div class="alert alert-info">
+
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="sel-publish-type">{{t "Publish as"}}</label>
+				<div class="controls">
+					<select id="sel-publish-type" name="publishAs" class="span10">
+						<option value="site">{{t "Site"}}</option>
+						<option value="gadget">{{t "Gadget"}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group" style="display: none;">
+				<label class="control-label" for="sel-publish-type">{{t "Permission"}}</label>
+				<div class="controls">
+					<select id="sel-publish-permission" name="permission" class="span10">
+						<option value="read">{{t "Access"}}</option>
+						<option value="edit">{{t "Edit"}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inp-publish-name">{{t "Name"}}</label>
+				<div class="controls">
+					<input type="text" name="name" id="inp-publish-name" class="span10 required" required>
+					<span class="mandatory">*</span>
+				</div>
+			</div>
+			<div class="control-group" style="display: none;">
+				<label class="control-label" for="inp-publish-version">{{t "Version"}} </label>
+				<div class="controls">
+					<input type="text" name="version" id="inp-publish-version" class="span10 required" value="1.0.0" required>
+					<span class="mandatory">*</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inp-publish-url">{{t "URL"}}</label>
+				<div class="controls">
+					<input type="text" name="url" id="inp-publish-url" class="span10 required" required>
+					<span class="mandatory">*</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inp-publish-url">{{t "Description"}}</label>
+				<div class="controls">
+					<textarea name="description" id="inp-publish-desc" class="span10"></textarea>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inp-publish-thumbnail">{{t "Thumbnail URL"}}</label>
+				<div class="controls">
+					<input type="text" name="thumbnail" id="inp-publish-thumbnail" class="span10">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="inp-publish-imageurl">{{t "Banner URL"}}</label>
+				<div class="controls">
+					<input type="text" name="banner" id="inp-publish-imageurl" class="span10">
+				</div>
+			</div>
+			<div class="control-group" style="display: none;">
+				<label class="control-label" for="inp-publish-thumbnail">{{t "Roles"}}</label>
+				<div class="controls">
+					<div id="inp-publish-rol-cont">
+						<input type="text" name="roles" id="inp-publish-roles" class="span10">
+					</div>
+
+				</div>
+			</div>
+			<div class="control-group" style="display: none;">
+				<label class="control-label" for="inp-publish-thumbnail">{{t "Users"}}</label>
+				<div class="controls">
+					<div id="inp-publish-users-cont">
+						<input type="text" name="users" id="inp-publish-users" class="span10">
+					</div>
+
+				</div>
+			</div>
+			
+			<input type="hidden" id="asset-path-hash">
+
+		</form>
+	</div>
+	<div class="modal-footer">
+
+		<button id="btn-publish-site" class="btn btn-primary">
+			{{t "Publish"}}
+		</button>
+	</div>
+</div>
+
+<!-- Modal -->
+<div id="modal-alert" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+	<div class="modal-body">
+		<div>
+			<div class="alert alert-block alert-error fade in">
+				<p class="alert-message"></p>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+			{{t "Close"}}
+		</button>
+	</div>
+</div>

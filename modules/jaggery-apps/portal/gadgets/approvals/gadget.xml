@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<Module>
+    <ModulePrefs title="Pending Approvals">
+        <Require feature="pubsub-2"/>
+    </ModulePrefs>
+    <Content type="html" view="default">
+        <![CDATA[
+
+    <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="serverinfo.jag"></script>
+    <script>
+        var headID = document.getElementsByTagName("head")[0];
+        var cssNode = document.createElement('link');
+        cssNode.type = 'text/css';
+        cssNode.rel = 'stylesheet';
+        cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/approvals/js/ui/font-awesome/css/font-awesome.min.css';
+        headID.appendChild(cssNode);
+    </script>
+    <script>
+        $(function () {
+            $('.max_view').click(function () {
+                gadgets.Hub.publish('org.wso2.is.dashboard', {
+                    msg: 'A message from My profile',
+                    id: "approvals  .expand-widget"
+                });
+            });
+        });
+    </script>
+
+    <div class='icon-tasks icon-user-tasks icon-marketing-styles'></div>
+    Approve or Disapprove tasks.
+    <p><a class='btn btn-default max_view' href=''>View details</a></p>
+    ]]>
+    </Content>
+
+    <Content type="html" view="home">
+        <![CDATA[
+    <script type="text/javascript" src="/portal/csrf.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/main.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/modal.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/gadget.js" type="text/javascript"></script>
+    <script type="text/javascript" src="serverinfo.jag"></script>
+
+    <script type="text/javascript" src="../wso2-dev/js/jquery.numberformatter-1.2.3.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../wso2-dev/js/jquery.dependClass-0.1.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../wso2-dev/js/jquery.slider.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../themes/portal/js/UESContainer.js"></script>
+    <script type="text/javascript" src="js/ui/js/vendor/jquery.tablesorter.pager.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+        <link rel="stylesheet" href="/portal/gadgets/approvals/js/ui/css/localstyles.css">
+
+    <script>
+        var headID = document.getElementsByTagName("head")[0];
+        var cssNode = document.createElement('link');
+        cssNode.type = 'text/css';
+        cssNode.rel = 'stylesheet';
+        cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/approvals/js/ui/font-awesome/css/font-awesome.min.css';
+        headID.appendChild(cssNode);
+    </script>
+
+    <script type="text/javascript">
+        var cookie = null;
+        var json = null;
+        var htJson = "";
+        var userName = null;
+        var profileList = null;
+        var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
+
+        $(function WindowLoad(event) {
+            url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
+            ws = new WebSocket(url);
+
+            ws.onopen = function () {
+                console.log("web Socket onopen. ");
+                ws.send("First Message open");
+            };
+            ws.onmessage = function (event) {
+                var obj = $.parseJSON(event.data);
+                cookie = obj.cookie;
+                userName = obj.user;
+                profileList = obj.list;
+                if (cookie != null) {
+                    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/approvals/index.jag?profileList=" + profileList;
+                    $.ajax({
+                        type: "GET",
+                        url: str
+
+                    })
+                            .done(function (data) {
+                                drawPage();
+
+                            })
+                            .fail(function () {
+                                console.log('error');
+
+                            })
+                            .always(function () {
+                                console.log('completed');
+                            });
+                }
+            };
+            ws.onclose = function () {
+                console.log("web Socket onclose. ");
+            };
+
+
+        });
+    </script>
+
+
+    <form id="gadgetForm" class="form-horizontal">
+        <div id="gadgetBody"></div>
+        <div id="message"></div>
+        <div id="fedGadgetBody" class="gadgetBodyScrollbar"></div>
+	        </div>
+    </form>
+    <form id="fidoForm">
+        <div id="message"></div>
+        <input type="hidden" id="tokenResponse" name="tokenResponse" value="ishara"/>
+    </form>
+    <div id="light" class="white_content associationWindow" style="width: 35%;height: 45%;">This is the lightbox content. <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a></div>
+    <div id="fade" class="black_overlay"></div>
+    ]]>
+    </Content>
+</Module>

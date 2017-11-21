@@ -1,0 +1,10 @@
+{
+    "proxy" : {
+        "proxyHost" : "",
+        "proxyHTTPSPort" : "",
+        "proxyContextPath" : ""
+    },
+    "fido" : {
+        "appId" : ""
+    }
+}

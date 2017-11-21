@@ -1,0 +1,34 @@
+<%
+
+include("../wsUtil.jag");
+var util = require("../../util/utility.jag");
+
+var log = new Log();
+var serverUrl = util.getServerUrl();
+serverUrl = serverUrl + "/LoggedUserInfoAdmin";
+
+var ws = require('ws');
+var webService = new ws.WSRequest();
+
+
+function getUserInfo(){
+
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getUserInfo");
+    log.debug(result);
+
+    result = result.return;
+    var uiPermissions = stringify(result.UIPermissionOfUser);
+    var uiPermissionsArray = [];
+    if(uiPermissions.indexOf(",") < 0){
+        //Only one permission exists
+        uiPermissionsArray.push(result.UIPermissionOfUser)
+        result.UIPermissionOfUser = uiPermissionsArray;
+    }else{
+        //this is an array. So no need to do any
+    }
+
+    log.debug(result);
+    return result;
+}
+
+%>

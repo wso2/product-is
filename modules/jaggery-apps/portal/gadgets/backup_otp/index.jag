@@ -1,0 +1,24 @@
+<%
+var log = new Log();
+
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+getUser();
+function getUser(){
+
+	session.put('auth-cookie', cookie);
+
+	try{
+
+		var profileClient = require('controllers/backup_otp/profileClient.jag');
+		var fieldValues = profileClient.getUserProfile(user, 'default');
+
+		print( fieldValues );
+	}catch(e){
+		print(e);
+		log.error(e);
+	}
+
+}
+
+%>
