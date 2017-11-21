@@ -42,3 +42,4 @@
 
     </form>
 <?php include "/opt/lampp/htdocs/password/layout/footer.php"; ?>
+
