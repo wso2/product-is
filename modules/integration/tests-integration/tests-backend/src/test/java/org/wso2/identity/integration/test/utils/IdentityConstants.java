@@ -17,6 +17,7 @@ public class IdentityConstants {
             public static final String IS_LOGOUT_REQ_SIGNED = "IsLogoutReqSigned";
             public static final String IS_AUTHN_RESP_SIGNED = "IsAuthnRespSigned";
             public static final String IS_USER_ID_IN_CLAIMS = "IsUserIdInClaims";
+            public static final String RESPONSE_AUTHN_CONTEXT_CLASS_REF = "ResponseAuthnContextClassRef";
         }
     }
 

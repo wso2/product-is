@@ -42,8 +42,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
-                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector
-                                    </artifactId>
+                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
                                     <version>${authenticator.twitter.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
@@ -239,6 +238,30 @@
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>totpauthenticationendpoint.war</destFileName>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/war
+                                    </outputDirectory>
+                                    <includes>**/*.war</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download_x509certificateauthenticationendpoint_war</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <artifactId>
+                                        org.wso2.carbon.extension.identity.authenticator.x509Certificate.endpoint
+                                    </artifactId>
+                                    <version>${authenticator.x509.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>x509certificateauthenticationendpoint.war</destFileName>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/war
                                     </outputDirectory>
                                     <includes>**/*.war</includes>
