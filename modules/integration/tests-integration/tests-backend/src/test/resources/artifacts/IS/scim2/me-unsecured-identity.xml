@@ -633,21 +633,10 @@
         <Resource context="(.*)/scim2/Groups/(.*)" secured="true" http-method="DELETE">
             <Permissions>/permission/admin/manage/identity/rolemgt/delete</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"    http-method="GET">
-            <Permissions>/permission/admin/login</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true" http-method="DELETE">
-            <Permissions>/permission/admin/manage/identity/usermgt/delete</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"    http-method="PUT">
-            <Permissions>/permission/admin/login</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"   http-method="PATCH">
-            <Permissions>/permission/admin/login</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true" http-method="POST">
-            <Permissions>/permission/admin/manage/identity/usermgt/create</Permissions>
-        </Resource>
+        <Resource context="(.*)/scim2/Me" secured="true"    http-method="GET"/>
+        <Resource context="(.*)/scim2/Me" secured="true" http-method="DELETE"/>
+        <Resource context="(.*)/scim2/Me" secured="true"    http-method="PUT"/>
+        <Resource context="(.*)/scim2/Me" secured="true"   http-method="PATCH"/>
         <Resource context="/scim2/ServiceProviderConfig" secured="false" http-method="all">
             <Permissions></Permissions>
         </Resource>
