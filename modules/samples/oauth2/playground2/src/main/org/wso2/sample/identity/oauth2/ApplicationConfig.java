@@ -102,8 +102,17 @@ public class ApplicationConfig {
 
     public static String getSessionIframeEndpointContext() {
         String iframeURL = buildURL(getProperties().getProperty(SESSION_IFRAME_ENDPOINT_CONTEXT));
-        if (StringUtils.isNotEmpty(iframeURL) && iframeURL.endsWith("client_id=")) {
-            iframeURL += getConsumerKey();
+        String consumerKey = getConsumerKey() ;
+        if (StringUtils.isNotEmpty(iframeURL) && StringUtils.isNotEmpty(consumerKey)) {
+            if(iframeURL.contains("?")){
+                if(iframeURL.trim().endsWith("?")) {
+                    iframeURL += "client_id=" + consumerKey;
+                }else{
+                    iframeURL += "&client_id=" + consumerKey;
+                }
+            }else{
+                iframeURL += "?client_id=" + consumerKey;
+            }
         }
         return iframeURL;
     }
