@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * Sample OAuth2 application config that read from file based.
+ * Sample OAuth2 application config that is loaded from the config file.
  */
 public class ApplicationConfig {
 
