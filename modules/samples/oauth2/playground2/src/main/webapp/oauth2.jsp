@@ -7,7 +7,20 @@
 <%@ page import="java.util.UUID" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
 <%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
+<%@ page import="org.wso2.sample.identity.oauth2.ApplicationConfig" %>
 <%
+
+
+    String consumerKey = ApplicationConfig.getConsumerKey();
+    String consumerSecret = ApplicationConfig.getConsumerSecret();
+    String scopeName = ApplicationConfig.getScope();
+    String callbackUrl = ApplicationConfig.getCallbackUrl();
+    String accessTokenEndpoint = ApplicationConfig.getAccessTokenEndpointContext();
+    String authorizeEndpoint = ApplicationConfig.getAuthorizeEndpointContext();
+    String logoutEndpoint = ApplicationConfig.getLogoutEndpointContext();
+    String userInfo = ApplicationConfig.getUserInforEndpointContext();
+    String sessionIFrameEndpoint = ApplicationConfig.getSessionIframeEndpointContext();
+
     String code = null;
     String accessToken = null;
     String idToken = null;
@@ -293,12 +306,13 @@
 
                         <tr>
                             <td><label>Client Id : </label></td>
-                            <td><input type="text" id="consumerKey" name="consumerKey" style="width:350px"></td>
+                            <td><input type="text" id="consumerKey" name="consumerKey" value="<%=consumerKey%>" style="width:350px"></td>
                         </tr>
 
                         <tr id="clientsecret" style="display:none">
                             <td><label>Client Secret : </label></td>
-                            <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
+                            <td><input type="password" id="consumerSecret" name="consumerSecret"
+                                       value="<%=consumerSecret%>" style="width:350px">
                             </td>
                         </tr>
 
@@ -315,7 +329,8 @@
 
                         <tr>
                             <td><label>Scope : </label></td>
-                            <td><input type="text" id="scope" name="scope" onchange="setVisibility();">
+                            <td><input type="text" id="scope" name="scope" value="<%=scopeName%>"
+                                       onchange="setVisibility();">
                             </td>
                         </tr>
                         <tr id="implicitRespType" style="display: none">
@@ -334,30 +349,34 @@
 
                         <tr id="callbackurltr">
                             <td><label>Callback URL : </label></td>
-                            <td><input type="text" id="callbackurl" name="callbackurl" style="width:350px">
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>"
+                                       style="width:350px">
                             </td>
                         </tr>
 
                         <tr id="authzep">
                             <td>Authorize Endpoint :</td>
-                            <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint" style="width:350px">
+                            <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint" value="<%=authorizeEndpoint%>"
+                                       style="width:350px">
                             </td>
                         </tr>
 
                         <tr id="accessep" style="display:none">
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" style="width:350px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint"  value="<%=accessTokenEndpoint%>"
+                                       style="width:350px"></td>
                         </tr>
 
                         <tr id="logutep" style="display:none">
                             <td>Logout Endpoint :</td>
-                            <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" style="width:350px">
+                            <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" value="<%=logoutEndpoint%>"
+                                       style="width:350px">
                             </td>
                         </tr>
 
                         <tr id="sessionep" style="display:none">
                             <td>Session Iframe Endpoint :</td>
-                            <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint"
+                            <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint" value="<%=sessionIFrameEndpoint%>"
                                        style="width:350px"></td>
                         </tr>
 
@@ -414,15 +433,15 @@
                         </tr>
                         <tr>
                             <td>Callback URL :</td>
-                            <td><input type="text" id="callbackurl" name="callbackurl" style="width:350px"></td>
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>" style="width:350px"></td>
                         </tr>
                         <tr>
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" style="width:350px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" value="<%=accessTokenEndpoint%>" style="width:350px"></td>
                         </tr>
                         <tr>
                             <td><label>Client Secret : </label></td>
-                            <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
+                            <td><input type="password" id="consumerSecret" name="consumerSecret" value="<%=consumerSecret%>" style="width:350px">
                             </td>
                         </tr>
                         <% if (session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
@@ -479,7 +498,8 @@
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" value="<%=userInfo%>"
+                                       style="width:350px"/>
                         </tr>
 
                         <tr>
