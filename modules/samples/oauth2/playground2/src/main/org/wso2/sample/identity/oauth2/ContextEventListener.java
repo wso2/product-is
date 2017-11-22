@@ -1,12 +1,12 @@
-/**
- * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -28,12 +28,10 @@ public class ContextEventListener implements ServletContextListener {
 
     private static Logger LOGGER = Logger.getLogger(ContextEventListener.class.getName());
 
-    private static Properties properties;
-
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
         //Load the config file.
-        properties = new Properties();
+        Properties properties = new Properties();
         try {
             String resourcePath = "/WEB-INF/classes/playground2.properties";
             InputStream resourceStream = servletContextEvent.getServletContext().getResourceAsStream(resourcePath);
@@ -50,11 +48,4 @@ public class ContextEventListener implements ServletContextListener {
 
     }
 
-    /**
-     * Get the properties of the sample
-     * @return Properties
-     */
-    public static Properties getProperties(){
-        return properties;
-    }
 }
