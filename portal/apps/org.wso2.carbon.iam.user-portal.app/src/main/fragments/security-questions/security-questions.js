@@ -21,17 +21,26 @@ function onGet(env) {
     var userUniqueId = session.getUser().getUserId();
     var action = env.request.formParams["action"];
 
-    var result = getUserQuestions(userUniqueId);
+    var getUserQuestionsResult = getUserQuestions(userUniqueId);
 
-    if (result.data.length === 0) {
+    if(!getUserQuestionsResult.success) {
+        data.success = getUserQuestionsResult.success;
+        data.message = getUserQuestionsResult.message;
+    }
+
+    if (getUserQuestionsResult.data.length === 0) {
         data.isUserHasQuestions = false;
     } else {
         data.isUserHasQuestions = true;
-        data.userQuestions = result.data;
+        data.userQuestions = getUserQuestionsResult.data;
     }
 
-    data.questionList = getChallengeQuestions(userUniqueId).data;
-
+    var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
+    if(!getChallengeQuestionsResult.success) {
+        data.success = getChallengeQuestionsResult.success;
+        data.message = getChallengeQuestionsResult.message;
+    }
+    data.questionList = getChallengeQuestionsResult.data;
     return data;
 }
 
@@ -52,7 +61,9 @@ function onPost(env) {
         var idsArray = ids.split(":");
         var questionSetId = idsArray[0];
         var questionId = idsArray[1];
-        setChallengeAnswer(userUniqueId, answer, questionSetId, questionId);
+        var addChallengeQResult = setChallengeAnswer(userUniqueId, answer, questionSetId, questionId);
+        data.success = addChallengeQResult.success;
+        data.message = addChallengeQResult.message;
     } else if (action == "update-question") {
 
         // Update question answer flow.
@@ -64,7 +75,9 @@ function onPost(env) {
         var domain = session.getUser().getDomainName();
         var authenticationResult = authenticate(username, oldPassword, domain);
         if (authenticationResult.success) {
-            setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId);
+            var updateChallengeQResult = setChallengeAnswer(userUniqueId, newAnswer, questionSetId, questionId);
+            data.success = updateChallengeQResult.success;
+            data.message = updateChallengeQResult.message;
         } else {
             data.success = authenticationResult.success;
             data.message = authenticationResult.message;
@@ -74,113 +87,73 @@ function onPost(env) {
         // Delete question flow.
         questionId = env.request.formParams["question-id"];
         questionSetId = env.request.formParams["question-set-id"];
-
-        var deleteQResult = deleteQuestion(userUniqueId, questionId, questionSetId);
-
-        data.message = deleteQResult.message;
-        data.success = deleteQResult.success;
+        var deleteChallengeQResult = deleteQuestion(userUniqueId, questionId, questionSetId);
+        data.message = deleteChallengeQResult.message;
+        data.success = deleteChallengeQResult.success;
     }
 
-    var getQResult = getUserQuestions(userUniqueId);
+    var getChallengeQResult = getUserQuestions(userUniqueId);
 
-    if (getQResult.data.length === 0) {
+    if (getChallengeQResult.data.length === 0) {
         data.isUserHasQuestions = false;
     } else {
         data.isUserHasQuestions = true;
-        data.userQuestions = getQResult.data;
+        data.userQuestions = getChallengeQResult.data;
     }
 
-    data.questionList = getChallengeQuestions(userUniqueId).data;
-
+    var getChallengeQuestionsResult = getChallengeQuestions(userUniqueId);
+    data.questionList = getChallengeQuestionsResult.data;
     return data;
 }
 
 function getUserQuestions(userUniqueId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "getAllChallengeQuestionsForUser", [userUniqueId]);
+        return {success: true, message: "", data : challengeQuestions};
     } catch (e) {
-        result.success = false;
-        result.message = e.message;
-        return result;
+        return {success: false, message: 'security.question.error.getChallengeQuestionsForUser'};
     }
-
-    result.data = challengeQuestions;
-    return result;
 }
 
 function getChallengeQuestions(userUniqueId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         var challengeQuestions = callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "getChallengeQuestionList", [userUniqueId]);
+        return {success: true, message: "", data : challengeQuestions};
     } catch (e) {
-        result.success = false;
-        result.message = e.message;
+        return {success: false, message: 'security.question.error.getChallengeQuestionList'};
     }
-
-    result.data = challengeQuestions;
-    return result;
 }
 
 function setChallengeAnswer(userUniqueId, answer, questionSetId, questionId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "setChallengeQuestionForUser", [userUniqueId, questionId, questionSetId, answer]);
+        return {success: true, message: 'security.question.success.setChallengeAnswer'};
     } catch (e) {
-        result.message = e.message;
-        result.success = false;
+        return {success: false, message: 'security.question.error.setChallengeAnswer'};
     }
-
-    return result;
 }
 
 function deleteQuestion(userUniqueId, questionId, questionSetId) {
-
-    var result = {};
-    result.success = true;
-    result.message = "";
-
     try {
         callOSGiService("org.wso2.is.portal.user.client.api.ChallengeQuestionManagerClientService",
             "deleteChallengeQuestionForUser", [userUniqueId, questionId, questionSetId]);
+        return {success: true, message: 'security.question.success.deleteQuestion'};
     } catch (e) {
-        result.message = e.message;
-        result.success = false;
+        return {success: false, message: 'security.question.error.deleteQuestion'};
     }
-
-    return result;
 }
 
 function authenticate(username, password, domain) {
     try {
         var passwordChar = Java.to(password.split(''), 'char[]');
-        callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
+        var uufUser = callOSGiService("org.wso2.is.portal.user.client.api.IdentityStoreClientService",
             "authenticate", [username, passwordChar, domain]);
-        return {success: true, message: ""};
+        createSession(uufUser);
+        return {success: true, message: "success"};
     } catch (e) {
-        var message = e.message;
-        var cause = e.getCause();
-        if (cause != null) {
-            // The exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
-            if (cause instanceof java.lang.reflect.InvocationTargetException) {
-                message = cause.getTargetException().message;
-            }
-        }
-        return {success: false, message: message};
+        return {success: false, message: 'security.question.error.invalidPassword'};
     }
 }
