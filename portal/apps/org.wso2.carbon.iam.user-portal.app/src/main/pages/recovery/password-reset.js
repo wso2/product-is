@@ -29,9 +29,9 @@ function onGet(env) {
 
 function onPost(env) {
     var confirmationCode = env.request.queryParams['confirmation'];
-    var password = env.request.formParams['input-password'];
+    var password = env.request.formParams['confirmPassword'];
 
     if (confirmationCode && password) {
-        recoveryManager.updatePassword(confirmationCode, password);
+        recoveryManager.updatePassword(confirmationCode, password, env);
     }
  }

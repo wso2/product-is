@@ -34,6 +34,7 @@ import org.wso2.carbon.identity.mgt.claim.Claim;
 import org.wso2.carbon.identity.mgt.exception.IdentityStoreException;
 import org.wso2.carbon.identity.mgt.exception.UserNotFoundException;
 import org.wso2.carbon.identity.mgt.impl.util.IdentityMgtConstants;
+import org.wso2.carbon.identity.recovery.IdentityRecoveryClientException;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryConstants;
 import org.wso2.carbon.identity.recovery.IdentityRecoveryException;
 import org.wso2.carbon.identity.recovery.bean.ChallengeQuestionsResponse;
@@ -215,17 +216,24 @@ public class RecoveryMgtServiceImpl implements RecoveryMgtService {
         try {
             getNotificationPasswordRecoveryManager().sendRecoveryNotification(userUniqueId, true);
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException(e.getMessage());
+            String msg = "Error while sending password recovery notification";
+            log.error(msg, e);
+            throw new UserPortalUIException(msg);
         }
     }
 
     @Override
-    public void updatePassword(String code, char[] password) throws UserPortalUIException {
+    public String updatePassword(String code, char[] password) throws UserPortalUIException {
         try {
             getNotificationPasswordRecoveryManager().updatePassword(code, password);
+        } catch (IdentityRecoveryClientException e) {
+            return e.getErrorCode();
         } catch (IdentityRecoveryException e) {
-            throw new UserPortalUIException(e.getMessage());
+            log.error("Error while updating password", e);
+            throw new UserPortalUIException("Error while updating password", e);
         }
+
+        return "UPDATED";
     }
 
     private NotificationPasswordRecoveryManager getNotificationPasswordRecoveryManager() {

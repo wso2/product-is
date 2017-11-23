@@ -1082,7 +1082,7 @@
         <msf4j.version>2.1.0</msf4j.version>
         <org.wso2.carbon.caching.version>1.0.0</org.wso2.carbon.caching.version>
         <org.wso2.carbon.deployment.version>5.0.0</org.wso2.carbon.deployment.version>
-        <org.wso2.carbon.identity.event.handler.version>1.0.2</org.wso2.carbon.identity.event.handler.version>
+        <org.wso2.carbon.identity.event.handler.version>1.0.3</org.wso2.carbon.identity.event.handler.version>
 
         <!--Transport Related Configrations -->
         <geronimo-jms_1.1_spec.version>1.1.0.wso2v1</geronimo-jms_1.1_spec.version>

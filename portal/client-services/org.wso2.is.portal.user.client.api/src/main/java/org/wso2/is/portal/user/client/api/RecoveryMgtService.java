@@ -53,7 +53,7 @@ public interface RecoveryMgtService {
      * @param password
      * @throws UserPortalUIException
      */
-    void updatePassword(String code, char[] password) throws UserPortalUIException;
+    String updatePassword(String code, char[] password) throws UserPortalUIException;
 
     /**
      * get recovery config bean object
