@@ -98,8 +98,7 @@
         oAuthPKCEAuthenticationRequestBuilder.setParameter(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
     }
 
-
-//build the new response mode with form post
+    // Build the new response mode with form post.
     OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildQueryMessage();
     response.sendRedirect(authzRequest.getLocationUri());
     return;
