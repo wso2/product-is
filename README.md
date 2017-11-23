@@ -134,7 +134,7 @@ System Requirements
 
 2. Processor - Pentium 800MHz or equivalent at minimum
 
-3. Java SE Development Kit 1.7 or higher
+3. Java SE Development Kit 1.8 or higher
 
 4. The Management Console requires full Javascript enablement of the Web browser.
 
