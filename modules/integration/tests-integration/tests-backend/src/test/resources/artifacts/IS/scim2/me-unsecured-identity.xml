@@ -121,6 +121,11 @@
     </OpenID>
 
     <OAuth>
+        <AppInfoCacheTimeout>-1</AppInfoCacheTimeout>
+        <AuthorizationGrantCacheTimeout>-1</AuthorizationGrantCacheTimeout>
+        <SessionDataCacheTimeout>-1</SessionDataCacheTimeout>
+        <ClaimCacheTimeout>-1</ClaimCacheTimeout>
+
         <!-- Specify the Token issuer class to be used.
              Default: org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl.
              Applicable values: org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer
@@ -345,6 +350,8 @@
     </MultifactorAuthentication>
 
     <SSOService>
+        <PersistanceCacheTimeout>157680000</PersistanceCacheTimeout>
+        <SessionIndexCacheTimeout>157680000</SessionIndexCacheTimeout>
         <EntityId>${carbon.host}</EntityId>
         <!--
             Default value for IdentityProviderURL is  built in following format
@@ -626,21 +633,10 @@
         <Resource context="(.*)/scim2/Groups/(.*)" secured="true" http-method="DELETE">
             <Permissions>/permission/admin/manage/identity/rolemgt/delete</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"    http-method="GET">
-            <Permissions>/permission/admin/login</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true" http-method="DELETE">
-            <Permissions>/permission/admin/manage/identity/usermgt/delete</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"    http-method="PUT">
-            <Permissions>/permission/admin/login</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"   http-method="PATCH">
-            <Permissions>/permission/admin/login</Permissions>
-        </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true" http-method="POST">
-            <Permissions>/permission/admin/manage/identity/usermgt/create</Permissions>
-        </Resource>
+        <Resource context="(.*)/scim2/Me" secured="true"    http-method="GET"/>
+        <Resource context="(.*)/scim2/Me" secured="true" http-method="DELETE"/>
+        <Resource context="(.*)/scim2/Me" secured="true"    http-method="PUT"/>
+        <Resource context="(.*)/scim2/Me" secured="true"   http-method="PATCH"/>
         <Resource context="/scim2/ServiceProviderConfig" secured="false" http-method="all">
             <Permissions></Permissions>
         </Resource>
