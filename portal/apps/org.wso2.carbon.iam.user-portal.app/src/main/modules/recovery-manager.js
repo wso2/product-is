@@ -62,7 +62,8 @@ var recoveryManager = {};
     }
 
     /**
-     *  Check whether password recovery enabled.
+     * Check whether the password recovery enabled.
+     *
      * @returns {*}
      */
 
@@ -199,7 +200,7 @@ var recoveryManager = {};
     };
 
     /**
-     * Returns whether requested password recovery option is enabled
+     * Returns whether requested password recovery option is enabled.
      * @param option recovery option
      * @returns {success: true/false, isEnabled: true/false}
      */
