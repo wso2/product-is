@@ -25,11 +25,9 @@ public class RemoteUMSampleConstants {
     public static final String REMOTE_SERVER_URL = "remote.server.url";
     public static final String USER_NAME = "user.name";
     public static final String PASSWORD = "user.password";
+    public static final String TRUST_STORE_PATH = "truststore.path";
+    public static final String TRUST_STORE_PASSWORD = "truststore.password";
 
-    public static final String IS_HOME = ".." + File.separator + ".." + File.separator;
-
-    public static final String TRUST_STORE_PATH = IS_HOME + "repository" + File.separator + "resources" +
-                                                  File.separator + "security" + File.separator + "wso2carbon.jks";
-    
-    public static final String TRUST_STORE_PASSWORD = "wso2carbon";
+    public static final String RESOURCE_PATH = System.getProperty("user.dir") + File.separator +
+            "src" + File.separator + "main" + File.separator + "resources" + File.separator ;
 }
