@@ -32,10 +32,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -59,6 +58,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 
 public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
@@ -69,7 +70,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String ARTIFACT_ID = "travelocity.com";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
+    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -86,7 +87,6 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private HttpClient httpClient;
     private Tomcat tomcatServer;
 
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -97,10 +97,10 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().build();
         createApplication();
 
-        //Starting tomcat
+        // Starting tomcat
         log.info("Starting Tomcat");
         tomcatServer = getTomcat();
 
@@ -133,10 +133,10 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
             "wso2.is")
     public void testRelayStateAndACSWithSAMLErrorResponse() throws Exception {
 
-        //create service provider config with mis-matching ACS to generate SAML error response
-        Boolean isAddSuccess = ssoConfigServiceClient
+        // Create service provider config with mis-matching ACS to generate SAML error response
+        boolean isAddSuccess = ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
-        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + ARTIFACT_ID);
+        assertTrue(isAddSuccess, "Adding a service provider has failed for " + ARTIFACT_ID);
 
         HttpResponse response;
         response = sendGetRequest(String.format(SAML_SSO_LOGIN_URL, ARTIFACT_ID, HTTP_POST_BINDING));
@@ -153,9 +153,9 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         String location = response.getFirstHeader("Location").getValue();
-        Assert.assertTrue(location.contains("RelayState=" + RELAY_STATE), "Redirection header to notification.do" +
+        assertTrue(location.contains("RelayState=" + RELAY_STATE), "Redirection header to notification.do" +
                 " page should contain RelayState query param sent with the request");
-        Assert.assertTrue(location.contains("ACSUrl=" + URLEncoder.encode(String.format(INVALID_ACS_URL,
+        assertTrue(location.contains("ACSUrl=" + URLEncoder.encode(String.format(ACS_URL,
                 ARTIFACT_ID), "UTF-8")), "Redirection header to notification.do" +
                 " page should contain ACS query param");
     }
@@ -185,7 +185,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
+        tomcat.setPort(DEFAULT_TOMCAT_PORT);
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();
@@ -211,6 +211,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     }
 
     private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
+
         tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
         tomcat.start();
     }
@@ -300,7 +301,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     }
 
     private void deleteApplication() throws Exception {
+
         applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
     }
-
 }
