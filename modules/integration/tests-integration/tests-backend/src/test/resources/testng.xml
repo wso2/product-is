@@ -56,6 +56,14 @@
             <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
         </classes>
     </test>
+    <test name="is-tests-scim2" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2GroupTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
+        </classes>
+    </test>
 
     <test name="is-tests-all" preserve-order="true" parallel="false">
         <packages>
@@ -167,6 +175,7 @@
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLErrorResponseTestCase"/>
         </classes>
     </test>
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
