@@ -51,4 +51,26 @@ public final class OAuth2Constants {
     public static final String OAUTH2_FORM_POST = "form_post";
     public static final String OAUTH2_RESPONSE_MODE = "response_mode";
 
+    //OAuth DCRM specific constants
+    public static final String CREATE = "create";
+    public static final String READ = "read";
+    public static final String UPDATE = "update";
+    public static final String DELETE = "delete";
+    public static final String DCRM_METHOD = "dcrmMethod";
+    public static final String CLIENT_ID = "clientId";
+    public static final String CLIENT_SECRET = "clientSecret";
+    public static final String CLIENT_NAME = "clientName";
+    public static final String GRANT_TYPES = "grantTypes";
+    public static final String REDIRECT_URIS = "redirectUris";
+    public static final String CLIENT_CONFIGURATION_ENDPOINT = "https://localhost:9443/identity/register/";
+    public static final String AUTHORIZATION = "Basic YWRtaW46YWRtaW4=";
+    public static final String CONTENT_TYPE = "application/json";
+
+    public static class DCRMMetaData {
+        public static final String CLIENT_NAME = "client_name";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+        public static final String GRANT_TYPES = "grant_types";
+        public static final String REDIRECT_URIS = "redirect_uris";
+    }
 }
