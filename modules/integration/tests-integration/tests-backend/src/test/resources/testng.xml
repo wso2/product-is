@@ -167,6 +167,7 @@
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLErrorResponseTestCase"/>
         </classes>
     </test>
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
