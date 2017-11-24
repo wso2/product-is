@@ -33,28 +33,29 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.schema.SCIMConstants;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
 import org.wso2.identity.integration.test.scim.utils.SCIMUtils;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 
 import java.rmi.RemoteException;
 
-public class SCIMServiceProviderUserTestCase {
+import static org.testng.AssertJUnit.assertTrue;
+
+public class SCIMServiceProviderUserTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(SCIMServiceProviderUserTestCase.class);
     private static final String USERNAME = "SCIMUser1";
-    public static final String PASSWORD = "password1";
-    public static final String ADMIN_ROLE = "admin";
-    public static final String SCIM_ME_ENDPOINT = "Users/me";
-    public static final String SCIM_USER_ENDPOINT = "Users";
+    private static final String PASSWORD = "password1";
+    private static final String ADMIN_ROLE = "admin";
+    private static final String SCIM_ME_ENDPOINT = "Users/me";
+    private static final String SCIM_USER_ENDPOINT = "Users";
     String scimUserId = null;
     private User provider_userInfo;
     UserManagementClient userMgtClient;
@@ -63,16 +64,16 @@ public class SCIMServiceProviderUserTestCase {
     String backendUrl = null;
     String sessionCookie = null;
     private SCIMClient scimClient;
-    private AutomationContext automationContext = null;
 
     @BeforeClass(alwaysRun = true)
     public void initiate() throws Exception {
-        automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        provider_userInfo = automationContext.getContextTenant().getContextUser();
-        backendUrl = automationContext.getContextUrls().getBackEndUrl();
+
+        super.init();
+        provider_userInfo = isServer.getContextTenant().getContextUser();
+        backendUrl = isServer.getContextUrls().getBackEndUrl();
         scim_url = backendUrl.substring(0, 22) + "/wso2/scim/";
-        serviceEndPoint = automationContext.getContextUrls().getServiceUrl();
-        sessionCookie = new LoginLogoutClient(automationContext).login();
+        serviceEndPoint = isServer.getContextUrls().getServiceUrl();
+        sessionCookie = new LoginLogoutClient(isServer).login();
         userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
     }
 
@@ -173,8 +174,8 @@ public class SCIMServiceProviderUserTestCase {
         try {
             RestClient restClient = new RestClient(clientConfig);
             User userInfo = new User();
-            userInfo.setUserName(this.automationContext.getSuperTenant().getTenantAdmin().getUserName());
-            userInfo.setPassword(this.automationContext.getSuperTenant().getTenantAdmin().getPassword());
+            userInfo.setUserName(this.isServer.getSuperTenant().getTenantAdmin().getUserName());
+            userInfo.setPassword(this.isServer.getSuperTenant().getTenantAdmin().getPassword());
             BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(userInfo);
             //create resource endpoint to get admin user information.
             Resource userResource = restClient.resource(scim_url + SCIM_USER_ENDPOINT);
@@ -182,8 +183,8 @@ public class SCIMServiceProviderUserTestCase {
                     .getAuthorizationHeader())
                     .contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).get(String
                             .class);
-            Assert.assertTrue(response.contains(
-                    "\"userName\":\"" + automationContext.getSuperTenant().getTenantAdmin().getUserName() + "\""));
+            assertTrue(response.contains(
+                    "\"userName\":\"" + isServer.getSuperTenant().getTenantAdmin().getUserName() + "\""));
         } catch (Exception e) {
             log.error("Failed to retrieve admin user information through /User endpoint.", e);
             Assert.fail("Failed to retrieve admin user information through /User endpoint.");
