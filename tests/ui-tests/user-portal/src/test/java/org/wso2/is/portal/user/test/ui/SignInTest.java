@@ -15,71 +15,54 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.is.portal.user.test.ui;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.LoginPageAction;
 
-
-
 /**
- * UI Tests for Sign In.
+ * UI test for Sign in Test.
  */
 public class SignInTest extends SelectDriver {
 
-    private static LoginPageAction loginPageAction = new LoginPageAction();
+    private static LoginPageAction loginPageAction;
+
     private static WebDriver driver;
-    private static String loginPage = "https://" + System.getProperty("home")  + ":" +
+    private static String loginPage = "https://" + System.getProperty("home") + ":" +
             System.getProperty("port") + "/user-portal/login";
-    private static String adminPage = "https://" + System.getProperty("home")  + ":" +
+    private static String adminPage = "https://" + System.getProperty("home") + ":" +
             System.getProperty("port") + "/user-portal/";
-    private static String usernameRecoveryPage = "https://" + System.getProperty("home")  + ":" +
-            System.getProperty("port") + "/user-portal/recovery/username";
-    private static String passwordRecoveryPage = "https://" + System.getProperty("home")  + ":" +
-            System.getProperty("port") + "/user-portal/recovery/password";
+
+    @BeforeClass
+    public void init() {
+        driver = selectDriver(System.getProperty("driver"));
+        loginPageAction = new LoginPageAction(driver);
+    }
 
     @Test(groups = "signInTest")
     public void loadLoginPage() throws Exception {
-        driver = selectDriver(System.getProperty("driver"));
+
         driver.get(loginPage);
         Assert.assertEquals(driver.getCurrentUrl(), loginPage,
                 "This current page is not the login page.");
-        driver.quit();
     }
 
     @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
     public void testLogin() throws Exception {
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(loginPage);
         String username = System.getProperty("username");
         String password = System.getProperty("password");
-        loginPageAction.login(driver, username, password);
+        boolean logged = loginPageAction.login(username, password);
+        Assert.assertTrue(logged, "Loggin failed.");
         Assert.assertEquals(driver.getCurrentUrl(), adminPage,
                 "This current page is not the admin user page.");
-        driver.quit();
     }
 
-    @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
-    public void testClickUsernameRecovery() throws Exception {
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(loginPage);
-        loginPageAction.clickForgetUsername(driver);
-        Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
-                "This current page is not the username recovery page.");
+    @AfterClass
+    public void close() {
         driver.quit();
-    }
-
-    @Test(groups = "signInTest", dependsOnMethods = "loadLoginPage")
-    public void testClickPasswordRecovery() throws Exception {
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(loginPage);
-        loginPageAction.clickForgetPassword(driver);
-        Assert.assertEquals(driver.getCurrentUrl(), passwordRecoveryPage,
-                "This current page is not the password recovery page.");
-        driver.quit();
-
     }
 }

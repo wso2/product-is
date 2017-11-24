@@ -20,6 +20,8 @@ package org.wso2.is.portal.user.test.ui;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.iam.userportal.actionobject.UsernameRecoveryPageAction;
 import org.wso2.carbon.identity.mgt.connector.Attribute;
@@ -34,27 +36,32 @@ import java.util.stream.Collectors;
  */
 public class UsernameRecoveryTest extends SelectDriver {
 
-    private static UsernameRecoveryPageAction usernameRecoveryPageAction
-            = new UsernameRecoveryPageAction();
+    private static UsernameRecoveryPageAction usernameRecoveryPageAction;
+
     private static WebDriver driver;
+
     private static String  loginPage = "https://" + System.getProperty("home") + ":" +
             System.getProperty("port") + "/user-portal/login";
     private static String usernameRecoveryPage = "https://" + System.getProperty("home")  + ":" +
             System.getProperty("port") + "/user-portal/recovery/username";
 
-    @Test(groups = "usernameRecoveryTest")
-    public void loadUsernameRecoveryPage() throws Exception {
+    @BeforeClass
+    public void init() {
         driver = selectDriver(System.getProperty("driver"));
+        usernameRecoveryPageAction = new UsernameRecoveryPageAction(driver);
+
+    }
+
+    @Test(groups = "usernameRecoveryTest")
+    public void loadRecoveryPage() throws Exception {
+
         driver.get(usernameRecoveryPage);
         Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
                 "This current page is not the username recovery page.");
-        driver.quit();
     }
 
-    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
-    public void testUssernameRecovery() throws Exception {
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(usernameRecoveryPage);
+    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadRecoveryPage")
+    public void testUsernameRecovery() throws Exception {
         Map<String, String> attibuteMap = new HashMap<>();
         attibuteMap.put("givenname", "dinali");
         attibuteMap.put("lastname", "silva");
@@ -66,21 +73,21 @@ public class UsernameRecoveryTest extends SelectDriver {
             return attribute;
         }).collect(Collectors.toList());
 
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(usernameRecoveryPage);
-        usernameRecoveryPageAction.recoverUsername(driver, attributes);
+        boolean result = usernameRecoveryPageAction.recoverUsername(attributes);
+        Assert.assertTrue(result, "The User clicked the recover button");
         Assert.assertEquals(driver.getCurrentUrl(), usernameRecoveryPage,
                 "This current page is not the username recovery page.");
-        driver.quit();
     }
 
-    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "loadUsernameRecoveryPage")
+    @Test(groups = "usernameRecoveryTest", dependsOnMethods = "testUsernameRecovery")
     public void backToSignIn() throws Exception {
-        driver = selectDriver(System.getProperty("driver"));
-        driver.get(usernameRecoveryPage);
-        usernameRecoveryPageAction.backToSignIn(driver);
+        boolean result = usernameRecoveryPageAction.backToSignIn();
+        Assert.assertTrue(result, "The user has not returned back to the sign in");
         Assert.assertEquals(driver.getCurrentUrl(), loginPage, "This current page is not the login page.");
-        driver.quit();
     }
 
+    @AfterClass
+    public void close() {
+        driver.quit();
+    }
 }

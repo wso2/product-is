@@ -22,24 +22,36 @@ import org.openqa.selenium.WebDriver;
 import org.wso2.carbon.iam.userportal.pageobject.LoginPage;
 
 /**
- * Action class for login.
+ * Login page action for generated page objects using chrome plugin.
  */
-public class LoginPageAction {
+public class LoginPageAction extends LoginPage {
 
-    private LoginPage loginPage = new LoginPage();
+    WebDriver webDriver = null;
+    public LoginPageAction(WebDriver driver) {
+        super(driver);
+        webDriver = driver;
+    }
 
-    public void login(WebDriver driver, String username, String password) {
-        loginPage.txtbxUsername(driver).sendKeys(username);
-        loginPage.txtbxPassword(driver).sendKeys(password);
-        loginPage.btnSignIn(driver).click();
+    public boolean login(String username, String password) {
+            getUsername1().sendKeys(username);
+            getPassword1().sendKeys(password);
+            getSignIn().click();
+        return true;
     }
-    public void signUp(WebDriver driver) {
-        loginPage.lnkSignUp(driver).click();
+
+    public boolean signUp() {
+        getSignUp().click();
+        return  true;
     }
-    public void clickForgetUsername(WebDriver driver) {
-        loginPage.lnkForgotUsername(driver).click();
+
+
+    public boolean forgetUsername() {
+        getUsername2().click();
+        return true;
     }
-    public void clickForgetPassword(WebDriver driver) {
-        loginPage.lnkForgotPassword(driver).click();
-    }
+     public boolean forgetPassword() {
+         getPassword2().click();
+         return true;
+     }
+
 }

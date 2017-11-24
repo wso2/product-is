@@ -23,8 +23,8 @@
     <!--Before running UI tests- set up web browser drivers and a running pack and uncomment these tests -->
     <test name="wso2-identity-server-user-portal-ui-tests" preserve-order="true" parallel="false">
         <classes>
-           <!-- <class name="org.wso2.is.portal.user.test.ui.SignInTest"/>-->
-           <!-- <class name="org.wso2.is.portal.user.test.ui.UsernameRecoveryTest"/>-->
+             <!--<class name="org.wso2.is.portal.user.test.ui.SignInTest"/>-->
+            <!--<class name="org.wso2.is.portal.user.test.ui.UsernameRecoveryTest"/>-->
         </classes>
     </test>
 </suite>

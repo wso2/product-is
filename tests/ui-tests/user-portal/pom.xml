@@ -67,6 +67,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
             <scope>test</scope>
@@ -153,7 +158,7 @@
                                 </property>
                                 <property>
                                     <name>pathToChromeDriver</name>
-                                    <value>src/test/resources/drivers/chrome/chromedriver</value>
+                                    <value>.../chrome/chromedriver</value>
                                 </property>
                                 <property>
                                     <name>home</name>
@@ -182,10 +187,5 @@
 
         </profile>
     </profiles>
-    <properties>
-        <import-packages>
-            org.wso2.is.user.portal.test.driver.*; version="${carbon.is.version}"
-        </import-packages>
-    </properties>
 
 </project>

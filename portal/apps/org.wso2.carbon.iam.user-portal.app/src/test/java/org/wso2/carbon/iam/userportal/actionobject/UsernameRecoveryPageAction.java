@@ -27,18 +27,32 @@ import java.util.List;
 /**
  * Action class for recoverying username.
  */
-public class UsernameRecoveryPageAction {
+public class UsernameRecoveryPageAction extends UsernameRecoveryPage {
 
-    private static UsernameRecoveryPage usernameRecoveryPage = new UsernameRecoveryPage();
+    WebDriver webDriver = null;
 
-    public void recoverUsername(WebDriver driver, List<Attribute> attributes) {
-        for (Attribute attribute: attributes) {
-            usernameRecoveryPage.txtbxClaimLabel(driver, attribute.getAttributeName())
-                    .sendKeys(attribute.getAttributeValue());
+    public UsernameRecoveryPageAction(WebDriver driver) {
+        super(driver);
+        webDriver = driver;
+    }
+
+    public boolean recoverUsername(List<Attribute> attributes) {
+        for (Attribute attribute : attributes) {
+            if (attribute.getAttributeName() == "givenname") {
+                getFirstName().sendKeys(attribute.getAttributeValue());
+            } else if (attribute.getAttributeName() == "lastname") {
+                getLastName().sendKeys(attribute.getAttributeValue());
+            } else if (attribute.getAttributeName() == "email") {
+                getEmail().sendKeys(attribute.getAttributeValue());
+            }
         }
-        usernameRecoveryPage.btnRecover(driver).click();
+        getRecover().click();
+        return true;
     }
-    public void backToSignIn(WebDriver driver) {
-        usernameRecoveryPage.btnBackSignIn(driver).click();
+
+    public boolean backToSignIn() {
+        getBackToSignIn().click();
+        return true;
     }
+
 }

@@ -15,29 +15,78 @@
  */
 package org.wso2.carbon.iam.userportal.pageobject;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-/**
- * Represents username recovery page.
- */
+import java.util.Map;
+
 public class UsernameRecoveryPage {
 
-    private static WebElement element = null;
+    private Map<String, String> data;
+    private WebDriver driver;
+    private int timeout = 15;
 
-    public static WebElement btnBackSignIn(WebDriver driver) {
-        element = driver.findElement(By.id("back-sign-in"));
-        return element;
+    @FindBy(id = "back-sign-in")
+    @CacheLookup
+    private WebElement backToSignIn;
+
+    @FindBy(id = "email")
+    @CacheLookup
+    private WebElement email;
+
+    @FindBy(id = "givenname")
+    @CacheLookup
+    private WebElement firstName;
+
+    @FindBy(id = "lastname")
+    @CacheLookup
+    private WebElement lastName;
+
+    @FindBy(id = "recover")
+    @CacheLookup
+    private WebElement recover;
+
+    public UsernameRecoveryPage() {
     }
 
-    public static WebElement btnRecover(WebDriver driver) {
-        element = driver.findElement(By.id("recover"));
-        return element;
+    public UsernameRecoveryPage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
+        this.driver = driver;
     }
 
-    public static WebElement txtbxClaimLabel(WebDriver driver, String label) {
-        element = driver.findElement(By.id(label));
-        return element;
+    public Map<String, String> getData() {
+        return data;
     }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public WebElement getBackToSignIn() {
+        return backToSignIn;
+    }
+
+    public WebElement getEmail() {
+        return email;
+    }
+
+    public WebElement getFirstName() {
+        return firstName;
+    }
+
+    public WebElement getLastName() {
+        return lastName;
+    }
+
+    public WebElement getRecover() {
+        return recover;
+    }
+
 }

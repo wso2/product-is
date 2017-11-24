@@ -13,50 +13,104 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.wso2.carbon.iam.userportal.pageobject;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import java.util.Map;
 
 /**
- * Represents login page
+ * Created by wso2dinali on 22/3/17.
  */
 public class LoginPage {
-    private static WebElement element = null;
 
-    public static WebElement txtbxUsername(WebDriver driver) {
-        element = driver.findElement(By.id("username"));
-        return element;
+    private Map<String, String> data;
+    private WebDriver driver;
+    private int timeout = 15;
+
+
+    @FindBy(id = "domainSelector")
+    @CacheLookup
+    private WebElement domain;
+
+    @FindBy(id = "password")
+    @CacheLookup
+    private WebElement password1;
+
+    @FindBy(id = "recover-password")
+    @CacheLookup
+    private WebElement password2;
+
+    @FindBy(id = "sign-in")
+    @CacheLookup
+    private WebElement signIn;
+
+    @FindBy(id = "sign-up")
+    @CacheLookup
+    private WebElement signUp;
+
+    @FindBy(id = "username")
+    @CacheLookup
+    private WebElement username1;
+
+    @FindBy(id = "recover-username")
+    @CacheLookup
+    private WebElement username2;
+
+
+    public LoginPage() {
     }
 
-    public static WebElement txtbxPassword(WebDriver driver) {
-        element = driver.findElement(By.id("password"));
-        return element;
+
+    public LoginPage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
+        this.driver = driver;
     }
 
-    public static WebElement btnSignIn(WebDriver driver) {
-        element = driver.findElement(By.id("sign-in"));
-        return element;
+
+    public Map<String, String> getData() {
+        return data;
     }
 
-    public static WebElement lnkForgotPassword(WebDriver driver) {
-        element = driver.findElement(By.id("recover-password"));
-        return element;
+    public WebDriver getDriver() {
+        return driver;
     }
 
-    public static WebElement lnkSignUp(WebDriver driver) {
-        element = driver.findElement(By.id("sign-up"));
-        return element;
+    public int getTimeout() {
+        return timeout;
     }
 
-    public static WebElement spanSignInError(WebDriver driver) {
-        element = driver.findElement(By.id("sign-in-error"));
-        return element;
+    public WebElement getDomain() {
+        return domain;
     }
 
-    public static WebElement lnkForgotUsername(WebDriver driver) {
-        element = driver.findElement(By.id("recover-username"));
-        return element;
+    public WebElement getPassword1() {
+        return password1;
     }
+
+    public WebElement getPassword2() {
+        return password2;
+    }
+
+    public WebElement getSignIn() {
+        return signIn;
+    }
+
+    public WebElement getSignUp() {
+        return signUp;
+    }
+
+    public WebElement getUsername1() {
+        return username1;
+    }
+
+    public WebElement getUsername2() {
+        return username2;
+    }
+
 }

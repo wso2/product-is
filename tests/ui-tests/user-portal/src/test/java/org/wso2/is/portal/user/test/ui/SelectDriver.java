@@ -27,7 +27,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Class to select the web driver.
  */
@@ -37,8 +36,6 @@ public class SelectDriver {
     private static WebDriver driver;
 
     public static WebDriver selectDriver(String driverType) {
-
-
         try {
             if (driverType.equalsIgnoreCase("chrome")) {
                 System.setProperty("webdriver.chrome.driver", System.getProperty("pathToChromeDriver"));
