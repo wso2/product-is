@@ -51,6 +51,7 @@ import static org.testng.Assert.assertTrue;
  * OAuth2 DCRM API Create process test case
  */
 public class OAuthDCRMTestCase extends ISIntegrationTest {
+    private static final String DUMMY_DCR_APP = "dummyDCRApp";
     private HttpClient client;
 
     private String client_id;
@@ -218,6 +219,82 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
                 "with invalid client ID should have returned an unauthorized");
 
         EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Try to register an OAuth app with authorization_code " +
+            "grant without any redirect uris.")
+    public void testRegisterAppWithAuthzCodeGrantAndNoRedirectUris() throws IOException {
+        HttpPost request = new HttpPost(getPath());
+        setRequestHeaders(request);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+
+        JSONObject dcrAppCreationRequest = new JSONObject();
+        dcrAppCreationRequest.put(OAuthDCRMConstants.CLIENT_NAME, DUMMY_DCR_APP);
+        dcrAppCreationRequest.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        dcrAppCreationRequest.put(OAuthDCRMConstants.REDIRECT_URIS, new JSONArray());
+
+        StringEntity entity = new StringEntity(dcrAppCreationRequest.toJSONString());
+        request.setEntity(entity);
+
+        HttpResponse failedResponse = client.execute(request);
+        assertEquals(failedResponse.getStatusLine().getStatusCode(), 400, "Since this was a BAD request should have " +
+                "received an error response with 400 status code.");
+
+        EntityUtils.consume(failedResponse.getEntity());
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Check whether created service providers " +
+            "are cleaned up when OAuth app creation fails.")
+    public void testRollbackOnInvalidRequest() throws IOException {
+        // Basic Request
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put(OAuthDCRMConstants.CLIENT_NAME, DUMMY_DCR_APP);
+        requestBody.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+
+        //////////////////////// BAD REQUEST WITH EMPTY REDIRECT URI ///////////////////////////
+        HttpPost badRequestWithoutRedirectUris = new HttpPost(getPath());
+        setRequestHeaders(badRequestWithoutRedirectUris);
+        // We keep the redirect uris empty to make this a bad request.
+        JSONObject badRequestBody = (JSONObject) requestBody.clone();
+        badRequestBody.put(OAuthDCRMConstants.REDIRECT_URIS, new JSONArray());
+        badRequestWithoutRedirectUris.setEntity(new StringEntity(badRequestBody.toJSONString()));
+
+        HttpResponse failedResponse = client.execute(badRequestWithoutRedirectUris);
+        assertEquals(failedResponse.getStatusLine().getStatusCode(), 400, "Since this was a BAD request should have " +
+                "received an error response with 400 status code.");
+
+        EntityUtils.consume(failedResponse.getEntity());
+
+        ///////////////// VALID REQUEST WITH THE SAME CLIENT_NAME ///////////////////////////
+        HttpPost validRequest = new HttpPost(getPath());
+        setRequestHeaders(validRequest);
+
+        JSONArray redirectURIs = new JSONArray();
+        redirectURIs.add(OAuthDCRMConstants.REDIRECT_URI);
+        // Add a valid Redirect URI
+        JSONObject validJSONBody = (JSONObject) requestBody.clone();
+        validJSONBody.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURIs);
+
+        validRequest.setEntity(new StringEntity(validJSONBody.toJSONString()));
+        HttpResponse successResponse = client.execute(validRequest);
+        assertEquals(successResponse.getStatusLine().getStatusCode(), 201, "Service Provider should have been created " +
+                "with the same client name: " +  DUMMY_DCR_APP + " attempted in the previous failed request.");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(successResponse.getEntity().getContent()));
+        Object responseObj = JSONValue.parse(rd);
+        EntityUtils.consume(successResponse.getEntity());
+        client_id = ((JSONObject) responseObj).get("client_id").toString();
+        assertNotNull(client_id, "client_id cannot be null");
+    }
+
+    private void setRequestHeaders(HttpPost request) {
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
     }
 
     private String getPath() {
