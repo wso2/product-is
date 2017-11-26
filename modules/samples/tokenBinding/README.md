@@ -1,7 +1,7 @@
 # TokenBindingSample
 This is a **Php based Oauth sample** application for WSO2 Identity server.
 
-This applicaiton can generate simple oauth requests that can support **Token binding**.Can be used to check normal oauth requests also.
+This applicaiton can generate simple oauth requests that can support **Token binding**.Can be used to check normal oauth requests also.(Have to setup a Token binding supported proxy server to perform token binding)
 
 
 How to run:
