@@ -393,4 +393,19 @@ public class IdentityProviderMgtServiceClient {
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    public String getResidentIDPMetadata() throws Exception {
+
+        try {
+            return idPMgtStub.getResidentIDPMetadata();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new Exception("Error occurred while retrieving idp metadata");
+        }
+    }
+
 }
