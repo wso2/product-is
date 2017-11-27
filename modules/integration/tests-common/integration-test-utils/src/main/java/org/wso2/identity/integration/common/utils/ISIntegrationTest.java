@@ -33,6 +33,7 @@ import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
@@ -141,73 +142,73 @@ public class ISIntegrationTest {
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
-//    protected void addJDBCUserStore(String dbURI, String driverName, String userName, String password,
-//                                    boolean disabled, String description, String domainName) throws Exception {
-//        UserStoreConfigAdminServiceClient userStoreConfigurationClient =
-//                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-//        userStoreConfigurationClient.addUserStore(getUserStoreDTO(dbURI, driverName, userName,
-//                password, disabled, description, domainName));
-//
-//    }
-//
-//    protected UserStoreDTO getUserStoreDTO(String dbURI, String driverName, String userName, String password,
-//                                           boolean disabled, String description, String domainName) throws Exception {
-//        ArrayList<PropertyDTO> propertyDTOsList = new ArrayList<PropertyDTO>();
-//        UserStoreDTO userStoreDTO = new UserStoreDTO();
-//        UserStoreConfigAdminServiceClient userStoreConfigurationClient =
-//                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-//        //set mandatory properties
-//        userStoreDTO.setClassName(jdbcClassName);
-//        userStoreDTO.setDescription(description);
-//        userStoreDTO.setDisabled(disabled);
-//        userStoreDTO.setDomainId(domainName);
-//
-//        Properties properties = userStoreConfigurationClient.getUserStoreProperties(jdbcClassName);
-//        Property[] advanceProperties = properties.getAdvancedProperties();
-//        Property[] mandatoryProperties = properties.getMandatoryProperties();
-//        Property[] optionalProperties = properties.getOptionalProperties();
-//
-//        for (Property mandatoryProperty : mandatoryProperties) {
-//            if (mandatoryProperty.getName().equals("userName")) {
-//                mandatoryProperty.setValue(userName);
-//            } else if (mandatoryProperty.getName().equals("password")) {
-//                mandatoryProperty.setValue(password);
-//            } else if (mandatoryProperty.getName().equals("url")) {
-//                mandatoryProperty.setValue(dbURI);
-//            } else if (mandatoryProperty.getName().equals("driverName")) {
-//                mandatoryProperty.setValue(driverName);
-//            }
-//        }
-//
-//        for (Property mandatoryProperty : mandatoryProperties) {
-//            PropertyDTO propertyDTO = new PropertyDTO();
-//            propertyDTO.setName(mandatoryProperty.getName());
-//            propertyDTO.setValue(mandatoryProperty.getValue());
-//            propertyDTOsList.add(propertyDTO);
-//        }
-//
-//        for (Property advanceProperty : advanceProperties) {
-//            PropertyDTO propertyDTO = new PropertyDTO();
-//            propertyDTO.setName(advanceProperty.getName());
-//            propertyDTO.setValue(advanceProperty.getValue());
-//            propertyDTOsList.add(propertyDTO);
-//        }
-//
-//        for (Property optionalProperty : optionalProperties) {
-//            PropertyDTO propertyDTO = new PropertyDTO();
-//            propertyDTO.setName(optionalProperty.getName());
-//            propertyDTO.setValue(optionalProperty.getValue());
-//            System.out.println(optionalProperty.getValue());
-//            propertyDTOsList.add(propertyDTO);
-//        }
-//
-//        log.info("Adding mandatory and optional properties completed..");
-//
-//        PropertyDTO[] propertyDTOArray = new PropertyDTO[propertyDTOsList.size()];
-//        propertyDTOArray = propertyDTOsList.toArray(propertyDTOArray);
-//
-//        userStoreDTO.setProperties(propertyDTOArray);
-//
-//        return userStoreDTO;
-//    }
+    protected void addJDBCUserStore(String dbURI, String driverName, String userName, String password,
+                                    boolean disabled, String description, String domainName) throws Exception {
+        UserStoreConfigAdminServiceClient userStoreConfigurationClient =
+                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        userStoreConfigurationClient.addUserStore(getUserStoreDTO(dbURI, driverName, userName,
+                password, disabled, description, domainName));
+    }
+
+    protected UserStoreDTO getUserStoreDTO(String dbURI, String driverName, String userName, String password,
+                                           boolean disabled, String description, String domainName) throws Exception {
+        ArrayList<PropertyDTO> propertyDTOsList = new ArrayList<PropertyDTO>();
+        UserStoreDTO userStoreDTO = new UserStoreDTO();
+
+        UserStoreConfigAdminServiceClient userStoreConfigurationClient =
+                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        //set mandatory properties
+        userStoreDTO.setClassName(jdbcClassName);
+        userStoreDTO.setDescription(description);
+        userStoreDTO.setDisabled(disabled);
+        userStoreDTO.setDomainId(domainName);
+
+        Properties properties = userStoreConfigurationClient.getUserStoreProperties(jdbcClassName);
+        Property[] advanceProperties = properties.getAdvancedProperties();
+        Property[] mandatoryProperties = properties.getMandatoryProperties();
+        Property[] optionalProperties = properties.getOptionalProperties();
+
+        for (Property mandatoryProperty : mandatoryProperties) {
+            if (mandatoryProperty.getName().equals("userName")) {
+                mandatoryProperty.setValue(userName);
+            } else if (mandatoryProperty.getName().equals("password")) {
+                mandatoryProperty.setValue(password);
+            } else if (mandatoryProperty.getName().equals("url")) {
+                mandatoryProperty.setValue(dbURI);
+            } else if (mandatoryProperty.getName().equals("driverName")) {
+                mandatoryProperty.setValue(driverName);
+            }
+        }
+
+        for (Property mandatoryProperty : mandatoryProperties) {
+            PropertyDTO propertyDTO = new PropertyDTO();
+            propertyDTO.setName(mandatoryProperty.getName());
+            propertyDTO.setValue(mandatoryProperty.getValue());
+            propertyDTOsList.add(propertyDTO);
+        }
+
+        for (Property advanceProperty : advanceProperties) {
+            PropertyDTO propertyDTO = new PropertyDTO();
+            propertyDTO.setName(advanceProperty.getName());
+            propertyDTO.setValue(advanceProperty.getValue());
+            propertyDTOsList.add(propertyDTO);
+        }
+
+        for (Property optionalProperty : optionalProperties) {
+            PropertyDTO propertyDTO = new PropertyDTO();
+            propertyDTO.setName(optionalProperty.getName());
+            propertyDTO.setValue(optionalProperty.getValue());
+            System.out.println(optionalProperty.getValue());
+            propertyDTOsList.add(propertyDTO);
+        }
+
+        log.info("Adding mandatory and optional properties completed..");
+
+        PropertyDTO[] propertyDTOArray = new PropertyDTO[propertyDTOsList.size()];
+        propertyDTOArray = propertyDTOsList.toArray(propertyDTOArray);
+
+        userStoreDTO.setProperties(propertyDTOArray);
+
+        return userStoreDTO;
+    }
 }
