@@ -185,8 +185,8 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
         Resource userResource = getUserResource("/name/" + name);
 
-        ClientResponse response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .head(String.class);
+        ClientResponse response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON).head();
 
         return response;
     }
