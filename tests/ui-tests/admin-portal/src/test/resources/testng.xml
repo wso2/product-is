@@ -26,6 +26,7 @@
             <!--<class name="org.wso2.is.portal.admin.test.ui.AdminSignInTest"/>-->
             <!--<class name="org.wso2.is.portal.admin.test.ui.AdminEditProfileTest"/>-->
             <!--<class name="org.wso2.is.portal.admin.test.ui.AddUserAskPwdViaEmailTest"/>-->
+            <!--<class name="org.wso2.is.portal.admin.test.ui.AdminInitiatedPasswordResetTest"/>-->
         </classes>
     </test>
 </suite>
