@@ -167,6 +167,12 @@
         </classes>
     </test>
 
+    <test name="scim2-compliance">
+        <classes>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2TestSuiteTestCase" />
+        </classes>
+    </test>
+
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
