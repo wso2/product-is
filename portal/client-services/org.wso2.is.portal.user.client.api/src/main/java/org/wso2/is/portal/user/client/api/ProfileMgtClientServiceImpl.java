@@ -224,6 +224,18 @@ public class ProfileMgtClientServiceImpl implements ProfileMgtClientService {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProfileUIEntry> getProfileEntries(String profileName)
+            throws UserPortalUIException {
+        ProfileEntry profileEntry = getProfile(profileName);
+        if (profileEntry.getClaims().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return profileEntry.getClaims().stream()
+                .map(claimConfigEntry -> new ProfileUIEntry(claimConfigEntry, null))
+                .collect(Collectors.toList());
+    }
+
     private RealmService getRealmService() {
         if (this.realmService == null) {
             throw new IllegalStateException("Realm Service is null.");

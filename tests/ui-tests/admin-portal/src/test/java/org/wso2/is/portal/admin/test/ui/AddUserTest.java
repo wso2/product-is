@@ -15,23 +15,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.is.portal.admin.test.ui;
 
 import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.iam.adminportal.actionobject.AddNewUserPageAction;
 import org.wso2.carbon.iam.adminportal.actionobject.AdminLoginPageAction;
-import org.wso2.is.portal.admin.test.ui.bean.AdminPortalURLBean;
 
-
-/**
- * Test for Sign-in in admin portal.
+/***
+ *  Test class for add user - with password scenario
  */
-public class AdminSignInTest extends UIBaseTest {
+public class AddUserTest extends UIBaseTest {
     private static AdminLoginPageAction adminLoginPageAction;
+    private static AddNewUserPageAction addNewUserPageAction;
 
     private static WebDriver driver;
 
@@ -39,26 +37,30 @@ public class AdminSignInTest extends UIBaseTest {
     public void init() {
         driver = selectDriver(System.getProperty("driver"));
         adminLoginPageAction = new AdminLoginPageAction(driver);
+        addNewUserPageAction = new AddNewUserPageAction(driver);
     }
 
-    @Test(groups = "AdminSignInTest")
-    public void loadLoginPage() throws Exception {
-
-        driver.get(AdminPortalURLBean.getAdminLoginPage());
-        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminLoginPage(),
-                "This current page is not the login page.");
+    @Test(groups = "AddUserTest")
+    public void loginPage() throws Exception {
+        //TODO:Test to log in as the admin user
     }
 
-    @Test(groups = "AdminSignInTest", dependsOnMethods = "loadLoginPage")
-    public void testLogin() throws Exception {
-        String username = System.getProperty("username");
-        String password = System.getProperty("password");
-        boolean logged = adminLoginPageAction.adminLogin(username, password);
-        Assert.assertTrue(logged, "Loggin failed.");
-        Assert.assertEquals(driver.getCurrentUrl(), AdminPortalURLBean.getAdminPage(),
-                "This current page is not the admin user page.");
-
+    @Test(groups = "AddUserTest", dependsOnMethods = "loginPage")
+    public void testAddNewUser() throws Exception {
+        //TODO:Test to add the new user with username, passwrod, confirmpassword and domain.
     }
+
+    @Test(groups = "AddUserTest", dependsOnMethods = "loginPage")
+    public void testAddNewUserWithEmptyUsername() throws Exception {
+        //TODO:Test to add the new user with an empty username.
+    }
+
+    @Test(groups = "AddUserTest", dependsOnMethods = "loginPage")
+    public void testAddNewUserWithInvalidPassword() throws Exception {
+        //TODO:Test to add the new user with an invalid password (password that is not in compliance with
+        // the default password policy)
+    }
+
     @AfterClass
     public void close() {
         driver.quit();

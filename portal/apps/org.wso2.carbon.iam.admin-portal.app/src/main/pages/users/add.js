@@ -3,7 +3,8 @@ function onGet(env) {
     var domainNames = getDomainNames(env);
     var primaryDomainName = getPrimaryDomainName(env);
     sendPasswordStrengthParameters();
-    return {domainNames: domainNames, primaryDomainName: primaryDomainName};
+    var profileNames = getProfileNames();
+    return {profiles: profileNames.profiles, domainNames: domainNames, primaryDomainName: primaryDomainName};
 }
 
 function onPost(env) {
@@ -17,11 +18,26 @@ function onPost(env) {
     var optionSelector = env.request.formParams['verificationSelector'];
     claimMap["http://wso2.org/claims/username"] = env.request.formParams['inputUsername'];
     domain = env.request.formParams['domain'];
+    var formParams = {};
+    formParams = env.request.formParams;
     switch (optionSelector) {
         case "with_password" :
+            claimMap = {};
             credentialMap = {};
-            credentialMap["password"] = env.request.formParams['newPassword'];
+            domain = null;
+            for (var i in formParams) {
+                if (i == "newPassword") {
+                    credentialMap["password"] = formParams[i];
+                } else if (i == "domain") {
+                    domain = formParams[i];
+                } else if (i == "inputUsername") {
+                    claimMap["http://wso2.org/claims/username"] = formParams[i];
+                } else {
+                    claimMap[i] = formParams[i];
+                }
+            }
             registrationResult = userRegistration(claimMap, credentialMap, domain);
+            var result = getProfileNames();
             break;
         case "ask_password" :
             credentialMap = {};
@@ -38,19 +54,23 @@ function onPost(env) {
             break;
     }
     if (registrationResult.errorMessage) {
-        return {
-            domainNames: domainNames, primaryDomainName: primaryDomainName,
-            errorMessage: registrationResult.errorMessage
-        };
+        if (result.success) {
+            return {
+                profiles: result.profiles, domainNames: domainNames, primaryDomainName: primaryDomainName,
+                errorMessage: registrationResult.errorMessage
+            }
+        } else {
+            return {
+                errorMessageProfile: result.message, domainNames: domainNames, primaryDomainName: primaryDomainName,
+                errorMessage: registrationResult.errorMessage
+            }
+        }
     }
-    else {
-        return {
-            domainNames: domainNames,
-            primaryDomainName: primaryDomainName,
-            message: registrationResult.message
-        };
+    else if (registrationResult.userRegistration && registrationResult.userRegistration.userId) {
+        sendRedirect(env.contextPath + '/users/list');
     }
-}
+
+    }
 
 function sendPasswordStrengthParameters() {
     var PasswordPolicyConfigurationUtil = Java
@@ -122,4 +142,23 @@ function generatePassword(length) {
         retVal += charset.charAt(Math.floor(Math.random() * n));
     }
     return retVal;
+}
+
+function getProfileNames() {
+
+    try {
+        var profiles = callOSGiService("org.wso2.is.portal.user.client.api.ProfileMgtClientService",
+            "getProfileNames", []);
+        return {success: true, profiles: profiles};
+    } catch (e) {
+        var message = e.message;
+        var cause = e.getCause();
+        if (cause !== null) {
+            //the exceptions thrown by the actual osgi service method is wrapped inside a InvocationTargetException.
+            if (cause instanceof java.lang.reflect.InvocationTargetException) {
+                message = cause.getTargetException().message;
+            }
+        }
+    }
+    return {success: false, message: message};
 }

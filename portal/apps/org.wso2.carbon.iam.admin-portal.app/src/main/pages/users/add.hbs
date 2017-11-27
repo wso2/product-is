@@ -6,6 +6,7 @@
 {{fragment "org.wso2.carbon.uuf.common.foundation.ui.jquery-validation"}}
 {{css "css/admin-portal.css"}}
 {{js "js/add.js"}}
+{{js "js/profile-change.js"}}
 
 {{#fillZone "content"}}
     <div class="body-wrapper">
@@ -81,6 +82,26 @@
             {{#defineZone "accountVerificationMethod-area"}}
                 <!-- Here is generated content for different account verification ui's when adding a user -->
             {{/defineZone}}
+            <!-- Need to add profile image above the profile details-->
+            <div id="profile-details">
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
+                        <select class="selectpicker form-control" id="profileSelector">
+                            {{#each profiles}}
+                                <option id="option-profile" action="{{this}}-profile-action"
+                                        value="{{this}}">{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="profiles-wrapper">
+                {{#each profiles}}
+                    <div id="{{this}}-form" class="{{this}} optionBox">
+                        {{fragment "org.wso2.carbon.iam.portal.common.profile-info" profileName=this action="add"}}
+                    </div>
+                {{/each}}
+            </div>
             <input class="btn btn-primary add-margin-bottom-3x" type="submit" name="addUser" id="addUser"
                    value="Add User"/>
         </form>

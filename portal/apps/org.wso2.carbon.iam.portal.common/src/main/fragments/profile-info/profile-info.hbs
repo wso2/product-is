@@ -1,0 +1,26 @@
+{{#if success}}
+    {{#if message}}
+        <div class="alert alert-success" role="alert">
+            <i class="icon fw fw-success"></i><strong>{{i18n "profile.success"}}</strong>
+            {{i18n message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{else}}
+    {{#if message}}
+        <div class="alert alert-danger" role="alert">
+            <i class="icon fw fw-error"></i><strong>{{i18n "profile.failure"}}</strong>
+            {{i18n message}}
+            <button type="button" class="close" aria-label="close" data-dismiss="alert">
+                <span aria-hidden="true">
+                    <i class="fw fw-cancel"></i>
+                </span>
+            </button>
+        </div>
+    {{/if}}
+{{/if}}
+{{fragment "profile-claims"}}

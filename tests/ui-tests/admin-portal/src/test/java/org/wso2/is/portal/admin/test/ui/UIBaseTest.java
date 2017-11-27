@@ -28,13 +28,12 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Class to select the web driver.
  */
-public class SelectDriver {
+public class UIBaseTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SelectDriver.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UIBaseTest.class);
     private static WebDriver driver;
 
     public static WebDriver selectDriver(String driverType) {
