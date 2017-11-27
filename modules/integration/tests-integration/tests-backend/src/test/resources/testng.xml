@@ -169,7 +169,7 @@
 
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
+			<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
