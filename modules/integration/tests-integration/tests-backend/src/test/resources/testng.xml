@@ -47,6 +47,7 @@
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>-->
             <!--<class name="org.wso2.identity.integration.test.user.mgt.remote.RemoteUserStoreManagerServiceTestCase" />-->
+            <class name="org.wso2.identity.integration.test.user.store.config.MultipleUserStoreTestCase" />
         </classes>
     </test>
 
@@ -113,6 +114,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRefreshTokenGrantTestCase"/>
             <!--
                 https://wso2.org/jira/browse/IDENTITY-6829 Need to fix this and comment out the test case ASAP.
             -->
@@ -146,6 +148,8 @@
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
             <!-- <class name="org.wso2.identity.integration.test.saml.SPMetaDataTenantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.IDENTITY6924ChangeSignatureKeySAMLIdPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.IDENTITY6924ChangeSignatureKeyFederationTestCase"/>
 
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
@@ -164,15 +168,29 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.IDENTITY4604RequestPathAuthWithSAMLSSO" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
+
+            <!--OAuth DCRM test cases-->
+            <class name="org.wso2.identity.integration.test.oauth.dcrm.OAuthDCRMReadTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth.dcrm.OAuthDCRMUpdateTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth.dcrm.OAuthDCRMDeleteTestCase"/>
+            <!-- Re-CAPCHA test case-->
+            <class name="org.wso2.identity.integration.test.IDENTITY5900TestCase"/>
+        </classes>
+    </test>
+
+    <test name="scim2-compliance">
+        <classes>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2TestSuiteTestCase" />
         </classes>
     </test>
 
     <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
+			<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
+
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLErrorResponseTestCase"/>
@@ -183,6 +201,11 @@
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-jaggery" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.jaggery.JaggerySessionDestroyedListenersTestCase"/>
         </classes>
     </test>
 </suite>
