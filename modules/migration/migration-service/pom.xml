@@ -27,7 +27,6 @@
     <artifactId>org.wso2.carbon.is.migration</artifactId>
     <packaging>bundle</packaging>
 
-
     <dependencies>
         <dependency>
             <groupId>org.apache.ws.commons.axiom</groupId>
@@ -86,8 +85,6 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.16.0.wso2v1</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -127,5 +124,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

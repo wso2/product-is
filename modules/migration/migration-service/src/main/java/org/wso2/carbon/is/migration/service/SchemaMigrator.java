@@ -55,12 +55,14 @@ public class SchemaMigrator extends Migrator {
         this.location = getMigratorConfig().getParameterValue(LOCATION);
 
         log.info(Constant.MIGRATION_LOG + "Executing Identity Migration Scripts.");
-        try (conn = getDataSource().getConnection(), statement = conn.createStatement()) {
+        try {
+            conn = getDataSource().getConnection();
             conn.setAutoCommit(false);
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
             if ("mysql".equals(databaseType)) {
                 Utility.setMySQLDBName(conn);
             }
+            statement = conn.createStatement();
 
             String dbscriptName = Utility.getSchemaPath(getSchema(), databaseType, location, getVersionConfig()
                                                                 .getVersion());
@@ -71,6 +73,21 @@ public class SchemaMigrator extends Migrator {
             log.error(e);
             if (!isContinueOnError()) {
                 throw new MigrationClientException(e.getMessage(), e);
+            }
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Failed to close database statement.", e);
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Failed to close database connection.", e);
             }
         }
     }
