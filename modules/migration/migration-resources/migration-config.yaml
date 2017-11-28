@@ -1,0 +1,151 @@
+migrationEnable: "true"
+
+currentVersion: "5.0.0"
+migrateVersion: "5.3.0"
+
+continueOnError: "true"
+batchUpdate: "true"
+ignoreForInactiveTenants: "true"
+
+versions:
+ -
+  version: "5.0.0-SP1"
+  migratorConfigs:
+   -
+    name: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+ -
+  version: "5.1.0"
+  migratorConfigs:
+   -
+    name: "IdentityDataCleaner"
+    order: 1
+    parameters:
+      schema: "identity"
+   -
+    name: "SchemaMigrator"
+    order: 2
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    name: "SchemaMigrator"
+    order: 3
+    parameters:
+      location: "step1"
+      schema: "um"
+   -
+    name: "IdentityDataMigrator"
+    order: 4
+    parameters:
+      schema: "identity"
+   -
+    name: "UMDataMigrator"
+    order: 5
+    parameters:
+      schema: "um"
+   -
+    name: "RegistryDataMigrator"
+    order: 6
+    parameters:
+      schema: "um"
+
+
+ -
+  version: "5.2.0"
+  migratorConfigs:
+   -
+    name: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    name: "SchemaMigrator"
+    order: 2
+    parameters:
+      location: "step1"
+      schema: "um"
+
+
+ -
+  version: "5.3.0"
+  migratorConfigs:
+   -
+    name: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    name: "ClaimDataMigrator"
+    order: 2
+    parameters:
+      schema: "identity"
+   -
+    name: "PermissionDataMigrator"
+    order: 3
+    parameters:
+      schema: "identity"
+   -
+    name: "EmailTemplateDataMigrator"
+    order: 4
+    parameters:
+      schema: "identity"
+
+   -
+    name: "ChallengeQuestionDataMigrator"
+    order: 5
+    parameters:
+      schema: "identity"
+   -
+    name: "ResidentIdpMetadataMigrator"
+    order: 6
+    parameters:
+      schema: "identity"
+   -
+    name: "OIDCScopeDataMigrator"
+    order: 7
+    parameters:
+      schema: "identity"
+
+
+ -
+  version: "5.4.0"
+  migratorConfigs:
+   -
+    name: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    name: "SchemaMigrator"
+    order: 2
+    parameters:
+      location: "step1"
+      schema: "um"
+   -
+    name: "ClaimDataMigrator"
+    order: 3
+    parameters:
+      schema: "identity"
+   -
+    name: "PermissionDataMigrator"
+    order: 4
+    parameters:
+      schema: "identity"
+   -
+    name: "OAuthDataMigrator"
+    order: 5
+    parameters:
+      schema: "identity"
+   -
+    name: "SchemaMigrator"
+    order: 6
+    parameters:
+      location: "step2"
+      schema: "identity"
