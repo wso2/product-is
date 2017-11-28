@@ -39,17 +39,14 @@ import java.sql.SQLException;
 import javax.xml.parsers.DocumentBuilder;
 
 public class PermissionDataMigrator extends Migrator {
+
     private static final Log log = LogFactory.getLog(PermissionDataMigrator.class);
+    private static final String RESOURCES_XML = "resources.xml";
+
     @Override
     public void migrate() throws MigrationClientException {
         migratePermissionData();
     }
-
-
-    private static final String RESOURCES_XML = "resources.xml";
-
-
-
 
     /**
      * MigratePermissionData
@@ -100,7 +97,6 @@ public class PermissionDataMigrator extends Migrator {
         }
         return doc;
     }
-
 
     /**
      * Select permission entries in UM_PERMISSION Table

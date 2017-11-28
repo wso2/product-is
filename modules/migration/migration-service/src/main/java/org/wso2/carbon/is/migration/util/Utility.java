@@ -52,27 +52,23 @@ public class Utility {
 
     private static Log log = LogFactory.getLog(Utility.class);
 
-    public static String getMigrationResourceDirectoryPath(){
+    public static String getMigrationResourceDirectoryPath() {
         String carbonHome = System.getProperty(Constant.CARBON_HOME);
         String resourcePath = carbonHome + File.separator + Constant.MIGRATION_RESOURCE_HOME ;
         return resourcePath ;
     }
 
-    public static String getDataFilePath(String dataFileName, String version){
+    public static String getDataFilePath(String dataFileName, String version) {
         String path = getMigrationResourceDirectoryPath() + File.separator  + version  + File.separator +
                       Constant.MIGRATION_RESOURCE_DATA_FILES + File.separator + dataFileName ;
         return path ;
     }
 
-    public static String getSchemaPath(String schema, String databaseType, String location, String version){
+    public static String getSchemaPath(String schema, String databaseType, String location, String version) {
         String scriptName = databaseType + ".sql";
         String path = getMigrationResourceDirectoryPath() + File.separator  + version + File.separator +
-                      Constant.MIGRATION_RESOURCE_DBSCRIPTS  + File
-                .separator +
-                      location +
-                      File
-                .separator + schema +
-                      File.separator + scriptName ;
+                      Constant.MIGRATION_RESOURCE_DBSCRIPTS  + File.separator + location +
+                      File.separator + schema + File.separator + scriptName ;
         return path ;
     }
 
