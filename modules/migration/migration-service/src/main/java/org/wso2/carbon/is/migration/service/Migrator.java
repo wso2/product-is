@@ -46,7 +46,6 @@ public abstract class Migrator {
         return this.migratorConfig;
     }
 
-
     public DataSource getDataSource(String schema) throws MigrationClientException {
         DataSource dataSource = DataSourceManager.getInstance().getDataSource(schema);
         return dataSource;
@@ -93,6 +92,11 @@ public abstract class Migrator {
         this.versionConfig = versionConfig;
     }
 
+    /**
+     * Migrator specific implementation.
+     *
+     * @throws MigrationClientException
+     */
     public abstract void migrate() throws MigrationClientException;
 
 }
