@@ -73,11 +73,11 @@ public abstract class VersionMigration {
             Migrator migrator = (Migrator)migratorClass.newInstance();
             return migrator ;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error("Error while creating migration instance");
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            log.error("Error while creating migration instance");
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("Error while creating migration instance");
         }
         return null;
     }

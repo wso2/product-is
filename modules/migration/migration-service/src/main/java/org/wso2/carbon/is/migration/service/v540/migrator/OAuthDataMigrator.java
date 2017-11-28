@@ -43,7 +43,7 @@ public class OAuthDataMigrator extends Migrator {
         try {
             migrateOAuth2ScopeData();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error while migrating OAuth2 scope data.", e);
         }
     }
     public void migrateOAuth2ScopeData() throws Exception {
