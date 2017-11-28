@@ -119,7 +119,7 @@
                             org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
                             org.apache.commons.logging; version="${version.commons.logging}",
-                            org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version}",
+                            org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version.range}",
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

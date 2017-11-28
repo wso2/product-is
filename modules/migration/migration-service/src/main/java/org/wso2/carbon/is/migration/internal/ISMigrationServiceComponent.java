@@ -19,6 +19,8 @@ package org.wso2.carbon.is.migration.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.identity.core.migrate.MigrationClient;
+import org.wso2.carbon.is.migration.MigrationClientImpl;
 import org.wso2.carbon.user.core.service.RealmService;
 
 
@@ -41,6 +43,7 @@ public class ISMigrationServiceComponent {
         try {
             ISMigrationServiceDataHolder.setIdentityOracleUser(System.getProperty("identityOracleUser"));
             ISMigrationServiceDataHolder.setUmOracleUser(System.getProperty("umOracleUser"));
+            context.getBundleContext().registerService(MigrationClient.class, new MigrationClientImpl(), null);
             if(log.isDebugEnabled()) {
                 log.debug("WSO2 IS migration bundle is activated");
             }
