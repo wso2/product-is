@@ -113,6 +113,8 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
+
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ScopesTestCase"/>
             <!--
                 https://wso2.org/jira/browse/IDENTITY-6829 Need to fix this and comment out the test case ASAP.
             -->
