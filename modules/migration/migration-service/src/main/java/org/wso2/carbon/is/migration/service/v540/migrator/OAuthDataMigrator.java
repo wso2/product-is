@@ -80,7 +80,7 @@ public class OAuthDataMigrator extends Migrator {
             if (!isContinueOnError()) {
                 throw e;
             }
-        }finally{
+        } finally{
             try {
                 if (conn != null) {
                     conn.close();
