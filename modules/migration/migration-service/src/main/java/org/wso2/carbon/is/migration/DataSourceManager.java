@@ -53,7 +53,7 @@ public class DataSourceManager {
             initIdentityDataSource();
             initUMDataSource();
         } catch (MigrationClientException e) {
-            e.printStackTrace();
+            log.error("Error while initializing datasource manager.");
         }
         initOracleDataSource();
     }

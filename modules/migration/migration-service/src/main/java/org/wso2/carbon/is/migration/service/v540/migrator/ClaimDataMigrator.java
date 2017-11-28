@@ -60,6 +60,12 @@ import javax.xml.stream.XMLStreamException;
 public class ClaimDataMigrator extends Migrator {
 
     private static final String CLAIM_CONFIG = "claim-config.xml";
+    private static final Log log = LogFactory.getLog(ClaimDataMigrator.class);
+    private ClaimConfig claimConfig;
+    private int tenantId;
+    private ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
+    private CacheBackedLocalClaimDAO localClaimDAO = new CacheBackedLocalClaimDAO(new LocalClaimDAO());
+    private CacheBackedExternalClaimDAO externalClaimDAO = new CacheBackedExternalClaimDAO(new ExternalClaimDAO());
 
     @Override
     public void migrate() throws MigrationClientException {
@@ -68,9 +74,9 @@ public class ClaimDataMigrator extends Migrator {
             try {
                 claimConfig = FileBasedClaimBuilder.buildClaimMappingsFromConfigFile(filePath);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error while building claims from config file", e);
             } catch (XMLStreamException e) {
-                e.printStackTrace();
+                log.error("Error while building claims from config file", e);
             }
 
             this.tenantId = Constant.SUPER_TENANT_ID;
@@ -82,25 +88,12 @@ public class ClaimDataMigrator extends Migrator {
                 migrateClaimData(tenant.getId());
             }
         } catch (UserStoreException e) {
-            e.printStackTrace();
+            log.error("Error while migrating claim data", e);
         } catch (ClaimMetadataException e) {
-            e.printStackTrace();
+            log.error("Error while migrating claim data", e);
         }
     }
 
-
-    private static final Log log = LogFactory
-            .getLog(org.wso2.carbon.identity.claim.metadata.mgt.DefaultClaimMetadataStore.class);
-    private ClaimConfig claimConfig;
-
-    private int tenantId;
-    private ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
-    private CacheBackedLocalClaimDAO localClaimDAO = new CacheBackedLocalClaimDAO(new LocalClaimDAO());
-    private CacheBackedExternalClaimDAO externalClaimDAO = new CacheBackedExternalClaimDAO(new ExternalClaimDAO());
-
-
-    
-    
     public void addNewClaimMapping(ClaimMapping claimMapping) throws UserStoreException {
         throw new UnsupportedOperationException("ClaimMetadataStore does not supports management operations");
     }
@@ -449,8 +442,8 @@ public class ClaimDataMigrator extends Migrator {
                     }
 
                     if (claimMapping.getMappedAttributes() != null) {
-                        for (Map.Entry<String, String> claimMappingEntry : claimMapping.getMappedAttributes()
-                                .entrySet()) {
+                        for (Map.Entry<String, String> claimMappingEntry :
+                                claimMapping.getMappedAttributes().entrySet()) {
                             mappedAttributes.add(new AttributeMapping(claimMappingEntry.getKey(),
                                                                       claimMappingEntry.getValue()));
                         }
@@ -512,8 +505,8 @@ public class ClaimDataMigrator extends Migrator {
                 }
             }
 
-            for (Map.Entry<String, org.wso2.carbon.user.core.claim.ClaimMapping> entry : claimConfig.getClaims()
-                    .entrySet()) {
+            for (Map.Entry<String, org.wso2.carbon.user.core.claim.ClaimMapping> entry :
+                    claimConfig.getClaims().entrySet()) {
 
                 String claimURI = entry.getKey();
                 String claimDialectURI = entry.getValue().getClaim().getDialectURI();

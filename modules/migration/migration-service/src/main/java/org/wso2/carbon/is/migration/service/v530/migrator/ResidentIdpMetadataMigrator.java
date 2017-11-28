@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.is.migration.service.v530.migrator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.is.migration.service.Migrator;
 import org.wso2.carbon.is.migration.service.v530.ResidentIdpMetadataManager;
@@ -27,6 +29,7 @@ import org.wso2.carbon.is.migration.service.v530.ResidentIdpMetadataManager;
  */
 public class ResidentIdpMetadataMigrator extends Migrator {
 
+    private static final Log log = LogFactory.getLog(ResidentIdpMetadataMigrator.class);
 
     @Override
     public void migrate() throws MigrationClientException {
@@ -38,7 +41,7 @@ public class ResidentIdpMetadataMigrator extends Migrator {
         try {
             new ResidentIdpMetadataManager().migrateResidentIdpMetaData(isIgnoreForInactiveTenants());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error while migrating resident idp metadata", e);
         }
     }
 
