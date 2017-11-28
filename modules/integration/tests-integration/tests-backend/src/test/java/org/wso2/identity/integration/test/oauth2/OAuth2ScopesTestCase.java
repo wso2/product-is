@@ -34,6 +34,7 @@ import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 public class OAuth2ScopesTestCase extends ISIntegrationTest {
@@ -123,15 +124,20 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     public void testScopeExistence() throws IOException {
 
         String name = "profile";
+        ClientResponse response = isScopeExists(name);
 
-        //ClientResponse response = isScopeExists(name);
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatusCode());
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Delete Scope test", dependsOnMethods = { "testScopeExistence" })
     public void testDeleteScope() throws IOException {
 
         String name = "profile";
-        deleteScope(name);
+
+        ClientResponse response = deleteScope(name);
+
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatusCode());
+        Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), isScopeExists(name).getStatusCode());
     }
 
 
@@ -186,19 +192,19 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         Resource userResource = getUserResource("/name/" + name);
 
         ClientResponse response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .head(String.class);
+                .head();
 
         return response;
     }
 
-    private JSONObject deleteScope(String name) {
+    private ClientResponse deleteScope(String name) {
 
         Resource userResource = getUserResource("/name/" + name);
 
-        String response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .delete(String.class);
+        ClientResponse response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+                .delete(ClientResponse.class);
 
-        return (JSONObject) JSONValue.parse(response);
+        return response;
     }
 
     private Resource getUserResource(String scopeEndpointAppender) {
