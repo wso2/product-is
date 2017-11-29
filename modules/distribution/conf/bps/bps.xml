@@ -101,7 +101,6 @@
 
     <!-- This property  can be used to configure ode scheduler thread pool size  -->
     <!--tns:ODESchedulerThreadPoolSize>0</tns:ODESchedulerThreadPoolSize-->
-     
     <!-- Simple Scheduler related configuration -->
     <!--<tns:ODESchedulerConfiguration>-->
         <!-- Maximum number of jobs in the "near future" todo queue. -->
