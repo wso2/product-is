@@ -63,7 +63,7 @@ public class RequestPathAuthenticatorBaseTestCase extends ISIntegrationTest {
             "<saml2p:StatusCode Value=\"urn:oasis:names:tc:SAML:2" + ".0:status:Success\"/>";
 
     protected String adminUsername;
-    private String adminPassword;
+    protected String adminPassword;
     private Tomcat tomcat;
     private AuthenticatorClient logManger;
     private ApplicationManagementServiceClient appMgtclient;
