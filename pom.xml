@@ -1600,7 +1600,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.10.79</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.10.80</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
