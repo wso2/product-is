@@ -84,12 +84,12 @@ versions:
     name: "ClaimDataMigrator"
     order: 2
     parameters:
-      schema: "identity"
+      schema: "um"
    -
     name: "PermissionDataMigrator"
     order: 3
     parameters:
-      schema: "identity"
+      schema: "um"
    -
     name: "EmailTemplateDataMigrator"
     order: 4
@@ -132,12 +132,12 @@ versions:
     name: "ClaimDataMigrator"
     order: 3
     parameters:
-      schema: "identity"
+      schema: "um"
    -
     name: "PermissionDataMigrator"
     order: 4
     parameters:
-      schema: "identity"
+      schema: "um"
    -
     name: "OAuthDataMigrator"
     order: 5
