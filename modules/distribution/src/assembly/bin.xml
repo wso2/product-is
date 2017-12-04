@@ -670,6 +670,13 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/balana-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-1.0.0-wso2v3.jar
             </source>
             <outputDirectory>wso2is-${pom.version}/lib</outputDirectory>

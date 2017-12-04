@@ -50,12 +50,15 @@
         </classes>
     </test>
 
-    <test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
-            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
-        </classes>
-    </test>
+    <!-- Analytics Test cases needs to be written to handle network delays. Commenting the tests until
+    they are rewritten. -->
+    <!--<test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>-->
+            <!--<class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase"/>
@@ -113,6 +116,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRefreshTokenGrantTestCase"/>
             <!--
                 https://wso2.org/jira/browse/IDENTITY-6829 Need to fix this and comment out the test case ASAP.
             -->
@@ -154,14 +158,12 @@
 
             <!--Identity Provider Management Test Cases-->
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
-            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorBaseTestCase" />
             <!--Entitlement Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementPIPAttributeCacheTestCase"/>-->
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
 
             <!-- Request path authenticator test cases-->
-            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathAuthenticatorInvalidUserTestCase" />
-            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.IDENTITY4604RequestPathAuthWithSAMLSSO" />
+            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
         </classes>
