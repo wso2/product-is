@@ -40,11 +40,13 @@ public class RoleBasedPasswordGrant extends PasswordGrantHandler {
     @Override
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
 
+        boolean superAuthorized = super.validateGrant(tokReqMsgCtx);
+
         //  default password validation
-        boolean authorized =  super.authorizeAccessDelegation(tokReqMsgCtx);
+        boolean authorized = super.authorizeAccessDelegation(tokReqMsgCtx);
 
         // additional check for role based
-        if(authorized) {
+        if (superAuthorized && authorized) {
 
             String username = tokReqMsgCtx.getOauth2AccessTokenReqDTO().getResourceOwnerUsername();
 
@@ -52,8 +54,8 @@ public class RoleBasedPasswordGrant extends PasswordGrantHandler {
                 String[] roles = CarbonContext.getThreadLocalCarbonContext().getUserRealm().getUserStoreManager().getRoleListOfUser
                         (MultitenantUtils.getTenantAwareUsername(username));
 
-                for(String role : getAuthorizedRoles()){
-                    if((new ArrayList<>(java.util.Arrays.asList(roles))).contains(role)){
+                for (String role : getAuthorizedRoles()) {
+                    if ((new ArrayList<>(java.util.Arrays.asList(roles))).contains(role)) {
                         return true;
                     }
                 }
@@ -65,7 +67,6 @@ public class RoleBasedPasswordGrant extends PasswordGrantHandler {
 
         return false;
     }
-
 
     /**
      * Retrieve authorized roles.  This can be read from configuration file.
