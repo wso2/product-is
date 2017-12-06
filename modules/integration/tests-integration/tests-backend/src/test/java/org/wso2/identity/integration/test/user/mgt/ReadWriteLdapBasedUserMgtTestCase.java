@@ -72,7 +72,7 @@ public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTes
 	@Test
 	public void testUserDisplayName() throws Exception{
 		String[] users = userMgtClient.listUsers("user5", 100);
-		Assert.assertEquals("user5|displayName5", users[0], "User display name is not retrieved correctly.");
+		Assert.assertEquals("user5", users[0], "User display name is not retrieved correctly.");
 	}
 
 	@AfterClass(alwaysRun = true)
