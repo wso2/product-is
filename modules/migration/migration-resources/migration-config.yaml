@@ -129,13 +129,18 @@ versions:
       location: "step1"
       schema: "um"
    -
+    name: "ClaimDataMigrator"
+    order: 3
+    parameters:
+      schema: "um"
+   -
     name: "OAuthDataMigrator"
-    order: 5
+    order: 4
     parameters:
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 6
+    order: 5
     parameters:
       location: "step2"
       schema: "identity"
