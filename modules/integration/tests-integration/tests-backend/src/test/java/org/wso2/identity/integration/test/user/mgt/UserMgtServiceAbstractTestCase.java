@@ -18,13 +18,6 @@
 
 package org.wso2.identity.integration.test.user.mgt;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -32,12 +25,18 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 
 public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest{
 
