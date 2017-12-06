@@ -59,12 +59,14 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     public void testAddScope() throws IOException {
 
         String name = "profile";
+        String displayName = "profile";
         String description = "get all profile information";
         String bindings = "[\"role1\",\"role2\"]";
 
-        JSONObject response = addScope(name, description, bindings);
+        JSONObject response = addScope(name, displayName, description, bindings);
 
         Assert.assertEquals(name, response.get("name").toString());
+        Assert.assertEquals(displayName, response.get("displayName").toString());
         Assert.assertEquals(description, response.get("description").toString());
         Assert.assertEquals(bindings, response.get("bindings").toString());
     }
@@ -74,10 +76,11 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
         String name1 = "profile";
         String name2 = "phone";
+        String displayName = "phone";
         String description = "get the phone information";
         String bindings = "[\"role3\",\"role4\"]";
 
-        addScope(name2, description, bindings);
+        addScope(name2, displayName, description, bindings);
 
         JSONArray response = getAllScope();
 
@@ -96,12 +99,14 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     public void testGetScope() throws IOException {
 
         String name = "profile";
+        String displayName = "profile";
         String description = "get all profile information";
         String bindings = "[\"role1\",\"role2\"]";
 
         JSONObject response = getScope(name);
 
         Assert.assertEquals(name, response.get("name").toString());
+        Assert.assertEquals(displayName, response.get("displayName").toString());
         Assert.assertEquals(description, response.get("description").toString());
         Assert.assertEquals(bindings, response.get("bindings").toString());
     }
@@ -110,12 +115,14 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     public void testUpdateScope() throws IOException {
 
         String name = "profile";
+        String displayName = "profile";
         String updatedDescription = "get all user profile information";
         String updatedBindings = "[\"role3\",\"role2\"]";
 
-        JSONObject response = updateScope(name, updatedDescription, updatedBindings);
+        JSONObject response = updateScope(name, displayName, updatedDescription, updatedBindings);
 
         Assert.assertEquals(name, response.get("name").toString());
+        Assert.assertEquals(displayName, response.get("displayName").toString());
         Assert.assertEquals(updatedDescription, response.get("description").toString());
         Assert.assertEquals(updatedBindings, response.get("bindings").toString());
     }
@@ -141,12 +148,12 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     }
 
 
-    private JSONObject addScope(String name, String description, String bindings) {
+    private JSONObject addScope(String name, String displayName, String description, String bindings) {
 
         Resource userResource = getUserResource(null);
 
-        String addScopeString = "{\"name\": " + "\""+name+"\"" + ", \"description\": " + "\""+description+"\"" + ", " +
-                "\"bindings\": " + bindings + "}";
+        String addScopeString = "{\"name\": " + "\""+name+"\"" + ", \"displayName\": " + "\""+displayName+"\"" + ", " +
+                "\"description\": " + "\""+description+"\"" + ", \"bindings\": " + bindings + "}";
 
         String response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .post(String.class, addScopeString);
@@ -174,12 +181,12 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         return (JSONObject) JSONValue.parse(response);
     }
 
-    private JSONObject updateScope(String name, String updatedDescription, String updatedBindings) {
+    private JSONObject updateScope(String name, String displayName, String updatedDescription, String updatedBindings) {
 
         Resource userResource = getUserResource("/name/" + name);
 
-        String updateScopeString = "{\"description\": " + "\""+updatedDescription+"\"" + ", " +
-                "\"bindings\": " + updatedBindings + "}";
+        String updateScopeString = "{\"description\": " + "\""+updatedDescription+"\"" + ", \"displayName\": " +
+                "\""+displayName+"\"" + ", \"bindings\": " + updatedBindings + "}";
 
         String response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .put(String.class, updateScopeString);
@@ -191,20 +198,15 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
         Resource userResource = getUserResource("/name/" + name);
 
-        ClientResponse response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .head();
-
-        return response;
+        return userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON).head();
     }
 
     private ClientResponse deleteScope(String name) {
 
         Resource userResource = getUserResource("/name/" + name);
 
-        ClientResponse response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+        return userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .delete(ClientResponse.class);
-
-        return response;
     }
 
     private Resource getUserResource(String scopeEndpointAppender) {
