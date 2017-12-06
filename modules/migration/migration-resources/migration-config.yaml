@@ -1,7 +1,7 @@
 migrationEnable: "true"
 
-currentVersion: "5.0.0"
-migrateVersion: "5.3.0"
+currentVersion: "5.3.0"
+migrateVersion: "5.4.0"
 
 continueOnError: "true"
 batchUpdate: "true"
@@ -84,12 +84,12 @@ versions:
     name: "ClaimDataMigrator"
     order: 2
     parameters:
-      schema: "identity"
+      schema: "um"
    -
     name: "PermissionDataMigrator"
     order: 3
     parameters:
-      schema: "identity"
+      schema: "um"
    -
     name: "EmailTemplateDataMigrator"
     order: 4
@@ -128,16 +128,6 @@ versions:
     parameters:
       location: "step1"
       schema: "um"
-   -
-    name: "ClaimDataMigrator"
-    order: 3
-    parameters:
-      schema: "identity"
-   -
-    name: "PermissionDataMigrator"
-    order: 4
-    parameters:
-      schema: "identity"
    -
     name: "OAuthDataMigrator"
     order: 5
