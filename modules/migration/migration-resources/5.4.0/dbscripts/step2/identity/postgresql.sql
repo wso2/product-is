@@ -1,12 +1,12 @@
-     scopeKeySetNullQueryMap.put(DatabaseTypes.mysql.toString(), "ALTER TABLE IDN_OAUTH2_SCOPE MODIFY "
-                                                                    + "SCOPE_KEY VARCHAR (100) NULL");
-        scopeKeySetNullQueryMap.put(DatabaseTypes.oracle.toString(), "ALTER TABLE IDN_OAUTH2_SCOPE MODIFY "
-                                                                     + "SCOPE_KEY VARCHAR2 (100) NULL");
-        scopeKeySetNullQueryMap.put(DatabaseTypes.mssql.toString(), "ALTER TABLE IDN_OAUTH2_SCOPE ALTER "
-                                                                    + "COLUMN SCOPE_KEY VARCHAR (100) NULL");
-        scopeKeySetNullQueryMap.put(DatabaseTypes.db2.toString(), "ALTER TABLE IDN_OAUTH2_SCOPE ALTER "
-                                                                  + "COLUMN SCOPE_KEY SET NULL");
-        scopeKeySetNullQueryMap.put(DatabaseTypes.h2.toString(), "ALTER TABLE IDN_OAUTH2_SCOPE ALTER "
-                                                                 + "COLUMN SCOPE_KEY VARCHAR (100) NULL");
-        scopeKeySetNullQueryMap.put(DatabaseTypes.postgresql.toString(), "ALTER TABLE IDN_OAUTH2_SCOPE "
-                                                                         + "ALTER COLUMN SCOPE_KEY SET NULL");
+ALTER TABLE IDN_OAUTH2_SCOPE MODIFY SCOPE_ID INTEGER NOT NULL AUTO_INCREMENT;
+ALTER TABLE IDN_OAUTH2_SCOPE CHANGE COLUMN `NAME` `DISPLAY_NAME` VARCHAR(255) NOT NULL;
+ALTER TABLE IDN_OAUTH2_SCOPE CHANGE COLUMN `SCOPE_KEY` `NAME` VARCHAR(255) NOT NULL;
+ALTER TABLE IDN_OAUTH2_SCOPE DROP COLUMN ROLES;
+UPDATE IDN_OAUTH2_SCOPE SET TENANT_ID = -1 WHERE TENANT_ID = 0;
+ALTER TABLE IDN_OAUTH2_SCOPE MODIFY TENANT_ID INTEGER NOT NULL DEFAULT -1;
+CREATE UNIQUE INDEX SCOPE_INDEX ON IDN_OAUTH2_SCOPE (NAME, TENANT_ID);
+
+DO $$ DECLARE con_name varchar(200); BEGIN SELECT 'ALTER TABLE IDN_OAUTH2_RESOURCE_SCOPE DROP CONSTRAINT ' || tc .constraint_name || ';' INTO con_name FROM information_schema.table_constraints AS tc JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name WHERE constraint_type = 'FOREIGN KEY' AND tc.table_name = 'IDN_OAUTH2_RESOURCE_SCOPE' AND ccu.table_name='IDN_OAUTH2_SCOPE' LIMIT 1; EXECUTE con_name; END $$;
+
+ALTER TABLE IDN_OAUTH2_RESOURCE_SCOPE MODIFY SCOPE_ID INTEGER NOT NULL;
+ALTER TABLE IDN_OAUTH2_RESOURCE_SCOPE ADD FOREIGN KEY (SCOPE_ID) REFERENCES IDN_OAUTH2_SCOPE(SCOPE_ID) ON DELETE CASCADE;
