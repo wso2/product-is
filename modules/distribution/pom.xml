@@ -195,6 +195,9 @@
                                 <!-- turn off IsBulkImportSupported -->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;false&lt;/Property&gt;" />
 
+                                <!-- turn off CaseInsensitiveUsername -->
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;CaseInsensitiveUsername&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;CaseInsensitiveUsername&quot;&gt;false&lt;/Property&gt;" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
