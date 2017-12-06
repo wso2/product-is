@@ -60,7 +60,7 @@
 			<Property name="SharedTenantNameAttribute">ou</Property>
 			<Property name="SharedTenantObjectClass">organizationalUnit</Property>
 			<Property name="MembershipAttribute">member</Property>
-			<Property name="DisplayNameAttribute">title</Property>
+			<Property name="DisplayNameAttribute">uid</Property>
 			<Property name="UserRolesCacheEnabled">true</Property>
 			<Property name="UserDNPattern">uid={0},ou=Users,dc=wso2,dc=org</Property>
 			<Property name="RoleDNPattern">cn={0},ou=Groups,dc=wso2,dc=org</Property>
