@@ -13,17 +13,21 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
 package org.wso2.carbon.is.migration.service.v540.migrator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.is.migration.service.Migrator;
+import org.wso2.carbon.is.migration.service.v540.bean.OAuthConsumerApp;
 import org.wso2.carbon.is.migration.service.v540.bean.OAuth2Scope;
 import org.wso2.carbon.is.migration.service.v540.bean.OAuth2ScopeBinding;
-import org.wso2.carbon.is.migration.service.v540.dao.IDNOAuth2ScopeBindingDAO;
-import org.wso2.carbon.is.migration.service.v540.dao.IDNOAuth2ScopeDAO;
+import org.wso2.carbon.is.migration.service.v540.bean.SpOAuth2ExpiryTimeConfiguration;
+import org.wso2.carbon.is.migration.service.v540.dao.OAuthDAO;
+import org.wso2.carbon.is.migration.service.v540.util.RegistryUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 
 import java.sql.Connection;
@@ -32,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Migrator implementation for OAuth Data
+ * This class handles the OAuth data migration.
  */
 public class OAuthDataMigrator extends Migrator {
 
@@ -40,55 +44,155 @@ public class OAuthDataMigrator extends Migrator {
 
     @Override
     public void migrate() throws MigrationClientException {
+
+        try {
+            migrateOAuthConsumerAppData();
+        } catch (Exception e) {
+            String message = "Error occurred while migrating OAuth consumer apps.";
+            if (isContinueOnError()) {
+                log.error(message, e);
+            } else {
+                throw new MigrationClientException(message, e);
+            }
+        }
+
         try {
             migrateOAuth2ScopeData();
         } catch (Exception e) {
-            log.error("Error while migrating OAuth2 scope data.", e);
-        }
-    }
-    public void migrateOAuth2ScopeData() throws Exception {
-
-        log.info(Constant.MIGRATION_LOG + "Migration starting OAuth2 Scope Bindings to the new table.");
-        Connection conn = getDataSource().getConnection();
-        try {
-            List<OAuth2ScopeBinding> oAuth2ScopeBindingList = new ArrayList<>();
-
-            IDNOAuth2ScopeDAO idnoAuth2ScopeDAO = IDNOAuth2ScopeDAO.getInstance();
-
-            List<OAuth2Scope> oAuth2ScopeRoles = idnoAuth2ScopeDAO.getOAuth2ScopeRoles(conn);
-
-            if (!oAuth2ScopeRoles.isEmpty()) {
-                for (OAuth2Scope oAuth2ScopeRole : oAuth2ScopeRoles) {
-                    String roleString = oAuth2ScopeRole.getRoleString();
-                    if (StringUtils.isNotBlank(roleString)) {
-                        String[] roleStringArray = roleString.split(",");
-                        for (String role : roleStringArray) {
-                            oAuth2ScopeBindingList.add(new OAuth2ScopeBinding(oAuth2ScopeRole.getScopeId(), role));
-                        }
-                    }
-                }
-                IDNOAuth2ScopeBindingDAO idnoAuth2ScopeBindingDAO = IDNOAuth2ScopeBindingDAO.getInstance();
-                idnoAuth2ScopeBindingDAO.addOAuth2ScopeBinding(oAuth2ScopeBindingList, isContinueOnError());
-
-                idnoAuth2ScopeDAO.updateOAuth2ScopeBinding(oAuth2ScopeRoles);
-                log.info(Constant.MIGRATION_LOG + "OAuth2 Scope Bindings Successfully migrated.");
+            String message = "Error occurred while migrating OAuth2 scope data.";
+            if (isContinueOnError()) {
+                log.error(message, e);
             } else {
-                log.info(Constant.MIGRATION_LOG + "No Oauth2 Scopes found.");
-            }
-        } catch (Exception e) {
-            log.error(e);
-            if (!isContinueOnError()) {
-                throw e;
-            }
-        } finally{
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                log.error("Failed to close database connection.", e);
+                throw new MigrationClientException(message, e);
             }
         }
     }
 
+    /**
+     * Migrate OAuth consumer apps.
+     *
+     * @throws MigrationClientException MigrationClientException
+     * @throws SQLException SQLException
+     */
+    private void migrateOAuthConsumerAppData() throws MigrationClientException, SQLException {
+
+        log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 consumer apps table.");
+
+        List<OAuthConsumerApp> consumerApps;
+        try (Connection connection = getDataSource().getConnection()) {
+            consumerApps = OAuthDAO.getInstance().getAllOAuthConsumerApps(connection);
+        }
+
+        if (consumerApps.isEmpty()) {
+            log.info(Constant.MIGRATION_LOG + "No data to migrate in OAuth2 consumer apps table.");
+            return;
+        }
+
+        List<OAuthConsumerApp> updatedConsumerApps = new ArrayList<>();
+
+        long applicationAccessTokenExpiryTime = 3600000;
+        if (StringUtils.isNotBlank(IdentityUtil.getProperty("OAuth.AccessTokenDefaultValidityPeriod"))) {
+            applicationAccessTokenExpiryTime = Long.parseLong(IdentityUtil.getProperty("OAuth" +
+                    ".AccessTokenDefaultValidityPeriod")) * 1000;
+        }
+
+        long userAccessTokenExpiryTime = 3600000;
+        if (StringUtils.isNotBlank(IdentityUtil.getProperty("OAuth.UserAccessTokenDefaultValidityPeriod"))) {
+            userAccessTokenExpiryTime = Long.parseLong(IdentityUtil.getProperty("OAuth" +
+                    ".UserAccessTokenDefaultValidityPeriod")) * 1000;
+        }
+
+        long refreshTokenExpiryTime = 84600000;
+        if (StringUtils.isNotBlank(IdentityUtil.getProperty("OAuth.RefreshTokenValidityPeriod"))) {
+            refreshTokenExpiryTime = Long.parseLong(IdentityUtil.getProperty("OAuth" +
+                    ".RefreshTokenValidityPeriod")) * 1000;
+        }
+
+        for (OAuthConsumerApp consumerApp : consumerApps) {
+            SpOAuth2ExpiryTimeConfiguration expiryTimeConfiguration = RegistryUtil.getSpTokenExpiryTimeConfig
+                    (consumerApp.getConsumerKey(), consumerApp.getTenantId());
+
+            if (expiryTimeConfiguration.getApplicationAccessTokenExpiryTime() != null) {
+                consumerApp.setApplicationAccessTokenExpiryTime(expiryTimeConfiguration
+                        .getApplicationAccessTokenExpiryTime());
+            } else {
+                consumerApp.setApplicationAccessTokenExpiryTime(applicationAccessTokenExpiryTime);
+            }
+            if (expiryTimeConfiguration.getUserAccessTokenExpiryTime() != null) {
+                consumerApp.setUserAccessTokenExpiryTime(expiryTimeConfiguration.getApplicationAccessTokenExpiryTime());
+            } else {
+                consumerApp.setUserAccessTokenExpiryTime(userAccessTokenExpiryTime);
+            }
+            if (expiryTimeConfiguration.getRefreshTokenExpiryTime() != null) {
+                consumerApp.setRefreshTokenExpiryTime(expiryTimeConfiguration.getApplicationAccessTokenExpiryTime());
+            } else {
+                consumerApp.setRefreshTokenExpiryTime(refreshTokenExpiryTime);
+            }
+
+            if (consumerApp.getApplicationAccessTokenExpiryTime() != 3600000
+                    || consumerApp.getUserAccessTokenExpiryTime() != 3600000
+                    || consumerApp.getRefreshTokenExpiryTime() != 84600000) {
+                updatedConsumerApps.add(consumerApp);
+            }
+        }
+
+        if (!updatedConsumerApps.isEmpty()) {
+            try (Connection connection = getDataSource().getConnection()) {
+                OAuthDAO.getInstance().updateExpiryTimesDefinedForOAuthConsumerApps(connection,
+                        updatedConsumerApps);
+            }
+        }
+        log.info(Constant.MIGRATION_LOG + "Migration succeeded for OAuth2 consumer apps table.");
+    }
+
+    /**
+     * Migrate OAuth2 scope data.
+     *
+     * @throws MigrationClientException MigrationClientException
+     * @throws SQLException SQLException
+     */
+    private void migrateOAuth2ScopeData() throws MigrationClientException, SQLException {
+
+        log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 Scope table.");
+
+        List<OAuth2Scope> oAuth2Scopes;
+        try (Connection connection = getDataSource().getConnection()) {
+            oAuth2Scopes = OAuthDAO.getInstance().getAllOAuth2Scopes(connection);
+        }
+
+        if (oAuth2Scopes.isEmpty()) {
+            log.info(Constant.MIGRATION_LOG + "No data to migrate in OAuth2 Scope table.");
+            return;
+        }
+
+        List<OAuth2ScopeBinding> oAuth2ScopeBindings = new ArrayList<>();
+        List<OAuth2Scope> updatedAuth2Scopes = new ArrayList<>();
+
+        for (OAuth2Scope oAuth2Scope : oAuth2Scopes) {
+            if (StringUtils.isNotBlank(oAuth2Scope.getRoles())) {
+                String[] roles = oAuth2Scope.getRoles().split(",");
+                for (String role : roles) {
+                    oAuth2ScopeBindings.add(new OAuth2ScopeBinding(oAuth2Scope.getScopeId(), role));
+                }
+            }
+            if (StringUtils.isBlank(oAuth2Scope.getName())) {
+                oAuth2Scope.setName(oAuth2Scope.getScopeKey());
+                updatedAuth2Scopes.add(oAuth2Scope);
+            }
+        }
+
+        if (!oAuth2ScopeBindings.isEmpty()) {
+            try (Connection connection = getDataSource().getConnection()) {
+                OAuthDAO.getInstance().addOAuth2ScopeBindings(connection, oAuth2ScopeBindings);
+            }
+        }
+
+        if (!updatedAuth2Scopes.isEmpty()) {
+            try (Connection connection = getDataSource().getConnection()) {
+                OAuthDAO.getInstance().updateOAuth2Scopes(connection, updatedAuth2Scopes);
+            }
+        }
+
+        log.info(Constant.MIGRATION_LOG + "Migration succeeded on OAuth2 Scope table.");
+    }
 }

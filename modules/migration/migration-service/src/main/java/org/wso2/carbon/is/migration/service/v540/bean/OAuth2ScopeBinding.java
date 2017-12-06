@@ -13,33 +13,41 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
 package org.wso2.carbon.is.migration.service.v540.bean;
 
 /**
  * Bean class for OAuth2 Scope binding
  */
 public class OAuth2ScopeBinding {
-    private String scopeId;
+
+    private int scopeId;
+
     private String scopeBinding;
 
-    public OAuth2ScopeBinding(String scopeId, String scopeBinding) {
+    public OAuth2ScopeBinding(int scopeId, String scopeBinding) {
+
         this.scopeId = scopeId;
         this.scopeBinding = scopeBinding;
     }
 
+    public int getScopeId() {
+
+        return scopeId;
+    }
+
+    public void setScopeId(int scopeId) {
+
+        this.scopeId = scopeId;
+    }
+
     public String getScopeBinding() {
+
         return scopeBinding;
     }
 
     public void setScopeBinding(String scopeBinding) {
+
         this.scopeBinding = scopeBinding;
-    }
-
-    public String getScopeId() {
-        return scopeId;
-    }
-
-    public void setScopeId(String scopeId) {
-        this.scopeId = scopeId;
     }
 }
