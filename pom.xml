@@ -1386,11 +1386,11 @@
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.office365.connector</artifactId>
                 <version>${authenticator.office365.version}</version>
             </dependency>
-            <dependency>
+            <!--dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.totp</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.totp.connector</artifactId>
                 <version>${authenticator.totp.version}</version>
-            </dependency>
+            </dependency-->
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector</artifactId>
@@ -1666,7 +1666,7 @@
         <identity.metadata.saml.version>1.0.5</identity.metadata.saml.version>
 
         <!-- Connectors -->
-        <authenticator.totp.version>2.0.9</authenticator.totp.version>
+        <!--authenticator.totp.version>2.0.9</authenticator.totp.version-->
         <authenticator.office365.version>1.0.0</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.9</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.8</authenticator.emailotp.version>
