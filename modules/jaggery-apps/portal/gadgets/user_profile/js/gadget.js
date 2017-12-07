@@ -21,7 +21,7 @@ function drawPage() {
             continue;
         }
 
-    if(json.return.totpAuthenticator && json.return.fieldValues[i].displayName =="Secret Key"){
+    if(json.return.totpAuthenticatorActive && json.return.fieldValues[i].displayName =="Secret Key"){
     	            totpEnabled = json.return.fieldValues[i].fieldValue;
     	            continue;
     	        }
@@ -48,7 +48,7 @@ function drawPage() {
             "                </td></tr>";
 
     }
-    if(json.return.totpAuthenticator) {
+    if(json.return.totpAuthenticatorActive) {
         body = body + "<tr><td><label class=\"control-label\">Refresh Secret Key</label>\n</td><td><div class=\"controls\">";
                     body = body + "<a class=\"control-label\" onclick=\"validateRefreshSecret();\">Click</a></div>\n<br></div></td></tr>";
                     body = body + "<tr><td><label class=\"control-label\">Enable TOTP</label>\n</td><td><div class=\"controls\">";

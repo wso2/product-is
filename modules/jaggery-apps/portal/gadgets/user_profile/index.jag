@@ -19,9 +19,9 @@ var totpName = "totp";
 var FrameworkUtils = Packages.org.wso2.carbon.identity.application.authentication.framework.util.FrameworkUtils;
 var totpAuthenticator = FrameworkUtils.getAppAuthenticatorByName(totpName);
 if(totpAuthenticator !== null) {
-    fieldValues.return.totpAuthenticator = true;
+    fieldValues.return.totpAuthenticatorActive = true;
 } else {
-    fieldValues.return.totpAuthenticator = false;
+    fieldValues.return.totpAuthenticatorActive = false;
 }
 
 print( fieldValues );
