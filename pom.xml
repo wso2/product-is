@@ -1190,6 +1190,16 @@
                 <version>${openws.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.orbit.org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json.wso2</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-java</artifactId>
                 <version>${selenium.version}</version>
@@ -1791,6 +1801,8 @@
         <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
         <commons.pool.wso2.version>1.5.6.wso2v1</commons.pool.wso2.version>
         <ds-annotations.version>1.2.10</ds-annotations.version>
+        <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
+        <json.version>3.0.0.wso2v1</json.version>
     </properties>
 
     <repositories>
