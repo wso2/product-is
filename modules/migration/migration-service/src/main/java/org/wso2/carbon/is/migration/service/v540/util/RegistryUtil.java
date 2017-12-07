@@ -40,6 +40,9 @@ public class RegistryUtil {
 
     private static final String APPLICATION_ACCESS_TOKEN_EXP_TIME_IN_MILLISECONDS = "applicationAccessTokenExpireTime";
 
+    private RegistryUtil() {
+
+    }
 
     /***
      * Return the SP-token Expiry time configuration object when consumer key is given.
@@ -80,7 +83,7 @@ public class RegistryUtil {
                             }
                         } catch (NumberFormatException e) {
                             String errorMsg = String.format("Invalid value provided as user access token expiry time " +
-                                    "for consumer key %s, tenant id : %d. Given value: %s, Expected a long value",
+                                            "for consumer key %s, tenant id : %d. Given value: %s, Expected a long value",
                                     consumerKey, tenantId, spTimeObject.get
                                             (USER_ACCESS_TOKEN_EXP_TIME_IN_MILLISECONDS).toString());
                             log.error(errorMsg, e);
@@ -119,9 +122,9 @@ public class RegistryUtil {
 
                         } catch (NumberFormatException e) {
                             String errorMsg = String.format("Invalid value provided as refresh token expiry time for " +
-                                    "consumer key %s, tenant id : %d. Given value: %s, Expected a long value",
+                                            "consumer key %s, tenant id : %d. Given value: %s, Expected a long value",
                                     consumerKey, tenantId, spTimeObject
-                                    .get(REFRESH_TOKEN_EXP_TIME_IN_MILLISECONDS).toString());
+                                            .get(REFRESH_TOKEN_EXP_TIME_IN_MILLISECONDS).toString());
                             log.error(errorMsg, e);
                         }
                     }
