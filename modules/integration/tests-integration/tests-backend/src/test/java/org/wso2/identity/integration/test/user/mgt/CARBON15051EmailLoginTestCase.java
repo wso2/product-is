@@ -19,69 +19,37 @@
 package org.wso2.identity.integration.test.user.mgt;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(CARBON15051EmailLoginTestCase.class);
     private LoginLogoutClient loginLogoutClient;
     private UserManagementClient userManagementClient;
-    private ServerConfigurationManager serverConfigurationManager;
-    private String adminUsername;
-    private String adminPassword;
+    private String emailUser = "user1@test.com";
+    private String emailUserPassword = "passWord1@";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        String pathToCarbonXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" + File.separator +
-                                 "userMgt" + File.separator + "carbon15051" + File.separator + "carbon.xml";
-        String targetCarbonXML = CarbonUtils.getCarbonHome() + "repository" + File.separator + "conf" + File.separator + "carbon.xml";
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfiguration(new File(pathToCarbonXML), new File(targetCarbonXML));
-
-
-        String pathToUserMgtXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" +
-                File.separator +
-                "userMgt" + File.separator + "carbon15051" + File.separator + "user-mgt.xml";
-        String targetUserMgtXML = CarbonUtils.getCarbonHome() + "repository" + File.separator + "conf" + File.separator + "user-mgt.xml";
-        serverConfigurationManager.applyConfiguration(new File(pathToUserMgtXML), new File(targetUserMgtXML));
-
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         loginLogoutClient = new LoginLogoutClient(isServer);
 
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
-
         userManagementClient = new UserManagementClient(backendURL, getSessionCookie());
-        userManagementClient.addUser("user1@test.com", "passWord1@", new String[]{"admin"}, null);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void endTest() throws Exception {
-
-        serverConfigurationManager.restoreToLastConfiguration();
+        userManagementClient.addUser(emailUser, emailUserPassword, new String[]{"admin"}, null);
     }
 
     @Test(groups = "wso2.is", description = "Trying to log in with email as the username")
@@ -90,8 +58,8 @@ public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
         String backendURL = isServer.getContextUrls().getBackEndUrl();
         login("admin", "admin",  backendURL);
         login("admin@carbon.super", "admin", backendURL);
-        login("user1@test.com", "passWord1@", backendURL);
-        login("user1@test.com@carbon.super", "passWord1@", backendURL);
+        login(emailUser, emailUserPassword, backendURL);
+        login(emailUser + "@carbon.super", emailUserPassword, backendURL);
         this.loginLogoutClient.logout();
     }
 

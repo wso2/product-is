@@ -18,37 +18,19 @@
 
 package org.wso2.identity.integration.test.user.mgt;
 
-import java.io.File;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 
 public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
-
-	private static final Log log = LogFactory.getLog(ReadWriteLdapBasedUserMgtTestCase.class);
-	private ServerConfigurationManager scm;
-	private File userMgtServerFile;
 
 	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.testInit();
 
-		String carbonHome = CarbonUtils.getCarbonHome();
-		userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
-				+ "conf" + File.separator + "user-mgt.xml");
-		File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-				+ File.separator + "readWriteLdapUserMgtConfig.xml");
-
-		scm = new ServerConfigurationManager(isServer);
-		scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
-		scm.restartGracefully();
 		super.testInit();
 
 		userMgtClient.addUser("user1", "passWord1@", null, "default");
@@ -85,12 +67,5 @@ public class ReadWriteLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTes
 		if (nameExists(userMgtClient.listRoles("umRole3", 100), "umRole3")) {
 			userMgtClient.deleteRole("umRole3");
 		}
-
-		// Reset the user-mgt.xml configuration.
-		File userMgtDefaultFile = new File(getISResourceLocation() + File.separator + "userMgt"
-				+ File.separator + "default-user-mgt.xml");
-		scm.applyConfigurationWithoutRestart(userMgtDefaultFile, userMgtServerFile, true);
-		scm.restartGracefully();
-
 	}
 }

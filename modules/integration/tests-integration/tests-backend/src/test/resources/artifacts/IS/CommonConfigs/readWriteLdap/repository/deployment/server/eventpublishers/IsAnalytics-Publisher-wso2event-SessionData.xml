@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<eventPublisher name="IsAnalytics-Publisher-wso2event-SessionData"
+  statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+  <from streamName="org.wso2.is.analytics.stream.OverallSession" version="1.0.0"/>
+  <mapping customMapping="disable" type="wso2event"/>
+  <to eventAdapterType="wso2event">
+    <property name="username">admin</property>
+    <property name="protocol">thrift</property>
+    <property name="publishingMode">non-blocking</property>
+    <property name="publishTimeout">0</property>
+    <property name="receiverURL">tcp://localhost:7612</property>
+    <property name="receiverURL">tcp://localhost:8021</property>
+    <property encrypted="true" name="password">aa47+5/q7d9AvOHUyYAJDXrx0Q6GQmgzIKS/hOkzp6huHrxslJJk6Oqmv2mrW159DOTfJ7Rw2nBbfGWjGiMckTFAO9p9YVF3kDDHhiyirWEJPSESSSJeBB782qnwoXEDSAjgiiUYWSRuYIfxdibXUUZr3JPSmjaxvy+EVMjjWgouMrid51UQTW50wl3C0fX03/nak4P9+GWx14T1JGAb07fKQlgK/AwYtJ8esNyiV1j0Z2jgGM9OLpqgZ9gqjsA95htzdqy2DgC/U74qfhkUKISAXUWZdGS+rCEYBFaVzAj0aPKtXmRWTrC6OTDSTVLQCKZPfcHqnU652PUQZqqKCA==</property>
+  </to>
+</eventPublisher>

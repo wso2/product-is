@@ -36,7 +36,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
@@ -45,7 +44,6 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -75,13 +73,12 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
     private static final String DB_USER_PASSWORD = "wso2automation";
     private static final String SCIM_USER_NAME = "scimUser";
     private static final String SECONDARY_STORE_USER_NAME = DOMAIN_ID + "/userStoreUser";
-    private static final String SECONDARY_STORE_USER_ROLE = DOMAIN_ID + "/jdsbUserStoreRole";
+    private static final String SECONDARY_STORE_USER_ROLE = DOMAIN_ID + "/jdbcUserStoreRole";
     private static final String SECONDARY_STORE_USER_PASSWORD = "password";
     private static final String SCOPE_DEFAULT = "default";
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
-    private ServerConfigurationManager serverConfigurationManager;
     private AuthenticatorClient authenticatorClient;
     private UserManagementClient userMgtClient;
     private String accessToken;
@@ -90,15 +87,6 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        String pathToCatalinaXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS"
-                + File.separator + "scim" + File.separator + "IDENTITY4776" + File.separator + "catalina-server.xml";
-        String targetCatalinaXML = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator
-                + "conf" + File.separator + "tomcat" + File.separator + "catalina-server.xml";
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfiguration(new File(pathToCatalinaXML),
-                new File(targetCatalinaXML), true, true);
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         LoginLogoutClient loginLogoutClient = new LoginLogoutClient(isServer);
@@ -116,8 +104,6 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         userMgtClient.deleteUser(SECONDARY_STORE_USER_NAME);
         userMgtClient.deleteRole(SECONDARY_STORE_USER_ROLE);
         userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        serverConfigurationManager.restoreToLastConfiguration();
-        log.info("Restored configuration and restarted gracefully...");
     }
 
     @Test(groups = "wso2.is", description = "loginUsingSecondaryUserStoreUser")
@@ -149,8 +135,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
     private void addSecondaryUserStore() throws Exception {
         String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
         H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
-                + "/repository/database/" + USER_STORE_DB_NAME,
-                DB_USER_NAME, DB_USER_PASSWORD);
+                + "/repository/database/" + USER_STORE_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
         dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
         dbmanager.disconnect();
 

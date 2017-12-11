@@ -37,19 +37,15 @@ import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,11 +56,9 @@ import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private ServerConfigurationManager serverConfigurationManager;
     private Oauth2TokenValidationClient oAuth2TokenValidationClient;
     private AuthenticatorClient logManger;
 
-    private File identityXML;
     private String adminUsername;
     private String adminPassword;
     private String accessToken;
@@ -76,7 +70,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private String consumerSecret;
 
     private DefaultHttpClient client;
-    private Tomcat tomcat;
 
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
@@ -86,9 +79,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
-        changeISConfiguration();
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
 
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
@@ -106,29 +97,15 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     public void atEnd() throws Exception {
         deleteApplication();
         removeOAuthApplicationData();
-        stopTomcat(tomcat);
+        remoteUSMServiceClient.deleteUser(USERNAME);
 
         logManger = null;
         consumerKey = null;
+        consumerSecret = null;
         accessToken = null;
-        resetISConfiguration();
     }
 
-    @Test(alwaysRun = true, description = "Deploy playground application")
-    public void testDeployPlaygroundApp() {
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl =
-                    getClass().getResource(File.separator + "samples" + File.separator +
-                            "playground2.war");
-            startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-        } catch (Exception e) {
-            Assert.fail("Playground application deployment failed.", e);
-        }
-    }
-
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods =
-            "testDeployPlaygroundApp")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
         OAuthConsumerAppDTO appDto = createApplication();
         Assert.assertNotNull(appDto, "Application creation failed.");
@@ -348,31 +325,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
             Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/everyone"), "Invalid JWT Token Role " +
                     "Values");
         }
-    }
-
-    private void changeISConfiguration() throws Exception {
-
-        log.info("Replacing identity.xml changing the entity id of SSOService");
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        identityXML = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File
-                .separator + "identity.xml");
-        File configuredIdentityXML = new File(getISResourceLocation()
-                + File.separator + "oauth" + File.separator
-                + "jwt-token-gen-enabled-identity.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
-    }
-
-    private void resetISConfiguration() throws Exception {
-
-        log.info("Replacing identity.xml with default configurations");
-        File defaultIdentityXml = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXml,
-                identityXML, true);
-        serverConfigurationManager.restartForcefully();
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {

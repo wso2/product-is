@@ -20,39 +20,20 @@ package org.wso2.identity.integration.test.user.mgt;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 
-import java.io.File;
 
 public class JDBCUserStoreManagerTestCase extends UserManagementServiceAbstractTest {
 
 
-    private ServerConfigurationManager scm;
-    private File userMgtServerFile;
-
     @BeforeClass(alwaysRun = true)
     public void configureServer() throws Exception {
         super.init();
-        String carbonHome = ServerConfigurationManager.getCarbonHome();
-        userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
-                                     + "conf" + File.separator + "user-mgt.xml");
-        File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                                          + File.separator + "JdbcUserMgtConfig.xml");
-
-        scm = new ServerConfigurationManager(isServer);
-        scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
         doInit();
-
     }
 
     @AfterClass(alwaysRun = true)
     public void restoreServer() throws Exception {
-        try {
-            super.clean();
-        } finally {
-            scm.restoreToLastConfiguration();
-        }
-
+        super.clean();
     }
 
     @Override
