@@ -49,5 +49,7 @@
         <servlet-name>OAuth2AccessResourcePage</servlet-name>
         <url-pattern>/oauth2-access-resource.jsp</url-pattern>
     </servlet-mapping>
-
+    <listener>
+        <listener-class>org.wso2.sample.identity.oauth2.ContextEventListener</listener-class>
+    </listener>
 </web-app>
