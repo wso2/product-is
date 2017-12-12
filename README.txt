@@ -18,9 +18,9 @@ System Requirements
 
 1. Minimum memory - 2 GB
 
-2. Processor - Pentium 800MHz or equivalent at minimum
+2. Processor - 2 Core/vCPU 1.1GHz or higher.
 
-3. Java SE Development Kit 1.7 or higher
+3. Java SE Development Kit 1.8
 
 4. The Management Console requires full Javascript enablement of the Web browser.
 
