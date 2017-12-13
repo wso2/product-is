@@ -227,3 +227,7 @@ div#menu ul.main li.menu-header img{
     border-radius:15px;
 }
 
+td.page-header-help {
+	display: none;
+}
+
