@@ -50,15 +50,6 @@ Installation and Running
 4. User dashboard is available at https://localhost:9443/dashboard
 5. For more information, see the Installation Guide
 
-Known Issues
-============
-
-All known issues have been recorded at https://wso2.org/jira/issues/?filter=14458
-
-Issues Fixed In This Release
-============================
-
-All the fixed for WSO2 Identity Server 5.4.0 release have been recorded at https://wso2.org/jira/issues/?filter=14457
 
 WSO2 Identity Server Distribution Directory Structure
 ==============================================
