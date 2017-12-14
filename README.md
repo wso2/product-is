@@ -64,7 +64,7 @@ Building the distribution from source
     - `mvn clean install` (To build the binary and source distributions with the tests)
     - `mvn clean install -Dmaven.test.skip=true` (To build the binary and source distribution, without running any of 
     the unit/integration tests)
-5. You can find the **wso2is-5.4.0.zip** binary distribution in product-is/modules/distribution/target directory.
+5. You can find the binary distribution in product-is/modules/distribution/target directory.
 
     
 Installation and Running
