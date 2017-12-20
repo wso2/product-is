@@ -56,14 +56,14 @@ public class EntitlementRestServiceTestCase extends ISIntegrationTest {
     private static final String POLICY_ID = "urn:oasis:names:tc:xacml:3.0:custompolicy";
     private static final String POLICY = "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" " +
             "PolicyId=\"urn:oasis:names:tc:xacml:3.0:custompolicy\" " +
-            "RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm" + ":deny-overrides\" " +
-            "Version=\"1.0\">" + "<Target>" + "<AnyOf>" + "<AllOf>" + "<Match " +
-            "MatchId=\"urn:oasis:names:tc:xacml:1.0:function:string-equal\">" + "<AttributeValue " +
-            "DataType=\"http://www.w3.org/2001/XMLSchema#string\">read</AttributeValue>" + "<AttributeDesignator " +
+            "RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-overrides\" " +
+            "Version=\"1.0\"><Target><AnyOf><AllOf><Match " +
+            "MatchId=\"urn:oasis:names:tc:xacml:1.0:function:string-equal\"><AttributeValue DataType=\"http://www" +
+            ".w3.org/2001/XMLSchema#string\">read</AttributeValue><AttributeDesignator " +
             "AttributeId=\"urn:oasis:names:tc:xacml:1.0:action:action-id\" " +
-            "Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\" DataType=\"http://www" + "" + "" +
-            "" + ".w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>" + "</Match>" + "</AllOf>" + "</AnyOf>" +
-            "</Target>" + "<Rule Effect=\"Permit\" RuleId=\"permit\"/>" + "</Policy>";
+            "Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\" DataType=\"http://www" +
+            ".w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/></Match></AllOf></AnyOf></Target><Rule " +
+            "Effect=\"Permit\" RuleId=\"permit\"/></Policy>";
     private EntitlementPolicyServiceClient entitlementPolicyClient;
     private HttpClient httpClient;
     private String username;
