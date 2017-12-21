@@ -1615,7 +1615,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.10.89</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.10.92</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1667,7 +1667,7 @@
         <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
         <provisioning.connector.google.version>5.1.5</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.4</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.1.6</provisioning.connector.scim.version>
+        <provisioning.connector.scim.version>5.1.8</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>5.3.6</identity.local.auth.basicauth.version>
@@ -1682,7 +1682,7 @@
 
         <!-- Connectors -->
         <!--authenticator.totp.version>2.0.9</authenticator.totp.version-->
-        <authenticator.office365.version>1.0.0</authenticator.office365.version>
+        <authenticator.office365.version>1.0.2</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.9</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.8</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.7</authenticator.twitter.version>
