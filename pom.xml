@@ -1569,6 +1569,11 @@
                 <artifactId>org.wso2.carbon.database.utils</artifactId>
                 <version>${carbon.database.utils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.registry</groupId>
+                <artifactId>org.wso2.carbon.registry.properties.stub</artifactId>
+                <version>${carbon.registry.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -79,8 +79,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected String consumerSecret;
 
 	protected final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProvider";
-	private final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
-	private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+	protected final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
+	protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
 	private static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
 	private static final String customClaimURI1 = "http://wso2.org/claims/challengeQuestion1";
