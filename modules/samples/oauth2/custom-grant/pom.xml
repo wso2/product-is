@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-identity-samples-oauth2</artifactId>
-        <version>5.4.0-update3</version>
+        <version>5.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
