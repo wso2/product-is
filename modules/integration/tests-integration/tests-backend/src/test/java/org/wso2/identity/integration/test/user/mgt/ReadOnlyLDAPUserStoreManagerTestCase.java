@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.user.mgt;
 
-import org.apache.axis2.AxisFault;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,11 +26,11 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
@@ -101,9 +100,12 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(newUserRole + "1", 100), newUserRole + "1"), "User Role already exist");
         try {
             userMgtClient.addRole(newUserRole + "1", null, new String[]{"login"}, false);
-        } catch (AxisFault axisFault) {
-            Assert.assertEquals(axisFault.getMessage(), "Read only user store or Role creation is disabled"
-                    , "Error message mismatched");
+        } catch (Exception e) {
+            String faultMessage =
+                    ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
+            Assert.assertTrue(faultMessage.contains("Read only user store or Role creation is disabled")
+                    , "Error Message mismatched, expected 'Read only user store or Role creation is disabled', " +
+                            "but was '" + faultMessage + " ,");
         }
 
     }
@@ -124,9 +126,11 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.updateRoleName(newUserRole, newUserRole + "updated");
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Read-only UserStoreManager. Roles cannot be added or modified.")
-                    , "Error message mismatched, expected 'Read-only UserStoreManager. Roles cannot be added or " +
-                    "modified.', but was '" + e.getMessage() + " '");
+            String faultMessage =
+                    ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
+            Assert.assertTrue(faultMessage.contains("Read-only UserStoreManager. Roles cannot be added or modified.")
+                    , "Error Message mismatched, expected 'Read-only UserStoreManager. Roles cannot be added or modified.', " +
+                            "but was '" + faultMessage + " ,");
         }
 
     }
@@ -162,9 +166,11 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveRolesOfUser(newUserName, newRoles, deletedRoles);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Error occurred while updating hybrid role list of user")
+            String faultMessage =
+                    ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
+            Assert.assertTrue(faultMessage.contains("Error occurred while updating hybrid role list of user")
                     , "Error Message mismatched, expected 'Error occurred while updating hybrid role list of user', " +
-                    "but was '" + e.getMessage() + " ,");
+                    "but was '" + faultMessage + " ,");
         }
     }
 
@@ -177,9 +183,11 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveUsersOfRole(newUserRole, newUsers, deletedUsers);
         } catch (Exception e) {
-            Assert.assertTrue(e.getMessage().contains("Read-only user store.Roles cannot be added or modified"),
-                    "Error message mismatched, expected 'Read-only user store.Roles cannot be added or modified', " +
-                            "but was '" + e.getMessage() + " '");
+            String faultMessage =
+                    ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
+            Assert.assertTrue(faultMessage.contains("Read-only user store.Roles cannot be added or modified")
+                    , "Error Message mismatched, expected 'Read-only user store.Roles cannot be added or modified', " +
+                            "but was '" + faultMessage + " ,");
         }
 
     }

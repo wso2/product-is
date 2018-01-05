@@ -22,7 +22,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.user.profile.stub.types.AssociatedAccountDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
@@ -35,6 +38,8 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     private UserManagementClient userMgtClient;
     private AuthenticatorClient logManger;
     private String userId1 = "UserProfileAdminTestUser1";
+
+    private IdentityProviderMgtServiceClient idpMgtClient;
     
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -128,5 +133,45 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         }
 
         logManger.logOut();
+    }
+
+    @Test(priority = 4, groups = "wso2.is", description = "Check Fed User Account Association")
+    public void testUserAccountAssociationAdd() throws Exception {
+
+        String username = "testUser2";
+        String password = "passWord1@";
+        String idpName = "idp1";
+
+        // create a user
+        userMgtClient.addUser(username, password, new String[]{"admin"}, "default");
+        Assert.assertEquals(userMgtClient.getUserList().contains(username), true);
+
+        idpMgtClient = new IdentityProviderMgtServiceClient(username, password, backendURL);
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, username, password);
+
+        IdentityProvider idp = new IdentityProvider();
+        idp.setIdentityProviderName(idpName);
+        idpMgtClient.addIdP(idp);
+        Assert.assertNotNull(idpMgtClient.getIdPByName(idpName));
+
+        // create a federated user account association
+        userProfileMgtClient.addFedIdpAccountAssociation(idpName, "dummy_idp_account_1");
+        userProfileMgtClient.addFedIdpAccountAssociation(idpName, "dummy_idp_account_2");
+
+        AssociatedAccountDTO[] associatedFedUserAccountIds = userProfileMgtClient.getAssociatedFedUserAccountIds();
+        Assert.assertNotNull(associatedFedUserAccountIds);
+        Assert.assertEquals(associatedFedUserAccountIds.length, 2);
+
+        // delete the user, this should clear the federated idp account associations
+        userMgtClient.deleteUser(username);
+        Assert.assertEquals(userMgtClient.getUserList().contains(username), false);
+
+        // create the same user
+        userMgtClient.addUser(username, password, new String[]{"admin"}, "default");
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, username, password);
+        associatedFedUserAccountIds = userProfileMgtClient.getAssociatedFedUserAccountIds();
+        // assert to make sure there are no federated idp user account associations for this user
+        Assert.assertEquals(associatedFedUserAccountIds == null || associatedFedUserAccountIds.length == 0, true);
+
     }
 }

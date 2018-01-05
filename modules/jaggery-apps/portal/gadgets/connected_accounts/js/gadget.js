@@ -83,7 +83,7 @@ function deleteUserAccountConnection(delUser) {
             $.ajax({
                 url: "/portal/gadgets/connected_accounts/index.jag",
                 type: "POST",
-                data: "&cookie=" + cookie + "&userName=" + delUser + "&action=delete",
+                data: {cookie : cookie, userName : delUser, action: "delete"},
                 success: function (data) {
                     var resp = $.parseJSON(data);
                     if (resp.success == true) {
@@ -123,8 +123,8 @@ function deleteUserAccountConnection(delUser) {
 function reloadGrid() {
     $.ajax({
         url: "/portal/gadgets/connected_accounts/index.jag",
-        type: "GET",
-        data: "&cookie=" + cookie + "&action=list",
+        type: "POST",
+        data: {cookie : cookie, action : "list"},
         success: function (data) {
             var resp = $.parseJSON(data);
             if (resp.success == true) {
@@ -203,8 +203,8 @@ function changeDropDownMenu() {
 function reloadFedGrid(json) {
     $.ajax({
         url: "/portal/gadgets/connected_accounts/index.jag",
-        type: "GET",
-        data: "&cookie=" + cookie + "&username=" + userName + "&action=associatedIdList",
+        type: "POST",
+        data: {cookie : cookie, username : userName, action: "associatedIdList"},
         success: function (data) {
             var resp = $.parseJSON(data);
             if (resp.success == true) {
@@ -296,7 +296,7 @@ function deleteFedUserAccountConnection(idPId, username) {
             $.ajax({
                 url: "/portal/gadgets/connected_accounts/index.jag",
                 type: "POST",
-                data: "&cookie=" + cookie + "&username=" + username + "&idPId=" + idPId + "&action=fedDelete",
+                data: {cookie : cookie, username : username, idPId : idPId, action: "fedDelete"},
                 success: function (data) {
                     var resp = $.parseJSON(data);
                     if (resp.success == true) {

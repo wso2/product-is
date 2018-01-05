@@ -48,5 +48,14 @@
         <delete file="${sts.webapp.lib}/log4j-over-slf4j-1.6.1.jar"/>
         <delete file="${sts.webapp.lib}/jcl-over-slf4j-1.6.1.jar"/>
         <delete file="${sts.webapp.lib}/slf4j-api-1.6.1.jar"/>
+
+        <!--
+        The release build env make the web apps have a SLF4J jar file with a different version.
+        This is a temp fix to make the release build work
+        -->
+        <delete file="${sts.webapp.lib}/jul-to-slf4j-1.7.5.jar"/>
+        <delete file="${sts.webapp.lib}/log4j-over-slf4j-1.7.5.jar"/>
+        <delete file="${sts.webapp.lib}/jcl-over-slf4j-1.7.5.jar"/>
+        <delete file="${sts.webapp.lib}/slf4j-api-1.7.5.jar"/>
     </target>
 </project>

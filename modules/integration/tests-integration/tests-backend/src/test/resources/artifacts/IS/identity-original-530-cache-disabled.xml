@@ -121,11 +121,6 @@
     </OpenID>
 
     <OAuth>
-        <AppInfoCacheTimeout>-1</AppInfoCacheTimeout>
-        <AuthorizationGrantCacheTimeout>-1</AuthorizationGrantCacheTimeout>
-        <SessionDataCacheTimeout>-1</SessionDataCacheTimeout>
-        <ClaimCacheTimeout>-1</ClaimCacheTimeout>
-
         <!--
             Default values for OAuth1RequestTokenUrl, OAuth1AccessTokenUrl, OAuth1AuthorizeUrl
             OAuth2AuthzEPUrl, OAuth2TokenEPUrl and OAuth2UserInfoEPUrl are built in following format
@@ -277,6 +272,14 @@
             <UserInfoEndpointResponseBuilder>org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder</UserInfoEndpointResponseBuilder>
             <SkipUserConsent>false</SkipUserConsent>
         </OpenIDConnect>
+
+      <!-- Configs related to OAuth2 token persistence -->
+  		<TokenPersistence>
+  				<Enable>true</Enable>
+  				<PoolSize>0</PoolSize>
+  				<RetryCount>5</RetryCount>
+  		</TokenPersistence>
+
     </OAuth>
 
     <MultifactorAuthentication>
@@ -294,8 +297,6 @@
     </MultifactorAuthentication>
 
     <SSOService>
-        <PersistanceCacheTimeout>157680000</PersistanceCacheTimeout>
-        <SessionIndexCacheTimeout>157680000</SessionIndexCacheTimeout>
         <EntityId>${carbon.host}</EntityId>
         <!--
             Default value for IdentityProviderURL is  built in following format
@@ -501,6 +502,42 @@
         <Resource context="(.*)/api/identity/entitlement/(.*)" secured="true" http-method="all">
             <Permissions>/permission/admin/manage/identity/pep</Permissions>
         </Resource>
+        <Resource context="/scim2/Users" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Groups" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/rolemgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Users/*" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Groups/*" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/rolemgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"    http-method="GET">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true" http-method="DELETE">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"    http-method="PUT">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/Me" secured="true"   http-method="PATCH">
+            <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="/scim2/ServiceProviderConfig" secured="false" http-method="all">
+            <Permissions></Permissions>
+        </Resource>
+        <Resource context="/scim2/ResourceType" secured="false" http-method="all">
+            <Permissions></Permissions>
+        </Resource>
+        <Resource context="/scim2/Bulk" secured="true"  http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/identity/oauth2/dcr/(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/applicationmgt</Permissions>
+        </Resource>
     </ResourceAccessControl>
 
     <ClientAppAuthentication>
@@ -509,10 +546,12 @@
 
     <TenantContextsToRewrite>
         <WebApp>
-            <Context>/api/identity/user/v0.9</Context>
-            <Context>/api/identity/recovery/v0.9</Context>
-            <Context>/oauth2</Context>
-            <Context>/api/identity/entitlement</Context>
+            <Context>/api/identity/user/v0.9/</Context>
+            <Context>/api/identity/recovery/v0.9/</Context>
+            <Context>/oauth2/</Context>
+            <Context>/scim2/</Context>
+            <Context>/api/identity/entitlement/</Context>
+            <Context>/api/identity/oauth2/dcr/v1.0/</Context>
         </WebApp>
         <Servlet>
             <Context>/identity/(.*)</Context>

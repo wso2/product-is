@@ -32,6 +32,7 @@
 
     <modules>
         <module>handler/service-provider</module>
+        <module>template/sample-template</module>
     </modules>
 
 </project>

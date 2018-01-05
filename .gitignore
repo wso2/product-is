@@ -21,3 +21,4 @@ target
 *.iws
 *.ipr
 .idea
+.DS_Store

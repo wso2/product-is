@@ -114,14 +114,14 @@
 
                                 <property name="sso-idp-config-default" value="&lt;!--ServiceProvider&gt;&lt;/ServiceProvider--&gt;" />
 
-                                <property name="sso-idp-config-replace" value="&lt;ServiceProvider&gt;${line.separator} &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator} &lt;AssertionConsumerServiceURLs&gt;${line.separator} &lt;AssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator} &lt;/AssertionConsumerServiceURLs&gt;${line.separator} &lt;DefaultAssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator} &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator} &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator}      &lt;AudiencesList&gt;${line.separator}        &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator}      &lt;/AudiencesList&gt;${line.separator}    &lt;/ServiceProvider&gt;" />
+                                <property name="sso-idp-config-replace" value="&lt;ServiceProvider&gt;${line.separator} &lt;Issuer&gt;wso2.my.dashboard&lt;/Issuer&gt;${line.separator} &lt;AssertionConsumerServiceURLs&gt;${line.separator} &lt;AssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/AssertionConsumerServiceURL&gt;${line.separator} &lt;/AssertionConsumerServiceURLs&gt;${line.separator} &lt;DefaultAssertionConsumerServiceURL&gt;${carbon.protocol}://${carbon.host}:${carbon.management.port}/dashboard/acs&lt;/DefaultAssertionConsumerServiceURL&gt;${line.separator} &lt;SignResponse&gt;true&lt;/SignResponse&gt;${line.separator} &lt;EnableAudienceRestriction&gt;true&lt;/EnableAudienceRestriction&gt;${line.separator} &lt;AudiencesList&gt;${line.separator} &lt;Audience&gt;carbonServer&lt;/Audience&gt;${line.separator} &lt;/AudiencesList&gt;${line.separator} &lt;/ServiceProvider&gt;" />
 
-                                <property name="security-header-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.apache.catalina.filters.HttpHeaderSecurityFilter&lt;/filter-class&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;hstsEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}      &lt;/init-param&gt;${line.separator}      &lt;init-param&gt;${line.separator}        &lt;param-name&gt;antiClickJackingEnabled&lt;/param-name&gt;${line.separator}        &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}      &lt;/init-param&gt;${line.separator}    &lt;/filter&gt;${line.separator}${line.separator}    &lt;filter&gt;${line.separator}      &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator}      &lt;filter-class&gt;org.apache.catalina.filters.HttpHeaderSecurityFilter&lt;/filter-class&gt;${line.separator}      &lt;init-param&gt;${line.separator}        &lt;param-name&gt;hstsEnabled&lt;/param-name&gt;${line.separator}        &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}      &lt;/init-param&gt;${line.separator}      &lt;init-param&gt;${line.separator}        &lt;param-name&gt;blockContentTypeSniffingEnabled&lt;/param-name&gt;${line.separator}        &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}      &lt;/init-param&gt;${line.separator}      &lt;init-param&gt;${line.separator}        &lt;param-name&gt;xssProtectionEnabled&lt;/param-name&gt;${line.separator}        &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}      &lt;/init-param&gt;${line.separator}    &lt;/filter&gt;" />
+                                <property name="security-header-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.apache.catalina.filters.HttpHeaderSecurityFilter&lt;/filter-class&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;hstsEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator} &lt;/init-param&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;antiClickJackingEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator} &lt;/init-param&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.apache.catalina.filters.HttpHeaderSecurityFilter&lt;/filter-class&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;hstsEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator} &lt;/init-param&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;blockContentTypeSniffingEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}&lt;/init-param&gt;${line.separator}&lt;init-param&gt;${line.separator}&lt;param-name&gt;xssProtectionEnabled&lt;/param-name&gt;${line.separator}&lt;param-value&gt;false&lt;/param-value&gt;${line.separator}&lt;/init-param&gt;${line.separator}&lt;/filter&gt;" />
 
-                                <property name="security-header-filter-mapping-is-token" value="&lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CharsetFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator}    &lt;/filter-mapping&gt;${line.separator}${line.separator}       &lt;filter-mapping&gt;${line.separator}     &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator}      &lt;url-pattern&gt;/carbon/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/samlsso/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/openid/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/openidserver/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/passivests/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/acs/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/iwa/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/identity/*&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/thriftAuthenticator/*&lt;/url-pattern&gt;${line.separator}    &lt;/filter-mapping&gt;${line.separator}" />
+                                <property name="security-header-filter-mapping-is-token" value="&lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CharsetFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/carbon/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/samlsso/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/openid/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/openidserver/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/passivests/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/acs/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/iwa/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/thriftAuthenticator/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CSRFGuard&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}" />
                                 <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;claim_mgt_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_mgt_emailtemplate_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_security_questions_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;" />
 
-                                <property name="captcha-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator}    &lt;/filter&gt;${line.separator}${line.separator}    &lt;filter-mapping&gt;${line.separator}      &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator}      &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator}      &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator}      &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator}      &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator}    &lt;/filter-mapping&gt;${line.separator}${line.separator}    &lt;session-config&gt;" />
+                                <property name="captcha-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator} &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator} &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;session-config&gt;" />
 
                                 <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
@@ -152,6 +152,9 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${xss-kernel-token}" value="${xss-is-token}" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/Security&gt;" value="${hideMenu}" />
+
+                                <!-- Enable AskPassword Admin UI in product-is -->
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;EnableAskPasswordAdminUI&gt;false&lt;/EnableAskPasswordAdminUI&gt;" value="&lt;EnableAskPasswordAdminUI&gt;true&lt;/EnableAskPasswordAdminUI&gt;" />
 
                                 <!-- Update log4j.properties file with Identity related log files -->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.logger.net.sf.ehcache.config.ConfigurationFactory=ERROR" value="log4j.logger.net.sf.ehcache=ERROR${line.separator}${line.separator}log4j.logger.org.springframework=WARN${line.separator}log4j.logger.org.opensaml.xml.security.credential.criteria=WARN${line.separator}${line.separator} #log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.security=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.core=DEBUG" />
@@ -192,6 +195,9 @@
                                 <!-- turn off IsBulkImportSupported -->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;IsBulkImportSupported&quot;&gt;false&lt;/Property&gt;" />
 
+                                <!-- turn off CaseInsensitiveUsername -->
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;CaseInsensitiveUsername&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;CaseInsensitiveUsername&quot;&gt;false&lt;/Property&gt;" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
@@ -202,6 +208,10 @@
 
                                 <!-- turn off Registry Indexing -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;startIndexing&gt;true&lt;/startIndexing&gt;" value="&lt;startIndexing&gt;false&lt;/startIndexing&gt;" />
+
+                                <!-- update ciphertool properties to enable securevault on thrift server keystore password-->
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-text.properties" token="Server.Service.Connector.keystorePass=[wso2carbon]" value="Server.Service.Connector.keystorePass=[wso2carbon]${line.separator}ThirftBasedEntitlementConfig.KeyStore.Password=[wso2carbon]" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-tool.properties" token="Server.Service.Connector.keystorePass=repository/conf/tomcat/catalina-server.xml//Server/Service/Connector[@keystorePass],true" value="Server.Service.Connector.keystorePass=repository/conf/tomcat/catalina-server.xml//Server/Service/Connector[@keystorePass],true${line.separator}ThirftBasedEntitlementConfig.KeyStore.Password=repository/conf/identity/identity.xml//Server/EntitlementSettings/ThirftBasedEntitlementConfig/KeyStore/Password,true" />
 
                                 <unzip dest="${tempdir}/shindig">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
@@ -379,6 +389,7 @@
                             <descriptors>
                                 <descriptor>src/assembly/dist.xml</descriptor>
                             </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                     <execution>
@@ -393,6 +404,21 @@
                             </filters>
                             <descriptors>
                                 <descriptor>src/assembly/bin.xml</descriptor>
+                            </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>src-doc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>${basedir}/src/assembly/filter.properties</filter>
+                            </filters>
+                            <descriptors>
                                 <descriptor>src/assembly/src.xml</descriptor>
                                 <descriptor>src/assembly/docs.xml</descriptor>
                             </descriptors>
@@ -427,6 +453,35 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>year-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <phase>validate</phase>
+
+                        <configuration>
+                            <name>current.date.year</name>
+                            <pattern>yyyy</pattern>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>month-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <name>current.date.month</name>
+                            <pattern>MMMM</pattern>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

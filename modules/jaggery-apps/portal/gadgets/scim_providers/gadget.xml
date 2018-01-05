@@ -68,11 +68,12 @@
                 gadgets.Hub.subscribe('org.wso2.ues.samples.ch', function(topic, data, subscriberData) {
                     if(cookie == null ){
                         cookie = data.cookie;
-                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/scim_providers/sample.jag?cookie=" + cookie ;
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/scim_providers/sample.jag" ;
 
                         $.ajax( {
-				type: "GET",
-				url: str 
+				type: "POST",
+				url: str,
+                data: {cookie : cookie}
 
 				})
                                 .done(function(data) {

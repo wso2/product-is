@@ -100,7 +100,7 @@ public class DBSeperationTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         File masterDatasourcesXmlToCopy = new File(artifactsDir + File.separator + "master-datasources-default.xml");
-        File identityXmlToCopy = new File(artifactsDir + File.separator + "identity-default.xml");
+        File identityXmlToCopy = new File(getISResourceLocation() + File.separator + "default-identity.xml");
         File userMgtXmlToCopy = new File(artifactsDir + File.separator + "user-mgt-default.xml");
         File registryXmlToCopy = new File(artifactsDir + File.separator + "registry-default.xml");
 

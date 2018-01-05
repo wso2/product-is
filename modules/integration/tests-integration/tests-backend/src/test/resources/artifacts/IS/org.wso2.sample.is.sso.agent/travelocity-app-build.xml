@@ -30,11 +30,17 @@
     <property name="properties" location="${basedir}/src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent"/>
 
     <target name="clear-slf4j-libs">
-        <delete file="${travelocity.webapp.lib}/jul-to-slf4j-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.lib}/log4j-over-slf4j-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.lib}/jcl-over-slf4j-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.lib}/slf4j-api-1.6.1.jar"/>
-        <delete file="${travelocity.webapp.classes}/travelocity.properties"/>
+
+        <delete>
+            <fileset dir="${travelocity.webapp.lib}">
+                <include name="jul-to-slf4j-*.jar"/>
+                <include name="log4j-over-slf4j-*.jar"/>
+                <include name="jcl-over-slf4j-*.jar"/>
+                <include name="slf4j-api-*.jar"/>
+            </fileset>
+        </delete>
+
+          <delete file="${travelocity.webapp.classes}/travelocity.properties"/>
         <copy file="${properties}/travelocity.properties"
               tofile="${travelocity.webapp.classes}/travelocity.properties"/>
         <war destfile="${build}/travelocity.com.war" webxml="${travelocity.webapp}/WEB-INF/web.xml">

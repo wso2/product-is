@@ -156,8 +156,8 @@ function drawAddFedAccountPopup() {
 
     $.ajax({
         url: "/portal/gadgets/connected_accounts/index.jag",
-        type: "GET",
-        data: "&cookie=" + cookie + "&action=idPList",
+        type: "POST",
+        data: {cookie : cookie, action : "idPList"},
         success: function (data) {
             var resp = $.parseJSON(data);
             if (resp.success == true) {

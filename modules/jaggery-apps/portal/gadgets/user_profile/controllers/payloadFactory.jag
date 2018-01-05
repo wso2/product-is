@@ -54,10 +54,18 @@ var login =       "<aut:login xmlns:aut=\"http://authentication.services.core.ca
 
 var getUserInfo = "<log:getUserInfo xmlns:log=\"http://loggeduserinfo.services.core.carbon.wso2.org\"/>"
 
-var startRegistration = "<xsd:startRegistration xmlns:xsd=\"http://service.fido.authenticator.application.identity.carbon.wso2.org\">\n"+  
-                    "<xsd:appID>{1}</xsd:appID>\n"+
-                    "</xsd:startRegistration>";
-
+var initTOTP = "<ns:initTOTP xmlns:ns=\"http://services.totp.authenticator.application.identity.carbon.wso2.org\">\n" +
+			          "<ns:username>{0}</ns:username>\n" +
+			          "</ns:initTOTP>";
+var resetTOTP = "<ns:resetTOTP xmlns:ns=\"http://services.totp.authenticator.application.identity.carbon.wso2.org\">\n" +
+			          "<ns:username>{0}</ns:username>\n" +
+			          "</ns:resetTOTP>";
+var refreshSecretKey = "<ns:refreshSecretKey xmlns:ns=\"http://services.totp.authenticator.application.identity.carbon.wso2.org\">\n" +
+			          "<ns:username>{0}</ns:username>\n" +
+			          "</ns:refreshSecretKey>";
+var startRegistration = "<xsd:startRegistration xmlns:xsd=\"http://service.fido.authenticator.application.identity.carbon.wso2.org\">\n"+
+                       "<xsd:appID>{1}</xsd:appID>\n"+
+                       "</xsd:startRegistration>";
 var finishRegistration = "<xsd:finishRegistration xmlns:xsd=\"http://service.fido.authenticator.application.identity.carbon.wso2.org\">\n"+
                     "<xsd:response>{0}</xsd:response>\n"+
                     "</xsd:finishRegistration>";
@@ -89,6 +97,9 @@ if(!application.get(SAML_ENABLED)){
 	application.put("urn:login", login);
 }
 application.put("urn:getUserInfo", getUserInfo);
+application.put("urn:initTOTP", initTOTP);
+application.put("urn:resetTOTP",resetTOTP);
+application.put("urn:refreshSecretKey",refreshSecretKey);
 application.put("urn:startRegistration", startRegistration);
 application.put("urn:finishRegistration", finishRegistration);
 application.put("urn:removeAllRegistrations", removeRegistration);

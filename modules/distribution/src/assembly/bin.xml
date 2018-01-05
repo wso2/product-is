@@ -17,6 +17,7 @@
  ~ under the License.
  -->
 <assembly>
+    <id>WSO2 Identity Server - Bin</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -88,6 +89,9 @@
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
+            <excludes>
+                <exclude>informix.sql</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>
@@ -162,6 +166,17 @@
             </includes>
         </fileSet>
 
+        <!--copy jaxrs web app for SCIM2 feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>scim2.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy jaxrs web app for OAuth feature-->
         <fileSet>
             <directory>
@@ -170,6 +185,24 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>oauth2.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#oauth2#v1.0.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#oauth2#dcr#v1.0.war</include>
             </includes>
         </fileSet>
 
@@ -205,6 +238,12 @@
             <includes>
                 <include>api#identity#entitlement.war</include>
             </includes>
+        </fileSet>
+
+        <!--copy the oauth2 grant type extensions -->
+        <fileSet>
+            <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
 
@@ -624,6 +663,13 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/balana-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-1.0.0-wso2v3.jar
             </source>
             <outputDirectory>wso2is-${pom.version}/lib</outputDirectory>
@@ -678,6 +724,19 @@
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/scim-schema-extension.config
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <!--copy scim2-consumer-config.xml-->
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/charon-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/scim2-schema-extension.config
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>

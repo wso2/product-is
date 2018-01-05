@@ -120,11 +120,6 @@
     </OpenID>
 
     <OAuth>
-        <AppInfoCacheTimeout>-1</AppInfoCacheTimeout>
-        <AuthorizationGrantCacheTimeout>-1</AuthorizationGrantCacheTimeout>
-        <SessionDataCacheTimeout>-1</SessionDataCacheTimeout>
-        <ClaimCacheTimeout>-1</ClaimCacheTimeout>
-
         <!--
             Default values for OAuth1RequestTokenUrl, OAuth1AccessTokenUrl, OAuth1AuthorizeUrl
             OAuth2AuthzEPUrl, OAuth2TokenEPUrl and OAuth2UserInfoEPUrl are built in following format
@@ -297,6 +292,14 @@
             </UserInfoEndpointResponseBuilder>
             <SkipUserConsent>false</SkipUserConsent>
         </OpenIDConnect>
+
+        <!-- Configs related to OAuth2 token persistence -->
+    		<TokenPersistence>
+    				<Enable>true</Enable>
+    				<PoolSize>0</PoolSize>
+    				<RetryCount>5</RetryCount>
+    		</TokenPersistence>
+
     </OAuth>
 
     <MultifactorAuthentication>
@@ -314,8 +317,6 @@
     </MultifactorAuthentication>
 
     <SSOService>
-        <PersistanceCacheTimeout>157680000</PersistanceCacheTimeout>
-        <SessionIndexCacheTimeout>157680000</SessionIndexCacheTimeout>
         <EntityId>${carbon.host}</EntityId>
         <!--
             Default value for IdentityProviderURL is  built in following format

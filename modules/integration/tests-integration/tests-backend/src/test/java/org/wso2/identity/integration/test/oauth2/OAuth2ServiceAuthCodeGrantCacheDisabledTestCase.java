@@ -100,7 +100,13 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
         logManger = null;
         consumerKey = null;
         accessToken = null;
-        serverConfigurationManager.restoreToLastConfiguration();
+        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
+        String carbonHome = Utils.getResidentCarbonHome();
+        File identityXml = new File(carbonHome + File.separator
+                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
+                + "identity.xml");
+        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
+        serverConfigurationManager.restartGracefully();
         serverConfigurationManager = null;
     }
 

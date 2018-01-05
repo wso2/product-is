@@ -369,7 +369,10 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private void resetISConfiguration() throws Exception {
 
         log.info("Replacing identity.xml with default configurations");
-        serverConfigurationManager.restoreToLastConfiguration();
+        File defaultIdentityXml = new File(getISResourceLocation() + File.separator + "default-identity.xml");
+        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXml,
+                identityXML, true);
+        serverConfigurationManager.restartForcefully();
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {

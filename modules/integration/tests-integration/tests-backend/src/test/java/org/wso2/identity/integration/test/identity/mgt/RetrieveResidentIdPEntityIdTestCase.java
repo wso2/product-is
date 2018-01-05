@@ -124,6 +124,9 @@ public class RetrieveResidentIdPEntityIdTestCase extends ISIntegrationTest {
     private void resetISConfiguration() throws Exception {
 
         log.info("Replacing identity.xml with default configurations");
-        serverConfigurationManager.restoreToLastConfiguration();
+        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
+
+        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
+        serverConfigurationManager.restartGracefully();
     }
 }

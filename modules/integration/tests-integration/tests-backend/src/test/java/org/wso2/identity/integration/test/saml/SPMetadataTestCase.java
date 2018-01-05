@@ -69,6 +69,8 @@ public class SPMetadataTestCase extends ISIntegrationTest {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = ssoConfigServiceClient.uploadServiceProvider(metadataXml);
         Assert.assertEquals(samlssoServiceProviderDTO.getIssuer(), ISSUER);
+        Assert.assertEquals(samlssoServiceProviderDTO.getDefaultAssertionConsumerUrl(), ACSs[0]);
+        Assert.assertEquals(samlssoServiceProviderDTO.getAssertionConsumerUrls(), ACSs);
 
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
@@ -87,8 +89,6 @@ public class SPMetadataTestCase extends ISIntegrationTest {
         Assert.assertEquals(samlssoServiceProviderDTOGet.getDoValidateSignatureInRequests(), ISAAUTHNREQUESTSSIGNED);
         Assert.assertEquals(samlssoServiceProviderDTOGet.getSloRequestURL(), SLOREQUESTURL);
         Assert.assertEquals(samlssoServiceProviderDTOGet.getSloResponseURL(), SLORESPONSEURL);
-        Assert.assertEquals(samlssoServiceProviderDTOGet.getCertAlias(), CERTALIAS);
-
     }
 
     @AfterClass

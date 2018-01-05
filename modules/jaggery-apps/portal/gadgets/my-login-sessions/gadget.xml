@@ -22,7 +22,7 @@
     </ModulePrefs>
     <Content type="html" view="default">
         <![CDATA[
-
+        <script type="text/javascript" src="/portal/csrf.js"></script>
         <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
@@ -174,11 +174,12 @@
                     cookie = obj.cookie;
                     userName = obj.user;
                     if (cookie != null) {
-                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/index.jag?cookie=" + cookie + "&user=" + userName;
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/index.jag";
 
                         $.ajax({
-                            type:"GET",
-                            url:str
+                            type:"POST",
+                            url:str,
+                            data: {cookie : cookie, user : userName}
 
                         }).done(function (data) {
                             drawPage(data);

@@ -479,10 +479,10 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
                                 ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
 
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
-                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
-                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
+//                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
+//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
+//                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -625,7 +625,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         firstNameClaim.setClaimUri(firstNameClaimURI);
         ClaimMapping firstNameClaimMapping = new ClaimMapping();
         firstNameClaimMapping.setRequested(true);
-        firstNameClaimMapping.setMandatory(true);
+        //firstNameClaimMapping.setMandatory(true);
         firstNameClaimMapping.setLocalClaim(firstNameClaim);
         firstNameClaimMapping.setRemoteClaim(firstNameClaim);
         claimMappingList.add(firstNameClaimMapping);
@@ -634,7 +634,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         lastNameClaim.setClaimUri(lastNameClaimURI);
         ClaimMapping lastNameClaimMapping = new ClaimMapping();
         lastNameClaimMapping.setRequested(true);
-        lastNameClaimMapping.setMandatory(true);
+        //lastNameClaimMapping.setMandatory(true);
         lastNameClaimMapping.setLocalClaim(lastNameClaim);
         lastNameClaimMapping.setRemoteClaim(lastNameClaim);
         claimMappingList.add(lastNameClaimMapping);
@@ -643,7 +643,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         emailClaim.setClaimUri(emailClaimURI);
         ClaimMapping emailClaimMapping = new ClaimMapping();
         emailClaimMapping.setRequested(true);
-        emailClaimMapping.setMandatory(true);
+        //emailClaimMapping.setMandatory(true);
         emailClaimMapping.setLocalClaim(emailClaim);
         emailClaimMapping.setRemoteClaim(emailClaim);
         claimMappingList.add(emailClaimMapping);

@@ -1,11 +1,8 @@
 <%
 
 var log = new Log();
-var cryptoUtil = Packages.org.wso2.carbon.core.util.CryptoUtil;
 
-var encodedString = decodeURIComponent(request.getParameter("cookie"));
-var cookieStr =  new java.lang.String(cryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(encodedString), "UTF-8");
-var cookie = String(cookieStr);
+var cookie = request.getParameter("cookie");
 var action = request.getParameter("action");
 
 session.put('auth-cookie', cookie);
