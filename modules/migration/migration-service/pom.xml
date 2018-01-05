@@ -19,8 +19,8 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.4.1-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <version>5.5.0-SNAPSHOT</version>
+        <relativePath>../../../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
