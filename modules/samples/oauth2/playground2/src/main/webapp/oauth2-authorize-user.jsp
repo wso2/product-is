@@ -34,7 +34,6 @@
         String callBackUrl = request.getParameter(OAuth2Constants.CALL_BACK_URL);
         String implicitRespType = request.getParameter(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
         String acr_values =  request.getParameter("acr_values");
-        String amr_values =  request.getParameter("amr_values");
 
         boolean usePKCE = usePKCEParameter != null && YES.equals(usePKCEParameter);
         if(usePKCE) {
@@ -62,7 +61,6 @@
         session.setAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT, logoutEndpoint);
         session.setAttribute(OAuth2Constants.OIDC_SESSION_IFRAME_ENDPOINT, sessionIFrameEndpoint);
         session.setAttribute("acr_values", acr_values);
-        session.setAttribute("amr_values", amr_values);
 
         if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) ||
             authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT)) {
@@ -105,9 +103,6 @@
     }
     if(acr_values != null) {
         oAuthPKCEAuthenticationRequestBuilder.setParameter("acr_values", acr_values);
-    }
-    if(amr_values != null) {
-        oAuthPKCEAuthenticationRequestBuilder.setParameter("amr_values", amr_values);
     }
 
     // Build the new response mode with form post.
