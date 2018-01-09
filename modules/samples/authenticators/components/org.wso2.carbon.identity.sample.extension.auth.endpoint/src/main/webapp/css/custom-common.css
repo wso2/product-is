@@ -1,0 +1,162 @@
+body {
+    background: #f9f9f9;
+    font-family: 'Roboto Light', Arial, Helvetica, sans-serif;
+    font-weight: 300;
+}
+header {
+    background: #222222;
+    min-height: 50px;
+    position: relative;
+}
+header .brand a {
+    min-height: 24px;
+}
+header .brand img.logo {
+    height: 24px;
+}
+header .brand h1 {
+    margin: 0 0 0 5px;
+    display: inline-block;
+    line-height: 1;
+}
+header .brand h1 em {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 0;
+    color: #ffffff;
+    padding: 3px 0 0 0;
+    font-style: normal;
+    text-transform: uppercase;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    min-height: 40px;
+    overflow: hidden;
+    color: #cbcbcb;
+    background: #222222;
+}
+footer > .container, footer > .container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+footer > .container p, footer > .container-fluid p {
+    line-height: 40px;
+    margin-bottom: 0;
+}
+footer a, footer a:hover {
+    color: #cbcbcb;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.boarder-bottom-blue {
+    border-bottom: 2px solid #006596;
+}
+.padding-double {
+    padding: 20px;
+}
+.white {
+    color: #FFF;
+}
+.blue-bg {
+    background-color: #3a9ecf !important;
+}
+.uppercase {
+    text-transform: uppercase;
+}
+.boarder-all {
+    border: 1px solid #d8d8d8;
+    background: #FFF;
+    margin-top: -10px;
+}
+.font-large {
+    font-size: 16px;
+}
+.wr-input-control {
+    margin-bottom: 20px;
+}
+.wr-login {
+    padding-top: 50px;
+
+}
+
+.wr-login input[type=text], .wr-login input[type=password]{
+    border: 1px #d2d2d2 solid;
+    width: 100%;
+    padding: 6px 10px;
+    z-index: 1;
+    -webkit-appearance: none;
+    line-height: 30px;
+    border-radius: 0px;
+}
+.wr-btn {
+    font-weight: normal;
+    font-size: 13px;
+    color: #fff;
+    background: #5d81d2;
+    padding: 10px 10px;
+    display: inline-block;
+    border: none;
+}
+button.grey-bg:hover {
+    background-color: #3A9ECF;
+}
+.wr-btn:hover {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #6b94f1;
+}
+button.grey-bg {
+    background-color: #222222;
+}
+button.font-extra-large {
+    font-size: 20px;
+}
+img.idp-image {
+    padding: 3px 2px;
+}
+
+
+.padding-left {padding-left:10px;}
+.padding-right {padding-right:10px;}
+.padding-top {padding-top:10px;}
+.padding-bottom {padding-bottom:10px;}
+.padding{padding:10px;}
+.padding-none{ padding:0px !important;}
+
+.padding-left-double {padding-left:20px;}
+.padding-right-double {padding-right:20px;}
+.padding-top-double {padding-top:20px;}
+.padding-bottom-double {padding-bottom:20px;}
+.padding-double{padding:20px;}
+
+.margin-left {margin-left:10px;}
+.margin-right {margin-right:10px;}
+.margin-top {margin-top:10px;}
+.margin-bottom {margin-bottom:10px;}
+.margin{margin:10px;}
+.margin-none{margin: 0px !important;}
+
+.margin-left-double {margin-left:20px;}
+.margin-right-double {margin-right:20px;}
+.margin-top-double {margin-top:20px;}
+.margin-bottom-double {margin-bottom:20px;}
+.margin-double{margin:20px;}
+.font-small{font-size:12px;}
+.font-medium{font-size:16px;}
+.font-large{font-size:1.3em;}
+.font-extra-large{font-size:20px !important;}
+
+.error-alert{
+    background-color: #FFE7E8;
+}
+
+.form-group.required .control-label:after {
+    content:" *";
+    color:red;
+}
