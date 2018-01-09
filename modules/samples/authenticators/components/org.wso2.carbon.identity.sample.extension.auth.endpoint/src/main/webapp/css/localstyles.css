@@ -1,0 +1,282 @@
+/*
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+body, p, div, a, span, h1, h2, h3, h4 {
+    font-family: 'helvetica neue', helvetica, arial, 'lucida grande', sans-serif;
+}
+
+body {
+    background: #999 url(../images/body-back.png) no-repeat center 10px;
+}
+
+.header-strip {
+    background: #5e5e5e;
+    height: 10px;
+}
+
+.header-back {
+    background: transparent url(../images/repeat.jpg) repeat-x left top;
+    height: 85px;
+}
+
+.header-text {
+    background: #000;
+    color: #cccccc;
+    font-size: 13px;
+    text-align: center;
+}
+
+.header-text strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+.logo {
+    background: transparent url(../images/logo.png) no-repeat left top;
+    width: 424px;
+    height: 85px;
+    display: block;
+    cursor: pointer;
+}
+
+.content-section {
+    text-align: left;
+    padding: 10px 0 0 0;
+}
+
+.content-section form.well {
+    text-align: left;
+}
+
+.btn-primary {
+    background-color: #316a90;
+    *background-color: #316a90;
+    background-image: -ms-linear-gradient(top, #316a90, #4583ac);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#316a90), to(#4583ac));
+    background-image: -webkit-linear-gradient(top, #316a90, #4583ac);
+    background-image: -o-linear-gradient(top, #316a90, #4583ac);
+    background-image: -moz-linear-gradient(top, #316a90, #4583ac);
+    background-image: linear-gradient(top, #316a90, #4583ac);
+    background-repeat: repeat-x;
+    border-color: #0055cc #0055cc #003580;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#316a90', endColorstr='#4583ac', GradientType=0);
+    filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+}
+
+.login-header {
+    background: #e86d1f;
+    color: #fff;
+    padding: 5px;
+
+    -webkit-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+
+    -webkit-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
+    -moz-border-radius-topright: 4px;
+
+    margin-top: 10px;
+}
+
+.form-horizontal .control-label {
+    width: 80px;
+}
+
+.form-horizontal .controls {
+    margin-left: 100px;
+}
+
+.form-horizontal .form-actions {
+    padding-left: 100px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+h1 {
+    margin-top: 20px;
+    color: #fff;
+    font-weight: normal;
+    font-size: 30px;
+}
+
+.different-login-container {
+    background: #F5F5F5;
+    padding: 10px;
+    -webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+.main-login-container {
+    background: transparent url(../images/container-back.png) repeat left top;
+    padding: 20px 10px;
+    margin-bottom: 20px;
+    -webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+.vertical-slitter {
+    border-right: solid 1px #fff;
+}
+
+.form-actions {
+    border-top: none;
+    background: transparent;
+}
+
+.btn-primary.active {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-primary {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background: #45484d; /* Old browsers */
+    background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #45484d), color-stop(100%, #000000)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #45484d 0%, #000000 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #45484d 0%, #000000 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #45484d 0%, #000000 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #45484d 0%, #000000 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#45484d', endColorstr='#000000', GradientType=0); /* IE6-9 */
+    padding: 5px 10px;
+
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+    color: #ffffff;
+
+    background: #45484d; /* Old browsers */
+    background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #45484d), color-stop(100%, #000000)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #45484d 0%, #000000 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #45484d 0%, #000000 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #45484d 0%, #000000 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #45484d 0%, #000000 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#45484d', endColorstr='#000000', GradientType=0); /* IE6-9 */
+
+}
+
+.btn-primary:active,
+.btn-primary.active {
+    background-color: #003399 \9;
+}
+
+.btn-primary-deny {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background: #C94135; /* Old browsers */
+    background: -moz-linear-gradient(top, #C94135 0%, #4E0505 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #C94135), color-stop(100%, #4E0505)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #C94135 0%, #4E0505 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #C94135 0%, #4E0505 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #C94135 0%, #4E0505 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #C94135 0%, #4E0505 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#C94135', endColorstr='#4E0505', GradientType=0); /* IE6-9 */
+    padding: 5px 10px;
+
+}
+
+.btn-primary-deny:hover,
+.btn-primary-deny:focus,
+.btn-primary-deny:active,
+.btn-primary-deny.active,
+.btn-primary-deny.disabled,
+.btn-primary-deny[disabled] {
+    color: #ffffff;
+
+    background: #C94135; /* Old browsers */
+    background: -moz-linear-gradient(top, #C94135 0%, #4E0505 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #C94135), color-stop(100%, #4E0505)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #C94135 0%, #4E0505 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #C94135 0%, #4E0505 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #C94135 0%, #4E0505 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #C94135 0%, #4E0505 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#C94135', endColorstr='#4E0505', GradientType=0); /* IE6-9 */
+
+}
+
+.btn-primary-deny:active,
+.btn-primary-deny.active {
+    background-color: #CA1909 \9;
+}
+
+.marL30 {
+    margin-left: 30% !important;
+}
+
+.marL32 {
+    margin-left: 32% !important;
+}
+
+h2 {
+    color: #ddd;
+    font-weight: normal;
+}
+
+.different-login-container a.main-link {
+    display: block;
+    background: transparent url(../images/icon-default.png) no-repeat left top;
+    width: 75px;
+    height: 76px;
+    float: left;
+    margin-right: 10px;
+    padding-left: 74px;
+}
+
+#claimed_id {
+    background: #fff url(../images/openid-input.gif) no-repeat left 4px;
+    padding-left: 20px;
+}
+
+.slidePopper {
+    position: absolute;
+    margin-top: 70px;
+    padding: 10px;
+    background: #fff;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    z-index: 6;
+}
+
+.slidePopper-cancel {
+    cursor: pointer;
+}
+
+.overlay {
+    background: #ccc;
+    opacity: 0.5;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+
+.go-btn {
+    margin-top: -8px;
+}

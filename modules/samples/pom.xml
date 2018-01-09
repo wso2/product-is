@@ -40,6 +40,7 @@
         <module>passive-sts</module>
         <module>identity-mgt</module>
         <module>workflow</module>
+        <module>authenticators</module>
     </modules>
 
 </project>
