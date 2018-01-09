@@ -703,6 +703,11 @@
                 <version>${sevlet.api.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>${jsp.api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.common.wso2</groupId>
                 <artifactId>google-collect</artifactId>
                 <version>${google.collect.wso2.version}</version>
@@ -1697,6 +1702,7 @@
         <bcprov.jdk13.version>140</bcprov.jdk13.version>
         <bcprov.jdk15.version>132</bcprov.jdk15.version>
         <sevlet.api.version>2.5</sevlet.api.version>
+        <jsp.api.version>2.0</jsp.api.version>
         <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
         <axiom.impl.version>1.2.12</axiom.impl.version>
         <axiom.version>1.2.11-wso2v6</axiom.version>
