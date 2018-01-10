@@ -22,17 +22,6 @@ body{
     text-align:center;
 }
 
-.logo{
-    background:transparent url(../img/logo2.png) no-repeat left top;
-    width:auto;
-    height:85px;
-    display:block;
-    cursor:pointer;
-    margin-top:5px;
-}
-
-
-
 .login-header{
     background:#e86d1f;
     color:#fff;
@@ -65,15 +54,6 @@ h1{
     font-weight:normal;
     font-size:30px;
 }
-.main-login-container{
- background:transparent url(../img/container-back.png) repeat left top;
-    padding:20px 20px;
-    margin-bottom:20px;
-   -webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-   -moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-    box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-    border-radius:10px;
-}
 
 .form-actions{
     border-top:none;
@@ -90,10 +70,6 @@ h2{
    font-weight:normal;
 }
 
-#claimed_id{
-   background:#fff url(../img/openid-input.gif) no-repeat left 4px;
-   padding-left:20px;
-}
 .link-seperator{
    border-bottom:solid 1px #ccc;
    padding-bottom:20px;
