@@ -221,13 +221,6 @@ ul {
 }*/
 
 
-#logo-wso2{
-      background: url("../img/wso2-logo-small.png") no-repeat scroll left top transparent;
-    display: inline-block;
-    height: 17px;
-    width: 41px;
-    margin-top:4px;
-}
 #logo-wso2:hover{
     background-position:left -18px;
 }
