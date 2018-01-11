@@ -40,11 +40,18 @@
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
-		<exclude>**/tomcat/catalina-server.xml</exclude>
+                <exclude>**/tomcat/catalina-server.xml</exclude>
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/email/email-admin-config.xml</exclude>
                 <exclude>**/dbscripts/**</exclude>
                 <exclude>**/security/authenticators.xml</exclude>
+                <exclude>**/java2wsdl.sh</exclude>
+                <exclude>**/java2wsdl.bat</exclude>
+                <exclude>**/wsdl2java.bat</exclude>
+                <exclude>**/wsdl2java.sh</exclude>
+                <exclude>**/tcpmon-1.0.jar</exclude>
+                <exclude>**/tcpmon.sh</exclude>
+                <exclude>**/tcpmon.bat</exclude>
             </excludes>
         </fileSet>
 
@@ -53,6 +60,9 @@
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/wso2server.bat</exclude>
+                <exclude>**/wsdl2java.sh</exclude>
+                <exclude>**/java2wsdl.sh</exclude>
+                <exclude>**/tcpmon.sh</exclude>
             </excludes>
             <includes>
                 <include>**/*.sh</include>
