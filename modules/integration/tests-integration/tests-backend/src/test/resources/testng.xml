@@ -169,6 +169,7 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
+            <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
         </classes>
     </test>
 
