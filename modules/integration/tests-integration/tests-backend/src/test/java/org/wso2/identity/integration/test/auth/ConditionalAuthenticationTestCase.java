@@ -221,7 +221,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         outboundAuthConfig.setEnableAuthorization(true);
         AuthenticationScriptConfig config = new AuthenticationScriptConfig();
         config.setContent(script);
-        config.setIsEnable(true);
+        config.setEnabled(true);
         outboundAuthConfig.setAuthenticationScriptConfig(config);
         serviceProvider.setLocalAndOutBoundAuthenticationConfig(outboundAuthConfig);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
@@ -264,8 +264,6 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         authenticationStep2.setStepOrder(2);
         authenticationStep2.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd
                 .IdentityProvider[]{getFederatedSAMLSSOIDP()});
-//        authenticationStep2.setSubjectStep(true);
-//        authenticationStep2.setAttributeStep(true);
         localAndOutboundAuthenticationConfig.addAuthenticationSteps(authenticationStep2);
 
         return localAndOutboundAuthenticationConfig;
@@ -558,7 +556,8 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
     private void readConditionalAuthScript() throws Exception {
 
-        try (InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("script.js")) {
+        try (InputStream resourceAsStream = this.getClass()
+                .getResourceAsStream("ConditionalAuthenticationTestCase.js")) {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream);
             StringBuilder resourceFile = new StringBuilder();
 
