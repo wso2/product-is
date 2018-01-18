@@ -1615,13 +1615,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.10.105</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.10.107</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.3</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.3.56</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.5.178</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.5.179</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.3</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.13</identity.inbound.auth.sts.version>
@@ -1653,7 +1653,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Properties -->
-        <identity.outbound.auth.oidc.version>5.1.10</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.1.11</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.1.8</identity.outbound.auth.samlsso.version>
 
