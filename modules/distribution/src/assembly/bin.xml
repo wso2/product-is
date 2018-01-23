@@ -263,6 +263,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
+        <!--copy the cxf filters to cxf-runtime-->
+        <fileSet>
+            <directory>../cxf-filters/target/cxfFilters/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/cxf</outputDirectory>
+        </fileSet>
+
         <!--Copy the outbound authenticator jars OIDC, Passive-STS.-->
         <fileSet>
             <directory>../authenticators/target/authenticatoroutboundCopied/jar</directory>
