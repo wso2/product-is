@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.4.1-SNAPSHOT</version>
+        <version>5.5.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -44,7 +44,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
                                     <artifactId>org.wso2.carbon.identity.oauth.client.authn.filter</artifactId>
-                                    <version>5.5.178-SNAPSHOT</version>
+                                    <version>${identity.inbound.auth.oauth.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/cxfFilters/jar
