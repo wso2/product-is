@@ -68,6 +68,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CommonConstants.IS_DEFAULT_HTTPS_PORT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
@@ -93,6 +94,9 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     private MultipleServersManager manager;
     private SAMLSSOConfigServiceClient samlSSOConfigServiceClient;
     private DefaultHttpClient client;
+    private ServiceProvider serviceProvider;
+    private LocalAndOutboundAuthenticationConfig outboundAuthConfig;
+    private HttpResponse response;
 
     private String consumerKey;
     private String consumerSecret;
@@ -117,7 +121,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         client = new DefaultHttpClient();
 
         startSecondaryIS();
-        readConditionalAuthScript();
+        readConditionalAuthScript("ConditionalAuthenticationTestCase.js");
 
         createSAMLAppInSecondaryIS();
         createServiceProviderInSecondaryIS();
@@ -147,6 +151,40 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        LoginToPrimaryIS();
+        /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
+         has been successfully completed. */
+        assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
+                "Failed to follow the conditional authentication steps.");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(groups = "wso2.is", description = "Check conditional authentication flow based on HTTP Cookie.")
+    public void testConditionalAuthenticationUsingHTTPCookie() throws Exception {
+
+        // Update authentication script to handle authentication based on HTTP context.
+        updateAuthScript("ConditionalAuthenticationHTTPCookieTestCase.js");
+        LoginToPrimaryIS();
+
+        /* Here if the response headers contains the custom HTTP cookie we set from the authentication script, it
+        indicates that the conditional authentication steps has been successfully completed. */
+        boolean hasTestCookie = false;
+        Header[] headers = response.getHeaders("Set-Cookie");
+        if (headers != null) {
+            for (Header header : headers) {
+                String headerValue = header.getValue();
+                if (headerValue.contains("testcookie")) {
+                    hasTestCookie = true;
+                }
+            }
+        }
+        assertTrue(hasTestCookie, "Failed to follow the conditional authentication steps. HTTP Cookie : " +
+                "testcookie was not found in the response.");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    private void LoginToPrimaryIS() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
@@ -155,7 +193,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         urlParameters.add(new BasicNameValuePair("acr_values", "acr1"));
         urlParameters.add(new BasicNameValuePair("accessEndpoint", OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+        response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Authorized response header is null.");
@@ -176,12 +214,6 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         EntityUtils.consume(response.getEntity());
 
         response = sendLoginPost(client, sessionDataKey);
-
-        /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
-         has been successfully completed. */
-        Assert.assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
-                "Failed to follow the conditional authentication steps.");
-        EntityUtils.consume(response.getEntity());
     }
 
     private void createServiceProviderInPrimaryIS() throws Exception {
@@ -195,7 +227,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
             }
         }
 
-        ServiceProvider serviceProvider = new ServiceProvider();
+        serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(PRIMARY_IS_APPLICATION_NAME);
         serviceProvider.setDescription("This is a test Service Provider for conditional authentication flow test.");
         applicationManagementServiceClient.createApplication(serviceProvider);
@@ -217,7 +249,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
                 new InboundAuthenticationRequestConfig[]{requestConfig});
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
 
-        LocalAndOutboundAuthenticationConfig outboundAuthConfig = createLocalAndOutboundAuthenticationConfig();
+        outboundAuthConfig = createLocalAndOutboundAuthenticationConfig();
         outboundAuthConfig.setEnableAuthorization(true);
         AuthenticationScriptConfig config = new AuthenticationScriptConfig();
         config.setContent(script);
@@ -554,10 +586,10 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         samlSSOConfigServiceClient.addServiceProvider(samlssoServiceProviderDTO);
     }
 
-    private void readConditionalAuthScript() throws Exception {
+    private void readConditionalAuthScript(String filename) throws Exception {
 
         try (InputStream resourceAsStream = this.getClass()
-                .getResourceAsStream("ConditionalAuthenticationTestCase.js")) {
+                .getResourceAsStream(filename)) {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream);
             StringBuilder resourceFile = new StringBuilder();
 
@@ -572,5 +604,22 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
             String errorMsg = "Error occurred while reading file from class path, " + e.getMessage();
             log.error(errorMsg);
         }
+    }
+
+    /**
+     * Update service provider authentication script config.
+     *
+     * @param filename File Name of the authentication script.
+     * @throws Exception
+     */
+    private void updateAuthScript(String filename) throws Exception {
+
+        readConditionalAuthScript(filename);
+        AuthenticationScriptConfig config = new AuthenticationScriptConfig();
+        config.setContent(script);
+        config.setEnabled(true);
+        outboundAuthConfig.setAuthenticationScriptConfig(config);
+        serviceProvider.setLocalAndOutBoundAuthenticationConfig(outboundAuthConfig);
+        applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 }
