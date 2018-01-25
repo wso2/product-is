@@ -20,8 +20,8 @@ package org.wso2.sample.is.sso.agent;
 
 import org.apache.axiom.om.util.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.wso2.carbon.identity.sso.agent.SAML2SSOAgentFilter;
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-import org.wso2.carbon.identity.sso.agent.SSOAgentFilter;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 
 import javax.servlet.*;
@@ -30,7 +30,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SSOAgentSampleFilter extends SSOAgentFilter {
+public class SSOAgentSampleFilter extends SAML2SSOAgentFilter {
 
     private static Logger LOGGER = Logger.getLogger("org.wso2.sample.is.sso.agent");
 
