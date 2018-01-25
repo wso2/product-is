@@ -1623,7 +1623,7 @@
         <identity.inbound.auth.saml.version>5.3.56</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>5.5.179</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.3</identity.inbound.auth.openid.version>
-        <identity.agent.sso.version>5.1.15</identity.agent.sso.version>
+        <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.13</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
         <identity.carbon.auth.mutual.ssl.version>5.1.3</identity.carbon.auth.mutual.ssl.version>
