@@ -1,6 +1,5 @@
 
   .jslider .jslider-bg i,
-  .jslider .jslider-pointer { background: url(../img/jslider.png) no-repeat 0 0; }
 
   .jslider { display: block; width: 100%; height: 1em; position: relative; top: 0.6em; font-family: Arial, sans-serif; }
   .jslider table { width: 100%; border-collapse: collapse; border: 0; }

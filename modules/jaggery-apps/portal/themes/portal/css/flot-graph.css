@@ -119,29 +119,7 @@ input[type=checkbox] {
 .btn {
     background-image: none!important;
 }
-	
-.icon-chevron-down {
-    background-image: url("../img/glyphicons-halflings.png");
-    background-position: -313px -121px;
-    background-repeat: no-repeat;
-    display: inline-block;
-    height: 12px;
-    line-height: 14px;
-    margin-top: 1px;
-    vertical-align: text-top;
-    width: 14px;
-}
-[class^="icon-"], [class*=" icon-"] {
-    background-image: url("/portal/img/glyphicons-halflings.png");
-    background-position: 14px 14px;
-    background-repeat: no-repeat;
-    display: inline-block;
-    height: 14px;
-    line-height: 14px;
-    margin-top: 1px;
-    vertical-align: text-top;
-    width: 14px;
-}
+
 span.configureChart {
     cursor: pointer;
     display: inline-block;

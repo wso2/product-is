@@ -142,23 +142,6 @@ body {
 .ui-resizable-resizing {
 	z-index:9999999 !important;
 }
-.layout_name_edit {
-	background-color:inherit;
-	background:url( '../media/images/icons/edit_input.gif' );
-	background-repeat:no-repeat;
-	background-position:0 center;
-	padding:0px;
-	margin:0px;
-	padding-left:14px;
-	border:none;
-	font-size:16px;
-	font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-	color:white;
-	outline:none;
-	width:90%;
-	font-style:italic;
-	cursor:text !important;
-}
 .layouts_grid .remove_element {
 	float:right;
 	color:black;

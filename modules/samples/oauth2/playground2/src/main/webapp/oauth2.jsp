@@ -6,7 +6,21 @@
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.util.UUID" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
+<%@ page import="org.wso2.sample.identity.oauth2.ApplicationConfig" %>
 <%
+
+
+    String consumerKey = ApplicationConfig.getConsumerKey();
+    String consumerSecret = ApplicationConfig.getConsumerSecret();
+    String scopeName = ApplicationConfig.getScope();
+    String callbackUrl = ApplicationConfig.getCallbackUrl();
+    String accessTokenEndpoint = ApplicationConfig.getAccessTokenEndpointContext();
+    String authorizeEndpoint = ApplicationConfig.getAuthorizeEndpointContext();
+    String logoutEndpoint = ApplicationConfig.getLogoutEndpointContext();
+    String userInfo = ApplicationConfig.getUserInforEndpointContext();
+    String sessionIFrameEndpoint = ApplicationConfig.getSessionIframeEndpointContext();
+
     String code = null;
     String accessToken = null;
     String idToken = null;
@@ -17,6 +31,7 @@
     String grantType = null;
     String code_verifier = null;
     String code_challenge = null;
+    String implicitResponseType = null;
 
     boolean isOIDCLogoutEnabled = false;
     boolean isOIDCSessionEnabled = false;
@@ -47,6 +62,7 @@
 
         error = request.getParameter(OAuth2Constants.ERROR);
         grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
+        implicitResponseType = (String) session.getAttribute(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
         if (StringUtils.isNotBlank(request.getHeader(OAuth2Constants.REFERER)) &&
                 request.getHeader(OAuth2Constants.REFERER).contains("rpIFrame")) {
             /**
@@ -122,6 +138,7 @@
 
             var grantType = document.getElementById("grantType").value;
             var scope = document.getElementById("scope").value;
+            var implicitResponseType = document.getElementById("response_type").value;
 
             document.getElementById("logutep").style.display = "none";
             document.getElementById("sessionep").style.display = "none";
@@ -147,6 +164,10 @@
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
                 document.getElementById("formPost").style.display = "";
+
+                if (scope.indexOf("openid") > -1) {
+                    document.getElementById("implicitRespType").style.display = "";
+                }
             } else if ('password' == grantType) {
                 document.getElementById("clientsecret").style.display = "";
                 document.getElementById("callbackurltr").style.display = "none";
@@ -183,6 +204,41 @@
                 }
             }
             return "";
+        }
+
+        function getIDtoken() {
+            var fragment = window.location.hash.substring(1);
+            var arrParams = fragment.split("&");
+            for (var i = 0; i < arrParams.length; i++) {
+                var urlParameters = arrParams[i].split("=");
+
+                if (urlParameters[0] == "id_token") {
+                    var idToken = urlParameters[1];
+                    return idToken;
+                }
+            }
+            return "";
+        }
+
+        function getDecodedIDToken() {
+            var idToken = getIDtoken();
+            if (idToken) {
+                var decodedIdToken = atob(idToken.split(".")[1]);
+                return decodedIdToken;
+            }
+            return "";
+        }
+
+        function makeList(data) {
+            document.write('<tbody>');
+            for (var i in data) {
+                document.write('<div><tr><td><label id="idtokenList">')
+                document.write(i);
+                document.write('</label></td><td>');
+                document.write(data[i]);
+                document.write('</td></tr></div>');
+            }
+            document.write('</tbody>');
         }
 
     </script>
@@ -250,12 +306,13 @@
 
                         <tr>
                             <td><label>Client Id : </label></td>
-                            <td><input type="text" id="consumerKey" name="consumerKey" style="width:350px"></td>
+                            <td><input type="text" id="consumerKey" name="consumerKey" value="<%=consumerKey%>" style="width:350px"></td>
                         </tr>
 
                         <tr id="clientsecret" style="display:none">
                             <td><label>Client Secret : </label></td>
-                            <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
+                            <td><input type="password" id="consumerSecret" name="consumerSecret"
+                                       value="<%=consumerSecret%>" style="width:350px">
                             </td>
                         </tr>
 
@@ -272,36 +329,54 @@
 
                         <tr>
                             <td><label>Scope : </label></td>
-                            <td><input type="text" id="scope" name="scope" onchange="setVisibility();">
+                            <td><input type="text" id="scope" name="scope" value="<%=scopeName%>"
+                                       onchange="setVisibility();">
+                            </td>
+                        </tr>
+                        <tr id="implicitRespType" style="display: none">
+                            <td><label>Implicit Response Type: </label></td>
+                            <td>
+                                <select id="response_type" name="response_type">
+                                    <option value="<%=OpenIDConnectConstants.ID_TOKEN%>" selected="selected">
+                                        ID token Only
+                                    </option>
+                                    <option value="<%=OpenIDConnectConstants.ID_TOKEN_TOKEN%>">ID token &
+                                        Access Token
+                                    </option>
+                                </select>
                             </td>
                         </tr>
 
                         <tr id="callbackurltr">
                             <td><label>Callback URL : </label></td>
-                            <td><input type="text" id="callbackurl" name="callbackurl" style="width:350px">
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>"
+                                       style="width:350px">
                             </td>
                         </tr>
 
                         <tr id="authzep">
                             <td>Authorize Endpoint :</td>
-                            <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint" style="width:350px">
+                            <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint" value="<%=authorizeEndpoint%>"
+                                       style="width:350px">
                             </td>
                         </tr>
 
                         <tr id="accessep" style="display:none">
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" style="width:350px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint"  value="<%=accessTokenEndpoint%>"
+                                       style="width:350px"></td>
                         </tr>
 
                         <tr id="logutep" style="display:none">
                             <td>Logout Endpoint :</td>
-                            <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" style="width:350px">
+                            <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" value="<%=logoutEndpoint%>"
+                                       style="width:350px">
                             </td>
                         </tr>
 
                         <tr id="sessionep" style="display:none">
                             <td>Session Iframe Endpoint :</td>
-                            <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint"
+                            <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint" value="<%=sessionIFrameEndpoint%>"
                                        style="width:350px"></td>
                         </tr>
 
@@ -358,15 +433,15 @@
                         </tr>
                         <tr>
                             <td>Callback URL :</td>
-                            <td><input type="text" id="callbackurl" name="callbackurl" style="width:350px"></td>
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>" style="width:350px"></td>
                         </tr>
                         <tr>
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" style="width:350px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" value="<%=accessTokenEndpoint%>" style="width:350px"></td>
                         </tr>
                         <tr>
                             <td><label>Client Secret : </label></td>
-                            <td><input type="password" id="consumerSecret" name="consumerSecret" style="width:350px">
+                            <td><input type="password" id="consumerSecret" name="consumerSecret" value="<%=consumerSecret%>" style="width:350px">
                             </td>
                         </tr>
                         <% if (session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
@@ -423,7 +498,8 @@
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" value="<%=userInfo%>"
+                                       style="width:350px"/>
                         </tr>
 
                         <tr>
@@ -480,7 +556,60 @@
                 </form>
             </div>
             <%} %>
-
+            <% } else if (OpenIDConnectConstants.ID_TOKEN.equals(implicitResponseType)) {
+            %>
+            <div>
+                <table class="user_pass_table">
+                    <tbody>
+                    <tr>
+                        <td><h5>ID Token:</h5></td>
+                        <td><input id="idToken" name="idToken" style="width:800px"/>
+                            <script type="text/javascript">
+                                document.getElementById("idToken").value = getIDtoken();
+                            </script>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <script type="text/javascript">
+                            var decodedIdToken = JSON.parse(getDecodedIDToken());
+                            makeList(decodedIdToken);
+                        </script>
+                    </tr>
+                    </tbody>
+                </table>
+                <%session.invalidate();%>
+            </div>
+            <% } else if (OpenIDConnectConstants.ID_TOKEN_TOKEN.equals(implicitResponseType)) {%>
+            <div>
+                <table class="user_pass_table">
+                    <tbody>
+                    <tr>
+                        <td><label><h5>Access Token :</h5></label></td>
+                        <td><input id="accessToken" name="accessToken" style="width:350px"/>
+                            <script type="text/javascript">
+                                document.getElementById("accessToken").value = getAcceesToken();
+                            </script>
+                    </tr>
+                    <tr>
+                        <td><h5>ID Token:</h5></td>
+                        <td><input id="idToken" name="idToken" style="width:800px"/>
+                            <script type="text/javascript">
+                                document.getElementById("idToken").value = getIDtoken();
+                            </script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <script type="text/javascript">
+                            var decodedIdToken = JSON.parse(getDecodedIDToken());
+                            makeList(decodedIdToken);
+                        </script>
+                    </tr>
+                    </tbody>
+                </table>
+                <%session.invalidate();%>
+            </div>
             <% } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT.equals(grantType)) {%>
             <div>
                 <form action="oauth2-access-resource.jsp" id="loginForm" method="post">
