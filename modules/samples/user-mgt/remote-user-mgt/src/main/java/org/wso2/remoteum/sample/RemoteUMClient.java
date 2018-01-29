@@ -22,15 +22,14 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.log4j.Logger;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.um.ws.api.WSAuthorizationManager;
 import org.wso2.carbon.um.ws.api.WSUserStoreManager;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.claim.Claim;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -39,9 +38,12 @@ import java.util.Properties;
  */
 public class RemoteUMClient {
 
+    static Logger log = Logger.getLogger(RemoteUMClient.class);
     private static String serverUrl;
     private static String username;
     private static String password;
+    private static String truststore;
+    private static String truststorePassword;
 
     private AuthenticationAdminStub authstub = null;
     private ConfigurationContext ctx;
@@ -64,8 +66,8 @@ public class RemoteUMClient {
         options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, authCookie);
 
         //set trust store properties required in SSL communication.
-        System.setProperty("javax.net.ssl.trustStore", RemoteUMSampleConstants.TRUST_STORE_PATH);
-        System.setProperty("javax.net.ssl.trustStorePassword", RemoteUMSampleConstants.TRUST_STORE_PASSWORD);
+        System.setProperty("javax.net.ssl.trustStore", truststore);
+        System.setProperty("javax.net.ssl.trustStorePassword", truststorePassword);
 
 
         //log in as admin user and obtain the cookie
@@ -87,12 +89,13 @@ public class RemoteUMClient {
         //String cookie = null;
         boolean loggedIn = authstub.login(username, password, "localhost");
         if (loggedIn) {
-            System.out.println("The user " + username + " logged in successfully.");
-            System.out.println();
+            log.info("==================================================");
+            log.info("The user " + username + " logged in successfully.");
+            log.info("==================================================");
             authCookie = (String) authstub._getServiceClient().getServiceContext().getProperty(
                     HTTPConstants.COOKIE_STRING);
         } else {
-            System.out.println("Error logging in " + username);
+            log.error("Error logging in " + username);
         }
         return authCookie;
     }
@@ -126,8 +129,8 @@ public class RemoteUMClient {
     public void addUser(String userName, String password) throws UserStoreException {
 
         remoteUserStoreManager.addUser(userName, password, null, null, null);
-        System.out.println("Added user: " + userName);
-        System.out.println();
+        log.info("Added user: " + userName);
+        log.info("================================================================");
     }
 
     /**
@@ -137,8 +140,8 @@ public class RemoteUMClient {
      */
     public void addRole(String roleName) throws UserStoreException {
         remoteUserStoreManager.addRole(roleName, null, null);
-        System.out.println("Added role: " + roleName);
-        System.out.println();
+        log.info("Added role: " + roleName);
+        log.info("================================================================");
     }
 
     /**
@@ -149,8 +152,8 @@ public class RemoteUMClient {
     public void addUserWithRole(String userName, String password, String roleName)
             throws UserStoreException {
         remoteUserStoreManager.addUser(userName, password, new String[]{roleName}, null, null);
-        System.out.println("Added user: " + userName + " with role: " + roleName);
-        System.out.println();
+        log.info("Added user: " + userName + " with role: " + roleName);
+        log.info("================================================================");
     }
 
     /**
@@ -169,8 +172,20 @@ public class RemoteUMClient {
      */
     public void deleteUser(String userName) throws UserStoreException {
         remoteUserStoreManager.deleteUser(userName);
-        System.out.println("Deleted user:" + userName);
-        System.out.println();
+        log.info("Deleted user:" + userName);
+        log.info("================================================================");
+    }
+
+
+    /**
+     * Delete an exisitng user from the system
+     *
+     * @throws Exception
+     */
+    public void deleteRole(String roleName) throws UserStoreException {
+        remoteUserStoreManager.deleteRole(roleName);
+        log.info("Deleted role:" + roleName);
+        log.info("================================================================");
     }
 
     /**
@@ -206,6 +221,9 @@ public class RemoteUMClient {
         RemoteUMClient remoteUMClient = new RemoteUMClient();
         //create web service client
         remoteUMClient.createRemoteUserStoreManager();
+
+        cleanSystem(remoteUMClient);
+
         //add a new user to the system
         remoteUMClient.addUser("kamal", "kamal");
         //add a role to the system
@@ -214,20 +232,20 @@ public class RemoteUMClient {
         remoteUMClient.addUserWithRole("saman", "saman", "eng");
         //print a list of all the users in the system
         String[] users = remoteUMClient.listUsers();
-        System.out.println("List of users in the system:");
+        log.info("List of users in the system:");
         for (String user : users) {
-            System.out.println(user);
+            log.info(user);
         }
-        System.out.println();
+        log.info("================================================================");
         //delete an existing user
         remoteUMClient.deleteUser("kamal");
         //print the current list of users
         String[] userList = remoteUMClient.listUsers();
-        System.out.println("List of users in the system currently:");
+        log.info("List of users in the system currently:");
         for (String user : userList) {
-            System.out.println(user);
+            log.info(user);
         }
-        System.out.println();
+        log.info("================================================================");
         remoteUMClient.addUser("dinuka", "dinuka");
         remoteUMClient.getUserClaims("admin", "null");
         remoteUMClient.updateLastName("dinuka", "malalanayake");
@@ -239,9 +257,34 @@ public class RemoteUMClient {
         remoteUMClient.authorizeRole("eng", "foo/bar", "read");
         //check authorization of a user belongs to that role
         if (remoteUMClient.isUserAuthorized("saman", "foo/bar", "read")) {
-            System.out.println("User saman is authorized to read foo/bar.");
+            log.info("User saman is authorized to read foo/bar.");
+            log.info("================================================================");
         }
 
+        cleanSystem(remoteUMClient);
+    }
+
+    private static void cleanSystem(RemoteUMClient remoteUMClient) {
+        try {
+            remoteUMClient.deleteUser("kamal");
+        } catch (UserStoreException e) {
+            //ignore
+        }
+        try {
+            remoteUMClient.deleteUser("dinuka");
+        } catch (UserStoreException e) {
+            //ignore
+        }
+        try {
+            remoteUMClient.deleteUser("saman");
+        } catch (UserStoreException e) {
+            //ignore
+        }
+        try {
+            remoteUMClient.deleteRole("eng");
+        } catch (UserStoreException e) {
+            //ignore
+        }
     }
 
     /**
@@ -252,14 +295,14 @@ public class RemoteUMClient {
      * @throws Exception
      */
     public void getUserClaims(String username, String profile) throws Exception {
-        System.out.println("================Print All Claims of " + username + "================");
+        log.info("================Print All Claims of " + username + "================");
         //list down the user claims
         for (Claim claims : remoteUserStoreManager.getUserClaimValues(username, profile)) {
-            System.out.println("-----------------------------------");
-            System.out.println(claims.getClaimUri() + " -- " + claims.getValue());
+            log.info("-----------------------------------");
+            log.info(claims.getClaimUri() + " -- " + claims.getValue());
         }
 
-        System.out.println("================================================================");
+        log.info("================================================================");
     }
 
     /**
@@ -271,8 +314,8 @@ public class RemoteUMClient {
      */
     public void updateLastName(String username, String value) throws Exception {
         remoteUserStoreManager.setUserClaimValue(username, "http://wso2.org/claims/lastname", value, null);
-        System.out.println("lastname :" + value + " updated successful for" + " User :" + username);
-        System.out.println();
+        log.info("lastname :" + value + " updated successful for User :" + username);
+        log.info("================================================================");
     }
 
     /**
@@ -284,8 +327,8 @@ public class RemoteUMClient {
      */
     public void updateEmail(String username, String value) throws Exception {
         remoteUserStoreManager.setUserClaimValue(username, "email", value, null);
-        System.out.println("email :" + value + " updated successful for" + " User :" + username);
-        System.out.println();
+        log.info("email :" + value + " updated successful for User :" + username);
+        log.info("================================================================");
     }
 
     private static void loadConfiguration() throws IOException {
@@ -296,6 +339,10 @@ public class RemoteUMClient {
         serverUrl = properties.getProperty(RemoteUMSampleConstants.REMOTE_SERVER_URL);
         username = properties.getProperty(RemoteUMSampleConstants.USER_NAME);
         password = properties.getProperty(RemoteUMSampleConstants.PASSWORD);
+
+        truststore = RemoteUMSampleConstants.RESOURCE_PATH + properties.getProperty(RemoteUMSampleConstants
+                .TRUST_STORE_PATH);
+        truststorePassword = properties.getProperty(RemoteUMSampleConstants.TRUST_STORE_PASSWORD);
     }
 
 }

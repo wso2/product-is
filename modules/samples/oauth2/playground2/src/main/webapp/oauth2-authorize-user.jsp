@@ -6,9 +6,12 @@
 <%@page import="org.apache.oltu.oauth2.common.message.types.GrantType" %>
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants" %>
 <%@ page import="org.wso2.sample.identity.oauth2.OAuthPKCEAuthenticationRequestBuilder" %>
+<%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
+<%@ page import="java.util.UUID" %>
 <%@page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
+    final String YES = "yes";
     try {
 
         String consumerKey = request.getParameter(OAuth2Constants.CONSUMER_KEY);
@@ -29,16 +32,16 @@
         String authzGrantType = request.getParameter(OAuth2Constants.OAUTH2_GRANT_TYPE);
         String scope = request.getParameter(OAuth2Constants.SCOPE);
         String callBackUrl = request.getParameter(OAuth2Constants.CALL_BACK_URL);
+        String implicitRespType = request.getParameter(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
 
-        boolean usePKCE = usePKCEParameter != null && "yes".equals(usePKCEParameter);
+        boolean usePKCE = usePKCEParameter != null && YES.equals(usePKCEParameter);
         if(usePKCE) {
             session.setAttribute(OAuth2Constants.OAUTH2_USE_PKCE, usePKCE);
         }
-        boolean formPostMode = "yes".equals(formPostParameter);
+        boolean formPostMode = YES.equals(formPostParameter);
         if (formPostMode) {
             session.setAttribute(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
         }
-
 
         // By default IS does not validate scope. To validate we need to write a callback handler.
         if (scope == null || scope.trim().length() == 0) {
@@ -71,7 +74,17 @@
     }
 
     OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
-    if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE) {
+    if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT)) {
+        if (scope.equals(OAuth2Constants.SCOPE_OPENID)) {
+            if (implicitRespType.equals(OpenIDConnectConstants.ID_TOKEN) ||
+                    implicitRespType.equals(OpenIDConnectConstants.ID_TOKEN_TOKEN)) {
+                authzGrantType = implicitRespType;
+                oAuthPKCEAuthenticationRequestBuilder.setParameter(OpenIDConnectConstants.NONCE,
+                        UUID.randomUUID().toString());
+                session.setAttribute(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE, implicitRespType);
+            }
+        }
+    } else if ((authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) && usePKCE)) {
         oAuthPKCEAuthenticationRequestBuilder = oAuthPKCEAuthenticationRequestBuilder.setPKCECodeChallenge(PKCECodeChallenge, PKCECodeChallengeMethod);
     }
 
@@ -85,8 +98,7 @@
         oAuthPKCEAuthenticationRequestBuilder.setParameter(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
     }
 
-
-//build the new response mode with form post
+    // Build the new response mode with form post.
     OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildQueryMessage();
     response.sendRedirect(authzRequest.getLocationUri());
     return;
