@@ -1533,6 +1533,11 @@
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
                 <version>${ds-annotations.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.consent.mgt</groupId>
+                <artifactId>org.wso2.carbon.consent.mgt.server.feature</artifactId>
+                <version>${carbon.consent.mgt.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1815,6 +1820,7 @@
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
         <json.version>3.0.0.wso2v1</json.version>
+        <carbon.consent.mgt.version>1.0.0-SNAPSHOT</carbon.consent.mgt.version>
     </properties>
 
     <repositories>
