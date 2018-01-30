@@ -20,6 +20,7 @@
     <test name="is-tests-consent" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
         </classes>
     </test>
 
