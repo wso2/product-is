@@ -54,6 +54,7 @@ public final class OAuth2Constant {
     public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
     public final static String OAUTH_APPLICATION_STATE_REVOKED = "REVOKED";
     public static final String OAUTH_CONSUMER_SECRET = "oauthConsumerSecret";
+    public static final String OAUTH_OIDC_REQUEST = "request";
 
     public final static String CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8490\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
