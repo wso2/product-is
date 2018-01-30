@@ -62,6 +62,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProvider";
 	private final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
 	private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+	private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
+	private static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
+	private static final String customClaimURI1 = "http://wso2.org/claims/challengeQuestion1";
+	private static final String customClaimURI2 = "http://wso2.org/claims/challengeQuestion2";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
 	private final static int TOMCAT_PORT = 8490;
@@ -180,6 +184,36 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		}
 		appMgtclient.updateApplicationData(serviceProvider);
 		return appDtoResult;
+	}
+
+	public void UpdateApplicationClaimConfig() throws Exception {
+		ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		ClaimConfig claimConfig = getClaimConfig();
+		serviceProvider.setClaimConfig(claimConfig);
+		appMgtclient.updateApplicationData(serviceProvider);
+	}
+
+	private ClaimConfig getClaimConfig() {
+		ClaimConfig claimConfig = new ClaimConfig();
+		ClaimMapping emailClaimMapping = getClaimMapping(EMAIL_CLAIM_URI);
+		ClaimMapping givenNameClaimMapping = getClaimMapping(GIVEN_NAME_CLAIM_URI);
+		ClaimMapping countryClaimMapping = getClaimMapping(COUNTRY_CLAIM_URI);
+		ClaimMapping customClaimMapping1 = getClaimMapping(customClaimURI1);
+		ClaimMapping customClaimMapping2 = getClaimMapping(customClaimURI2);
+		claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
+				.ClaimMapping[]{emailClaimMapping, givenNameClaimMapping, countryClaimMapping, customClaimMapping1,
+				customClaimMapping2});
+		return claimConfig;
+	}
+
+	private ClaimMapping getClaimMapping(String claimUri) {
+		Claim claim = new Claim();
+		claim.setClaimUri(claimUri);
+		ClaimMapping claimMapping = new ClaimMapping();
+		claimMapping.setRequested(true);
+		claimMapping.setLocalClaim(claim);
+		claimMapping.setRemoteClaim(claim);
+		return claimMapping;
 	}
 
 	/**
