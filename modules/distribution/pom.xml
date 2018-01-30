@@ -249,6 +249,13 @@
                                     </fileset>
                                 </copy>
 
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent"
+                                      overwrite="false">
+                                    <fileset
+                                            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/">
+                                    </fileset>
+                                </copy>
+
                                 <path id="h2.classpath">
                                     <path refid="maven.compile.classpath" />
                                 </path>
@@ -258,6 +265,15 @@
                                         <path refid="h2.classpath" />
                                     </classpath>
                                     <fileset file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/h2.sql" />
+                                </sql>
+                                <echo message="##################### END ########################" />
+                                <echo message="########### Create Consent Management Database ##############" />
+                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath" />
+                                    </classpath>
+                                    <fileset
+                                            file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/h2.sql" />
                                 </sql>
                                 <echo message="##################### END ########################" />
 
