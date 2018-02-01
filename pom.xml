@@ -1820,7 +1820,7 @@
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
         <json.version>3.0.0.wso2v1</json.version>
-        <carbon.consent.mgt.version>1.0.0-SNAPSHOT</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>1.0.0</carbon.consent.mgt.version>
     </properties>
 
     <repositories>

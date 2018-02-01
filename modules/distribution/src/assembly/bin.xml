@@ -257,7 +257,7 @@
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>api#identity#approval#v1.0.war</include>
+                <include>api#identity#consent-mgt#v1.0.war</include>
             </includes>
         </fileSet>
 
