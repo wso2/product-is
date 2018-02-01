@@ -426,6 +426,9 @@
                                     org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${carbon.identity.auth.version}
                                 </featureArtifactDef>
 
+                                <featureArtifactDef>
+                                    org.wso2.carbon.consent.mgt:org.wso2.carbon.consent.mgt.server.feature:${carbon.consent.mgt.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -865,6 +868,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.consent.mgt.version}</version>
                                 </feature>
 
 
@@ -1315,6 +1322,11 @@
                                     <version>${carbon.identity.auth.version}</version>
                                 </feature>
 
+                                <feature>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.consent.mgt.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
@@ -1724,6 +1736,10 @@
 			        <feature>
                                     <id>org.wso2.carbon.identity.captcha.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.consent.mgt.version}</version>
                                 </feature>
 
                             </features>
