@@ -250,6 +250,17 @@
             </includes>
         </fileSet>
 
+        <!--copy jaxrs web app for consent management feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#consent-mgt#v1.0.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy the oauth2 grant type extensions -->
         <fileSet>
             <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
@@ -442,6 +453,17 @@
             <includes>
                 <include>**/**.json</include>
             </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/consent</outputDirectory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+            <fileMode>644</fileMode>
+            <directoryMode>775</directoryMode>
         </fileSet>
     </fileSets>
 
@@ -877,6 +899,11 @@
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mex/metadata.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps/mex/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
     </files>
