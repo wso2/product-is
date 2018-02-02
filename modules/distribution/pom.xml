@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.5.0-SNAPSHOT</version>
+        <version>5.5.0-m3</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -249,10 +249,8 @@
                                     </fileset>
                                 </copy>
 
-                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent"
-                                      overwrite="false">
-                                    <fileset
-                                            dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/">
+                                <copy todir="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent" overwrite="false">
+                                    <fileset dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/">
                                     </fileset>
                                 </copy>
 
@@ -272,8 +270,7 @@
                                     <classpath>
                                         <path refid="h2.classpath" />
                                     </classpath>
-                                    <fileset
-                                            file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/h2.sql" />
+                                    <fileset file="target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/h2.sql" />
                                 </sql>
                                 <echo message="##################### END ########################" />
 
