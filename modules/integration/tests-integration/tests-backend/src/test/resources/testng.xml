@@ -17,6 +17,12 @@
         </classes>
     </test>
 
+    <test name="is-tests-consent" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-discovery" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
