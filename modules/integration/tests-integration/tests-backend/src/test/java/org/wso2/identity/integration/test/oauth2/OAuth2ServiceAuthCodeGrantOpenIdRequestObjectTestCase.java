@@ -68,7 +68,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private ServerConfigurationManager serverConfigurationManager;
     private Oauth2TokenValidationClient oAuth2TokenValidationClient;
     private AuthenticatorClient logManger;
-//    private ClaimManagementServiceClient claimManagementServiceClient;
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
 
     private File identityXML;
