@@ -365,7 +365,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         }
     }
 
-
     @Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
             "testGetAccessToken")
     public void testAuthorizationContextValidateJwtToken() throws Exception {
@@ -429,7 +428,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
         return response;
     }
-
 
     protected ClaimValue[] getUserClaims() {
         ClaimValue[] claimValues = new ClaimValue[5];
