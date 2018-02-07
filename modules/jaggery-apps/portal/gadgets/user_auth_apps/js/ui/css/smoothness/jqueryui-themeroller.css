@@ -51,10 +51,6 @@
 .selected .ui-accordion-header, .selected .ui-accordion-header:hover {
 	background: #ffffff url(images/ffffff_40x100_textures_02_glass_65.png) 0 50% repeat-x;
 }
-.selected .ui-accordion-header a, .selected .ui-accordion-header a:hover {
-	color: #222222;
-	background: url(images/222222_7x7_arrow_down.gif) .5em 50% no-repeat;
-}
 .ui-accordion-content {
 	background: #ffffff url(images/ffffff_40x100_textures_01_flat_0.png) 0 0 repeat-x;
 	color: #222222;
@@ -594,39 +590,6 @@ table.ui-datepicker .ui-datepicker-title-row td a {
 	height: 150px;
 	margin-right: 15px;
 }
-.ui-colorpicker-color div { /* is this extra div needed? why not just .ui-colorpicker-color ? */
-	border: 1px solid #d3d3d3;
-	height: 150px;
-	background: url(images/_x_.);
-	position: relative;
-}
-.ui-colorpicker-color div div {/* shouldn't this have a class like ui-colorpicker-selector ? */
-	width: 11px;
-	height: 11px;
-	background: url(images/_x_.);
-	position: absolute;
-	border: 0;
-	margin: -5px 0 0 -5px;
-	float: none;
-}
-.ui-colorpicker-hue {
-	border: 1px solid #d3d3d3;
-	float: left;
-	width: 17px;
-	height: 150px;
-	background: url(images/_x_.);
-	position: relative;
-	margin-right: 15px;
-}
-.ui-colorpicker-hue div {
-	background:transparent url(images/222222_35x9_colorpicker_indicator.gif.gif);
-	height:9px;
-	left:-9px;
-	margin:-4px 0 0;
-	position:absolute;
-	width:35px;
-	cursor: ns-resize;
-}
 .ui-colorpicker-new-color, .ui-colorpicker-current-color {
 	float: left;
 	width: 6.5em;
@@ -688,17 +651,6 @@ table.ui-datepicker .ui-datepicker-title-row td a {
 
 .ui-colorpicker-field label {
 	font-weight: normal;
-}
-.ui-colorpicker-field span {
-	width: 7px;
-	background: url(images/888888_11x11_icon_arrows_updown.gif) 50% 50% no-repeat;
-	right: 5px;
-	top: 0;
-	height: 20px;
-	position: absolute;
-}
-.ui-colorpicker-field span:hover {
-	background: url(images/454545_11x11_icon_arrows_updown.gif) 50% 50% no-repeat;
 }
 
 .ui-colorpicker-submit {
@@ -776,55 +728,10 @@ Generic ThemeRoller Classes
 .ui-arrow-left-default:active, .ui-arrow-left-active {background: url(images/222222_7x7_arrow_left.gif) no-repeat 50% 50%;}
 .ui-arrow-left-content {background: url(images/222222_7x7_arrow_left.gif) no-repeat 50% 50%;}
 
-.ui-arrow-down-default {background: url(images/888888_7x7_arrow_down.gif) no-repeat 50% 50%;}
-.ui-arrow-down-default:hover, .ui-arrow-down-hover {background: url(images/454545_7x7_arrow_down.gif) no-repeat 50% 50%;}
-.ui-arrow-down-default:active, .ui-arrow-down-active {background: url(images/222222_7x7_arrow_down.gif) no-repeat 50% 50%;}
-.ui-arrow-down-content {background: url(images/222222_7x7_arrow_down.gif) no-repeat 50% 50%;}
-
-.ui-arrow-up-default {background: url(images/888888_7x7_arrow_up.gif) no-repeat 50% 50%;}
-.ui-arrow-up-default:hover, .ui-arrow-up-hover {background: url(images/454545_7x7_arrow_up.gif) no-repeat 50% 50%;}
-.ui-arrow-up-default:active, .ui-arrow-up-active {background: url(images/222222_7x7_arrow_up.gif) no-repeat 50% 50%;}
-.ui-arrow-up-content {background: url(images/222222_7x7_arrow_up.gif) no-repeat 50% 50%;}
-
 .ui-close-default {background: url(images/888888_11x11_icon_close.gif) no-repeat 50% 50%;}
 .ui-close-default:hover, .ui-close-hover {background: url(images/454545_11x11_icon_close.gif) no-repeat 50% 50%;}
 .ui-close-default:active, .ui-close-active {background: url(images/222222_11x11_icon_close.gif) no-repeat 50% 50%;}
 .ui-close-content {background: url(images/222222_11x11_icon_close.gif) no-repeat 50% 50%;}
-
-.ui-folder-closed-default {background: url(images/888888_11x11_icon_folder_closed.gif) no-repeat 50% 50%;}
-.ui-folder-closed-default:hover, .ui-folder-closed-hover {background: url(images/454545_11x11_icon_folder_closed.gif) no-repeat 50% 50%;}
-.ui-folder-closed-default:active, .ui-folder-closed-active {background: url(images/222222_11x11_icon_folder_closed.gif) no-repeat 50% 50%;}
-.ui-folder-closed-content {background: url(images/888888_11x11_icon_folder_closed.gif) no-repeat 50% 50%;}
-
-.ui-folder-open-default {background: url(images/888888_11x11_icon_folder_open.gif) no-repeat 50% 50%;}
-.ui-folder-open-default:hover, .ui-folder-open-hover {background: url(images/454545_11x11_icon_folder_open.gif) no-repeat 50% 50%;}
-.ui-folder-open-default:active, .ui-folder-open-active {background: url(images/222222_11x11_icon_folder_open.gif) no-repeat 50% 50%;}
-.ui-folder-open-content {background: url(images/222222_11x11_icon_folder_open.gif) no-repeat 50% 50%;}
-
-.ui-doc-default {background: url(images/888888_11x11_icon_doc.gif) no-repeat 50% 50%;}
-.ui-doc-default:hover, .ui-doc-hover {background: url(images/454545_11x11_icon_doc.gif) no-repeat 50% 50%;}
-.ui-doc-default:active, .ui-doc-active {background: url(images/222222_11x11_icon_doc.gif) no-repeat 50% 50%;}
-.ui-doc-content {background: url(images/222222_11x11_icon_doc.gif) no-repeat 50% 50%;}
-
-.ui-arrows-leftright-default {background: url(images/888888_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%;}
-.ui-arrows-leftright-default:hover, .ui-arrows-leftright-hover {background: url(images/454545_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%;}
-.ui-arrows-leftright-default:active, .ui-arrows-leftright-active {background: url(images/222222_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%;}
-.ui-arrows-leftright-content {background: url(images/222222_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%;}
-
-.ui-arrows-updown-default {background: url(images/888888_11x11_icon_arrows_updown.gif) no-repeat 50% 50%;}
-.ui-arrows-updown-default:hover, .ui-arrows-updown-hover {background: url(images/454545_11x11_icon_arrows_updown.gif) no-repeat 50% 50%;}
-.ui-arrows-updown-default:active, .ui-arrows-updown-active {background: url(images/222222_11x11_icon_arrows_updown.gif) no-repeat 50% 50%;}
-.ui-arrows-updown-content {background: url(images/222222_11x11_icon_arrows_updown.gif) no-repeat 50% 50%;}
-
-.ui-minus-default {background: url(images/888888_11x11_icon_minus.gif) no-repeat 50% 50%;}
-.ui-minus-default:hover, .ui-minus-hover {background: url(images/454545_11x11_icon_minus.gif) no-repeat 50% 50%;}
-.ui-minus-default:active, .ui-minus-active {background: url(images/222222_11x11_icon_minus.gif) no-repeat 50% 50%;}
-.ui-minus-content {background: url(images/222222_11x11_icon_minus.gif) no-repeat 50% 50%;}
-
-.ui-plus-default {background: url(images/888888_11x11_icon_plus.gif) no-repeat 50% 50%;}
-.ui-plus-default:hover, .ui-plus-hover {background: url(images/454545_11x11_icon_plus.gif) no-repeat 50% 50%;}
-.ui-plus-default:active, .ui-plus-active {background: url(images/222222_11x11_icon_plus.gif) no-repeat 50% 50%;}
-.ui-plus-content {background: url(images/222222_11x11_icon_plus.gif) no-repeat 50% 50%;}
 
 /*hidden elements*/
 .ui-hidden {
