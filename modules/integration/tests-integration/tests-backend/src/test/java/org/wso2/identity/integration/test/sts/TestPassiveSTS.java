@@ -284,7 +284,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         HttpGet getRequest = new HttpGet(locationHeader.getValue());
         HttpResponse response = client.execute(getRequest);
         String resultPage2 = DataExtractUtil.getContentData(response);
-        Assert.assertTrue(resultPage2.contains("Authentication Error !"), "Session hijacking is possible.");
+        Assert.assertTrue(resultPage2.contains("Authentication Error!"), "Session hijacking is possible.");
         EntityUtils.consume(response.getEntity());
     }
 //    @Test(alwaysRun = true, description = "Test PassiveSTS Claims",
