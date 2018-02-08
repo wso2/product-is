@@ -306,7 +306,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        response = client.execute(request);
+        response = client.execute(getRequest);
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
