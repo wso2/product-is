@@ -1,0 +1,24 @@
+<%
+include("../../util/constants.jag");
+include("util/constants.jag");
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+var reciptID = request.getParameter("id");
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+try {
+    var serverCoreUrl = application.get(SERVER_CORE_URL);
+    var url  = serverCoreUrl + CONSENT_API_URI + RECEIPTS_URL + reciptID;
+    var consentJSON = get(url, {} ,"json");
+
+    print(consentJSON);
+
+    } catch(e) {
+        print(e);
+        log.error(e);
+}
+
+%>
