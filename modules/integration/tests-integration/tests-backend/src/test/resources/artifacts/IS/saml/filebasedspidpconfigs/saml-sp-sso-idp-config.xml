@@ -9,6 +9,7 @@
             <DefaultAssertionConsumerServiceURL>http://localhost:8490/travelocity.com/home.jsp
             </DefaultAssertionConsumerServiceURL>
             <SignResponse>true</SignResponse>
+            <CertAlias>wso2carbon</CertAlias>
             <EnableSingleLogout>true</EnableSingleLogout>
             <ValidateSignatures>true</ValidateSignatures>
             <EnableAttributeProfile>true</EnableAttributeProfile>
