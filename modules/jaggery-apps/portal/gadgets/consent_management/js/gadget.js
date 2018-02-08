@@ -1,7 +1,6 @@
 
 
 function getReceiptDetails(reciptID) {
-
     if (cookie != null) {
         var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/receipt.jag";
         var consentJSON;
@@ -27,9 +26,31 @@ function getReceiptDetails(reciptID) {
     }
 }
 
+function revokeReceipt(reciptID) {
+    if (cookie != null) {
+        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/revoke_receipt.jag";
+
+        $.ajax({
+            type:"POST",
+            url:str,
+            data: {cookie : cookie, user : userName, id : reciptID}
+
+        })
+            .done(function (data) {
+                location.reload();
+            })
+            .fail(function () {
+                console.log('error');
+
+            })
+            .always(function () {
+                console.log('completed');
+            });
+    }
+}
+
 function renderReceiptList(data) {
     var receiptData = {receipts: data.data};
-    //debugger;
     var content = '{{#receipts}}<div class="panel panel-default panel-consents">' +
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
@@ -55,7 +76,6 @@ function renderReceiptList(data) {
 
 function renderReceiptDetails(data) {
     var receiptData = {receipts: data.data};
-    //debugger;
     var content = '{{#receipts}}{{#services}}<div class="panel panel-default panel-consents">' +
         '<div class="panel-heading">' +
         '<button type="button" class="close btn-cancel-settings" data-target="#cancel" data-dismiss="alert">' +
@@ -113,7 +133,6 @@ function renderReceiptDetails(data) {
     });
 
     container.jstree("check_all");
-
 }
 
 
@@ -124,7 +143,13 @@ function addActions(){
         getReceiptDetails(receiptID);
     });
     $(".btn-revoke").click(function(){
-        console.log("Revoke Receipt");
+        var receiptID = $(this).prev().data("id");
+        var responseText = confirm("Are you sure you want to revoke this consent? this is not reversable...");
+
+        if (responseText == true) {
+            revokeReceipt(receiptID);
+        }
+
     });
     $(".btn-cancel-settings").click(function(){
         renderReceiptList(json);
