@@ -1,0 +1,26 @@
+<%
+include("../../util/constants.jag");
+include("util/constants.jag");
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var carbon = require("carbon");
+var user = request.getParameter("user");
+var tenantUser = carbon.server.tenantUser(user);
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+try {
+    var serverCoreUrl = application.get(SERVER_CORE_URL);
+    var url  = serverCoreUrl + CONSENT_API_URI ;
+    var data = { state: CONSENT_STATE_ACTIVE, piiPrincipalId: tenantUser.username };
+    var consentsJSON = get(url, data ,"json");
+
+    print(consentsJSON);
+
+    } catch(e) {
+        print(e);
+        log.error(e);
+    }
+
+%>
