@@ -551,6 +551,28 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 </li>
 
+<li class="layout_block " data-sizey="1" data-sizex="2" data-col="4" data-row="5"
+    data-url="<%=httpsCoreUrl%>/portal/gadgets/consent_management/gadget.xml" data-wid="48" data-prefs="{}"
+    data-title="Consent Management">
+    <div class="grid_header">
+        <h3></h3>
+            		<span class="grid_header_controls">
+                		<a class="show-widget-pref" data-collapse="true"><i class="icon-cog"></i></a>
+                		<a id ="sample1" class="expand-widget"><i class="icon-resize-full"></i></a>
+                		<a class="shrink-widget"><i class="icon-resize-small"></i></a>
+                		<a class="close-widget" href="#"><i class="icon-remove"></i></a>
+            		</span>
+    </div>
+    <div class="gadget-pref-cont">
+
+    </div>
+
+    <div class="add-gadget-item">
+
+    </div>
+
+</li>
+
 <!--
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="0" data-row="0"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/backup_otp/gadget.xml" data-wid="46" data-prefs="{}"
