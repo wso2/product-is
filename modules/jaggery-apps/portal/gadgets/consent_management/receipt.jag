@@ -4,14 +4,14 @@ include("util/constants.jag");
 var log = new Log();
 var cookie = request.getParameter("cookie");
 var user = request.getParameter("user");
-var reciptID = request.getParameter("id");
+var receiptID = request.getParameter("id");
 
 session.put('auth-cookie', cookie);
 session.put('user', user);
 
 try {
     var serverCoreUrl = application.get(SERVER_CORE_URL);
-    var url  = serverCoreUrl + CONSENT_API_URI + RECEIPTS_URL + reciptID;
+    var url  = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI + RECEIPTS_URL + receiptID;
     var consentJSON = get(url, {}, {"cookie" : cookie} ,"json");
 
     print(consentJSON);
