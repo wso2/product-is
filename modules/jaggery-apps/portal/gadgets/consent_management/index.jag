@@ -12,7 +12,7 @@ session.put('user', user);
 
 try {
     var serverCoreUrl = application.get(SERVER_CORE_URL);
-    var url  = serverCoreUrl + CONSENT_API_URI ;
+    var url  = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI ;
     var data = { state: CONSENT_STATE_ACTIVE, piiPrincipalId: tenantUser.username };
     var consentsJSON = get(url, data, {"cookie" : cookie} ,"json");
 
