@@ -5,6 +5,8 @@ var log = new Log();
 var cookie = request.getParameter("cookie");
 var user = request.getParameter("user");
 var receiptID = request.getParameter("id");
+var carbon = require("carbon");
+var tenantUser = carbon.server.tenantUser(user);
 
 session.put('auth-cookie', cookie);
 session.put('user', user);
