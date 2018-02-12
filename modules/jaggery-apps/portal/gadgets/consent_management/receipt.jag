@@ -1,7 +1,8 @@
 <%
 include("../../util/constants.jag");
 include("util/constants.jag");
-var log = new Log();
+
+var log = new Log("consent_reciept");
 var cookie = request.getParameter("cookie");
 var user = request.getParameter("user");
 var receiptID = request.getParameter("id");
