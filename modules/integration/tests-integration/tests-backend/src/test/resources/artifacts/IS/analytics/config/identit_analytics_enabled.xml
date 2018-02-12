@@ -513,7 +513,7 @@
 
     <TenantContextsToRewrite>
         <WebApp>
-            <Context>/api/identity/user/v0.9/</Context>
+            <Context>/api/identity/user/v1.0/</Context>
             <Context>/api/identity/recovery/v0.9/</Context>
             <Context>/oauth2/</Context>
             <Context>/scim2/</Context>
