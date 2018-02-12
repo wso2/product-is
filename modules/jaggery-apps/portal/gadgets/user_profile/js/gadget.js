@@ -110,6 +110,7 @@ function drawPage() {
         "                    </td></div></tr>"+
         "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
+        "                        <input type=\"button\" onclick=\"downloadUserInfo();\" class=\"btn btn-primary\" value=\"Download UserInfo\"/>\n" +
         "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
         "                    </td></tr>" +
         "                  </tbody>\n" +
@@ -130,6 +131,43 @@ function cancel() {
         id:"user_profile  .shrink-widget"
     });
 
+}
+
+function downloadUserInfo() {
+
+    if (cookie != null) {
+        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/download-userinfo.jag";
+        var consentJSON;
+
+        $.ajax({
+            type:"POST",
+            url:str,
+            data: {cookie : cookie, user : userName }
+
+        })
+            .done(function (data) {
+                downloadData(data, "userInfo.json");
+
+            })
+            .fail(function () {
+                console.log('error');
+
+            })
+            .always(function () {
+                console.log('completed');
+            });
+    }
+}
+
+function downloadData(data, fileName){
+    var blob = new Blob([data]);
+    var a = document.createElement('a' );
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName; // Set the file name.
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    delete a;
 }
 
 function validate() {
