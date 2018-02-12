@@ -350,11 +350,17 @@ ul.dropdown-menu li a:hover{
     font-size: 14px;
     font-weight: 300;
 }
-.panel-body #tree-table{
+.panel-body .tree-table-container{
     padding: 15px;
     width: 60%;
     margin: 20px auto;
     border: 1px solid #dfdfdf;
+}
+.panel-body .tree-table-container p{
+    color: #999;
+    font-weight: 300;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dfdfdf;
 }
 #tree-table .action-calendar{
     cursor: pointer;
