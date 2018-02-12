@@ -49,7 +49,7 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
 
     private static final String HOST_PART = "https://localhost:9853";
     private static final String PI_INFO = "pi-info/";
-    private static final String ME = "me/";
+    private static final String ME = "me";
     private static final String RESOURCE_PATH = "/api/identity/user/v1.0/";
     private static final String USERNAME_CLAIM_URI = "http://wso2.org/claims/username";
     private HttpClient client;
