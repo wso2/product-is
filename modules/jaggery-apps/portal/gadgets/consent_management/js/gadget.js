@@ -1,15 +1,18 @@
 const EXPIRY_DATE_STRING = "VALID_UNTIL:";
-var receiptData;
+var receiptData; //populated with initial JSON payload
 
+/*
+* Get receipt details for the given receipt ID and renders receipt details
+*/
 function getReceiptDetails(receiptID) {
     if (cookie != null) {
         var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/receipt.jag";
         var consentJSON;
 
         $.ajax({
-            type:"POST",
-            url:str,
-            data: {cookie : cookie, user : userName, id : receiptID}
+            type: "POST",
+            url: str,
+            data: {cookie: cookie, user: userName, id: receiptID}
 
         })
             .done(function (data) {
@@ -27,14 +30,17 @@ function getReceiptDetails(receiptID) {
     }
 }
 
+/*
+ * Revokes a receipt for a given receipt ID
+ */
 function revokeReceipt(receiptID) {
     if (cookie != null) {
         var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/revoke_receipt.jag";
 
         $.ajax({
-            type:"POST",
-            url:str,
-            data: {cookie : cookie, user : userName, id : receiptID}
+            type: "POST",
+            url: str,
+            data: {cookie: cookie, user: userName, id: receiptID}
 
         })
             .done(function (data) {
@@ -50,13 +56,16 @@ function revokeReceipt(receiptID) {
     }
 }
 
-function updateReceipt(receiptData){
+/*
+ * Updates a receipt by it's receipt ID, By posting changed receipt data
+ */
+function updateReceipt(receiptData) {
     if (cookie != null) {
         var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/update_receipt.jag";
         $.ajax({
-            type:"POST",
-            url:str,
-            data: {cookie : cookie, user : userName, receiptData : JSON.stringify(receiptData)}
+            type: "POST",
+            url: str,
+            data: {cookie: cookie, user: userName, receiptData: JSON.stringify(receiptData)}
 
         })
             .done(function (data) {
@@ -72,6 +81,9 @@ function updateReceipt(receiptData){
     }
 }
 
+/*
+ * Renders the receipt list to html
+ */
 function renderReceiptList(data) {
     var receiptData = {receipts: data.data};
     var content = '{{#receipts}}<div class="panel panel-default panel-consents">' +
@@ -97,6 +109,11 @@ function renderReceiptList(data) {
     addActions();
 }
 
+/*
+ * Renders the receipt details to html.
+ * Appends purposes and purpose categories to the rendered.
+ * initiates jstree.
+ */
 function renderReceiptDetails(data) {
     receiptData = {receipts: data.data};
     var content = '{{#receipts}}{{#services}}<div class="panel panel-default panel-consents">' +
@@ -133,7 +150,7 @@ function renderReceiptDetails(data) {
 
     var theTemplate = Handlebars.compile(content);
 
-    Handlebars.registerHelper('extractDate', function(title) {
+    Handlebars.registerHelper('extractDate', function (title) {
         return constructDate(title);
     });
     var html = theTemplate(receiptData);
@@ -143,8 +160,8 @@ function renderReceiptDetails(data) {
     $("#consent-settings").append(html);
 
     var treeTemplate =
-    '<div id="html1">' +
-    '<ul>' +
+        '<div id="html1">' +
+        '<ul>' +
         '<li class="jstree-open" data-jstree=\'{"icon":"icon-book"}\'>All' +
         '<ul>' +
         '{{#receipts}}{{#services}}' +
@@ -156,8 +173,8 @@ function renderReceiptDetails(data) {
         '</li>{{/purposes}}' +
         '{{/services}}{{/receipts}}' +
         '</ul>' +
-    '</ul>' +
-    '</div>';
+        '</ul>' +
+        '</div>';
 
     var tree = Handlebars.compile(treeTemplate);
     var treeRendered = tree(receiptData);
@@ -166,20 +183,23 @@ function renderReceiptDetails(data) {
 
     var container = $("#html1").jstree({
         plugins: ["table", "sort", "checkbox", "actions", "wholerow"],
-        checkbox: { "keep_selected_style" : false },
+        checkbox: {"keep_selected_style": false},
     });
 
     container.jstree("check_all");
     addActions(container);
 }
 
-function addActions(container){
+/*
+ * Binds all click event handlers
+ */
+function addActions(container) {
 
-    $(".btn-settings").click(function(){
+    $(".btn-settings").click(function () {
         var receiptID = $(this).data("id");
         getReceiptDetails(receiptID);
     });
-    $(".btn-revoke").click(function(){
+    $(".btn-revoke").click(function () {
         var receiptID = $(this).prev().data("id");
         var responseText = confirm("Are you sure you want to revoke this consent? this is not reversible...");
 
@@ -187,10 +207,10 @@ function addActions(container){
             revokeReceipt(receiptID);
         }
     });
-    $(".btn-cancel-settings").click(function(){
+    $(".btn-cancel-settings").click(function () {
         renderReceiptList(json);
     });
-    $(".btn-update-settings").click(function(){
+    $(".btn-update-settings").click(function () {
         var responseText = confirm("Are you sure you want to update/revoke this consent? this is not reversible...");
 
         if (responseText == true) {
@@ -199,23 +219,23 @@ function addActions(container){
 
     });
     var today = new Date();
-    $( "#date_picker" ).datepicker({
+    $("#date_picker").datepicker({
         showOn: "button",
         buttonImageOnly: false,
         buttonText: '<i class="icon-calendar action-calendar"></i>',
-        minDate : today,
+        minDate: today,
         changeMonth: true,
         changeYear: true,
-        onSelect: function(dateText) {
+        onSelect: function (dateText) {
             var split = dateText.split("/");
-            var newDate = Date.UTC(split[2],split[0],split[1]);
+            var newDate = Date.UTC(split[2], split[0], split[1]);
             var expiry = EXPIRY_DATE_STRING + newDate;
 
             $("#date_picker_new_expiry").val(expiry);
 
         }
     });
-    $( ".ui-datepicker-reset" ).click(function(){
+    $(".ui-datepicker-reset").click(function () {
         var old_val = $("#date_picker_old_expiry").val();
         $("#date_picker").val(constructDate(old_val));
         $("#date_picker_new_expiry").val(old_val);
@@ -225,6 +245,10 @@ function addActions(container){
 
 }
 
+/*
+ * Pushes changed purposes and purpose categories.
+ * changes can occur on tree change or date picker date change.
+ */
 function populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes) {
     for (var i = 0; i < purposes.length; i++) {
         var purpose = purposes[i];
@@ -250,7 +274,11 @@ function populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes) {
         newPurposes.push(newPurpose);
     }
 }
-function revokeAndAddNewReceipt(receiptData, container){
+
+/*
+ * Updates the receipt with new receipt data
+ */
+function revokeAndAddNewReceipt(receiptData, container) {
     var oldReceipt = receiptData.receipts;
     var newReceipt = {};
     var services = [];
@@ -258,10 +286,10 @@ function revokeAndAddNewReceipt(receiptData, container){
 
     var expiryDate = $("#date_picker_new_expiry").val();
 
-    var selectedNodes = container.jstree(true).get_selected('full',true);
-    var undeterminedNodes = container.jstree(true).get_undetermined('full',true);
+    var selectedNodes = container.jstree(true).get_selected('full', true);
+    var undeterminedNodes = container.jstree(true).get_undetermined('full', true);
 
-    if(!selectedNodes || selectedNodes.length < 1 ){
+    if (!selectedNodes || selectedNodes.length < 1) {
         revokeReceipt(oldReceipt.consentReceiptID);
         return;
     }
@@ -278,11 +306,11 @@ function revokeAndAddNewReceipt(receiptData, container){
     service['serviceDescription'] = oldReceipt.services[0].serviceDescription;
     service['serviceDisplayName'] = oldReceipt.services[0].serviceDisplayName;
     service['tenantDomain'] = oldReceipt.services[0].tenantDomain;
-    
+
     var oldPurposes = oldReceipt.services[0].purposes;
     var relationshipTree = unflatten(selectedNodes); //Build relationship tree
     var purposes = relationshipTree[0].children;
-    var newPurposes =[];
+    var newPurposes = [];
     populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes);
     service['purposes'] = newPurposes;
     services.push(service);
@@ -291,6 +319,9 @@ function revokeAndAddNewReceipt(receiptData, container){
     updateReceipt(newReceipt);
 }
 
+/*
+ * returns a relationship tree when checked nodes and children are passed
+ */
 function unflatten(arr) {
     var tree = [],
         mappedArr = {},
@@ -298,7 +329,7 @@ function unflatten(arr) {
         mappedElem;
 
     // First map the nodes of the array to an object -> create a hash table.
-    for(var i = 0, len = arr.length; i < len; i++) {
+    for (var i = 0, len = arr.length; i < len; i++) {
         arrElem = arr[i];
         mappedArr[arrElem.id] = arrElem;
         mappedArr[arrElem.id]['children'] = [];
@@ -320,18 +351,25 @@ function unflatten(arr) {
     return tree;
 }
 
-function filterPurpose(purposes, id){
-    return purposes.filter(function(obj){
-         if(obj.purposeId == id){
+/*
+ * returns objects that matches purpose id
+ */
+function filterPurpose(purposes, id) {
+    return purposes.filter(function (obj) {
+        if (obj.purposeId == id) {
             return obj;
-        };
+        }
+        ;
     });
 }
 
-function checkValidDate(dateObj){
-    if ( Object.prototype.toString.call(dateObj) === "[object Date]" ) {
+/*
+ * validate whether the passed is a date object or not
+ */
+function checkValidDate(dateObj) {
+    if (Object.prototype.toString.call(dateObj) === "[object Date]") {
         // it is a date
-        if ( isNaN( dateObj.getTime() ) ) {
+        if (isNaN(dateObj.getTime())) {
             return false;
         }
         else {
@@ -343,22 +381,28 @@ function checkValidDate(dateObj){
     }
 }
 
-function constructDate(expiry){
-    if(!expiry || expiry.length < 1){
+/*
+ * construct a datepicker friendly date from the expiry value
+ */
+function constructDate(expiry) {
+    if (!expiry || expiry.length < 1) {
         return getDefaultExpiry();
     }
     var t = expiry.split(EXPIRY_DATE_STRING);
-    if(t.length < 2){
+    if (t.length < 2) {
         return getDefaultExpiry();
     }
     var date = new Date(parseInt(t[1]));
-    if(!checkValidDate(date)){
+    if (!checkValidDate(date)) {
         return getDefaultExpiry();
     }
-    var goodDate = date.getMonth() +"/"+ date.getDate() +"/"+ date.getFullYear();
+    var goodDate = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
     return goodDate;
 }
 
-function getDefaultExpiry(){
+/*
+ * change return value to set datepicker default
+ */
+function getDefaultExpiry() {
     return "Forever";
 }
