@@ -81,6 +81,9 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String RELAY_STATE = "token";
     private static final String HTTP_POST_BINDING = "HTTP-POST";
+    private static final String JAVAX_NET_SSL_TRUSTORE = "javax.net.ssl.trustStore";
+    private static final String JAVAX_NET_SSL_TRUSTORE_PASSWORD = "javax.net.ssl.trustStorePassword";
+    private static final String JAVAX_NET_SSL_TRUSTORE_TYPE = "javax.net.ssl.trustStoreType";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -160,7 +163,6 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
                 " page should contain ACS query param");
     }
 
-
     private void createApplication() throws Exception {
 
         ServiceProvider serviceProvider = new ServiceProvider();
@@ -189,13 +191,12 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         tomcat.setBaseDir("");
 
         StandardHost stdHost = (StandardHost) tomcat.getHost();
-
         stdHost.setAppBase("");
         stdHost.setAutoDeploy(true);
         stdHost.setDeployOnStartup(true);
         stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
 
+        tomcat.setHost(stdHost);
         setSystemProperties();
         return tomcat;
     }
@@ -204,10 +205,9 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
         URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
                 + "products" + File.separator + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword",
-                "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        System.setProperty(JAVAX_NET_SSL_TRUSTORE, resourceUrl.getPath());
+        System.setProperty(JAVAX_NET_SSL_TRUSTORE_PASSWORD, "wso2carbon");
+        System.setProperty(JAVAX_NET_SSL_TRUSTORE_TYPE, "JKS");
     }
 
     private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
