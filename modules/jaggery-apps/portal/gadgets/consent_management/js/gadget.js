@@ -1,4 +1,5 @@
-
+const EXPIRY_DATE_STRING = "VALID_UNTIL:";
+var receiptData;
 
 function getReceiptDetails(receiptID) {
     if (cookie != null) {
@@ -70,6 +71,7 @@ function updateReceipt(receiptData){
             });
     }
 }
+
 function renderReceiptList(data) {
     var receiptData = {receipts: data.data};
     var content = '{{#receipts}}<div class="panel panel-default panel-consents">' +
@@ -80,8 +82,8 @@ function renderReceiptList(data) {
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
-        '<button type="button" class="btn btn-default btn-settings" data-id="{{consentReceiptID}}"><span class="icon-cog icon-font-size"></span></button>' +
-        '<button type="button" class="btn btn-danger btn-revoke">Revoke</button></div>' +
+        '<button type="button" class="btn btn-primary btn-settings" data-id="{{consentReceiptID}}"><span class="icon-cog icon-font-size"></span></button>' +
+        '<button type="button" class="btn btn-default btn-revoke">Revoke</button></div>' +
         '</div>' +
         '</div>' +
         '</div>{{/receipts}}';
@@ -95,7 +97,6 @@ function renderReceiptList(data) {
     addActions();
 }
 
-var receiptData;
 function renderReceiptDetails(data) {
     receiptData = {receipts: data.data};
     var content = '{{#receipts}}{{#services}}<div class="panel panel-default panel-consents">' +
@@ -107,21 +108,34 @@ function renderReceiptDetails(data) {
         '</div>' +
         '<div class="panel-body no-padding">' +
         '<div class="more-info">' +
-        '<p>More about this service: </p>' +
+        '<p>More about this service: <span class="pull-right datepicker">' +
+        '<label>Valid Until</label>' +
+        '<input type="text" name="date_picker" id="date_picker" value="{{extractDate purposes.1.termination}}"/>' +
+        '<input type="hidden" name="date_picker_old_expiry" id="date_picker_old_expiry" value="{{purposes.1.termination}}"/>' +
+        '<input type="hidden" name="date_picker_new_expiry" id="date_picker_new_expiry" value="{{purposes.1.termination}}"/>' +
+        '<button type="button" class="ui-datepicker-reset action-reset" title="Reset Date"><i class="icon-undo"></i></button>' +
+        '</span>' +
+        '</p>' +
         '<ul>' +
         '<li><strong>Collection Method : </strong>{{../collectionMethod}}</li>' +
         '<li><strong>Version : </strong>{{../version}}</li>' +
         '</ul>' +
         '</div>' +
-        '<div class="tree-table-container"><p>Deselect consents that you wish to revoke</p><div id="tree-table"></div></div>' +
+        '<div class="tree-table-container">' +
+        '<p>Deselect consents that you wish to revoke</p>' +
+        '<div id="tree-table"></div>' +
+        '</div>' +
         '<div class="panel-footer text-right">' +
         '<button type="button" class="btn btn-primary btn-update-settings">Update</button>' +
         '<button type="button" class="btn btn-default btn-cancel-settings">Cancel</button>' +
         '</div>' +
         '</div>{{/services}}{{/receipts}}';
 
-
     var theTemplate = Handlebars.compile(content);
+
+    Handlebars.registerHelper('extractDate', function(title) {
+        return constructDate(title);
+    });
     var html = theTemplate(receiptData);
 
     $("#consent-listing").hide();
@@ -184,13 +198,65 @@ function addActions(container){
         }
 
     });
+    var today = new Date();
+    $( "#date_picker" ).datepicker({
+        showOn: "button",
+        buttonImageOnly: false,
+        buttonText: '<i class="icon-calendar action-calendar"></i>',
+        minDate : today,
+        changeMonth: true,
+        changeYear: true,
+        onSelect: function(dateText) {
+            var split = dateText.split("/");
+            var newDate = Date.UTC(split[2],split[0],split[1]);
+            var expiry = EXPIRY_DATE_STRING + newDate;
+
+            $("#date_picker_new_expiry").val(expiry);
+
+        }
+    });
+    $( ".ui-datepicker-reset" ).click(function(){
+        var old_val = $("#date_picker_old_expiry").val();
+        $("#date_picker").val(constructDate(old_val));
+        $("#date_picker_new_expiry").val(old_val);
+
+    });
+
+
 }
 
+function populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes) {
+    for (var i = 0; i < purposes.length; i++) {
+        var purpose = purposes[i];
+        var newPurpose = {};
+        newPurpose["purposeId"] = purpose.li_attr.purposeid;
+        var oldPurpose = filterPurpose(oldPurposes, purpose.li_attr.purposeid);
+        newPurpose = oldPurpose[0];
+        newPurpose['piiCategory'] = [];
+        newPurpose['purposeCategoryId'] = [1];
+        newPurpose['termination'] = expiryDate;
+        delete(newPurpose['purpose']);
+        delete(newPurpose['purposeCategory']);
+
+        var piiCategory = [];
+        var categories = purpose.children;
+        for (var j = 0; j < categories.length; j++) {
+            var category = categories[j];
+            var c = {};
+            c['piiCategoryId'] = category.li_attr.piicategoryid;
+            piiCategory.push(c);
+        }
+        newPurpose['piiCategory'] = piiCategory;
+        newPurposes.push(newPurpose);
+    }
+}
 function revokeAndAddNewReceipt(receiptData, container){
     var oldReceipt = receiptData.receipts;
     var newReceipt = {};
     var services = [];
     var service = {};
+
+    var expiryDate = $("#date_picker_new_expiry").val();
 
     var selectedNodes = container.jstree(true).get_selected('full',true);
     var undeterminedNodes = container.jstree(true).get_undetermined('full',true);
@@ -217,29 +283,7 @@ function revokeAndAddNewReceipt(receiptData, container){
     var relationshipTree = unflatten(selectedNodes); //Build relationship tree
     var purposes = relationshipTree[0].children;
     var newPurposes =[];
-
-    for(var i=0; i< purposes.length; i++){
-        var purpose = purposes[i];
-        var newPurpose = {};
-        newPurpose["purposeId"]  =  purpose.li_attr.purposeid;
-        var oldPurpose = filterPurpose(oldPurposes, purpose.li_attr.purposeid);
-        newPurpose = oldPurpose[0];
-        newPurpose['piiCategory'] = [];
-        newPurpose['purposeCategoryId'] = [1];
-        delete(newPurpose['purpose']);
-        delete(newPurpose['purposeCategory']);
-
-        var piiCategory = [];
-        var categories = purpose.children;
-        for(var j=0; j< categories.length; j++){
-            var category = categories[j];
-            var c = {};
-            c['piiCategoryId']  =  category.li_attr.piicategoryid;
-            piiCategory.push(c);
-        }
-        newPurpose['piiCategory'] = piiCategory;
-        newPurposes.push(newPurpose);
-    }
+    populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes);
     service['purposes'] = newPurposes;
     services.push(service);
     newReceipt['services'] = services;
@@ -282,4 +326,39 @@ function filterPurpose(purposes, id){
             return obj;
         };
     });
+}
+
+function checkValidDate(dateObj){
+    if ( Object.prototype.toString.call(dateObj) === "[object Date]" ) {
+        // it is a date
+        if ( isNaN( dateObj.getTime() ) ) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+function constructDate(expiry){
+    if(!expiry || expiry.length < 1){
+        return getDefaultExpiry();
+    }
+    var t = expiry.split(EXPIRY_DATE_STRING);
+    if(t.length < 2){
+        return getDefaultExpiry();
+    }
+    var date = new Date(parseInt(t[1]));
+    if(!checkValidDate(date)){
+        return getDefaultExpiry();
+    }
+    var goodDate = date.getMonth() +"/"+ date.getDate() +"/"+ date.getFullYear();
+    return goodDate;
+}
+
+function getDefaultExpiry(){
+    return "Forever";
 }
