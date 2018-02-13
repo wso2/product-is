@@ -17,4 +17,8 @@ var SAML_ENABLED = "saml.enabled";
 
 var SAML_RESPONSE = "saml.response";
 var SAML_PROPERTIES = "saml.config"
+
+var SERVER_CORE_URL = "serverCoreUrl";
+var USERINFO_API_URI = "/api/identity/user/v1.0/me" ;
+
 %>
