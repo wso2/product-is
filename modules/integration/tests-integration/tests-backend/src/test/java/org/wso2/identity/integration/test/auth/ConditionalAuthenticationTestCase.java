@@ -102,6 +102,10 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     private String consumerSecret;
     private String script;
 
+    public static final String ENABLE_CONDITIONAL_AUTHENTICATION_FLAG = "enableConditionalAuthenticationFeature";
+    private boolean isEnableConditionalAuthenticationFeature =
+            System.getProperty(ENABLE_CONDITIONAL_AUTHENTICATION_FLAG) != null;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -152,6 +156,9 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        if( !isEnableConditionalAuthenticationFeature) {
+            return;
+        }
         LoginToPrimaryIS();
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
@@ -162,6 +169,10 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow based on HTTP Cookie.")
     public void testConditionalAuthenticationUsingHTTPCookie() throws Exception {
+
+        if( !isEnableConditionalAuthenticationFeature) {
+            return;
+        }
 
         // Update authentication script to handle authentication based on HTTP context.
         updateAuthScript("ConditionalAuthenticationHTTPCookieTestCase.js");
@@ -187,6 +198,9 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     @Test(groups = "wso2.is", description = "Check conditional authentication flow with claim assignment.")
     public void testConditionalAuthenticationClaimAssignment() throws Exception {
 
+        if( !isEnableConditionalAuthenticationFeature) {
+            return;
+        }
         // Update authentication script to handle authentication based on HTTP context.
         updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
         LoginToPrimaryIS();
