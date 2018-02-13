@@ -350,11 +350,17 @@ ul.dropdown-menu li a:hover{
     font-size: 14px;
     font-weight: 300;
 }
-.panel-body #tree-table{
+.panel-body .tree-table-container{
     padding: 15px;
     width: 60%;
     margin: 20px auto;
     border: 1px solid #dfdfdf;
+}
+.panel-body .tree-table-container p{
+    color: #999;
+    font-weight: 300;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dfdfdf;
 }
 #tree-table .action-calendar{
     cursor: pointer;
@@ -364,10 +370,21 @@ ul.dropdown-menu li a:hover{
     margin-top: 0;
     position: absolute;
     right: 0;
+    line-height: 12px;
+    border-bottom: 1px dashed #428bca;
 }
+.action-reset{
+    cursor: pointer;
+    background: none;
+    padding: 6px;
+    color: #3071a9;
+    margin-top: 0;
+    line-height: 12px;
+    border: none;
+}
+
 #tree-table .action-calendar:hover,#tree-table .action-calendar:active{
-    background: #beebff;
-    color: #428bca;
+    color: #4aa4eb;
 }
 .jstree-default .jstree-anchor{
     margin-bottom: 4px;
@@ -375,8 +392,13 @@ ul.dropdown-menu li a:hover{
 .btn-cancel-settings{
     margin-left: 4px;
 }
+.btn-group > .btn-settings span{
+    color: #fff;
+}
 .btn-group > .btn-revoke {
-    margin-left: 4px;
+    margin-left: 4px!important;
+    background: none;
+    color: #c9302c;
 }
 .panel-heading .close{
     position: relative;
@@ -394,4 +416,33 @@ ul.dropdown-menu li a:hover{
 .jstree-default .jstree-wholerow{
     height: 26px !important;
 }
-
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year{
+    height: auto;
+}
+.ui-datepicker-trigger i{
+    font-size: 1.2em;
+    color: #3071a9;
+}
+.ui-datepicker-trigger{
+    background: none;
+    border: none;
+}
+.datepicker label{
+    display: inline-block;
+    padding-right: 2px;
+    color: #999;
+    font-weight: 300;;
+    text-align: right;
+}
+#date_picker{
+    height: auto;
+    width: 80px;
+    margin-bottom: 6px;
+    border: none;
+    background: #f2f2f2;
+    box-shadow: none;
+    color: #3071a9;
+    border-bottom: 1px dashed #428bca;
+    text-align: center;
+    padding: 0;
+}
