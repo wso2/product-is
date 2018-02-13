@@ -49,6 +49,7 @@
             <script type="text/javascript" src="js/ui/js/vendor/jstree/dist/jstree.min.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/jstree/src/jstree-actions.js"></script>
             <script type="text/javascript" src="js/modal.js"></script>
+            <script type="text/javascript" src="js/main.js"></script>
             <script type="text/javascript" src="js/gadget.js"></script>
             <script type="text/javascript" src="js/landing.js"></script>
             <script type="text/javascript" src="serverinfo.jag"></script>
@@ -137,6 +138,7 @@
                 </div>
             </div>
 
+            <div id="message"></div>
 
             <script type="text/javascript">
                 //initialize the 3 popup css class names - create more if needed
