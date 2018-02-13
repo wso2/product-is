@@ -39,6 +39,11 @@
         <jsp-file>/oauth2-access-resource.jsp</jsp-file>
         <load-on-startup>0</load-on-startup>
     </servlet>
+
+    <servlet>
+        <servlet-name>IDTokenDecrypterServlet</servlet-name>
+        <servlet-class>org.wso2.sample.identity.oauth2.IDTokenDecrypterServlet</servlet-class>
+    </servlet>
     
    <servlet-mapping>
         <servlet-name>OAuth2ClientServlet</servlet-name>
@@ -49,6 +54,12 @@
         <servlet-name>OAuth2AccessResourcePage</servlet-name>
         <url-pattern>/oauth2-access-resource.jsp</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>IDTokenDecrypterServlet</servlet-name>
+        <url-pattern>/IDTokenDecrypterServlet</url-pattern>
+    </servlet-mapping>
+
     <listener>
         <listener-class>org.wso2.sample.identity.oauth2.ContextEventListener</listener-class>
     </listener>

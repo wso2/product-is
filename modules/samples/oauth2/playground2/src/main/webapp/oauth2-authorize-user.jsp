@@ -163,9 +163,12 @@
         OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
         OAuthClientResponse oAuthResponse = oAuthClient.accessToken(accessRequest);
         String accessToken = oAuthResponse.getParam(OAuth2Constants.ACCESS_TOKEN);
+        String idToken = oAuthResponse.getParam(OAuth2Constants.ID_TOKEN);
 
         // For future use we store the access_token in session.
         session.setAttribute(OAuth2Constants.ACCESS_TOKEN, accessToken);
+        session.setAttribute(OAuth2Constants.ID_TOKEN, idToken);
+
     }
 } catch (Exception e) {
 %>
