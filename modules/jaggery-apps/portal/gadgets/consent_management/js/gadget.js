@@ -1,6 +1,20 @@
 const EXPIRY_DATE_STRING = "VALID_UNTIL:";
 var receiptData; //populated with initial JSON payload
-
+var confirmationDialog = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+            "  <div class=\"modal-dialog\">\n" +
+            "    <div class=\"modal-content\">\n" +
+            "      <div class=\"modal-header\">\n" +
+            "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+            "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+            "      </div>\n" +
+            "      <div class=\"modal-body\">\n" +
+            "        <p>One fine body&hellip;</p>\n" +
+            "      </div>\n" +
+            "      <div class=\"modal-footer\">\n" +
+            "      </div>\n" +
+            "    </div>\n" +
+            "  </div>\n" +
+            "</div>";
 /*
 * Get receipt details for the given receipt ID and renders receipt details
 */
@@ -201,23 +215,34 @@ function addActions(container) {
     });
     $(".btn-revoke").click(function () {
         var receiptID = $(this).prev().data("id");
-        var responseText = confirm("Are you sure you want to revoke this consent? this is not reversible...");
-
-        if (responseText == true) {
-            revokeReceipt(receiptID);
-        }
+        $("#message").append(confirmationDialog);
+        message({
+                title: "Consent Confirmation",
+                content: 'Are you sure you want to revoke this consent? this is not reversible...',
+                type: 'confirm',
+                okCallback: function () {
+                        revokeReceipt(receiptID);
+                }
+        });
     });
+
     $(".btn-cancel-settings").click(function () {
         renderReceiptList(json);
     });
-    $(".btn-update-settings").click(function () {
-        var responseText = confirm("Are you sure you want to update/revoke this consent? this is not reversible...");
 
-        if (responseText == true) {
-            revokeAndAddNewReceipt(receiptData, container);
-        }
+    $(".btn-update-settings").click(function () {
+        $("#message").append(confirmationDialog);
+        message({
+                title: "Consent Confirmation",
+                content: 'Are you sure you want to update/revoke this consent? this is not reversible...',
+                type: 'confirm',
+                okCallback: function () {
+                        revokeAndAddNewReceipt(receiptData, container);
+                }
+        });
 
     });
+
     var today = new Date();
     $("#date_picker").datepicker({
         showOn: "button",
@@ -235,14 +260,13 @@ function addActions(container) {
 
         }
     });
+
     $(".ui-datepicker-reset").click(function () {
         var old_val = $("#date_picker_old_expiry").val();
         $("#date_picker").val(constructDate(old_val));
         $("#date_picker_new_expiry").val(old_val);
 
     });
-
-
 }
 
 /*
