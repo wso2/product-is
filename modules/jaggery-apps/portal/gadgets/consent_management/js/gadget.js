@@ -149,6 +149,7 @@ function renderReceiptList(data) {
  */
 function renderReceiptDetails(data) {
     receiptData = {receipts: data.data};
+
     var content = '{{#receipts}}{{#services}}<div class="panel panel-default panel-consents">' +
         '<div class="panel-heading">' +
         '<button type="button" class="close btn-cancel-settings" data-target="#cancel" data-dismiss="alert">' +
@@ -160,9 +161,9 @@ function renderReceiptDetails(data) {
         '<div class="more-info">' +
         '<p>More about this service: <span class="pull-right datepicker">' +
         '<label>Valid Until</label>' +
-        '<input type="text" name="date_picker" id="date_picker" value="{{extractDate purposes.1.termination}}"/>' +
-        '<input type="hidden" name="date_picker_old_expiry" id="date_picker_old_expiry" value="{{purposes.1.termination}}"/>' +
-        '<input type="hidden" name="date_picker_new_expiry" id="date_picker_new_expiry" value="{{purposes.1.termination}}"/>' +
+        '<input type="text" name="date_picker" id="date_picker" value="{{{extractDate purposes.0.termination}}}"/>' +
+        '<input type="hidden" name="date_picker_old_expiry" id="date_picker_old_expiry" value="{{purposes.0.termination}}"/>' +
+        '<input type="hidden" name="date_picker_new_expiry" id="date_picker_new_expiry" value="{{purposes.0.termination}}"/>' +
         '<button type="button" class="ui-datepicker-reset action-reset" title="Reset Date"><i class="icon-undo"></i></button>' +
         '</span>' +
         '</p>' +
@@ -181,11 +182,11 @@ function renderReceiptDetails(data) {
         '</div>' +
         '</div>{{/services}}{{/receipts}}';
 
-    var theTemplate = Handlebars.compile(content);
-
-    Handlebars.registerHelper('extractDate', function (title) {
-        return constructDate(title);
+    Handlebars.registerHelper('extractDate', function (expiry) {
+        return constructDate(expiry);
     });
+
+    var theTemplate = Handlebars.compile(content);
     var html = theTemplate(receiptData);
 
     $("#consent-listing").hide();
@@ -342,7 +343,7 @@ function revokeAndAddNewReceipt(receiptData, container) {
     newReceipt['jurisdiction'] = oldReceipt.jurisdiction;
     newReceipt['collectionMethod'] = oldReceipt.collectionMethod;
     newReceipt['policyURL'] = oldReceipt.policyUrl;
-    newReceipt['piiPrincipalId'] = oldReceipt.piiPrincipalId;
+    delete(newReceipt['piiPrincipalId']);
     newReceipt['language'] = oldReceipt.language;
 
     service['service'] = oldReceipt.services[0].service;
