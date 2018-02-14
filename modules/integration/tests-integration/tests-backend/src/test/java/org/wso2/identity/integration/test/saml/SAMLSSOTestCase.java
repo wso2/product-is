@@ -348,19 +348,28 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
             }
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
+            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getApp()
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
-            EntityUtils.consume(response.getEntity());
+
 
             if (requestMissingClaims(response)) {
-                response = Utils.sendPOSTClaimMessage(response, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
-                        .getArtifact(), httpClient);
+                Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
+                        "pastr cookie not found in response.");
+                String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+                EntityUtils.consume(response.getEntity());
+
+                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
+                        .getArtifact(), httpClient, pastreCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
-                    httpClient);
+            String redirectUrl = Utils.getRedirectUrl(response);
+            if(StringUtils.isNotBlank(redirectUrl)) {
+                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
+                        httpClient);
+            }
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            EntityUtils.consume(response.getEntity());
 
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
@@ -687,9 +696,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private boolean requestMissingClaims (HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("claims.do") ? true : false;
+        return redirectUrl.contains("consent.do") ? true : false;
 
     }
-
-
 }
