@@ -49,6 +49,7 @@ import java.util.Map;
 public class Utils {
 
     private static String RESIDENT_CARBON_HOME;
+    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
 
     public static  boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
@@ -106,14 +107,17 @@ public class Utils {
         tomcat.start();
     }
 
-    public static HttpResponse sendPOSTMessage(String sessionKey, String commonAuthUrl, String userAgent, String
+    public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
-        HttpPost post = new HttpPost(commonAuthUrl);
+        HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         post.addHeader("Referer", String.format(acsUrl, artifact));
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
+        if (StringUtils.equals(url, SAML_SSO_URL)) {
+            urlParameters.add(new BasicNameValuePair("tocommonauth", "true"));
+        }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
@@ -133,6 +137,33 @@ public class Utils {
             urlParameters.add(new BasicNameValuePair("claim_mand_"+claims[i], "providedClaimValue"));
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
+    }
+
+    public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
+                                                    String acsUrl, String artifact,  HttpClient httpClient, String
+                                                              pastreCookie) throws Exception {
+        String redirectUrl = getRedirectUrl(response);
+        Map<String, String> queryParams = getQueryParams(redirectUrl);
+
+
+        String sessionKey = queryParams.get("sessionDataKey");
+        String[] claims = queryParams.get("requestedClaims").split(",");
+
+        HttpPost post = new HttpPost(commonAuthUrl);
+        post.setHeader("User-Agent", userAgent);
+        post.addHeader("Referer", String.format(acsUrl, artifact));
+        post.addHeader("Cookie", pastreCookie);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+
+        for (int i = 0; i < claims.length; i++) {
+            urlParameters.add(new BasicNameValuePair("consent_" + claims[i], "on"));
+        }
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        urlParameters.add(new BasicNameValuePair("requestedClaims", queryParams.get("requestedClaims")));
+        urlParameters.add(new BasicNameValuePair("mandatoryClaims", "null"));
+        urlParameters.add(new BasicNameValuePair("consent", "approve"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }
