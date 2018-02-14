@@ -1,23 +1,42 @@
+/*
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 const EXPIRY_DATE_STRING = "VALID_UNTIL:";
 var receiptData; //populated with initial JSON payload
 var confirmationDialog = "<div class=\"modal fade\" id=\"messageModal\">\n" +
-            "  <div class=\"modal-dialog\">\n" +
-            "    <div class=\"modal-content\">\n" +
-            "      <div class=\"modal-header\">\n" +
-            "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
-            "        <h3 class=\"modal-title\">Modal title</h4>\n" +
-            "      </div>\n" +
-            "      <div class=\"modal-body\">\n" +
-            "        <p>One fine body&hellip;</p>\n" +
-            "      </div>\n" +
-            "      <div class=\"modal-footer\">\n" +
-            "      </div>\n" +
-            "    </div>\n" +
-            "  </div>\n" +
-            "</div>";
+    "  <div class=\"modal-dialog\">\n" +
+    "    <div class=\"modal-content\">\n" +
+    "      <div class=\"modal-header\">\n" +
+    "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+    "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+    "      </div>\n" +
+    "      <div class=\"modal-body\">\n" +
+    "        <p>One fine body&hellip;</p>\n" +
+    "      </div>\n" +
+    "      <div class=\"modal-footer\">\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "</div>";
+
 /*
-* Get receipt details for the given receipt ID and renders receipt details
-*/
+ * Get receipt details for the given receipt ID and renders receipt details
+ */
 function getReceiptDetails(receiptID) {
     if (cookie != null) {
         var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/receipt.jag";
@@ -217,12 +236,12 @@ function addActions(container) {
         var receiptID = $(this).prev().data("id");
         $("#message").append(confirmationDialog);
         message({
-                title: "Consent Confirmation",
-                content: 'Are you sure you want to revoke this consent? this is not reversible...',
-                type: 'confirm',
-                okCallback: function () {
-                        revokeReceipt(receiptID);
-                }
+            title: "Consent Confirmation",
+            content: 'Are you sure you want to revoke this consent? this is not reversible...',
+            type: 'confirm',
+            okCallback: function () {
+                revokeReceipt(receiptID);
+            }
         });
     });
 
@@ -233,12 +252,12 @@ function addActions(container) {
     $(".btn-update-settings").click(function () {
         $("#message").append(confirmationDialog);
         message({
-                title: "Consent Confirmation",
-                content: 'Are you sure you want to update/revoke this consent? this is not reversible...',
-                type: 'confirm',
-                okCallback: function () {
-                        revokeAndAddNewReceipt(receiptData, container);
-                }
+            title: "Consent Confirmation",
+            content: 'Are you sure you want to update/revoke this consent? this is not reversible...',
+            type: 'confirm',
+            okCallback: function () {
+                revokeAndAddNewReceipt(receiptData, container);
+            }
         });
 
     });
