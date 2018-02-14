@@ -29,6 +29,7 @@ import org.wso2.carbon.is.migration.service.v540.bean.SpOAuth2ExpiryTimeConfigur
 import org.wso2.carbon.is.migration.service.v540.dao.OAuthDAO;
 import org.wso2.carbon.is.migration.service.v540.util.RegistryUtil;
 import org.wso2.carbon.is.migration.util.Constant;
+import org.wso2.carbon.is.migration.util.Utility;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -108,7 +109,14 @@ public class OAuthDataMigrator extends Migrator {
                     ".RefreshTokenValidityPeriod")) * 1000;
         }
 
+        boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
+        List<Integer> inactiveTenants = Utility.getInactiveTenants();
         for (OAuthConsumerApp consumerApp : consumerApps) {
+            if (ignoreForInactiveTenants && inactiveTenants.contains(consumerApp.getTenantId())) {
+                log.info("Skipping OAuth2 consumer apps table migration for inactive tenant: " +
+                        consumerApp.getTenantId());
+                continue;
+            }
             SpOAuth2ExpiryTimeConfiguration expiryTimeConfiguration = RegistryUtil.getSpTokenExpiryTimeConfig
                     (consumerApp.getConsumerKey(), consumerApp.getTenantId());
 
