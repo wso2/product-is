@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.identity.integration.test.auth;
 
@@ -36,6 +36,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.application.common.model.script.xsd.AuthenticationScriptConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
@@ -57,7 +58,6 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import org.wso2.carbon.identity.application.common.model.script.xsd.AuthenticationScriptConfig;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -78,8 +78,8 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUT
  */
 public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final String IDENTITY_PROVIDER_ALIAS = "https://localhost:" + IS_DEFAULT_HTTPS_PORT +
-            "/oauth2/token/";
+    private static final String IDENTITY_PROVIDER_ALIAS =
+            "https://localhost:" + IS_DEFAULT_HTTPS_PORT + "/oauth2/token/";
     private static final String SECONDARY_IS_SAMLSSO_URL = "https://localhost:9854/samlsso";
     private static final int PORT_OFFSET_1 = 1;
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
@@ -102,19 +102,24 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     private String consumerSecret;
     private String script;
 
+    public static final String ENABLE_CONDITIONAL_AUTHENTICATION_FLAG = "enableConditionalAuthenticationFeature";
+    private boolean isEnableConditionalAuthenticationFeature =
+            System.getProperty(ENABLE_CONDITIONAL_AUTHENTICATION_FLAG) != null;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
 
         logManger = new AuthenticatorClient(backendURL);
-        String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(), isServer
-                .getSuperTenant().getTenantAdmin().getPassword(), isServer.getInstance().getHosts().get("default"));
+        String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                isServer.getSuperTenant().getTenantAdmin().getPassword(),
+                isServer.getInstance().getHosts().get("default"));
         oauthAdminClient = new OauthAdminClient(backendURL, cookie);
-        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
-                (null, null);
-        applicationManagementServiceClient =
-                new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
+        ConfigurationContext configContext = ConfigurationContextFactory
+                .createConfigurationContextFromFileSystem(null, null);
+        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
+                configContext);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         manager = new MultipleServersManager();
 
@@ -151,6 +156,9 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        if( !isEnableConditionalAuthenticationFeature) {
+            return;
+        }
         LoginToPrimaryIS();
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
@@ -161,6 +169,10 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow based on HTTP Cookie.")
     public void testConditionalAuthenticationUsingHTTPCookie() throws Exception {
+
+        if( !isEnableConditionalAuthenticationFeature) {
+            return;
+        }
 
         // Update authentication script to handle authentication based on HTTP context.
         updateAuthScript("ConditionalAuthenticationHTTPCookieTestCase.js");
@@ -178,8 +190,21 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
                 }
             }
         }
-        assertTrue(hasTestCookie, "Failed to follow the conditional authentication steps. HTTP Cookie : " +
-                "testcookie was not found in the response.");
+        assertTrue(hasTestCookie, "Failed to follow the conditional authentication steps. HTTP Cookie : "
+                + "testcookie was not found in the response.");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(groups = "wso2.is", description = "Check conditional authentication flow with claim assignment.")
+    public void testConditionalAuthenticationClaimAssignment() throws Exception {
+
+        if( !isEnableConditionalAuthenticationFeature) {
+            return;
+        }
+        // Update authentication script to handle authentication based on HTTP context.
+        updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
+        LoginToPrimaryIS();
+
         EntityUtils.consume(response.getEntity());
     }
 
@@ -205,8 +230,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
-                keyPositionMap);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null for " + PRIMARY_IS_APPLICATION_NAME);
 
         String sessionDataKey = keyValues.get(0).getValue();
@@ -240,13 +264,13 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
             Property property = new Property();
             property.setName("oauthConsumerSecret");
             property.setValue(consumerSecret);
-            Property[] properties = {property};
+            Property[] properties = { property };
             requestConfig.setProperties(properties);
         }
 
         InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                new InboundAuthenticationRequestConfig[]{requestConfig});
+        inboundAuthenticationConfig
+                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[] { requestConfig });
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
 
         outboundAuthConfig = createLocalAndOutboundAuthenticationConfig();
@@ -263,8 +287,8 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
         appDTO.setCallbackUrl(CALLBACK_URL);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
-                "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
+                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
         appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
         appDTO.setApplicationName(PRIMARY_IS_APPLICATION_NAME);
         oauthAdminClient.registerOAuthApplicationData(appDTO);
@@ -278,8 +302,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
      */
     private LocalAndOutboundAuthenticationConfig createLocalAndOutboundAuthenticationConfig() throws Exception {
 
-        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig = new
-                LocalAndOutboundAuthenticationConfig();
+        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig = new LocalAndOutboundAuthenticationConfig();
         localAndOutboundAuthenticationConfig.setAuthenticationType("flow");
         AuthenticationStep authenticationStep1 = new AuthenticationStep();
         authenticationStep1.setStepOrder(1);
@@ -287,15 +310,16 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         localConfig.setName(CommonConstants.BASIC_AUTHENTICATOR);
         localConfig.setDisplayName("basicauth");
         localConfig.setEnabled(true);
-        authenticationStep1.setLocalAuthenticatorConfigs(new LocalAuthenticatorConfig[]{localConfig});
+        authenticationStep1.setLocalAuthenticatorConfigs(new LocalAuthenticatorConfig[] { localConfig });
         authenticationStep1.setSubjectStep(true);
         authenticationStep1.setAttributeStep(true);
         localAndOutboundAuthenticationConfig.addAuthenticationSteps(authenticationStep1);
 
         AuthenticationStep authenticationStep2 = new AuthenticationStep();
         authenticationStep2.setStepOrder(2);
-        authenticationStep2.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd
-                .IdentityProvider[]{getFederatedSAMLSSOIDP()});
+        authenticationStep2.setFederatedIdentityProviders(
+                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[] {
+                        getFederatedSAMLSSOIDP() });
         localAndOutboundAuthenticationConfig.addAuthenticationSteps(authenticationStep2);
 
         return localAndOutboundAuthenticationConfig;
@@ -319,7 +343,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         saml2SSOAuthnConfig.setEnabled(true);
         saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
         identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
-        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
+        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[] { saml2SSOAuthnConfig });
 
         identityProviderMgtServiceClient.addIdP(identityProvider);
     }
@@ -331,10 +355,8 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
      */
     private org.wso2.carbon.identity.application.common.model.idp.xsd.Property[] getSAML2SSOAuthnConfigProperties() {
 
-        org.wso2.carbon.identity.application.common.model.idp.xsd.Property[] properties =
-                new org.wso2.carbon.identity.application.common.model.idp.xsd.Property[13];
-        org.wso2.carbon.identity.application.common.model.idp.xsd.Property
-                property = new org.wso2.carbon.identity.application.common.model.idp.xsd.Property();
+        org.wso2.carbon.identity.application.common.model.idp.xsd.Property[] properties = new org.wso2.carbon.identity.application.common.model.idp.xsd.Property[13];
+        org.wso2.carbon.identity.application.common.model.idp.xsd.Property property = new org.wso2.carbon.identity.application.common.model.idp.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
         property.setValue(IDP_NAME);
         properties[0] = property;
@@ -404,84 +426,69 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
      *
      * @return
      */
-    private org.wso2.carbon.identity.application.common.model.xsd.Property[]
-    getSAMLSSOConfigurationPropertiesForXSD() {
+    private org.wso2.carbon.identity.application.common.model.xsd.Property[] getSAMLSSOConfigurationPropertiesForXSD() {
 
-        org.wso2.carbon.identity.application.common.model.xsd.Property[] properties = new org.wso2.carbon
-                .identity.application.common.model.xsd.Property[13];
+        org.wso2.carbon.identity.application.common.model.xsd.Property[] properties = new org.wso2.carbon.identity.application.common.model.xsd.Property[13];
 
-        org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
         property.setValue(IDP_NAME);
         properties[0] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SP_ENTITY_ID);
         property.setValue(SECONDARY_IS_APPLICATION_NAME);
         properties[1] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
         property.setValue(SECONDARY_IS_SAMLSSO_URL);
         properties[2] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_REQ_SIGNED);
         property.setValue("false");
         properties[3] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_ENABLED);
         property.setValue("true");
         properties[4] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL);
         properties[5] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED);
         property.setValue("false");
         properties[6] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_RESP_SIGNED);
         property.setValue("false");
         properties[7] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_USER_ID_IN_CLAIMS);
         property.setValue("false");
         properties[8] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_ENCRYPTION);
         property.setValue("false");
         properties[9] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_SIGNING);
         property.setValue("false");
         properties[10] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName("commonAuthQueryParams");
         properties[11] = property;
 
-        property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
+        property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
         property.setName("AttributeConsumingServiceIndex");
         properties[12] = property;
 
@@ -490,22 +497,20 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
     private org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider getFederatedSAMLSSOIDP() {
 
-        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider identityProvider = new org.wso2.carbon
-                .identity.application.common.model.xsd.IdentityProvider();
+        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider identityProvider = new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
         identityProvider.setIdentityProviderName(IDP_NAME);
         identityProvider.setAlias(IDENTITY_PROVIDER_ALIAS);
         identityProvider.setEnable(true);
 
-        org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig
-                federatedAuthenticatorConfig = new org.wso2.carbon.identity.application.common.model.xsd
-                .FederatedAuthenticatorConfig();
+        org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig federatedAuthenticatorConfig = new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
         federatedAuthenticatorConfig.setProperties(getSAMLSSOConfigurationPropertiesForXSD());
         federatedAuthenticatorConfig.setName("SAMLSSOAuthenticator");
         federatedAuthenticatorConfig.setDisplayName("samlsso");
         federatedAuthenticatorConfig.setEnabled(true);
         identityProvider.setDefaultAuthenticatorConfig(federatedAuthenticatorConfig);
-        identityProvider.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd
-                .FederatedAuthenticatorConfig[]{federatedAuthenticatorConfig});
+        identityProvider.setFederatedAuthenticatorConfigs(
+                new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig[] {
+                        federatedAuthenticatorConfig });
         return identityProvider;
     }
 
@@ -516,28 +521,25 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
 
         startCarbonServer(context, startupParameters);
-        String serviceUrl = (context.getContextUrls()
-                .getSecureServiceUrl()).replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
+        String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
+                .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
-        sessionCookie = authenticatorClient.login(context.getSuperTenant().getTenantAdmin()
-                .getUserName(), context.getSuperTenant().getTenantAdmin().getPassword(), context
-                .getDefaultInstance().getHosts().get("default"));
+        sessionCookie = authenticatorClient.login(context.getSuperTenant().getTenantAdmin().getUserName(),
+                context.getSuperTenant().getTenantAdmin().getPassword(),
+                context.getDefaultInstance().getHosts().get("default"));
 
         if (sessionCookie != null) {
-            ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
-                    (null, null);
-            applicationManagementServiceClient2 =
-                    new ApplicationManagementServiceClient
-                            (sessionCookie, serviceUrl, configContext);
-            samlSSOConfigServiceClient = new SAMLSSOConfigServiceClient(serviceUrl,
-                    sessionCookie);
+            ConfigurationContext configContext = ConfigurationContextFactory
+                    .createConfigurationContextFromFileSystem(null, null);
+            applicationManagementServiceClient2 = new ApplicationManagementServiceClient(sessionCookie, serviceUrl,
+                    configContext);
+            samlSSOConfigServiceClient = new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie);
         }
     }
 
-    private void startCarbonServer(AutomationContext context, Map<String, String> startupParameters)
-            throws Exception {
+    private void startCarbonServer(AutomationContext context, Map<String, String> startupParameters) throws Exception {
 
         CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
                 startupParameters);
@@ -556,15 +558,14 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         InboundAuthenticationRequestConfig samlAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();
         samlAuthenticationRequestConfig.setInboundAuthKey(SECONDARY_IS_APPLICATION_NAME);
         samlAuthenticationRequestConfig.setInboundAuthType("samlsso");
-        org.wso2.carbon.identity.application.common.model.xsd.Property property =
-                new org.wso2.carbon.identity.application.common.model.xsd.Property();
+        org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
 
         samlAuthenticationRequestConfig
-                .setProperties(new org.wso2.carbon.identity.application.common.model.xsd.Property[]{property});
+                .setProperties(new org.wso2.carbon.identity.application.common.model.xsd.Property[] { property });
 
         InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
         inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                new InboundAuthenticationRequestConfig[]{samlAuthenticationRequestConfig});
+                new InboundAuthenticationRequestConfig[] { samlAuthenticationRequestConfig });
 
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         applicationManagementServiceClient2.updateApplicationData(serviceProvider);
@@ -574,7 +575,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(SECONDARY_IS_APPLICATION_NAME);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{COMMON_AUTH_URL});
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[] { COMMON_AUTH_URL });
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(COMMON_AUTH_URL);
         samlssoServiceProviderDTO.setNameIDFormat(SAML_NAME_ID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(false);
@@ -588,8 +589,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
     private void readConditionalAuthScript(String filename) throws Exception {
 
-        try (InputStream resourceAsStream = this.getClass()
-                .getResourceAsStream(filename)) {
+        try (InputStream resourceAsStream = this.getClass().getResourceAsStream(filename)) {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream);
             StringBuilder resourceFile = new StringBuilder();
 
