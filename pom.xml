@@ -1626,13 +1626,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.27</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.33</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.3</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.2</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.13</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.17</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.4</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.14</identity.inbound.auth.sts.version>
@@ -1669,7 +1669,7 @@
         <identity.outbound.auth.samlsso.version>5.1.8</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
-        <social.authenticator.facebook.version>5.1.12</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.1.13</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.1.6</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.4</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.4</social.authenticator.yahoo.version>
