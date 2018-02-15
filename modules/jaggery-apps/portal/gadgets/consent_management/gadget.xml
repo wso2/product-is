@@ -122,8 +122,15 @@
                             })
                                     .done(function (data) {
                                         json = $.parseJSON(data);
-                                        renderReceiptList(json);
+                                        var emptyObj = $.isEmptyObject(json.data);
 
+                                        if(!emptyObj){
+                                            renderReceiptList(json);
+                                        }else{
+                                            var noContentAlert = '<div class="alert alert-info alert-custom">' +
+                                                '<span class="icon-info-sign icon-2x"></span> There are no consents to show for <strong>' + userName + '</strong></div>';
+                                            $("#consent-listing").html(noContentAlert).show();
+                                        }
                                     })
                                     .fail(function () {
                                         console.log('error');
