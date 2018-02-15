@@ -465,6 +465,23 @@
             <fileMode>644</fileMode>
             <directoryMode>775</directoryMode>
         </fileSet>
+
+        <fileSet>
+            <directory>target/forget-me/</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me</outputDirectory>
+            <excludes>
+                <exclude>**/forget-me</exclude>
+                <exclude>**/forget-me.bat</exclude>
+                <exclude>conf/sql/**</exclude>
+                <exclude>conf/datasources/**</exclude>
+            </excludes>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>target/forget-me/conf/sql/identity/</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -905,6 +922,26 @@
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/bin/forgetme/forget-me</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <fileMode>744</fileMode>
+        </file>
+        <file>
+            <source>src/bin/forgetme/forget-me.bat</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <fileMode>744</fileMode>
+        </file>
+        <file>
+            <source>target/forget-me/bin/forget-me</source>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
+            <fileMode>744</fileMode>
+        </file>
+        <file>
+            <source>target/forget-me/bin/forget-me.bat</source>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
+            <fileMode>744</fileMode>
         </file>
     </files>
 </assembly>
