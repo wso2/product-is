@@ -34,6 +34,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -47,6 +48,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 /**
  * This test class tests OIDC SSO functionality for two replying party applications
@@ -259,6 +263,16 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
                 + "is null.");
 
+        if (Utils.requestMissingClaims(response)) {
+            Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
+                    "pastr cookie not found in response.");
+            String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
+                    (response), client, pastreCookie);
+            EntityUtils.consume(response.getEntity());
+        }
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
