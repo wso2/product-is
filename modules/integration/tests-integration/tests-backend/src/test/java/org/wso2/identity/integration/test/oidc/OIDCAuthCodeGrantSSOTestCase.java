@@ -18,14 +18,20 @@
 
 package org.wso2.identity.integration.test.oidc;
 
+import org.apache.commons.httpclient.params.HttpParams;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
@@ -34,6 +40,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -47,6 +54,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 /**
  * This test class tests OIDC SSO functionality for two replying party applications
@@ -85,6 +95,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     protected String sessionDataKey;
     protected String authorizationCode;
 
+    CookieStore cookieStore = new BasicCookieStore();
+
     protected HttpClient client;
 
 
@@ -102,7 +114,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         startTomcat();
         deployApplications();
 
-        client = HttpClientBuilder.create().build();
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
     }
 
@@ -225,7 +237,14 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                 ". Authorized response header is null");
         EntityUtils.consume(response.getEntity());
 
-        response = sendGetRequest(client, locationHeader.getValue());
+        if (isFirstAuthenticationRequest) {
+            response = sendGetRequest(client, locationHeader.getValue());
+        } else {
+            HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+                    .setDefaultCookieStore(cookieStore).build();
+            response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
+        }
+
         Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() + ". "
                 + "Authorized user response is null.");
 
@@ -238,16 +257,38 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
             sessionDataKey = keyValues.get(0).getValue();
             Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " + application.getApplicationName());
-        } else {
-            keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
-            List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse
-                    (response, keyPositionMap);
-            Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null for " + application
-                    .getApplicationName());
 
-            sessionDataKeyConsent = keyValues.get(0).getValue();
-            Assert.assertNotNull(sessionDataKeyConsent, "Invalid sessionDataKeyConsent for " + application
-                    .getApplicationName());
+        } else {
+
+            Header consentLocationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+
+            if (Utils.requestMissingClaims(response)) {
+
+                String pastrCookie = Utils.getPastreCookie(response);
+                Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+                EntityUtils.consume(response.getEntity());
+
+                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, consentLocationHeader
+                        .getValue(), client, pastrCookie);
+                EntityUtils.consume(response.getEntity());
+
+                Header oauthConsentLocationHeader = response.getFirstHeader(OAuth2Constant
+                        .HTTP_RESPONSE_HEADER_LOCATION);
+                Assert.assertNotNull(oauthConsentLocationHeader, "OAuth consent url is null for " +
+                        oauthConsentLocationHeader.getValue());
+
+                response = sendGetRequest(client, oauthConsentLocationHeader.getValue());
+                keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
+                List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse
+                        (response, keyPositionMap);
+                Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null for " + application
+                        .getApplicationName());
+
+
+                sessionDataKeyConsent = keyValues.get(0).getValue();
+                Assert.assertNotNull(sessionDataKeyConsent, "Invalid sessionDataKeyConsent for " + application
+                        .getApplicationName());
+            }
         }
 
         EntityUtils.consume(response.getEntity());
@@ -259,6 +300,15 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
                 + "is null.");
 
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, Utils.getRedirectUrl
+                    (response), client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());

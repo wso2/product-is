@@ -36,6 +36,14 @@
             <artifactId>h2-database-engine</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.privacy</groupId>
+            <artifactId>org.wso2.carbon.privacy.forgetme.conf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.privacy</groupId>
+            <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
@@ -87,6 +95,21 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.privacy</groupId>
+                                    <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
+                                    <version>${forgetme.tool.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target/forget-me</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.privacy</groupId>
+                                    <artifactId>org.wso2.carbon.privacy.forgetme.conf</artifactId>
+                                    <version>${forgetme.tool.version}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target/forget-me-conf</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -258,6 +281,9 @@
                                     </fileset>
                                 </copy>
 
+                                <!-- Replace the config.json related to the forget-me tool with identity specific config. -->
+                                <copy file="target/forget-me-conf/products/identity/conf/config-identity.json" tofile="target/forget-me/conf/config.json" overwrite="true" />
+
                                 <path id="h2.classpath">
                                     <path refid="maven.compile.classpath" />
                                 </path>
@@ -353,6 +379,8 @@
                                 <delete dir="target/sources" />
                                 <delete dir="target/site" />
                                 <delete dir="src/site" />
+                                <delete dir="target/forget-me" />
+                                <delete dir="target/forget-me-conf" />
                             </tasks>
                         </configuration>
                     </execution>

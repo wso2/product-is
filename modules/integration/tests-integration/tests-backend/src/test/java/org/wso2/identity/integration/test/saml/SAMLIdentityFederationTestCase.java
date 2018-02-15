@@ -28,6 +28,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.opensaml.xml.util.Base64;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -48,6 +49,7 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -345,8 +347,20 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(request);
+        String locationHeader = getHeaderValue(response, "Location");
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                            PORT_OFFSET_1), USER_AGENT , locationHeader, client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+            locationHeader = getHeaderValue(response, "Location");
+        }
         closeHttpConnection(response);
-        return getHeaderValue(response, "Location");
+
+        return locationHeader;
     }
 
     private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client, String redirectURL) throws Exception {

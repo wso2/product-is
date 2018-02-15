@@ -89,7 +89,7 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Add Receipt test", dependsOnMethods = {"testAddPurpose"})
     public void testAddReceipt() {
 
-        String piiPrincipalId = "admin@carbon.super";
+        String piiPrincipalId = "admin";
         String service = "travelocity.com";
         String serviceDisplayName = "Travelocity";
         String serviceDescription = "Travel City Guide";
@@ -102,8 +102,8 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
         JSONObject response = addReceipt(piiPrincipalId, service, serviceDisplayName, serviceDescription,
                 consentType, collectionMethod, jurisdiction, language, policyURL);
 
-        Assert.assertEquals(piiPrincipalId, response.get("piiPrincipalId"));
-        Assert.assertEquals(language, response.get("language"));
+        Assert.assertEquals(response.get("piiPrincipalId"), piiPrincipalId);
+        Assert.assertEquals(response.get("language"), language);
     }
 
     private JSONObject addPIICategory(String name, String description) {
@@ -180,7 +180,6 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
         Resource piiCatResource = restClient.resource(consentEndpoint);
 
         String addReceiptString = "{" +
-                "  \"piiPrincipalId\": \"" + piiPrincipalId + "\"," +
                 "  \"services\": [" +
                 "    {" +
                 "      \"service\": \"" + service + "\"," +

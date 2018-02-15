@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.saml;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -26,6 +27,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -207,8 +209,20 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(request);
+        String locationHeader = getHeaderValue(response, "Location");
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                    PORT_OFFSET_1), USER_AGENT, locationHeader, client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+            locationHeader = getHeaderValue(response, "Location");
+        }
         closeHttpConnection(response);
-        return getHeaderValue(response, "Location");
+
+        return locationHeader;
     }
 
     protected Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client, String redirectURL) throws
@@ -237,8 +251,21 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(request);
+        String locationHeader = getHeaderValue(response, "Location");
+        if (Utils.requestMissingClaims(response)) {
+
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                    PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+            locationHeader = getHeaderValue(response, "Location");
+        }
         closeHttpConnection(response);
-        return getHeaderValue(response, "Location");
+
+        return locationHeader;
     }
 
     protected String getSAMLResponseFromPrimaryIS(HttpClient client, String redirectURL) throws Exception {
