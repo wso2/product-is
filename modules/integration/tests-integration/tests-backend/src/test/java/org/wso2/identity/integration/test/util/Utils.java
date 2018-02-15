@@ -149,7 +149,14 @@ public class Utils {
 
 
         String sessionKey = queryParams.get("sessionDataKey");
-        String[] claims = queryParams.get("requestedClaims").split(",");
+        String requestedClaims = queryParams.get("requestedClaims");
+
+        String[] claims;
+        if (StringUtils.isNotBlank(requestedClaims)) {
+            claims = requestedClaims.split(",");
+        } else {
+            claims = new String[0];
+        }
 
         HttpPost post = new HttpPost(commonAuthUrl);
         post.setHeader("User-Agent", userAgent);
