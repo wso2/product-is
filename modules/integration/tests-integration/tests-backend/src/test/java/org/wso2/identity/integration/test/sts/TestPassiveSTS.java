@@ -21,6 +21,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String COMMON_AUTH_URL =
             "https://localhost:9853/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
+    public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
 
     private String adminUsername;
     private String adminPassword;
@@ -200,6 +202,17 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
+        if (requestMissingClaims(response)) {
+            Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
+                    "pastr cookie not found in response.");
+            String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , locationHeader.getValue()
+                    , client, pastreCookie);
+            locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+        }
 
         HttpGet getRequest = new HttpGet(locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
@@ -350,6 +363,13 @@ public class TestPassiveSTS extends ISIntegrationTest {
         claimMappingList.add(emailClaimMapping);
 
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
+    }
+
+    private boolean requestMissingClaims (HttpResponse response) {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        return redirectUrl.contains("consent.do") ? true : false;
+
     }
 
 }

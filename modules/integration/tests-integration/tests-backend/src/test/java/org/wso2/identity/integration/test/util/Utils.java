@@ -142,7 +142,7 @@ public class Utils {
     }
 
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
-                                                    String acsUrl, String artifact,  HttpClient httpClient, String
+                                                    String referer,  HttpClient httpClient, String
                                                               pastreCookie) throws Exception {
         String redirectUrl = getRedirectUrl(response);
         Map<String, String> queryParams = getQueryParams(redirectUrl);
@@ -153,7 +153,7 @@ public class Utils {
 
         HttpPost post = new HttpPost(commonAuthUrl);
         post.setHeader("User-Agent", userAgent);
-        post.addHeader("Referer", String.format(acsUrl, artifact));
+        post.addHeader("Referer", referer);
         post.addHeader("Cookie", pastreCookie);
         List<NameValuePair> urlParameters = new ArrayList<>();
 
@@ -166,6 +166,13 @@ public class Utils {
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
+    }
+
+    public static boolean requestMissingClaims (HttpResponse response) {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        return redirectUrl.contains("consent.do") ? true : false;
+
     }
 
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
