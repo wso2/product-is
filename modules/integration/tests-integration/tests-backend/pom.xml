@@ -636,5 +636,9 @@
             <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
     </dependencies>
 </project>
