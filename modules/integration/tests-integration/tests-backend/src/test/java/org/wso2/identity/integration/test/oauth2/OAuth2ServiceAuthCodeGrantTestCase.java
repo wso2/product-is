@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -203,6 +205,16 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 		HttpResponse response = sendLoginPost(client, sessionDataKey);
 		Assert.assertNotNull(response, "Login request failed. Login response is null.");
 
+		if (Utils.requestMissingClaims(response)) {
+			Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
+					"pastr cookie not found in response.");
+			String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+			EntityUtils.consume(response.getEntity());
+
+			response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
+					(response), client, pastreCookie);
+			EntityUtils.consume(response.getEntity());
+		}
 		Header locationHeader =
 		                        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		Assert.assertNotNull(locationHeader, "Login response header is null");
@@ -229,6 +241,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 		Header locationHeader =
 		                        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		Assert.assertNotNull(locationHeader, "Approval Location header is null.");
+
 		EntityUtils.consume(response.getEntity());
 
 		response = sendPostRequest(client, locationHeader.getValue());
