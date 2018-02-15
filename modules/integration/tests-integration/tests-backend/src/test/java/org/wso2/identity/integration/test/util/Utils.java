@@ -175,6 +175,24 @@ public class Utils {
 
     }
 
+    public static String getPastreCookie(HttpResponse response) {
+
+        String pastrCookie = null;
+        boolean foundPastrCookie = false;
+        Header[] headers = response.getHeaders("Set-Cookie");
+        if (headers != null) {
+            int i = 0;
+            while (!foundPastrCookie && i < headers.length) {
+                if (headers[i].getValue().contains("pastr")) {
+                    pastrCookie = headers[i].getValue().split(";")[0];
+                    foundPastrCookie = true;
+                }
+                i++;
+            }
+        }
+        return pastrCookie;
+    }
+
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
             artifact, HttpClient httpClient) throws IOException {
         Header[] headers = response.getAllHeaders();

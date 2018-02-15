@@ -203,13 +203,12 @@ public class TestPassiveSTS extends ISIntegrationTest {
         locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
         if (requestMissingClaims(response)) {
-            Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
-                    "pastr cookie not found in response.");
-            String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , locationHeader.getValue()
-                    , client, pastreCookie);
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, locationHeader.getValue()
+                    , client, pastrCookie);
             locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
             EntityUtils.consume(response.getEntity());
         }
