@@ -26,6 +26,13 @@ import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
  */
 public class OIDCAuthCodeGrantSSODifferentSubjectIDTestCase extends OIDCAuthCodeGrantSSOTestCase {
 
+
+    @Override
+    protected void initUser() throws Exception {
+        super.initUser();
+        user.setUsername("oidcsessiontestuser1");
+    }
+
     @Override
     protected void initApplications() throws Exception {
         super.initApplications();
