@@ -358,8 +358,8 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                 String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
                 EntityUtils.consume(response.getEntity());
 
-                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
-                        .getArtifact(), httpClient, pastreCookie);
+                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL, config.getApp()
+                        .getArtifact()), httpClient, pastreCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
