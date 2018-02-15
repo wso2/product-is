@@ -353,13 +353,12 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
 
 
             if (requestMissingClaims(response)) {
-                Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
-                        "pastr cookie not found in response.");
-                String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+                String pastrCookie = Utils.getPastreCookie(response);
+                Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL, config.getApp()
-                        .getArtifact()), httpClient, pastreCookie);
+                        .getArtifact()), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 

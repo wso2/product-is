@@ -349,13 +349,12 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         HttpResponse response = client.execute(request);
         String locationHeader = getHeaderValue(response, "Location");
         if (Utils.requestMissingClaims(response)) {
-            Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
-                    "pastr cookie not found in response.");
-            String pastreCookie =response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
             response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
-                            PORT_OFFSET_1), USER_AGENT , locationHeader, client, pastreCookie);
+                            PORT_OFFSET_1), USER_AGENT , locationHeader, client, pastrCookie);
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
         }
