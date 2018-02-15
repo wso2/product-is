@@ -45,6 +45,7 @@ import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -61,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -218,6 +221,15 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. response is null.");
 
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
+                    (response), client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");

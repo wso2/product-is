@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -41,6 +42,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -145,6 +149,15 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 		HttpResponse response = sendLoginPost(client, sessionDataKey);
 		Assert.assertNotNull(response, "Login request failed. Login response is null.");
 
+		if (Utils.requestMissingClaims(response)) {
+			String pastrCookie = Utils.getPastreCookie(response);
+			Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+			EntityUtils.consume(response.getEntity());
+
+			response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
+					(response), client, pastrCookie);
+			EntityUtils.consume(response.getEntity());
+		}
 		Header locationHeader =
 				response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		Assert.assertNotNull(locationHeader, "Login request failed. Login response header is null");
