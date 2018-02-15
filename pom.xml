@@ -1386,6 +1386,18 @@
                 <version>${identity.oauth2.jwt.bearer.grant.version}</version>
             </dependency>
 
+            <!-- Forget-me tool. -->
+            <dependency>
+                <groupId>org.wso2.carbon.privacy</groupId>
+                <artifactId>org.wso2.carbon.privacy.forgetme.conf</artifactId>
+                <version>${forgetme.tool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.privacy</groupId>
+                <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
+                <version>${forgetme.tool.version}</version>
+            </dependency>
+
             <!-- Other Connectors packed with IS -->
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
@@ -1597,13 +1609,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.25</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.47</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
-        <identity.carbon.auth.saml2.version>5.2.3</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.2</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.12</identity.inbound.auth.oauth.version>
+        <identity.carbon.auth.saml2.version>5.2.4</identity.carbon.auth.saml2.version>
+        <identity.inbound.auth.saml.version>5.4.3</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>5.6.20</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.4</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.14</identity.inbound.auth.sts.version>
@@ -1624,7 +1636,7 @@
         <identity.data.publisher.authentication.version>5.1.7</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.2</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.2</identity.data.publisher.audit.version>
-        <identity.governance.version>1.0.39</identity.governance.version>
+        <identity.governance.version>1.1.0</identity.governance.version>
         <carbon.identity.auth.version>1.1.13</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.18</identity.event.handler.notification.version>
@@ -1640,7 +1652,7 @@
         <identity.outbound.auth.samlsso.version>5.1.8</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
-        <social.authenticator.facebook.version>5.1.12</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.1.13</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.1.6</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.4</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.4</social.authenticator.yahoo.version>
@@ -1652,7 +1664,7 @@
         <provisioning.connector.scim.version>5.1.8</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
-        <identity.local.auth.basicauth.version>5.3.6</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>5.3.7</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.8</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
@@ -1673,6 +1685,9 @@
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
         <identity.notification.json.version>5.1.1</identity.notification.json.version>
+
+        <!-- Forget-me tool -->
+        <forgetme.tool.version>1.0.0</forgetme.tool.version>
 
         <!--Identity Repo Versions End-->
 
@@ -1791,7 +1806,7 @@
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
         <json.version>3.0.0.wso2v1</json.version>
-        <carbon.consent.mgt.version>1.0.15</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>1.0.24</carbon.consent.mgt.version>
     </properties>
 
     <repositories>

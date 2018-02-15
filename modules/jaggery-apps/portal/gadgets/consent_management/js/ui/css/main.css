@@ -446,3 +446,14 @@ ul.dropdown-menu li a:hover{
     text-align: center;
     padding: 0;
 }
+.alert-custom{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+.alert-custom span.icon-info-sign{
+    margin-right: 10px;
+}
+.alert-custom strong{
+    margin-left: 4px;
+}
