@@ -185,6 +185,15 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
             String sessionKey = extractDataFromResponse(response, "name=\"sessionDataKey\"", 1);
             response = sendPOSTMessage(sessionKey);
+            if (Utils.requestMissingClaims(response)) {
+
+                String pastrCookie = Utils.getPastreCookie(response);
+                Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+                EntityUtils.consume(response.getEntity());
+
+                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
+                        Utils.getRedirectUrl(response), httpClient, pastrCookie);
+            }
             EntityUtils.consume(response.getEntity());
 
             response = sendRedirectRequest(response);
