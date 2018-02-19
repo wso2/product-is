@@ -24,6 +24,7 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
     String applicationName = "oauthApp1";
     String consumerKey;
     OauthAdminClient adminClient;
+    String updatedApplicationName = "oauthApp2";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -124,6 +125,15 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
         Assert.assertTrue(updated);
     }
 
+    @Test(groups = "wso2.is",
+          description = "Testing updating Oauth2 application",
+          dependsOnMethods = { "testRegisterApplication", "testUpdateOauthAppState", "testUpdateOauthSecretKey" })
+    public void testUpdateOauthApplication() throws Exception {
+        updateApplication(getApplication(applicationName));
+        Assert.assertEquals(getApplication(updatedApplicationName).getApplicationName(), updatedApplicationName,
+                "Application update has failed" + ".Received incorrect application name");
+    }
+
     private void createOauthApp() throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException {
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
         appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
@@ -148,5 +158,22 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
 
     private void updateOauthSecretKey() throws Exception {
         adminClient.updateOauthSecretKey(applicationName);
+    }
+
+    private void updateApplication(OAuthConsumerAppDTO oAuthConsumerAppDTO) throws Exception {
+        oAuthConsumerAppDTO.setApplicationName(updatedApplicationName);
+        adminClient.updateConsumerApplication(oAuthConsumerAppDTO);
+    }
+
+    private OAuthConsumerAppDTO getApplication(String applicationName)
+            throws OAuthAdminServiceIdentityOAuthAdminException, RemoteException {
+        OAuthConsumerAppDTO[] appDTOs = adminClient.getAllOAuthApplicationData();
+
+        for (OAuthConsumerAppDTO appDTO : appDTOs) {
+            if (appDTO.getApplicationName().equals(applicationName)) {
+                return appDTO;
+            }
+        }
+        return null;
     }
 }
