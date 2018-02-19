@@ -42,6 +42,7 @@ public final class OAuth2Constant {
     public final static String AUTHTOKEN_VALIDATE_SERVICE = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
     public final static String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
+    public final static String AUTHORIZE_ENDPOINT_URL = "https://localhost:9853/oauth2/authorize";
     public final static String APPROVAL_URL = "https://localhost:9853/oauth2/authorize";
     public final static String AUTHORIZE_PARAM = "Authorize";
     public final static String TOKEN_VALIDATION_SERVICE_URL = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
