@@ -200,4 +200,9 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
         </classes>
     </test>
+    <test name="is-tests-oauth2-encryption" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
+        </classes>
+    </test>
 </suite>
