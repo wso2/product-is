@@ -203,6 +203,7 @@
     <test name="is-tests-oauth2-encryption" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
         </classes>
     </test>
 </suite>
