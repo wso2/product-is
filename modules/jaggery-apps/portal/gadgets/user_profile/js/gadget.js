@@ -1,5 +1,4 @@
 function drawPage() {
-    console.log(json);
     var output = "";
     var u2fScript="<script src=\"u2f-api.js\"></script>";
     var start = "<div class=\"container-fluid\" style=\"width:95%\">\n" +
@@ -106,11 +105,11 @@ function drawPage() {
     var endString ="<tr>\n" +
         "               <td colspan=\"2\">" +
         "                   <div style=\"margin: auto;\">" +
-        "                    <button id=\"connectFedBtn\" class=\"btn btn-primary mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
+        "                    <button id=\"connectFedBtn\" class=\"btn btn-default mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
         "                    </td></div></tr>"+
         "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
-        "                        <input type=\"button\" onclick=\"downloadUserInfo();\" class=\"btn btn-primary\" value=\"Download UserInfo\"/>\n" +
+        "                        <input type=\"button\" onclick=\"downloadUserInfo();\" class=\"btn btn-default\" value=\"Export\"/>\n" +
         "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
         "                    </td></tr>" +
         "                  </tbody>\n" +
