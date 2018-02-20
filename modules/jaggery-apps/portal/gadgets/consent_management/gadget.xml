@@ -122,9 +122,9 @@
                             })
                                 .done(function (data) {
                                     json = $.parseJSON(data);
-                                    var emptyObj = $.isEmptyObject(json.data);
-
-                                    if (!emptyObj) {
+                                    var emptyObj = $.isEmptyObject(json.receipts);
+                                    var emptyDefault = $.isEmptyObject(json.default);
+                                    if (!emptyObj || !emptyDefault) {
                                         renderReceiptList(json);
                                     } else {
                                         var noContentAlert = '<div class="alert alert-info alert-custom">' +
@@ -151,6 +151,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 content-section">
+                        <div id="resident-consent-listing" style="display:none;"></div>
                         <div id="consent-listing" style="display:none;"></div>
                         <div id="consent-settings" style="display:none;"></div>
                         <div id="message"></div>
