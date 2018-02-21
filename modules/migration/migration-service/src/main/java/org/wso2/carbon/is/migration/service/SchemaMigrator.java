@@ -104,11 +104,10 @@ public class SchemaMigrator extends Migrator {
     private void executeSQLScript(String dbscriptName) throws Exception {
 
         String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-        boolean oracleUserChanged = true;
         boolean keepFormat = false;
+
         if ("oracle".equals(databaseType)) {
             delimiter = "/";
-            oracleUserChanged = false;
         } else if ("db2".equals(databaseType)) {
             delimiter = "/";
         } else if ("openedge".equals(databaseType)) {
@@ -141,9 +140,12 @@ public class SchemaMigrator extends Migrator {
                     }
                 }
                 //add the oracle database owner
-                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")) {
-                    line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
-                    oracleUserChanged = true;
+                if ("oracle".equals(databaseType) && line.contains("databasename :=")) {
+                    if (dbscriptName.contains("identity")) {
+                        line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
+                    } else if (dbscriptName.contains("um")) {
+                        line = "databasename := '" + ISMigrationServiceDataHolder.getUmOracleUser() + "';";
+                    }
                 }
                 sql.append(keepFormat ? "\n" : " ").append(line);
 
