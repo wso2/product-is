@@ -219,9 +219,11 @@
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</name>
+                    <name>org.wso2.identity.integration.common.extension.server.IdentityServerExtension</name>
                     <parameter name="-DportOffset" value="410" />
                     <parameter name="-Dsetup" value="true"/>
+                    <!--<parameter name="backup-test-pack" value="true"/>-->
+                    <!--<parameter name="backup-location" value="<Absolute path for backup location with trailing foreword slash>"/>-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
