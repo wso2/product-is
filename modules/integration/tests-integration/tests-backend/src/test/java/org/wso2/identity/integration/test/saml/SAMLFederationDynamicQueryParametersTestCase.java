@@ -242,7 +242,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
             // 302 to SAML Federated IDP initiated from the primary IS
             String requestToFedIdpLocationHeader = Utils.getRedirectUrl(requestToFederatedIdp);
             // Assert whether the query param value sent in the inbound request was passed in the 302 to Federated IDP
-            List<NameValuePair> nameValuePairs = URLEncodedUtils.parse(requestToFedIdpLocationHeader, StandardCharsets.UTF_8);
+            List<NameValuePair> nameValuePairs = buildQueryParamList(requestToFedIdpLocationHeader);
             boolean isDynamicQueryParamReplaced = false;
             for (NameValuePair valuePair : nameValuePairs) {
                 if (StringUtils.equalsIgnoreCase(DYNAMIC_QUERY_PARAM_KEY, valuePair.getName())) {
@@ -257,6 +257,52 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
                 client.close();
             }
         }
+    }
+
+    @Test(alwaysRun = true, description = "Test SAML Federation Request with Dynamic Query Parameters",
+            dependsOnMethods = {"testCreateServiceProviderWithSAMLConfigsAndSAMLFedIdp"})
+    public void testSAMLRedirectBindingDynamicWithoutInboundQueryParam() throws Exception {
+
+        HttpGet request = new HttpGet(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-Redirect");
+        CloseableHttpClient client = null;
+        try {
+            client = HttpClientBuilder.create().disableRedirectHandling().build();
+            // Do a redirect to travelocity app.
+            HttpResponse response = client.execute(request);
+            EntityUtils.consume(response.getEntity());
+
+            // Modify the location header to included the secToken.
+            String location = Utils.getRedirectUrl(response);
+
+            // Do a GET manually to send the SAML Request to IS.
+            HttpGet requestToIS = new HttpGet(location);
+            HttpResponse requestToFederatedIdp = client.execute(requestToIS);
+            EntityUtils.consume(requestToFederatedIdp.getEntity());
+
+            // 302 to SAML Federated IDP initiated from the primary IS
+            String requestToFedIdpLocationHeader = Utils.getRedirectUrl(requestToFederatedIdp);
+            // Assert whether the query param value sent in the inbound request was passed in the 302 to Federated IDP
+            List<NameValuePair> nameValuePairs = buildQueryParamList(requestToFedIdpLocationHeader);
+            boolean isDynamicQuerySentInFedAuthRequestEmpty = false;
+            for (NameValuePair valuePair : nameValuePairs) {
+                if (StringUtils.equalsIgnoreCase(DYNAMIC_QUERY_PARAM_KEY, valuePair.getName())) {
+                    // Check whether the query param value sent in inbound request was included to the additional query
+                    // params defined in the SAML Application Authenticator.
+                    isDynamicQuerySentInFedAuthRequestEmpty = StringUtils.isEmpty(valuePair.getValue());
+                }
+            }
+
+            Assert.assertTrue(isDynamicQuerySentInFedAuthRequestEmpty);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
+    }
+
+    private List<NameValuePair> buildQueryParamList(String requestToFedIdpLocationHeader) {
+
+        return URLEncodedUtils.parse(requestToFedIdpLocationHeader, StandardCharsets.UTF_8);
     }
 
     private Property[] getSAML2SSOAuthnConfigProperties() {
