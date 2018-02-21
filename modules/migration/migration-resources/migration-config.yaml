@@ -86,29 +86,34 @@ versions:
     parameters:
       schema: "um"
    -
-    name: "PermissionDataMigrator"
+    name: "ClaimsUpgrader"
     order: 3
     parameters:
       schema: "um"
    -
-    name: "EmailTemplateDataMigrator"
+    name: "PermissionDataMigrator"
     order: 4
+    parameters:
+      schema: "um"
+   -
+    name: "EmailTemplateDataMigrator"
+    order: 5
     parameters:
       schema: "identity"
 
    -
     name: "ChallengeQuestionDataMigrator"
-    order: 5
-    parameters:
-      schema: "identity"
-   -
-    name: "ResidentIdpMetadataMigrator"
     order: 6
     parameters:
       schema: "identity"
    -
-    name: "OIDCScopeDataMigrator"
+    name: "ResidentIdpMetadataMigrator"
     order: 7
+    parameters:
+      schema: "identity"
+   -
+    name: "OIDCScopeDataMigrator"
+    order: 8
     parameters:
       schema: "identity"
 
