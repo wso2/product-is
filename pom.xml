@@ -1649,7 +1649,7 @@
         <!-- Authenticator Properties -->
         <identity.outbound.auth.oidc.version>5.1.13</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.9</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.10</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.13</social.authenticator.facebook.version>
