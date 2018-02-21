@@ -145,7 +145,7 @@ function updateReceipt(receiptData) {
  */
 function renderReceiptList(data) {
     var receiptData = data;
-    var content = '<div id="default-receipt"><h3>Default Consent</h3>{{#default}}<div class="panel' +
+    var content = '<div id="default-receipt"><h3>System Consent</h3>{{#default}}<div class="panel' +
         ' panel-default' +
         ' panel-consents">' +
         '<div class="panel-body flex-container">' +
@@ -248,10 +248,12 @@ function renderReceiptDetails(data) {
         '{{#purposes}}<li data-jstree=\'{"icon":"icon-book"}\' purposeid="{{purposeId}}">{{purpose}}' +
         '<ul>' +
         '{{#piiCategory}}<li data-jstree=\'{"icon":"icon-user", "selected":true}\' piicategoryid="{{piiCategoryId}}"' +
-        ' class="selected">{{piiCategoryName}}</li>{{/piiCategory}}' +
+        ' class="selected">' +
+        '{{#if piiCategoryDisplayName}}{{piiCategoryDisplayName}}{{else}}{{piiCategoryName}}{{/if}}</li>' +
+        '{{/piiCategory}}' +
         '{{#piiCategories}}<li data-jstree={{#if accepted}}\'{"icon":"icon-user",' +
-        ' "selected":true}\'{{else}}\'{"icon":"icon-user"}\'{{/if}}' +
-        ' piicategoryid="{{piiCategoryId}}">{{piiCategory}}</li>{{/piiCategories}}' +
+        ' "selected":true}\'{{else}}\'{"icon":"icon-user"}\'{{/if}} piicategoryid="{{piiCategoryId}}">' +
+        '{{#if displayName}}{{displayName}}{{else}}{{piiCategory}}{{/if}}</li>{{/piiCategories}}' +
         '</ul>' +
         '</li>' +
         '</li>{{/purposes}}' +

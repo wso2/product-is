@@ -395,6 +395,9 @@ ul.dropdown-menu li a:hover{
 .btn-group > .btn-settings span{
     color: #fff;
 }
+.btn-group > .btn-default-settings span{
+    color: #fff;
+}
 .btn-group > .btn-revoke {
     margin-left: 4px!important;
     background: none;
@@ -456,4 +459,8 @@ ul.dropdown-menu li a:hover{
 }
 .alert-custom strong{
     margin-left: 4px;
+}
+
+#receipts{
+    margin-top: 40px;
 }

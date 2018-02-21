@@ -25,6 +25,7 @@ try {
     var currentReceipt;
     var acceptedPurposes;
     var defaultReceipt = {};
+    //if default reciept already exists, then extract the accepted purposes
     if (receiptID) {
         var receiptUrl = url + RECEIPTS_URL + receiptID;
         var consentJSON = get(receiptUrl, {}, headers, "json");
@@ -38,48 +39,25 @@ try {
         }
     }
 
-    var purposesForReceipt = [];
+    var purposesForResidentIDPReceipt = [];
     var servicesForResidentIDPReceipt = [];
+    // retrieve metadata of all the existing purposes
     var purposesURL = url + PURPOSES_URI;
     var purposes = get(purposesURL, {}, headers, "json");
 
-    if (purposes.data) {
+    if (purposes.data && purposes.data.length > 0) {
         var purposesJSON = purposes.data;
+        // retrieve details of each purpose
         purposesJSON.forEach(function (purpose) {
             var purposeURL = purposesURL + "/" + purpose.purposeId;
             var purposeForReceipt = get(purposeURL, {}, headers, "json");
             if (purposeForReceipt.data && DEFAULT_CONSENT != purposeForReceipt.data.purpose) {
-                var purposeReceiptData = purposeForReceipt.data;
-                if (acceptedPurposes && acceptedPurposes.length > 0) {
-                    acceptedPurposes.forEach(function
-                        (acceptedPurpose) {
-                        if (acceptedPurpose.purposeId == purposeReceiptData.purposeId) {
-                            purposeReceiptData["termination"] =  acceptedPurpose.termination;
-                            var acceptedCategories = acceptedPurpose.piiCategory;
-                            var categories = purposeReceiptData.piiCategories;
-                            categories.forEach(function (category) {
-                                acceptedCategories.forEach(function (acceptedCategory) {
-                                    if (category.piiCategoryId == acceptedCategory.piiCategoryId) {
-                                        category["accepted"] = true;
-                                    }
-                                });
-                            });
-
-                        }
-                    });
-                }
-                purposeReceiptData["consentType"] = purposeReceiptData["consentType"] ||
-                    identityRecoveryConstants.Consent.EXPLICIT_CONSENT_TYPE;
-                purposeReceiptData["primaryPurpose"] = purposeReceiptData["primaryPurpose"] || true;
-                purposeReceiptData["thirdPartyDisclosure"] = purposeReceiptData["thirdPartyDisclosure"] || true;
-                purposeReceiptData["termination"] = purposeReceiptData["termination"] ||
-                    identityRecoveryConstants.Consent.INFINITE_TERMINATION;
-                purposeReceiptData["thirdPartyName"] = purposeReceiptData["thirdPartyName"] || "";
-                purposesForReceipt.push(purposeReceiptData);
+                var purposeReceiptData = populatePurposes(purposeForReceipt, acceptedPurposes);
+                purposesForResidentIDPReceipt.push(purposeReceiptData);
             }
         });
     }
-    var serviceForResidentIDPReceipt = loadResidentIDPInformation(tenantUser.domain, purposesForReceipt);
+    var serviceForResidentIDPReceipt = loadResidentIDPInformation(tenantUser.domain, purposesForResidentIDPReceipt);
     servicesForResidentIDPReceipt.push(serviceForResidentIDPReceipt);
     defaultReceipt["services"] = servicesForResidentIDPReceipt;
     loadDefaultReceiptInformation(defaultReceipt);
@@ -120,6 +98,36 @@ function loadDefaultReceiptInformation(receipt) {
     receipt["jurisdiction"] = receipt["jurisdiction"] || jurisdiction;
     receipt["language"] = receipt["language"] || language;
     receipt["collectionMethod"] = receipt["collectionMethod"] || collectionMethod;
+}
+
+function populatePurposes(purposeForReceipt, acceptedPurposes){
+    var purposeReceiptData = purposeForReceipt.data;
+    if (acceptedPurposes && acceptedPurposes.length > 0) {
+        acceptedPurposes.forEach(function(acceptedPurpose) {
+            if (acceptedPurpose.purposeId == purposeReceiptData.purposeId) {
+                purposeReceiptData["termination"] =  acceptedPurpose.termination;
+                var acceptedCategories = acceptedPurpose.piiCategory;
+                var categories = purposeReceiptData.piiCategories;
+                // identify consented pii-categories
+                categories.forEach(function (category) {
+                    acceptedCategories.forEach(function (acceptedCategory) {
+                        if (category.piiCategoryId == acceptedCategory.piiCategoryId) {
+                            category["accepted"] = true;
+                        }
+                    });
+                });
+
+            }
+        });
+    }
+    purposeReceiptData["consentType"] = purposeReceiptData["consentType"] ||
+        identityRecoveryConstants.Consent.EXPLICIT_CONSENT_TYPE;
+    purposeReceiptData["primaryPurpose"] = purposeReceiptData["primaryPurpose"] || true;
+    purposeReceiptData["thirdPartyDisclosure"] = purposeReceiptData["thirdPartyDisclosure"] || true;
+    purposeReceiptData["termination"] = purposeReceiptData["termination"] ||
+        identityRecoveryConstants.Consent.INFINITE_TERMINATION;
+    purposeReceiptData["thirdPartyName"] = purposeReceiptData["thirdPartyName"] || "";
+    return purposeReceiptData;
 }
 
 %>
