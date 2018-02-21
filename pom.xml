@@ -1615,7 +1615,7 @@
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.4</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.3</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.20</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.26</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.4</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.14</identity.inbound.auth.sts.version>
@@ -1634,7 +1634,7 @@
         <identity.inbound.provisioning.scim2.version>1.1.19</identity.inbound.provisioning.scim2.version>
         <identity.tool.samlsso.validator.version>5.1.6</identity.tool.samlsso.validator.version>
         <identity.data.publisher.authentication.version>5.1.7</identity.data.publisher.authentication.version>
-        <identity.data.publisher.oauth.version>1.0.2</identity.data.publisher.oauth.version>
+        <identity.data.publisher.oauth.version>1.0.3</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.2</identity.data.publisher.audit.version>
         <identity.governance.version>1.1.0</identity.governance.version>
         <carbon.identity.auth.version>1.1.13</carbon.identity.auth.version>
