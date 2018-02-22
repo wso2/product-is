@@ -36,7 +36,8 @@ try {
             defaultReceipt = currentReceipt;
         }
 
-        if (currentReceipt.services && currentReceipt.services.length > 0 && currentReceipt.services[0].purposes) {
+        if (currentReceipt && currentReceipt.services && currentReceipt.services.length > 0
+            && currentReceipt.services[0].purposes) {
             acceptedPurposes = currentReceipt.services[0].purposes || [];
         }
     }
