@@ -1,7 +1,5 @@
 <%
-
 include("constants.jag");
-
 var commonUtil = require("/util/utility.jag");
 
 var log = new Log();
@@ -244,6 +242,16 @@ function generateDashboard(page, context, i18n){
 }
 
 
+function validateResponse(obj) {
+    var xhr = obj.xhr;
+	log.info(xhr.status);
+    if (HTTP_CODES.unAuthorized == xhr.status) {
+        log.debug("Authenticated session is invalidated in the server for user:" + session.get(LOGGED_IN_USER));
+		print({"status" : HTTP_CODES.unAuthorized});
+        response.sendError(HTTP_CODES.unAuthorized);
+    }
+}
+
 String.prototype.replaceAll = function(stringToFind,stringToReplace){
     var temp = this;
     var index = temp.indexOf(stringToFind);
@@ -254,5 +262,5 @@ String.prototype.replaceAll = function(stringToFind,stringToReplace){
     return temp;
 };
 
-
 %>
+
