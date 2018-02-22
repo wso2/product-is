@@ -1,6 +1,7 @@
 <%
 include("../../util/constants.jag");
 include("util/constants.jag");
+include("util/utility.jag");
 var log = new Log();
 var cookie = request.getParameter("cookie");
 var carbon = require("carbon");
@@ -23,6 +24,7 @@ try {
     var data = {state: CONSENT_STATE_ACTIVE, piiPrincipalId: tenantUser.username};
     var headers = {"cookie": cookie};
     var consentsJSON = get(url, data, headers, "json");
+    validateResponse(consentsJSON);
 
     data["service"] = residentIdpName;
     var residentIDPReciept = get(url, data, headers, "json");
