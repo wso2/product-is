@@ -924,12 +924,12 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/bin/forgetme/forget-me</source>
+            <source>src/bin/forgetme/forgetme.sh</source>
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>src/bin/forgetme/forget-me.bat</source>
+            <source>src/bin/forgetme/forgetme.bat</source>
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
