@@ -135,7 +135,7 @@ public class IdentityProviderMgtServiceClient {
             idPMgtStub.updateResidentIdP(identityProvider);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new Exception("Error occurred while retrieving list of Identity Providers");
+            throw new Exception("Error occurred while updating resident identity provider");
         }
     }
 
