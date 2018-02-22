@@ -165,7 +165,13 @@ public class Utils {
         List<NameValuePair> urlParameters = new ArrayList<>();
 
         for (int i = 0; i < claims.length; i++) {
-            urlParameters.add(new BasicNameValuePair("consent_" + claims[i], "on"));
+
+            if (StringUtils.isNotBlank(claims[i])) {
+                String[] claimMeta = claims[i].split("_", 2);
+                if (claimMeta.length == 2) {
+                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                }
+            }
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         urlParameters.add(new BasicNameValuePair("requestedClaims", queryParams.get("requestedClaims")));
