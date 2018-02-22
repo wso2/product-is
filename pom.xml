@@ -1609,13 +1609,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.65</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.67</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.4</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.3</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.27</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.29</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.14</identity.inbound.auth.sts.version>
@@ -1637,7 +1637,7 @@
         <identity.data.publisher.oauth.version>1.0.3</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.2</identity.data.publisher.audit.version>
         <identity.governance.version>1.1.4</identity.governance.version>
-        <carbon.identity.auth.version>1.1.14</carbon.identity.auth.version>
+        <carbon.identity.auth.version>1.1.15</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.18</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
