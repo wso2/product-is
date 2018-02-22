@@ -1,6 +1,7 @@
 <%
 include("../../util/constants.jag");
 include("util/constants.jag");
+include("util/utility.jag");
 
 var log = new Log("default_reciept");
 var cookie = request.getParameter("cookie");
@@ -29,12 +30,14 @@ try {
     if (receiptID) {
         var receiptUrl = url + RECEIPTS_URL + receiptID;
         var consentJSON = get(receiptUrl, {}, headers, "json");
+        validateResponse(consentJSON);
         if (consentJSON.data) {
             currentReceipt = consentJSON.data;
             defaultReceipt = currentReceipt;
         }
 
-        if (currentReceipt.services && currentReceipt.services.length > 0 && currentReceipt.services[0].purposes) {
+        if (currentReceipt && currentReceipt.services && currentReceipt.services.length > 0
+            && currentReceipt.services[0].purposes) {
             acceptedPurposes = currentReceipt.services[0].purposes || [];
         }
     }
@@ -44,6 +47,7 @@ try {
     // retrieve metadata of all the existing purposes
     var purposesURL = url + PURPOSES_URI;
     var purposes = get(purposesURL, {}, headers, "json");
+    validateResponse(purposes);
 
     if (purposes.data && purposes.data.length > 0) {
         var purposesJSON = purposes.data;

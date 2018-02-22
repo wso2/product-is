@@ -25,4 +25,10 @@ var RECEIPTS_URL = "/receipts/";
 var PURPOSES_URI = "/purposes";
 var DEFAULT_CONSENT = "DEFAULT";
 var COLLECTION_METHOD_USER_PORTAL = "Web Form - User Portal";
+var HTTP_CODES = {
+    success : 200,
+    notFound : 404,
+    unAuthorized : 401
+    // etc
+}
 %>
