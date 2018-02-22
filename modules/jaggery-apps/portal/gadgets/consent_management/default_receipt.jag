@@ -91,7 +91,7 @@ function loadDefaultReceiptInformation(receipt) {
     var policyUrl = "";
     var jurisdiction = identityRecoveryConstants.Consent.DEFAULT_JURISDICTION;
     var language = identityRecoveryConstants.Consent.LANGUAGE_ENGLISH;
-    var collectionMethod = identityRecoveryConstants.Consent.COLLECTION_METHOD_SELF_REGISTRATION;
+    var collectionMethod = receipt.collectionMethod || COLLECTION_METHOD_USER_PORTAL;
 
     receipt["consent"] = receipt["consent"] || consent;
     receipt["policyUrl"] = receipt["policyUrl"] || policyUrl;
