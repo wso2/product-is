@@ -53,9 +53,8 @@ function getReceiptDetails(receiptID) {
                 renderReceiptDetails(consentJSON);
 
             })
-            .fail(function () {
-                console.log('error');
-
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
@@ -79,9 +78,8 @@ function getResidentIDPReceiptDetails(receiptID) {
                 renderReceiptDetails(consentJSON);
 
             })
-            .fail(function () {
-                console.log('error');
-
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
@@ -105,14 +103,22 @@ function revokeReceipt(receiptID) {
             .done(function (data) {
                 location.reload();
             })
-            .fail(function () {
-                console.log('error');
-
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
             });
     }
+}
+
+function publishErrorAndShrink(error) {
+    console.log(error);
+    gadgets.Hub.publish('org.wso2.is.dashboard', {
+        msg: 'A message from Consent Management',
+        id: "consent_management .shrink-widget",
+        status: error.status
+    });
 }
 
 /*
@@ -130,9 +136,8 @@ function updateReceipt(receiptData) {
             .done(function (data) {
                 location.reload();
             })
-            .fail(function () {
-                console.log('error');
-
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
@@ -151,7 +156,7 @@ function renderReceiptList(data) {
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
         '<h4>{{#if spDisplayName}}{{spDisplayName}}' +
-        ' <span>{{#if consentReceiptID}}({{consentReceiptID}}){{/if}}</span>{{else}}{{consentReceiptID}}{{/if}}</h4>' +
+        ' {{else}}{{consentReceiptID}}{{/if}}</h4>' +
         '<p>{{spDescription}}</p>' +
         '</div>' +
         '<div class="right">' +
