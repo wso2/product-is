@@ -101,6 +101,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     private String consumerKey;
     private String consumerSecret;
     private String script;
+    private String initialCarbonHome;
 
     public static final String ENABLE_CONDITIONAL_AUTHENTICATION_FLAG = "enableConditionalAuthenticationFeature";
     private boolean isEnableConditionalAuthenticationFeature =
@@ -110,7 +111,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     public void testInit() throws Exception {
 
         super.init();
-
+        initialCarbonHome = System.getProperty("carbon.home");
         logManger = new AuthenticatorClient(backendURL);
         String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
@@ -151,6 +152,8 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         this.logManger.logOut();
         logManger = null;
         manager.stopAllServers();
+        //Restore carbon.home system property to initial value
+        System.setProperty("carbon.home", initialCarbonHome);
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")

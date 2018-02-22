@@ -21,7 +21,6 @@ package org.wso2.identity.integration.test.user.store.config;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.om.util.Base64;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -36,7 +35,6 @@ import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileUtil;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -67,18 +65,15 @@ import javax.xml.namespace.QName;
  */
 public class UserStorePasswordEncryption extends ISIntegrationTest {
 
-    private static final String userstoreDeploymentDir = CarbonUtils.getCarbonRepository() + "userstores";
     private static Log log = LogFactory.getLog(UserStorePasswordEncryption.class);
     private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-    private static final String CARBON_PROPERTIES_FILE_NAME = "carbon.properties";
     private static final String USER_STORE_DOMAIN_NAME = "integrationTest.com";
-    private static final String USER_STORE_DOMAIN_NAME_2 = "integrationTest2.com";
 
     private UserStoreConfigAdminServiceClient userStoreConfigurationClient;
     private ServerConfigurationManager serverConfigurationManager;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private String keyStoreFilePath;
-    private String confDir;
+    private String userstoreDeploymentDir;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -88,8 +83,8 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
         keyStoreFilePath =
                 getTestArtifactLocation() + File.separator + "keystores" + File.separator + "products" + File.separator
                         + "wso2carbon.jks";
-        confDir = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf"
-                + File.separator;
+        userstoreDeploymentDir = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +
+                "deployment" + File.separator + "server" + File.separator + "userstores";
     }
 
     @Test(groups = "wso2.is",
@@ -97,81 +92,14 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
           priority = 1)
     public void testCustomPasswordEncryptionOfUserStoreXML() throws Exception {
 
-        String userStoreConfigFileName = "integrationTest2_com.xml";
-        String userStorePassword = "testAdminPassword";
-
-        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("DomainName", USER_STORE_DOMAIN_NAME_2);
-        properties.put("url", "jdbc:h2:./repository/database/UserStorePasswordEncryptionDB2");
-        properties.put("password", userStorePassword);
-        properties.put("userName", "testUserName");
-        properties.put("driverName", "org.h2.Driver");
-
-        Set<String> keys = properties.keySet();
-        PropertyDTO[] propertyDTOs = new PropertyDTO[keys.toArray().length];
-        int i = 0;
-        for (String key : keys) {
-            PropertyDTO propertyDTO = new PropertyDTO();
-            propertyDTO.setName(key);
-            propertyDTO.setValue(properties.get(key));
-            propertyDTOs[i] = propertyDTO;
-            i++;
-        }
-
-        UserStoreDTO userStoreDTO = userStoreConfigurationClient
-                .createUserStoreDTO(JDBC_CLASS, USER_STORE_DOMAIN_NAME_2, propertyDTOs);
-        //Add user store.
-        userStoreConfigurationClient.addUserStore(userStoreDTO);
-        Assert.assertTrue(
-                userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigurationClient, USER_STORE_DOMAIN_NAME_2),
-                "Domain addition via DTO has failed.");
-        OMElement userStoreOM = AXIOMUtil.stringToOM(
-                FileUtil.readFileToString(userstoreDeploymentDir + File.separator + userStoreConfigFileName));
-
-        String password = null;
-        Iterator propertyIterator = userStoreOM.getChildrenWithLocalName("Property");
-        while (propertyIterator.hasNext()) {
-            Object resultObject = propertyIterator.next();
-            if (resultObject instanceof OMElement) {
-                OMElement propertyOM = (OMElement) resultObject;
-                if (propertyOM.getAttribute(new QName("name")).getAttributeValue().equals("password")) {
-                    password = propertyOM.getText();
-                    break;
-                }
-            }
-        }
-
-        Assert.assertNotNull(password, "Password property not available in the userstore configuration");
-        //the cipher text is a self contained cipher.
-        JSONObject jsonObject = (JSONObject) JSONValue
-                .parse(new String(Base64.decode(password), Charset.defaultCharset()));
-        String cipherText = jsonObject.get("c").toString();
-        String decryptedPassword = new String(decrypt(Base64.decode(cipherText), "RSA/ECB/OAEPwithSHA1andMGF1Padding"),
-                Charset.defaultCharset());
-        log.info("decrypted Password : " + decryptedPassword);
-        Assert.assertEquals(decryptedPassword, userStorePassword, "Password encryption failed when adding userstore");
-    }
-
-    @Test(groups = "wso2.is",
-          description = "Test encryption of password in user store configuration xml by commenting "
-                  + "org.wso2.CipherTransformation in carbon.properties file",
-          priority = 2)
-    public void testDefaultPasswordEncryptionOfUserStoreXML() throws Exception {
-
-        String carbonPropertiesFilePath = getTestArtifactLocation() + File.separator + CARBON_PROPERTIES_FILE_NAME;
-        File srcCarbonPropFile = new File(carbonPropertiesFilePath);
-        serverConfigurationManager.applyConfiguration(srcCarbonPropFile);
-        super.init();
-        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-
         String userStoreConfigFileName = "integrationTest_com.xml";
         String userStorePassword = "testAdminPassword";
 
+        userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+
         Map<String, String> properties = new HashMap<>();
         properties.put("DomainName", USER_STORE_DOMAIN_NAME);
-        properties.put("url", "jdbc:h2:./repository/database/UserStorePasswordEncryptionDB");
+        properties.put("url", "jdbc:h2:./repository/database/UserStorePasswordEncryptionDB2");
         properties.put("password", userStorePassword);
         properties.put("userName", "testUserName");
         properties.put("driverName", "org.h2.Driver");
@@ -209,13 +137,17 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
                 }
             }
         }
+
         Assert.assertNotNull(password, "Password property not available in the userstore configuration");
-        //Default behavior is encryption using RSA
-        String decryptedPassword = new String(decrypt(Base64.decode(password), "RSA"), Charset.defaultCharset());
+        //the cipher text is a self contained cipher.
+        JSONObject jsonObject = (JSONObject) JSONValue
+                .parse(new String(Base64.decode(password), Charset.defaultCharset()));
+        String cipherText = jsonObject.get("c").toString();
+        String decryptedPassword = new String(decrypt(Base64.decode(cipherText), "RSA/ECB/OAEPwithSHA1andMGF1Padding"),
+                Charset.defaultCharset());
         log.info("decrypted Password : " + decryptedPassword);
         Assert.assertEquals(decryptedPassword, userStorePassword, "Password encryption failed when adding userstore");
     }
-
 
 
     @AfterClass(alwaysRun = true)
@@ -223,11 +155,6 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
         userStoreConfigurationClient.deleteUserStore(USER_STORE_DOMAIN_NAME);
         Assert.assertTrue(
                 userStoreConfigUtils.waitForUserStoreUnDeployment(userStoreConfigurationClient, USER_STORE_DOMAIN_NAME),
-                "Deletion of user store has failed");
-        userStoreConfigurationClient.deleteUserStore(USER_STORE_DOMAIN_NAME_2);
-        Assert.assertTrue(
-                userStoreConfigUtils.waitForUserStoreUnDeployment(userStoreConfigurationClient,
-                        USER_STORE_DOMAIN_NAME_2),
                 "Deletion of user store has failed");
         serverConfigurationManager.restoreToLastConfiguration();
     }
