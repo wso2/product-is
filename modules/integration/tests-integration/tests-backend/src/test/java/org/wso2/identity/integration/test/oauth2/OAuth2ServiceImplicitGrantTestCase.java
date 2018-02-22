@@ -193,7 +193,8 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		                        response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		Assert.assertNotNull(locationHeader, "Approval Location header is null.");
 
-		accessToken = DataExtractUtil.extractAccessTokenFromQueryString(locationHeader.getValue());
+		accessToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+				OAuth2Constant.ACCESS_TOKEN);
 		Assert.assertNotNull(accessToken, "Access token is null.");
 		EntityUtils.consume(response.getEntity());
 	}
