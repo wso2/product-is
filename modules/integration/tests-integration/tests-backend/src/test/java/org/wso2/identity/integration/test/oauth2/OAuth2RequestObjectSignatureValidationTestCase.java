@@ -102,7 +102,8 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(getBasicOAuthApp());
+        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
+        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
         Assert.assertNotNull(serviceProvider, "OAuth App creation failed");
         Assert.assertNotNull(consumerKey);
         Assert.assertNotNull(consumerSecret);
@@ -230,16 +231,6 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
                 "&response_type=code&scope=openid";
     }
 
-    private OAuthConsumerAppDTO getBasicOAuthApp() {
-
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit");
-        return appDTO;
-    }
-
     private String buildPlainJWT(String consumerKey) {
 
         JWTClaimsSet jwtClaimsSet = getJwtClaimsSet(consumerKey);
@@ -270,50 +261,6 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         return signedJWT.serialize();
     }
 
-    private ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO) throws Exception {
-
-        adminClient.registerOAuthApplicationData(appDTO);
-
-        OAuthConsumerAppDTO oauthConsumerApp = adminClient.getOAuthAppByName(appDTO.getApplicationName());
-        consumerKey = oauthConsumerApp.getOauthConsumerKey();
-        consumerSecret = oauthConsumerApp.getOauthConsumerSecret();
-
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
-        appMgtclient.createApplication(serviceProvider);
-
-        serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-
-        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
-        setInboundOAuthConfig(authRequestList);
-
-        if (authRequestList.size() > 0) {
-            serviceProvider.getInboundAuthenticationConfig()
-                    .setInboundAuthenticationRequestConfigs(authRequestList.toArray(
-                            new InboundAuthenticationRequestConfig[authRequestList.size()]));
-        }
-        appMgtclient.updateApplicationData(serviceProvider);
-        return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-    }
-
-    private void setInboundOAuthConfig(List<InboundAuthenticationRequestConfig> authRequestList) {
-
-        if (consumerKey != null) {
-            InboundAuthenticationRequestConfig opicAuthenticationRequest =
-                    new InboundAuthenticationRequestConfig();
-            opicAuthenticationRequest.setInboundAuthKey(consumerKey);
-            opicAuthenticationRequest.setInboundAuthType("oauth2");
-            if (consumerSecret != null && !consumerSecret.isEmpty()) {
-                Property property = new Property();
-                property.setName("oauthConsumerSecret");
-                property.setValue(consumerSecret);
-                Property[] properties = {property};
-                opicAuthenticationRequest.setProperties(properties);
-            }
-            authRequestList.add(opicAuthenticationRequest);
-        }
-    }
-
     private void initServiceProviderKeys() throws Exception {
 
         KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
@@ -323,25 +270,9 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         RSAPublicKey sp1RsaPublicKey = (RSAPublicKey) kp.getPublic();
         sp1PrivateKey = (RSAPrivateKey) kp.getPrivate();
 
-        X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
-        v3CertGen.setSerialNumber(BigInteger.valueOf(new SecureRandom().nextInt()).abs());
-        v3CertGen.setIssuerDN(new X509Principal("CN=wso2, OU=None, O=None L=None, C=None"));
-        v3CertGen.setNotBefore(new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30));
-        v3CertGen.setNotAfter(new Date(System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 365 * 10)));
-        v3CertGen.setSubjectDN(new X509Principal("CN=wso2, OU=None, O=None L=None, C=None"));
-        v3CertGen.setPublicKey(sp1RsaPublicKey);
-        v3CertGen.setSignatureAlgorithm("SHA256withRSA");
-        sp1X509PublicCert = v3CertGen.generate(sp1PrivateKey);
+        sp1X509PublicCert = getX509PublicCert(sp1RsaPublicKey, sp1PrivateKey);
 
         KeyPair sp2KeyPair = keyGenerator.genKeyPair();
         sp2PrivateKey = (RSAPrivateKey) sp2KeyPair.getPrivate();
-    }
-
-    private String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
-
-        String certBegin = "-----BEGIN CERTIFICATE-----\n";
-        String endCert = "-----END CERTIFICATE-----";
-        String pemCert = new String(Base64.getEncoder().encode(x509Certificate.getEncoded()));
-        return certBegin + pemCert + endCert;
     }
 }
