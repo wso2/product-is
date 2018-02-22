@@ -12,10 +12,14 @@ session.put('auth-cookie', cookie);
 session.put('user', user);
 
 try {
+    // Override collectionMethod
+    receiptData = parse(receiptData);
+    receiptData.collectionMethod = COLLECTION_METHOD_USER_PORTAL;
+
     var serverCoreUrl = application.get(SERVER_CORE_URL);
     var url  = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI;
     var header = {"cookie" : cookie, "Content-Type": "application/json"};
-    var consentJSON = post(url, receiptData, header, "json");
+    var consentJSON = post(url, stringify(receiptData), header, "json");
 
     print(consentJSON);
 
