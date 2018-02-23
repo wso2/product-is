@@ -19,6 +19,8 @@
 package org.wso2.identity.integration.test.consent;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -28,6 +30,7 @@ import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
 import org.apache.wink.client.handlers.BasicAuthSecurityHandler;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -39,6 +42,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -53,6 +57,8 @@ import javax.ws.rs.core.MediaType;
  * Self sign up tests - with consents.
  */
 public class SelfSignUpConsentTest extends ISIntegrationTest {
+
+    protected Log log = LogFactory.getLog(getClass());
 
     public static final String CONSNT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
     public static final String USER_RECOVERY_ME_ENDPOINT = "/api/identity/user/v1.0/me";
@@ -86,6 +92,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private AuthenticatorClient logManager;
     private UserManagementClient tenantUserMgtClient;
     private String secondaryTenantDomain;
+    private String financialPurposeId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -112,6 +119,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws RemoteException, UserAdminUserAdminException {
+
         tenantUserMgtClient.deleteUser(EBONY);
     }
 
@@ -230,7 +238,10 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
             dependsOnMethods = "selfSignUpWithConsents")
     public void getPurposes() throws Exception {
 
+        updateResidentIDPProperty(tenantResidentIDP, ENABLE_SELF_REGISTRATION_PROP_KEY, "true", false);
+        updateResidentIDPProperty(tenantResidentIDP, DISABLE_ACC_LOCK_ON_SELF_REG_PROP_KEY, "false", false);
         String consents = getConsents(EBONY + "@" + secondaryTenantDomain, PASSWORD);
+        log.info("Consents for user " + EBONY + " :" + consents);
         Assert.assertNotNull(consents);
         JSONArray purposesJson = new JSONArray(consents);
         String receiptID = ((JSONObject) purposesJson.get(0)).getString("consentReceiptID");
@@ -288,11 +299,11 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     }
 
-    public void addFinancialPurposeCategory() {
+    public void addFinancialPurposeCategory() throws JSONException {
 
         String name = FINANCIAL;
         String description = FINANCIAL_PURPOSE_NAME;
-        addPurposeCategory(name, description);
+        financialPurposeId = addPurposeCategory(name, description);
     }
 
     private void addPIICategory(String name, String description) {
@@ -313,7 +324,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
                 .post(String.class, addPIICatString);
     }
 
-    private void addPurposeCategory(String name, String description) {
+    private String addPurposeCategory(String name, String description) throws JSONException {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
@@ -327,8 +338,10 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         String addPurposeCatString = "{\"purposeCategory\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
                 description + "\"}";
 
-        piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+        String content = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .post(String.class, addPurposeCatString);
+        JSONObject purpose = new JSONObject(content);
+        return purpose.getString("purposeCategoryId");
     }
 
     public void addFinancialPurpose() {
@@ -369,7 +382,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private void selfRegister(String username, String password, String givenName, String emailAddress, String
             lastName, String mobile) {
 
-        String consent = getConsentReqBody(1, 1);
+        String consent = getConsentReqBody(financialPurposeId, 1);
 
         String selfRegisterReqBody = "{\"user\": {\"username\": \"" + username + "\",\"realm\": \"\", " +
                 "\"password\": \"" + password + "\",\"claims\": " +
@@ -393,7 +406,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     }
 
-    private String getConsentReqBody(int purposeId, int piiCategoryId) {
+    private String getConsentReqBody(String purposeId, int piiCategoryId) {
 
         return "{\\\"services\\\":[{\\\"purposes\\\":[{\\\"purposeId\\\":\\\"" + purposeId + "\\\"," +
                 "\\\"piiCategory\\\":[{\\\"piiCategoryId\\\":\\\"" + piiCategoryId + "\\\"}]," +
@@ -404,12 +417,13 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(tenantAdminUserName);
-        basicAuth.setPassword(ADMIN);
+        basicAuth.setUserName(username);
+        basicAuth.setPassword(password);
         clientConfig.handlers(basicAuth);
 
         RestClient restClient = new RestClient(clientConfig);
-        Resource user = restClient.resource(consentEndpoint);
+        Resource user = restClient.resource(consentEndpoint + "?piiPrincipalId=" + MultitenantUtils
+                .getTenantAwareUsername(username));
 
         String response = user.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .get(String.class);
@@ -418,6 +432,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     private String getConsent(String username, String password, String receiptId) {
 
+        log.info("Retrieving consent for username " + username + ". reciptId : " + receiptId);
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
         basicAuth.setUserName(username);
@@ -426,6 +441,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         RestClient restClient = new RestClient(clientConfig);
         Resource user = restClient.resource(consentEndpoint + "/receipts/" + receiptId);
+        log.info("Calling to receipt endpoint :" + consentEndpoint + "/receipts/" + receiptId);
 
         String response = user.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .get(String.class);
