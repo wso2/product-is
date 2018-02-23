@@ -415,7 +415,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                     .SAML_RESPONSE_PARAM, samlResponse);
             String resultPage = extractDataFromResponse(response);
 
-            Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
+            Assert.assertTrue(response.getHeaders("Location")[0].toString().contains("index.jsp"),
                               "SAML SSO Logout failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
