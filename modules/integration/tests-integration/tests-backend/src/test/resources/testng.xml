@@ -21,7 +21,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
-            <!--<class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>-->
+            <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
         </classes>
     </test>
 
