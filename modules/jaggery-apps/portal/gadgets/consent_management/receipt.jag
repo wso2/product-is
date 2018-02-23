@@ -1,6 +1,7 @@
 <%
 include("../../util/constants.jag");
 include("util/constants.jag");
+include("util/utility.jag");
 
 var log = new Log("consent_reciept");
 var cookie = request.getParameter("cookie");
@@ -16,6 +17,7 @@ try {
     var serverCoreUrl = application.get(SERVER_CORE_URL);
     var url  = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI + RECEIPTS_URL + receiptID;
     var consentJSON = get(url, {}, {"cookie" : cookie} ,"json");
+    validateResponse(consentJSON);
 
     print(consentJSON);
 
