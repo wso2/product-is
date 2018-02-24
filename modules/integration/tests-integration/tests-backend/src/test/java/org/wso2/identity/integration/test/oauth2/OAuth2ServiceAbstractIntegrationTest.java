@@ -31,8 +31,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.bouncycastle.jce.X509Principal;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -51,20 +49,8 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.SignatureException;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
 /**
 * OAuth2 test integration abstraction
@@ -495,117 +481,4 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
     public String getBase64EncodedString(String consumerKey, String consumerSecret) {
         return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
     }
-
-	/**
-	 * Convert a x509 certificate to pem format.
-	 *
-	 * @param x509Certificate Certificate in x509 format.
-	 * @return Certificate in pem format.
-	 * @throws CertificateEncodingException
-	 */
-	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
-
-		String certBegin = "-----BEGIN CERTIFICATE-----\n";
-		String endCert = "-----END CERTIFICATE-----";
-		String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
-		return certBegin + pemCert + endCert;
-	}
-
-	/**
-	 * Build and return a basic consumer application DTO with all OAuth2 grant types.
-	 *
-	 * @param callBackURL String callback URL.
-	 * @return Basic OAuthConsumerAppDTO object.
-	 */
-	public OAuthConsumerAppDTO getBasicOAuthApp(String callBackURL) {
-
-		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-		appDTO.setApplicationName(OAUTH_APPLICATION_NAME);
-		appDTO.setCallbackUrl(callBackURL);
-		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-		appDTO.setGrantTypes("authorization_code implicit password client_credentials");
-		return appDTO;
-	}
-
-	/**
-	 * Register a service provider and setup consumer key and secret when a OAuthConsumerAppDTO is given.
-	 *
-	 * @param appDTO OAuthConsumerAppDTO of the service provider.
-	 * @return Registered service provider.
-	 * @throws Exception
-	 */
-	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
-			throws Exception {
-
-		adminClient.registerOAuthApplicationData(appDTO);
-
-		OAuthConsumerAppDTO oauthConsumerApp = adminClient.getOAuthAppByName(appDTO.getApplicationName());
-		consumerKey = oauthConsumerApp.getOauthConsumerKey();
-		consumerSecret = oauthConsumerApp.getOauthConsumerSecret();
-
-		ServiceProvider serviceProvider = new ServiceProvider();
-		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
-		appMgtclient.createApplication(serviceProvider);
-
-		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-
-		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
-		setInboundOAuthConfig(authRequestList);
-
-		if (authRequestList.size() > 0) {
-			serviceProvider.getInboundAuthenticationConfig()
-					.setInboundAuthenticationRequestConfigs(authRequestList.toArray(
-							new InboundAuthenticationRequestConfig[authRequestList.size()]));
-		}
-		appMgtclient.updateApplicationData(serviceProvider);
-		return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-	}
-
-	/**
-	 * Update app with inbound configurations.
-	 *
-	 * @param authRequestList Authentication Request Config list.
-	 */
-	private void setInboundOAuthConfig(List<InboundAuthenticationRequestConfig> authRequestList) {
-
-		if (consumerKey != null) {
-			InboundAuthenticationRequestConfig opicAuthenticationRequest =
-					new InboundAuthenticationRequestConfig();
-			opicAuthenticationRequest.setInboundAuthKey(consumerKey);
-			opicAuthenticationRequest.setInboundAuthType("oauth2");
-			if (consumerSecret != null && !consumerSecret.isEmpty()) {
-				Property property = new Property();
-				property.setName("oauthConsumerSecret");
-				property.setValue(consumerSecret);
-				Property[] properties = {property};
-				opicAuthenticationRequest.setProperties(properties);
-			}
-			authRequestList.add(opicAuthenticationRequest);
-		}
-	}
-
-	/**
-	 * Generate a X509 public certificate using the public key and private key.
-	 *
-	 * @param publicKey  RSAPublicKey for the certificate.
-	 * @param privateKey RSAPrivateKey for the certificate.
-	 * @return Generated X509Certificate object.
-	 * @throws CertificateEncodingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws SignatureException
-	 * @throws InvalidKeyException
-	 */
-	public X509Certificate getX509PublicCert(RSAPublicKey publicKey, RSAPrivateKey privateKey)
-			throws CertificateEncodingException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
-
-		X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
-		v3CertGen.setSerialNumber(BigInteger.valueOf(new SecureRandom().nextInt()).abs());
-		v3CertGen.setIssuerDN(new X509Principal("CN=wso2, OU=None, O=None L=None, C=None"));
-		v3CertGen.setNotBefore(new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30));
-		v3CertGen.setNotAfter(new Date(System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 365 * 10)));
-		v3CertGen.setSubjectDN(new X509Principal("CN=wso2, OU=None, O=None L=None, C=None"));
-		v3CertGen.setPublicKey(publicKey);
-		v3CertGen.setSignatureAlgorithm("SHA256withRSA");
-		return v3CertGen.generate(privateKey);
-	}
 }

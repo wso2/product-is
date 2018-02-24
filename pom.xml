@@ -1136,11 +1136,6 @@
                 <version>${nimbusds.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.nimbusds</groupId>
-                <artifactId>oauth2-oidc-sdk</artifactId>
-                <version>${nimbus.oidc.sdk.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-codec.wso2</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
@@ -1784,7 +1779,6 @@
         <axis2.wso2.version>1.6.1.wso2v12</axis2.wso2.version>
         <axis2-transports.version>1.1.0-wso2v13</axis2-transports.version>
         <nimbusds.version>2.26.1</nimbusds.version>
-        <nimbus.oidc.sdk.version>5.52</nimbus.oidc.sdk.version>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <h2database.wso2.version>1.2.140.wso2v3</h2database.wso2.version>
         <felix.framework.version>1.0.3</felix.framework.version>
