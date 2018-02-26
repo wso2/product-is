@@ -51,19 +51,21 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -388,14 +390,21 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      */
     private void initServiceProviderKeys() throws Exception {
 
-        KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-        keyGenerator.initialize(2048);
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        String jksPath = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
+                File.separator + "keystores" + File.separator + "sp1KeyStore.jks";
+        String jksPassword = "wso2carbon";
 
-        KeyPair kp = keyGenerator.genKeyPair();
-        RSAPublicKey sp1RsaPublicKey = (RSAPublicKey) kp.getPublic();
-        spPrivateKey = (RSAPrivateKey) kp.getPrivate();
+        keyStore.load(new FileInputStream(jksPath), jksPassword.toCharArray());
 
-        spX509PublicCert = getX509PublicCert(sp1RsaPublicKey, spPrivateKey);
+        String alias = "wso2carbon";
+        KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
+                new KeyStore.PasswordProtection(jksPassword.toCharArray()));
+        spPrivateKey = (RSAPrivateKey) pkEntry.getPrivateKey();
+
+        // Load certificate chain
+        Certificate[] chain = keyStore.getCertificateChain(alias);
+        spX509PublicCert = (X509Certificate) chain[0];
     }
 
     /**

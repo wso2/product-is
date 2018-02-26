@@ -49,6 +49,7 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import sun.security.provider.X509Factory;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -505,8 +506,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
 
-		String certBegin = "-----BEGIN CERTIFICATE-----\n";
-		String endCert = "-----END CERTIFICATE-----";
+		String certBegin = X509Factory.BEGIN_CERT;
+		String endCert = X509Factory.END_CERT;
 		String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
 		return certBegin + pemCert + endCert;
 	}
@@ -582,30 +583,5 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			}
 			authRequestList.add(opicAuthenticationRequest);
 		}
-	}
-
-	/**
-	 * Generate a X509 public certificate using the public key and private key.
-	 *
-	 * @param publicKey  RSAPublicKey for the certificate.
-	 * @param privateKey RSAPrivateKey for the certificate.
-	 * @return Generated X509Certificate object.
-	 * @throws CertificateEncodingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws SignatureException
-	 * @throws InvalidKeyException
-	 */
-	public X509Certificate getX509PublicCert(RSAPublicKey publicKey, RSAPrivateKey privateKey)
-			throws CertificateEncodingException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
-
-		X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
-		v3CertGen.setSerialNumber(BigInteger.valueOf(new SecureRandom().nextInt()).abs());
-		v3CertGen.setIssuerDN(new X509Principal("CN=wso2, OU=None, O=None L=None, C=None"));
-		v3CertGen.setNotBefore(new Date(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30));
-		v3CertGen.setNotAfter(new Date(System.currentTimeMillis() + (1000L * 60 * 60 * 24 * 365 * 10)));
-		v3CertGen.setSubjectDN(new X509Principal("CN=wso2, OU=None, O=None L=None, C=None"));
-		v3CertGen.setPublicKey(publicKey);
-		v3CertGen.setSignatureAlgorithm("SHA256withRSA");
-		return v3CertGen.generate(privateKey);
 	}
 }
