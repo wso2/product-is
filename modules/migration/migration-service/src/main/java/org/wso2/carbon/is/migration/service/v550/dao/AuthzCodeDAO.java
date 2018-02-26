@@ -15,16 +15,25 @@
 */
 package org.wso2.carbon.is.migration.service.v550.dao;
 
+import org.wso2.carbon.is.migration.service.v550.bean.AuthzCodeInfo;
+import org.wso2.carbon.is.migration.service.v550.bean.OauthTokenInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.ADD_AUTHORIZATION_CODE_HASH_COLUMN;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_AUTHORIZATION_CODES;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_DB2SQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_INFORMIX;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_MSSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_MYSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_ORACLE;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ACCESS_TOKEN;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_AUTHORIZATION_CODE;
 
 public class AuthzCodeDAO {
 
@@ -60,17 +69,66 @@ public class AuthzCodeDAO {
         } else {
             sql = RETRIEVE_AUTHORIZATION_CODE_TABLE_ORACLE;
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                ResultSet resultSet = preparedStatement.executeQuery()) {
-            if (resultSet != null) {
-                try {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet != null) {
                     resultSet.findColumn(AUTHORIZATION_CODE_HASH);
                     isAuthzCodeColumnsExist = true;
-                } catch (SQLException e) {
-                    isAuthzCodeColumnsExist = false;
+
                 }
+            } catch (SQLException e) {
+                isAuthzCodeColumnsExist = false;
             }
         }
         return isAuthzCodeColumnsExist;
+    }
+
+    public void addAuthzCodeHashColumns(Connection connection) throws SQLException {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_AUTHORIZATION_CODE_HASH_COLUMN)) {
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    /**
+     * Method to retrieve all the authorization codes from the database
+     * @param connection
+     * @return list of authorization codes
+     * @throws SQLException
+     */
+    public List<AuthzCodeInfo> getAllAuthzCodes(Connection connection) throws SQLException {
+
+        List<AuthzCodeInfo> authzCodeInfoList = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(RETRIEVE_ALL_AUTHORIZATION_CODES);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                authzCodeInfoList.add(new AuthzCodeInfo(resultSet.getString("AUTHORIZATION_CODE"),
+                        resultSet.getString("CODE_ID")));
+            }
+            connection.commit();
+        }
+        return authzCodeInfoList;
+    }
+
+    /**
+     * Method to update the authorization code table with updated authorization codes.
+     * @param updatedAuthzCodeList List of updated authorization codes
+     * @param connection database connection
+     * @throws SQLException
+     */
+    public void updateNewAuthzCodes(List<AuthzCodeInfo> updatedAuthzCodeList, Connection connection)
+            throws SQLException {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_AUTHORIZATION_CODE)) {
+            for (AuthzCodeInfo authzCodeInfo : updatedAuthzCodeList) {
+                preparedStatement.setString(1, authzCodeInfo.getAuthorizationCode());
+                preparedStatement.setString(2, authzCodeInfo.getAuthorizationCodeHash());
+                preparedStatement.setString(3, authzCodeInfo.getCodeId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            connection.commit();
+        }
     }
 }
