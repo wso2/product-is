@@ -155,9 +155,8 @@ function renderReceiptList(data) {
         ' panel-consents">' +
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
-        '<h4>{{#if spDisplayName}}{{spDisplayName}}' +
-        ' {{else}}{{consentReceiptID}}{{/if}}</h4>' +
-        '<p>{{spDescription}}</p>' +
+        '<h4>{{spDisplayName}}</h4>' +
+        '<p><span>Receipt Id: {{consentReceiptID}}</span></p><p>"{{spDescription}}"</span></p>' +
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
@@ -172,8 +171,8 @@ function renderReceiptList(data) {
         ' panel-consents">' +
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
-        '<h4>{{#if spDisplayName}}{{spDisplayName}} <span>({{consentReceiptID}})</span>{{else}}{{consentReceiptID}}{{/if}}</h4>' +
-        '<p>{{spDescription}}</p>' +
+        '<h4>{{spDisplayName}}</h4>' +
+        '<p><span>Receipt Id: {{consentReceiptID}}</span></p><p>"{{spDescription}}"</span></p>' +
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
