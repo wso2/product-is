@@ -15,17 +15,24 @@
 */
 package org.wso2.carbon.is.migration.service.v550.dao;
 
+import org.wso2.carbon.is.migration.service.v550.bean.OauthTokenInfo;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.ADD_ACCESS_TOKEN_HASH_COLUMN;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.ADD_REFRESH_TOKEN_HASH_COLUMN;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_DB2SQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_INFORMIX;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_MSSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_MYSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_ORACLE;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_TOKENS;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ACCESS_TOKEN;
 
 public class TokenDAO {
 
@@ -67,25 +74,63 @@ public class TokenDAO {
             sql = RETRIEVE_ACCESS_TOKEN_TABLE_ORACLE;
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet != null) {
-                try {
+            try {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet != null) {
+
                     resultSet.findColumn(ACCESS_TOKEN_HASH);
                     resultSet.findColumn(REFRESH_TOKEN_HASH);
                     isTokenHashColumnsExist = true;
-                } catch (SQLException e) {
-                    isTokenHashColumnsExist = false;
+
                 }
+            } catch (SQLException e) {
+                isTokenHashColumnsExist = false;
             }
         }
         return isTokenHashColumnsExist;
     }
 
-    public void addTokenHashColumns(Connection connection) throws SQLException {
+    public void addAccessTokenHashColumn(Connection connection) throws SQLException {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_ACCESS_TOKEN_HASH_COLUMN)) {
                 preparedStatement.executeUpdate();
-                connection.commit();
+                //connection.commit();
+        }
+    }
+
+    public void addRefreshTokenHashColumn(Connection connection) throws SQLException {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_REFRESH_TOKEN_HASH_COLUMN)) {
+            preparedStatement.executeUpdate();
+            //connection.commit();
+        }
+    }
+
+    public List<OauthTokenInfo> getAllAccessTokens(Connection connection) throws SQLException {
+        List<OauthTokenInfo> oauthTokenInfos = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(RETRIEVE_ALL_TOKENS);
+                ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                oauthTokenInfos.add(new OauthTokenInfo(resultSet.getString("ACCESS_TOKEN"),
+                        resultSet.getString("REFRESH_TOKEN"),resultSet.getString("TOKEN_ID")));
+            }
+            connection.commit();
+        }
+        return oauthTokenInfos;
+    }
+
+    public void updateNewTokens(List<OauthTokenInfo> updatedOauthTokenList,Connection connection) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCESS_TOKEN)) {
+            for (OauthTokenInfo oauthTokenInfo : updatedOauthTokenList) {
+                preparedStatement.setString(1, oauthTokenInfo.getAccessToken());
+                preparedStatement.setString(2, oauthTokenInfo.getRefreshToken());
+                preparedStatement.setString(3, oauthTokenInfo.getAccessTokenHash());
+                preparedStatement.setString(4, oauthTokenInfo.getRefreshTokenhash());
+                preparedStatement.setString(5, oauthTokenInfo.getTokenId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            connection.commit();
         }
     }
 

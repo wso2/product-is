@@ -155,4 +155,14 @@ versions:
      parameters:
        location: "step1"
        schema: "identity"
-
+    -
+     name: "OAuthDataMigrator"
+     order: 2
+     parameters:
+       schema: "identity"
+    -
+     name: "SchemaMigrator"
+     order: 3
+     parameters:
+       location: "step2"
+       schema: "identity"
