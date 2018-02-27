@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.claim.ClaimMapping;
 import org.wso2.carbon.user.core.claim.inmemory.ClaimConfig;
 
 import javax.xml.stream.XMLStreamException;
@@ -113,11 +114,11 @@ public class ClaimsUpgrader extends Migrator {
         Set<String> existingLocalClaimURIs = new HashSet<>();
 
         // Add local claim mappings.
-        for (Map.Entry<String, org.wso2.carbon.user.core.claim.ClaimMapping> entry : claimConfig.getClaims()
+        for (Map.Entry<String, ClaimMapping> entry : claimConfig.getClaims()
                 .entrySet()) {
 
             String claimURI = entry.getKey();
-            org.wso2.carbon.user.core.claim.ClaimMapping claimMapping = entry.getValue();
+            ClaimMapping claimMapping = entry.getValue();
 
             if (existingLocalClaimURIs.isEmpty()) {
                 existingLocalClaimURIs = getExistingLocalClaimURIs(tenantId);
@@ -158,8 +159,7 @@ public class ClaimsUpgrader extends Migrator {
      * @param claimMapping      claim mappings
      * @throws ClaimMetadataException ClaimMetadataException
      */
-    private void addLocalClaimMapping(int tenantId, String primaryDomainName, String claimURI, org.wso2.carbon.user
-            .core.claim.ClaimMapping claimMapping) throws ClaimMetadataException {
+    private void addLocalClaimMapping(int tenantId, String primaryDomainName, String claimURI, ClaimMapping claimMapping) throws ClaimMetadataException {
 
         List<AttributeMapping> mappedAttributes = new ArrayList<>();
         if (StringUtils.isNotBlank(claimMapping.getMappedAttribute())) {

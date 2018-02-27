@@ -29,4 +29,7 @@ public class Constant {
     public static final String CARBON_HOME = "carbon.home" ;
     public static final int SUPER_TENANT_ID = -1234;
     public static final String MIGRATION_LOG = " WSO2 Product Migration Service Task : ";
+
+    public static final String IDENTITY_DB_SCRIPT = "identity";
+    public static final String UM_DB_SCRIPT = "um";
 }

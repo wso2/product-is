@@ -39,6 +39,9 @@ import java.sql.Statement;
 import java.util.StringTokenizer;
 import javax.sql.DataSource;
 
+import static org.wso2.carbon.is.migration.util.Constant.IDENTITY_DB_SCRIPT;
+import static org.wso2.carbon.is.migration.util.Constant.UM_DB_SCRIPT;
+
 /**
  * Database creator for Migration process.
  */
@@ -198,9 +201,9 @@ public class MigrationDatabaseCreator {
                 }
                 //add the oracle database owner
                 if ("oracle".equals(databaseType) && line.contains("databasename :=")) {
-                    if (dbscriptName.contains("identity")) {
+                    if (dbscriptName.contains(IDENTITY_DB_SCRIPT)) {
                         line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
-                    } else if (dbscriptName.contains("um")) {
+                    } else if (dbscriptName.contains(UM_DB_SCRIPT)) {
                         line = "databasename := '" + ISMigrationServiceDataHolder.getUmOracleUser() + "';";
                     }
                 }
