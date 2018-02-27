@@ -45,6 +45,86 @@
 				<AttributeID>phoneVerified</AttributeID>
 				<Description>Phone Verified</Description>
 			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/verifyEmail</ClaimURI>
+				<DisplayName>Verify Email</DisplayName>
+				<AttributeID>verifyEmail</AttributeID>
+				<Description>Temporary claim to invoke email verified feature</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/askPassword</ClaimURI>
+				<DisplayName>Ask Password</DisplayName>
+				<AttributeID>askPassword</AttributeID>
+				<Description>Temporary claim to invoke email ask Password feature</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/adminForcedPasswordReset</ClaimURI>
+				<DisplayName>Force Password Reset</DisplayName>
+				<AttributeID>forcePasswordReset</AttributeID>
+				<Description>Temporary claim to invoke email force password feature</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/failedPasswordRecoveryAttempts</ClaimURI>
+				<DisplayName>Failed Password Recovery Attempts</DisplayName>
+				<AttributeID>failedRecoveryAttempts</AttributeID>
+				<Description>Number of consecutive failed attempts done for password recovery</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/primaryChallengeQuestion</ClaimURI>
+				<DisplayName>Primary Challenge Question</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>primaryChallengeQuestion</AttributeID>
+				<Description>Primary Challenge Question</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/challengeQuestionUris</ClaimURI>
+				<DisplayName>Challenge Question</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>challengeQuestionUris</AttributeID>
+				<Description>Challenge Question</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/emailVerified</ClaimURI>
+				<DisplayName>Email Verified</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>emailVerified</AttributeID>
+				<Description>Email Verified</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/accountDisabled</ClaimURI>
+				<DisplayName>Account Disabled</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>accountDisabled</AttributeID>
+				<Description>Account Disabled</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/failedLoginLockoutCount</ClaimURI>
+				<DisplayName>Failed Lockout Count</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>failedLockoutCount</AttributeID>
+				<Description>Failed Lockout Count</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/lastLoginTime</ClaimURI>
+				<DisplayName>Last Login</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>lastLoginTime</AttributeID>
+				<Description>Last Login Time</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/lastLogonTime</ClaimURI>
+				<DisplayName>Last Logon</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>lastLogonTime</AttributeID>
+				<Description>Last Logon Time</Description>
+			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/lastPasswordUpdateTime</ClaimURI>
+				<DisplayName>Last Password Update</DisplayName>
+				<!-- Proper attribute Id in your user store must be configured for this -->
+				<AttributeID>lastPasswordUpdate</AttributeID>
+				<Description>Last Password Update Time</Description>
+			</Claim>
 		</Dialect>
 		<Dialect dialectURI="urn:ietf:params:scim:schemas:core:2.0">
 			<Claim>
