@@ -382,7 +382,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private void selfRegister(String username, String password, String givenName, String emailAddress, String
             lastName, String mobile) {
 
-        String consent = getConsentReqBody(financialPurposeId, 1);
+        String consent = getConsentReqBody(financialPurposeId, 1, username);
 
         String selfRegisterReqBody = "{\"user\": {\"username\": \"" + username + "\",\"realm\": \"\", " +
                 "\"password\": \"" + password + "\",\"claims\": " +
@@ -406,11 +406,18 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     }
 
-    private String getConsentReqBody(String purposeId, int piiCategoryId) {
+    private String getConsentReqBody(String purposeId, int piiCategoryId, String username) {
 
-        return "{\\\"services\\\":[{\\\"purposes\\\":[{\\\"purposeId\\\":\\\"" + purposeId + "\\\"," +
-                "\\\"piiCategory\\\":[{\\\"piiCategoryId\\\":\\\"" + piiCategoryId + "\\\"}]," +
-                "\\\"purposeCategoryId\\\":[1]}]}]}";
+       return  "{\\\"jurisdiction\\\":\\\"someJurisdiction\\\",\\\"collectionMethod\\\":\\\"Web Form - Self " +
+                "Registration\\\"," +
+                "\\\"language\\\":\\\"en\\\",\\\"piiPrincipalId\\\":\\\""+username+"\\\",\\\"services\\\":" +
+                "[{\\\"tenantDomain\\\":\\\"wso2.com\\\",\\\"serviceDisplayName\\\":\\\"Resident IDP\\\"," +
+                "\\\"serviceDescription\\\":\\\"Resident IDP\\\",\\\"purposes\\\":[{\\\"purposeId\\\":"+purposeId+"," +
+               "\\\"purposeCategoryId\\\":[1]," +
+                "\\\"consentType\\\":\\\"EXPLICIT\\\",\\\"piiCategory\\\":[{\\\"piiCategoryId\\\":"+piiCategoryId+"," +
+                "\\\"validity\\\":\\\"DATE_UNTIL:INDEFINITE\\\"}],\\\"primaryPurpose\\\":true," +
+                "\\\"termination\\\":\\\"DATE_UNTIL:INDEFINITE\\\",\\\"thirdPartyDisclosure\\\":false}],\\\"tenantId\\\":1}]," +
+                "\\\"policyURL\\\":\\\"somePolicyUrl\\\",\\\"tenantId\\\":1,\\\"properties\\\":{}}";
     }
 
     private String getConsents(String username, String password) {
