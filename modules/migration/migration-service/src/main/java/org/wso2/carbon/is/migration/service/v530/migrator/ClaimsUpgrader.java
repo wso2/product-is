@@ -40,7 +40,11 @@ import org.wso2.carbon.user.core.claim.inmemory.ClaimConfig;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * New claims has been introduced to the new version.
