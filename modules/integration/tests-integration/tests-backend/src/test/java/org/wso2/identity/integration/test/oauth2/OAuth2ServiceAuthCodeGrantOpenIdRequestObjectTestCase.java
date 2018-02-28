@@ -21,8 +21,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -86,7 +88,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     private DefaultHttpClient client;
     private Tomcat tomcat;
-
+    private List<NameValuePair> consentParameters = new ArrayList<>();
+    private CookieStore cookieStore = new BasicCookieStore();
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String givenNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String countryClaimURI = "http://wso2.org/claims/country";
@@ -125,6 +128,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
                 isServer.getInstance().getHosts().get("default"));
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
         client = new DefaultHttpClient();
+        client.setCookieStore(cookieStore);
         setSystemproperties();
         remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL,
@@ -228,14 +232,12 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
             response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
                     (response), client, pastrCookie);
-            EntityUtils.consume(response.getEntity());
         }
+        EntityUtils.consume(response.getEntity());
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
-        EntityUtils.consume(response.getEntity());
-
-        response = sendGetRequest(client, locationHeader.getValue());
+        response = sendConsentGetRequest(client, locationHeader.getValue(), cookieStore, consentParameters);
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
         keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
         List<KeyValue> keyValues =
@@ -250,7 +252,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
     public void testSendApprovalPost() throws Exception {
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+
+        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
         Assert.assertNotNull(response, "Approval request failed. response is invalid.");
 
         Header locationHeader =

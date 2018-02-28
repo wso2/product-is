@@ -25,15 +25,20 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -279,5 +284,30 @@ public class Utils {
         }
         rd.close();
         return value;
+    }
+
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        String requestedClaims = queryParams.get("requestedClaims");
+
+        String[] claims;
+        if (StringUtils.isNotBlank(requestedClaims)) {
+            claims = requestedClaims.split(",");
+        } else {
+            claims = new String[0];
+        }
+
+        for (String claim : claims) {
+            if (StringUtils.isNotBlank(claim)) {
+                String[] claimMeta = claim.split("_", 2);
+                if (claimMeta.length == 2) {
+                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                }
+            }
+        }
+        return urlParameters;
     }
 }
