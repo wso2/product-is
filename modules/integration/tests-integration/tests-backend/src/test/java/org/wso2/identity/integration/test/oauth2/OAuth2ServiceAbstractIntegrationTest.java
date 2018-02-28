@@ -21,14 +21,17 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -46,6 +49,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -257,6 +261,23 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return response;
 	}
 
+	public HttpResponse sendConsentGetRequest(DefaultHttpClient client, String locationURL, CookieStore cookieStore,
+											  List<NameValuePair> consentRequiredClaimsFromResponse) throws Exception {
+
+		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+																		.setDefaultCookieStore(cookieStore).build();
+		HttpGet getRequest = new HttpGet(locationURL);
+		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+		HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
+
+		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
+		client.setCookieStore(cookieStore);
+		EntityUtils.consume(response.getEntity());
+		return httpResponse;
+	}
+
 	/**
 	 * Send Post request
 	 *
@@ -322,6 +343,30 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 
+		return response;
+	}
+
+	/**
+	 * Send approval post request with consent
+	 *
+	 * @param client http client
+	 * @param sessionDataKeyConsent session consent data
+	 * @param consentClaims claims requiring user consent
+	 * @return http response
+	 * @throws java.io.IOException
+	 */
+	public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
+													List<NameValuePair> consentClaims) throws IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("consent", "approve"));
+		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+
+		if (consentClaims != null) {
+			urlParameters.addAll(consentClaims);
+		}
+
+		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 		return response;
 	}
 
