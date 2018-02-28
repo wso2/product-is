@@ -95,4 +95,10 @@ public class SQLConstants {
     public static final String UPDATE_CONSUMER_SECRET =
             "UPDATE IDN_OAUTH_CONSUMER_APPS SET " + "CONSUMER_SECRET=? WHERE " + "ID=?";
 
+    public static final String RETRIEVE_ALL_BPS_PROFILES =
+            "SELECT PASSWORD, PROFILE_NAME, TENANT_ID FROM " + "WF_BPS_PROFILE";
+
+    public static final String UPDATE_BPS_PROFILE_PASSWORD =
+            "UPDATE WF_BPS_PROFILE SET " + "PASSWORD=? WHERE " + "PROFILE_NAME=? AND TENANT_ID=?";
+
 }
