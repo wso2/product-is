@@ -104,13 +104,6 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target/forget-me</outputDirectory>
                                 </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.privacy</groupId>
-                                    <artifactId>org.wso2.carbon.privacy.forgetme.conf</artifactId>
-                                    <version>${forgetme.tool.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/forget-me-conf</outputDirectory>
-                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -190,7 +183,7 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE" value="log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE${line.separator}log4j.logger.DELETE_EVENT_LOGGER=INFO, DELETE_EVENT_LOGFILE" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.additivity.AUDIT_LOG=false" value="log4j.additivity.AUDIT_LOG=false${line.separator}${line.separator}log4j.appender.DELETE_EVENT_LOGFILE=org.wso2.carbon.utils.logging.appenders.CarbonDailyRollingFileAppender${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.File=${carbon.home}/repository/logs/delete-event.log${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.Append=true${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout=org.wso2.carbon.utils.logging.TenantAwarePatternLayout${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout.ConversionPattern=[%d] %P%5p {%c}- %x %m %n${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout.TenantPattern=%U%@%D [%T] [%S]${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.threshold=INFO${line.separator}log4j.additivity.DELETE_EVENT_LOGFILE=false" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.additivity.AUDIT_LOG=false" value="log4j.additivity.AUDIT_LOG=false${line.separator}${line.separator}log4j.appender.DELETE_EVENT_LOGFILE=org.apache.log4j.FileAppender${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.File=${carbon.home}/repository/logs/delete-event.log${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.Append=true${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout=org.apache.log4j.PatternLayout${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout.ConversionPattern=%m %n${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.threshold=INFO${line.separator}log4j.additivity.DELETE_EVENT_LOGFILE=false" />
 
                                 <!-- Update carbon webapps web.xml file for HttpHeaderSecurityFilter to skip /oidc/* path from antiClickJacking  -->
                                 <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" match="(?s)&lt;filter&gt;\s+&lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;.*&lt;/filter&gt;" replace="${security-header-filter-is-token}" />
@@ -280,9 +273,6 @@
                                     <fileset dir="${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/">
                                     </fileset>
                                 </copy>
-
-                                <!-- Replace the config.json related to the forget-me tool with identity specific config. -->
-                                <copy file="target/forget-me-conf/products/identity/conf/config-identity.json" tofile="target/forget-me/conf/config.json" overwrite="true" />
 
                                 <path id="h2.classpath">
                                     <path refid="maven.compile.classpath" />
@@ -380,7 +370,6 @@
                                 <delete dir="target/site" />
                                 <delete dir="src/site" />
                                 <delete dir="target/forget-me" />
-                                <delete dir="target/forget-me-conf" />
                             </tasks>
                         </configuration>
                     </execution>

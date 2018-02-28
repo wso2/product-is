@@ -467,18 +467,20 @@
         </fileSet>
 
         <fileSet>
-            <directory>target/forget-me/</directory>
+            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}</directory>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me</outputDirectory>
             <excludes>
                 <exclude>**/forget-me</exclude>
                 <exclude>**/forget-me.bat</exclude>
+                <exclude>**/config.json</exclude>
                 <exclude>conf/sql/**</exclude>
                 <exclude>conf/datasources/**</exclude>
+                <exclude>conf/product-config/**</exclude>
             </excludes>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>target/forget-me/conf/sql/identity/</directory>
+            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/</directory>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
@@ -924,24 +926,30 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/bin/forgetme/forget-me</source>
+            <source>src/bin/forgetme/forgetme.sh</source>
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>src/bin/forgetme/forget-me.bat</source>
+            <source>src/bin/forgetme/forgetme.bat</source>
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>target/forget-me/bin/forget-me</source>
+            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forget-me</source>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>target/forget-me/bin/forget-me.bat</source>
+            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forget-me.bat</source>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
             <fileMode>744</fileMode>
+        </file>
+        <file>
+            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/product-config/config-identity.json</source>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/</outputDirectory>
+            <destName>config.json</destName>
+            <fileMode>644</fileMode>
         </file>
     </files>
 </assembly>

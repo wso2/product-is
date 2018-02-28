@@ -22,4 +22,13 @@ var SAML_PROPERTIES = "saml.config"
 var CONSENT_STATE_ACTIVE = "ACTIVE";
 var CONSENT_API_URI = "/api/identity/consent-mgt/v1.0/consents";
 var RECEIPTS_URL = "/receipts/";
+var PURPOSES_URI = "/purposes";
+var DEFAULT_CONSENT = "DEFAULT";
+var COLLECTION_METHOD_USER_PORTAL = "Web Form - User Portal";
+var HTTP_CODES = {
+    success : 200,
+    notFound : 404,
+    unAuthorized : 401
+    // etc
+}
 %>

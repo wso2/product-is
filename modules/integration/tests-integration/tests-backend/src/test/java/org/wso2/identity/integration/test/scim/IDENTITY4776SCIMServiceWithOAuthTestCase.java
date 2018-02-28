@@ -111,6 +111,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+        deleteApplication();
         removeOAuthApplicationData();
         userMgtClient.deleteUser(SCIM_USER_NAME);
         userMgtClient.deleteUser(SECONDARY_STORE_USER_NAME);

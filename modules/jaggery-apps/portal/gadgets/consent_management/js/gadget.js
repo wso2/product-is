@@ -53,9 +53,33 @@ function getReceiptDetails(receiptID) {
                 renderReceiptDetails(consentJSON);
 
             })
-            .fail(function () {
-                console.log('error');
+            .fail(function (error) {
+                publishErrorAndShrink(error);
+            })
+            .always(function () {
+                console.log('completed');
+            });
+    }
+}
 
+function getResidentIDPReceiptDetails(receiptID) {
+    if (cookie != null) {
+        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/default_receipt.jag";
+        var consentJSON;
+
+        $.ajax({
+            type: "POST",
+            url: str,
+            data: {cookie: cookie, user: userName, id: receiptID}
+
+        })
+            .done(function (data) {
+                consentJSON = $.parseJSON(data);
+                renderReceiptDetails(consentJSON);
+
+            })
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
@@ -79,14 +103,22 @@ function revokeReceipt(receiptID) {
             .done(function (data) {
                 location.reload();
             })
-            .fail(function () {
-                console.log('error');
-
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
             });
     }
+}
+
+function publishErrorAndShrink(error) {
+    console.log(error);
+    gadgets.Hub.publish('org.wso2.is.dashboard', {
+        msg: 'A message from Consent Management',
+        id: "consent_management .shrink-widget",
+        status: error.status
+    });
 }
 
 /*
@@ -104,9 +136,8 @@ function updateReceipt(receiptData) {
             .done(function (data) {
                 location.reload();
             })
-            .fail(function () {
-                console.log('error');
-
+            .fail(function (error) {
+                publishErrorAndShrink(error);
             })
             .always(function () {
                 console.log('completed');
@@ -118,12 +149,30 @@ function updateReceipt(receiptData) {
  * Renders the receipt list to html
  */
 function renderReceiptList(data) {
-    var receiptData = {receipts: data.data};
-    var content = '{{#receipts}}<div class="panel panel-default panel-consents">' +
+    var receiptData = data;
+    var content = '<div id="default-receipt"><h3>System Consent</h3>{{#default}}<div class="panel' +
+        ' panel-default' +
+        ' panel-consents">' +
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
-        '<h4>{{#if spDisplayName}}{{spDisplayName}} <span>({{consentReceiptID}})</span>{{else}}{{consentReceiptID}}{{/if}}</h4>' +
-        '<p>{{spDescription}}</p>' +
+        '<h4>{{spDisplayName}}</h4>' +
+        '<p><span>Receipt Id: {{consentReceiptID}}</span></p><p>"{{spDescription}}"</span></p>' +
+        '</div>' +
+        '<div class="right">' +
+        '<div class="btn-group" role="group" aria-label="actions">' +
+        '<button type="button" class="btn btn-primary btn-default-settings" data-id="{{consentReceiptID}}"><span' +
+        ' class="icon-cog icon-font-size"></span></button>' +
+        '{{#if consentReceiptID}}<button type="button" class="btn btn-default' +
+        ' btn-revoke">Revoke</button></div>{{/if}}' +
+        '</div>' +
+        '</div>' +
+        '</div>{{/default}}</div>' +
+        '{{#if receipts.length}}<div id="receipts"><h3>Consents</h3>{{#receipts}}<div class="panel panel-default' +
+        ' panel-consents">' +
+        '<div class="panel-body flex-container">' +
+        '<div class="left">' +
+        '<h4>{{spDisplayName}}</h4>' +
+        '<p><span>Receipt Id: {{consentReceiptID}}</span></p><p>"{{spDescription}}"</span></p>' +
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
@@ -131,7 +180,7 @@ function renderReceiptList(data) {
         '<button type="button" class="btn btn-default btn-revoke">Revoke</button></div>' +
         '</div>' +
         '</div>' +
-        '</div>{{/receipts}}';
+        '</div>{{/receipts}}</div>{{/if}}';
 
     var theTemplate = Handlebars.compile(content);
     var html = theTemplate(receiptData);
@@ -148,6 +197,7 @@ function renderReceiptList(data) {
  * initiates jstree.
  */
 function renderReceiptDetails(data) {
+    console.log(data.data);
     receiptData = {receipts: data.data};
 
     var content = '{{#receipts}}{{#services}}<div class="panel panel-default panel-consents">' +
@@ -201,7 +251,13 @@ function renderReceiptDetails(data) {
         '{{#receipts}}{{#services}}' +
         '{{#purposes}}<li data-jstree=\'{"icon":"icon-book"}\' purposeid="{{purposeId}}">{{purpose}}' +
         '<ul>' +
-        '{{#piiCategory}}<li data-jstree=\'{"icon":"icon-user"}\' piicategoryid="{{piiCategoryId}}">{{piiCategoryName}}</li>{{/piiCategory}}' +
+        '{{#piiCategory}}<li data-jstree=\'{"icon":"icon-user", "selected":true}\' piicategoryid="{{piiCategoryId}}"' +
+        ' class="selected">' +
+        '{{#if piiCategoryDisplayName}}{{piiCategoryDisplayName}}{{else}}{{piiCategoryName}}{{/if}}</li>' +
+        '{{/piiCategory}}' +
+        '{{#piiCategories}}<li data-jstree={{#if accepted}}\'{"icon":"icon-user",' +
+        ' "selected":true}\'{{else}}\'{"icon":"icon-user"}\'{{/if}} piicategoryid="{{piiCategoryId}}">' +
+        '{{#if displayName}}{{displayName}}{{else}}{{piiCategory}}{{/if}}</li>{{/piiCategories}}' +
         '</ul>' +
         '</li>' +
         '</li>{{/purposes}}' +
@@ -220,7 +276,7 @@ function renderReceiptDetails(data) {
         checkbox: {"keep_selected_style": false},
     });
 
-    container.jstree("check_all");
+    // container.jstree("check_all");
     addActions(container);
 }
 
@@ -233,12 +289,17 @@ function addActions(container) {
         var receiptID = $(this).data("id");
         getReceiptDetails(receiptID);
     });
+
+    $(".btn-default-settings").click(function () {
+        var receiptID = $(this).data("id");
+        getResidentIDPReceiptDetails(receiptID);
+    });
     $(".btn-revoke").click(function () {
         var receiptID = $(this).prev().data("id");
         $("#message").append(confirmationDialog);
         message({
             title: "Consent Confirmation",
-            content: 'Are you sure you want to revoke this consent? this is not reversible...',
+            content: 'Are you sure you want to revoke this consent? This is not reversible.',
             type: 'confirm',
             okCallback: function () {
                 revokeReceipt(receiptID);
@@ -254,7 +315,7 @@ function addActions(container) {
         $("#message").append(confirmationDialog);
         message({
             title: "Consent Confirmation",
-            content: 'Are you sure you want to update/revoke this consent? this is not reversible...',
+            content: 'Are you sure you want to update/revoke this consent? This is not reversible.',
             type: 'confirm',
             okCallback: function () {
                 revokeAndAddNewReceipt(receiptData, container);
@@ -305,6 +366,8 @@ function populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes) {
         newPurpose['termination'] = expiryDate;
         delete(newPurpose['purpose']);
         delete(newPurpose['purposeCategory']);
+        delete(newPurpose['description']);
+        delete(newPurpose['piiCategories']);
 
         var piiCategory = [];
         var categories = purpose.children;

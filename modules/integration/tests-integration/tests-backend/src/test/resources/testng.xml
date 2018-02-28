@@ -21,6 +21,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
+            <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
         </classes>
     </test>
 
@@ -161,6 +162,7 @@
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
             <!-- <class name="org.wso2.identity.integration.test.saml.SPMetaDataTenantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase"/>
 
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
 
@@ -198,6 +200,12 @@
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-oauth2-encryption" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
         </classes>
     </test>
 </suite>
