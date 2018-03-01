@@ -17,7 +17,7 @@
     ~ under the License.
 -->
 <Module>
-    <ModulePrefs title="Consent Management">
+    <ModulePrefs title="My Consents">
         <Require feature="pubsub-2"/>
     </ModulePrefs>
     <Content type="html" view="default">
