@@ -112,6 +112,10 @@
                             })
                             .fail(function () {
                                 console.log('error');
+                                gadgets.Hub.publish('org.wso2.is.dashboard', {
+                                    msg: 'A message from User Profile',
+                                    id: "user_profile .shrink-widget",
+                                });
 
                             })
                             .always(function () {

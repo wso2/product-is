@@ -356,7 +356,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="3" data-row="2"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/user_auth_apps/gadget.xml" data-wid="40" data-prefs="{}"
-    data-title="Authorized Apps">
+    data-title="Authorized OAuth Apps">
     <div class="grid_header">
         <h3></h3>
             		<span class="grid_header_controls">
@@ -553,7 +553,7 @@ if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.
 
 <li class="layout_block " data-sizey="1" data-sizex="2" data-col="4" data-row="5"
     data-url="<%=httpsCoreUrl%>/portal/gadgets/consent_management/gadget.xml" data-wid="48" data-prefs="{}"
-    data-title="Consent Management">
+    data-title="My Consents">
     <div class="grid_header">
         <h3></h3>
             		<span class="grid_header_controls">
