@@ -133,7 +133,11 @@
                                     }
                                 })
                                 .fail(function () {
-                                    console.log('error');
+                                    console.log("error");
+                                    gadgets.Hub.publish('org.wso2.is.dashboard', {
+                                        msg: 'A message from Consent Management',
+                                        id: "consent_management .shrink-widget",
+                                    });
 
                                 })
                                 .always(function () {

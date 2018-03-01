@@ -21,4 +21,12 @@ var SAML_PROPERTIES = "saml.config"
 var SERVER_CORE_URL = "serverCoreUrl";
 var USERINFO_API_URI = "/api/identity/user/v1.0/me" ;
 
+
+var HTTP_CODES = {
+    success : 200,
+    notFound : 404,
+    unAuthorized : 401
+    // etc
+}
+
 %>

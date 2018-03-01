@@ -1,5 +1,6 @@
 <%
 include("../../util/constants.jag")
+include("../../util/utility.jag")
 var log = new Log();
 var cookie = request.getParameter("cookie");
 var carbon = require("carbon");
@@ -15,12 +16,12 @@ try {
     var url  = serverCoreUrl + "/t/" + tenantUser.domain + USERINFO_API_URI;
     var header = {"cookie" : cookie};
     var userInfoJSON = get(url, {}, header ,"json");
-
+    validateResponse(userInfoJSON);
     print(userInfoJSON.data);
 
     } catch(e) {
         print(e);
-        log.error(e);
+        log.error(e.message);
     }
 
 %>
