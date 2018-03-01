@@ -71,7 +71,7 @@ try {
 
 } catch (e) {
     print(e);
-    log.error(e);
+    log.error(e.message);
 }
 
 function loadResidentIDPInformation(tenantDomain, purposes) {

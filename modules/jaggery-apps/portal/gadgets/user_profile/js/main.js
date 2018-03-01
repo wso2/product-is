@@ -92,14 +92,17 @@ function cancelProcessToLogin(parameters){
               return;
            }
 
-
            var type = "";
+           var title = "Dashboard ";
            if(params.title == undefined){
                if(params.type == "info"){ type = "Notification"}
                if(params.type == "warning"){ type = "Warning"}
                if(params.type == "error"){ type = "Error"}
+               title = title + type;
+           } else {
+               title = params.title;
            }
-           messageDisplay({content:params.content,title:"Dashboard " + type,buttons:[
+           messageDisplay({content: params.content, title: title, buttons: [
                {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                    $('#messageModal').modal('hide');
                    if(params.cbk && typeof params.cbk == "function")
