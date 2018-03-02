@@ -86,7 +86,14 @@ public class ClaimsUpgrader extends Migrator {
 
             // Migrate other tenants.
             List<Tenant> tenants = Utility.getTenants();
+            List<Integer> inactiveTenants = Utility.getInactiveTenants();
+            boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
             for (Tenant tenant : tenants) {
+                int tenantId = tenant.getId();
+                if (ignoreForInactiveTenants && inactiveTenants.contains(tenantId)) {
+                    log.info("Skipping claim data migration for Inactive tenant : " + tenantId);
+                    continue;
+                }
                 migrateClaimData(tenant.getId());
             }
         } catch (UserStoreException | ClaimMetadataException e) {
