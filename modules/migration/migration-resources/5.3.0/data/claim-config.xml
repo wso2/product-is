@@ -236,15 +236,6 @@
                 <Description>Entitlements</Description>
             </Claim>
             <Claim>
-                <ClaimURI>urn:scim:schemas:core:1.0:roles</ClaimURI>
-                <DisplayName>Roles</DisplayName>
-                <AttributeID>roles</AttributeID>
-                <Description>Roles</Description>
-                <DisplayOrder>5</DisplayOrder>
-                <SupportedByDefault/>
-                <MappedLocalClaim>http://wso2.org/claims/role</MappedLocalClaim>
-            </Claim>
-            <Claim>
                 <ClaimURI>http://wso2.org/claims/x509Certificates</ClaimURI>
                 <DisplayName>X509Certificates</DisplayName>
                 <AttributeID>x509Certificates</AttributeID>
