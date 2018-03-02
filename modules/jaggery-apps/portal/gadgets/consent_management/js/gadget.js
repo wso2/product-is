@@ -334,7 +334,7 @@ function addActions(container) {
         changeYear: true,
         onSelect: function (dateText) {
             var split = dateText.split("/");
-            var newDate = Date.UTC(split[2], split[0], split[1]);
+            var newDate = new Date(split[2], split[0] - 1, split[1]).getTime();
             var expiry = EXPIRY_DATE_STRING + newDate;
 
             $("#date_picker_new_expiry").val(expiry);
@@ -375,6 +375,7 @@ function populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes) {
             var category = categories[j];
             var c = {};
             c['piiCategoryId'] = category.li_attr.piicategoryid;
+            c['validity'] = expiryDate;
             piiCategory.push(c);
         }
         newPurpose['piiCategory'] = piiCategory;
@@ -503,7 +504,7 @@ function constructDate(expiry) {
     if (!checkValidDate(date)) {
         return getDefaultExpiry();
     }
-    var goodDate = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
+    var goodDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
     return goodDate;
 }
 
