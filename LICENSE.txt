@@ -73,7 +73,7 @@ bcprov-jdk15on-1.52.jar                                                         
 bcprov-jdk15on_1.52.0.wso2v1.jar                                                bundle         bouncy    8485      
 cassandra-thrift_1.2.13.wso2v4.jar                                              bundle         apache2   4379      
 cglib_2.2.0.wso2v1.jar                                                          bundle         apache2   2760      
-com.google.gson_2.3.1.jar                                                       bundle         apache2   1143      
+com.google.gson_2.3.1.jar                                                       bundle         apache2   1143
 com.google.gson_2.7.0.jar                                                       bundle         apache2   1853      
 com.google.guava_19.0.0.jar                                                     bundle         apache2   1627
 com.google.guava_13.0.1.jar                                                    	               apache2
