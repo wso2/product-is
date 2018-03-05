@@ -62,8 +62,6 @@ public class OAuthDataMigrator extends Migrator {
 
     public void addHashColumns() throws MigrationClientException, SQLException {
 
-
-
         try (Connection connection = getDataSource().getConnection()) {
             isTokenHashColumnsAvailable = TokenDAO.getInstance().isTokenHashColumnsAvailable(connection);
             isAuthzCodeHashColumnAvailable = AuthzCodeDAO.getInstance().isAuthzCodeHashColumnAvailable(connection);
