@@ -34,6 +34,9 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.StringTokenizer;
 
+import static org.wso2.carbon.is.migration.util.Constant.IDENTITY_DB_SCRIPT;
+import static org.wso2.carbon.is.migration.util.Constant.UM_DB_SCRIPT;
+
 /**
  * Migrator implementation for Schema migration.
  */
@@ -104,11 +107,10 @@ public class SchemaMigrator extends Migrator {
     private void executeSQLScript(String dbscriptName) throws Exception {
 
         String databaseType = DatabaseCreator.getDatabaseType(this.conn);
-        boolean oracleUserChanged = true;
         boolean keepFormat = false;
+
         if ("oracle".equals(databaseType)) {
             delimiter = "/";
-            oracleUserChanged = false;
         } else if ("db2".equals(databaseType)) {
             delimiter = "/";
         } else if ("openedge".equals(databaseType)) {
@@ -141,9 +143,12 @@ public class SchemaMigrator extends Migrator {
                     }
                 }
                 //add the oracle database owner
-                if (!oracleUserChanged && "oracle".equals(databaseType) && line.contains("databasename :=")) {
-                    line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
-                    oracleUserChanged = true;
+                if ("oracle".equals(databaseType) && line.contains("databasename :=")) {
+                    if (dbscriptName.contains(IDENTITY_DB_SCRIPT)) {
+                        line = "databasename := '" + ISMigrationServiceDataHolder.getIdentityOracleUser() + "';";
+                    } else if (dbscriptName.contains(UM_DB_SCRIPT)) {
+                        line = "databasename := '" + ISMigrationServiceDataHolder.getUmOracleUser() + "';";
+                    }
                 }
                 sql.append(keepFormat ? "\n" : " ").append(line);
 
