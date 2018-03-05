@@ -49,10 +49,6 @@ public class TokenDAO {
         return instance;
     }
 
-    /*public boolean isHashColumnsAvailable(Connection connection) throws SQLException {
-            return isTokenHashColumnsAvailable(connection);
-    }*/
-
     public boolean isTokenHashColumnsAvailable(Connection connection) throws SQLException {
 
         String sql;
@@ -120,6 +116,7 @@ public class TokenDAO {
     }
 
     public void updateNewTokens(List<OauthTokenInfo> updatedOauthTokenList,Connection connection) throws SQLException {
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCESS_TOKEN)) {
             for (OauthTokenInfo oauthTokenInfo : updatedOauthTokenList) {
                 preparedStatement.setString(1, oauthTokenInfo.getAccessToken());
