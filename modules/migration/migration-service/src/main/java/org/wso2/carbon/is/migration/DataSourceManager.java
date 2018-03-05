@@ -18,6 +18,7 @@ package org.wso2.carbon.is.migration;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.consent.mgt.core.util.ConsentConfigParser;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityConfigParser;
@@ -43,6 +44,7 @@ public class DataSourceManager {
 
     private DataSource dataSource;
     private DataSource umDataSource;
+    private DataSource consentDataSource;
 
     private static final Log log = LogFactory.getLog(DataSourceManager.class);
     private static DataSourceManager dataSourceManager = null ;
@@ -52,6 +54,7 @@ public class DataSourceManager {
         try {
             initIdentityDataSource();
             initUMDataSource();
+            initConsentDataSource();
         } catch (MigrationClientException e) {
             log.error("Error while initializing datasource manager.");
         }
@@ -70,6 +73,8 @@ public class DataSourceManager {
             return dataSource;
         }else if(schema.getName().equals(Schema.UM.getName())){
             return umDataSource;
+        } else if (schema.getName().equals(Schema.CONSENT.getName())) {
+            return consentDataSource;
         }
         throw new MigrationClientException("DataSource is not available for " + schema);
     }
@@ -79,6 +84,8 @@ public class DataSourceManager {
             return dataSource;
         }else if(schema.equals(Schema.UM.getName())){
             return umDataSource;
+        } else if (schema.equals(Schema.CONSENT.getName())) {
+            return consentDataSource;
         }
         throw new MigrationClientException("DataSource is not available for " + schema);
     }
@@ -117,6 +124,26 @@ public class DataSourceManager {
                                                                                   .getIdentityOracleUser() == null) {
                 ISMigrationServiceDataHolder.setIdentityOracleUser(umDataSource.getConnection().getMetaData()
                                                                            .getUserName());
+                log.info(Constant.MIGRATION_LOG + "Initialized user management database in Oracle.");
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while initializing user management database for Oracle.", e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while closing the user manager database connection", e);
+            }
+        }
+
+        try {
+            conn = consentDataSource.getConnection();
+            if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
+                    .getIdentityOracleUser() == null) {
+                ISMigrationServiceDataHolder.setIdentityOracleUser(consentDataSource.getConnection().getMetaData()
+                        .getUserName());
                 log.info(Constant.MIGRATION_LOG + "Initialized user management database in Oracle.");
             }
         } catch (Exception e) {
@@ -190,6 +217,32 @@ public class DataSourceManager {
         if (umDataSource == null) {
             String errorMsg = "UM Datasource initialization error.";
             throw new MigrationClientException(errorMsg);
+        }
+    }
+
+    /**
+     * Initialize Consent Data Source
+     *
+     * @throws MigrationClientException
+     */
+    private void initConsentDataSource() throws MigrationClientException {
+        ConsentConfigParser configParser = new ConsentConfigParser();
+        String dataSourceName = configParser.getConsentDataSource();
+
+        if (dataSourceName == null) {
+            String errorMsg = "DataSource Element is not available for Consent management";
+            log.error(errorMsg);
+            throw new MigrationClientException(errorMsg);
+        }
+
+        Context ctx;
+        try {
+            ctx = new InitialContext();
+            consentDataSource = (DataSource) ctx.lookup(dataSourceName);
+
+        } catch (NamingException e) {
+            String errorMsg = "Error when looking up the Consent Data Source.";
+            throw new MigrationClientException(errorMsg, e);
         }
     }
 
