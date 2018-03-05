@@ -20,7 +20,8 @@ package org.wso2.carbon.is.migration.util;
  */
 public enum Schema{
     IDENTITY("identity"),
-    UM("um");
+    UM("um"),
+    CONSENT("consent");
 
     private String schemaName ;
     private Schema(String schemaName){

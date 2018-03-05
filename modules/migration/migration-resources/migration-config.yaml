@@ -156,18 +156,24 @@ versions:
        location: "step1"
        schema: "identity"
     -
-     name: "OAuthDataMigrator"
+     name: "SchemaMigrator"
      order: 2
      parameters:
-       schema: "identity"
+       location: "step1"
+       schema: "consent"
     -
-     name: "BPSProfileDataMigrator"
+     name: "OAuthDataMigrator"
      order: 3
      parameters:
        schema: "identity"
     -
-     name: "SchemaMigrator"
+     name: "BPSProfileDataMigrator"
      order: 4
+     parameters:
+       schema: "identity"
+    -
+     name: "SchemaMigrator"
+     order: 5
      parameters:
        location: "step2"
        schema: "identity"
