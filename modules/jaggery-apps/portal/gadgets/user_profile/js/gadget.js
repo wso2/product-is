@@ -110,7 +110,7 @@ function drawPage() {
         "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
         "                        <input type=\"button\" onclick=\"downloadUserInfo();\" class=\"btn btn-default\" value=\"Export\"/>\n" +
-        "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
+        "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn btn-default btn-cancel\" value=\"Cancel\"/>\n" +
         "                    </td></tr>" +
         "                  </tbody>\n" +
         "</table>"+
@@ -376,7 +376,7 @@ middle = middle + "<label > Device not registered yet please register your devic
                                "                    <div class=\"control-group\">\n" +
                                "                        <div class=\"controls\">\n" +
                                "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
-                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn\" value=\"Done\"/>\n" +
+                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn btn-default btn-cancel\" value=\"Done\"/>\n" +
                                "                        </div>\n" +
                                "                    </div></div>\n" +
                                "                </form>\n" +
