@@ -17,7 +17,11 @@ package org.wso2.carbon.is.migration.service.v550;
 
 import org.wso2.carbon.is.migration.VersionMigration;
 
+/**
+ * Version migration implementation from 5.4.0 to 5.5.0
+ */
 public class V550Migration extends VersionMigration {
+
     @Override
     public String getPreviousVersion() {
         return "5.4.0";
