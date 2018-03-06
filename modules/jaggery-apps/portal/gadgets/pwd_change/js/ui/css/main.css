@@ -289,3 +289,7 @@ ul.dropdown-menu li a:hover{
     background: #222;
 
 }
+.btn-cancel{
+    background: none!important;
+}
+
