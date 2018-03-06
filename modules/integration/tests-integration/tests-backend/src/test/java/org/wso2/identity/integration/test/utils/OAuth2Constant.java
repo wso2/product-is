@@ -33,6 +33,7 @@ public final class OAuth2Constant {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     public final static String ACCESS_TOKEN = "access_token";
+    public static final String ID_TOKEN = "id_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
     public final static String OAUTH_VERSION_2 = "OAuth-2.0";
     public static final String OAUTH_2 = "oauth2";
@@ -79,9 +80,17 @@ public final class OAuth2Constant {
     public static final String BASIC_HEADER = "Basic";
     public static final String INVALID_GRANT_ERROR = "invalid_grant";
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
+    public static final String SESSION_DATA_KEY = "sessionDataKey";
     public static final String INVALID_CLIENT = "invalid_client";
     public static final String TRAVELOCITY_APP_CONTEXT_ROOT = "/travelocity.com";
     public static final String OAUTH2_GRANT_TYPE_SAML2_BEARER = "urn:ietf:params:oauth:grant-type:saml2-bearer";
+
+    // OAuth 2 request parameters.
+    public static final String OAUTH2_RESPONSE_TYPE = "response_type";
+    public static final String OAUTH2_CLIENT_ID = "client_id";
+    public static final String OAUTH2_REDIRECT_URI = "redirect_uri";
+    public static final String OAUTH2_SCOPE = "scope";
+    public static final String OAUTH2_NONCE = "nonce";
 
     public static final class PlaygroundAppPaths {
 

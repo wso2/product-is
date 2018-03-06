@@ -17,11 +17,17 @@
  */
 package org.wso2.identity.integration.test.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -219,22 +225,44 @@ public class DataExtractUtil {
 	}
 
 	/**
-	 * Extract Access token from Query String
-	 * 
-	 * @param query
-	 *            - Query String
-	 * @return Access Token
+	 * Extract a value corresponds to a given key from Query String.
+	 *
+	 * @param query Query string that holds the key value pair.
+	 * @param key   String key to be extracted.
+	 * @return Extracted string value from the query.
 	 */
-	public static String extractAccessTokenFromQueryString(String query) {
+	public static String extractParamFromURIFragment(String query, String key) {
 		String fragment = query.substring(query.indexOf("#") + 1);
 		String[] params = fragment.split("&");
 		for (String param : params) {
 			String name = param.split("=")[0];
-			if (name.contains(OAuth2Constant.ACCESS_TOKEN)) {
+			if (name.contains(key)) {
 				return param.split("=")[1];
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Return a query param value of a given key, from a URI string.
+	 *
+	 * @param URIString URI as a string   .
+	 * @param key       Key that needs to be extracted.
+	 * @throws URISyntaxException
+	 * @return String value corresponds to the key.
+	 */
+	public static String getParamFromURIString(String URIString, String key) throws URISyntaxException {
+
+		String param = null;
+		List<NameValuePair> params = URLEncodedUtils.parse(new URI(URIString),
+				String.valueOf(StandardCharsets.UTF_8));
+		for (NameValuePair param1 : params) {
+			if (StringUtils.equals(param1.getName(), key)) {
+				param = param1.getValue();
+				break;
+			}
+		}
+		return param;
 	}
 
 	public static class KeyValue {
