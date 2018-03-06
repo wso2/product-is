@@ -470,8 +470,8 @@
             <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}</directory>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me</outputDirectory>
             <excludes>
-                <exclude>**/forget-me</exclude>
-                <exclude>**/forget-me.bat</exclude>
+                <exclude>**/forgetme.sh</exclude>
+                <exclude>**/forgetme.bat</exclude>
                 <exclude>**/config.json</exclude>
                 <exclude>conf/sql/**</exclude>
                 <exclude>conf/datasources/**</exclude>
@@ -936,12 +936,12 @@
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forget-me</source>
+            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forgetme.sh</source>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forget-me.bat</source>
+            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forgetme.bat</source>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
             <fileMode>744</fileMode>
         </file>
