@@ -1624,13 +1624,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.107</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.109</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.4</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.4</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.41</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.45</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1725,7 +1725,7 @@
         <charon.version>2.1.3</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1.wso2v25</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1-wso2v26</rampart.wso2.version>
         <rampart.wso2.version.1>1.6.1-wso2v23</rampart.wso2.version.1>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
