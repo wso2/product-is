@@ -177,3 +177,8 @@ versions:
      parameters:
        location: "step2"
        schema: "identity"
+    -
+     name: "PolicySubscriberDataMigrator"
+     order: 6
+     parameters:
+       schema: "identity"
