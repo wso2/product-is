@@ -25,20 +25,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.test.utils.CommonConstants;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,6 +45,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class Utils {
 
@@ -154,11 +152,24 @@ public class Utils {
 
 
         String sessionKey = queryParams.get("sessionDataKey");
+        String mandatoryClaims = queryParams.get("mandatoryClaims");
         String requestedClaims = queryParams.get("requestedClaims");
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
 
         String[] claims;
-        if (StringUtils.isNotBlank(requestedClaims)) {
-            claims = requestedClaims.split(",");
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
         } else {
             claims = new String[0];
         }
@@ -171,7 +182,7 @@ public class Utils {
 
         for (int i = 0; i < claims.length; i++) {
 
-            if (StringUtils.isNotBlank(claims[i])) {
+            if (isNotBlank(claims[i])) {
                 String[] claimMeta = claims[i].split("_", 2);
                 if (claimMeta.length == 2) {
                     urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
@@ -179,8 +190,6 @@ public class Utils {
             }
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
-        urlParameters.add(new BasicNameValuePair("requestedClaims", queryParams.get("requestedClaims")));
-        urlParameters.add(new BasicNameValuePair("mandatoryClaims", "null"));
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
@@ -292,16 +301,30 @@ public class Utils {
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
         List<NameValuePair> urlParameters = new ArrayList<>();
         String requestedClaims = queryParams.get("requestedClaims");
+        String mandatoryClaims = queryParams.get("mandatoryClaims");
+
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
 
         String[] claims;
-        if (StringUtils.isNotBlank(requestedClaims)) {
-            claims = requestedClaims.split(",");
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
         } else {
             claims = new String[0];
         }
 
         for (String claim : claims) {
-            if (StringUtils.isNotBlank(claim)) {
+            if (isNotBlank(claim)) {
                 String[] claimMeta = claim.split("_", 2);
                 if (claimMeta.length == 2) {
                     urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
