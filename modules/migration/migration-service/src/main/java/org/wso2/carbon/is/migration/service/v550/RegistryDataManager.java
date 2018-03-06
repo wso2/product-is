@@ -18,8 +18,14 @@ package org.wso2.carbon.is.migration.service.v550;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.core.util.CryptoUtil;
+import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 
@@ -27,6 +33,8 @@ public class RegistryDataManager {
 
     private static final Log log = LogFactory.getLog(RegistryDataManager.class);
     private static RegistryDataManager instance = new RegistryDataManager();
+    private static final String SYSLOG = "/repository/components/org.wso2.carbon.logging/loggers/syslog/SYSLOG_PROPERTIES";
+    public static final String PASSWORD = "password";
 
     private RegistryDataManager(){}
 
@@ -56,6 +64,59 @@ public class RegistryDataManager {
                 log.info("Email templates migrated for tenant : " + tenant.getDomain());
             } catch (Exception e) {
                 log.error("Error while migrating email templates for tenant : " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    /**
+     * Method to migrate encrypted password of SYSLOG_PROPERTIES registry resource
+     *
+     * @param migrateActiveTenantsOnly
+     * @throws UserStoreException
+     */
+    public void migrateSysLogPropertyPassword(boolean migrateActiveTenantsOnly)
+            throws UserStoreException, RegistryException, CryptoException, IdentityException {
+
+        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping SYSLOG_PROPERTIES file migration. ");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
+                IdentityTenantUtil
+                        .initializeRegistry(tenant.getId(), IdentityTenantUtil.getTenantDomain(tenant.getId()));
+                Registry registry = IdentityTenantUtil.getConfigRegistry(tenant.getId());
+                if (registry.resourceExists(SYSLOG)) {
+                    try {
+                        registry.beginTransaction();
+                        Resource resource = registry.get(SYSLOG);
+                        String password = resource.getProperty(PASSWORD);
+                        if (!CryptoUtil.getDefaultCryptoUtil().base64DecodeAndIsSelfContainedCipherText(password)) {
+                            byte[] decryptedPassword = CryptoUtil.getDefaultCryptoUtil()
+                                    .base64DecodeAndDecrypt(password, "RSA");
+                            String newEncryptedPassword = CryptoUtil.getDefaultCryptoUtil()
+                                    .encryptAndBase64Encode(decryptedPassword);
+                            resource.setProperty(PASSWORD, newEncryptedPassword);
+                        }
+                        registry.put(SYSLOG, resource);
+                        registry.commitTransaction();
+                    } catch (RegistryException e) {
+                        registry.rollbackTransaction();
+                        log.error("Unable to update the appender", e);
+                        throw e;
+                    }
+                }
+            } catch (RegistryException registryException) {
+                throw registryException;
+            } catch (CryptoException cryptoException) {
+                throw cryptoException;
+            } catch (IdentityException identityException) {
+                throw identityException;
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
             }
