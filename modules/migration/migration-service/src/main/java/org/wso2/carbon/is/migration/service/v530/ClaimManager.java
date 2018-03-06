@@ -113,7 +113,6 @@ public class ClaimManager {
             }
         }
         report.append("\n\n");
-        log.info("end adding local claims");
     }
 
     /**
