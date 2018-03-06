@@ -177,3 +177,7 @@ versions:
      parameters:
        location: "step2"
        schema: "identity"
+    -
+     name: "SysLogPropertiesMigrator"
+     order: 6
+
