@@ -143,6 +143,16 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
+
+        String locationHeader = Utils.getRedirectUrl(response);
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, locationHeader,
+                    httpClientAzUser, pastrCookie);
+        }
         EntityUtils.consume(response.getEntity());
         response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 httpClientAzUser);
@@ -162,7 +172,17 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 NON_AZ_TEST_TENANT_USER + WSO2_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
+
         String redirectUrl = Utils.getRedirectUrl(response);
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, redirectUrl,
+                    httpClientNonAzUser, pastrCookie);
+            redirectUrl = Utils.getRedirectUrl(response);
+        }
         EntityUtils.consume(response.getEntity());
         response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);
         String responseString = extractDataFromResponse(response);
