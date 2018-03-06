@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,22 +13,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.wso2.carbon.is.migration.util;
+package org.wso2.carbon.is.migration.service.v550;
 
-/**
- * Schema bean class.
- */
-public enum Schema{
-    IDENTITY("identity"),
-    UM("um"),
-    CONSENT("consent");
+import org.wso2.carbon.is.migration.VersionMigration;
 
-    private String schemaName ;
-    private Schema(String schemaName){
-        this.schemaName = schemaName ;
+public class V550Migration extends VersionMigration {
+    @Override
+    public String getPreviousVersion() {
+        return "5.4.0";
     }
 
-    public String getName(){
-        return schemaName ;
+    @Override
+    public String getCurrentVersion() {
+        return "5.5.0";
     }
 }
