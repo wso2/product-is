@@ -67,6 +67,18 @@
         <!--</classes>-->
     <!--</test>-->
 
+    <test name="is-tests-scim" preserve-order="true" parallel="false">
+        <classes>
+            <!--SCIM Test Cases-->
+            <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
+            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
+            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
+            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
+            <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
+            <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
+        </classes>
+    </test>
+
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase"/>
@@ -89,7 +101,7 @@
             <!--<class name="org.wso2.identity.integration.test.um.ws.api.RemoteAuthorizationManagerServiceTestCase" />-->
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimMetadataManagementServiceTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.mgt.ClaimManagementServiceTestCase" />-->
-            <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountLockingWhileSCIMEnabledTestCase"/>-->
+
             <!--Identity Management Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>-->
@@ -150,12 +162,6 @@
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--User Profile Management Test Cases-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
-            <!--SCIM Test Cases-->
-            <!--<class name="org.wso2.identity.integration.test.scim.SCIMUserProviderTestCase" />-->
-            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
-            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
-            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
-            <!--<class name="org.wso2.identity.integration.test.scim.SCIMGlobalProviderTestCase" />-->
             <!--SAML Test Cases-->
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
