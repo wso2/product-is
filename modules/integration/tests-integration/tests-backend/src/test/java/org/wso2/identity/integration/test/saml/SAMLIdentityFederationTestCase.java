@@ -387,8 +387,19 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = new DefaultHttpClient().execute(request);
+        String locationHeader = getHeaderValue(response, "Location");
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                    PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+            locationHeader = getHeaderValue(response, "Location");
+        }
         closeHttpConnection(response);
-        return getHeaderValue(response, "Location");
+        return locationHeader;
     }
 
     private String getSAMLResponseFromPrimaryIS(HttpClient client, String redirectURL)
