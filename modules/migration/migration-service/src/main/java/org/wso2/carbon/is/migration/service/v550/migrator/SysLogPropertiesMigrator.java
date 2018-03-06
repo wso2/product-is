@@ -28,8 +28,7 @@ import org.wso2.carbon.user.api.UserStoreException;
 
 public class SysLogPropertiesMigrator extends Migrator {
 
-    private static final Log log = LogFactory
-            .getLog(org.wso2.carbon.is.migration.service.v550.migrator.SysLogPropertiesMigrator.class);
+    private static final Log log = LogFactory.getLog(SysLogPropertiesMigrator.class);
 
     @Override
     public void migrate() throws MigrationClientException {
@@ -41,7 +40,7 @@ public class SysLogPropertiesMigrator extends Migrator {
 
         log.info(Constant.MIGRATION_LOG + "Migration starting on SYSLOG_PROPERTIES file");
         try {
-            RegistryDataManager.getInstance().migrateSysLogPropertyPassword(true);
+            RegistryDataManager.getInstance().migrateSysLogPropertyPassword(isIgnoreForInactiveTenants());
         } catch (UserStoreException e) {
             throw new MigrationClientException("Error while retrieving all tenants. ", e);
         } catch (RegistryException e) {
@@ -49,8 +48,8 @@ public class SysLogPropertiesMigrator extends Migrator {
                     e);
         } catch (CryptoException e) {
             throw new MigrationClientException("Error while encrypting/decrypting SYSLOG_PROPERTIES password. ", e);
-        } catch (IdentityException e) {
+        } /*catch (IdentityException e) {
             throw new MigrationClientException("Error while initializing registry using IdentityTenantUtil. ", e);
-        }
+        }*/
     }
 }
