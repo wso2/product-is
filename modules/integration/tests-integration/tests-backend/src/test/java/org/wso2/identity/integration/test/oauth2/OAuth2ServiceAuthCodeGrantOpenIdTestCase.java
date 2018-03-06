@@ -26,6 +26,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -189,14 +190,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. response is null.");
 
-        if (Utils.requestMissingClaims(response)) {
-            String pastrCookie = Utils.getPastreCookie(response);
-            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
-            EntityUtils.consume(response.getEntity());
-
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
-                    (response), client, pastrCookie);
-        }
         EntityUtils.consume(response.getEntity());
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
