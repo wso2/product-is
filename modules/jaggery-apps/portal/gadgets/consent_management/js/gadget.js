@@ -228,7 +228,7 @@ function renderReceiptDetails(data) {
         '</div>' +
         '<div class="panel-footer text-right">' +
         '<button type="button" class="btn btn-primary btn-update-settings">Update</button>' +
-        '<button type="button" class="btn btn-default btn-cancel-settings">Cancel</button>' +
+        '<button type="button" class="btn btn-default btn-cancel btn-cancel-settings">Cancel</button>' +
         '</div>' +
         '</div>{{/services}}{{/receipts}}';
 
