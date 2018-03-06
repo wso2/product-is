@@ -144,6 +144,18 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
         EntityUtils.consume(response.getEntity());
+
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
+                                                    String.format(ACS_URL, APPLICATION_NAME),
+                                                    httpClientAzUser, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
         response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 httpClientAzUser);
         String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
