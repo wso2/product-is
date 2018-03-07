@@ -89,6 +89,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String profileName = "default";
     private static final String sessionStreamId = "org.wso2.is.analytics.stream.OverallSession:1.0.0";
     private static final String authenticationStreamId = "org.wso2.is.analytics.stream.OverallAuthentication:1.0.0";
+    protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -98,6 +99,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private ThriftServer thriftServer;
     private ServerConfigurationManager serverConfigurationManager;
     HttpClient sharedHttpClient = new DefaultHttpClient();
+    private static final Long WAIT_TIME = 3000L;
 
 
     private String resultPage;
@@ -298,26 +300,31 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is", dependsOnMethods = {"testAddSP"})
-    public void testSAMLSSOIsPassiveLogin() {
+    public void testSAMLSSOIsPassiveLogin() throws IOException {
+        HttpResponse response = null;
         try {
             HttpClient httpClient = sharedHttpClient;
-            HttpResponse response;
             response = Utils.sendGetRequest(String.format(SAML_SSO_INDEX_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, "name='SAMLResponse'", 5);
+
             samlResponse = new String(Base64.decodeBase64(samlResponse));
             Assert.assertTrue(samlResponse.contains("Destination=\"" + String.format(ACS_URL, config.getApp()
                     .getArtifact()) + "\""));
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
+        } finally {
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
         }
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOIsPassiveLogin"})
-    public void testSAMLSSOLogin() {
+    public void testSAMLSSOLogin() throws IOException {
+        HttpResponse response = null;
         try {
-            HttpResponse response;
             HttpClient httpClient = sharedHttpClient;
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
@@ -331,16 +338,28 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             }
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+            EntityUtils.consume(response.getEntity());
             response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
-            EntityUtils.consume(response.getEntity());
+
+            if (Utils.requestMissingClaims(response)) {
+                String pastrCookie = Utils.getPastreCookie(response);
+                Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+                EntityUtils.consume(response.getEntity());
+
+                response = Utils.sendPOSTConsentMessage(response,
+                        String.format(COMMON_AUTH_URL, DEFAULT_PORT),
+                        USER_AGENT, ACS_URL, httpClient, pastrCookie);
+                EntityUtils.consume(response.getEntity());
+            }
 
             response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            EntityUtils.consume(response.getEntity());
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
-            Thread.sleep(2000);
-
+            EntityUtils.consume(response.getEntity());
+            waitUntilEventsReceive(3);
             Assert.assertEquals(thriftServer.getPreservedEventList().size(), 3);
 
             Event sessionEvent = null;
@@ -389,32 +408,37 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[16], "1");
             // isFirstLogin
             Assert.assertEquals(eventStreamData[20], false);
-            extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
         } finally {
             thriftServer.resetPreservedEventList();
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
         }
     }
 
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLogin"})
-    public void testSAMLSSOLoginWithExistingSession() {
+    public void testSAMLSSOLoginWithExistingSession() throws IOException {
+        HttpResponse response = null;
         try {
-            HttpResponse response;
             HttpClient httpClient = sharedHttpClient;
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
+                EntityUtils.consume(response.getEntity());
                 response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
             }
 
+            EntityUtils.consume(response.getEntity());
+            waitUntilEventsReceive(2);
             Event sessionEvent = null;
             for (Event event : thriftServer.getPreservedEventList()) {
                 String streamId = event.getStreamId();
@@ -424,25 +448,28 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             }
 
             assertSessionUpdateEvent(sessionEvent);
-            extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
         } finally {
             thriftServer.resetPreservedEventList();
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
         }
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login fail", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLogout"})
-    public void testSAMLSSOLoginFail() {
+    public void testSAMLSSOLoginFail() throws IOException {
+        HttpResponse response = null;
         try {
-            HttpResponse response;
             HttpClient httpClient = new DefaultHttpClient();
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
+                EntityUtils.consume(response.getEntity());
                 response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
                 EntityUtils.consume(response.getEntity());
 
@@ -451,16 +478,18 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             }
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+            EntityUtils.consume(response.getEntity());
             response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
                     .getArtifact(), "dummy", config.getUser().getPassword(), httpClient);
             EntityUtils.consume(response.getEntity());
 
             response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            EntityUtils.consume(response.getEntity());
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
-            Thread.sleep(2000);
-
+            EntityUtils.consume(response.getEntity());
+            waitUntilEventsReceive(1);
             Event event = (Event) thriftServer.getPreservedEventList().get(0);
             Object[] eventStreamData = event.getPayloadData();
 
@@ -484,37 +513,45 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[15], "NOT_AVAILABLE");
             // authenticationStep
             Assert.assertEquals(eventStreamData[16], "1");
-            extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
         } finally {
             thriftServer.resetPreservedEventList();
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
         }
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLoginWithExistingSession"})
     public void testSAMLSSOLogout() throws Exception {
+        HttpResponse response = null;
         try {
-            HttpResponse response;
             HttpClient httpClient = sharedHttpClient;
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGOUT_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
+                EntityUtils.consume(response.getEntity());
                 response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
             }
 
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            EntityUtils.consume(response.getEntity());
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
+            EntityUtils.consume(response.getEntity());
+            waitUntilEventsReceive(1);
             assertSessionTerminationEvent(thriftServer.getPreservedEventList().get(0));
-            extractDataFromResponse(response);
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
         } finally {
             thriftServer.resetPreservedEventList();
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
         }
     }
 
@@ -745,4 +782,12 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         return result.toString();
     }
 
+    private void waitUntilEventsReceive(int eventCount) {
+
+        long terminationTime = System.currentTimeMillis() + WAIT_TIME;
+        while (System.currentTimeMillis() < terminationTime) {
+            if (thriftServer.getPreservedEventList().size() == eventCount) ;
+            break;
+        }
+    }
 }
