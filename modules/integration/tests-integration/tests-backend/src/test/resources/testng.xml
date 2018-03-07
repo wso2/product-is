@@ -58,14 +58,12 @@
         </classes>
     </test>
 
-    <!-- Analytics Test cases needs to be written to handle network delays. Commenting the tests until
-    they are rewritten. -->
-    <!--<test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>-->
-            <!--<class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>-->
-        <!--</classes>-->
-    <!--</test>-->
+    <test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
+            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
+        </classes>
+    </test>
 
     <test name="is-tests-scim" preserve-order="true" parallel="false">
         <classes>
