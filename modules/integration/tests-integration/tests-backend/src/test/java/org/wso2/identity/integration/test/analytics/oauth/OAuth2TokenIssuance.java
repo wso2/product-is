@@ -162,8 +162,6 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
            Assert.assertNotNull(accessToken, "Access token is null.");
            waitUntilEventsReceive(1);
-           Thread.sleep(2000);
-           System.out.println("");
            Assert.assertNotNull(thriftServer.getPreservedEventList());
            Event tokenIssuanceEvent = null;
            for (Event event : thriftServer.getPreservedEventList()) {
