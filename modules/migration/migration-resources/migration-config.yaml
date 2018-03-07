@@ -172,16 +172,21 @@ versions:
      parameters:
        schema: "identity"
     -
-     name: "SysLogPropertiesMigrator"
+     name: "UserStorePasswordMigrator"
      order: 5
+     parameters:
+       schema: "identity"
+    -
+     name: "SysLogPropertiesMigrator"
+     order: 6
     -
      name: "SchemaMigrator"
-     order: 6
+     order: 7
      parameters:
        location: "step2"
        schema: "identity"
     -
      name: "PolicySubscriberDataMigrator"
-     order: 7
+     order: 8
      parameters:
        schema: "identity"
