@@ -1546,9 +1546,9 @@
                 <version>${identity.app.authz.xacml.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml</groupId>
-                <artifactId>org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml.server.feature</artifactId>
-                <version>${identity.oauth.scope.validator.xacml.version}</version>
+                <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth2.validators.xacml.server.feature</artifactId>
+                <version>${identity.oauth2.validators.xacml.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -1661,7 +1661,7 @@
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.18</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
-        <identity.oauth.scope.validator.xacml.version>1.0.0-SNAPSHOT</identity.oauth.scope.validator.xacml.version>
+        <identity.oauth2.validators.xacml.version>1.0.5-SNAPSHOT</identity.oauth2.validators.xacml.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->

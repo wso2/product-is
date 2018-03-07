@@ -234,7 +234,7 @@
                                     org.wso2.carbon.identity.application.authz.xacml:org.wso2.carbon.identity.application.authz.xacml.server.feature:${identity.app.authz.xacml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml:org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml.server.feature:${identity.oauth.scope.validator.xacml.version}
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.validators.xacml.server.feature:${identity.oauth2.validators.xacml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
@@ -740,9 +740,9 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml.server.feature.group
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
                                     </id>
-                                    <version>${identity.oauth.scope.validator.xacml.version}</version>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -1240,9 +1240,9 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml.server.feature.group
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
                                     </id>
-                                    <version>${identity.oauth.scope.validator.xacml.version}</version>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -1666,9 +1666,9 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.inbound.auth.oauth2.scope.validator.xacml.server.feature.group
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
                                     </id>
-                                    <version>${identity.oauth.scope.validator.xacml.version}</version>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
