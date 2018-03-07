@@ -60,8 +60,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected String consumerSecret;
 
 	protected final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProvider";
-	private final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
-	private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+	protected final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
+	protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
 	private final static int TOMCAT_PORT = 8490;
