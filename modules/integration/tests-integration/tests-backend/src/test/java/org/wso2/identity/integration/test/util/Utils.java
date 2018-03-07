@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class Utils {
 
@@ -149,11 +152,24 @@ public class Utils {
 
 
         String sessionKey = queryParams.get("sessionDataKey");
+        String mandatoryClaims = queryParams.get("mandatoryClaims");
         String requestedClaims = queryParams.get("requestedClaims");
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
 
         String[] claims;
-        if (StringUtils.isNotBlank(requestedClaims)) {
-            claims = requestedClaims.split(",");
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
         } else {
             claims = new String[0];
         }
@@ -166,7 +182,7 @@ public class Utils {
 
         for (int i = 0; i < claims.length; i++) {
 
-            if (StringUtils.isNotBlank(claims[i])) {
+            if (isNotBlank(claims[i])) {
                 String[] claimMeta = claims[i].split("_", 2);
                 if (claimMeta.length == 2) {
                     urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
@@ -174,8 +190,6 @@ public class Utils {
             }
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
-        urlParameters.add(new BasicNameValuePair("requestedClaims", queryParams.get("requestedClaims")));
-        urlParameters.add(new BasicNameValuePair("mandatoryClaims", "null"));
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
@@ -279,5 +293,44 @@ public class Utils {
         }
         rd.close();
         return value;
+    }
+
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        String requestedClaims = queryParams.get("requestedClaims");
+        String mandatoryClaims = queryParams.get("mandatoryClaims");
+
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
+
+        String[] claims;
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
+        } else {
+            claims = new String[0];
+        }
+
+        for (String claim : claims) {
+            if (isNotBlank(claim)) {
+                String[] claimMeta = claim.split("_", 2);
+                if (claimMeta.length == 2) {
+                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                }
+            }
+        }
+        return urlParameters;
     }
 }

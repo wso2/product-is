@@ -21,16 +21,21 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.jce.X509Principal;
+import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -46,11 +51,25 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import sun.security.provider.X509Factory;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.SignatureException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
 /**
 * OAuth2 test integration abstraction
@@ -257,6 +276,23 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return response;
 	}
 
+	public HttpResponse sendConsentGetRequest(DefaultHttpClient client, String locationURL, CookieStore cookieStore,
+											  List<NameValuePair> consentRequiredClaimsFromResponse) throws Exception {
+
+		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+																		.setDefaultCookieStore(cookieStore).build();
+		HttpGet getRequest = new HttpGet(locationURL);
+		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+		HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
+
+		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
+		client.setCookieStore(cookieStore);
+		EntityUtils.consume(response.getEntity());
+		return httpResponse;
+	}
+
 	/**
 	 * Send Post request
 	 *
@@ -322,6 +358,30 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 
+		return response;
+	}
+
+	/**
+	 * Send approval post request with consent
+	 *
+	 * @param client http client
+	 * @param sessionDataKeyConsent session consent data
+	 * @param consentClaims claims requiring user consent
+	 * @return http response
+	 * @throws java.io.IOException
+	 */
+	public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
+													List<NameValuePair> consentClaims) throws IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("consent", "approve"));
+		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+
+		if (consentClaims != null) {
+			urlParameters.addAll(consentClaims);
+		}
+
+		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 		return response;
 	}
 
@@ -481,4 +541,92 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
     public String getBase64EncodedString(String consumerKey, String consumerSecret) {
         return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
     }
+
+	/**
+	 * Convert a x509 certificate to pem format.
+	 *
+	 * @param x509Certificate Certificate in x509 format.
+	 * @return Certificate in pem format.
+	 * @throws CertificateEncodingException
+	 */
+	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
+
+		String certBegin = X509Factory.BEGIN_CERT;
+		String endCert = X509Factory.END_CERT;
+		String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
+		return certBegin + pemCert + endCert;
+	}
+
+	/**
+	 * Build and return a basic consumer application DTO with all OAuth2 grant types.
+	 *
+	 * @param callBackURL String callback URL.
+	 * @return Basic OAuthConsumerAppDTO object.
+	 */
+	public OAuthConsumerAppDTO getBasicOAuthApp(String callBackURL) {
+
+		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+		appDTO.setApplicationName(OAUTH_APPLICATION_NAME);
+		appDTO.setCallbackUrl(callBackURL);
+		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+		appDTO.setGrantTypes("authorization_code implicit password client_credentials");
+		return appDTO;
+	}
+
+	/**
+	 * Register a service provider and setup consumer key and secret when a OAuthConsumerAppDTO is given.
+	 *
+	 * @param appDTO OAuthConsumerAppDTO of the service provider.
+	 * @return Registered service provider.
+	 * @throws Exception
+	 */
+	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
+			throws Exception {
+
+		adminClient.registerOAuthApplicationData(appDTO);
+
+		OAuthConsumerAppDTO oauthConsumerApp = adminClient.getOAuthAppByName(appDTO.getApplicationName());
+		consumerKey = oauthConsumerApp.getOauthConsumerKey();
+		consumerSecret = oauthConsumerApp.getOauthConsumerSecret();
+
+		ServiceProvider serviceProvider = new ServiceProvider();
+		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+		appMgtclient.createApplication(serviceProvider);
+
+		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+
+		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
+		setInboundOAuthConfig(authRequestList);
+
+		if (authRequestList.size() > 0) {
+			serviceProvider.getInboundAuthenticationConfig()
+					.setInboundAuthenticationRequestConfigs(authRequestList.toArray(
+							new InboundAuthenticationRequestConfig[authRequestList.size()]));
+		}
+		appMgtclient.updateApplicationData(serviceProvider);
+		return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+	}
+
+	/**
+	 * Update app with inbound configurations.
+	 *
+	 * @param authRequestList Authentication Request Config list.
+	 */
+	private void setInboundOAuthConfig(List<InboundAuthenticationRequestConfig> authRequestList) {
+
+		if (consumerKey != null) {
+			InboundAuthenticationRequestConfig opicAuthenticationRequest =
+					new InboundAuthenticationRequestConfig();
+			opicAuthenticationRequest.setInboundAuthKey(consumerKey);
+			opicAuthenticationRequest.setInboundAuthType("oauth2");
+			if (consumerSecret != null && !consumerSecret.isEmpty()) {
+				Property property = new Property();
+				property.setName("oauthConsumerSecret");
+				property.setValue(consumerSecret);
+				Property[] properties = {property};
+				opicAuthenticationRequest.setProperties(properties);
+			}
+			authRequestList.add(opicAuthenticationRequest);
+		}
+	}
 }

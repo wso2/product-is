@@ -89,4 +89,9 @@ public class OauthAdminClient {
     public OAuthConsumerAppDTO getOAuthAppByName(String applicationName) throws Exception {
 	    return oauthAdminStub.getOAuthApplicationDataByAppName(applicationName);
     }
+
+    public void updateConsumerApplication(OAuthConsumerAppDTO application)
+            throws Exception {
+        oauthAdminStub.updateConsumerApplication(application);
+    }
 }

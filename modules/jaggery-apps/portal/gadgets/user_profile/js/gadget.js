@@ -148,14 +148,23 @@ function downloadUserInfo() {
                 downloadData(data, "userInfo.json");
 
             })
-            .fail(function () {
-                console.log('error');
+            .fail(function (error) {
+                publishErrorAndShrink(error);
 
             })
             .always(function () {
                 console.log('completed');
             });
     }
+}
+
+function publishErrorAndShrink(error) {
+    console.log(error);
+    gadgets.Hub.publish('org.wso2.is.dashboard', {
+        msg: 'A message from User Profile',
+        id: "user_profile .shrink-widget",
+        status: error.status
+    });
 }
 
 function downloadData(data, fileName){
@@ -193,7 +202,8 @@ function validate() {
 
         if (json.return.fieldValues[i].required == "true") {
             if (validateEmpty(fldname).length > 0) {
-                message({content:displayName + ' is required', type:'warning', cbk:function () {
+                message({title:"Missing Required Field Warning", content:displayName + ' is required',
+                    type:'warning', cbk:function () {
                 } });
                 return false;
             }
@@ -204,7 +214,8 @@ function validate() {
 
             var valid = reg.test(value);
             if (value != '' && !valid) {
-                message({content:displayName + ' is not valid', type:'warning', cbk:function () {
+                message({title:"Invalid Input Field Warning", content:displayName + ' is not valid',
+                    type:'warning', cbk:function () {
                 } });
                 return false;
             }
@@ -218,7 +229,8 @@ function validate() {
     for (i = 0; i < elements.length; i++) {
         if ((elements[i].type === 'text' || elements[i].type === 'password') &&
             elements[i].value != null && elements[i].value.match(unsafeCharPattern) != null) {
-            message({content:'Unauthorized characters are specified', type:'warning', cbk:function () {
+            message({title:"Invalid Input Field Warning", content:'Unauthorized characters are specified' ,
+                type:'warning', cbk:function () {
             } });
             return false;
         }

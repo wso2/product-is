@@ -144,3 +144,44 @@ versions:
     parameters:
       location: "step2"
       schema: "identity"
+
+
+  -
+   version: "5.5.0"
+   migratorConfigs:
+    -
+     name: "SchemaMigrator"
+     order: 1
+     parameters:
+       location: "step1"
+       schema: "identity"
+    -
+     name: "SchemaMigrator"
+     order: 2
+     parameters:
+       location: "step1"
+       schema: "consent"
+    -
+     name: "OAuthDataMigrator"
+     order: 3
+     parameters:
+       schema: "identity"
+    -
+     name: "BPSProfileDataMigrator"
+     order: 4
+     parameters:
+       schema: "identity"
+    -
+     name: "SysLogPropertiesMigrator"
+     order: 5
+    -
+     name: "SchemaMigrator"
+     order: 6
+     parameters:
+       location: "step2"
+       schema: "identity"
+    -
+     name: "PolicySubscriberDataMigrator"
+     order: 7
+     parameters:
+       schema: "identity"

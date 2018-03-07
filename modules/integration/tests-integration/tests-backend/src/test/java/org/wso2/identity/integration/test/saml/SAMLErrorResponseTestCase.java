@@ -28,13 +28,16 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -46,6 +49,7 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,9 +61,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 
 public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
@@ -89,6 +95,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private HttpClient httpClient;
     private Tomcat tomcatServer;
+    private CookieStore cookieStore = new BasicCookieStore();
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -100,7 +107,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
-        httpClient = HttpClientBuilder.create().build();
+        httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         createApplication();
 
         // Starting tomcat
@@ -155,12 +162,37 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         response = sendPOSTMessage(sessionKey);
         EntityUtils.consume(response.getEntity());
 
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
+                                                    String.format(ACS_URL, ARTIFACT_ID),
+                                                    httpClient, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
+        response = sendGetWithoutRedirect(response);
         String location = response.getFirstHeader("Location").getValue();
         assertTrue(location.contains("RelayState=" + RELAY_STATE), "Redirection header to notification.do" +
                 " page should contain RelayState query param sent with the request");
         assertTrue(location.contains("ACSUrl=" + URLEncoder.encode(String.format(ACS_URL,
                 ARTIFACT_ID), "UTF-8")), "Redirection header to notification.do" +
                 " page should contain ACS query param");
+    }
+
+    private HttpResponse sendGetWithoutRedirect(HttpResponse response) throws IOException {
+
+        HttpClient client = HttpClientBuilder.create().disableRedirectHandling().setDefaultCookieStore
+                (cookieStore).build();
+
+        String location = response.getFirstHeader("Location").getValue();
+
+        HttpGet getRequest = new HttpGet(location);
+        getRequest.setHeader("User-Agent", USER_AGENT);
+
+        return client.execute(getRequest);
     }
 
     private void createApplication() throws Exception {

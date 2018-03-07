@@ -21,9 +21,12 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -87,6 +90,9 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private static final String USERNAME = "authcodegrantuser";
     private static final String PASSWORD = "pass123";
 
+    private List<NameValuePair> consentParameters = new ArrayList<>();
+    private CookieStore cookieStore = new BasicCookieStore();
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
@@ -101,6 +107,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
                 isServer.getInstance().getHosts().get("default"));
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
         client = new DefaultHttpClient();
+        client.setCookieStore(cookieStore);
         setSystemproperties();
         remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
     }
@@ -183,20 +190,11 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. response is null.");
 
-        if (Utils.requestMissingClaims(response)) {
-            String pastrCookie = Utils.getPastreCookie(response);
-            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
-            EntityUtils.consume(response.getEntity());
+        EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
-                    (response), client, pastrCookie);
-            EntityUtils.consume(response.getEntity());
-        }
-
-        Header locationHeader =
-                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
-        response = sendGetRequest(client, locationHeader.getValue());
+        response = sendConsentGetRequest(client, locationHeader.getValue(), cookieStore, consentParameters);
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
         keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
         List<KeyValue> keyValues =
@@ -211,7 +209,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
     public void testSendApprovalPost() throws Exception {
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+
+        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
         Assert.assertNotNull(response, "Approval request failed. response is invalid.");
 
         Header locationHeader =

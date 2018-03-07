@@ -98,6 +98,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     CookieStore cookieStore = new BasicCookieStore();
 
     protected HttpClient client;
+    protected List<NameValuePair> consentParameters = new ArrayList<>();
 
 
     @BeforeClass(alwaysRun = true)
@@ -267,17 +268,13 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                 String pastrCookie = Utils.getPastreCookie(response);
                 Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
-
-                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, consentLocationHeader
-                        .getValue(), client, pastrCookie);
-                EntityUtils.consume(response.getEntity());
-
-                Header oauthConsentLocationHeader = response.getFirstHeader(OAuth2Constant
-                        .HTTP_RESPONSE_HEADER_LOCATION);
+                Header oauthConsentLocationHeader = consentLocationHeader;
                 Assert.assertNotNull(oauthConsentLocationHeader, "OAuth consent url is null for " +
                         oauthConsentLocationHeader.getValue());
 
+                consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
                 response = sendGetRequest(client, oauthConsentLocationHeader.getValue());
+
                 keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
                 List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse
                         (response, keyPositionMap);
@@ -300,15 +297,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
                 + "is null.");
 
-        if (Utils.requestMissingClaims(response)) {
-            String pastrCookie = Utils.getPastreCookie(response);
-            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
-            EntityUtils.consume(response.getEntity());
-
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, Utils.getRedirectUrl
-                    (response), client, pastrCookie);
-            EntityUtils.consume(response.getEntity());
-        }
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
@@ -329,7 +317,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     private void testConsentApproval(OIDCApplication application) throws Exception {
 
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
         Assert.assertNotNull(response, "Approval request failed for " + application.getApplicationName() + ". " +
                 "response is invalid.");
 

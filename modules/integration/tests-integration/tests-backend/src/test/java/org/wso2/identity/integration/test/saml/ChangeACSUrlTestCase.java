@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -233,12 +234,23 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(request);
+
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response,
+                                                    String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_1),
+                                                    USER_AGENT, PRIMARY_IS_SAML_ACS_URL, client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
         closeHttpConnection(response);
         return getHeaderValue(response, "Location");
     }
 
     private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client, String redirectURL) throws Exception {
-
         HttpPost request = new HttpPost(redirectURL);
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
@@ -261,6 +273,17 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = new DefaultHttpClient().execute(request);
+
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response,
+                                                    String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0),
+                                                    USER_AGENT, PRIMARY_IS_SAML_ACS_URL, client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
         closeHttpConnection(response);
         return getHeaderValue(response, "Location");
     }

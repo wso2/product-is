@@ -162,10 +162,30 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 AZ_TEST_USER, AZ_TEST_USER_PW, httpClientAzUser);
+
+        String locationHeader = Utils.getRedirectUrl(response);
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, locationHeader,
+                    httpClientAzUser, pastrCookie);
+        }
         EntityUtils.consume(response.getEntity());
 
-        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                httpClientAzUser);
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
+                                                    String.format(ACS_URL, APPLICATION_NAME),
+                                                    httpClientAzUser, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
+        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, APPLICATION_NAME, httpClientAzUser);
         String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
 
         response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
@@ -185,6 +205,16 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
                 NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, httpClientNonAzUser);
+
+        String locationHeader = Utils.getRedirectUrl(response);
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, locationHeader,
+                    httpClientNonAzUser, pastrCookie);
+        }
         String redirectUrl = Utils.getRedirectUrl(response);
         EntityUtils.consume(response.getEntity());
         response = Utils.sendGetRequest(redirectUrl, USER_AGENT, httpClientNonAzUser);

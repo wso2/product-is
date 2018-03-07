@@ -155,9 +155,8 @@ function renderReceiptList(data) {
         ' panel-consents">' +
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
-        '<h4>{{#if spDisplayName}}{{spDisplayName}}' +
-        ' {{else}}{{consentReceiptID}}{{/if}}</h4>' +
-        '<p>{{spDescription}}</p>' +
+        '<h4>{{spDisplayName}}</h4>' +
+        '<p><span>Receipt Id: {{consentReceiptID}}</span></p><p>"{{spDescription}}"</span></p>' +
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
@@ -172,8 +171,8 @@ function renderReceiptList(data) {
         ' panel-consents">' +
         '<div class="panel-body flex-container">' +
         '<div class="left">' +
-        '<h4>{{#if spDisplayName}}{{spDisplayName}} <span>({{consentReceiptID}})</span>{{else}}{{consentReceiptID}}{{/if}}</h4>' +
-        '<p>{{spDescription}}</p>' +
+        '<h4>{{spDisplayName}}</h4>' +
+        '<p><span>Receipt Id: {{consentReceiptID}}</span></p><p>"{{spDescription}}"</span></p>' +
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
@@ -300,7 +299,7 @@ function addActions(container) {
         $("#message").append(confirmationDialog);
         message({
             title: "Consent Confirmation",
-            content: 'Are you sure you want to revoke this consent? this is not reversible...',
+            content: 'Are you sure you want to revoke this consent? This is not reversible.',
             type: 'confirm',
             okCallback: function () {
                 revokeReceipt(receiptID);
@@ -316,7 +315,7 @@ function addActions(container) {
         $("#message").append(confirmationDialog);
         message({
             title: "Consent Confirmation",
-            content: 'Are you sure you want to update/revoke this consent? this is not reversible...',
+            content: 'Are you sure you want to update/revoke this consent? This is not reversible.',
             type: 'confirm',
             okCallback: function () {
                 revokeAndAddNewReceipt(receiptData, container);
@@ -335,7 +334,7 @@ function addActions(container) {
         changeYear: true,
         onSelect: function (dateText) {
             var split = dateText.split("/");
-            var newDate = Date.UTC(split[2], split[0], split[1]);
+            var newDate = new Date(split[2], split[0] - 1, split[1]).getTime();
             var expiry = EXPIRY_DATE_STRING + newDate;
 
             $("#date_picker_new_expiry").val(expiry);
@@ -376,6 +375,7 @@ function populateNewPurposes(purposes, oldPurposes, expiryDate, newPurposes) {
             var category = categories[j];
             var c = {};
             c['piiCategoryId'] = category.li_attr.piicategoryid;
+            c['validity'] = expiryDate;
             piiCategory.push(c);
         }
         newPurpose['piiCategory'] = piiCategory;
@@ -504,7 +504,7 @@ function constructDate(expiry) {
     if (!checkValidDate(date)) {
         return getDefaultExpiry();
     }
-    var goodDate = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
+    var goodDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
     return goodDate;
 }
 
