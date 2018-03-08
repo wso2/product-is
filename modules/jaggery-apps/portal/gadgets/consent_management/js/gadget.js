@@ -150,7 +150,7 @@ function updateReceipt(receiptData) {
  */
 function renderReceiptList(data) {
     var receiptData = data;
-    var content = '<div id="default-receipt"><h3>System Consent</h3>{{#default}}<div class="panel' +
+    var content = '<div id="default-receipt"><h3>System Consents</h3>{{#default}}<div class="panel' +
         ' panel-default' +
         ' panel-consents">' +
         '<div class="panel-body flex-container">' +
