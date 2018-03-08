@@ -48,10 +48,14 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
 
+/**
+ *  Test cases to check the functionality of the XACML based scope validator.
+ */
 public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
+
     private static final String VALIDATE_SCOPE_BASED_POLICY_ID = "validate_scope_based_policy_template";
     private static final String VALID_SCOPE = "SCOPE1";
-    private static final String XACML_BASED_SCOPE_VALIDATOR_NAME = "XACML Scope Validator";
+    private static final String SCOPE_VALIDATOR_NAME = "XACML Scope Validator";
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String SCOPE_POLICY = "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" " +
             "PolicyId=\"validate_scope_based_policy_template\"\n" +
@@ -105,7 +109,6 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
     }
 
@@ -119,15 +122,13 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         entitlementPolicyClient.removePolicy(VALIDATE_SCOPE_BASED_POLICY_ID);
         entitlementPolicyClient.publishPolicies(new String[]{VALIDATE_SCOPE_BASED_POLICY_ID}, new String[]{"PDP " +
                 "Subscriber"}, "DELETE", true, null, 1);
-        client.close();
     }
-
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration.")
     public void testRegisterApplication() throws Exception {
 
         OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        oAuthConsumerAppDTO.setScopeValidators(new String[]{XACML_BASED_SCOPE_VALIDATOR_NAME});
+        oAuthConsumerAppDTO.setScopeValidators(new String[]{SCOPE_VALIDATOR_NAME});
         ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
         Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
@@ -136,6 +137,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
 
     @Test(groups = "wso2.is", description = "Check publishing a policy", dependsOnMethods = "testRegisterApplication")
     public void testPublishPolicy() throws Exception {
+
         PolicyDTO policy = new PolicyDTO();
         policy.setPolicy(SCOPE_POLICY);
         policy.setVersion("3.0");
@@ -182,41 +184,37 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
      */
     private boolean getTokenAndValidate(Scope scope) throws Exception {
 
-        // Reset client.
         client = HttpClientBuilder.create().disableRedirectHandling().build();
 
-        String username = "admin";
-        Secret password = new Secret("admin");
-        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
+        try {
+            String username = "admin";
+            Secret password = new Secret("admin");
+            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
+            ClientID clientID = new ClientID(consumerKey);
+            Secret clientSecret = new Secret(consumerSecret);
+            ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+            URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+            TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
 
-        ClientID clientID = new ClientID(consumerKey);
-        Secret clientSecret = new Secret(consumerSecret);
-        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+            HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+            Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
+            AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
+            Assert.assertNotNull(tokenResponse, "Access token response is null.");
 
+            AccessToken accessToken = tokenResponse.getTokens().getAccessToken();
+            URI introSpecEndpoint = new URI(OAuth2Constant.INTRO_SPEC_ENDPOINT);
+            BearerAccessToken bearerAccessToken = new BearerAccessToken(accessToken.getValue());
+            TokenIntrospectionRequest TokenIntroRequest = new TokenIntrospectionRequest(introSpecEndpoint,
+                    bearerAccessToken,
+                    accessToken);
+            HTTPResponse introspectionHTTPResp = TokenIntroRequest.toHTTPRequest().send();
+            Assert.assertNotNull(introspectionHTTPResp, "Introspection http response is null.");
 
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-
-        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
-
-        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
-        Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
-
-        AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
-        Assert.assertNotNull(tokenResponse, "Access token response is null.");
-        AccessToken accessToken = tokenResponse.getTokens().getAccessToken();
-
-        URI introSpecEndpoint = new URI(OAuth2Constant.INTRO_SPEC_ENDPOINT);
-
-        BearerAccessToken bearerAccessToken = new BearerAccessToken(accessToken.getValue());
-
-        TokenIntrospectionRequest TokenIntroRequest = new TokenIntrospectionRequest(introSpecEndpoint, bearerAccessToken,
-
-                accessToken);
-        HTTPResponse introspectionHTTPResp = TokenIntroRequest.toHTTPRequest().send();
-        Assert.assertNotNull(introspectionHTTPResp, "Introspection http response is null.");
-
-        TokenIntrospectionResponse introspectionResponse = TokenIntrospectionResponse.parse(introspectionHTTPResp);
-        Assert.assertNotNull(introspectionResponse, "Introspection response is null.");
-        return introspectionResponse.indicatesSuccess();
+            TokenIntrospectionResponse introspectionResponse = TokenIntrospectionResponse.parse(introspectionHTTPResp);
+            Assert.assertNotNull(introspectionResponse, "Introspection response is null.");
+            return introspectionResponse.indicatesSuccess();
+        } finally {
+            client.close();
+        }
     }
 }
