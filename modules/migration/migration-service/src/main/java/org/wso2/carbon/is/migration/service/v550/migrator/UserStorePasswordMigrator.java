@@ -23,12 +23,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.service.Migrator;
+import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 import org.wso2.carbon.user.api.Tenant;
 
@@ -121,13 +121,8 @@ public class UserStorePasswordMigrator extends Migrator {
                 if ("password".equals(element.getAttributeValue(new QName("name"))) ||
                         "ConnectionPassword".equals(element.getAttributeValue(new QName("name")))) {
                     String encryptedPassword = element.getText();
-
-                    if (StringUtils.isNotEmpty(encryptedPassword) && !CryptoUtil.getDefaultCryptoUtil()
-                            .base64DecodeAndIsSelfContainedCipherText(encryptedPassword)) {
-                        byte[] decryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                                .base64DecodeAndDecrypt(encryptedPassword, "RSA");
-                        newEncryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                                .encryptAndBase64Encode(decryptedPassword);
+                    newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(encryptedPassword);
+                    if (StringUtils.isNotEmpty(newEncryptedPassword)) {
                         element.setText(newEncryptedPassword);
                     }
                 }
