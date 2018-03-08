@@ -15,14 +15,15 @@
 */
 package org.wso2.carbon.is.migration.service.v550;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
@@ -30,18 +31,25 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID;
 
 public class RegistryDataManager {
 
     private static final Log log = LogFactory.getLog(RegistryDataManager.class);
 
-    public static final String ENTITLEMENT_POLICY_PUBLISHER = "/repository/identity/entitlement/publisher/";
-    public static final String PASSWORD_PROPERTY = "subscriberPassword";
-
     private static RegistryDataManager instance = new RegistryDataManager();
+
+    public static final String POLICY_PUBLISHER_RESOURCE_PATH = "/repository/identity/entitlement/publisher/";
+    public static final String KEYSTORE_RESOURCE_PATH = "/repository/security/key-stores/";
     private static final String SYSLOG = "/repository/components/org.wso2.carbon.logging/loggers/syslog/SYSLOG_PROPERTIES";
     public static final String PASSWORD = "password";
+    public static final String SUBSCRIBER_PASSWORD = "subscriberPassword";
+    public static final String PRIVATE_KEY_PASS = "privatekeyPass";
 
     private RegistryDataManager(){}
 
@@ -61,7 +69,7 @@ public class RegistryDataManager {
 
         //migrating super tenant configurations
         try {
-            migrateSubscriberDataForTenant();
+            migrateSubscriberDataForTenant(SUPER_TENANT_ID);
             log.info("Policy Subscribers migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
         } catch (Exception e) {
             log.error("Error while migrating Policy Subscribers for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
@@ -76,13 +84,54 @@ public class RegistryDataManager {
             }
             try {
                 startTenantFlow(tenant);
-                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
-                migrateSubscriberDataForTenant();
+                migrateSubscriberDataForTenant(tenant.getId());
                 log.info("Subscribers migrated for tenant : " + tenant.getDomain());
             } catch (Exception e) {
                 log.error("Error while migrating Subscribers for tenant : " + tenant.getDomain(), e);
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    public void migrateKeyStorePassword(boolean migrateActiveTenantsOnly) throws Exception {
+
+        //migrating super tenant configurations
+        try {
+            migrateKeyStorePasswordForTenant(SUPER_TENANT_ID);
+            log.info("Keystore passwords migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            log.error("Error while migrating Keystore passwords for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+            throw e;
+        }
+
+        //migrating tenant configurations
+        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Subscriber migration!");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                migrateKeyStorePasswordForTenant(tenant.getId());
+                log.info("Keystore passwords migrated for tenant : " + tenant.getDomain());
+            } catch (Exception e) {
+                log.error("Error while migrating keystore passwords for tenant : " + tenant.getDomain());
+                throw e;
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    private void migrateKeyStorePasswordForTenant(int tenantId) throws RegistryException, CryptoException {
+        Registry registry = IdentityTenantUtil.getRegistryService().getGovernanceSystemRegistry(tenantId);
+        if (registry.resourceExists(KEYSTORE_RESOURCE_PATH)) {
+            Collection keyStoreCollection = (Collection) registry.get(KEYSTORE_RESOURCE_PATH);
+            for (String keyStorePath : keyStoreCollection.getChildren()) {
+                updateRegistryProperties(registry, keyStorePath,
+                        new ArrayList<>(Arrays.asList(PASSWORD, PRIVATE_KEY_PASS)));
             }
         }
     }
@@ -98,7 +147,7 @@ public class RegistryDataManager {
 
         //migrating super tenant configurations
         try {
-            migrateSysLogPropertyPasswordForTenant();
+            migrateSysLogPropertyPasswordForTenant(SUPER_TENANT_ID);
             log.info("Sys log property password migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
         } catch (Exception e) {
             log.error("Error while migrating Sys log property password for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
@@ -111,8 +160,7 @@ public class RegistryDataManager {
             }
             try {
                 startTenantFlow(tenant);
-                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
-                migrateSysLogPropertyPasswordForTenant();
+                migrateSysLogPropertyPasswordForTenant(tenant.getId());
             } catch (RegistryException registryException) {
                 throw registryException;
             } catch (CryptoException cryptoException) {
@@ -123,49 +171,46 @@ public class RegistryDataManager {
         }
     }
 
-    private void migrateSubscriberDataForTenant() throws RegistryException, CryptoException {
+    private void migrateSubscriberDataForTenant(int tenantId) throws RegistryException, CryptoException {
 
-        Registry registry = IdentityTenantUtil.getRegistryService().getGovernanceSystemRegistry();
-        if (registry.resourceExists(ENTITLEMENT_POLICY_PUBLISHER)) {
-            Collection subscriberCollection = (Collection) registry.get(ENTITLEMENT_POLICY_PUBLISHER);
-
+        Registry registry = IdentityTenantUtil.getRegistryService().getGovernanceSystemRegistry(tenantId);
+        if (registry.resourceExists(POLICY_PUBLISHER_RESOURCE_PATH)) {
+            Collection subscriberCollection = (Collection) registry.get(POLICY_PUBLISHER_RESOURCE_PATH);
             for (String subscriberPath : subscriberCollection.getChildren()) {
-                Resource subscriberResource = registry.get(subscriberPath);
-                String encryptedPassword = subscriberResource.getProperty(PASSWORD_PROPERTY);
-
-                if (StringUtils.isNotEmpty(encryptedPassword) && !CryptoUtil.getDefaultCryptoUtil()
-                                .base64DecodeAndIsSelfContainedCipherText(encryptedPassword)) {
-                    byte[] decryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                            .base64DecodeAndDecrypt(encryptedPassword, "RSA");
-                    String newEncryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                            .encryptAndBase64Encode(decryptedPassword);
-                    subscriberResource.setProperty(PASSWORD_PROPERTY, newEncryptedPassword);
-                    registry.put(subscriberPath, subscriberResource);
-                }
+                updateRegistryProperties(registry, subscriberPath, new ArrayList<>(Arrays.asList(SUBSCRIBER_PASSWORD)));
             }
         }
     }
 
-    private void migrateSysLogPropertyPasswordForTenant() throws RegistryException, CryptoException {
+    private void migrateSysLogPropertyPasswordForTenant(int tenantId) throws RegistryException, CryptoException {
 
-        Registry registry = IdentityTenantUtil.getRegistryService().getConfigSystemRegistry();
-        if (registry.resourceExists(SYSLOG)) {
+        Registry registry = IdentityTenantUtil.getRegistryService().getConfigSystemRegistry(tenantId);
+        updateRegistryProperties(registry, SYSLOG, new ArrayList<>(Arrays.asList(PASSWORD)));
+    }
+
+    private void updateRegistryProperties(Registry registry, String resource, List<String> properties)
+            throws RegistryException, CryptoException {
+
+        if (registry == null || StringUtils.isEmpty(resource) || CollectionUtils.isEmpty(properties)) {
+            return;
+        }
+
+        if (registry.resourceExists(resource)) {
             try {
                 registry.beginTransaction();
-                Resource resource = registry.get(SYSLOG);
-                String password = resource.getProperty(PASSWORD);
-                if (!CryptoUtil.getDefaultCryptoUtil().base64DecodeAndIsSelfContainedCipherText(password)) {
-                    byte[] decryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                            .base64DecodeAndDecrypt(password, "RSA");
-                    String newEncryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                            .encryptAndBase64Encode(decryptedPassword);
-                    resource.setProperty(PASSWORD, newEncryptedPassword);
+                Resource resourceObj = registry.get(resource);
+                for (String encryptedPropertyName : properties) {
+                    String oldValue = resourceObj.getProperty(encryptedPropertyName);
+                    String newValue = EncryptionUtil.getNewEncryptedValue(oldValue);
+                    if (StringUtils.isNotEmpty(newValue)) {
+                        resourceObj.setProperty(encryptedPropertyName, newValue);
+                    }
                 }
-                registry.put(SYSLOG, resource);
+                registry.put(resource, resourceObj);
                 registry.commitTransaction();
             } catch (RegistryException e) {
                 registry.rollbackTransaction();
-                log.error("Unable to update the appender", e);
+                log.error("Unable to update the registry resource", e);
                 throw e;
             }
         }

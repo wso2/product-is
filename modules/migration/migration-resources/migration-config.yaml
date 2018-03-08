@@ -1,7 +1,7 @@
 migrationEnable: "true"
 
-currentVersion: "5.3.0"
-migrateVersion: "5.4.0"
+currentVersion: "5.4.0"
+migrateVersion: "5.5.0"
 
 continueOnError: "true"
 batchUpdate: "true"
@@ -188,5 +188,10 @@ versions:
     -
      name: "PolicySubscriberDataMigrator"
      order: 8
+     parameters:
+       schema: "identity"
+    -
+     name: "KeyStorePasswordMigrator"
+     order: 9
      parameters:
        schema: "identity"
