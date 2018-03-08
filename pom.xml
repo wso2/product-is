@@ -1630,7 +1630,7 @@
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.4</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.4</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.49</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.51</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1774,7 +1774,7 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <carbon.deployment.version>4.7.6</carbon.deployment.version>
+        <carbon.deployment.version>4.7.15</carbon.deployment.version>
         <carbon.registry.version>4.6.27</carbon.registry.version>
         <carbon.multitenancy.version>4.6.8</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.5</jaggery.extensions.version>
