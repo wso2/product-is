@@ -17,8 +17,27 @@
  */
 
 const EXPIRY_DATE_STRING = "VALID_UNTIL:";
+const ALL_ATTRIBUTES_MANDATORY = true;
+var isResidentIDP = false;
+var allAttributes = [];
+
 var receiptData; //populated with initial JSON payload
 var confirmationDialog = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+    "  <div class=\"modal-dialog\">\n" +
+    "    <div class=\"modal-content\">\n" +
+    "      <div class=\"modal-header\">\n" +
+    "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+    "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+    "      </div>\n" +
+    "      <div class=\"modal-body\">\n" +
+    "        <p>One fine body&hellip;</p>\n" +
+    "      </div>\n" +
+    "      <div class=\"modal-footer\">\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "</div>";
+var warningDialog = "<div class=\"modal fade\" id=\"messageModal\">\n" +
     "  <div class=\"modal-dialog\">\n" +
     "    <div class=\"modal-content\">\n" +
     "      <div class=\"modal-header\">\n" +
@@ -276,6 +295,17 @@ function renderReceiptDetails(data) {
         checkbox: {"keep_selected_style": false},
     });
 
+    container.bind('ready.jstree', function(event, data) {
+        var $tree = $(this);
+        $($tree.jstree().get_json($tree, {
+            flat: true
+        }))
+            .each(function(index, value) {
+                var node = container.jstree().get_node(this.id);
+                allAttributes.push(node.id);
+            });
+    });
+
     addActions(container);
     $('[data-toggle="tooltip"]').tooltip();
 }
@@ -287,16 +317,18 @@ function addActions(container) {
 
     $(".btn-settings").click(function () {
         var receiptID = $(this).data("id");
+        isResidentIDP = false;
         getReceiptDetails(receiptID);
     });
 
     $(".btn-default-settings").click(function () {
         var receiptID = $(this).data("id");
+        isResidentIDP = true;
         getResidentIDPReceiptDetails(receiptID);
     });
     $(".btn-revoke").click(function () {
         var receiptID = $(this).prev().data("id");
-        $("#message").append(confirmationDialog);
+        $("#message").html(confirmationDialog);
         message({
             title: "Consent Confirmation",
             content: 'Are you sure you want to revoke this consent? This is not reversible.',
@@ -312,16 +344,19 @@ function addActions(container) {
     });
 
     $(".btn-update-settings").click(function () {
-        $("#message").append(confirmationDialog);
-        message({
-            title: "Consent Confirmation",
-            content: 'Are you sure you want to update/revoke this consent? This is not reversible.',
-            type: 'confirm',
-            okCallback: function () {
-                revokeAndAddNewReceipt(receiptData, container);
-            }
-        });
 
+        var selectedAttributes = container.jstree(true).get_selected();
+        var allSelected = compareArrays(allAttributes, selectedAttributes) ? true : false;
+
+        if(ALL_ATTRIBUTES_MANDATORY && isResidentIDP){
+            if (!allSelected) {
+                showWarning()
+            }else{
+                showConfirm();
+            }
+        }else{
+            showConfirm();
+        }
     });
 
     var today = new Date();
@@ -347,6 +382,29 @@ function addActions(container) {
         $("#date_picker").val(constructDate(old_val));
         $("#date_picker_new_expiry").val(old_val);
 
+    });
+}
+
+function showWarning(){
+    $("#message").html(warningDialog);
+    message({
+        title: "Consent Selection",
+        content: 'Please select all consents in order to proceed...',
+        type: 'warning',
+        okCallback: function () {
+        }
+    });
+}
+
+function showConfirm(){
+    $("#message").html(confirmationDialog);
+    message({
+        title: "Consent Confirmation",
+        content: 'Are you sure you want to update/revoke this consent? This is not reversible.',
+        type: 'confirm',
+        okCallback: function () {
+            revokeAndAddNewReceipt(receiptData, container);
+        }
     });
 }
 
@@ -514,3 +572,7 @@ function constructDate(expiry) {
 function getDefaultExpiry() {
     return "Forever";
 }
+
+function compareArrays(arr1, arr2) {
+    return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
+};
