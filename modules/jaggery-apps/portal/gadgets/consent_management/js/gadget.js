@@ -331,7 +331,7 @@ function addActions(container) {
         $("#message").html(confirmationDialog);
         message({
             title: "Consent Confirmation",
-            content: 'Are you sure you want to revoke this consent? this operation is not reversible.',
+            content: 'Are you sure you want to revoke this consent? This operation is not reversible.',
             type: 'confirm',
             okCallback: function () {
                 revokeReceipt(receiptID);
@@ -400,7 +400,7 @@ function showConfirm() {
     $("#message").html(confirmationDialog);
     message({
         title: "Consent Confirmation",
-        content: 'Are you sure you want to update/revoke this consent? this operation is not reversible.',
+        content: 'Are you sure you want to update/revoke this consent? This operation is not reversible.',
         type: 'confirm',
         okCallback: function () {
             revokeAndAddNewReceipt(receiptData, container);
