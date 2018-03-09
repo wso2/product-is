@@ -160,7 +160,7 @@ function renderReceiptList(data) {
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
-        '<button type="button" class="btn btn-primary btn-default-settings" data-id="{{consentReceiptID}}"><span' +
+        '<button type="button" class="btn btn-primary btn-default-settings" data-toggle="tooltip" data-placement="top" title="Settings" data-id="{{consentReceiptID}}"><span' +
         ' class="icon-cog icon-font-size"></span></button>' +
         '{{#if consentReceiptID}}<button type="button" class="btn btn-default' +
         ' btn-revoke">Revoke</button></div>{{/if}}' +
@@ -176,7 +176,7 @@ function renderReceiptList(data) {
         '</div>' +
         '<div class="right">' +
         '<div class="btn-group" role="group" aria-label="actions">' +
-        '<button type="button" class="btn btn-primary btn-settings" data-id="{{consentReceiptID}}"><span class="icon-cog icon-font-size"></span></button>' +
+        '<button type="button" class="btn btn-primary btn-settings" data-toggle="tooltip" data-placement="top" title="Settings" data-id="{{consentReceiptID}}"><span class="icon-cog icon-font-size"></span></button>' +
         '<button type="button" class="btn btn-default btn-revoke">Revoke</button></div>' +
         '</div>' +
         '</div>' +
@@ -189,6 +189,7 @@ function renderReceiptList(data) {
     $("#consent-listing").empty().show();
     $("#consent-listing").append(html);
     addActions();
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
 /*
@@ -197,7 +198,6 @@ function renderReceiptList(data) {
  * initiates jstree.
  */
 function renderReceiptDetails(data) {
-    console.log(data.data);
     receiptData = {receipts: data.data};
 
     var content = '{{#receipts}}{{#services}}<div class="panel panel-default panel-consents">' +
@@ -214,7 +214,7 @@ function renderReceiptDetails(data) {
         '<input type="text" name="date_picker" id="date_picker" value="{{{extractDate purposes.0.termination}}}"/>' +
         '<input type="hidden" name="date_picker_old_expiry" id="date_picker_old_expiry" value="{{purposes.0.termination}}"/>' +
         '<input type="hidden" name="date_picker_new_expiry" id="date_picker_new_expiry" value="{{purposes.0.termination}}"/>' +
-        '<button type="button" class="ui-datepicker-reset action-reset" title="Reset Date"><i class="icon-undo"></i></button>' +
+        '<button type="button" class="ui-datepicker-reset action-reset"><i class="icon-undo" data-toggle="tooltip" data-placement="top" title="Reset Date"></i></button>' +
         '</span>' +
         '</p>' +
         '<ul>' +
@@ -228,7 +228,7 @@ function renderReceiptDetails(data) {
         '</div>' +
         '<div class="panel-footer text-right">' +
         '<button type="button" class="btn btn-primary btn-update-settings">Update</button>' +
-        '<button type="button" class="btn btn-default btn-cancel-settings">Cancel</button>' +
+        '<button type="button" class="btn btn-default btn-cancel btn-cancel-settings">Cancel</button>' +
         '</div>' +
         '</div>{{/services}}{{/receipts}}';
 
@@ -276,8 +276,8 @@ function renderReceiptDetails(data) {
         checkbox: {"keep_selected_style": false},
     });
 
-    // container.jstree("check_all");
     addActions(container);
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
 /*
@@ -328,7 +328,7 @@ function addActions(container) {
     $("#date_picker").datepicker({
         showOn: "button",
         buttonImageOnly: false,
-        buttonText: '<i class="icon-calendar action-calendar"></i>',
+        buttonText: '<i class="icon-calendar action-calendar" data-toggle="tooltip" data-placement="top" title="Pick a Date"></i>',
         minDate: today,
         changeMonth: true,
         changeYear: true,
