@@ -84,6 +84,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
     public void atEnd() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
         deleteApplication();
+        removeOAuthApplicationData();
         resetISConfiguration();
         consumerKey = null;
     }

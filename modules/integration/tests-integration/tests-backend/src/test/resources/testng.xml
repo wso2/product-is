@@ -129,7 +129,6 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRegexCallbackUrlTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OAuth2XACMLScopeValidatorTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantCacheDisabledTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeAfterCacheTimeOutTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevokeWithInvalidClientCredentialsTestCase"/>
@@ -141,6 +140,9 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRefreshTokenGrantTestCase"/>
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ScopesTestCase"/>
+            <!--XACML based scope validation test-->
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2XACMLScopeValidatorTestCase"/>
+
             <!--
                 https://wso2.org/jira/browse/IDENTITY-6829 Need to fix this and comment out the test case ASAP.
             -->
