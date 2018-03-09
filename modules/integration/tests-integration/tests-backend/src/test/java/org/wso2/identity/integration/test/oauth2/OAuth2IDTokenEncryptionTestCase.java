@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.ReadOnlyJWEHeader;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
@@ -81,6 +82,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     private X509Certificate spX509PublicCert;
 
     private static final String CALLBACK_URL = "https://localhost/callback";
+    private static final String ENCRYPTION_ALGORITHM = "RSA-OAEP";
+    private static final String ENCRYPTION_METHOD = "A256GCM";
 
     private CloseableHttpClient client;
 
@@ -155,8 +158,23 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         Assert.assertTrue(updateApp.getIdTokenEncryptionEnabled(), "Enforcing ID Token encryption failed.");
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request for authorization code grant type.",
+    @Test(groups = "wso2.is", description = "Setup encryption algorithm and encryption method.",
             dependsOnMethods = "testEnforceIDTokenEncryption")
+    public void testConfigureIDTokenEncryptionAlgorithms() throws Exception {
+
+        OAuthConsumerAppDTO consumerAppDTO = adminClient.getOAuthAppByConsumerKey(consumerKey);
+        consumerAppDTO.setIdTokenEncryptionAlgorithm(ENCRYPTION_ALGORITHM);
+        consumerAppDTO.setIdTokenEncryptionMethod(ENCRYPTION_METHOD);
+        adminClient.updateConsumerApp(consumerAppDTO);
+        OAuthConsumerAppDTO updateApp = adminClient.getOAuthAppByConsumerKey(consumerKey);
+        Assert.assertEquals(updateApp.getIdTokenEncryptionAlgorithm(),
+                ENCRYPTION_ALGORITHM, "Configuring encryption algorithm failed.");
+        Assert.assertEquals(updateApp.getIdTokenEncryptionMethod(),
+                ENCRYPTION_METHOD, "Configuring encryption method failed.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request for authorization code grant type.",
+            dependsOnMethods = "testConfigureIDTokenEncryptionAlgorithms")
     public void testAuthCodeGrantSendAuthRequestPost() throws Exception {
 
         // Send a direct auth code request to IS instance.
@@ -245,6 +263,18 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
 
     @Test(groups = "wso2.is", description = "Decrypted the id token.",
             dependsOnMethods = "testAuthCodeGrantSendGetTokensPost")
+    public void testEncryptionAlgorithmAndEncryptionMethod() throws Exception {
+
+        EncryptedJWT jwt = EncryptedJWT.parse(idToken);
+        ReadOnlyJWEHeader header = jwt.getHeader();
+        String algorithm = header.getAlgorithm().getName();
+        Assert.assertEquals(algorithm, ENCRYPTION_ALGORITHM, "Encryption algorithm configuration failed.");
+        String method = header.getEncryptionMethod().getName();
+        Assert.assertEquals(method, ENCRYPTION_METHOD, "Encryption method configuration failed.");
+    }
+
+    @Test(groups = "wso2.is", description = "Decrypted the id token.",
+            dependsOnMethods = "testEncryptionAlgorithmAndEncryptionMethod")
     public void testAuthCodeGrantDecryptIDToken() throws Exception {
 
         Assert.assertTrue(decryptAndCheckIDToken(idToken, consumerKey),
