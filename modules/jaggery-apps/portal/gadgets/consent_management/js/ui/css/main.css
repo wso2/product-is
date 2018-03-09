@@ -464,3 +464,7 @@ ul.dropdown-menu li a:hover{
 #receipts{
     margin-top: 40px;
 }
+.btn-cancel{
+    background: none!important;
+}
+

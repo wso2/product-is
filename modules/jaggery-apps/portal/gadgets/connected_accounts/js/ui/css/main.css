@@ -304,3 +304,7 @@ ul.dropdown-menu li a:hover{
     width: 16px;
     height:16px;
 }
+.btn-cancel{
+    background: none!important;
+}
+
