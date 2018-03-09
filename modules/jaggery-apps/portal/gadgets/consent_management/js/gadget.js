@@ -295,12 +295,12 @@ function renderReceiptDetails(data) {
         checkbox: {"keep_selected_style": false},
     });
 
-    container.bind('ready.jstree', function(event, data) {
+    container.bind('ready.jstree', function (event, data) {
         var $tree = $(this);
         $($tree.jstree().get_json($tree, {
             flat: true
         }))
-            .each(function(index, value) {
+            .each(function (index, value) {
                 var node = container.jstree().get_node(this.id);
                 allAttributes.push(node.id);
             });
@@ -331,7 +331,7 @@ function addActions(container) {
         $("#message").html(confirmationDialog);
         message({
             title: "Consent Confirmation",
-            content: 'Are you sure you want to revoke this consent? This is not reversible.',
+            content: 'Are you sure you want to revoke this consent? this operation is not reversible.',
             type: 'confirm',
             okCallback: function () {
                 revokeReceipt(receiptID);
@@ -348,13 +348,13 @@ function addActions(container) {
         var selectedAttributes = container.jstree(true).get_selected();
         var allSelected = compareArrays(allAttributes, selectedAttributes) ? true : false;
 
-        if(ALL_ATTRIBUTES_MANDATORY && isResidentIDP){
+        if (ALL_ATTRIBUTES_MANDATORY && isResidentIDP) {
             if (!allSelected) {
                 showWarning()
-            }else{
+            } else {
                 showConfirm();
             }
-        }else{
+        } else {
             showConfirm();
         }
     });
@@ -385,7 +385,7 @@ function addActions(container) {
     });
 }
 
-function showWarning(){
+function showWarning() {
     $("#message").html(warningDialog);
     message({
         title: "Consent Selection",
@@ -396,11 +396,11 @@ function showWarning(){
     });
 }
 
-function showConfirm(){
+function showConfirm() {
     $("#message").html(confirmationDialog);
     message({
         title: "Consent Confirmation",
-        content: 'Are you sure you want to update/revoke this consent? This is not reversible.',
+        content: 'Are you sure you want to update/revoke this consent? this operation is not reversible.',
         type: 'confirm',
         okCallback: function () {
             revokeAndAddNewReceipt(receiptData, container);
