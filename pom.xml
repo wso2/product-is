@@ -1625,7 +1625,7 @@
 
         <!--Carbon Identity Framework Version-->
         <carbon.identity.framework.version>5.11.134</carbon.identity.framework.version>
-        <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
+        <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.5</identity.carbon.auth.saml2.version>
