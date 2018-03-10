@@ -127,7 +127,6 @@
             <!--OIDC Test Cases-->
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OIDCWithCodeGrantTestCase"/>
 
             <!--OpenId Test Cases-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
