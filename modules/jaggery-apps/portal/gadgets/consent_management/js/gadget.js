@@ -296,6 +296,7 @@ function renderReceiptDetails(data) {
     });
 
     container.bind('ready.jstree', function (event, data) {
+        allAttributes = [];
         var $tree = $(this);
         $($tree.jstree().get_json($tree, {
             flat: true
@@ -352,10 +353,10 @@ function addActions(container) {
             if (!allSelected) {
                 showWarning()
             } else {
-                showConfirm();
+                showConfirm(container);
             }
         } else {
-            showConfirm();
+            showConfirm(container);
         }
     });
 
@@ -389,14 +390,14 @@ function showWarning() {
     $("#message").html(warningDialog);
     message({
         title: "Consent Selection",
-        content: 'Please select all consents in order to proceed...',
+        content: 'Please select all consents in order to proceed.',
         type: 'warning',
         okCallback: function () {
         }
     });
 }
 
-function showConfirm() {
+function showConfirm(container) {
     $("#message").html(confirmationDialog);
     message({
         title: "Consent Confirmation",
