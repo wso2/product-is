@@ -62,6 +62,7 @@
             <script type="text/javascript" src="/portal/csrf.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/bootstrap.min.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/handlebars-v4.0.11.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/jstree/dist/jstree.min.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/jstree/src/jstree-actions.js"></script>
