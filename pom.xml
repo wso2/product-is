@@ -1624,13 +1624,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.120</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.134</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.10.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
-        <identity.carbon.auth.saml2.version>5.2.4</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.2.5</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.4</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.51</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.53</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1664,7 +1664,7 @@
         <!-- Authenticator Properties -->
         <identity.outbound.auth.oidc.version>5.1.15</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.11</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.12</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
@@ -1684,7 +1684,7 @@
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>1.0.9</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>1.0.10</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.0.5</identity.metadata.saml.version>
@@ -1692,7 +1692,7 @@
         <!-- Connectors -->
         <!--authenticator.totp.version>2.0.9</authenticator.totp.version-->
         <authenticator.office365.version>1.0.2</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.10</authenticator.smsotp.version>
+        <authenticator.smsotp.version>2.0.11</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.9</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.4</authenticator.x509.version>
@@ -1776,7 +1776,7 @@
         <testng.version>6.1.1</testng.version>
         <carbon.deployment.version>4.7.15</carbon.deployment.version>
         <carbon.registry.version>4.6.27</carbon.registry.version>
-        <carbon.multitenancy.version>4.6.8</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.6.9</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.5</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
@@ -1822,7 +1822,7 @@
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
         <json.version>3.0.0.wso2v1</json.version>
-        <carbon.consent.mgt.version>1.0.44</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>1.0.50</carbon.consent.mgt.version>
         <carbon.database.utils.version>2.0.6</carbon.database.utils.version>
     </properties>
 
