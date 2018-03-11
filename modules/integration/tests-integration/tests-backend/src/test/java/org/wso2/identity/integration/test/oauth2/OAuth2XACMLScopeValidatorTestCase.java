@@ -49,7 +49,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.net.URI;
 
 /**
- *  Test cases to check the functionality of the XACML based scope validator.
+ * Test cases to check the functionality of the XACML based scope validator.
  */
 public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -154,7 +154,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testPublishPolicy")
     public void testValidateTokenWithInValidScope() throws Exception {
 
-        boolean result = getTokenAndValidate(new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        boolean result = getTokenAndValidate(new Scope(OAuth2Constant.OAUTH2_SCOPE_EMAIL));
         Assert.assertFalse(result, "Introspection is true.");
     }
 
@@ -170,7 +170,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testValidateTokenWithValidScope")
     public void testValidateTokenWithMultipleScope() throws Exception {
 
-        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_EMAIL));
         Assert.assertTrue(result, "Introspection is false.");
     }
 
@@ -187,9 +187,9 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         client = HttpClientBuilder.create().disableRedirectHandling().build();
 
         try {
-            String username = "admin";
-            Secret password = new Secret("admin");
-            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
+            Secret password = new Secret(userInfo.getPassword());
+            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(userInfo.getUserName(),
+                    password);
             ClientID clientID = new ClientID(consumerKey);
             Secret clientSecret = new Secret(consumerSecret);
             ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
