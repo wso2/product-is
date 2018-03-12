@@ -195,3 +195,8 @@ versions:
      order: 9
      parameters:
        schema: "identity"
+    -
+     name: "SecurityPolicyPasswordMigrator"
+     order: 10
+     parameters:
+       schema: "identity"
