@@ -193,7 +193,7 @@ public class RegistryDataManager {
         try {
             updateSecurityPolicyPassword(SUPER_TENANT_ID);
             log.info("Policy Subscribers migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
-        } catch (Exception e) {
+        } catch (XMLStreamException e) {
             log.error("Error while migrating Policy Subscribers for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
         }
 
@@ -208,7 +208,7 @@ public class RegistryDataManager {
                 startTenantFlow(tenant);
                 updateSecurityPolicyPassword(tenant.getId());
                 log.info("Service Principle Passwords migrated for tenant : " + tenant.getDomain());
-            } catch (Exception e) {
+            } catch (XMLStreamException e) {
                 log.error("Error while migrating Service Principle Passwords for tenant : " + tenant.getDomain(), e);
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
@@ -291,9 +291,6 @@ public class RegistryDataManager {
                     }
                 }
             }
-        } catch (XMLStreamException e) {
-            log.error("Error while updating security policy password");
-            throw e;
         } finally {
             try {
                 if(parser != null) {
@@ -350,9 +347,7 @@ public class RegistryDataManager {
                                 .append(SECURITY_POLICY_RESOURCE_PATH).toString();
                         Collection policies = (Collection) registry.get(policyCollectionPath);
                         if (policies != null) {
-                            for (String policyPath : policies.getChildren()) {
-                                policyPaths.add(policyPath);
-                            }
+                            policyPaths.addAll(Arrays.asList(policies.getChildren()));
                         }
                     }
                 }
