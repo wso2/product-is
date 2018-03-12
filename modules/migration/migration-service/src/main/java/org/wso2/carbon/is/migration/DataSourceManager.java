@@ -121,8 +121,8 @@ public class DataSourceManager {
         try {
             conn = umDataSource.getConnection();
             if ("oracle".equals(DatabaseCreator.getDatabaseType(conn)) && ISMigrationServiceDataHolder
-                                                                                  .getIdentityOracleUser() == null) {
-                ISMigrationServiceDataHolder.setIdentityOracleUser(umDataSource.getConnection().getMetaData()
+                                                                                  .getUmOracleUser() == null) {
+                ISMigrationServiceDataHolder.setUmOracleUser(umDataSource.getConnection().getMetaData()
                                                                            .getUserName());
                 log.info(Constant.MIGRATION_LOG + "Initialized user management database in Oracle.");
             }
