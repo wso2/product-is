@@ -303,7 +303,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         String name = FINANCIAL;
         String description = FINANCIAL_PURPOSE_NAME;
-        financialPurposeId = addPurposeCategory(name, description);
+        addPurposeCategory(name, description);
     }
 
     private void addPIICategory(String name, String description) {
@@ -344,15 +344,15 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         return purpose.getString("purposeCategoryId");
     }
 
-    public void addFinancialPurpose() {
+    public void addFinancialPurpose() throws JSONException {
 
         String name = FINANCIAL_PURPOSE_NAME;
         String description = FINANCIAL_PURPOSE_NAME;
-        addPurpose(name, description);
+        financialPurposeId  = addPurpose(name, description);
 
     }
 
-    private void addPurpose(String name, String description) {
+    private String addPurpose(String name, String description) throws JSONException {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
@@ -366,8 +366,10 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         String addPurposeString = "{\"purpose\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
                 description + "\" , \"piiCategories\": [" + 1 + "]}";
 
-        piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
+        String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .post(String.class, addPurposeString);
+        JSONObject purpose = new JSONObject(response);
+        return purpose.getString("purposeId");
     }
 
     private HttpResponse sendGetRequest(HttpClient client, String locationURL) throws IOException {
