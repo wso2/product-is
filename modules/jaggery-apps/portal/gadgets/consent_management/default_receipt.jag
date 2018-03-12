@@ -57,7 +57,9 @@ try {
             var purposeForReceipt = get(purposeURL, {}, headers, "json");
             if (purposeForReceipt.data && DEFAULT_CONSENT != purposeForReceipt.data.purpose) {
                 var purposeReceiptData = populatePurposes(purposeForReceipt, acceptedPurposes);
-                purposesForResidentIDPReceipt.push(purposeReceiptData);
+                if (purposeReceiptData) {
+                    purposesForResidentIDPReceipt.push(purposeReceiptData);
+                }
             }
         });
     }
@@ -106,6 +108,9 @@ function loadDefaultReceiptInformation(receipt) {
 
 function populatePurposes(purposeForReceipt, acceptedPurposes){
     var purposeReceiptData = purposeForReceipt.data;
+    if (!purposeReceiptData || !purposeReceiptData.piiCategories || purposeReceiptData.piiCategories.length < 1) {
+        return null;
+    }
     if (acceptedPurposes && acceptedPurposes.length > 0) {
         acceptedPurposes.forEach(function(acceptedPurpose) {
             if (acceptedPurpose.purposeId == purposeReceiptData.purposeId) {
