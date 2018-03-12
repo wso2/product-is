@@ -24,7 +24,7 @@ import org.wso2.carbon.is.migration.service.Migrator;
 import org.wso2.carbon.is.migration.service.v550.RegistryDataManager;
 import org.wso2.carbon.is.migration.util.Constant;
 
-public class SecurityPolicyPasswordMigrator extends Migrator{
+public class SecurityPolicyPasswordMigrator extends Migrator {
 
     private static final Log log = LogFactory.getLog(SecurityPolicyPasswordMigrator.class);
 
