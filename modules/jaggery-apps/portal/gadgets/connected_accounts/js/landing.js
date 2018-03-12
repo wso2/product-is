@@ -58,7 +58,7 @@ function drawAddAccountPopup() {
         "                    <div class=\"control-group\" style=\"margin-left: 116px;\">\n" +
         "                        <div class=\"controls\">\n" +
         "                            <input type=\"button\" onclick=\"connect();\" class=\"btn btn-primary\"  style=\"margin-right: 5px;\" value=\"Associate\"/>\n" +
-        "                            <input type=\"button\" onclick=\"cancelConnect();\" class=\"btn\" value=\"&nbsp;Cancel&nbsp;\"/>\n" +
+        "                            <input type=\"button\" onclick=\"cancelConnect();\" class=\"btn btn-default btn-cancel\" value=\"&nbsp;Cancel&nbsp;\"/>\n" +
         "                        </div>\n" +
         "                    </div></div>\n" +
         "                </form>\n" +
@@ -213,7 +213,7 @@ function drawAddFedAccountPopup() {
                         "                    <div class=\"control-group mgnL135\">\n" +
                         "                        <div class=\"controls\">\n" +
                         "                            <input type=\"button\" onclick=\"fedConnect();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Associate\"/>\n" +
-                        "                            <input type=\"button\" onclick=\"cancelConnect();\" class=\"btn\" value=\"Cancel\"/>\n" +
+                        "                            <input type=\"button\" onclick=\"cancelConnect();\" class=\"btn btn-default btn-cancel\" value=\"Cancel\"/>\n" +
                         "                        </div>\n" +
                         "                    </div></div>\n" +
                         "                </form>\n" +
