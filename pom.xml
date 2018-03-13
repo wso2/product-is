@@ -1628,13 +1628,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.141</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.144</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.5</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.6</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.58</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.60</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1660,7 +1660,7 @@
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.18</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
-        <identity.oauth2.validators.xacml.version>1.0.6</identity.oauth2.validators.xacml.version>
+        <identity.oauth2.validators.xacml.version>1.0.7</identity.oauth2.validators.xacml.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
@@ -1781,7 +1781,7 @@
         <testng.version>6.1.1</testng.version>
         <carbon.deployment.version>4.7.15</carbon.deployment.version>
         <carbon.registry.version>4.6.28</carbon.registry.version>
-        <carbon.multitenancy.version>4.6.9</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.6.11</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.5</jaggery.extensions.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>1.6.1.wso2v11</axis2.jaxb.wso2.version>
