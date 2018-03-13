@@ -476,6 +476,7 @@
                 <exclude>conf/sql/**</exclude>
                 <exclude>conf/datasources/**</exclude>
                 <exclude>conf/product-config/**</exclude>
+                <exclude>conf/streams/**</exclude>
             </excludes>
             <fileMode>644</fileMode>
         </fileSet>
