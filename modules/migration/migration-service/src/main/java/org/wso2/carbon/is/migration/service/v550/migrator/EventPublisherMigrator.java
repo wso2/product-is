@@ -15,6 +15,7 @@
 */
 package org.wso2.carbon.is.migration.service.v550.migrator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -22,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.is.migration.service.Migrator;
+import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 
 import java.io.File;
@@ -73,16 +75,11 @@ public class EventPublisherMigrator extends Migrator {
                 NodeList data = getEncryptedPayload(doc, xpath);
                 if (data.getLength() > 0) {
                     for (int i = 0; i < data.getLength(); i++) {
-                        if (!CryptoUtil.getDefaultCryptoUtil()
-                                .base64DecodeAndIsSelfContainedCipherText(data.item(i).getNodeValue())) {
-                            byte[] decryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                                    .base64DecodeAndDecrypt(data.item(i).getNodeValue(), "RSA");
-                            String newEncryptedPassword = CryptoUtil.getDefaultCryptoUtil()
-                                    .encryptAndBase64Encode(decryptedPassword);
+                        String newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(data.item(i).getNodeValue());
+                        if (StringUtils.isNotEmpty(newEncryptedPassword)) {
                             data.item(i).setNodeValue(newEncryptedPassword);
                         }
                     }
-
                     Transformer xformer = TransformerFactory.newInstance().newTransformer();
                     xformer.transform(new DOMSource(doc),
                             new StreamResult(new File(fileEntry.getAbsolutePath()).getPath()));
