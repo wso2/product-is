@@ -200,3 +200,6 @@ versions:
      order: 10
      parameters:
        schema: "identity"
+    -
+     name: "EventPublisherMigrator"
+     order: 11
