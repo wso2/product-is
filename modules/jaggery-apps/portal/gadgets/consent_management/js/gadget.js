@@ -181,8 +181,6 @@ function renderReceiptList(data) {
         '<div class="btn-group" role="group" aria-label="actions">' +
         '<button type="button" class="btn btn-primary btn-default-settings" data-toggle="tooltip" data-placement="top" title="Settings" data-id="{{consentReceiptID}}"><span' +
         ' class="icon-cog icon-font-size"></span></button>' +
-        '{{#if consentReceiptID}}<button type="button" class="btn btn-default' +
-        ' btn-revoke">Revoke</button></div>{{/if}}' +
         '</div>' +
         '</div>' +
         '</div>{{/default}}</div>' +
