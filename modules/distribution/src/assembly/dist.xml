@@ -39,6 +39,7 @@
                 <exclude>features/**/*.war</exclude>
                 <exclude>features/org.wso2.carbon.as.runtimes.cxf_*/cxf/*.jar</exclude>
                 <exclude>features/org.wso2.carbon.identity.oauth.server_*/runtimes/cxf/*.jar</exclude>
+                <exclude>features/org.wso2.carbon.identity.oauth2.validators.xacml.server_*/dropins/*.jar</exclude>
             </excludes>
         </fileSet>
     </fileSets>
