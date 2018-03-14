@@ -274,12 +274,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy the cxf filters to cxf-runtime-->
-        <fileSet>
-            <directory>../cxf-filters/target/cxfFilters/jar</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/cxf</outputDirectory>
-        </fileSet>
-
         <!--Copy the outbound authenticator jars OIDC, Passive-STS.-->
         <fileSet>
             <directory>../authenticators/target/authenticatoroutboundCopied/jar</directory>
@@ -476,12 +470,21 @@
                 <exclude>conf/sql/**</exclude>
                 <exclude>conf/datasources/**</exclude>
                 <exclude>conf/product-config/**</exclude>
+                <exclude>conf/streams/**</exclude>
             </excludes>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
             <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/</directory>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
+        <!--Copy scope validator to dropins dropins.-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/resources/components/dropins/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
     </fileSets>
@@ -949,6 +952,14 @@
             <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/product-config/config-identity.json</source>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/</outputDirectory>
             <destName>config.json</destName>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/policies/xacml/default/scope_based_token_validation_policy_template.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
+            </outputDirectory>
             <fileMode>644</fileMode>
         </file>
     </files>

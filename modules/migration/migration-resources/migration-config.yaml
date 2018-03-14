@@ -1,7 +1,7 @@
 migrationEnable: "true"
 
-currentVersion: "5.3.0"
-migrateVersion: "5.4.0"
+currentVersion: "5.4.0"
+migrateVersion: "5.5.0"
 
 continueOnError: "true"
 batchUpdate: "true"
@@ -172,16 +172,34 @@ versions:
      parameters:
        schema: "identity"
     -
-     name: "SysLogPropertiesMigrator"
+     name: "UserStorePasswordMigrator"
      order: 5
+     parameters:
+       schema: "identity"
+    -
+     name: "SysLogPropertiesMigrator"
+     order: 6
     -
      name: "SchemaMigrator"
-     order: 6
+     order: 7
      parameters:
        location: "step2"
        schema: "identity"
     -
      name: "PolicySubscriberDataMigrator"
-     order: 7
+     order: 8
      parameters:
        schema: "identity"
+    -
+     name: "KeyStorePasswordMigrator"
+     order: 9
+     parameters:
+       schema: "identity"
+    -
+     name: "SecurityPolicyPasswordMigrator"
+     order: 10
+     parameters:
+       schema: "identity"
+    -
+     name: "EventPublisherMigrator"
+     order: 11

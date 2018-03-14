@@ -57,7 +57,7 @@ Project Resources
 Building the distribution from source
 =========================================
 
-1. Install Java 8 or above
+1. Install Java 8
 2. Install Apache Maven 3.x.x(https://maven.apache.org/download.cgi#)
 3. Get a clone from https://github.com/wso2/product-is.git or download the source 
 4. Run the one of the below maven commands from product-is directory, 
@@ -216,4 +216,4 @@ For further details, see the WSO2 Carbon documentation at
 https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2017 WSO2 Inc.
+(c) Copyright 2018 WSO2 Inc.

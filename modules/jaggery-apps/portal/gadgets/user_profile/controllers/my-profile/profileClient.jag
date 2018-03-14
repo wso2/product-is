@@ -3,6 +3,7 @@
 include("../wsUtil.jag");
 var util = require("../../util/utility.jag");
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+var encode = Packages.org.owasp.encoder.Encode;
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
@@ -29,6 +30,7 @@ function getUserProfile(username, profileName){
 
     for(var x = 0; x < result.return.fieldValues.length; x++){
         var obj = result.return.fieldValues[x];
+        obj.fieldValue = encode.forHtmlContent(obj.fieldValue);
         if(obj.required === "false"){
             obj.required = "";
         }

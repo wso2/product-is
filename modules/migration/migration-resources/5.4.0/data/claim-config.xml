@@ -168,10 +168,10 @@
 				<Description>Preferred Language</Description>
 			</Claim>
 			<Claim>
-				<ClaimURI>http://wso2.org/claims/locality</ClaimURI>
-				<DisplayName>Locality</DisplayName>
+				<ClaimURI>http://wso2.org/claims/local</ClaimURI>
+				<DisplayName>Local</DisplayName>
 				<AttributeID>local</AttributeID>
-				<Description>Locality</Description>
+				<Description>Local</Description>
 			</Claim>
 			<Claim>
 				<ClaimURI>http://wso2.org/claims/timeZone</ClaimURI>

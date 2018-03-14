@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.5.0-SNAPSHOT</version>
+        <version>5.6.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -232,6 +232,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.application.authz.xacml:org.wso2.carbon.identity.application.authz.xacml.server.feature:${identity.app.authz.xacml.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.validators.xacml.server.feature:${identity.oauth2.validators.xacml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
@@ -737,6 +740,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1231,6 +1240,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1648,6 +1663,12 @@
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
                                     </id>
                                     <version>${identity.app.authz.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
                                 </feature>
                                 <feature>
                                     <id>

@@ -1,7 +1,7 @@
 <ServiceProvider>
 	<ApplicationID>2</ApplicationID>
 	<ApplicationName>wso2_sp_dashboard</ApplicationName>
-	<Description>Default Service Provider</Description>
+	<Description>User Self Care Portal</Description>
 	<InboundAuthenticationConfig>
 		<InboundAuthenticationRequestConfigs>
 			<InboundAuthenticationRequestConfig>
