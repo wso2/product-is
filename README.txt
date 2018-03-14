@@ -36,8 +36,8 @@ Project Resources
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
 * Wiki               : http://docs.wso2.org/wiki/display/IS550/WSO2+Identity+Server+Documentation
-* JIRA-Issue Tracker : https://wso2.org/jira/browse/IDENTITY      
-* Forums             : http://stackoverflow.com/questions/tagged/wso2/
+* Issue Tracker      : https://github.com/wso2/product-is/issues
+* Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: dev@wso2.org
 
     
@@ -49,6 +49,7 @@ Installation and Running
 3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
 4. User dashboard is available at https://localhost:9443/dashboard
 5. For more information, see the Installation Guide
+    https://docs.wso2.com/display/IS550/Installation+Guide
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -171,7 +172,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://docs.wso2.com/display/Carbon443/WSO2+Carbon+Secure+Vault
+https://docs.wso2.com/display/ADMIN44x/Carbon+Secure+Vault+Implementation
 
 Support
 =======
@@ -219,7 +220,7 @@ For more information about WSO2 Identity Server please see http://wso2.org/proje
 WSO2 Oxygen Tank developer portal for addition resources.
 
 For further details, see the WSO2 Identity Server documentation at
-https://docs.wso2.com/display/IS540/WSO2+Identity+Server+Documentation
+https://docs.wso2.com/display/IS550/WSO2+Identity+Server+Documentation
 
 ---------------------------------------------------------------------------
 (c) Copyright 2018 WSO2 Inc.
