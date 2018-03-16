@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>playground2</artifactId>
     <packaging>war</packaging>
-    <name>OAuth 2.0 Playground App with WSO2 Identity Server 5.2.0</name>
+    <name>OAuth 2.0 Playground App with WSO2 Identity Server</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
