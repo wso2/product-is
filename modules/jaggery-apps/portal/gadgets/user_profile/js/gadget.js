@@ -1,5 +1,4 @@
 function drawPage() {
-    console.log(json);
     var output = "";
     var u2fScript="<script src=\"u2f-api.js\"></script>";
     var start = "<div class=\"container-fluid\" style=\"width:95%\">\n" +
@@ -106,11 +105,12 @@ function drawPage() {
     var endString ="<tr>\n" +
         "               <td colspan=\"2\">" +
         "                   <div style=\"margin: auto;\">" +
-        "                    <button id=\"connectFedBtn\" class=\"btn btn-primary mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
+        "                    <button id=\"connectFedBtn\" class=\"btn btn-default mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
         "                    </td></div></tr>"+
         "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
-        "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
+        "                        <input type=\"button\" onclick=\"downloadUserInfo();\" class=\"btn btn-default\" value=\"Export\"/>\n" +
+        "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn btn-default btn-cancel\" value=\"Cancel\"/>\n" +
         "                    </td></tr>" +
         "                  </tbody>\n" +
         "</table>"+
@@ -130,6 +130,52 @@ function cancel() {
         id:"user_profile  .shrink-widget"
     });
 
+}
+
+function downloadUserInfo() {
+
+    if (cookie != null) {
+        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/download-userinfo.jag";
+        var consentJSON;
+
+        $.ajax({
+            type:"POST",
+            url:str,
+            data: {cookie : cookie, user : userName }
+
+        })
+            .done(function (data) {
+                downloadData(data, "userInfo.json");
+
+            })
+            .fail(function (error) {
+                publishErrorAndShrink(error);
+
+            })
+            .always(function () {
+                console.log('completed');
+            });
+    }
+}
+
+function publishErrorAndShrink(error) {
+    console.log(error);
+    gadgets.Hub.publish('org.wso2.is.dashboard', {
+        msg: 'A message from User Profile',
+        id: "user_profile .shrink-widget",
+        status: error.status
+    });
+}
+
+function downloadData(data, fileName){
+    var blob = new Blob([data]);
+    var a = document.createElement('a' );
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName; // Set the file name.
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    delete a;
 }
 
 function validate() {
@@ -156,7 +202,8 @@ function validate() {
 
         if (json.return.fieldValues[i].required == "true") {
             if (validateEmpty(fldname).length > 0) {
-                message({content:displayName + ' is required', type:'warning', cbk:function () {
+                message({title:"Missing Required Field Warning", content:displayName + ' is required',
+                    type:'warning', cbk:function () {
                 } });
                 return false;
             }
@@ -167,7 +214,8 @@ function validate() {
 
             var valid = reg.test(value);
             if (value != '' && !valid) {
-                message({content:displayName + ' is not valid', type:'warning', cbk:function () {
+                message({title:"Invalid Input Field Warning", content:displayName + ' is not valid',
+                    type:'warning', cbk:function () {
                 } });
                 return false;
             }
@@ -181,7 +229,8 @@ function validate() {
     for (i = 0; i < elements.length; i++) {
         if ((elements[i].type === 'text' || elements[i].type === 'password') &&
             elements[i].value != null && elements[i].value.match(unsafeCharPattern) != null) {
-            message({content:'Unauthorized characters are specified', type:'warning', cbk:function () {
+            message({title:"Invalid Input Field Warning", content:'Unauthorized characters are specified' ,
+                type:'warning', cbk:function () {
             } });
             return false;
         }
@@ -327,7 +376,7 @@ middle = middle + "<label > Device not registered yet please register your devic
                                "                    <div class=\"control-group\">\n" +
                                "                        <div class=\"controls\">\n" +
                                "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
-                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn\" value=\"Done\"/>\n" +
+                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn btn-default btn-cancel\" value=\"Done\"/>\n" +
                                "                        </div>\n" +
                                "                    </div></div>\n" +
                                "                </form>\n" +

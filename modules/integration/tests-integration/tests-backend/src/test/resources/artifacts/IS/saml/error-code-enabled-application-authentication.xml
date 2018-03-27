@@ -46,9 +46,7 @@
         <LogoutRequestHandler>
             org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultLogoutRequestHandler
         </LogoutRequestHandler>
-        <StepBasedSequenceHandler>
-            org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.DefaultStepBasedSequenceHandler
-        </StepBasedSequenceHandler>
+        <StepBasedSequenceHandler>org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.GraphBasedSequenceHandler</StepBasedSequenceHandler>
         <RequestPathBasedSequenceHandler>
             org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.DefaultRequestPathBasedSequenceHandler
         </RequestPathBasedSequenceHandler>

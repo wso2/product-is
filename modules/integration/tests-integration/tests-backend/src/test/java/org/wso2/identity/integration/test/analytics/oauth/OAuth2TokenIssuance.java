@@ -54,6 +54,8 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
+
+    private static final Long WAIT_TIME = 3000L;
     private AuthenticatorClient logManger;
     private String adminUsername;
     private String adminPassword;
@@ -128,52 +130,56 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorozedPost() throws Exception {
-        String tokenIssuanceStreamId = "org.wso2.is.analytics.stream.OauthTokenIssuance:1.0.0";
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair(
-                "grantType",
-                OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-        urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
-        urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
-        urlParameters.add(new BasicNameValuePair("accessEndpoint",
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
-        urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        HttpResponse response =
-                sendPostRequestWithParameters(client, urlParameters,
-                        OAuth2Constant.AUTHORIZED_USER_URL);
-        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
-        EntityUtils.consume(response.getEntity());
+       try {
+           String tokenIssuanceStreamId = "org.wso2.is.analytics.stream.OauthTokenIssuance:1.0.0";
+           List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+           urlParameters.add(new BasicNameValuePair(
+                   "grantType",
+                   OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
+           urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
+           urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
+           urlParameters.add(new BasicNameValuePair("accessEndpoint",
+                   OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
+           urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
+           HttpResponse response =
+                   sendPostRequestWithParameters(client, urlParameters,
+                           OAuth2Constant.AUTHORIZED_USER_URL);
+           Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
+           EntityUtils.consume(response.getEntity());
 
-        response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
+           response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
-        keyPositionMap.put("name=\"accessToken\"", 1);
+           Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+           keyPositionMap.put("name=\"accessToken\"", 1);
 
-        List<KeyValue> keyValues =
-                DataExtractUtil.extractInputValueFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(keyValues, "Access token Key value is null.");
-        accessToken = keyValues.get(0).getValue();
+           List<KeyValue> keyValues =
+                   DataExtractUtil.extractInputValueFromResponse(response,
+                           keyPositionMap);
+           Assert.assertNotNull(keyValues, "Access token Key value is null.");
+           accessToken = keyValues.get(0).getValue();
 
-        EntityUtils.consume(response.getEntity());
+           EntityUtils.consume(response.getEntity());
 
-        Assert.assertNotNull(accessToken, "Access token is null.");
+           Assert.assertNotNull(accessToken, "Access token is null.");
+           waitUntilEventsReceive(1);
+           Assert.assertNotNull(thriftServer.getPreservedEventList());
+           Event tokenIssuanceEvent = null;
+           for (Event event : thriftServer.getPreservedEventList()) {
+               String streamId = event.getStreamId();
+               if (tokenIssuanceStreamId.equalsIgnoreCase(streamId)) {
+                   tokenIssuanceEvent = event;
+               }
+           }
+           Assert.assertNotNull(tokenIssuanceEvent);
+           Assert.assertEquals("carbon.super", tokenIssuanceEvent.getPayloadData()[1]);
+           Assert.assertEquals("PRIMARY", tokenIssuanceEvent.getPayloadData()[2]);
+           Assert.assertEquals(appDto.getOauthConsumerKey(), tokenIssuanceEvent.getPayloadData()[3]);
+           Assert.assertEquals("client_credentials", tokenIssuanceEvent.getPayloadData()[4]);
+           Assert.assertEquals("default", tokenIssuanceEvent.getPayloadData()[6]);
 
-        Assert.assertNotNull(thriftServer.getPreservedEventList());
-        Event tokenIssuanceEvent = null;
-        for (Event event : thriftServer.getPreservedEventList()) {
-            String streamId = event.getStreamId();
-            if (tokenIssuanceStreamId.equalsIgnoreCase(streamId)) {
-                tokenIssuanceEvent = event;
-            }
-        }
-        Assert.assertNotNull(tokenIssuanceEvent);
-        Assert.assertEquals("carbon.super", tokenIssuanceEvent.getPayloadData()[1]);
-        Assert.assertEquals("PRIMARY", tokenIssuanceEvent.getPayloadData()[2]);
-        Assert.assertEquals(appDto.getOauthConsumerKey(), tokenIssuanceEvent.getPayloadData()[3]);
-        Assert.assertEquals("client_credentials", tokenIssuanceEvent.getPayloadData()[4]);
-        Assert.assertEquals("default", tokenIssuanceEvent.getPayloadData()[6]);
-
+       } finally {
+           thriftServer.resetPreservedEventList();
+       }
     }
 
     public void changeIdentityXml() {
@@ -261,5 +267,12 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
         }
     }
 
+    private void waitUntilEventsReceive(int eventCount) {
 
+        long terminationTime = System.currentTimeMillis() + WAIT_TIME;
+        while (System.currentTimeMillis() < terminationTime) {
+            if (thriftServer.getPreservedEventList().size() == eventCount) ;
+            break;
+        }
+    }
 }

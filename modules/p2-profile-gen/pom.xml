@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.4.1-update6-SNAPSHOT</version>
+        <version>5.6.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -234,6 +234,9 @@
                                     org.wso2.carbon.identity.application.authz.xacml:org.wso2.carbon.identity.application.authz.xacml.server.feature:${identity.app.authz.xacml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.validators.xacml.server.feature:${identity.oauth2.validators.xacml.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -426,6 +429,15 @@
                                     org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${carbon.identity.auth.version}
                                 </featureArtifactDef>
 
+                                <featureArtifactDef>
+                                    org.wso2.carbon.consent.mgt:org.wso2.carbon.consent.mgt.server.feature:${carbon.consent.mgt.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.utils:org.wso2.carbon.database.utils.feature:${carbon.database.utils.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -728,6 +740,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -866,7 +884,18 @@
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.consent.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.database.utils.feature.group</id>
+                                    <version>${carbon.database.utils.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
@@ -1211,6 +1240,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1313,6 +1348,19 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${carbon.identity.auth.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.consent.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.database.utils.feature.group</id>
+                                    <version>${carbon.database.utils.version}</version>
                                 </feature>
 
                             </features>
@@ -1618,6 +1666,12 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
+                                    </id>
+                                    <version>${identity.oauth2.validators.xacml.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1724,6 +1778,18 @@
 			        <feature>
                                     <id>org.wso2.carbon.identity.captcha.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.consent.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.consent.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.database.utils.feature.group</id>
+                                    <version>${carbon.database.utils.version}</version>
                                 </feature>
 
                             </features>

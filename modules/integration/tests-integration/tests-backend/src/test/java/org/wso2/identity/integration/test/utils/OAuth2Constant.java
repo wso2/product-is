@@ -33,6 +33,7 @@ public final class OAuth2Constant {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     public final static String ACCESS_TOKEN = "access_token";
+    public static final String ID_TOKEN = "id_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
     public final static String OAUTH_VERSION_2 = "OAuth-2.0";
     public static final String OAUTH_2 = "oauth2";
@@ -42,6 +43,7 @@ public final class OAuth2Constant {
     public final static String AUTHTOKEN_VALIDATE_SERVICE = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
     public final static String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
+    public final static String AUTHORIZE_ENDPOINT_URL = "https://localhost:9853/oauth2/authorize";
     public final static String APPROVAL_URL = "https://localhost:9853/oauth2/authorize";
     public final static String AUTHORIZE_PARAM = "Authorize";
     public final static String TOKEN_VALIDATION_SERVICE_URL = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
@@ -54,6 +56,7 @@ public final class OAuth2Constant {
     public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
     public final static String OAUTH_APPLICATION_STATE_REVOKED = "REVOKED";
     public static final String OAUTH_CONSUMER_SECRET = "oauthConsumerSecret";
+    public static final String OAUTH_OIDC_REQUEST = "request";
 
     public final static String CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8490\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
@@ -77,9 +80,18 @@ public final class OAuth2Constant {
     public static final String BASIC_HEADER = "Basic";
     public static final String INVALID_GRANT_ERROR = "invalid_grant";
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
+    public static final String SESSION_DATA_KEY = "sessionDataKey";
     public static final String INVALID_CLIENT = "invalid_client";
     public static final String TRAVELOCITY_APP_CONTEXT_ROOT = "/travelocity.com";
     public static final String OAUTH2_GRANT_TYPE_SAML2_BEARER = "urn:ietf:params:oauth:grant-type:saml2-bearer";
+
+    // OAuth 2 request parameters.
+    public static final String OAUTH2_RESPONSE_TYPE = "response_type";
+    public static final String OAUTH2_CLIENT_ID = "client_id";
+    public static final String OAUTH2_REDIRECT_URI = "redirect_uri";
+    public static final String OAUTH2_SCOPE = "scope";
+    public static final String OAUTH2_NONCE = "nonce";
+    public static final String INTRO_SPEC_ENDPOINT = "https://localhost:9853/oauth2/introspect";
 
     public static final class PlaygroundAppPaths {
 

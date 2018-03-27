@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    ~ Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+    ~
+    ~ WSO2 Inc. licenses this file to you under the Apache License,
+    ~ Version 2.0 (the "License"); you may not use this file except
+    ~ in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~ http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing,
+    ~ software distributed under the License is distributed on an
+    ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    ~ KIND, either express or implied.  See the License for the
+    ~ specific language governing permissions and limitations
+    ~ under the License.
+-->
+<Module>
+    <ModulePrefs title="My Consents">
+        <Require feature="pubsub-2"/>
+    </ModulePrefs>
+    <Content type="html" view="default">
+        <![CDATA[
+            <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+
+            <script type="text/javascript" src="js/jquery.min.js" ></script>
+            <script type="text/javascript" src="serverinfo.jag"></script>
+            <script>
+                var headID = document.getElementsByTagName("head")[0];
+                var cssNode = document.createElement('link');
+                cssNode.type = 'text/css';
+                cssNode.rel = 'stylesheet';
+                cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/consent_management/js/ui/font-awesome/css/font-awesome.min.css';
+                headID.appendChild(cssNode);
+            </script>
+            <script>
+                $(function() {
+                    $('.max_view').click(function() {
+                         gadgets.Hub.publish('org.wso2.is.dashboard', {
+                                    msg : 'A message from Consent Management',
+                                    id: "consent_management .expand-widget"
+                                });
+                    });
+                });
+            </script>
+
+            <div class='icon-check icon-repeat-dashboard icon-marketing-styles'></div>
+            <p>View and edit your consents</p>
+            <p><a class='btn btn-default max_view' href=''>View details</a></p>
+        ]]>
+    </Content>
+
+    <Content type="html" view="home">
+        <![CDATA[
+            <script type="text/javascript" src="/portal/csrf.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/bootstrap.min.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/handlebars-v4.0.11.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/jstree/dist/jstree.min.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/jstree/src/jstree-actions.js"></script>
+            <script type="text/javascript" src="js/modal.js"></script>
+            <script type="text/javascript" src="js/main.js"></script>
+            <script type="text/javascript" src="js/gadget.js"></script>
+            <script type="text/javascript" src="js/landing.js"></script>
+            <script type="text/javascript" src="serverinfo.jag"></script>
+
+
+            <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/js/vendor/jquery-ui-1.10.4.custom/css/base/jquery-ui-1.10.4.custom.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/js/vendor/jstree/dist/themes/default/style.min.css" />
+            <link rel="stylesheet" type="text/css" href="js/ui/css/localstyles.css">
+
+            <script>
+                var headID = document.getElementsByTagName("head")[0];
+                var cssNode = document.createElement('link');
+                cssNode.type = 'text/css';
+                cssNode.rel = 'stylesheet';
+                cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/consent_management/js/ui/font-awesome/css/font-awesome.min.css';
+                headID.appendChild(cssNode);
+
+            </script>
+
+            <script type="text/javascript">
+                var cookie = null;
+                var json = null;
+                var userName = null;
+                var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
+
+                $(function WindowLoad(event) {
+                    url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
+                    ws = new WebSocket(url);
+
+                    ws.onopen = function () {
+                        console.log("web Socket onopen. ");
+                        ws.send("First Message open");
+                    };
+                    ws.onmessage = function (event) {
+                        var obj = $.parseJSON(event.data);
+                        cookie = obj.cookie;
+                        userName = obj.user;
+                        if (cookie != null) {
+                            var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/index.jag";
+
+                            $.ajax({
+                                type: "POST",
+                                url: str,
+                                data: {cookie: cookie, user: userName}
+
+                            })
+                                .done(function (data) {
+                                    json = $.parseJSON(data);
+                                    var emptyObj = $.isEmptyObject(json.receipts);
+                                    var emptyDefault = $.isEmptyObject(json.default);
+                                    if (!emptyObj || !emptyDefault) {
+                                        renderReceiptList(json);
+                                    } else {
+                                        var noContentAlert = '<div class="alert alert-info alert-custom">' +
+                                            '<span class="icon-info-sign icon-2x"></span> There are no consents to show for <strong>' + userName + '</strong></div>';
+                                        $("#consent-listing").html(noContentAlert).show();
+                                    }
+                                })
+                                .fail(function () {
+                                    console.log("error");
+                                    gadgets.Hub.publish('org.wso2.is.dashboard', {
+                                        msg: 'A message from Consent Management',
+                                        id: "consent_management .shrink-widget",
+                                    });
+
+                                })
+                                .always(function () {
+                                    console.log('completed');
+                                });
+                        }
+                    };
+                    ws.onclose = function () {
+                        console.log("web Socket onclose. ");
+                    };
+                });
+
+            </script>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 content-section">
+                        <div id="resident-consent-listing" style="display:none;"></div>
+                        <div id="consent-listing" style="display:none;"></div>
+                        <div id="consent-settings" style="display:none;"></div>
+                        <div id="message"></div>
+                        <div id="light" class="white_content associationWindow" style="width: 35%;height: 45%;">This is the lightbox content.
+                            <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a>
+                        </div>
+                        <div id="fade" class="black_overlay"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="message"></div>
+
+            <script type="text/javascript">
+                //initialize the 3 popup css class names - create more if needed
+                var matchClass=['popup1','popup2','popup3'];
+                //Set your 3 basic sizes and other options for the class names above - create more if needed
+                var popup1 = 'width=400,height=300,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=20,top=20';
+                var popup2 = 'width=800,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=20,top=20';
+                var popup3 = 'width=1000,height=750,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=20,top=20';
+
+
+                //The pop-up function
+                   $(function tfpop(){
+
+                       //Attach the clicks to the popup classes
+                       $('.popup3').click(function() {
+                           var popurl = PROXY_CONTEXT_PATH + '/portal/gadgets/consent_management/samlsso.jag?login=true';
+                           var popupSpecs = $(this).attr('class');
+                           //Create a "unique" name for the window using a random number
+                           var popupName = Math.floor(Math.random()*10000001);
+                           //Opens the pop-up window according to the specified specs
+                           newwindow=window.open(popurl,popupName,eval(popupSpecs));
+                           return false;
+                       });
+                   });
+
+
+
+            </script>
+        ]]>
+    </Content>
+</Module>

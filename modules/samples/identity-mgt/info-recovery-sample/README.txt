@@ -100,7 +100,7 @@ How to run by deploying the existing war file
 How to build using maven
 ------------------------
 
-Before building make sure following dependancies are satisfied.
+Before building make sure following dependencies are satisfied.
 
 org.wso2.carbon.identity.mgt.stub
 org.wso2.carbon.utils

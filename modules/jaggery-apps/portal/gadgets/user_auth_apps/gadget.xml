@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-    <ModulePrefs title="Authorized Apps" >
+    <ModulePrefs title="Authorized OAuth Apps" >
         <Require feature="pubsub-2"/>
     </ModulePrefs>
     <Content type="html" view="default">
@@ -36,7 +36,7 @@
 	</script>
 
 	    <div class='icon-thumbs-up-alt icon-thumbs-up-alt-dashboard icon-marketing-styles'></div>
-        <p>Manage your authorized applications.</p>
+        <p>Manage your authorized oauth applications.</p>
         <p><a class='btn btn-default max_view' href=''>View details</a></p>
         ]]>
     </Content>

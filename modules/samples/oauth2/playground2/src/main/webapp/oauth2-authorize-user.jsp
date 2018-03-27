@@ -33,6 +33,7 @@
         String scope = request.getParameter(OAuth2Constants.SCOPE);
         String callBackUrl = request.getParameter(OAuth2Constants.CALL_BACK_URL);
         String implicitRespType = request.getParameter(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
+        String acr_values =  request.getParameter("acr_values");
 
         boolean usePKCE = usePKCEParameter != null && YES.equals(usePKCEParameter);
         if(usePKCE) {
@@ -48,19 +49,22 @@
             scope = "default";
         }
 
+        session.setAttribute(OAuth2Constants.CONSUMER_KEY, consumerKey);
+        session.setAttribute(OAuth2Constants.CONSUMER_SECRET, consumerSecret);
         session.setAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE, authzGrantType);
         session.setAttribute(OAuth2Constants.CONSUMER_KEY, consumerKey);
         session.setAttribute(OAuth2Constants.CONSUMER_SECRET, consumerSecret);
         session.setAttribute(OAuth2Constants.SCOPE, scope);
         session.setAttribute(OAuth2Constants.CALL_BACK_URL, callBackUrl);
         session.setAttribute(OAuth2Constants.OAUTH2_AUTHZ_ENDPOINT, authzEndpoint);
+        session.setAttribute(OAuth2Constants.OAUTH2_ACCESS_ENDPOINT, accessEndpoint);
         session.setAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT, logoutEndpoint);
         session.setAttribute(OAuth2Constants.OIDC_SESSION_IFRAME_ENDPOINT, sessionIFrameEndpoint);
+        session.setAttribute("acr_values", acr_values);
 
         if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_CODE) ||
             authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT)) {
             // If the grant type is authorization code or implicit - then we need to send a request to the Authorization end point.
-
             if (StringUtils.isBlank(consumerKey) || StringUtils.isBlank(callBackUrl) ||
                 StringUtils.isBlank(authzEndpoint)) {
 %>
@@ -70,8 +74,8 @@
 </script>
 
 <%
-        return;
-    }
+                return;
+            }
 
     OAuthPKCEAuthenticationRequestBuilder oAuthPKCEAuthenticationRequestBuilder = new OAuthPKCEAuthenticationRequestBuilder(authzEndpoint);
     if (authzGrantType.equals(OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT)) {
@@ -97,6 +101,9 @@
     if (formPostMode) {
         oAuthPKCEAuthenticationRequestBuilder.setParameter(OAuth2Constants.OAUTH2_RESPONSE_MODE, OAuth2Constants.OAUTH2_FORM_POST);
     }
+    if(acr_values != null) {
+        oAuthPKCEAuthenticationRequestBuilder.setParameter("acr_values", acr_values);
+    }
 
     // Build the new response mode with form post.
     OAuthClientRequest authzRequest = oAuthPKCEAuthenticationRequestBuilder.buildQueryMessage();
@@ -107,6 +114,7 @@
 
     // For any other grant type we need to send the request to the Access Token end point.
     OAuthClientRequest accessRequest = null;
+    OAuthClientRequest.TokenRequestBuilder accessRequestBuilder = null;
 
     if (StringUtils.isBlank(recowner) || StringUtils.isBlank(recpassword)) {
         if (StringUtils.isBlank(consumerKey) || StringUtils.isBlank(consumerSecret) ||
@@ -119,12 +127,11 @@
 
 <%
     }
-    accessRequest = OAuthClientRequest.tokenLocation(accessEndpoint)
+    accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                       .setGrantType(GrantType.CLIENT_CREDENTIALS)
                                       .setClientId(consumerKey)
                                       .setClientSecret(consumerSecret)
-                                      .setScope(scope)
-                                      .buildBodyMessage();
+                                      .setScope(scope);
 
 } else {
     if (StringUtils.isBlank(consumerKey) || StringUtils.isBlank(consumerSecret) || StringUtils.isBlank(recowner) ||
@@ -137,23 +144,31 @@
 
 <%
             }
-            accessRequest = OAuthClientRequest.tokenLocation(accessEndpoint)
+            accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                               .setGrantType(GrantType.PASSWORD)
                                               .setClientId(consumerKey)
                                               .setClientSecret(consumerSecret)
                                               .setScope(scope)
                                               .setUsername(recowner)
-                                              .setPassword(recpassword)
-                                              .buildBodyMessage();
+                                              .setPassword(recpassword);
+
         }
+        if(acr_values != null) {
+            accessRequestBuilder.setParameter("acr_values", acr_values);
+        }
+
+        accessRequest = accessRequestBuilder.buildBodyMessage();
 
         // Creates OAuth client that uses custom http client under the hood
         OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
         OAuthClientResponse oAuthResponse = oAuthClient.accessToken(accessRequest);
         String accessToken = oAuthResponse.getParam(OAuth2Constants.ACCESS_TOKEN);
+        String idToken = oAuthResponse.getParam(OAuth2Constants.ID_TOKEN);
 
         // For future use we store the access_token in session.
         session.setAttribute(OAuth2Constants.ACCESS_TOKEN, accessToken);
+        session.setAttribute(OAuth2Constants.ID_TOKEN, idToken);
+
     }
 } catch (Exception e) {
 %>

@@ -1,7 +1,7 @@
 migrationEnable: "true"
 
-currentVersion: "5.3.0"
-migrateVersion: "5.4.0"
+currentVersion: "5.4.0"
+migrateVersion: "5.5.0"
 
 continueOnError: "true"
 batchUpdate: "true"
@@ -52,8 +52,6 @@ versions:
     order: 6
     parameters:
       schema: "um"
-
-
  -
   version: "5.2.0"
   migratorConfigs:
@@ -69,8 +67,6 @@ versions:
     parameters:
       location: "step1"
       schema: "um"
-
-
  -
   version: "5.3.0"
   migratorConfigs:
@@ -95,7 +91,6 @@ versions:
     order: 4
     parameters:
       schema: "identity"
-
    -
     name: "ChallengeQuestionDataMigrator"
     order: 5
@@ -111,8 +106,6 @@ versions:
     order: 7
     parameters:
       schema: "identity"
-
-
  -
   version: "5.4.0"
   migratorConfigs:
@@ -144,3 +137,60 @@ versions:
     parameters:
       location: "step2"
       schema: "identity"
+ -
+  version: "5.5.0"
+  migratorConfigs:
+   -
+    name: "SchemaMigrator"
+    order: 1
+    parameters:
+      location: "step1"
+      schema: "identity"
+   -
+    name: "SchemaMigrator"
+    order: 2
+    parameters:
+      location: "step1"
+      schema: "consent"
+   -
+    name: "OAuthDataMigrator"
+    order: 3
+    parameters:
+      schema: "identity"
+   -
+    name: "BPSProfileDataMigrator"
+    order: 4
+    parameters:
+      schema: "identity"
+   -
+    name: "UserStorePasswordMigrator"
+    order: 5
+    parameters:
+      schema: "identity"
+   -
+    name: "SysLogPropertiesMigrator"
+    order: 6
+   -
+    name: "SchemaMigrator"
+    order: 7
+    parameters:
+      location: "step2"
+      schema: "identity"
+   -
+    name: "PolicySubscriberDataMigrator"
+    order: 8
+    parameters:
+      schema: "identity"
+   -
+    name: "KeyStorePasswordMigrator"
+    order: 9
+    parameters:
+      schema: "identity"
+   -
+    name: "SecurityPolicyPasswordMigrator"
+    order: 10
+    parameters:
+      schema: "identity"
+   -
+    name: "EventPublisherMigrator"
+    order: 11

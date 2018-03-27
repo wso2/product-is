@@ -1,0 +1,78 @@
+<%
+include("../../util/constants.jag");
+include("util/constants.jag");
+include("util/utility.jag");
+var log = new Log();
+var cookie = request.getParameter("cookie");
+var carbon = require("carbon");
+var user = request.getParameter("user");
+var tenantUser = carbon.server.tenantUser(user);
+
+var idpManager = Packages.org.wso2.carbon.idp.mgt.IdentityProviderManager;
+var residentIdP = idpManager.getInstance().getResidentIdP(tenantUser.domain);
+var identityRecoveryConstants = Packages.org.wso2.carbon.identity.recovery.IdentityRecoveryConstants;
+var residentIdpName = residentIdP.getHomeRealmId();
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+try {
+    var serviceForResidentIDPReceipt;
+    var responseJSON = {};
+    var serverCoreUrl = application.get(SERVER_CORE_URL);
+    var url = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI;
+    var data = {state: CONSENT_STATE_ACTIVE, piiPrincipalId: tenantUser.username};
+    var headers = {"cookie": cookie};
+    var consentsJSON = get(url, data, headers, "json");
+    validateResponse(consentsJSON);
+
+    data["service"] = residentIdpName;
+    var residentIDPReciept = get(url, data, headers, "json");
+
+    if (consentsJSON.data && consentsJSON.data.length > 0 &&
+        residentIDPReciept.data && residentIDPReciept.data.length > 0) {
+        var receipts = consentsJSON.data;
+        receipts.forEach(function (receipt) {
+            if (receipt.spDisplayName == residentIDPReciept.data[0].spDisplayName) {
+                serviceForResidentIDPReceipt = receipt;
+                removeElement(receipts, receipt);
+            }
+        });
+    }
+    responseJSON["receipts"] = consentsJSON.data;
+
+    if (!serviceForResidentIDPReceipt) {
+        serviceForResidentIDPReceipt = loadResidentIDPInformation(tenantUser.domain);
+    }
+
+    responseJSON["default"] = serviceForResidentIDPReceipt;
+
+    print(responseJSON);
+
+} catch (e) {
+    print(e);
+    log.error(e);
+}
+
+function loadResidentIDPInformation(tenantDomain) {
+    var service = {};
+
+    var serviceName = residentIdP.getHomeRealmId();
+    var serviceDisplayName = residentIdP.getDisplayName() || identityRecoveryConstants.Consent.RESIDENT_IDP;
+    var serviceDescription = residentIdP.getIdentityProviderDescription() || identityRecoveryConstants.Consent
+        .RESIDENT_IDP;
+
+    service["service"] = serviceName;
+    service["spDisplayName"] = serviceDisplayName;
+    service["spDescription"] = serviceDescription;
+    service["tenantDomain"] = tenantDomain;
+    return service;
+}
+
+function removeElement(array, value){
+    var idx = array.indexOf(value);
+    if (idx != -1) {
+        return array.splice(idx, 1);
+    }
+}
+%>

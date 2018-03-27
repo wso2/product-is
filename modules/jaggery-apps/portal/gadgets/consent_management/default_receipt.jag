@@ -1,0 +1,142 @@
+<%
+include("../../util/constants.jag");
+include("util/constants.jag");
+include("util/utility.jag");
+
+var log = new Log("default_reciept");
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+var receiptID = request.getParameter("id");
+var carbon = require("carbon");
+var tenantUser = carbon.server.tenantUser(user);
+
+var idpManager = Packages.org.wso2.carbon.idp.mgt.IdentityProviderManager;
+var residentIdP = idpManager.getInstance().getResidentIdP(tenantUser.domain);
+var identityRecoveryConstants = Packages.org.wso2.carbon.identity.recovery.IdentityRecoveryConstants;
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+try {
+    var responseJSON = {};
+    var serverCoreUrl = application.get(SERVER_CORE_URL);
+    var url = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI
+    var headers = {"cookie": cookie};
+
+    var currentReceipt;
+    var acceptedPurposes;
+    var defaultReceipt = {};
+    //if default reciept already exists, then extract the accepted purposes
+    if (receiptID) {
+        var receiptUrl = url + RECEIPTS_URL + receiptID;
+        var consentJSON = get(receiptUrl, {}, headers, "json");
+        validateResponse(consentJSON);
+        if (consentJSON.data) {
+            currentReceipt = consentJSON.data;
+            defaultReceipt = currentReceipt;
+        }
+
+        if (currentReceipt && currentReceipt.services && currentReceipt.services.length > 0
+            && currentReceipt.services[0].purposes) {
+            acceptedPurposes = currentReceipt.services[0].purposes || [];
+        }
+    }
+
+    var purposesForResidentIDPReceipt = [];
+    var servicesForResidentIDPReceipt = [];
+    // retrieve metadata of all the existing purposes
+    var purposesURL = url + PURPOSES_URI;
+    var purposes = get(purposesURL, {}, headers, "json");
+    validateResponse(purposes);
+
+    if (purposes.data && purposes.data.length > 0) {
+        var purposesJSON = purposes.data;
+        // retrieve details of each purpose
+        purposesJSON.forEach(function (purpose) {
+            var purposeURL = purposesURL + "/" + purpose.purposeId;
+            var purposeForReceipt = get(purposeURL, {}, headers, "json");
+            if (purposeForReceipt.data && DEFAULT_CONSENT != purposeForReceipt.data.purpose) {
+                var purposeReceiptData = populatePurposes(purposeForReceipt, acceptedPurposes);
+                if (purposeReceiptData) {
+                    purposesForResidentIDPReceipt.push(purposeReceiptData);
+                }
+            }
+        });
+    }
+    var serviceForResidentIDPReceipt = loadResidentIDPInformation(tenantUser.domain, purposesForResidentIDPReceipt);
+    servicesForResidentIDPReceipt.push(serviceForResidentIDPReceipt);
+    defaultReceipt["services"] = servicesForResidentIDPReceipt;
+    loadDefaultReceiptInformation(defaultReceipt);
+    responseJSON["data"] = defaultReceipt;
+
+    print(responseJSON);
+
+} catch (e) {
+    print(e);
+    log.error(e.message);
+}
+
+function loadResidentIDPInformation(tenantDomain, purposes) {
+    var service = {};
+
+    var serviceName = residentIdP.getHomeRealmId();
+    var serviceDisplayName = residentIdP.getDisplayName() || identityRecoveryConstants.Consent.RESIDENT_IDP;
+    var serviceDescription = residentIdP.getIdentityProviderDescription() || identityRecoveryConstants.Consent
+        .RESIDENT_IDP;
+
+    service["service"] = serviceName;
+    service["serviceDisplayName"] = serviceDisplayName;
+    service["serviceDescription"] = serviceDescription;
+    service["tenantDomain"] = tenantDomain;
+    service["purposes"] = purposes;
+    return service;
+}
+
+function loadDefaultReceiptInformation(receipt) {
+    var consent = identityRecoveryConstants.Consent.CONSENT;
+    var policyUrl = "";
+    var jurisdiction = identityRecoveryConstants.Consent.DEFAULT_JURISDICTION;
+    var language = identityRecoveryConstants.Consent.LANGUAGE_ENGLISH;
+    var collectionMethod = receipt.collectionMethod || COLLECTION_METHOD_USER_PORTAL;
+
+    receipt["consent"] = receipt["consent"] || consent;
+    receipt["policyUrl"] = receipt["policyUrl"] || policyUrl;
+    receipt["jurisdiction"] = receipt["jurisdiction"] || jurisdiction;
+    receipt["language"] = receipt["language"] || language;
+    receipt["collectionMethod"] = receipt["collectionMethod"] || collectionMethod;
+}
+
+function populatePurposes(purposeForReceipt, acceptedPurposes){
+    var purposeReceiptData = purposeForReceipt.data;
+    if (!purposeReceiptData || !purposeReceiptData.piiCategories || purposeReceiptData.piiCategories.length < 1) {
+        return null;
+    }
+    if (acceptedPurposes && acceptedPurposes.length > 0) {
+        acceptedPurposes.forEach(function(acceptedPurpose) {
+            if (acceptedPurpose.purposeId == purposeReceiptData.purposeId) {
+                purposeReceiptData["termination"] =  acceptedPurpose.termination;
+                var acceptedCategories = acceptedPurpose.piiCategory;
+                var categories = purposeReceiptData.piiCategories;
+                // identify consented pii-categories
+                categories.forEach(function (category) {
+                    acceptedCategories.forEach(function (acceptedCategory) {
+                        if (category.piiCategoryId == acceptedCategory.piiCategoryId) {
+                            category["accepted"] = true;
+                        }
+                    });
+                });
+
+            }
+        });
+    }
+    purposeReceiptData["consentType"] = purposeReceiptData["consentType"] ||
+        identityRecoveryConstants.Consent.EXPLICIT_CONSENT_TYPE;
+    purposeReceiptData["primaryPurpose"] = purposeReceiptData["primaryPurpose"] || true;
+    purposeReceiptData["thirdPartyDisclosure"] = purposeReceiptData["thirdPartyDisclosure"] || true;
+    purposeReceiptData["termination"] = purposeReceiptData["termination"] ||
+        identityRecoveryConstants.Consent.INFINITE_TERMINATION;
+    purposeReceiptData["thirdPartyName"] = purposeReceiptData["thirdPartyName"] || "";
+    return purposeReceiptData;
+}
+
+%>

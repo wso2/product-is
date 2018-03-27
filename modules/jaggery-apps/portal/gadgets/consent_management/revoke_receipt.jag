@@ -1,0 +1,29 @@
+<%
+include("../../util/constants.jag");
+include("util/constants.jag");
+include("util/utility.jag");
+
+var log = new Log("consent_revoke_reciept");
+var cookie = request.getParameter("cookie");
+var user = request.getParameter("user");
+var receiptID = request.getParameter("id");
+var carbon = require("carbon");
+var tenantUser = carbon.server.tenantUser(user);
+
+session.put('auth-cookie', cookie);
+session.put('user', user);
+
+try {
+    var serverCoreUrl = application.get(SERVER_CORE_URL);
+    var url  = serverCoreUrl + "/t/" + tenantUser.domain + CONSENT_API_URI + RECEIPTS_URL + receiptID;
+    var consentJSON = del(url, {}, {"cookie" : cookie});
+    validateResponse(consentJSON);
+
+    print(consentJSON);
+
+    } catch(e) {
+        print(e);
+        log.error(e);
+}
+
+%>

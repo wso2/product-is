@@ -187,7 +187,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         String errormsg = ((JSONObject) obj).get("error").toString();
 
         EntityUtils.consume(response.getEntity());
-        Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
+        Assert.assertEquals(errormsg, "invalid_request", "Invalid error message");
     }
 
 	@Test(groups = "wso2.is", description = "Send token request with invalid credentials", dependsOnMethods =

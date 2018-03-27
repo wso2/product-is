@@ -11,7 +11,7 @@ Welcome to WSO2 Identity Server
 
 |  Branch | Build Status |
 | :------------ |:-------------
-| master      | [![Build Status](https://wso2.org/jenkins/job/products/job/product-is_5.x.x/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is_5.x.x) |
+| master      | [![Build Status](https://wso2.org/jenkins/job/products/job/product-is_5.5.x/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is_5.5.x) |
 
 
 
@@ -40,7 +40,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   http://docs.wso2.com/display/IS541/Installation+Prerequisites
+   http://docs.wso2.com/display/IS550/Installation+Prerequisites
 
 
 Project Resources
@@ -48,7 +48,7 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : http://docs.wso2.org/wiki/display/IS541/WSO2+Identity+Server+Documentation
+* Wiki               : http://docs.wso2.org/wiki/display/IS550/WSO2+Identity+Server+Documentation
 * JIRA-Issue Tracker : https://wso2.org/jira/browse/IDENTITY      
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: dev@wso2.org
@@ -57,7 +57,7 @@ Project Resources
 Building the distribution from source
 =========================================
 
-1. Install Java 8 or above
+1. Install Java 8
 2. Install Apache Maven 3.x.x(https://maven.apache.org/download.cgi#)
 3. Get a clone from https://github.com/wso2/product-is.git or download the source 
 4. Run the one of the below maven commands from product-is directory, 
@@ -216,4 +216,4 @@ For further details, see the WSO2 Carbon documentation at
 https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2017 WSO2 Inc.
+(c) Copyright 2018 WSO2 Inc.
