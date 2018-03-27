@@ -11,7 +11,7 @@ Welcome to WSO2 Identity Server
 
 |  Branch | Build Status |
 | :------------ |:-------------
-| master      | [![Build Status](https://wso2.org/jenkins/job/products/job/product-is_5.5.x/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is_5.5.x) |
+| master      | [![Build Status](https://wso2.org/jenkins/job/products/job/product-is/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is) |
 
 
 
@@ -40,7 +40,8 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   http://docs.wso2.com/display/IS550/Installation+Prerequisites
+   http://docs.wso2.com/display/IS541/Installation+Prerequisites (For latest released version)
+   http://docs.wso2.com/display/IS560/Installation+Prerequisites (For current development version)
 
 
 Project Resources
@@ -48,8 +49,10 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : http://docs.wso2.org/wiki/display/IS550/WSO2+Identity+Server+Documentation
-* JIRA-Issue Tracker : https://wso2.org/jira/browse/IDENTITY      
+* Wiki 
+    * Latest released version     : http://docs.wso2.org/wiki/display/IS541/WSO2+Identity+Server+Documentation
+    * Current development version : http://docs.wso2.org/wiki/display/IS560/WSO2+Identity+Server+Documentation
+* Issue Tracker      : https://github.com/wso2/product-is/issues      
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: dev@wso2.org
 
@@ -57,7 +60,7 @@ Project Resources
 Building the distribution from source
 =========================================
 
-1. Install Java 8
+1. Install Java SE Development Kit 1.8
 2. Install Apache Maven 3.x.x(https://maven.apache.org/download.cgi#)
 3. Get a clone from https://github.com/wso2/product-is.git or download the source 
 4. Run the one of the below maven commands from product-is directory, 
