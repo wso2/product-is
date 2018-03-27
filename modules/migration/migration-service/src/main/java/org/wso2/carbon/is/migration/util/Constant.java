@@ -32,4 +32,6 @@ public class Constant {
 
     public static final String IDENTITY_DB_SCRIPT = "identity";
     public static final String UM_DB_SCRIPT = "um";
+
+    public static final String EVENT_PUBLISHER_PATH = "/repository/deployment/server/eventpublishers";
 }

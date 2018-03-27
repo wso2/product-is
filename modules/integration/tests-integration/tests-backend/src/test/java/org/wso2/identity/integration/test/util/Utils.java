@@ -45,10 +45,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class Utils {
 
     private static String RESIDENT_CARBON_HOME;
+    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
 
     public static  boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
@@ -106,14 +110,17 @@ public class Utils {
         tomcat.start();
     }
 
-    public static HttpResponse sendPOSTMessage(String sessionKey, String commonAuthUrl, String userAgent, String
+    public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
-        HttpPost post = new HttpPost(commonAuthUrl);
+        HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         post.addHeader("Referer", String.format(acsUrl, artifact));
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
+        if (StringUtils.equals(url, SAML_SSO_URL)) {
+            urlParameters.add(new BasicNameValuePair("tocommonauth", "true"));
+        }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
@@ -135,6 +142,82 @@ public class Utils {
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
+    }
+
+    public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
+                                                    String referer,  HttpClient httpClient, String
+                                                              pastreCookie) throws Exception {
+        String redirectUrl = getRedirectUrl(response);
+        Map<String, String> queryParams = getQueryParams(redirectUrl);
+
+
+        String sessionKey = queryParams.get("sessionDataKey");
+        String mandatoryClaims = queryParams.get("mandatoryClaims");
+        String requestedClaims = queryParams.get("requestedClaims");
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
+
+        String[] claims;
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
+        } else {
+            claims = new String[0];
+        }
+
+        HttpPost post = new HttpPost(commonAuthUrl);
+        post.setHeader("User-Agent", userAgent);
+        post.addHeader("Referer", referer);
+        post.addHeader("Cookie", pastreCookie);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+
+        for (int i = 0; i < claims.length; i++) {
+
+            if (isNotBlank(claims[i])) {
+                String[] claimMeta = claims[i].split("_", 2);
+                if (claimMeta.length == 2) {
+                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                }
+            }
+        }
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        urlParameters.add(new BasicNameValuePair("consent", "approve"));
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
+    }
+
+    public static boolean requestMissingClaims (HttpResponse response) {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        return redirectUrl.contains("consent.do") ? true : false;
+
+    }
+
+    public static String getPastreCookie(HttpResponse response) {
+
+        String pastrCookie = null;
+        boolean foundPastrCookie = false;
+        Header[] headers = response.getHeaders("Set-Cookie");
+        if (headers != null) {
+            int i = 0;
+            while (!foundPastrCookie && i < headers.length) {
+                if (headers[i].getValue().contains("pastr")) {
+                    pastrCookie = headers[i].getValue().split(";")[0];
+                    foundPastrCookie = true;
+                }
+                i++;
+            }
+        }
+        return pastrCookie;
     }
 
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
@@ -210,5 +293,44 @@ public class Utils {
         }
         rd.close();
         return value;
+    }
+
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        String requestedClaims = queryParams.get("requestedClaims");
+        String mandatoryClaims = queryParams.get("mandatoryClaims");
+
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
+
+        String[] claims;
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
+        } else {
+            claims = new String[0];
+        }
+
+        for (String claim : claims) {
+            if (isNotBlank(claim)) {
+                String[] claimMeta = claim.split("_", 2);
+                if (claimMeta.length == 2) {
+                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                }
+            }
+        }
+        return urlParameters;
     }
 }

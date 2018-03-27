@@ -48,6 +48,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -74,6 +75,7 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
     private static final String SERVICE_PROVIDER_Desc = "Service Provider with Request Path Authentication";
     protected static final String DEFAULT_CHARSET = "UTF-8";
     protected static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
+    protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String SAML_SUCCESS_TAG =
             "<saml2p:StatusCode Value=\"urn:oasis:names:tc:SAML:2" + ".0:status:Success\"/>";
     private static final String ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
@@ -184,6 +186,18 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         response = client.execute(request);
+
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, isURL + "commonauth", USER_AGENT, ACS_URL,
+                                                    client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
+        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, "", client);
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Successful login response returned code " + responseCode);
         String samlResponse = "";
@@ -223,6 +237,7 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
                 secToken = tokens[5];
             }
         }
+        client = new DefaultHttpClient();
         EntityUtils.consume(response.getEntity());
         request = new HttpPost(isURL + "samlsso");
         urlParameters = new ArrayList<>();

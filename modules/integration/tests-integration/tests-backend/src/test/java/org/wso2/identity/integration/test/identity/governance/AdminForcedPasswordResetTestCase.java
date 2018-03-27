@@ -68,6 +68,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     public static final String LOCATION = "Location";
     public static final String ACS = "/acs";
     public static final String SAMLSSO = "/samlsso";
+    public static final String COMMONAUTH = "/commonauth";
     public static final String SESSION_DATA_KEY = "sessionDataKey";
     private UserManagementClient userMgtClient;
     private AuthenticatorClient loginManger;
@@ -184,6 +185,17 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         //Next login attempt after password reset
         response = loginToDashboardApp(TEST_USER_USERNAME, TEST_USER_NEW_PASSWORD);
 
+        if (Utils.requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, webAppUrlContext + COMMONAUTH, USER_AGENT,
+                                                    Utils.getRedirectUrl(response), httpClient, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
+        response = Utils.sendRedirectRequest(response, USER_AGENT, Utils.getRedirectUrl(response), "", httpClient);
         //Extract SAMLResponse
         String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
         EntityUtils.consume(response.getEntity());

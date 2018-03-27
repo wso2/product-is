@@ -263,7 +263,11 @@
     				<PoolSize>0</PoolSize>
     				<RetryCount>5</RetryCount>
     		</TokenPersistence>
-
+        <!-- Scope validators list. The validators registered here wil be executed during token validation. -->
+        <ScopeValidators>
+            <ScopeValidator class="org.wso2.carbon.identity.oauth2.validators.JDBCScopeValidator" />
+            <ScopeValidator class="org.wso2.carbon.identity.oauth2.validators.xacml.XACMLScopeValidator" />
+        </ScopeValidators>
     </OAuth>
 
     <MultifactorAuthentication>
@@ -507,7 +511,7 @@
 
     <TenantContextsToRewrite>
         <WebApp>
-            <Context>/api/identity/user/v0.9/</Context>
+            <Context>/api/identity/user/v1.0/</Context>
             <Context>/api/identity/recovery/v0.9/</Context>
             <Context>/oauth2/</Context>
             <Context>/scim2/</Context>

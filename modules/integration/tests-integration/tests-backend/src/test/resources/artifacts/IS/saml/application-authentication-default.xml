@@ -42,7 +42,7 @@
         <RequestCoordinator>org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultRequestCoordinator</RequestCoordinator>
         <AuthenticationRequestHandler>org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultAuthenticationRequestHandler</AuthenticationRequestHandler>
         <LogoutRequestHandler>org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultLogoutRequestHandler</LogoutRequestHandler>
-        <StepBasedSequenceHandler>org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.DefaultStepBasedSequenceHandler</StepBasedSequenceHandler>
+        <StepBasedSequenceHandler>org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.GraphBasedSequenceHandler</StepBasedSequenceHandler>
         <RequestPathBasedSequenceHandler>org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.DefaultRequestPathBasedSequenceHandler</RequestPathBasedSequenceHandler>
         <StepHandler>org.wso2.carbon.identity.application.authentication.framework.handler.step.impl.DefaultStepHandler</StepHandler>
         <HomeRealmDiscoverer>org.wso2.carbon.identity.application.authentication.framework.handler.hrd.impl.DefaultHomeRealmDiscoverer</HomeRealmDiscoverer>

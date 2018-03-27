@@ -33,7 +33,7 @@ function drawPage() {
         "                <div class=\"control-group\">\n" +
         "                    <div class=\"controls\">\n" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
-        "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn\" value=\"Cancel\"/>\n" +
+        "                        <input type=\"button\" onclick=\"cancel();\" class=\"btn btn-default btn-cancel\" value=\"Cancel\"/>\n" +
         "                    </div>\n" +
         "                </div>";
     output = start;

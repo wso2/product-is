@@ -55,6 +55,14 @@ public class OauthAdminClient {
     	appDtos = oauthAdminStub.getAllOAuthApplicationData();
     	return appDtos;
     }
+
+    public OAuthConsumerAppDTO getOAuthAppByConsumerKey(String consumerKey) throws Exception {
+	    return oauthAdminStub.getOAuthApplicationData(consumerKey);
+    }
+
+    public void updateConsumerApp(OAuthConsumerAppDTO updatedConsumerApp) throws Exception {
+        oauthAdminStub.updateConsumerApplication(updatedConsumerApp);
+    }
     
     public void removeOAuthApplicationData(String consumerKey) throws RemoteException, OAuthAdminServiceIdentityOAuthAdminException{
     	oauthAdminStub.removeOAuthApplicationData(consumerKey);
@@ -76,5 +84,14 @@ public class OauthAdminClient {
             throws Exception {
         OAuthConsumerAppDTO authConsumerAppDTO = oauthAdminStub.getOAuthApplicationDataByAppName(appName);
         oauthAdminStub.updateOauthSecretKey(authConsumerAppDTO.getOauthConsumerKey());
+    }
+
+    public OAuthConsumerAppDTO getOAuthAppByName(String applicationName) throws Exception {
+	    return oauthAdminStub.getOAuthApplicationDataByAppName(applicationName);
+    }
+
+    public void updateConsumerApplication(OAuthConsumerAppDTO application)
+            throws Exception {
+        oauthAdminStub.updateConsumerApplication(application);
     }
 }

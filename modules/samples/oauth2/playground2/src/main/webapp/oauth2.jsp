@@ -8,8 +8,11 @@
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
 <%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
 <%@ page import="org.wso2.sample.identity.oauth2.ApplicationConfig" %>
+<%@ page import="java.util.logging.Logger" %>
+<%@ page import="org.wso2.sample.identity.oauth2.ContextEventListener" %>
+<%@ page import="java.util.logging.Level" %>
 <%
-
+    Logger LOGGER = Logger.getLogger(ContextEventListener.class.getName());
 
     String consumerKey = ApplicationConfig.getConsumerKey();
     String consumerSecret = ApplicationConfig.getConsumerSecret();
@@ -32,6 +35,7 @@
     String code_verifier = null;
     String code_challenge = null;
     String implicitResponseType = null;
+    String acr_values = "";
 
     boolean isOIDCLogoutEnabled = false;
     boolean isOIDCSessionEnabled = false;
@@ -97,6 +101,7 @@
             accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
         } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_RESOURCE_OWNER.equals(grantType)) {
             accessToken = (String) session.getAttribute(OAuth2Constants.ACCESS_TOKEN);
+            idToken = (String) session.getAttribute(OAuth2Constants.ID_TOKEN);
         }
 
         scope = (String) session.getAttribute(OAuth2Constants.SCOPE);
@@ -241,6 +246,153 @@
             document.write('</tbody>');
         }
 
+        function decryptIdToken(element) {
+            console.log($(element).parent().parent().parent().parent());
+
+            // Remove error row if exists.
+            var row = document.getElementById("errorRow");
+            if (row != null ) row.parentNode.removeChild(row);
+
+            // Remove previously added decrypted data if exists.
+            $(".id_token_data_row").remove();
+
+            // Get last row by going to parent table element from button click.
+            var lastRow = $(element).parent().parent().parent().parent().find('tr:last');
+
+            var idToken = $("#encryptedIdToken").val().trim();
+            var privateKeyString = $("#clientPrivateKey").val().trim();
+            var data = {
+                "idToken": idToken,
+                "privateKeyString": privateKeyString
+            };
+
+            // Send ajax request to decrypt the id token.
+            $.ajax({
+                type: 'POST',
+                url: '/playground2/IDTokenDecrypterServlet',
+                dataType: 'text',
+                data: data,
+                success: function (data) {
+                    if (data != null || data !== "") {
+                        var dataJson = JSON.parse(data);
+
+                        // Add header dara row.
+                        var prettyHeader = JSON.stringify(dataJson.header, undefined, 4);
+                        var tokenHeaderHTML =
+                            "<tr class='id_token_data_row'>" +
+                                "<td>ID Token Header :</td><td>" +
+                                    "<textarea style='width:450px;height:130px;line-height:13px;'>" + prettyHeader +
+                                    "</textarea>" +
+                                "</td>" +
+                            "</tr>";
+                        lastRow.prev().after(tokenHeaderHTML);
+
+                        // Add claims data row.
+                        var prettyClaims = JSON.stringify(dataJson.claims, undefined, 4);
+                        var tokenClaimsHTML =
+                            "<tr class='id_token_data_row'>" +
+                                "<td>ID Token Claims :</td><td>" +
+                                    "<textarea style='width:450px;line-height:13px;'>" + prettyClaims + "</textarea>" +
+                                "</td>" +
+                            "</tr>";
+                        lastRow.prev().after(tokenClaimsHTML);
+                    }
+                },
+                error: function (e) {
+                    var errorHTML = $("<tr id=\"errorRow\"><td></td>" +
+                        "<td style='width:100%;color:#cc0000;' colspan='2'>" + e.responseText + "</td></tr>");
+                    lastRow.prev().after(errorHTML);
+                }
+            });
+        }
+
+        // Inject html in implicit flow id token only mode, depending on the type of the id token.
+        function renderImplicitFlowIdTokenHTML(idToken) {
+            var html = "";
+            if (idToken.split(".").length == 5) {
+                // It's a JWE.
+                html =
+                    "<tr>" +
+                        "<td><label style=\"width: 130px;\">Encrypted ID Token :</label></td>" +
+                        "<td>" +
+                            "<textarea id=\"encryptedIdToken\" name=\"idToken\" style=\"width:450px\"></textarea>" +
+                        "</td>"+
+                    "</tr>" +
+                    "<tr>" +
+                        "<td><label>Client Private Key :</label></td>" +
+                        "<td>" +
+                            "<textarea id=\"clientPrivateKey\" name=\"idToken\" style=\"width:450px\"></textarea>" +
+                        "</td>"+
+                        "<td>" +
+                            "<input type=\"submit\" class=\"button\" value=\"Decrypt\" " +
+                                "onclick=\"decryptIdToken(this);return false;\">" +
+                        "</td>" +
+                    "</tr>";
+                $(html).prependTo('#implicit-id-token');
+                $("#encryptedIdToken").val(idToken);
+            } else {
+                html =
+                    "<tr>" +
+                        "<td><label style=\"width: 130px;\">ID Token :</label></td>" +
+                        "<td>" +
+                            "<textarea id=\"idToken\" name=\"idToken\" style=\"width:450px\"></textarea>" +
+                        "</td>"+
+                    "</tr>";
+                $(html).prependTo('#implicit-id-token');
+                $("#idToken").val(idToken);
+            }
+        }
+
+        // Inject html in implicit flow id token and access token mode, depending on the type of the id token.
+        function renderImplicitFlowIdTokenTokenHTML(idToken) {
+            var html = "";
+            if (idToken.split(".").length == 5) {
+                // It's a JWE.
+                html =
+                    "<tr>" +
+                        "<td><label style=\"width: 130px;\">Access Token :</label></td>" +
+                        "<td>" +
+                            "<input id=\"accessToken\" name=\"accessToken\" style=\"width:450px\"/>" +
+                        "</td>"+
+                    "</tr>" +
+                    "<tr>" +
+                        "<td><label>Encrypted ID Token :</label></td>" +
+                        "<td>" +
+                            "<textarea id=\"encryptedIdToken\" name=\"idToken\" style=\"width:450px\"></textarea>" +
+                        "</td>"+
+                    "</tr>" +
+                    "<tr>" +
+                        "<td><label>Client Private Key :</label></td>" +
+                        "<td>" +
+                            "<textarea id=\"clientPrivateKey\" name=\"idToken\" style=\"width:450px\"></textarea>" +
+                        "</td>"+
+                        "<td>" +
+                            "<input type=\"submit\" class=\"button\" value=\"Decrypt\" " +
+                                "onclick=\"decryptIdToken(this);return false;\">" +
+                        "</td>" +
+                    "</tr>";
+                $(html).prependTo('#implicit-id-token-token');
+                $("#encryptedIdToken").val(idToken);
+                $("#accessToken").val(getAcceesToken());
+            } else {
+                html =
+                    "<tr>" +
+                        "<td><label style=\"width: 130px;\">Access Token :</label></td>" +
+                        "<td>" +
+                            "<input id=\"accessToken\" name=\"accessToken\" style=\"width:450px\"/>" +
+                        "</td>"+
+                    "</tr>" +
+                    "<tr>" +
+                        "<td><label>ID Token :</label></td>" +
+                        "<td>" +
+                            "<textarea id=\"idToken\" name=\"idToken\" style=\"width:450px\"></textarea>" +
+                        "</td>"+
+                    "</tr>";
+                $(html).prependTo('#implicit-id-token-token');
+                $("#idToken").val(idToken);
+                $("#accessToken").val(getAcceesToken());
+            }
+        }
     </script>
 
 </head>
@@ -283,6 +435,7 @@
                 <%} %>
 
                 <form action="oauth2-authorize-user.jsp" id="loginForm" method="post" name="oauthLoginForm">
+
                     <table class="user_pass_table" width="100%">
                         <tbody>
 
@@ -306,24 +459,24 @@
 
                         <tr>
                             <td><label>Client Id : </label></td>
-                            <td><input type="text" id="consumerKey" name="consumerKey" value="<%=consumerKey%>" style="width:350px"></td>
+                            <td><input type="text" id="consumerKey" name="consumerKey" value="<%=consumerKey%>" style="width:450px"></td>
                         </tr>
 
                         <tr id="clientsecret" style="display:none">
                             <td><label>Client Secret : </label></td>
                             <td><input type="password" id="consumerSecret" name="consumerSecret"
-                                       value="<%=consumerSecret%>" style="width:350px">
+                                       value="<%=consumerSecret%>" style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="recownertr" style="display:none">
                             <td><label>Resource Owner User Name: </label></td>
-                            <td><input type="text" id="recowner" name="recowner" style="width:350px"></td>
+                            <td><input type="text" id="recowner" name="recowner" style="width:450px"></td>
                         </tr>
 
                         <tr id="recpasswordtr" style="display:none">
                             <td><label>Resource Owner Password : </label></td>
-                            <td><input type="password" id="recpassword" name="recpassword" style="width:350px">
+                            <td><input type="password" id="recpassword" name="recpassword" style="width:450px">
                             </td>
                         </tr>
 
@@ -350,34 +503,34 @@
                         <tr id="callbackurltr">
                             <td><label>Callback URL : </label></td>
                             <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>"
-                                       style="width:350px">
+                                       style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="authzep">
                             <td>Authorize Endpoint :</td>
                             <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint" value="<%=authorizeEndpoint%>"
-                                       style="width:350px">
+                                       style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="accessep" style="display:none">
                             <td>Access Token Endpoint :</td>
                             <td><input type="text" id="accessEndpoint" name="accessEndpoint"  value="<%=accessTokenEndpoint%>"
-                                       style="width:350px"></td>
+                                       style="width:450px"></td>
                         </tr>
 
                         <tr id="logutep" style="display:none">
                             <td>Logout Endpoint :</td>
                             <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" value="<%=logoutEndpoint%>"
-                                       style="width:350px">
+                                       style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="sessionep" style="display:none">
                             <td>Session Iframe Endpoint :</td>
                             <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint" value="<%=sessionIFrameEndpoint%>"
-                                       style="width:350px"></td>
+                                       style="width:450px"></td>
                         </tr>
 
                         <tr id="pkceOption">
@@ -396,7 +549,7 @@
                         </tr>
                         <tr id="pkceChallenge">
                             <td>PKCE Code Challenge</td>
-                            <td><input type="text" style="width: 350px" readonly name="code_challenge"
+                            <td><input type="text" style="width: 450px" readonly name="code_challenge"
                                        value="<%=code_challenge%>"></td>
                         </tr>
                         <tr id="pkceVerifier">
@@ -410,6 +563,12 @@
                             <td><input type="radio" name="form_post" value="yes">Yes &nbsp;
                                 <input type="radio" name="form_post" value="no" checked>No
                             </td>
+                        </tr>
+
+                        <tr id="acr">
+                            <td>Authentication Context Class/LoA</td>
+                            <td><input type="text" style="width: 450px" name="acr_values"
+                                       value="<%=acr_values%>"></td>
                         </tr>
 
                         <tr>
@@ -433,21 +592,21 @@
                         </tr>
                         <tr>
                             <td>Callback URL :</td>
-                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>" style="width:350px"></td>
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>" style="width:450px"></td>
                         </tr>
                         <tr>
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" value="<%=accessTokenEndpoint%>" style="width:350px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" value="<%=accessTokenEndpoint%>" style="width:450px"></td>
                         </tr>
                         <tr>
                             <td><label>Client Secret : </label></td>
-                            <td><input type="password" id="consumerSecret" name="consumerSecret" value="<%=consumerSecret%>" style="width:350px">
+                            <td><input type="password" id="consumerSecret" name="consumerSecret" value="<%=consumerSecret%>" style="width:450px">
                             </td>
                         </tr>
                         <% if (session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
                         <tr>
                             <td><label>PKCE Verifier : </label></td>
-                            <td><input type="text" id="pkce_verifier" name="code_verifier" style="width:350px"
+                            <td><input type="text" id="pkce_verifier" name="code_verifier" style="width:450px"
                                        value="<%=(String)session.getAttribute(OAuth2Constants.OAUTH2_PKCE_CODE_VERIFIER)%>">
                             </td>
                         </tr>
@@ -469,6 +628,7 @@
                         </tr>
                         </tbody>
                     </table>
+
                 </form>
 
             </div>
@@ -476,11 +636,9 @@
             } else if (accessToken != null) {
 
                 if (idToken != null) {
-                    try {
-                        name = SignedJWT.parse(idToken).getJWTClaimsSet().getSubject();
-                    } catch (Exception e) {
-                        //ignore
-                    }
+                    // Check token for JWS or JWE by number of periods (.)
+                    if (StringUtils.countMatches(idToken, ".") == 4) {
+                        // It's a JWE.
             %>
 
             <div>
@@ -489,17 +647,28 @@
                     <table class="user_pass_table">
                         <tbody>
                         <tr>
-                            <td><label>Logged In User :</label></td>
-                            <td><label id="loggedUser"><%=name%></label></td>
-                        </tr>
-                        <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px" value="<%=accessToken%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:450px"
+                                       value="<%=accessToken%>"/>
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
                             <td><input id="resource_url" name="resource_url" type="text" value="<%=userInfo%>"
-                                       style="width:350px"/>
+                                       style="width:450px"/>
+                        </tr>
+                        <tr>
+                            <td><label>Encrypted ID Token :</label></td>
+                            <td><textarea id="encryptedIdToken" name="idToken" style="width:450px">
+                                <%=idToken.trim()%>
+                            </textarea>
+                        </tr>
+                        <tr>
+                            <td><label>Client Private Key :</label></td>
+                            <td><textarea id="clientPrivateKey" name="privateKey" style="width:450px"></textarea></td>
+                            <td>
+                                <input type="submit" class="button" value="Decrypt"
+                                       onclick="decryptIdToken(this);return false;">
+                            </td>
                         </tr>
 
                         <tr>
@@ -525,7 +694,62 @@
                 </form>
             </div>
 
-            <%} else { %>
+            <%
+                    } else {
+                        try {
+                            name = SignedJWT.parse(idToken).getJWTClaimsSet().getSubject();
+                        } catch (Exception e) {
+                            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                        }
+            %>
+
+            <div>
+                <form action="oauth2-access-resource.jsp" id="loginForm" method="post">
+
+                    <table class="user_pass_table" id="oauth-code-with-JWS">
+                        <tbody>
+                        <tr>
+                            <td><label>Logged In User :</label></td>
+                            <td><label id="loggedUser"><%=name%></label></td>
+                        </tr>
+                        <tr>
+                            <td><label>Access Token :</label></td>
+                            <td><input id="accessToken" name="accessToken" style="width:450px" value="<%=accessToken%>"/>
+                        </tr>
+                        <tr>
+                            <td><label>UserInfo Endpoint :</label></td>
+                            <td><input id="resource_url" name="resource_url" type="text" value="<%=userInfo%>"
+                                       style="width:450px"/>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <input type="submit" class="button" value="Get UserInfo">
+                            </td>
+                            <%
+                                if (isOIDCLogoutEnabled) {
+                            %>
+                            <td>
+                                <button type="button" class="button"
+                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';">
+                                    Logout
+                                </button>
+                            </td>
+                            <%
+                                }
+                            %>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+
+            <%
+                    }
+                } else {
+            %>
+
             <div>
                 <form action="oauth2-access-resource.jsp" id="loginForm" method="post">
 
@@ -533,17 +757,17 @@
                         <tbody>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px" value="<%=accessToken%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:450px" value="<%=accessToken%>"/>
                         </tr>
                         <% if (application.getInitParameter("setup").equals("AM")) { %>
                         <tr>
                             <td><label>Resource URL :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" style="width:450px"/>
                         </tr>
                         <% } %>
                         <tr>
                             <td><label>Introspection Endpoint :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" style="width:450px"/>
                         </tr>
                         <tr>
                             <td>
@@ -555,24 +779,18 @@
 
                 </form>
             </div>
-            <%} %>
-            <% } else if (OpenIDConnectConstants.ID_TOKEN.equals(implicitResponseType)) {
+
+            <%
+                }
+            } else if (OpenIDConnectConstants.ID_TOKEN.equals(implicitResponseType)) {
             %>
             <div>
-                <table class="user_pass_table">
+                <table class="user_pass_table" id="implicit-id-token">
                     <tbody>
                     <tr>
-                        <td><h5>ID Token:</h5></td>
-                        <td><input id="idToken" name="idToken" style="width:800px"/>
-                            <script type="text/javascript">
-                                document.getElementById("idToken").value = getIDtoken();
-                            </script>
-                        </td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
                         <script type="text/javascript">
+                            var idtoken = getIDtoken();
+                            renderImplicitFlowIdTokenHTML(idtoken);
                             var decodedIdToken = JSON.parse(getDecodedIDToken());
                             makeList(decodedIdToken);
                         </script>
@@ -581,36 +799,27 @@
                 </table>
                 <%session.invalidate();%>
             </div>
-            <% } else if (OpenIDConnectConstants.ID_TOKEN_TOKEN.equals(implicitResponseType)) {%>
+
+            <%
+            } else if (OpenIDConnectConstants.ID_TOKEN_TOKEN.equals(implicitResponseType)) {
+            %>
             <div>
-                <table class="user_pass_table">
+                <table class="user_pass_table" id="implicit-id-token-token">
                     <tbody>
                     <tr>
-                        <td><label><h5>Access Token :</h5></label></td>
-                        <td><input id="accessToken" name="accessToken" style="width:350px"/>
-                            <script type="text/javascript">
-                                document.getElementById("accessToken").value = getAcceesToken();
-                            </script>
-                    </tr>
-                    <tr>
-                        <td><h5>ID Token:</h5></td>
-                        <td><input id="idToken" name="idToken" style="width:800px"/>
-                            <script type="text/javascript">
-                                document.getElementById("idToken").value = getIDtoken();
-                            </script>
-                        </td>
-                    </tr>
-                    <tr>
                         <script type="text/javascript">
+                            var idtoken = getIDtoken();
+                            renderImplicitFlowIdTokenTokenHTML(idtoken);
                             var decodedIdToken = JSON.parse(getDecodedIDToken());
                             makeList(decodedIdToken);
                         </script>
                     </tr>
                     </tbody>
                 </table>
-                <%session.invalidate();%>
             </div>
-            <% } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT.equals(grantType)) {%>
+            <%
+            } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT.equals(grantType)) {
+            %>
             <div>
                 <form action="oauth2-access-resource.jsp" id="loginForm" method="post">
 
@@ -618,7 +827,7 @@
                         <tbody>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:350px"/>
+                            <td><input id="accessToken" name="accessToken" style="width:450px"/>
                                 <script type="text/javascript">
                                     document.getElementById("accessToken").value = getAcceesToken();
                                 </script>
@@ -626,12 +835,12 @@
                         <% if (application.getInitParameter("setup").equals("AM")) { %>
                         <tr>
                             <td><label>Resource URL :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" style="width:450px"/>
                         </tr>
                         <% } %>
                         <tr>
                             <td><label>Introspection Endpoint :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text" style="width:350px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" style="width:450px"/>
                         </tr>
                         <tr>
                             <td>

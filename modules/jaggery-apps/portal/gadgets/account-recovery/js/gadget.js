@@ -71,7 +71,7 @@ function drawPage() {
         "            <div class=\"control-group\">\n" +
         "                <div class=\"controls\">\n" +
         "                    <input type=\"button\" class=\"btn btn-primary\" value=\"Update\" onclick=\"validate();\"/>\n" +
-        "                    <input type=\"button\" class=\"btn\" value=\"Cancel\" onclick=\"cancel();\"/>\n" +
+        "                    <input type=\"button\" class=\"btn btn-default btn-cancel\" value=\"Cancel\" onclick=\"cancel();\"/>\n" +
         "                </div>\n" +
         "            </div>\n" +
         "    </div>";
