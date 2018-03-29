@@ -35,7 +35,6 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.SocketOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
