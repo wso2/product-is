@@ -225,7 +225,7 @@
     </test>
     <test name="xacml-entitlement-testcases" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase"/>-->
         </classes>
     </test>
 </suite>
