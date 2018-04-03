@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -314,7 +314,6 @@ export class OauthClient extends React.Component {
 
     viewImplicitResults = (e) => {
         e.preventDefault();
-
         this.setState({isImplicit: true});
     }
 
@@ -407,7 +406,6 @@ export class OauthClient extends React.Component {
             summary = status + " " + status_Text;
             this.setState({summary})
         }
-        ;
     }
 
     // This method handle the client side whenever an error is returned in the response.
@@ -431,7 +429,6 @@ export class OauthClient extends React.Component {
             summary = <font color="red">Error: {error_des} {err}</font>
             this.setState({summary})
         }
-        ;
     }
 
     handleEdit = (e) => {
@@ -781,7 +778,6 @@ export class OauthClient extends React.Component {
                                 </Highlight><br/></p>
                         </div>
                     </div>
-
                     <div className="panel panel-primary">
                         <div className="panel-heading">Response Data</div>
                         <div className="panel-body">
@@ -825,7 +821,6 @@ export class OauthClient extends React.Component {
                         </div>
                     </div>
                 </div>
-
             );
         } else {
             return (
