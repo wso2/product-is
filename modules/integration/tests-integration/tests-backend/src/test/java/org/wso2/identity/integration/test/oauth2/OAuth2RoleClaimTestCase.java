@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTest {
+
     private static final String OAUTH_ROLE = "oauthRole";
     private static final String ROLE_CLAIM_URI = "http://wso2.org/claims/role";
     private static final String OIDC_DIALECT_URI = "http://wso2.org/oidc/claim";
@@ -79,11 +80,12 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
 
     private String openidScope = "sub,email,email_verified,name,family_name,given_name,middle_name,nickname," +
-            "preferred_username,profile,picture,website,gender,birthdate,zoneinfo,locale,updated_at,phone_number,phone_number_verified," +
-            "address,street_address,country,formatted,postal_code,locality,region";
+            "preferred_username,profile,picture,website,gender,birthdate,zoneinfo,locale,updated_at,phone_number," +
+            "phone_number_verified,address,street_address,country,formatted,postal_code,locality,region";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init(TestUserMode.TENANT_USER);
 
         setSystemproperties();
@@ -95,8 +97,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
                 "default", false);
         propertiesAdminServiceClient = new PropertiesAdminServiceClient(backendURL, sessionCookie);
 
-        propertiesAdminServiceClient.updateProperty(OPENID_SCOPE_RESOURCE, OPENID_SCOPE_PROPERTY, openidScope + "," + OIDC_ROLE_CLAIM_URI
-                , OPENID_SCOPE_PROPERTY);
+        propertiesAdminServiceClient.updateProperty(OPENID_SCOPE_RESOURCE, OPENID_SCOPE_PROPERTY, openidScope + "," +
+                OIDC_ROLE_CLAIM_URI, OPENID_SCOPE_PROPERTY);
 
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
 
@@ -109,8 +111,10 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApplication();
-        propertiesAdminServiceClient.updateProperty(OPENID_SCOPE_RESOURCE, OPENID_SCOPE_PROPERTY, openidScope, OPENID_SCOPE_PROPERTY);
+        propertiesAdminServiceClient.updateProperty(OPENID_SCOPE_RESOURCE, OPENID_SCOPE_PROPERTY, openidScope,
+                OPENID_SCOPE_PROPERTY);
 
         remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
         remoteUSMServiceClient.deleteUser(USERNAME);
@@ -121,6 +125,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
+
         OAuthConsumerAppDTO appDto = createApplication();
         Assert.assertNotNull(appDto, "Application creation failed.");
 
@@ -167,7 +172,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
             "testSendAuthorizedPost")
     public void testSendAuthorizedPostAfterRoleUpdate() throws Exception {
 
-        remoteUSMServiceClient.updateRoleListOfUser(USERNAME, null, new String[] {OAUTH_ROLE});
+        remoteUSMServiceClient.updateRoleListOfUser(USERNAME, null, new String[]{OAUTH_ROLE});
 
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -194,8 +199,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
         Object roles = ((JSONObject) idToken).get(OIDC_ROLE_CLAIM_URI);
         ArrayList<String> roleList = new ArrayList<>();
-        for (int i=0; i<((JSONArray)roles).size() ;i++) {
-            roleList.add(((JSONArray)roles).get(i).toString());
+        for (int i = 0; i < ((JSONArray) roles).size(); i++) {
+            roleList.add(((JSONArray) roles).get(i).toString());
         }
         Assert.assertTrue(roleList.contains(OAUTH_ROLE), "Id token does not contain updated role claim");
     }
@@ -219,11 +224,11 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         email.setValue(EMAIL_VALUE);
         claimValues[2] = email;
 
-
         return claimValues;
     }
 
     public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO) throws Exception {
+
         OAuthConsumerAppDTO appDtoResult = null;
 
         adminClient.registerOAuthApplicationData(appDTO);
@@ -276,7 +281,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
                 Property property = new Property();
                 property.setName("oauthConsumerSecret");
                 property.setValue(consumerSecret);
-                Property[] properties = { property };
+                Property[] properties = {property};
                 opicAuthenticationRequest.setProperties(properties);
             }
             authRequestList.add(opicAuthenticationRequest);
@@ -302,7 +307,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         if (authRequestList.size() > 0) {
             serviceProvider.getInboundAuthenticationConfig()
-                    .setInboundAuthenticationRequestConfigs(authRequestList.toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
+                    .setInboundAuthenticationRequestConfigs(authRequestList.toArray(new
+                            InboundAuthenticationRequestConfig[authRequestList.size()]));
         }
         appMgtclient.updateApplicationData(serviceProvider);
         return appDtoResult;
