@@ -401,8 +401,17 @@
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/</outputDirectory>
+            <excludes>
+                <exclude>*/httpclient*</exclude>
+                <exclude>*/httpcore*</exclude>
+                <exclude>*/commons-logging*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/</outputDirectory>
             <includes>
-                <include>*/**</include>
+                <include>*/httpcore-nio*</include>
             </includes>
         </fileSet>
 
