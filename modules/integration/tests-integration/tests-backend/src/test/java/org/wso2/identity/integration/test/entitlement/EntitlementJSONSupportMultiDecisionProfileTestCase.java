@@ -257,7 +257,13 @@ public class EntitlementJSONSupportMultiDecisionProfileTestCase extends ISIntegr
 
         Object obj1Converted = convertJsonElement(ob1);
         Object obj2Converted = convertJsonElement(ob2);
-        return obj1Converted.equals(obj2Converted);
+
+        HashSet<HashMap> set1 = (HashSet<HashMap>) ((HashMap) obj1Converted).get("Response");
+        HashSet<HashMap> set2 = (HashSet<HashMap>) ((HashMap) obj2Converted).get("Response");
+
+        Assert.assertEquals(set1, set2, "The two set of objects are not equal");
+
+        return set1.equals(set2);
     }
 
     private static Object convertJsonElement(Object elem) throws JSONException {
