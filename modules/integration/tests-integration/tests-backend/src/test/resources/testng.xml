@@ -138,6 +138,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2RoleClaimTestCase"/>
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ScopesTestCase"/>
             <!--XACML based scope validation test-->
@@ -221,6 +222,11 @@
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
+        </classes>
+    </test>
+    <test name="xacml-entitlement-testcases" preserve-order="true" parallel="false">
+        <classes>
+            <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase"/>-->
         </classes>
     </test>
 </suite>

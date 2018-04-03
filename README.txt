@@ -27,7 +27,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   http://docs.wso2.org/wiki/display/IS550/Installation+Prerequisites
+   http://docs.wso2.org/wiki/display/IS560/Installation+Prerequisites
 
 
 Project Resources
@@ -49,7 +49,7 @@ Installation and Running
 3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
 4. User dashboard is available at https://localhost:9443/dashboard
 5. For more information, see the Installation Guide
-    https://docs.wso2.com/display/IS550/Installation+Guide
+    https://docs.wso2.com/display/IS560/Installation+Guide
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -220,7 +220,7 @@ For more information about WSO2 Identity Server please see http://wso2.org/proje
 WSO2 Oxygen Tank developer portal for addition resources.
 
 For further details, see the WSO2 Identity Server documentation at
-https://docs.wso2.com/display/IS550/WSO2+Identity+Server+Documentation
+https://docs.wso2.com/display/IS560/WSO2+Identity+Server+Documentation
 
 ---------------------------------------------------------------------------
 (c) Copyright 2018 WSO2 Inc.
