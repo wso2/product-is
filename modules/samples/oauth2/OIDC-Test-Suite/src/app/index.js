@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,8 @@ import {Authorized} from "./components/Authorized";
 import {Footer} from "./components/Footer";
 
 class App extends React.Component {
-
     render() {
         return (
-
             <div>
                 <Header title=" OIDC Compliance Test Suite"/>
                 <div className="container">
