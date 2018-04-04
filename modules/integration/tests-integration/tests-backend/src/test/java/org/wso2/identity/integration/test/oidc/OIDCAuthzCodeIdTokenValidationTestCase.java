@@ -64,10 +64,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Integration test cases for getting nonce claim with id token.
+ * Integration test cases for validating id token claims.
  */
-public class OIDCNonceWithAuthzCodeTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    public static final String TEST_NONCE = "test_nonce";
     private RSAPrivateKey spPrivateKey;
     private X509Certificate spX509PublicCert;
     private static final String CALLBACK_URL = "https://localhost/callback";
@@ -110,7 +111,9 @@ public class OIDCNonceWithAuthzCodeTestCase extends OAuth2ServiceAbstractIntegra
     public void testRegisterApplication() throws Exception {
 
         OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
+        ServiceProvider serviceProvider = registerServiceProviderWithLocalAndOutboundConfigs(oAuthConsumerAppDTO);
+        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setUseTenantDomainInLocalSubjectIdentifier(true);
+        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setUseUserstoreDomainInLocalSubjectIdentifier(true);
         Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
@@ -127,10 +130,11 @@ public class OIDCNonceWithAuthzCodeTestCase extends OAuth2ServiceAbstractIntegra
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, OAuth2Constant.OAUTH2_SCOPE_OPENID));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE,"test_nonce"));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, TEST_NONCE));
 
         HttpResponse response =
-                sendPostRequestWithParameters(client, urlParameters,
+                sendPostRequestWithParameters(client, urlParameters
+                        ,
                         OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
 
@@ -204,7 +208,9 @@ public class OIDCNonceWithAuthzCodeTestCase extends OAuth2ServiceAbstractIntegra
         idToken = oidcTokens.getIDTokenString();
         Assert.assertNotNull(idToken, "ID token is null");
         ReadOnlyJWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
-        Assert.assertEquals(jwtClaimsSet.getClaim("nonce"), "test_nonce", "Invalid nonce received.");
+        Assert.assertEquals(jwtClaimsSet.getClaim("nonce"), TEST_NONCE, "Invalid nonce received.");
+        Assert.assertEquals(jwtClaimsSet.getSubject(), "testuser11@carbon.super", "Invalid subject received.");
+        Assert.assertEquals(jwtClaimsSet.getIssuer(), "https://localhost:9853/oauth2/token", "Invalid issuer received.");
     }
 
     private String getSessionDataKeyConsent(CloseableHttpClient client, String sessionDataKey)
