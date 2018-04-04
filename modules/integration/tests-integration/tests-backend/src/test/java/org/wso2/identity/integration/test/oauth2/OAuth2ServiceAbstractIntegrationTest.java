@@ -583,6 +583,27 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
 
+		ServiceProvider serviceProvider = generateServiceProvider(appDTO);
+		return getServiceProvider(serviceProvider);
+	}
+
+	/**
+	 * Register a SP with some local and outbound configs.
+	 *
+	 * @param appDTO OAuthConsumerAppDTO of the service provider.
+	 * @return Registered service provider with some local and outbound configs
+	 * @throws Exception
+	 */
+	public ServiceProvider registerServiceProviderWithLocalAndOutboundConfigs(OAuthConsumerAppDTO appDTO)
+			throws Exception {
+
+		ServiceProvider serviceProvider = generateServiceProvider(appDTO);
+		serviceProvider.getLocalAndOutBoundAuthenticationConfig().setUseTenantDomainInLocalSubjectIdentifier(true);
+		return getServiceProvider(serviceProvider);
+	}
+
+	private ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO) throws Exception {
+
 		adminClient.registerOAuthApplicationData(appDTO);
 
 		OAuthConsumerAppDTO oauthConsumerApp = adminClient.getOAuthAppByName(appDTO.getApplicationName());
@@ -603,6 +624,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 					.setInboundAuthenticationRequestConfigs(authRequestList.toArray(
 							new InboundAuthenticationRequestConfig[authRequestList.size()]));
 		}
+		return serviceProvider;
+	}
+
+	private ServiceProvider getServiceProvider(ServiceProvider serviceProvider) throws Exception {
+
 		appMgtclient.updateApplicationData(serviceProvider);
 		return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
 	}
