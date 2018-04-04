@@ -49,38 +49,39 @@ public class OAuthDAO {
         return instance;
     }
 
-    public boolean isConsumerSecretHashColumnAvailable(Connection connection) throws SQLException {
+    public boolean isConsumerSecretHashColumnAvailable(Connection connection)  {
 
         String sql;
+        PreparedStatement prepStmt = null;
         boolean isConsumerSecretHashColumnsExist = false;
-        if (connection.getMetaData().getDriverName().contains("MySQL") || connection.getMetaData().getDriverName()
-                .contains("H2")) {
-            sql = RETRIEVE_CONSUMER_APPS_TABLE_MYSQL;
-        } else if (connection.getMetaData().getDatabaseProductName().contains("DB2")) {
-            sql = RETRIEVE_CONSUMER_APPS_TABLE_DB2SQL;
-        } else if (connection.getMetaData().getDriverName().contains("MS SQL") || connection.getMetaData()
-                .getDriverName().contains("Microsoft")) {
-            sql = RETRIEVE_CONSUMER_APPS_TABLE_MSSQL;
-        } else if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
-            sql = RETRIEVE_CONSUMER_APPS_TABLE_MYSQL;
-        } else if (connection.getMetaData().getDriverName().contains("Informix")) {
-            // Driver name = "IBM Informix JDBC Driver for IBM Informix Dynamic Server"
-            sql = RETRIEVE_CONSUMER_APPS_TABLE_INFORMIX;
-        } else {
-            sql = RETRIEVE_CONSUMER_APPS_TABLE_ORACLE;
-        }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try {
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet != null) {
-
-                    resultSet.findColumn(CONSUMER_SECRET_HASH);
-                    isConsumerSecretHashColumnsExist = true;
-
-                }
-            } catch (SQLException e) {
-                isConsumerSecretHashColumnsExist = false;
+        try {
+            if (connection.getMetaData().getDriverName().contains("MySQL") || connection.getMetaData().getDriverName()
+                    .contains("H2")) {
+                sql = RETRIEVE_CONSUMER_APPS_TABLE_MYSQL;
+            } else if (connection.getMetaData().getDatabaseProductName().contains("DB2")) {
+                sql = RETRIEVE_CONSUMER_APPS_TABLE_DB2SQL;
+            } else if (connection.getMetaData().getDriverName().contains("MS SQL") || connection.getMetaData()
+                    .getDriverName().contains("Microsoft")) {
+                sql = RETRIEVE_CONSUMER_APPS_TABLE_MSSQL;
+            } else if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                sql = RETRIEVE_CONSUMER_APPS_TABLE_MYSQL;
+            } else if (connection.getMetaData().getDriverName().contains("Informix")) {
+                // Driver name = "IBM Informix JDBC Driver for IBM Informix Dynamic Server"
+                sql = RETRIEVE_CONSUMER_APPS_TABLE_INFORMIX;
+            } else {
+                sql = RETRIEVE_CONSUMER_APPS_TABLE_ORACLE;
             }
+
+            prepStmt = connection.prepareStatement(sql);
+            ResultSet resultSet = prepStmt.executeQuery();
+            if (resultSet != null) {
+
+                resultSet.findColumn(CONSUMER_SECRET_HASH);
+                isConsumerSecretHashColumnsExist = true;
+
+            }
+        } catch (SQLException e) {
+            isConsumerSecretHashColumnsExist = false;
         }
         return isConsumerSecretHashColumnsExist;
     }
