@@ -19,9 +19,9 @@ package org.wso2.sample.is.sso.agent;
 
 import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
-import org.wso2.carbon.identity.sso.agent.SSOAgentException;
-import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509Credential;
-import org.wso2.carbon.identity.sso.agent.saml.SSOAgentX509KeyStoreCredential;
+import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
+import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509Credential;
+import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509KeyStoreCredential;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
