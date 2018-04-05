@@ -438,6 +438,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.utils:org.wso2.carbon.database.utils.feature:${carbon.database.utils.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.oauth.uma:org.wso2.carbon.identity.oauth.uma.server.feature:${carbon.identity.oauth.uma.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -895,6 +899,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.database.utils.feature.group</id>
                                     <version>${carbon.database.utils.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth.uma.server.feature.group</id>
+                                    <version>${carbon.identity.oauth.uma.version}</version>
                                 </feature>
 
                             </features>
@@ -1363,6 +1371,11 @@
                                     <version>${carbon.database.utils.version}</version>
                                 </feature>
 
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth.uma.server.feature.group</id>
+                                    <version>${carbon.identity.oauth.uma.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
@@ -1790,6 +1803,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.database.utils.feature.group</id>
                                     <version>${carbon.database.utils.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth.uma.server.feature.group</id>
+                                    <version>${carbon.identity.oauth.uma.version}</version>
                                 </feature>
 
                             </features>
