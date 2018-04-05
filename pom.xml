@@ -1686,7 +1686,7 @@
         <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
         <provisioning.connector.google.version>5.1.5</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.4</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.1.9</provisioning.connector.scim.version>
+        <provisioning.connector.scim.version>5.1.8</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>5.3.7</identity.local.auth.basicauth.version>
