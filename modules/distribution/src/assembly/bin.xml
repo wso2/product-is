@@ -187,7 +187,7 @@
             </includes>
         </fileSet>
 
-        <!--copy jaxrs web app for OAuth feature-->
+        <!--copy jaxrs web app for 5.11.157-SNAPSHOT feature-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -258,6 +258,29 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>api#identity#consent-mgt#v1.0.war</include>
+            </includes>
+        </fileSet>
+
+
+        <!--copy  web app for UMA 2.0 permission endpoint feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#oauth2#uma#permission#v1.0.war</include>
+            </includes>
+        </fileSet>
+
+        <!--copy  web app for UMA 2.0 resource endpoint feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#oauth2#uma#resourceregistration#v1.0.war</include>
             </includes>
         </fileSet>
 
@@ -462,6 +485,18 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/
             </directory>
             <outputDirectory>wso2is-${pom.version}/dbscripts/consent</outputDirectory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+            <fileMode>644</fileMode>
+            <directoryMode>775</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/uma/
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/dbscripts/identity/uma</outputDirectory>
             <includes>
                 <include>**/*.sql</include>
             </includes>
@@ -969,6 +1004,13 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
             </outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/uma.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
     </files>
