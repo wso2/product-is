@@ -187,7 +187,7 @@
             </includes>
         </fileSet>
 
-        <!--copy jaxrs web app for 5.11.157-SNAPSHOT feature-->
+        <!--copy jaxrs web app for OAuth feature-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
