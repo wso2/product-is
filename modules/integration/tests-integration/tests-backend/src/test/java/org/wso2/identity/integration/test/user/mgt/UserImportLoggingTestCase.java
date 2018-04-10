@@ -17,8 +17,17 @@
  */
 package org.wso2.identity.integration.test.user.mgt;
 
+import org.apache.axis2.AxisFault;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
-import org.testng.Assert;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -30,10 +39,39 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.AUDIT_LOG_FILE_NAME;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.BULK_USER_IMPORT_ERROR_FILE;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.BULK_USER_IMPORT_OP;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.BULK_USER_IMPORT_SUCCESS_FILE;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.CAUSE;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.COUNT;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.DUPLICATE_USERNAME;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.DUPLICATE_USERS;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.DUPLICATE_USER_COUNT;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.ENCODING;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_CAUSE;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_USERNAME;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_USERS;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_USER_COUNT;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.LOG_FILE_NAME;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.PIPE_REGEX;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.RESULT_REGEX;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.SUCCESS_COUNT;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.SUCCESS_USER_COUNT;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.SUCCESS_USER_COUNT_IN_MIXED_MODE;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.USERS;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.USER_NAME;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.USER_STORE_DOMAIN;
 
 /**
  * Test cases for the bulkUserImport log appender.
@@ -41,9 +79,13 @@ import javax.activation.FileDataSource;
  */
 public class UserImportLoggingTestCase extends ISIntegrationTest {
 
+    private static final Log log = LogFactory.getLog(UserImportLoggingTestCase.class);
     private UserManagementClient userMgtClient;
     private boolean isFilePresent = false;
-    private final String LOG_FILE_NAME = "bulkuserimport.log";
+    private final String BULK_USER_FILE = getISResourceLocation() + File.separator + "userMgt"
+            + File.separator;
+    private final String LOG_FILE_LOCATION = Utils.getResidentCarbonHome() + File.separatorChar + "repository" +
+            File.separatorChar + "logs";
 
     @BeforeClass
     public void init() throws Exception {
@@ -53,33 +95,131 @@ public class UserImportLoggingTestCase extends ISIntegrationTest {
         PropertyConfigurator.configure(createLog4jConfiguration());
     }
 
-    @Test (description = "Perform bulk user import and check the bulkuserimport log file is created.")
+    @Test(description = "Perform bulk user import and check the bulkuserimport log file is created.")
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    public void testBulkUserImportLog() throws RemoteException, UserAdminUserAdminException {
+    public void testBulkUserImportLogFileIsPresent() throws RemoteException, UserAdminUserAdminException {
 
-        String userStoreDomain = "PRIMARY";
-        File bulkUserFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "bulkUserImport.csv");
+        File bulkUserFile = new File(BULK_USER_FILE + BULK_USER_IMPORT_SUCCESS_FILE);
 
         DataHandler handler = new DataHandler(new FileDataSource(bulkUserFile));
-        userMgtClient.bulkImportUsers(userStoreDomain, "bulkUserImport.csv", handler, "PassWord1@");
-        String logsHome = Utils.getResidentCarbonHome() + File.separatorChar + "repository" + File.separatorChar +
-                "logs";
-        File logDir = new File(logsHome);
-        String[] logFiles = logDir.list();
+        userMgtClient.bulkImportUsers(USER_STORE_DOMAIN, BULK_USER_IMPORT_SUCCESS_FILE, handler, null);
 
-        if (logFiles != null) {
+        File logDir = new File(LOG_FILE_LOCATION);
+        String[] logFiles = logDir.list();
+        if (ArrayUtils.isNotEmpty(logFiles)) {
             for (String fileName : logFiles) {
                 if (LOG_FILE_NAME.equals(fileName)) {
                     isFilePresent = true;
                 }
             }
         }
-        Assert.assertTrue(isFilePresent);
+        assertTrue(isFilePresent);
+    }
+
+    @Test(description = "Method to test the bulk user import error scenario. The test checks for the RemoteException " +
+            "which is thrown by the bulkImportUser method", expectedExceptions = {AxisFault.class},
+            dependsOnMethods = {"testBulkUserImportLogFileIsPresent"})
+    public void testBulkImportWithUserAdminException() throws RemoteException, UserAdminUserAdminException {
+
+        File bulkUserFile = new File(BULK_USER_FILE + BULK_USER_IMPORT_ERROR_FILE);
+
+        DataHandler handler = new DataHandler(new FileDataSource(bulkUserFile));
+        userMgtClient.bulkImportUsers(USER_STORE_DOMAIN, BULK_USER_IMPORT_ERROR_FILE, handler, null);
+
+        File logDir = new File(LOG_FILE_LOCATION);
+        String[] logFiles = logDir.list();
+        if (ArrayUtils.isNotEmpty(logFiles)) {
+            for (String fileName : logFiles) {
+                if (LOG_FILE_NAME.equals(fileName)) {
+                    isFilePresent = true;
+                }
+            }
+        }
+    }
+
+    @Test(description = "Test the audit log content for the bulk user import operation.",
+            dependsOnMethods = {"testBulkImportWithUserAdminException"})
+    public void testBulkUserImportAuditLog() throws IOException, JSONException {
+
+        List<String> bulkUserImportAuditLogs = new ArrayList<>();
+        String[] auditLogSegments = null;
+        JSONObject resultJson = null;
+        String result = null;
+        String auditLogFile = LOG_FILE_LOCATION + File.separatorChar + AUDIT_LOG_FILE_NAME;
+        File auditFile = new File(auditLogFile);
+
+        // Iterate through the file and read lines.
+        LineIterator iterator = FileUtils.lineIterator(auditFile, ENCODING);
+
+        while (iterator.hasNext()) {
+            String auditLine = iterator.nextLine();
+
+            if (StringUtils.contains(auditLine, BULK_USER_IMPORT_OP)) {
+                bulkUserImportAuditLogs.add(auditLine);
+            }
+        }
+
+        /*
+        * There are two log entries for bulk user import.
+        *
+        * 1. Success scenario
+        * 2. Importing users with failures and duplicates.
+        * */
+        for (String line : bulkUserImportAuditLogs) {
+
+            log.info("Audit log line: " + line);
+            auditLogSegments = line.split(PIPE_REGEX);
+            result = auditLogSegments[4];
+
+            if (StringUtils.isNotEmpty(result)) {
+
+                // Get the result as a json object
+                resultJson = new JSONObject(result.trim().split(RESULT_REGEX)[1]);
+
+                if (resultJson.has(DUPLICATE_USERS) && resultJson.has(FAILED_USERS)) {
+
+                    // Assert the success count
+                    assertEquals(resultJson.getInt(SUCCESS_COUNT), SUCCESS_USER_COUNT);
+
+                    // Get the duplicate users as a json object
+                    JSONObject duplicateUsers = resultJson.getJSONObject(DUPLICATE_USERS);
+                    // Get the duplicate user names
+                    JSONArray duplicateUsersList = duplicateUsers.getJSONArray(USERS);
+
+                    // Assert the duplicate count and the duplicate user names
+                    assertEquals(duplicateUsers.getInt(COUNT), DUPLICATE_USER_COUNT);
+                    // Check the duplicate users count is matches the number of users in the list
+                    assertEquals(duplicateUsersList.length(), DUPLICATE_USER_COUNT);
+                    assertEquals(duplicateUsersList.get(0), DUPLICATE_USERNAME);
+
+                    // Get the failed user information as json object
+                    JSONObject failedUsers = resultJson.getJSONObject(FAILED_USERS);
+                    // Get the failed users as Json array
+                    JSONArray failedUsersList = failedUsers.getJSONArray(USERS);
+
+                    // Check the failed user count matches the number of users in the list.
+                    assertEquals(failedUsersList.length(), FAILED_USER_COUNT);
+
+                    // Assert the failed user count, name and the cause.
+                    assertEquals(failedUsers.getInt(COUNT), FAILED_USER_COUNT);
+
+                    // Get the failed user json object
+                    JSONObject failedUser = failedUsersList.getJSONObject(0);
+
+                    // Assert the failed user name and the cause.
+                    assertEquals(failedUser.getString(USER_NAME), FAILED_USERNAME);
+                    assertEquals(failedUser.getString(CAUSE), FAILED_CAUSE);
+                } else {
+                    // Assert the success count when all the users are imported successfully.
+                    assertEquals(resultJson.getInt(SUCCESS_COUNT), SUCCESS_USER_COUNT_IN_MIXED_MODE);
+                }
+            }
+        }
     }
 
     /**
      * Generate the log4j properties related to the log appender.
+     *
      * @return : Properties object with the necessary properties.
      */
     private Properties createLog4jConfiguration() {
