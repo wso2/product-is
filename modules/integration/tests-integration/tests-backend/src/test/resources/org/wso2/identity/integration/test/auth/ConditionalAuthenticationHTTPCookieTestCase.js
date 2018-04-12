@@ -1,4 +1,4 @@
-function httpcontext(context) {
+function onInitialRequest(context) {
 
     if (context.request.cookies.testcookie) {
         log.info("--------------- cookie testcookie found in request.");
