@@ -16,7 +16,7 @@
  * under the License.
  */
 
-function test(context) {
+function onInitialRequest(context) {
     executeStep({
         id: '1',
         on: {
