@@ -80,12 +80,13 @@ import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.U
 public class UserImportLoggingTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(UserImportLoggingTestCase.class);
-    private UserManagementClient userMgtClient;
-    private boolean isFilePresent = false;
+
     private final String BULK_USER_FILE = getISResourceLocation() + File.separator + "userMgt"
             + File.separator;
     private final String LOG_FILE_LOCATION = Utils.getResidentCarbonHome() + File.separatorChar + "repository" +
             File.separatorChar + "logs";
+    private boolean isFilePresent = false;
+    private UserManagementClient userMgtClient;
 
     @BeforeClass
     public void init() throws Exception {
