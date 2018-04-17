@@ -69,14 +69,14 @@ import java.util.List;
 public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     public static final String TEST_NONCE = "test_nonce";
+    protected static final String CALLBACK_URL = "https://localhost/callback";
     private RSAPrivateKey spPrivateKey;
     private X509Certificate spX509PublicCert;
-    private static final String CALLBACK_URL = "https://localhost/callback";
-    private CloseableHttpClient client;
-    private String sessionDataKey;
-    private String sessionDataKeyConsent;
-    private AuthorizationCode authorizationCode;
-    private String idToken;
+    protected CloseableHttpClient client;
+    protected String sessionDataKey;
+    protected String sessionDataKeyConsent;
+    protected AuthorizationCode authorizationCode;
+    protected String idToken;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -237,7 +237,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         return DataExtractUtil.getParamFromURIString(locationValue, OAuth2Constant.SESSION_DATA_KEY_CONSENT);
     }
 
-    private String getLocationHeaderValue(HttpResponse response) {
+    protected String getLocationHeaderValue(HttpResponse response) {
 
         Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(location);
