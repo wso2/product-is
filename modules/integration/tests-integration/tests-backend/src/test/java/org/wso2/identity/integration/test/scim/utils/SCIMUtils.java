@@ -22,6 +22,9 @@ import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
 import org.apache.wink.client.handlers.ClientHandler;
+import org.wso2.charon.core.attributes.Attribute;
+import org.wso2.charon.core.attributes.ComplexAttribute;
+import org.wso2.charon.core.attributes.SimpleAttribute;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.exceptions.CharonException;
 import org.wso2.charon.core.objects.Group;
@@ -29,6 +32,9 @@ import org.wso2.charon.core.objects.User;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.test.utils.BasicAuthHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class defines utility methods for SCIM Test Cases.
@@ -135,6 +141,27 @@ public class SCIMUtils {
     }
 
     /**
+     * Constructs a User instance according to the SCIM Schema and returns the encoded JSON string of User
+     * representation.
+     *
+     * @param scimClient    SCIMClient instance
+     * @param username      Username
+     * @param externalID    External ID of the user
+     * @param emails        String array of emails
+     * @param password      Password of the User
+     * @return              JSON String representation of the User
+     * @throws CharonException
+     */
+    public static String getEncodedExtensibleSCIMUser(SCIMClient scimClient, String username, String externalID,
+                                                     String[] emails, String password, String
+                                                              organization, boolean askPassword) throws
+            CharonException {
+
+        return scimClient.encodeSCIMObject(getExtensibleSCIMUser(scimClient, username, externalID, emails,
+                password, organization, askPassword), SCIMConstants.JSON);
+    }
+
+    /**
      * Constructs and returns a Group instance according to the SCIM Schema.
      *
      * @param scimClient    SCIMClient instance
@@ -185,4 +212,36 @@ public class SCIMUtils {
         return scimUser;
     }
 
+    /**
+     * Constructs and returns a User instance according to the SCIM Extension Schema.
+     *
+     * @param scimClient    SCIMClient instance
+     * @param username      Username
+     * @param externalID    External ID of the user
+     * @param emails        String array of emails
+     * @param password      Password of the User
+     * @return              User instance
+     * @throws CharonException
+     */
+    public static User getExtensibleSCIMUser(SCIMClient scimClient, String username, String externalID,
+                                                          String[] emails, String password, String organizationName,
+                                                          boolean askPassword) throws CharonException {
+
+        // Create a user according to SCIM User Extension Schema.
+        User scimUser = scimClient.createUser();
+        SimpleAttribute organization = new SimpleAttribute("organization", organizationName);
+        SimpleAttribute askPassowrd = new SimpleAttribute("askPassword", askPassword);
+        Map<String, Attribute> attributeMap = new HashMap<>();
+        attributeMap.put("organization", organization);
+        attributeMap.put("askPassword", askPassowrd);
+        ComplexAttribute wso2Extension = new ComplexAttribute("wso2Extension",
+                "urn:scim:schemas:extension:wso2:1.0");
+        wso2Extension.setAttributes(attributeMap);
+        scimUser.setAttribute(wso2Extension);
+        scimUser.setUserName(username);
+        scimUser.setExternalId(externalID);
+        scimUser.setEmails(emails);
+        scimUser.setPassword(password);
+        return scimUser;
+    }
 }
