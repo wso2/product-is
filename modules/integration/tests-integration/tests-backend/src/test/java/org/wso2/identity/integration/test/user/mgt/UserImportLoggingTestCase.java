@@ -17,7 +17,6 @@
  */
 package org.wso2.identity.integration.test.user.mgt;
 
-import org.apache.axis2.AxisFault;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.ArrayUtils;
@@ -59,6 +58,7 @@ import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.D
 import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.DUPLICATE_USERS;
 import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.DUPLICATE_USER_COUNT;
 import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.ENCODING;
+import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.ERROR_MESSAGE;
 import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_CAUSE;
 import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_USERNAME;
 import static org.wso2.identity.integration.test.utils.BulkUserImportConstants.FAILED_USERS;
@@ -118,47 +118,41 @@ public class UserImportLoggingTestCase extends ISIntegrationTest {
     }
 
     @Test(description = "Method to test the bulk user import error scenario. The test checks for the RemoteException " +
-            "which is thrown by the bulkImportUser method", expectedExceptions = {AxisFault.class},
+            "which is thrown by the bulkImportUser method",
             dependsOnMethods = {"testBulkUserImportLogFileIsPresent"})
-    public void testBulkImportWithUserAdminException() throws RemoteException, UserAdminUserAdminException {
+    public void testBulkImportWithUserAdminException() throws UserAdminUserAdminException {
 
+        String errorMessage = "";
         File bulkUserFile = new File(BULK_USER_FILE + BULK_USER_IMPORT_ERROR_FILE);
 
         DataHandler handler = new DataHandler(new FileDataSource(bulkUserFile));
-        userMgtClient.bulkImportUsers(USER_STORE_DOMAIN, BULK_USER_IMPORT_ERROR_FILE, handler, null);
+        try {
+            userMgtClient.bulkImportUsers(USER_STORE_DOMAIN, BULK_USER_IMPORT_ERROR_FILE, handler, null);
+        } catch (RemoteException e) {
+            errorMessage = e.getMessage();
+            assertEquals(errorMessage, ERROR_MESSAGE);
+        }
 
-        File logDir = new File(LOG_FILE_LOCATION);
-        String[] logFiles = logDir.list();
-        if (ArrayUtils.isNotEmpty(logFiles)) {
-            for (String fileName : logFiles) {
-                if (LOG_FILE_NAME.equals(fileName)) {
-                    isFilePresent = true;
-                }
-            }
+        if (StringUtils.isNotBlank(errorMessage)) {
+            errorMessage = errorMessage.replaceAll(" ", "").replaceAll("\\.", "");
+            String[] segments = errorMessage.split(",");
+
+            String errorSegment = segments[1];
+            String duplicateUserSegment = segments[2];
+
+            assertEquals(Integer.valueOf(errorSegment.split(":")[1]).intValue(), FAILED_USER_COUNT);
+            assertEquals(Integer.valueOf(duplicateUserSegment.split(":")[1]).intValue(), DUPLICATE_USER_COUNT);
         }
     }
 
-    @Test(description = "Test the audit log content for the bulk user import operation.",
+    @Test(description = "Test the audit log content for the bulk user import operation for success users.",
             dependsOnMethods = {"testBulkImportWithUserAdminException"})
-    public void testBulkUserImportAuditLog() throws IOException, JSONException {
+    public void testBulkUserImportAuditLogForSuccessUsers() throws IOException, JSONException {
 
-        List<String> bulkUserImportAuditLogs = new ArrayList<>();
         String[] auditLogSegments = null;
         JSONObject resultJson = null;
         String result = null;
-        String auditLogFile = LOG_FILE_LOCATION + File.separatorChar + AUDIT_LOG_FILE_NAME;
-        File auditFile = new File(auditLogFile);
-
-        // Iterate through the file and read lines.
-        LineIterator iterator = FileUtils.lineIterator(auditFile, ENCODING);
-
-        while (iterator.hasNext()) {
-            String auditLine = iterator.nextLine();
-
-            if (StringUtils.contains(auditLine, BULK_USER_IMPORT_OP)) {
-                bulkUserImportAuditLogs.add(auditLine);
-            }
-        }
+        List<String> bulkUserImportAuditLogs = readAuditLogFile();
 
         /*
         * There are two log entries for bulk user import.
@@ -177,21 +171,38 @@ public class UserImportLoggingTestCase extends ISIntegrationTest {
                 // Get the result as a json object
                 resultJson = new JSONObject(result.trim().split(RESULT_REGEX)[1]);
 
-                if (resultJson.has(DUPLICATE_USERS) && resultJson.has(FAILED_USERS)) {
-
+                if (!resultJson.has(DUPLICATE_USERS) && !resultJson.has(FAILED_USERS)) {
+                    // Assert the success count when all the users are imported successfully.
+                    assertEquals(resultJson.getInt(SUCCESS_COUNT), SUCCESS_USER_COUNT_IN_MIXED_MODE);
+                } else {
                     // Assert the success count
                     assertEquals(resultJson.getInt(SUCCESS_COUNT), SUCCESS_USER_COUNT);
+                }
+            }
+        }
+    }
 
-                    // Get the duplicate users as a json object
-                    JSONObject duplicateUsers = resultJson.getJSONObject(DUPLICATE_USERS);
-                    // Get the duplicate user names
-                    JSONArray duplicateUsersList = duplicateUsers.getJSONArray(USERS);
+    @Test(description = "Test the audit log content for the bulk user import operation for failed users.",
+            dependsOnMethods = {"testBulkImportWithUserAdminException"})
+    public void testBulkUserImportAuditLogForFailedUsers() throws IOException, JSONException {
 
-                    // Assert the duplicate count and the duplicate user names
-                    assertEquals(duplicateUsers.getInt(COUNT), DUPLICATE_USER_COUNT);
-                    // Check the duplicate users count is matches the number of users in the list
-                    assertEquals(duplicateUsersList.length(), DUPLICATE_USER_COUNT);
-                    assertEquals(duplicateUsersList.get(0), DUPLICATE_USERNAME);
+        String[] auditLogSegments = null;
+        JSONObject resultJson = null;
+        String result = null;
+        List<String> bulkUserImportAuditLogs = readAuditLogFile();
+
+        for (String line : bulkUserImportAuditLogs) {
+
+            log.info("Audit log line: " + line);
+            auditLogSegments = line.split(PIPE_REGEX);
+            result = auditLogSegments[4];
+
+            if (StringUtils.isNotEmpty(result)) {
+
+                // Get the result as a json object
+                resultJson = new JSONObject(result.trim().split(RESULT_REGEX)[1]);
+
+                if (resultJson.has(FAILED_USERS)) {
 
                     // Get the failed user information as json object
                     JSONObject failedUsers = resultJson.getJSONObject(FAILED_USERS);
@@ -210,12 +221,72 @@ public class UserImportLoggingTestCase extends ISIntegrationTest {
                     // Assert the failed user name and the cause.
                     assertEquals(failedUser.getString(USER_NAME), FAILED_USERNAME);
                     assertEquals(failedUser.getString(CAUSE), FAILED_CAUSE);
-                } else {
-                    // Assert the success count when all the users are imported successfully.
-                    assertEquals(resultJson.getInt(SUCCESS_COUNT), SUCCESS_USER_COUNT_IN_MIXED_MODE);
                 }
             }
         }
+    }
+
+    @Test(description = "Test the audit log content for the bulk user import operation for duplicate users.",
+            dependsOnMethods = {"testBulkImportWithUserAdminException"})
+    public void testBulkUserImportAuditLogForDuplicateUsers() throws IOException, JSONException {
+
+        String[] auditLogSegments = null;
+        JSONObject resultJson = null;
+        String result = null;
+        List<String> bulkUserImportAuditLogs = readAuditLogFile();
+
+        for (String line : bulkUserImportAuditLogs) {
+
+            log.info("Audit log line: " + line);
+            auditLogSegments = line.split(PIPE_REGEX);
+            result = auditLogSegments[4];
+
+            if (StringUtils.isNotEmpty(result)) {
+
+                // Get the result as a json object
+                resultJson = new JSONObject(result.trim().split(RESULT_REGEX)[1]);
+
+                if (resultJson.has(DUPLICATE_USERS)) {
+
+                    // Get the duplicate users as a json object
+                    JSONObject duplicateUsers = resultJson.getJSONObject(DUPLICATE_USERS);
+                    // Get the duplicate user names
+                    JSONArray duplicateUsersList = duplicateUsers.getJSONArray(USERS);
+
+                    // Assert the duplicate count and the duplicate user names
+                    assertEquals(duplicateUsers.getInt(COUNT), DUPLICATE_USER_COUNT);
+                    // Check the duplicate users count is matches the number of users in the list
+                    assertEquals(duplicateUsersList.length(), DUPLICATE_USER_COUNT);
+                    assertEquals(duplicateUsersList.get(0), DUPLICATE_USERNAME);
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Read the audit log file and extract the log entries as lines.
+     *
+     * @return : An Array List which contains audit log lines.
+     * @throws IOException : If any error occurred while reading the file.
+     */
+    private List<String> readAuditLogFile() throws IOException {
+
+        List<String> bulkUserImportAuditLogs = new ArrayList<>();
+        String auditLogFile = LOG_FILE_LOCATION + File.separatorChar + AUDIT_LOG_FILE_NAME;
+        File auditFile = new File(auditLogFile);
+
+        // Iterate through the file and read lines.
+        LineIterator iterator = FileUtils.lineIterator(auditFile, ENCODING);
+
+        while (iterator.hasNext()) {
+            String auditLine = iterator.nextLine();
+
+            if (StringUtils.contains(auditLine, BULK_USER_IMPORT_OP)) {
+                bulkUserImportAuditLogs.add(auditLine);
+            }
+        }
+        return bulkUserImportAuditLogs;
     }
 
     /**
