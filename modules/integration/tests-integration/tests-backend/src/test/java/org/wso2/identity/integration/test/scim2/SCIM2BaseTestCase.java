@@ -23,6 +23,9 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String ID_ATTRIBUTE = "id";
     public static final String PASSWORD_ATTRIBUTE = "password";
     public static final String EMAILS_ATTRIBUTE = "emails";
+    public static final String ADDRESSES_ATTRIBUTE = "addresses";
+    public static final String PHONE_NUMBERS_ATTRIBUTE = "phoneNumbers";
+    public static final String PHONE_NUMBERS_TYPE_HOME_ATTRIBUTE = "home";
     public static final String NAME_ATTRIBUTE = "name";
     public static final String SCHEMAS_ATTRIBUTE = "schemas";
     public static final String TYPE_PARAM = "type";
