@@ -47,6 +47,8 @@ public class BulkUserImportConstants {
     public static final String DUPLICATE_USERNAME = "name3";
     public static final String FAILED_CAUSE = "Claims and values are not in correct format";
     public static final String FAILED_USERNAME = "name522";
+    public static final String ERROR_MESSAGE = "Bulk User Import was completed with" +
+            " Errors. Success count : 4,  Failed Count : 1, Duplicate Count : 1.";
     public static final int DUPLICATE_USER_COUNT = 1;
     public static final int FAILED_USER_COUNT = 1;
     public static final int SUCCESS_USER_COUNT = 4;
