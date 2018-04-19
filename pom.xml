@@ -1633,13 +1633,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.167</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.178</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.7</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.6</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.66</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.67</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1686,7 +1686,7 @@
         <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
         <provisioning.connector.google.version>5.1.5</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.4</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.1.8</provisioning.connector.scim.version>
+        <provisioning.connector.scim.version>5.1.10</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>5.3.7</identity.local.auth.basicauth.version>
