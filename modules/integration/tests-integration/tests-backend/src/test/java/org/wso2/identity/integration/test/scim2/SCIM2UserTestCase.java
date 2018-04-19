@@ -26,7 +26,6 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ADDRESSES_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_HOME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_WORK_ATTRIBUTE;
@@ -37,6 +36,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_AT
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PHONE_NUMBERS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PHONE_NUMBERS_TYPE_HOME_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PHOTOS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
@@ -51,8 +51,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     private static final int PHONE_NUMBERS_TYPE_HOME_CLAIM_VALUE = 123456;
-    private static final String ADDRESS_1 = "address1";
-    private static final String ADDRESS_2 = "address2";
+    private static final String PHOTOS_1 = "photo1";
+    private static final String PHOTOS_2 = "photo2";
     public static final String USERNAME = "scim2user";
     public static final String PASSWORD = "testPassword";
 
@@ -118,9 +118,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         emails.add(emailWork);
         emails.add(emailHome);
 
-        JSONArray addresses = new JSONArray();
-        addresses.add(ADDRESS_1);
-        addresses.add(ADDRESS_2);
+        JSONArray photos = new JSONArray();
+        photos.add(PHOTOS_1);
+        photos.add(PHOTOS_2);
 
         JSONObject phoneNumberHome = new JSONObject();
         phoneNumberHome.put(TYPE_PARAM, PHONE_NUMBERS_TYPE_HOME_ATTRIBUTE);
@@ -133,7 +133,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         rootObject.put(PASSWORD_ATTRIBUTE, PASSWORD);
 
-        rootObject.put(ADDRESSES_ATTRIBUTE, addresses);
+        rootObject.put(PHOTOS_ATTRIBUTE, photos);
 
         rootObject.put(PHONE_NUMBERS_ATTRIBUTE, phoneNumbers);
 
@@ -171,9 +171,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME);
 
-        String addressesFromResponse = ((JSONObject) responseObj).get(ADDRESSES_ATTRIBUTE).toString();
+        String addressesFromResponse = ((JSONObject) responseObj).get(PHOTOS_ATTRIBUTE).toString();
         boolean hasAddressClaims = false;
-        if (addressesFromResponse.contains(ADDRESS_1) && addressesFromResponse.contains(ADDRESS_2)) {
+        if (addressesFromResponse.contains(PHOTOS_1) && addressesFromResponse.contains(PHOTOS_2)) {
             hasAddressClaims = true;
         }
         assertTrue(hasAddressClaims, "Address claims have not been retrieved successfully.");
@@ -287,9 +287,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         emails.add(emailWork);
         emails.add(emailHome);
 
-        JSONArray addresses = new JSONArray();
-        addresses.add(ADDRESS_1);
-        addresses.add(ADDRESS_2);
+        JSONArray photos = new JSONArray();
+        photos.add(PHOTOS_1);
+        photos.add(PHOTOS_2);
 
         JSONObject phoneNumberHome = new JSONObject();
         phoneNumberHome.put(TYPE_PARAM, PHONE_NUMBERS_TYPE_HOME_ATTRIBUTE);
@@ -300,7 +300,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         rootObject.put(EMAILS_ATTRIBUTE, emails);
         rootObject.put(PASSWORD_ATTRIBUTE, updatedPassword);
-        rootObject.put(ADDRESSES_ATTRIBUTE, addresses);
+        rootObject.put(PHOTOS_ATTRIBUTE, photos);
         rootObject.put(PHONE_NUMBERS_ATTRIBUTE, phoneNumbers);
 
         StringEntity entity = new StringEntity(rootObject.toString());
