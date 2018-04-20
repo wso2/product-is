@@ -230,9 +230,4 @@
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase"/>-->
         </classes>
     </test>
-    <test name="is-tests-usr-import" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.identity.integration.test.user.mgt.UserImportLoggingTestCase" />
-        </classes>
-    </test>
 </suite>

@@ -1538,11 +1538,7 @@
                 <artifactId>org.wso2.carbon.identity.idp.metadata.saml2.server.feature</artifactId>
                 <version>${identity.metadata.saml.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.user.mgt</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.wso2.carbon.identity.application.authz.xacml</groupId>
                 <artifactId>org.wso2.carbon.identity.application.authz.xacml.server.feature</artifactId>
