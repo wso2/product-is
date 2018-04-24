@@ -21,15 +21,10 @@ function onInitialRequest(context) {
         id: '1',
         on: {
             success: function (context) {
-                var fName = context.subject.claims.local['http://wso2.org/claims/givenname'];
-                var lName = context.subject.claims.local['http://wso2.org/claims/lastname'];
+                var fName = context.steps[1].subject.localClaims['http://wso2.org/claims/givenname'];
+                var lName = context.steps[1].subject.localClaims['http://wso2.org/claims/lastname'];
                 var displayName = fName + ' '+ lName + ' by Javascript';
-                var newClaim = {'local' : {}, 'remote': {}};
-                newClaim.remote.uri = 'http://your.domain.some/claims/displayName';
-                newClaim.local.uri = 'http://wso2.org/claims/displayName';
-                newClaim.value = displayName;
-                
-                context.subject.claims.push(newClaim)
+                context.steps[1].subject.localClaims['http://wso2.org/claims/displayName'] = displayName;
             }
         }
     });
