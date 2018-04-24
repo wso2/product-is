@@ -1,20 +1,21 @@
 /*
-* Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.wso2.carbon.is.migration.service.v550.dao;
 
+import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.service.v550.bean.AuthzCodeInfo;
 import org.wso2.carbon.is.migration.service.v550.bean.ClientSecretInfo;
 import org.wso2.carbon.is.migration.service.v550.bean.OauthTokenInfo;
@@ -49,10 +50,11 @@ public class OAuthDAO {
         return instance;
     }
 
-    public boolean isConsumerSecretHashColumnAvailable(Connection connection)  {
+    public boolean isConsumerSecretHashColumnAvailable(Connection connection) {
 
         String sql;
         PreparedStatement prepStmt = null;
+        ResultSet resultSet = null;
         boolean isConsumerSecretHashColumnsExist = false;
         try {
             if (connection.getMetaData().getDriverName().contains("MySQL") || connection.getMetaData().getDriverName()
@@ -73,7 +75,7 @@ public class OAuthDAO {
             }
 
             prepStmt = connection.prepareStatement(sql);
-            ResultSet resultSet = prepStmt.executeQuery();
+            resultSet = prepStmt.executeQuery();
             if (resultSet != null) {
 
                 resultSet.findColumn(CONSUMER_SECRET_HASH);
@@ -82,6 +84,8 @@ public class OAuthDAO {
             }
         } catch (SQLException e) {
             isConsumerSecretHashColumnsExist = false;
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, resultSet, prepStmt);
         }
         return isConsumerSecretHashColumnsExist;
     }
@@ -95,6 +99,7 @@ public class OAuthDAO {
 
     /**
      * Method to retrieve all the client secrets from the database
+     *
      * @param connection
      * @return list of client secrets
      * @throws SQLException
@@ -103,7 +108,7 @@ public class OAuthDAO {
 
         List<ClientSecretInfo> clientSecretInfoList = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(RETRIEVE_ALL_CONSUMER_SECRETS);
-                ResultSet resultSet = preparedStatement.executeQuery()) {
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 clientSecretInfoList
                         .add(new ClientSecretInfo(resultSet.getString("CONSUMER_SECRET"),
@@ -116,8 +121,9 @@ public class OAuthDAO {
 
     /**
      * Update the client secrets encrypted with new algorithm to the database
+     *
      * @param updatedClientSecretList updated list of client secrets
-     * @param connection identity database connection
+     * @param connection              identity database connection
      * @throws SQLException
      */
     public void updateNewClientSecrets(List<ClientSecretInfo> updatedClientSecretList, Connection connection)

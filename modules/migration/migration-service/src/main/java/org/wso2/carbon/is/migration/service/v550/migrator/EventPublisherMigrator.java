@@ -101,7 +101,7 @@ public class EventPublisherMigrator extends Migrator {
 
         try {
             XPathExpression expr = xpath
-                    .compile("//*[local-name()='property'][@*[local-name()='encrypted'='true']]/text()");
+                    .compile("//*[local-name()='property'][@*[local-name()='encrypted']='true']/text()");
             return (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             throw new MigrationClientException(
