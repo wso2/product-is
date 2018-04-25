@@ -459,6 +459,15 @@
         </fileSet>
         <fileSet>
             <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/siddhiapps
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/siddhiapps</outputDirectory>
+            <includes>
+                <include>**/*.siddhi</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/consent/
             </directory>
             <outputDirectory>wso2is-${pom.version}/dbscripts/consent</outputDirectory>
