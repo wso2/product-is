@@ -15,10 +15,10 @@
  */
 package org.wso2.carbon.is.migration.service.v550.dao;
 
-import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
-import org.wso2.carbon.is.migration.service.v550.bean.AuthzCodeInfo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.is.migration.service.v550.bean.ClientSecretInfo;
-import org.wso2.carbon.is.migration.service.v550.bean.OauthTokenInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,6 +38,7 @@ import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_CONS
 
 public class OAuthDAO {
 
+    private static final Log log = LogFactory.getLog(OAuthDAO.class);
     private static OAuthDAO instance = new OAuthDAO();
     private static final String CONSUMER_SECRET_HASH = "CONSUMER_SECRET_HASH";
 
@@ -50,11 +51,9 @@ public class OAuthDAO {
         return instance;
     }
 
-    public boolean isConsumerSecretHashColumnAvailable(Connection connection) {
+    public boolean isConsumerSecretHashColumnAvailable(Connection connection) throws MigrationClientException {
 
         String sql;
-        PreparedStatement prepStmt = null;
-        ResultSet resultSet = null;
         boolean isConsumerSecretHashColumnsExist = false;
         try {
             if (connection.getMetaData().getDriverName().contains("MySQL") || connection.getMetaData().getDriverName()
@@ -73,19 +72,23 @@ public class OAuthDAO {
             } else {
                 sql = RETRIEVE_CONSUMER_APPS_TABLE_ORACLE;
             }
-
-            prepStmt = connection.prepareStatement(sql);
-            resultSet = prepStmt.executeQuery();
-            if (resultSet != null) {
-
-                resultSet.findColumn(CONSUMER_SECRET_HASH);
-                isConsumerSecretHashColumnsExist = true;
-
+        } catch (Exception e) {
+            throw new MigrationClientException("Error while retrieving metadata from connection.", e);
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet != null) {
+                    resultSet.findColumn(CONSUMER_SECRET_HASH);
+                    isConsumerSecretHashColumnsExist = true;
+                }
+            } catch (SQLException e) {
+                isConsumerSecretHashColumnsExist = false;
+                log.error("Error occured while executing the PreparedStatement." + e.getMessage());
             }
         } catch (SQLException e) {
             isConsumerSecretHashColumnsExist = false;
-        } finally {
-            IdentityDatabaseUtil.closeAllConnections(connection, resultSet, prepStmt);
+            log.error("Error occured while creating the PreparedStatement." + e.getMessage());
         }
         return isConsumerSecretHashColumnsExist;
     }
