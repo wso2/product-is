@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>wso2is-identity-samples-microprofile</artifactId>
+        <version>5.6.0-m6-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>microprofile-jwt</artifactId>
+
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>pom.xml</packagingExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <assemblyArtifact>
+                        <groupId>io.openliberty</groupId>
+                        <artifactId>openliberty-runtime</artifactId>
+                        <version>18.0.0.1</version>
+                        <type>zip</type>
+                    </assemblyArtifact>
+                    <serverName>sample-liberty-server</serverName>
+                    <configFile>${basedir}/src/main/liberty/config/server.xml</configFile>
+                    <packageFile>${project.build.directory}/secure-wallet-service.jar</packageFile>
+                    <include>runnable</include>
+                    <looseApplication>false</looseApplication>
+                    <installAppPackages>project</installAppPackages>
+                    <bootstrapProperties>
+                        <app.context.root>/</app.context.root>
+                        <app.location>${project.artifactId}-${project.version}.war</app.location>
+                        <default.http.port>8080</default.http.port>
+                        <default.https.port>8443</default.https.port>
+                    </bootstrapProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-server</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>install-server</goal>
+                            <goal>create-server</goal>
+                            <goal>install-feature</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>package-server-with-apps</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>install-apps</goal>
+                            <goal>package-server</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

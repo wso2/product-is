@@ -41,6 +41,7 @@
         <module>identity-mgt</module>
         <module>workflow</module>
         <module>authenticators</module>
+        <module>microprofile</module>
     </modules>
 
 </project>
