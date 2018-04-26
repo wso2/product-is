@@ -19,8 +19,6 @@
 package org.wso2.identity.integration.test.provisioning;
 
 import junit.framework.Assert;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -127,10 +125,12 @@ public class DBSeperationTestCase extends ISIntegrationTest {
             identityProvider.setProvisioningConnectorConfigs(new ProvisioningConnectorConfig[]{scimConfig});
             identityProviderMgtServiceClient.addIdP(identityProvider);
             identityProviderMgtServiceClient.deleteIdP(TENANT_IDP);
-            Assert.assertFalse("Not functioning when UM tables and Identity tables seperated into two databases.",
-                    logViewer.getAllRemoteSystemLogs()[0].getPriority().equals("ERROR"));
+            Assert.assertFalse("Failed to delete IdP: " + TENANT_IDP + " when UM tables and Identity tables are " +
+                    "separated into two databases.", logViewer.getAllRemoteSystemLogs()[0].getPriority().equals
+                    ("ERROR") && logViewer.getAllRemoteSystemLogs()[0].getMessage().contains("Error when provisioning" +
+                    " IDP deletion"));
         } catch (Exception e) {
-            Assert.fail("Identity Provider addition or deletion failed at db seperation test.");
+            Assert.fail("Identity Provider addition or deletion failed at database separation test.");
         }
 
     }
