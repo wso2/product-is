@@ -126,11 +126,12 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.updateRoleName(newUserRole, newUserRole + "updated");
         } catch (Exception e) {
-            String faultMessage =
-                    ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
-            Assert.assertTrue(faultMessage.contains("Read-only UserStoreManager. Roles cannot be added or modified.")
-                    , "Error Message mismatched, expected 'Read-only UserStoreManager. Roles cannot be added or modified.', " +
-                            "but was '" + faultMessage + " ,");
+            String faultMessage = ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException()
+                    .getMessage();
+            Assert.assertTrue(
+                    faultMessage.contains("30002 - InvalidOperation Invalid operation. User store is read only"),
+                    "Error Message mismatched, expected '30002 - InvalidOperation Invalid operation. User store "
+                            + "is read only', " + "but was '" + faultMessage + " ,");
         }
 
     }
@@ -183,11 +184,12 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         try {
             userMgtClient.addRemoveUsersOfRole(newUserRole, newUsers, deletedUsers);
         } catch (Exception e) {
-            String faultMessage =
-                    ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
-            Assert.assertTrue(faultMessage.contains("Read-only user store.Roles cannot be added or modified")
-                    , "Error Message mismatched, expected 'Read-only user store.Roles cannot be added or modified', " +
-                            "but was '" + faultMessage + " ,");
+            String faultMessage = ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException()
+                    .getMessage();
+            Assert.assertTrue(
+                    faultMessage.contains("30002 - InvalidOperation Invalid operation. User store is read only"),
+                    "Error Message mismatched, expected '30002 - InvalidOperation Invalid operation. User store is "
+                            + "read only', but was '" + faultMessage + " ,");
         }
 
     }
