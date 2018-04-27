@@ -128,8 +128,8 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             String faultMessage =
                     ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
-            Assert.assertTrue(faultMessage.contains("Read-only UserStoreManager. Roles cannot be added or modified.")
-                    , "Error Message mismatched, expected 'Read-only UserStoreManager. Roles cannot be added or modified.', " +
+            Assert.assertTrue(faultMessage.contains("Invalid operation. User store is read only")
+                    , "Error Message mismatched, expected 'Invalid operation. User store is read only', " +
                             "but was '" + faultMessage + " ,");
         }
 
@@ -168,8 +168,8 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             String faultMessage =
                     ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
-            Assert.assertTrue(faultMessage.contains("Error occurred while updating hybrid role list of user")
-                    , "Error Message mismatched, expected 'Error occurred while updating hybrid role list of user', " +
+            Assert.assertTrue(faultMessage.contains("Invalid operation. User store is read only")
+                    , "Error Message mismatched, expected 'Invalid operation. User store is read only', " +
                     "but was '" + faultMessage + " ,");
         }
     }
