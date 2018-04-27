@@ -535,7 +535,7 @@
                 <plugin>
                     <groupId>net.wasdev.wlp.maven.plugins</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
-                    <version>2.2</version>
+                    <version>${liberty.maven.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -1852,6 +1852,7 @@
         <carbon.consent.mgt.version>1.0.51</carbon.consent.mgt.version>
         <carbon.database.utils.version>2.0.6</carbon.database.utils.version>
         <carbon.identity.oauth.uma.version>1.0.0</carbon.identity.oauth.uma.version>
+        <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
     </properties>
 
     <repositories>
