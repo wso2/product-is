@@ -54,25 +54,25 @@
                         <default.https.port>8443</default.https.port>
                     </bootstrapProperties>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>install-server</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>install-server</goal>
-                            <goal>create-server</goal>
-                            <goal>install-feature</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>package-server-with-apps</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>install-apps</goal>
-                            <goal>package-server</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>install-server</id>-->
+                        <!--<phase>prepare-package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>install-server</goal>-->
+                            <!--<goal>create-server</goal>-->
+                            <!--<goal>install-feature</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                    <!--<execution>-->
+                        <!--<id>package-server-with-apps</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>install-apps</goal>-->
+                            <!--<goal>package-server</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
             </plugin>
         </plugins>
     </build>
