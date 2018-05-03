@@ -36,12 +36,15 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.carbon.identity.claim.metadata.mgt.stub.ClaimMetadataManagementServiceClaimMetadataException;
+import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.schema.SCIMConstants;
+import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
 import org.wso2.identity.integration.test.scim.utils.SCIMUtils;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
@@ -51,17 +54,23 @@ import java.rmi.RemoteException;
 public class SCIMServiceProviderUserTestCase {
     private static final Log log = LogFactory.getLog(SCIMServiceProviderUserTestCase.class);
     private static final String USERNAME = "SCIMUser1";
+    public static final String EXTENDED_USERNAME = "SCIMExntendedUser1";
     public static final String PASSWORD = "password1";
     public static final String ADMIN_ROLE = "admin";
     public static final String SCIM_ME_ENDPOINT = "Users/me";
+    public static final String EXTERNAL_ID = "externalId1";
+    public static final String ORGANIZATION = "WSO2";
     String scimUserId = null;
+    String extendedSCIMUserId = null;
     private User provider_userInfo;
     UserManagementClient userMgtClient;
+    ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
     String scim_url;
     String serviceEndPoint = null;
     String backendUrl = null;
     String sessionCookie = null;
     private SCIMClient scimClient;
+    boolean askPassword = true;
 
     @BeforeClass(alwaysRun = true)
     public void initiate() throws Exception {
@@ -72,6 +81,7 @@ public class SCIMServiceProviderUserTestCase {
         serviceEndPoint = automationContext.getContextUrls().getServiceUrl();
         sessionCookie = new LoginLogoutClient(automationContext).login();
         userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
+        claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendUrl, sessionCookie);
     }
 
     @BeforeMethod
@@ -97,8 +107,53 @@ public class SCIMServiceProviderUserTestCase {
         Object obj= JSONValue.parse(response);
         scimUserId = ((JSONObject)obj).get("id").toString();
         userMgtClient.listUsers(USERNAME, 100);
-        Assert.assertTrue(isUserExists());
+        Assert.assertTrue(isUserExists(USERNAME));
         Assert.assertNotNull(scimUserId);
+    }
+
+    @Test(alwaysRun = true, description = "Add SCIM user with SCIM extension attributes.")
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL})
+    public void createUserWithExtensionAttributes() throws Exception {
+
+        // Extension attribute mapped to WSO2 Identity claim.
+        ExternalClaimDTO externalAskPasswordClaimDTO = new ExternalClaimDTO();
+        externalAskPasswordClaimDTO.setExternalClaimDialectURI("urn:scim:schemas:core:1.0");
+        externalAskPasswordClaimDTO.setExternalClaimURI("urn:scim:schemas:extension:wso2:1.0:wso2Extension.askPassword");
+        externalAskPasswordClaimDTO.setMappedLocalClaimURI("http://wso2.org/claims/identity/askPassword");
+
+        // Extension attribute mapped to WSO2 Local claim.
+        ExternalClaimDTO externalOrganizationClaimDTO = new ExternalClaimDTO();
+        externalOrganizationClaimDTO.setExternalClaimDialectURI("urn:scim:schemas:core:1.0");
+        externalOrganizationClaimDTO.setExternalClaimURI("urn:scim:schemas:extension:wso2:1.0:wso2Extension" +
+                ".organization");
+        externalOrganizationClaimDTO.setMappedLocalClaimURI("http://wso2.org/claims/organization");
+
+        claimMetadataManagementServiceClient.addExternalClaim(externalAskPasswordClaimDTO);
+        claimMetadataManagementServiceClient.addExternalClaim(externalOrganizationClaimDTO);
+
+        // Create SCIM client.
+        String encodedUser = SCIMUtils.getEncodedExtensibleSCIMUser(scimClient, EXTENDED_USERNAME, EXTERNAL_ID ,
+                new String[] { "scimuser1@gmail.com", "scimuser1@wso2.com" }, PASSWORD, ORGANIZATION, askPassword);
+
+        // Create a apache wink ClientHandler to intercept and identify response messages.
+        Resource userResource = SCIMUtils.getUserResource(scimClient, scim_url);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
+        String response = userResource.
+                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
+                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
+                post(String.class, encodedUser);
+        log.info(response);
+        Object obj= JSONValue.parse(response);
+        extendedSCIMUserId = ((JSONObject)obj).get("id").toString();
+        Assert.assertNotNull(extendedSCIMUserId);
+        Assert.assertTrue(isUserExists(EXTENDED_USERNAME));
+
+        Object wso2Extension = ((JSONObject) obj).get("wso2Extension");
+        boolean askPassword = Boolean.valueOf(((JSONObject)wso2Extension).get("askPassword").toString());
+        String organization = ((JSONObject)wso2Extension).get("organization").toString();
+
+        Assert.assertTrue(askPassword, "Failed to update 'askPassword' extension claim.");
+        Assert.assertEquals(ORGANIZATION, organization, "Failed to update 'organization' extension claim.");
     }
 
     @Test(alwaysRun = true, description = "Get SCIM user", dependsOnMethods = { "createUser" })
@@ -123,6 +178,37 @@ public class SCIMServiceProviderUserTestCase {
         //decode the response
         log.info(response);
         Assert.assertTrue(response.contains(""));
+    }
+
+    @Test(alwaysRun = true, description = "Get SCIM user with extension attributes", dependsOnMethods = {
+            "createUserWithExtensionAttributes" })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    public void getUserWithExtensionAttributes() {
+        //create a apache wink ClientHandler to intercept and identify response messages
+        SCIMResponseHandler responseHandler = new SCIMResponseHandler();
+        responseHandler.setSCIMClient(scimClient);
+        //set the handler in wink client config
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.handlers(new ClientHandler[]{responseHandler});
+        //create a wink rest client with the above config
+        RestClient restClient = new RestClient(clientConfig);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
+        //create resource endpoint to access a known user resource.
+        Resource userResource = restClient.resource(scim_url + "Users/" + extendedSCIMUserId);
+        String response = userResource.
+                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
+                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON)
+                .get(String.class);
+
+        //decode the response
+        Object obj= JSONValue.parse(response);
+
+        Object wso2Extension = ((JSONObject) obj).get("wso2Extension");
+        boolean askPassword = Boolean.valueOf(((JSONObject)wso2Extension).get("askPassword").toString());
+        String organization = ((JSONObject)wso2Extension).get("organization").toString();
+
+        Assert.assertTrue(askPassword, "Failed to retrieve 'askPassword' extension claim.");
+        Assert.assertEquals(ORGANIZATION, organization, "Failed to retrieve 'organization' extension claim.");
     }
 
     @Test(alwaysRun = true, description = "Get logged in SCIM user", dependsOnMethods = { "getUser" })
@@ -206,6 +292,31 @@ public class SCIMServiceProviderUserTestCase {
         Assert.assertTrue(response.contains("\"userName\":\"" + USERNAME + "\""));
     }
 
+    @Test(alwaysRun = true, description = "filter all SCIM users", dependsOnMethods = { "getUserWithExtensionAttributes" })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    public void filterUserByExtensionAttribute() throws Exception {
+        //create SCIM client
+        SCIMClient scimClient = new SCIMClient();
+        //create a apache wink ClientHandler to intercept and identify response messages
+        SCIMResponseHandler responseHandler = new SCIMResponseHandler();
+        responseHandler.setSCIMClient(scimClient);
+        //set the handler in wink client config
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.handlers(new ClientHandler[]{responseHandler});
+        //create a wink rest client with the above config
+        RestClient restClient = new RestClient(clientConfig);
+
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
+        //create resource endpoint to access a known user resource.
+        Resource userResource = restClient.resource(scim_url + "Users?filter=wso2Extension.askPassword%20Eq%20" +
+                askPassword);
+        String response = userResource.
+                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
+                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON)
+                .get(String.class);
+        Assert.assertTrue(response.contains("\"userName\":\"" + EXTENDED_USERNAME + "\""));
+    }
+
     @Test(alwaysRun = true, description = "Update SCIM user", dependsOnMethods = { "filterUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void UpdateUser() throws Exception {
@@ -248,6 +359,50 @@ public class SCIMServiceProviderUserTestCase {
         Assert.assertTrue(response.contains(updatedMiddleName));
     }
 
+    @Test(alwaysRun = true, description = "Update SCIM user", dependsOnMethods = { "filterUser" })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    public void UpdateUserWithExtensionAttributes() throws Exception {
+        boolean updatedAskPassword = false;
+        String updatedOrganization = "WSO2-Updated";
+
+        //create a apache wink ClientHandler to intercept and identify response messages
+        SCIMResponseHandler responseHandler = new SCIMResponseHandler();
+        responseHandler.setSCIMClient(scimClient);
+        //set the handler in wink client config
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.handlers(new ClientHandler[]{responseHandler});
+        //create a wink rest client with the above config
+        RestClient restClient = new RestClient(clientConfig);
+        BasicAuthInfo encodedBasicAuthInfo = SCIMUtils.getBasicAuthInfo(provider_userInfo);
+        //create resource endpoint to access a known user resource.
+//        Resource userResource = restClient.resource(scim_url + "Users/" + scimUserId);
+        org.wso2.charon.core.objects.User decodedUser =  SCIMUtils.getExtensibleSCIMUser(scimClient,
+                EXTENDED_USERNAME, EXTERNAL_ID , new String[] { "scimuser1@gmail.com", "scimuser1@wso2.com" },
+                PASSWORD, updatedOrganization, updatedAskPassword);
+//        decodedUser.setDisplayName(updatedMiddleName);
+//        decodedUser.setWorkEmail(updatedEmail, true);
+
+        //encode updated user
+        String updatedUserString = scimClient.encodeSCIMObject(decodedUser, SCIMConstants.JSON);
+        //update user
+        Resource updateUserResource = restClient.resource(scim_url + "Users/" + extendedSCIMUserId);
+        String responseUpdated = updateUserResource.
+                header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader()).
+                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON)
+                .put(String.class, updatedUserString);
+        log.info("Updated user: " + responseUpdated);
+
+        Object obj= JSONValue.parse(responseUpdated);
+        Object wso2Extension = ((JSONObject) obj).get("wso2Extension");
+        boolean askPassword = Boolean.valueOf(((JSONObject)wso2Extension).get("askPassword").toString());
+        String organization = ((JSONObject)wso2Extension).get("organization").toString();
+
+        Assert.assertEquals(updatedAskPassword, askPassword, "Failed to update 'askPassword' extension claim with " +
+                "SCIM Update operation.");
+        Assert.assertEquals(updatedOrganization, organization, "Failed to update 'organization' extension claim with" +
+                " SCIM Update operation");
+    }
+
     @Test(alwaysRun = true, description = "Delete SCIM user", dependsOnMethods = { "UpdateUser" })
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void DeleteUser() throws Exception {
@@ -264,15 +419,15 @@ public class SCIMServiceProviderUserTestCase {
                 delete(String.class);
         //decode the response
         Assert.assertTrue(response.isEmpty());
-        Assert.assertFalse(isUserExists());
+        Assert.assertFalse(isUserExists(USERNAME));
     }
 
 
-    private boolean isUserExists() throws Exception {
+    private boolean isUserExists(String username) throws Exception {
         boolean userExists = false;
-        FlaggedName[] nameList = userMgtClient.listAllUsers(USERNAME, 100);
+        FlaggedName[] nameList = userMgtClient.listAllUsers(username, 100);
         for (FlaggedName name : nameList) {
-            if (name.getItemName().contains(USERNAME)) {
+            if (name.getItemName().contains(username)) {
                 userExists = true;
             }
         }
