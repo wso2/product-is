@@ -1649,13 +1649,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.191</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.192</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.7</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.6</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.69</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.6.70</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1664,8 +1664,8 @@
         <identity.user.account.association.version>5.1.5</identity.user.account.association.version>
         <identity.user.workflow.version>5.1.5</identity.user.workflow.version>
         <identity.user.ws.version>5.1.8</identity.user.ws.version>
-        <identity.userstore.ldap.version>5.1.5</identity.userstore.ldap.version>
-        <identity.userstore.remote.version>5.1.3</identity.userstore.remote.version>
+        <identity.userstore.ldap.version>5.1.6</identity.userstore.ldap.version>
+        <identity.userstore.remote.version>5.1.4</identity.userstore.remote.version>
         <identity.workflow.impl.bps.version>5.1.13</identity.workflow.impl.bps.version>
         <identity.carbon.auth.iwa.version>5.1.6</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.5</identity.workflow.template.multisteps.version>
