@@ -26,13 +26,13 @@ import org.wso2.carbon.identity.application.authentication.framework.util.Framew
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Sample Hardware-Key Authenticator.
@@ -131,5 +131,10 @@ public class SampleHardwareKeyAuthenticator extends AbstractSampleAuthenticator 
         appUrl.setDisplayOrder(0);
         configProperties.add(appUrl);
         return configProperties;
+    }
+
+    protected boolean retryAuthenticationEnabled() {
+
+        return true;
     }
 }

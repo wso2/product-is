@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.application.authentication.framework.Authenticat
 import org.wso2.carbon.identity.application.authentication.framework.LocalApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
+import org.wso2.carbon.identity.application.authentication.framework.exception.InvalidCredentialsException;
 import org.wso2.carbon.identity.application.authentication.framework.exception.LogoutFailedException;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
 
@@ -80,6 +81,7 @@ public abstract class AbstractSampleAuthenticator extends AbstractApplicationAut
         }
         if (status == AuthenticatorFlowStatus.FAIL_COMPLETED) {
             log.error("user authentication failed.");
+            throw new InvalidCredentialsException("User authentication failed due to invalid credentials.");
         }
     }
 }
