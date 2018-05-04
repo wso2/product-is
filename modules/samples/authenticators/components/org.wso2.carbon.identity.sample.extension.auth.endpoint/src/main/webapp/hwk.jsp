@@ -34,20 +34,22 @@
     int nextNum = randomGenerator.nextInt(10000);
 
     if (reqNumberStr != null && oldNumStr != null) {
+        boolean success = false;
         try {
             int reqNumber = Integer.parseInt(reqNumberStr);
             int oldNum = Integer.parseInt(oldNumStr);
             if (oldNum == reqNumber) {
-                if (callbackUrl != null) {
-                    String cbURL = URLDecoder.decode(callbackUrl, StandardCharsets.UTF_8.name());
-                    cbURL = FrameworkUtils.appendQueryParamsStringToUrl(cbURL, "success=true");
-                    /* This is for demonstration purposes only.
-                    You need to properly encode the parameters to avoid security breaches. */
-                    response.sendRedirect(cbURL);
-                }
+                success = true;
             }
         } catch (NumberFormatException e) {
             logger.error("Invalid number.", e);
+        }
+        if (callbackUrl != null) {
+            String cbURL = URLDecoder.decode(callbackUrl, StandardCharsets.UTF_8.name());
+            cbURL = FrameworkUtils.appendQueryParamsStringToUrl(cbURL, "success=" + Boolean.toString(success));
+            /* This is for demonstration purposes only.
+            You need to properly encode the parameters to avoid security breaches. */
+            response.sendRedirect(cbURL);
         }
     }
 %>
