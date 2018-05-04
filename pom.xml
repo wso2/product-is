@@ -1853,6 +1853,7 @@
         <carbon.database.utils.version>2.0.6</carbon.database.utils.version>
         <carbon.identity.oauth.uma.version>1.0.0</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
+        <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
     </properties>
 
     <repositories>
