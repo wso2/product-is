@@ -229,13 +229,13 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
     private JWTClaimsSet getJwtClaimsSet(String consumerKey) {
 
-        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
-        jwtClaimsSet.setSubject(consumerKey);
-        jwtClaimsSet.setIssuer(consumerKey);
-        jwtClaimsSet.setAudience(Collections.singletonList(OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
-        jwtClaimsSet.setClaim("client_id", consumerKey);
-        jwtClaimsSet.setIssueTime(new Date());
-        return jwtClaimsSet;
+        JWTClaimsSet.Builder jwtClaimsSetBuilder = new JWTClaimsSet.Builder();
+        jwtClaimsSetBuilder.subject(consumerKey);
+        jwtClaimsSetBuilder.issuer(consumerKey);
+        jwtClaimsSetBuilder.audience(Collections.singletonList(OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
+        jwtClaimsSetBuilder.claim("client_id", consumerKey);
+        jwtClaimsSetBuilder.issueTime(new Date());
+        return jwtClaimsSetBuilder.build();
     }
 
     private String buildSignedJWT(String consumerKey, RSAPrivateKey privateKey) throws Exception {
@@ -243,10 +243,10 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         JWSSigner rsaSigner = new RSASSASigner(privateKey);
 
         // Prepare JWS object with simple string as payload
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.RS256);
-        jwsHeader.setKeyID(UUID.randomUUID().toString());
+        JWSHeader.Builder jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256);
+        jwsHeader.keyID(UUID.randomUUID().toString());
 
-        SignedJWT signedJWT = new SignedJWT(jwsHeader, getJwtClaimsSet(consumerKey));
+        SignedJWT signedJWT = new SignedJWT(jwsHeader.build(), getJwtClaimsSet(consumerKey));
         signedJWT.sign(rsaSigner);
         return signedJWT.serialize();
     }
