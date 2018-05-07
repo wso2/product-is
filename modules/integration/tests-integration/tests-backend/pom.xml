@@ -645,7 +645,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.nimbusds</groupId>
+            <groupId>org.wso2.orbit.com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
         </dependency>
         <dependency>
