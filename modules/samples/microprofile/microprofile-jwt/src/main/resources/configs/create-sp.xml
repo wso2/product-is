@@ -1,0 +1,32 @@
+<!--
+  ~ Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd"
+                  xmlns:xsd1="http://model.common.application.identity.carbon.wso2.org/xsd">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <xsd:createApplication>
+         <!--Optional:-->
+         <xsd:serviceProvider>
+            <!--Optional:-->
+            <xsd1:applicationName>microprofile_jwt_sample</xsd1:applicationName>
+            <!--Optional:-->
+            <xsd1:description>A sample service provider for microprofile jwt sample</xsd1:description>
+         </xsd:serviceProvider>
+      </xsd:createApplication>
+   </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://org.apache.axis2/xsd">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <xsd:getApplication>
+            <!--Optional:-->
+            <xsd:applicationName>microprofile_jwt_sample</xsd:applicationName>
+        </xsd:getApplication>
+    </soapenv:Body>
+</soapenv:Envelope>
