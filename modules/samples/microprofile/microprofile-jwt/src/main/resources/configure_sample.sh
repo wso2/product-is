@@ -183,7 +183,8 @@ create_update_sp() {
   sp_name=$1
   cd configs || return
 
-  request_data="get-sp.xml"
+  request_data1="get-sp.xml"
+  request_data2="oauth-app-registration.xml"
   auth=$(echo "admin:admin"|base64)
 
   if [ -f "update-sp_${sp_name}.xml" ]
@@ -196,15 +197,21 @@ create_update_sp() {
       rm -r response_unformatted.xml
   fi
 
-  if [ ! -f "$request_data" ]
+  if [ ! -f "$request_data1" ]
     then
-      echo "$request_data File does not exists."
+      echo "$request_data1 File does not exists."
+      return 255
+  fi
+
+  if [ ! -f "$request_data2" ]
+    then
+      echo "$request_data2 File does not exists."
       return 255
   fi
 
   touch response_unformatted.xml
   # Send the SOAP request to Get the Application.
-  curl -s -k -d @${request_data} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: urn:getApplication" https://localhost:9443/services/IdentityApplicationManagementService.IdentityApplicationManagementServiceHttpsSoap11Endpoint/ > response_unformatted.xml
+  curl -s -k -d @${request_data1} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: urn:getApplication" https://localhost:9443/services/IdentityApplicationManagementService.IdentityApplicationManagementServiceHttpsSoap11Endpoint/ > response_unformatted.xml
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while getting application details for ${sp_name}.... !!"
@@ -217,6 +224,17 @@ create_update_sp() {
   xmllint --format response_unformatted.xml
   app_id=$(xmllint --xpath "//*[local-name()='applicationID']/text()" response_unformatted.xml)
   rm response_unformatted.xml
+
+  # Send the SOAP request to register OAuth Application data
+  curl -s -k -d @${request_data2} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: urn:registerOAuthApplicationData" -o /dev/null https://localhost:9443/services/OAuthAdminService.OAuthAdminServiceHttpsSoap11Endpoint/
+  res=$?
+  if test "${res}" != "0"; then
+    echo "!! Problem occurred while registering OAuth application.... !!"
+    echo
+    cleanup "${sp_name}"
+    echo
+    return 255
+  fi
 
   touch update-sp_"${sp_name}".xml
   echo "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://org.apache.axis2/xsd\"
@@ -273,7 +291,36 @@ create_update_sp() {
                 <!--Optional:-->
                 <xsd1:description>A sample service provider for microprofile jwt sample</xsd1:description>
                 <!--Optional:-->
-                <xsd1:inboundAuthenticationConfig/>
+                 <xsd1:inboundAuthenticationConfig>
+                     <!--Zero or more repetitions:-->
+                     <xsd1:inboundAuthenticationRequestConfigs>
+                        <!--Optional:-->
+                        <xsd1:inboundAuthKey>li6JMbjW6WDMKTWsRnGcjp5zcGhi</xsd1:inboundAuthKey>
+                        <!--Optional:-->
+                        <xsd1:inboundAuthType>oauth2</xsd1:inboundAuthType>
+                        <!--Zero or more repetitions:-->
+                        <xsd1:properties>
+                            <!--Optional:-->
+                            <xsd1:advanced>false</xsd1:advanced>
+                            <!--Optional:-->
+                            <xsd1:confidential>false</xsd1:confidential>
+                            <!--Optional:-->
+                            <xsd1:defaultValue></xsd1:defaultValue>
+                            <!--Optional:-->
+                            <xsd1:description></xsd1:description>
+                            <!--Optional:-->
+                            <xsd1:displayName></xsd1:displayName>
+                            <!--Optional:-->
+                            <xsd1:name>oauthConsumerSecret</xsd1:name>
+                            <!--Optional:-->
+                            <xsd1:required>false</xsd1:required>
+                            <!--Optional:-->
+                            <xsd1:type></xsd1:type>
+                            <!--Optional:-->
+                            <xsd1:value>NMB3EAfxh4YvSTqbb3iMkongAHjW</xsd1:value>
+                        </xsd1:properties>
+                     </xsd1:inboundAuthenticationRequestConfigs>
+                 </xsd1:inboundAuthenticationConfig>
                 <xsd1:permissionAndRoleConfig/>
                 <!--Optional:-->
                 <xsd1:saasApp>false</xsd1:saasApp>
@@ -452,7 +499,6 @@ delete_roles() {
   return 0;
 }
 
-
 echo "CONFIGURING MICROPROFILE JWT SAMPLE"
 
 add_users_and_roles admin admin
@@ -470,8 +516,8 @@ read -r clean
 
   case ${clean} in
     [Yy]* )
-      cleanup microprofile_jwt_sample
-      ;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer yes or no.";;
-     esac
+      cleanup microprofile_jwt_sample;;
+    [Nn]* )
+      exit;;
+    * ) echo "Please answer yes or no.";;
+  esac

@@ -26,7 +26,7 @@
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/src/main/resources</directory>
-            <outputDirectory>microprofile-jwt-resources</outputDirectory>
+            <outputDirectory>sample-configuration-resources</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>
                 <exclude>assembly/**</exclude>
