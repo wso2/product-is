@@ -391,7 +391,7 @@ label.error{
 }
 
 .grid_header h3{
-    padding-left:20px;    
+    padding: 10px 15px;
 }
 
 .dropdown_separator {
@@ -407,4 +407,14 @@ label.error{
 .switch_to_div {
     font-style: oblique;
     font-weight: bolder;
+}
+.margin-top-50{
+    margin-top: 50px;
+}
+.row-gutter-30 {
+    margin-left: 0;
+    margin-right: 0;
+}
+.row-gutter-30 > div{
+    margin-bottom: 30px;
 }

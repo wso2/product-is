@@ -24,8 +24,8 @@ body {
 }
 .grid_header_controls {
 	position:absolute;
-	right:10px;
-	top:18px;
+	right:15px;
+	top:13px;
 	display:none;
 }
 .grid_header_controls-show {
@@ -95,8 +95,9 @@ body {
 	left:1.2% !important;
 	position:fixed !important;
 	right:-100px !important;
-	top:123px !important;
+	top:140px !important;
 	width:97.5% !important;
+	z-index:999999;
 }
 .gadget-pref-cont button {
 	margin-right:10px;
@@ -175,6 +176,7 @@ body {
 #gridster-con {
 	position:relative;
 }
+/*
 .layouts_grid {
 	left:0;
 	min-height:300px;
@@ -192,12 +194,13 @@ body {
 }
 .layouts_grid ul {
 	list-style-type:none;
-	/*min-height: 660px;*/
+	min-height: 660px;
 }
 .layouts_grid .gs_w {
 	z-index:2;
 	position:absolute;
 }
+*/
 .ready .gs_w:not(.preview-holder) {
 	-webkit-transition:opacity .3s,left .3s,top .3s;
 	-moz-transition:opacity .3s,left .3s,top .3s;
@@ -298,10 +301,8 @@ body {
 #dashboardName {
 	color:rgba(52, 72, 94, 1.0);
 	font-size:24px;
-	left:20px;
-	position:absolute;
 	text-shadow:2px 2px 0 #FFFFFF;
-	top:59px;
+	margin: 20px 10px;
 }
 .navbar-inner.sub-navbar-designer {
 	display:none;
@@ -417,6 +418,8 @@ body {
 	background:#fff;
 	position:relative;
 	overflow-y:hidden;
+	-webkit-transition: width 2s, height .2s; /* For Safari 3.1 to 6.0 */
+	transition: width 2s, height .2s;
 }
 .layout_block:hover {
 	cursor:move;
@@ -501,7 +504,7 @@ body {
 	position:absolute;
 	right:0;
 	top:55px;
-	padding:0 6px;
+	padding:0 10px;
 }
 .add-gadget-item> div {
 	height:100%;
