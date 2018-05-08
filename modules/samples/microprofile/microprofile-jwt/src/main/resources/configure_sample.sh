@@ -19,7 +19,7 @@ cleanup() {
   sp_name=$1
   delete_users
   delete_roles
-  delete_sp ${sp_name} urn:deleteApplication https://localhost:9443/services/IdentityApplicationManagementService.IdentityApplicationManagementServiceHttpsSoap11Endpoint/
+  delete_sp "${sp_name}" urn:deleteApplication https://localhost:9443/services/IdentityApplicationManagementService.IdentityApplicationManagementServiceHttpsSoap11Endpoint/
 
   return 0;
 }
@@ -34,65 +34,65 @@ add_users_and_roles() {
   if [ ! -d "configs" ]
     then
       echo "configs Directory does not exists."
-      return -1
+      return 255
   fi
 
   if [ ! -f "$request_data1" ]
     then
       echo "$request_data1 File does not exists."
-      return -1
+      return 255
   fi
 
   if [ ! -f "$request_data2" ]
    then
       echo "$request_data2 File does not exists."
-      return -1
+      return 255
   fi
 
   if [ ! -f "$request_data3" ]
     then
       echo "$request_data2 File does not exists."
-      return -1
+      return 255
   fi
 
   echo
   echo "Creating a user named cameron..."
 
   # The following command can be used to create a user.
-  curl -s -k --user ${IS_name}:${IS_pass} --data '{"schemas":[],"name":{"familyName":"Smith","givenName":"Cameron"},"userName":"cameron","password":"cameron123","emails":"cameron@gmail.com","addresses":{"country":"United States"}}' --header "Content-Type:application/json" -o /dev/null https://localhost:9443/wso2/scim/Users
+  curl -s -k --user "${IS_name}":"${IS_pass}" --data '{"schemas":[],"name":{"familyName":"Smith","givenName":"Cameron"},"userName":"cameron","password":"cameron123","emails":"cameron@gmail.com","addresses":{"country":"United States"}}' --header "Content-Type:application/json" -o /dev/null https://localhost:9443/wso2/scim/Users
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating user cameron. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The user cameron was successfully created. **"
   echo
 
   echo "Creating a user named alex..."
 
-  curl -s -k --user ${IS_name}:${IS_pass} --data '{"schemas":[],"name":{"familyName":"Miller","givenName":"Alex"},"userName":"alex","password":"alex123","emails":"alex@gmail.com","addresses":{"country":"United States"}}' --header "Content-Type:application/json" -o /dev/null https://localhost:9443/wso2/scim/Users
+  curl -s -k --user "${IS_name}":"${IS_pass}" --data '{"schemas":[],"name":{"familyName":"Miller","givenName":"Alex"},"userName":"alex","password":"alex123","emails":"alex@gmail.com","addresses":{"country":"United States"}}' --header "Content-Type:application/json" -o /dev/null https://localhost:9443/wso2/scim/Users
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating user alex. !!"
     echo
     delete_users
     echo
-    return -1
+    return 255
   fi
   echo "** The user alex was successfully created. **"
   echo
 
   echo "Creating a user named john..."
 
-  curl -s -k --user ${IS_name}:${IS_pass} --data '{"schemas":[],"name":{"familyName":"Williams","givenName":"John"},"userName":"john","password":"john123","emails":"john@gmail.com","addresses":{"country":"United States"}}' --header "Content-Type:application/json" -o /dev/null https://localhost:9443/wso2/scim/Users
+  curl -s -k --user "${IS_name}":"${IS_pass}" --data '{"schemas":[],"name":{"familyName":"Williams","givenName":"John"},"userName":"john","password":"john123","emails":"john@gmail.com","addresses":{"country":"United States"}}' --header "Content-Type:application/json" -o /dev/null https://localhost:9443/wso2/scim/Users
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating user john. !!"
     echo
     cleanup
     echo
-    return -1
+    return 255
   fi
   echo "** The user john was successfully created. **"
   echo
@@ -100,42 +100,42 @@ add_users_and_roles() {
   echo "Creating a role named Debtor..."
 
   #The following command will add a role to the user.
-  curl -s -k --user ${IS_name}:${IS_pass} -d @${request_data1} -H "Content-Type: text/xml" -H "SOAPAction: urn:addRole" -o /dev/null https://localhost:9443/services/RemoteUserStoreManagerService.RemoteUserStoreManagerServiceHttpsSoap11Endpoint/
+  curl -s -k --user "${IS_name}":"${IS_pass}" -d @${request_data1} -H "Content-Type: text/xml" -H "SOAPAction: urn:addRole" -o /dev/null https://localhost:9443/services/RemoteUserStoreManagerService.RemoteUserStoreManagerServiceHttpsSoap11Endpoint/
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating role Debtor. !!"
     echo
     cleanup
     echo
-    return -1
+    return 255
   fi
   echo "** The role Debtor was successfully created. **"
   echo
 
   echo "Creating a role named Creditor..."
 
-  curl -s -k --user ${IS_name}:${IS_pass} -d @${request_data2} -H "Content-Type: text/xml" -H "SOAPAction: urn:addRole" -o /dev/null https://localhost:9443/services/RemoteUserStoreManagerService.RemoteUserStoreManagerServiceHttpsSoap11Endpoint/
+  curl -s -k --user "${IS_name}":"${IS_pass}" -d @${request_data2} -H "Content-Type: text/xml" -H "SOAPAction: urn:addRole" -o /dev/null https://localhost:9443/services/RemoteUserStoreManagerService.RemoteUserStoreManagerServiceHttpsSoap11Endpoint/
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating role Creditor. !!"
     echo
     cleanup
     echo
-    return -1
+    return 255
   fi
   echo "** The role Creditor was successfully created. **"
   echo
 
   echo "Creating a role named ViewBalance..."
 
-  curl -s -k --user ${IS_name}:${IS_pass} -d @${request_data3} -H "Content-Type: text/xml" -H "SOAPAction: urn:addRole" -o /dev/null https://localhost:9443/services/RemoteUserStoreManagerService.RemoteUserStoreManagerServiceHttpsSoap11Endpoint/
+  curl -s -k --user "${IS_name}":"${IS_pass}" -d @${request_data3} -H "Content-Type: text/xml" -H "SOAPAction: urn:addRole" -o /dev/null https://localhost:9443/services/RemoteUserStoreManagerService.RemoteUserStoreManagerServiceHttpsSoap11Endpoint/
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating role ViewBalance. !!"
     echo
     cleanup
     echo
-    return -1
+    return 255
   fi
   echo "** The role ViewBalance was successfully created. **"
   echo
@@ -148,47 +148,47 @@ create_service_provider() {
   soap_action=$2
   endpoint=$3
   request_data="configs/create-sp.xml"
-  auth=`echo "admin:admin"|base64`
+  auth=$(echo "admin:admin"|base64)
 
   if [ ! -d "configs" ]
     then
       echo "configs Directory not exists."
-      return -1
+      return 255
   fi
 
   if [ ! -f "$request_data" ]
     then
       echo "$request_data File does not exists."
-      return -1
+      return 255
   fi
 
-  echo "Creating Service Provider $sp_name..."
+  echo "Creating Service Provider ${sp_name}..."
 
   # Send the SOAP request to create the new SP.
-  curl -s -k -d @${request_data} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: ${soap_action}" -o /dev/null ${endpoint}
+  curl -s -k -d @${request_data} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: ${soap_action}" -o /dev/null "${endpoint}"
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while creating the service provider. !!"
     echo
-    cleanup ${sp_name}
+    cleanup "${sp_name}"
     echo
-    return -1
+    return 255
   fi
-  echo "** Service Provider $sp_name successfully created. **"
+  echo "** Service Provider ${sp_name} successfully created. **"
 
   return 0;
 }
 
 create_update_sp() {
   sp_name=$1
-  cd configs
+  cd configs || return
 
   request_data="get-sp.xml"
-  auth=`echo "admin:admin"|base64`
+  auth=$(echo "admin:admin"|base64)
 
-  if [ -f "update-sp.xml" ]
+  if [ -f "update-sp_${sp_name}.xml" ]
     then
-      rm -r update-sp.xml
+      rm -r update-sp_"${sp_name}".xml
   fi
 
   if [ -f "response_unformatted.xml" ]
@@ -199,7 +199,7 @@ create_update_sp() {
   if [ ! -f "$request_data" ]
     then
       echo "$request_data File does not exists."
-      return -1
+      return 255
   fi
 
   touch response_unformatted.xml
@@ -209,16 +209,16 @@ create_update_sp() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while getting application details for ${sp_name}.... !!"
     echo
-    cleanup ${sp_name}
+    cleanup "${sp_name}"
     echo
-    return -1
+    return 255
   fi
 
   xmllint --format response_unformatted.xml
-  app_id=`xmllint --xpath "//*[local-name()='applicationID']/text()" response_unformatted.xml`
+  app_id=$(xmllint --xpath "//*[local-name()='applicationID']/text()" response_unformatted.xml)
   rm response_unformatted.xml
 
-  touch update-sp_${sp_name}.xml
+  touch update-sp_"${sp_name}".xml
   echo "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://org.apache.axis2/xsd\"
                   xmlns:xsd1=\"http://model.common.application.identity.carbon.wso2.org/xsd\">
     <soapenv:Header/>
@@ -280,8 +280,8 @@ create_update_sp() {
             </xsd:serviceProvider>
         </xsd:updateApplication>
     </soapenv:Body>
-  </soapenv:Envelope>" >> update-sp_${sp_name}.xml
-  cd ../
+  </soapenv:Envelope>" >> update-sp_"${sp_name}".xml
+  cd ../ || return
 
   return 0;
 }
@@ -290,36 +290,36 @@ configure_service_provider() {
   sp_name=$1
   soap_action=$2
   endpoint=$3
-  auth=`echo "admin:admin"|base64`
+  auth=$(echo "admin:admin"|base64)
 
   if [ ! -d "configs" ]
     then
       echo "configs Directory does not exists."
-      return -1
+      return 255
   fi
 
-  create_update_sp ${sp_name}
-  request_data="configs/update-sp.xml"
+  create_update_sp "${sp_name}"
+  request_data="configs/update-sp_${sp_name}.xml"
 
   if [ ! -f "$request_data" ]
     then
       echo "$request_data File does not exists."
-      return -1
+      return 255
   fi
 
   # Send the SOAP request to Update the Application.
-  curl -s -k -d @${request_data} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: ${soap_action}" -o /dev/null ${endpoint}
+  curl -s -k -d @"${request_data}" -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: ${soap_action}" -o /dev/null "${endpoint}"
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while updating application ${sp_name}.... !!"
     echo
-    cleanup ${sp_name}
+    cleanup "${sp_name}"
     echo
-    return -1
+    return 255
   fi
   echo "** Successfully updated the application ${sp_name}. **"
 
-  rm configs/update-sp_${sp_name}
+  rm configs/update-sp_"${sp_name}".xml
 
   return 0;
 }
@@ -328,33 +328,33 @@ delete_sp() {
   sp_name=$1
   soap_action=$2
   endpoint=$3
-  auth=`echo "admin:admin"|base64`
+  auth=$(echo "admin:admin"|base64)
   request_data="configs/cleanup/delete-sp.xml"
 
   if [ ! -d "configs/cleanup" ]
     then
       echo "configs/cleanup Directory not exists."
-      return -1
+      return 255
   fi
 
   if [ ! -f "$request_data" ]
     then
       echo "$request_data File does not exists."
-      return -1
+      return 255
   fi
 
   echo
-  echo "Deleting Service Provider $sp_name..."
+  echo "Deleting Service Provider ${sp_name}..."
 
   # Send the SOAP request to delete a SP.
-  curl -s -k -d @${request_data} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: ${soap_action}" -o /dev/null ${endpoint}
+  curl -s -k -d @${request_data} -H "Authorization: Basic ${auth}" -H "Content-Type: text/xml" -H "SOAPAction: ${soap_action}" -o /dev/null "${endpoint}"
   res=$?
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the service provider. !!"
     echo
-    return -1
+    return 255
   fi
-  echo "** Service Provider $sp_name successfully deleted. **"
+  echo "** Service Provider ${sp_name} successfully deleted. **"
 
   return 0;
 }
@@ -363,7 +363,7 @@ delete_users() {
   request_data1="configs/cleanup/delete-cameron.xml"
   request_data2="configs/cleanup/delete-alex.xml"
   request_data3="configs/cleanup/delete-john.xml"
-  auth=`echo "admin:admin"|base64`
+  auth=$(echo "admin:admin"|base64)
 
   echo
   echo "Deleting the user named cameron..."
@@ -374,7 +374,7 @@ delete_users() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the user cameron. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The user cameron was successfully deleted. **"
   echo
@@ -386,7 +386,7 @@ delete_users() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the user alex. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The user alex was successfully deleted. **"
   echo
@@ -398,7 +398,7 @@ delete_users() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the user john. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The user john was successfully deleted. **"
   echo
@@ -410,7 +410,7 @@ delete_roles() {
   request_data1="configs/cleanup/delete-role-debtor.xml"
   request_data2="configs/cleanup/delete-role-creditor.xml"
   request_data3="configs/cleanup/delete-role-viewbalance.xml"
-  auth=`echo "admin:admin"|base64`
+  auth=$(echo "admin:admin"|base64)
 
   echo "Deleting the role named Debtor..."
   # Send the SOAP request to delete the role.
@@ -419,7 +419,7 @@ delete_roles() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the role Debtor. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The role Debtor was successfully deleted. **"
   echo
@@ -431,7 +431,7 @@ delete_roles() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the role Creditor. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The role Creditor was successfully deleted. **"
   echo
@@ -444,7 +444,7 @@ delete_roles() {
   if test "${res}" != "0"; then
     echo "!! Problem occurred while deleting the role ViewBalance. !!"
     echo
-    return -1
+    return 255
   fi
   echo "** The role ViewBalance was successfully deleted. **"
   echo
@@ -466,12 +466,12 @@ echo
 echo "Press y - YES"
 echo "Press n - NO"
 echo
-read clean
+read -r clean
 
   case ${clean} in
     [Yy]* )
       cleanup microprofile_jwt_sample
-      break;;
+      ;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
      esac
