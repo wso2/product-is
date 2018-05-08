@@ -115,6 +115,6 @@ $(function () {
         e.stopPropagation();
     });
 
-    $("[data-toggle='tooltip']").tooltip();
+   // $("[data-toggle='tooltip']").tooltip();
 
 });

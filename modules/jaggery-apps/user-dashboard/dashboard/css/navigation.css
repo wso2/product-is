@@ -58,7 +58,6 @@ hr.emboss {
 .nav .dropdown-toggle .caret {
     border-bottom-color: #CCCCCC;
     border-top-color: #CCCCCC;
-    margin-top:10px;
 }
 
 .nav .dropdown-toggle:hover .caret {
@@ -77,13 +76,22 @@ hr.emboss {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+.navbar.navbar-fixed-top{
+    background: #2C3238;
+}
 .navbar .brand {
     color: #FFFFFF;
     padding: 0;
-    margin: 9px 0 0 0;
+    margin-top: 12px;
+    margin-left: 0 !important;
     background: url("../img/logo.png") no-repeat;
     width: 192px;
     height: 24px;
+}
+@media only screen and (max-width: 768px) {
+    .navbar .brand {
+        margin-left: 15px!important;
+    }
 }
 .navbar .nav {
     margin-bottom: -1px;
@@ -118,7 +126,6 @@ hr.emboss {
 }
 .navbar-inverse .navbar-inner {
     background: #2C3238;
-    background-image: none;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#002C3238,endColorstr=#002C3238); 
 }
 .navbar-inner {
@@ -144,6 +151,7 @@ hr.emboss {
     padding: 0;
     border: none;
     margin:0;
+    min-width: 199px;
 }
 .dropdown-menu.dropdown-share{
     padding:0 15px;
@@ -156,7 +164,6 @@ hr.emboss {
 
 .dropdown-menu.dropdown-account {
     margin-top: -1px;
-    padding: 8px 5px;
     border: 0;
 }
 .dropdown-menu li > a {
@@ -169,6 +176,7 @@ hr.emboss {
 }
 
 .dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
-    background: #16a085;
+    color: #e2e2e2;
+    background: #080808;
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#0016a085,endColorstr=#0016a085); 
 }
