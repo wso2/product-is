@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.samples.microprofile.jwt;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import java.math.BigDecimal;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
@@ -38,7 +39,7 @@ import javax.ws.rs.core.Response;
 @DeclareRoles({"admin","ViewBalance", "Debtor", "Creditor"})
 @Path("/")
 public class SecureWalletEndpoint {
-    private double currentBalance = 13492838.45;
+    private BigDecimal currentBalance = new BigDecimal("13492838.45");
     private String currency = "USD";
 
     @Inject
@@ -58,8 +59,8 @@ public class SecureWalletEndpoint {
     @RolesAllowed({"admin","Debtor"})
     public Response debit(@QueryParam("amount") String amount) {
         Double debitAmount = Double.valueOf(amount);
-        if (currentBalance > debitAmount) {
-            currentBalance -= debitAmount;
+        if (currentBalance.doubleValue() > debitAmount) {
+            currentBalance = currentBalance.subtract(new BigDecimal(amount));
         } else {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Not enough balance to debit: " + currency + " " + currentBalance).build();
@@ -71,16 +72,16 @@ public class SecureWalletEndpoint {
     @Path("/credit")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"admin","Creditor"})
-    public JsonObject credit(@QueryParam("amount") String amount) {
-        currentBalance += Double.valueOf(amount);
-        return generateBalanceInfo();
+    public Response credit(@QueryParam("amount") String amount) {
+        currentBalance = currentBalance.add(new BigDecimal(amount));
+        return Response.ok(generateBalanceInfo()).build();
     }
 
     private JsonObject generateBalanceInfo() {
         JsonObjectBuilder result = Json.createObjectBuilder().add(currency, currentBalance);
         double warningLimit = 10000.00;
 
-        if (warningLimit > currentBalance) {
+        if (warningLimit > currentBalance.doubleValue()) {
             String warningMsg = String.format("balance is below warning limit: %s", warningLimit);
             result.add("warning", warningMsg);
         }
