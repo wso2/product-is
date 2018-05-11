@@ -19,10 +19,10 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.ReadOnlyJWEHeader;
+import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
@@ -266,7 +266,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     public void testEncryptionAlgorithmAndEncryptionMethod() throws Exception {
 
         EncryptedJWT jwt = EncryptedJWT.parse(idToken);
-        ReadOnlyJWEHeader header = jwt.getHeader();
+        JWEHeader header = jwt.getHeader();
         String algorithm = header.getAlgorithm().getName();
         Assert.assertEquals(algorithm, ENCRYPTION_ALGORITHM, "Encryption algorithm configuration failed.");
         String method = header.getEncryptionMethod().getName();
@@ -487,7 +487,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         RSADecrypter decrypter = new RSADecrypter(spPrivateKey);
         jwt.decrypt(decrypter);
 
-        ReadOnlyJWTClaimsSet claims = jwt.getJWTClaimsSet();
+        JWTClaimsSet claims = jwt.getJWTClaimsSet();
         Assert.assertNotNull(claims, "ID token claim set is null");
 
         String aud = claims.getAudience().get(0);
