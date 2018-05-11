@@ -74,7 +74,7 @@ public class IDTokenDecrypterServlet extends HttpServlet {
                 JSONObject claimsJSON = new JSONObject();
 
                 // Get all claims set to a map and return a JSON object.
-                Map<String, Object> allClaims = encryptedJWT.getJWTClaimsSet().getAllClaims();
+                Map<String, Object> allClaims = encryptedJWT.getJWTClaimsSet().getClaims();
                 for (Map.Entry<String, Object> entry : allClaims.entrySet()) {
                     claimsJSON.put(entry.getKey(), entry.getValue());
                 }

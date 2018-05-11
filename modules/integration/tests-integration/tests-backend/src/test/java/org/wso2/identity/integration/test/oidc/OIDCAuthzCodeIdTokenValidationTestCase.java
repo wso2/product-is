@@ -18,7 +18,7 @@
  */
 package org.wso2.identity.integration.test.oidc;
 
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
@@ -207,7 +207,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
 
         idToken = oidcTokens.getIDTokenString();
         Assert.assertNotNull(idToken, "ID token is null");
-        ReadOnlyJWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
         Assert.assertEquals(jwtClaimsSet.getClaim("nonce"), TEST_NONCE, "Invalid nonce received.");
         Assert.assertEquals(jwtClaimsSet.getSubject(), "testuser11@carbon.super", "Invalid subject received.");
         Assert.assertEquals(jwtClaimsSet.getIssuer(), "https://localhost:9853/oauth2/token", "Invalid issuer received.");
