@@ -323,6 +323,12 @@
 				<AttributeID>verifyEmail</AttributeID>
 				<Description>Temporary claim to invoke email verified feature</Description>
 			</Claim>
+			<Claim>
+				<ClaimURI>http://wso2.org/claims/identity/lockedReason</ClaimURI>
+				<DisplayName>Locked Reason</DisplayName>
+				<AttributeID>lockedReason</AttributeID>
+				<Description>The reason for account locking</Description>
+			</Claim>
 		</Dialect>
 		<Dialect dialectURI="urn:ietf:params:scim:schemas:core:2.0">
 			<Claim>
