@@ -6,7 +6,7 @@ function onInitialRequest(context) {
         case "acr1" : executeStep({id :'1',
             on : {
                 success : function(context) {
-                    var isAdmin = hasRole(context, 'admin');
+                    var isAdmin = hasRole(context.steps[1].subject, 'admin');
                     Log.info("--------------- Has Admin "+isAdmin);
                     if(isAdmin) {
                         executeStep({id :'2'});
