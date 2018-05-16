@@ -333,6 +333,7 @@
                                     <fileset dir="${tempdir}/web">
                                         <exclude name="**/yui/**" />
                                         <exclude name="**/ajax/**" />
+                                        <exclude name="**/codemirror/**" />
                                         <exclude name="**/WEB-INF/**" />
                                         <exclude name="**/gadget/**" />
                                         <exclude name="**/*.html" />

@@ -146,6 +146,25 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download_conditional_authentication_functions</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.user</artifactId>
+                                    <version>${conditional.authentication.functions.version}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <!-- Download totp authenticator jar from nexus and copy to the authenticatorCopied/jar folder-->
                     <!--execution>
                         <id>download_totp_jar</id>
