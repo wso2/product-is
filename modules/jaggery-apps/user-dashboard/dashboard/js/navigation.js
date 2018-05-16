@@ -1,9 +1,5 @@
 $(function () {
 
-/*    setInterval(function () {
-        $.get('/portal/apis/session-check.jag');
-    }, 10000 * 6);*/
-
     var login = function () {
         if (!$("#form-login").valid()) return;
 
@@ -97,15 +93,7 @@ $(function () {
         $(this).find('form').find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
         $(this).find('.alert').html('').hide();
     })
-    /*
-     $('#btn-register').bind('click', register);
 
-     $('#modal-register input').bind('keypress', function(e) {
-     if (e.keyCode === 13) {
-     register();
-     }
-     });
-     */
     $('#sso-login').click(function () {
         $('#sso-login-form').submit();
 
@@ -114,7 +102,5 @@ $(function () {
     $('.dropdown-menu input, .dropdown-menu label').click(function (e) {
         e.stopPropagation();
     });
-
-   // $("[data-toggle='tooltip']").tooltip();
 
 });
