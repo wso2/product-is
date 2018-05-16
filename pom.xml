@@ -1418,6 +1418,13 @@
                 <version>${forgetme.tool.version}</version>
             </dependency>
 
+            <!--Conditional authenticator functions-->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.user</artifactId>
+                <version>${conditional.authentication.functions.version}</version>
+            </dependency>
+
             <!-- Other Connectors packed with IS -->
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
@@ -1654,7 +1661,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.192</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.207</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1727,6 +1734,8 @@
         <authenticator.emailotp.version>2.0.9</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.5</authenticator.x509.version>
+
+        <conditional.authentication.functions.version>0.1.0</conditional.authentication.functions.version>
 
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
