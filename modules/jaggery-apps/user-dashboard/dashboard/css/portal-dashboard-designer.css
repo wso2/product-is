@@ -164,43 +164,9 @@ body {
 /*! gridster.js - v0.1.0 - 2012-10-07
  * http://gridster.net/
  * Copyright (c) 2012 ducksboard; Licensed MIT */
-/*
- .layouts_grid {
- position: relative !important;
- width: 100%;
- min-height: 300px;
- float: left;
- margin-top: 126px;
- }
- */
 #gridster-con {
 	position:relative;
 }
-/*
-.layouts_grid {
-	left:0;
-	min-height:300px;
-	position:absolute !important;
-	right:0;
-	width:99%;
-}
-.layouts_grid> * {
-	margin:0 auto;
-	-webkit-transition:height .4s;
-	-moz-transition:height .4s;
-	-o-transition:height .4s;
-	-ms-transition:height .4s;
-	transition:height .4s;
-}
-.layouts_grid ul {
-	list-style-type:none;
-	min-height: 660px;
-}
-.layouts_grid .gs_w {
-	z-index:2;
-	position:absolute;
-}
-*/
 .ready .gs_w:not(.preview-holder) {
 	-webkit-transition:opacity .3s,left .3s,top .3s;
 	-moz-transition:opacity .3s,left .3s,top .3s;
@@ -310,10 +276,6 @@ body {
 	box-shadow:0 0 2px rgba(0, 0, 0, 0.5) !important;
 	border:none;
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=0);
-	/*
-	 padding-top:8px;
-	 padding-bottom:5px;
-	 */
 }
 .sub-navbar-designer-view .nav> li> a {
 	color:#34495E;
@@ -356,44 +318,6 @@ body {
 #grid-guides i {
 	position:absolute
 }
-/*
- #grid-guides i:nth-child(1){
- top:0;
- left:0;
- }
- #grid-guides i:nth-child(2){
- top:0;
- left:12.5%;
- }
- #grid-guides i:nth-child(3){
- top:0;
- left:25%;
- }
- #grid-guides i:nth-child(4){
- top:0;
- left:37.5%;
- }
- #grid-guides i:nth-child(5){
- top:0;
- right:50%;
- }
- #grid-guides i:nth-child(6){
- top:0;
- left:62.5%;
- }
- #grid-guides i:nth-child(7){
- top:0;
- left:75%;
- }
- #grid-guides i:nth-child(8){
- top:0;
- left:87.5%;
- }
- #grid-guides i:nth-child(9){
- top:0;
- right:0;
- }
- */
 .navbar-inner.sub-navbar-designer a.disabled {
 	color:#888 !important;
 }
@@ -415,6 +339,7 @@ body {
 	width:80px;
 }
 .layout_block {
+	height:165px;
 	background:#fff;
 	position:relative;
 	overflow-y:hidden;
