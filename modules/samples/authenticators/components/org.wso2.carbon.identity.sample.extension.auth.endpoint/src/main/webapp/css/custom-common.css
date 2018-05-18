@@ -160,3 +160,32 @@ img.idp-image {
     content:" *";
     color:red;
 }
+.hwkDeviceContainerParent{
+    padding-top: 0;
+}
+.hwkDeviceContainer{
+    position: relative;
+    display: block;
+    margin-top: -10px;
+}
+.hwkBg{
+    margin: 0 auto;
+    width: 400px;
+    height: 221px;
+    background: url("../images/hk.png");
+    background-size: cover;
+}
+#ssdGeneratedNumber{
+    position: absolute;
+    top: 32%;
+    left: 38%;
+    padding: 4px 8px;
+    width: 200px;
+    height: 55px;
+}
+#ssdGeneratedNumber div{
+     background: none;
+ }
+.sevenSeg-svg{
+    background: none;
+}
