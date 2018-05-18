@@ -1661,13 +1661,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.209</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.210</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.7</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.6</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>5.6.70</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.3</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.5</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1681,28 +1681,28 @@
         <identity.workflow.impl.bps.version>5.1.13</identity.workflow.impl.bps.version>
         <identity.carbon.auth.iwa.version>5.1.6</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.5</identity.workflow.template.multisteps.version>
-        <identity.outbound.auth.requestpath.oauth.version>5.1.4</identity.outbound.auth.requestpath.oauth.version>
-        <identity.inbound.provisioning.scim.version>5.3.24</identity.inbound.provisioning.scim.version>
+        <identity.outbound.auth.requestpath.oauth.version>5.1.5</identity.outbound.auth.requestpath.oauth.version>
+        <identity.inbound.provisioning.scim.version>5.3.27</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>1.1.19</identity.inbound.provisioning.scim2.version>
         <identity.tool.samlsso.validator.version>5.1.6</identity.tool.samlsso.validator.version>
         <identity.data.publisher.authentication.version>5.1.8</identity.data.publisher.authentication.version>
-        <identity.data.publisher.oauth.version>1.0.3</identity.data.publisher.oauth.version>
+        <identity.data.publisher.oauth.version>1.0.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.3</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.12</identity.governance.version>
-        <carbon.identity.auth.version>1.1.16</carbon.identity.auth.version>
+        <identity.governance.version>1.1.13</identity.governance.version>
+        <carbon.identity.auth.version>1.1.18</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.18</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
-        <identity.oauth2.validators.xacml.version>1.0.7</identity.oauth2.validators.xacml.version>
+        <identity.oauth2.validators.xacml.version>1.0.8</identity.oauth2.validators.xacml.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Properties -->
-        <identity.outbound.auth.oidc.version>5.1.16</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.1.17</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.12</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.13</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
@@ -1718,11 +1718,11 @@
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>5.3.7</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.1.12</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.1.13</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>1.0.10</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>1.0.12</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.0.5</identity.metadata.saml.version>
@@ -1735,7 +1735,7 @@
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.5</authenticator.x509.version>
 
-        <conditional.authentication.functions.version>0.1.0</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>0.1.1</conditional.authentication.functions.version>
 
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
@@ -1866,7 +1866,7 @@
         <json.version>3.0.0.wso2v1</json.version>
         <carbon.consent.mgt.version>1.0.51</carbon.consent.mgt.version>
         <carbon.database.utils.version>2.0.6</carbon.database.utils.version>
-        <carbon.identity.oauth.uma.version>1.0.0</carbon.identity.oauth.uma.version>
+        <carbon.identity.oauth.uma.version>1.0.1</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
     </properties>
