@@ -1434,7 +1434,11 @@
                 <artifactId>org.wso2.carbon.identity.conditional.auth.functions.cookie</artifactId>
                 <version>${conditional.authentication.functions.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.siddhi</artifactId>
+                <version>${conditional.authentication.functions.version}</version>
+            </dependency>
             <!-- Other Connectors packed with IS -->
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
