@@ -1434,7 +1434,16 @@
                 <artifactId>org.wso2.carbon.identity.conditional.auth.functions.notification</artifactId>
                 <version>${conditional.authentication.functions.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.cookie</artifactId>
+                <version>${conditional.authentication.functions.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.siddhi</artifactId>
+                <version>${conditional.authentication.functions.version}</version>
+            </dependency>
             <!-- Other Connectors packed with IS -->
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
@@ -1745,7 +1754,7 @@
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.5</authenticator.x509.version>
 
-        <conditional.authentication.functions.version>0.1.1</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>0.1.2</conditional.authentication.functions.version>
 
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
