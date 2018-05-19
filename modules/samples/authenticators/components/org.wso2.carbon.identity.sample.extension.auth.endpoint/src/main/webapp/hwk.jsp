@@ -31,7 +31,8 @@
     /* This is for demonstration purposes only.
     You need to use a SecureRandom generator to avoid security breaches. */
     Random randomGenerator = new Random();
-    int nextNum = randomGenerator.nextInt(10000);
+    int nextNum = randomGenerator.nextInt(9000);
+    nextNum = nextNum + 1000;
 
     if (reqNumberStr != null && oldNumStr != null) {
         boolean success = false;
@@ -95,9 +96,7 @@
                                 <!--This is for demonstration purposes only.
                                 You need to properly encode the parameters before adding to the page source to
                                 avoid security breaches. -->
-                                <input id="generatedNumber" name="generatedNumber" type="text" value="<%=nextNum%>"
-                                       class="form-control" tabindex="0"
-                                       placeholder="Key" disabled="disabled">
+                                <p>Enter the 4 digit code that is displayed in the key fob below</p>
                                 <input id="oldNum" name="oldNum" hidden="hidden" value="<%=nextNum%>"/>
                                 <input id="callbackUrl" name="callbackUrl" hidden="hidden" value="<%=callbackUrl%>"/>
                                 <input id="authenticator" name="authenticator" hidden="hidden"
@@ -105,7 +104,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
                                 <input id="timeBasedId" name="timeBasedId" type="password" class="form-control"
-                                       placeholder="Password" autocomplete="off">
+                                       placeholder="Code" autocomplete="off">
                             </div>
 
                             <br>
@@ -130,14 +129,33 @@
                 </div>
                 <!-- /content -->
             </div>
+            <div
+                    class="container hwkDeviceContainerParent col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+                <div class="hwkDeviceContainer">
+                    <div class="hwkBg"></div>
+                    <div id="ssdGeneratedNumber"></div>
+                </div>
+            </div>
         </div>
         <!-- /content/body -->
 
     </div>
 </div>
 
-<script src="libs/jquery_1.11.3/jquery-1.11.3.js"></script>
+<script src="libs/jquery-2.2.4/jquery-2.2.4.min.js"></script>
+<script src="libs/jquery-ui/jquery-ui.min.js"></script>
 <script src="libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/sevenSeg.js"></script>
+<script>
 
+    $("#ssdGeneratedNumber").sevenSeg({
+        digits:4,
+        value: <%=nextNum%>,
+        colorOff: "#2283c7",
+        colorOn: "#000000",
+        colorBackground: "none",
+        slant: 10
+    });
+</script>
 </body>
 </html>
