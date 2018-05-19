@@ -69,8 +69,12 @@
                     <div class="padding-double login-form">
 
                         <form action="" method="post" id="loginForm">
-                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <img id="retinaImage" src="images/retina.png" class="img-responsive">
+                            <div class="videoContainer Aligner">
+                                <div id="container" class="Aligner-item">
+                                    <video id="videoel" height="300" width="400" preload="auto" loop playsinline autoplay>
+                                    </video>
+                                    <canvas id="overlay" height="300" width="400"></canvas>
+                                </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
                                 <!--This is for demonstration purposes only.
@@ -108,37 +112,122 @@
     </div>
 </div>
 
-<script src="libs/jquery_1.11.3/jquery-1.11.3.js"></script>
+<script src="libs/jquery-2.2.4/jquery-2.2.4.min.js"></script>
 <script src="libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/clmtracker-demo/utils.js"></script>
+<script src="libs/clmtracker-demo/clmtrackr.js"></script>
 <script>
-    <!--
-    //Displays the scanning animation--
-    var canvas = document.getElementById('scanner');
-    var ctx = canvas.getContext('2d');
-    var x = 4,
-        y = 4,
-        speed = 1,
-        isBottom = false;
+    // getUserMedia only works over https in Chrome 47+, so we redirect to https. Also notify user if running from file.
+    if (window.location.protocol == "file:") {
+        alert("You seem to be running this example directly from a file. Note that these examples only work when served from a server or localhost due to canvas cross-domain restrictions.");
+    } else if (window.location.hostname !== "localhost" && window.location.protocol !== "https:"){
+        window.location.protocol = "https";
+    }
+</script>
+<script>
+    var vid = document.getElementById('videoel');
+    var vid_width = vid.width;
+    var vid_height = vid.height;
+    var overlay = document.getElementById('overlay');
+    var overlayCC = overlay.getContext('2d');
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#7fcc17';
-        ctx.lineCap = 'round';
-        ctx.shadowBlur = 18;
-        ctx.shadowColor = "#7fcc17";
-        ctx.fillRect(x, y, 210, 10);
-
-        if (!isBottom && y < canvas.height - 14) y += speed;
-        else if (y === canvas.height - 14) isBottom = true;
-
-        if (isBottom && y > 4) y -= speed;
-        else if (y === 4) isBottom = false;
-
-        requestAnimationFrame(draw);
+    /*********** Setup of video/webcam and checking for webGL support *********/
+    var cWidth = $("#container").width();
+    $("#videoel").prop("width", cWidth);
+    $("#overlay").prop("width", cWidth);
+    var insertAltVideo = function(video) {
+        // insert alternate video if getUserMedia not available
+        if (supports_video()) {
+            if (supports_webm_video()) {
+                video.src = "./media/cap12_edit.webm";
+            } else if (supports_h264_baseline_video()) {
+                video.src = "./media/cap12_edit.mp4";
+            } else {
+                return false;
+            }
+            return true;
+        } else return false;
     }
 
-    draw();
-    -->
+    function adjustVideoProportions() {
+        // resize overlay and video if proportions of video are not 4:3
+        // keep same height, just change width
+        var proportion = vid.videoWidth/vid.videoHeight;
+        vid_width = Math.round(vid_height * proportion);
+        vid.width = vid_width;
+        overlay.width = vid_width;
+    }
+
+    function gumSuccess( stream ) {
+        // add camera stream if getUserMedia succeeded
+        if ("srcObject" in vid) {
+            vid.srcObject = stream;
+        } else {
+            vid.src = (window.URL && window.URL.createObjectURL(stream));
+        }
+        vid.onloadedmetadata = function() {
+            adjustVideoProportions();
+            vid.play();
+        }
+        vid.onresize = function() {
+            adjustVideoProportions();
+            if (trackingStarted) {
+                ctrack.stop();
+                ctrack.reset();
+                ctrack.start(vid);
+            }
+        }
+    }
+
+    function gumFail() {
+        // fall back to video if getUserMedia failed
+        insertAltVideo(vid);
+        document.getElementById('gum').className = "hide";
+        document.getElementById('nogum').className = "nohide";
+        alert("There was some problem trying to fetch video from your webcam, using a fallback video instead.");
+    }
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
+
+    // set up video
+    if (navigator.mediaDevices) {
+        navigator.mediaDevices.getUserMedia({video : true}).then(gumSuccess).catch(gumFail);
+    } else if (navigator.getUserMedia) {
+        navigator.getUserMedia({video : true}, gumSuccess, gumFail);
+    } else {
+        insertAltVideo(vid);
+        document.getElementById('gum').className = "hide";
+        document.getElementById('nogum').className = "nohide";
+        alert("Your browser does not seem to support getUserMedia, using a fallback video instead.");
+    }
+
+    /*********** Code for face tracking *********/
+
+    var ctrack = new clm.tracker();
+    ctrack.init();
+    var trackingStarted = false;
+    startVideo();
+    function startVideo() {
+        // start video
+        vid.play();
+        // start tracking
+        ctrack.start(vid);
+        trackingStarted = true;
+        // start loop to draw face
+        drawLoop();
+    }
+
+    function drawLoop() {
+        requestAnimFrame(drawLoop);
+        overlayCC.clearRect(0, 0, vid_width, vid_height);
+        //psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
+        if (ctrack.getCurrentPosition()) {
+            ctrack.draw(overlay);
+        }
+    }
+
+
 </script>
 
 </body>
