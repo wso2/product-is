@@ -528,6 +528,11 @@
                     <version>2.4</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.war.plugin.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.0.0</version>
@@ -1873,6 +1878,7 @@
         <carbon.database.utils.version>2.0.6</carbon.database.utils.version>
         <carbon.identity.oauth.uma.version>1.0.1</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
+        <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
     </properties>
 

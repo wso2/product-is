@@ -14,7 +14,7 @@
            jwksUri="https://localhost:9443/oauth2/jwks"
            keyName="wso2carbon"
            issuer="https://localhost:9443/oauth2/token"
-           audiences="${CLIENT_KEY}"
+           audiences="li6JMbjW6WDMKTWsRnGcjp5zcGhi"
            ignoreApplicationAuthMethod="false">
     </mpJwt>
     <keyStore id="defaultKeyStore" location="${CARBON_HOME}/repository/resources/security/wso2carbon.jks"
