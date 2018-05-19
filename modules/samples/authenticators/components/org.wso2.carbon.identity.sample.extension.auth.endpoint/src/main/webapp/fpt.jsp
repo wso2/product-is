@@ -115,7 +115,7 @@
     </div>
 </div>
 
-<script src="libs/jquery_1.11.3/jquery-1.11.3.js"></script>
+<script src="libs/jquery-2.2.4/jquery-2.2.4.min.js"></script>
 <script src="libs/bootstrap_3.3.5/js/bootstrap.min.js"></script>
 <script>
     <!--
