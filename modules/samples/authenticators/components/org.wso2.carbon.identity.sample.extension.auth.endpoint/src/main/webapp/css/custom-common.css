@@ -189,3 +189,61 @@ img.idp-image {
 .sevenSeg-svg{
     background: none;
 }
+#overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    -o-transform : scaleX(-1);
+    -webkit-transform : scaleX(-1);
+    transform : scaleX(-1);
+    -ms-filter : fliph; /*IE*/
+    filter : fliph; /*IE*/
+}
+
+#videoel {
+    -o-transform : scaleX(-1);
+    -webkit-transform : scaleX(-1);
+    transform : scaleX(-1);
+    -ms-filter : fliph; /*IE*/
+    filter : fliph; /*IE*/
+}
+.videoContainer{
+    margin: 0 auto;
+}
+#container {
+    position : relative;
+    /*margin : 0px auto;*/
+}
+
+#content {
+    margin-top : 70px;
+    margin-left : 100px;
+    margin-right : 100px;
+    max-width: 950px;
+}
+
+h2 {
+    font-weight : 400;
+}
+
+.nogum {
+    display : none;
+}
+
+.btn {
+    font-family: 'Lato';
+    font-size: 16px;
+}
+
+.hide {
+    display : none;
+}
+
+.nohide {
+    display : block;
+}
+.Aligner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
