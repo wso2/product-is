@@ -144,8 +144,8 @@
                 <div class="demo-warn">
                     <div class="alert alert-danger" role="alert">
                         <div class="glyphicon glyphicon-warning-sign"></div>
-                        <p><b>This is a non functioning sample.</b></p>
-                        <p>For demonstration purposes only..!!!</p>
+                        <p><b>This is only for demonstration...!</b></p>
+                        <p>There is no real functionality provided.</p>
                     </div>
                 </div>
             </div>
