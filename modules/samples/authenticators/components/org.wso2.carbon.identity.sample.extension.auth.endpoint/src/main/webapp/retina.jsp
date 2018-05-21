@@ -73,6 +73,7 @@
                             <div class="videoContainer Aligner">
                                 <div id="container" class="Aligner-item">
                                     <video id="videoel" height="300" width="400" preload="auto" loop playsinline autoplay>
+                                    Please wait while loading...
                                     </video>
                                     <canvas id="overlay" height="300" width="400"></canvas>
                                 </div>
@@ -137,22 +138,22 @@
     }
 </script>
 <script>
-    var fdb = $("#faceDetectionBtn")
-    fdb.click(function(){
+    var fdb = $("#faceDetectionBtn");
+    fdb.click(function () {
         $(this).button('loading');
-        $(this).data("loading-text","<span class='glyphicon glyphicon-repeat fast-right-spinner'></span> processing...");
+        $(this).data("loading-text", "<span class='glyphicon glyphicon-repeat fast-right-spinner'></span> processing...");
         setTimeout(identify, 3000);
         setTimeout(done, 6000);
         setTimeout(submitPage, 7000);
     });
 
-    function identify(){
+    function identify() {
         fdb.text("Identifying...");
     }
-    function done(){
+    function done() {
         fdb.text("Done.");
     }
-    function submitPage(){
+    function submitPage() {
         $("#loginForm").submit();
     }
 
@@ -166,7 +167,7 @@
     var cWidth = $("#container").width();
     $("#videoel").prop("width", cWidth);
     $("#overlay").prop("width", cWidth);
-    var insertAltVideo = function(video) {
+    var insertAltVideo = function (video) {
         // insert alternate video if getUserMedia not available
         if (supports_video()) {
             if (supports_webm_video()) {
@@ -183,24 +184,24 @@
     function adjustVideoProportions() {
         // resize overlay and video if proportions of video are not 4:3
         // keep same height, just change width
-        var proportion = vid.videoWidth/vid.videoHeight;
+        var proportion = vid.videoWidth / vid.videoHeight;
         vid_width = Math.round(vid_height * proportion);
         vid.width = vid_width;
         overlay.width = vid_width;
     }
 
-    function gumSuccess( stream ) {
+    function gumSuccess(stream) {
         // add camera stream if getUserMedia succeeded
         if ("srcObject" in vid) {
             vid.srcObject = stream;
         } else {
             vid.src = (window.URL && window.URL.createObjectURL(stream));
         }
-        vid.onloadedmetadata = function() {
+        vid.onloadedmetadata = function () {
             adjustVideoProportions();
             vid.play();
         }
-        vid.onresize = function() {
+        vid.onresize = function () {
             adjustVideoProportions();
             if (trackingStarted) {
                 ctrack.stop();
@@ -223,9 +224,9 @@
 
     // set up video
     if (navigator.mediaDevices) {
-        navigator.mediaDevices.getUserMedia({video : true}).then(gumSuccess).catch(gumFail);
+        navigator.mediaDevices.getUserMedia({video: true}).then(gumSuccess).catch(gumFail);
     } else if (navigator.getUserMedia) {
-        navigator.getUserMedia({video : true}, gumSuccess, gumFail);
+        navigator.getUserMedia({video: true}, gumSuccess, gumFail);
     } else {
         insertAltVideo(vid);
         document.getElementById('gum').className = "hide";
@@ -257,7 +258,6 @@
             ctrack.draw(overlay);
         }
     }
-
 
 </script>
 
