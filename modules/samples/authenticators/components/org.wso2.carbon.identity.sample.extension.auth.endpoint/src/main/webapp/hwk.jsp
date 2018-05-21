@@ -80,7 +80,7 @@
         <div class="col-md-12">
 
             <!-- content -->
-            <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+            <div class="container-hardware-key col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
                 <div>
                     <h2 class="wr-title uppercase blue-bg padding-double white boarder-bottom-blue margin-none">Hardware
                         Key </h2>
@@ -128,10 +128,19 @@
                 <!-- /content -->
             </div>
             <div
-                    class="container hwkDeviceContainerParent col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+                    class="container-hardware-key hwkDeviceContainerParent col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
                 <div class="hwkDeviceContainer">
                     <div class="hwkBg"></div>
                     <div id="ssdGeneratedNumber"></div>
+                </div>
+            </div>
+            <div class="container-hardware-key col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
+                <div class="demo-warn">
+                    <div class="alert alert-danger" role="alert">
+                        <div class="glyphicon glyphicon-warning-sign"></div>
+                        <p><b>This is a non functioning sample.</b></p>
+                        <p>For demonstration purposes only..!!!</p>
+                    </div>
                 </div>
             </div>
         </div>

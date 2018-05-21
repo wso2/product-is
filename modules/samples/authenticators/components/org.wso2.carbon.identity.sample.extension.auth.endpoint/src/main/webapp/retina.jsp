@@ -59,10 +59,11 @@
         <div class="col-md-12">
 
             <!-- content -->
-            <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+            <div
+                    class="container-face-detection col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
                 <div>
-                    <h2 class="wr-title blue-bg padding-double white boarder-bottom-blue margin-none">Retina
-                        Scanner </h2>
+                    <h2 class="wr-title blue-bg padding-double white boarder-bottom-blue margin-none">Face Detection
+                    </h2>
                 </div>
                 <div class="boarder-all ">
                     <div class="clearfix"></div>
@@ -105,6 +106,15 @@
                     </div>
                 </div>
                 <!-- /content -->
+            </div>
+            <div class="container-face-detection col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
+                <div class="demo-warn">
+                    <div class="alert alert-danger" role="alert">
+                        <div class="glyphicon glyphicon-warning-sign"></div>
+                        <p><b>This is a non functioning sample.</b></p>
+                        <p>For demonstration purposes only..!!!</p>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- /content/body -->
