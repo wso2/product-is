@@ -171,8 +171,11 @@
     });
 
     $("#hwkBtn").click(function () {
-        if ($("#timeBasedId").val() == $("#oldNum").val()) {
+        var input = $("#timeBasedId").val();
+        if (input === $("#oldNum").val()) {
             $("#loginForm").submit();
+        } else if(input.length === 0) {
+            $("#wrong-hwk-alert").text("Code cannot be empty..").show();
         } else {
             $("#wrong-hwk-alert").show();
             window.setTimeout(function() {
