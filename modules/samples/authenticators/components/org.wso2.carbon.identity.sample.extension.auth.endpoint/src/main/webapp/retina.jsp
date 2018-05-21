@@ -90,7 +90,9 @@
                             <div class="form-actions">
                                 <button
                                         class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"
-                                        type="submit">Scan
+                                        type="button" id="faceDetectionBtn"
+                                        data-loading-text="<span class='glyphicon glyphicon-repeat fast-right-spinner'></span> processing...">
+                                        Scan
                                 </button>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
@@ -111,8 +113,8 @@
                 <div class="demo-warn">
                     <div class="alert alert-danger" role="alert">
                         <div class="glyphicon glyphicon-warning-sign"></div>
-                        <p><b>This is a non functioning sample.</b></p>
-                        <p>For demonstration purposes only..!!!</p>
+                        <p><b>This is only for demonstration...!</b></p>
+                        <p>There is no real functionality provided.</p>
                     </div>
                 </div>
             </div>
@@ -135,6 +137,25 @@
     }
 </script>
 <script>
+    var fdb = $("#faceDetectionBtn")
+    fdb.click(function(){
+        $(this).button('loading');
+        $(this).data("loading-text","<span class='glyphicon glyphicon-repeat fast-right-spinner'></span> processing...");
+        setTimeout(identify, 3000);
+        setTimeout(done, 6000);
+        setTimeout(submitPage, 7000);
+    });
+
+    function identify(){
+        fdb.text("Identifying...");
+    }
+    function done(){
+        fdb.text("Done.");
+    }
+    function submitPage(){
+        $("#loginForm").submit();
+    }
+
     var vid = document.getElementById('videoel');
     var vid_width = vid.width;
     var vid_height = vid.height;
