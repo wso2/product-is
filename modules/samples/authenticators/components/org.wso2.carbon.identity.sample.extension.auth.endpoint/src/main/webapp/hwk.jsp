@@ -91,6 +91,12 @@
 
                         <form action="" method="post" id="loginForm">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                                <div id="wrong-hwk-alert" class="alert alert-danger" role="alert" style="display:
+                                none;">
+                                    Incorrect code, Please retry again...
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
                                 <!--This is for demonstration purposes only.
                                 You need to properly encode the parameters before adding to the page source to
                                 avoid security breaches. -->
@@ -110,7 +116,7 @@
                             <div class="form-actions">
                                 <button
                                         class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"
-                                        type="submit">Sign in
+                                        type="button" id="hwkBtn">Sign in
                                 </button>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
@@ -156,13 +162,28 @@
 <script>
 
     $("#ssdGeneratedNumber").sevenSeg({
-        digits:4,
+        digits: 4,
         value: <%=nextNum%>,
         colorOff: "#2283c7",
         colorOn: "#000000",
         colorBackground: "none",
         slant: 10
     });
+
+    $("#hwkBtn").click(function () {
+        if ($("#timeBasedId").val() == $("#oldNum").val()) {
+            $("#loginForm").submit();
+        } else {
+            $("#wrong-hwk-alert").show();
+            window.setTimeout(function() {
+                $("#wrong-hwk-alert").fadeTo(500, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+                location.reload();
+            }, 2000);
+        }
+    });
+
 </script>
 </body>
 </html>
