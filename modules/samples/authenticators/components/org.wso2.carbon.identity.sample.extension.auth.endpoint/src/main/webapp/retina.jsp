@@ -59,10 +59,11 @@
         <div class="col-md-12">
 
             <!-- content -->
-            <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+            <div
+                    class="container-face-detection col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
                 <div>
-                    <h2 class="wr-title blue-bg padding-double white boarder-bottom-blue margin-none">Retina
-                        Scanner </h2>
+                    <h2 class="wr-title blue-bg padding-double white boarder-bottom-blue margin-none">Face Detection
+                    </h2>
                 </div>
                 <div class="boarder-all ">
                     <div class="clearfix"></div>
@@ -72,6 +73,7 @@
                             <div class="videoContainer Aligner">
                                 <div id="container" class="Aligner-item">
                                     <video id="videoel" height="300" width="400" preload="auto" loop playsinline autoplay>
+                                    Please wait while loading...
                                     </video>
                                     <canvas id="overlay" height="300" width="400"></canvas>
                                 </div>
@@ -89,7 +91,9 @@
                             <div class="form-actions">
                                 <button
                                         class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"
-                                        type="submit">Scan
+                                        type="button" id="faceDetectionBtn"
+                                        data-loading-text="<span class='glyphicon glyphicon-repeat fast-right-spinner'></span> processing...">
+                                        Scan
                                 </button>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
@@ -105,6 +109,15 @@
                     </div>
                 </div>
                 <!-- /content -->
+            </div>
+            <div class="container-face-detection col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
+                <div class="demo-warn">
+                    <div class="alert alert-danger" role="alert">
+                        <div class="glyphicon glyphicon-warning-sign"></div>
+                        <p><b>This is only for demonstration...!</b></p>
+                        <p>There is no real functionality provided.</p>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- /content/body -->
@@ -125,6 +138,25 @@
     }
 </script>
 <script>
+    var fdb = $("#faceDetectionBtn");
+    fdb.click(function () {
+        $(this).button('loading');
+        $(this).data("loading-text", "<span class='glyphicon glyphicon-repeat fast-right-spinner'></span> processing...");
+        setTimeout(identify, 3000);
+        setTimeout(done, 6000);
+        setTimeout(submitPage, 7000);
+    });
+
+    function identify() {
+        fdb.text("Identifying...");
+    }
+    function done() {
+        fdb.text("Done.");
+    }
+    function submitPage() {
+        $("#loginForm").submit();
+    }
+
     var vid = document.getElementById('videoel');
     var vid_width = vid.width;
     var vid_height = vid.height;
@@ -135,7 +167,7 @@
     var cWidth = $("#container").width();
     $("#videoel").prop("width", cWidth);
     $("#overlay").prop("width", cWidth);
-    var insertAltVideo = function(video) {
+    var insertAltVideo = function (video) {
         // insert alternate video if getUserMedia not available
         if (supports_video()) {
             if (supports_webm_video()) {
@@ -152,24 +184,24 @@
     function adjustVideoProportions() {
         // resize overlay and video if proportions of video are not 4:3
         // keep same height, just change width
-        var proportion = vid.videoWidth/vid.videoHeight;
+        var proportion = vid.videoWidth / vid.videoHeight;
         vid_width = Math.round(vid_height * proportion);
         vid.width = vid_width;
         overlay.width = vid_width;
     }
 
-    function gumSuccess( stream ) {
+    function gumSuccess(stream) {
         // add camera stream if getUserMedia succeeded
         if ("srcObject" in vid) {
             vid.srcObject = stream;
         } else {
             vid.src = (window.URL && window.URL.createObjectURL(stream));
         }
-        vid.onloadedmetadata = function() {
+        vid.onloadedmetadata = function () {
             adjustVideoProportions();
             vid.play();
         }
-        vid.onresize = function() {
+        vid.onresize = function () {
             adjustVideoProportions();
             if (trackingStarted) {
                 ctrack.stop();
@@ -192,9 +224,9 @@
 
     // set up video
     if (navigator.mediaDevices) {
-        navigator.mediaDevices.getUserMedia({video : true}).then(gumSuccess).catch(gumFail);
+        navigator.mediaDevices.getUserMedia({video: true}).then(gumSuccess).catch(gumFail);
     } else if (navigator.getUserMedia) {
-        navigator.getUserMedia({video : true}, gumSuccess, gumFail);
+        navigator.getUserMedia({video: true}, gumSuccess, gumFail);
     } else {
         insertAltVideo(vid);
         document.getElementById('gum').className = "hide";
@@ -226,7 +258,6 @@
             ctrack.draw(overlay);
         }
     }
-
 
 </script>
 

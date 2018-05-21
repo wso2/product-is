@@ -82,7 +82,7 @@
         <div class="col-md-12">
 
             <!-- content -->
-            <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+            <div class="container-hardware-key col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
                 <div>
                     <h2 class="wr-title uppercase blue-bg padding-double white boarder-bottom-blue margin-none">Hardware
                         Key </h2>
@@ -92,6 +92,12 @@
                     <div class="padding-double login-form">
 
                         <form action="" method="post" id="loginForm">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                                <div id="wrong-hwk-alert" class="alert alert-danger" role="alert" style="display:
+                                none;">
+                                    Incorrect code, Please retry again...
+                                </div>
+                            </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
                                 <!--This is for demonstration purposes only.
                                 You need to properly encode the parameters before adding to the page source to
@@ -112,7 +118,7 @@
                             <div class="form-actions">
                                 <button
                                         class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"
-                                        type="submit">Sign in
+                                        type="button" id="hwkBtn">Sign in
                                 </button>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
@@ -130,10 +136,19 @@
                 <!-- /content -->
             </div>
             <div
-                    class="container hwkDeviceContainerParent col-xs-10 col-sm-6 col-md-6 col-lg-3 col-centered wr-content wr-login col-centered">
+                    class="container-hardware-key hwkDeviceContainerParent col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
                 <div class="hwkDeviceContainer">
                     <div class="hwkBg"></div>
                     <div id="ssdGeneratedNumber"></div>
+                </div>
+            </div>
+            <div class="container-hardware-key col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
+                <div class="demo-warn">
+                    <div class="alert alert-danger" role="alert">
+                        <div class="glyphicon glyphicon-warning-sign"></div>
+                        <p><b>This is only for demonstration...!</b></p>
+                        <p>There is no real functionality provided.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,13 +164,31 @@
 <script>
 
     $("#ssdGeneratedNumber").sevenSeg({
-        digits:4,
+        digits: 4,
         value: <%=nextNum%>,
         colorOff: "#2283c7",
         colorOn: "#000000",
         colorBackground: "none",
         slant: 10
     });
+
+    $("#hwkBtn").click(function () {
+        var input = $("#timeBasedId").val();
+        if (input === $("#oldNum").val()) {
+            $("#loginForm").submit();
+        } else if(input.length === 0) {
+            $("#wrong-hwk-alert").text("Code cannot be empty..").show();
+        } else {
+            $("#wrong-hwk-alert").show();
+            window.setTimeout(function() {
+                $("#wrong-hwk-alert").fadeTo(500, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+                location.reload();
+            }, 2000);
+        }
+    });
+
 </script>
 </body>
 </html>
