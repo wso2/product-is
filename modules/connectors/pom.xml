@@ -190,7 +190,7 @@
                         </configuration>
                     </execution>
                     <!-- Download totp authenticator jar from nexus and copy to the authenticatorCopied/jar folder-->
-                    <!--execution>
+                    <execution>
                         <id>download_totp_jar</id>
                         <phase>compile</phase>
                         <goals>
@@ -212,7 +212,7 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution-->
+                    </execution>
                     <!-- Download eamilOTP  authenticator endpoint war from nexus and copy to the authenticatorCopied/war folder-->
                     <execution>
                         <id>download_emailotp_war</id>
@@ -264,7 +264,7 @@
                         </configuration>
                     </execution>
                     <!-- Download TOTP endpoint war from nexus and copy to the authenticatorCopied/war folder-->
-                    <!--execution>
+                    <execution>
                         <id>download_totp_war</id>
                         <phase>compile</phase>
                         <goals>
@@ -287,7 +287,7 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution-->
+                    </execution>
                     <execution>
                         <id>download_x509certificateauthenticationendpoint_war</id>
                         <phase>compile</phase>
