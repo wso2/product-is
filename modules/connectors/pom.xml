@@ -172,7 +172,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.cookie</artifactId>
+                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.http</artifactId>
                                     <version>${conditional.authentication.functions.version}</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
@@ -180,7 +180,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.siddhi</artifactId>
+                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.analytics</artifactId>
                                     <version>${conditional.authentication.functions.version}</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
