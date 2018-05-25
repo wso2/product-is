@@ -22,9 +22,9 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.is.migration.service.Migrator;
-import org.wso2.carbon.is.migration.service.v540.bean.OAuthConsumerApp;
 import org.wso2.carbon.is.migration.service.v540.bean.OAuth2Scope;
 import org.wso2.carbon.is.migration.service.v540.bean.OAuth2ScopeBinding;
+import org.wso2.carbon.is.migration.service.v540.bean.OAuthConsumerApp;
 import org.wso2.carbon.is.migration.service.v540.bean.SpOAuth2ExpiryTimeConfiguration;
 import org.wso2.carbon.is.migration.service.v540.dao.OAuthDAO;
 import org.wso2.carbon.is.migration.service.v540.util.RegistryUtil;
@@ -91,22 +91,22 @@ public class OAuthDataMigrator extends Migrator {
 
         List<OAuthConsumerApp> updatedConsumerApps = new ArrayList<>();
 
-        long applicationAccessTokenExpiryTime = 3600000;
+        long applicationAccessTokenExpiryTime = 3600;
         if (StringUtils.isNotBlank(IdentityUtil.getProperty("OAuth.AccessTokenDefaultValidityPeriod"))) {
             applicationAccessTokenExpiryTime = Long.parseLong(IdentityUtil.getProperty("OAuth" +
-                    ".AccessTokenDefaultValidityPeriod")) * 1000;
+                    ".AccessTokenDefaultValidityPeriod"));
         }
 
-        long userAccessTokenExpiryTime = 3600000;
+        long userAccessTokenExpiryTime = 3600;
         if (StringUtils.isNotBlank(IdentityUtil.getProperty("OAuth.UserAccessTokenDefaultValidityPeriod"))) {
             userAccessTokenExpiryTime = Long.parseLong(IdentityUtil.getProperty("OAuth" +
-                    ".UserAccessTokenDefaultValidityPeriod")) * 1000;
+                    ".UserAccessTokenDefaultValidityPeriod"));
         }
 
-        long refreshTokenExpiryTime = 84600000;
+        long refreshTokenExpiryTime = 84600;
         if (StringUtils.isNotBlank(IdentityUtil.getProperty("OAuth.RefreshTokenValidityPeriod"))) {
             refreshTokenExpiryTime = Long.parseLong(IdentityUtil.getProperty("OAuth" +
-                    ".RefreshTokenValidityPeriod")) * 1000;
+                    ".RefreshTokenValidityPeriod"));
         }
 
         boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
@@ -122,24 +122,26 @@ public class OAuthDataMigrator extends Migrator {
 
             if (expiryTimeConfiguration.getApplicationAccessTokenExpiryTime() != null) {
                 consumerApp.setApplicationAccessTokenExpiryTime(expiryTimeConfiguration
-                        .getApplicationAccessTokenExpiryTime());
+                        .getApplicationAccessTokenExpiryTime() / 1000);
             } else {
                 consumerApp.setApplicationAccessTokenExpiryTime(applicationAccessTokenExpiryTime);
             }
             if (expiryTimeConfiguration.getUserAccessTokenExpiryTime() != null) {
-                consumerApp.setUserAccessTokenExpiryTime(expiryTimeConfiguration.getApplicationAccessTokenExpiryTime());
+                consumerApp.setUserAccessTokenExpiryTime(expiryTimeConfiguration.getApplicationAccessTokenExpiryTime
+                        () / 1000);
             } else {
                 consumerApp.setUserAccessTokenExpiryTime(userAccessTokenExpiryTime);
             }
             if (expiryTimeConfiguration.getRefreshTokenExpiryTime() != null) {
-                consumerApp.setRefreshTokenExpiryTime(expiryTimeConfiguration.getApplicationAccessTokenExpiryTime());
+                consumerApp.setRefreshTokenExpiryTime(expiryTimeConfiguration.getApplicationAccessTokenExpiryTime()
+                        / 1000);
             } else {
                 consumerApp.setRefreshTokenExpiryTime(refreshTokenExpiryTime);
             }
 
-            if (consumerApp.getApplicationAccessTokenExpiryTime() != 3600000
-                    || consumerApp.getUserAccessTokenExpiryTime() != 3600000
-                    || consumerApp.getRefreshTokenExpiryTime() != 84600000) {
+            if (consumerApp.getApplicationAccessTokenExpiryTime() != 3600
+                    || consumerApp.getUserAccessTokenExpiryTime() != 3600
+                    || consumerApp.getRefreshTokenExpiryTime() != 84600) {
                 updatedConsumerApps.add(consumerApp);
             }
         }
