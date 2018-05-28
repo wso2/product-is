@@ -203,3 +203,6 @@ versions:
     parameters:
       location: "step1"
       schema: "uma"
+  -
+    name: "ClaimDataMigrator"
+    order: 2
