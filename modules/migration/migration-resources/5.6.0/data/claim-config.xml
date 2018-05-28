@@ -1,0 +1,119 @@
+<!--
+  ~ Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  -->
+
+<ClaimConfig>
+    <Dialects>
+        <Dialect dialectURI="http://wso2.org/claims">
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/userprincipal</ClaimURI>
+                <DisplayName>User Principal</DisplayName>
+                <AttributeID>uid</AttributeID>
+                <Description>User Principal</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/extendedRef</ClaimURI>
+                <DisplayName>Extended Ref</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>extendedRef</AttributeID>
+                <Description>Extended Ref</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/extendedDisplayName</ClaimURI>
+                <DisplayName>Extended Display Name</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>extendedDisplayName</AttributeID>
+                <Description>Extended Display Name</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/costCenter</ClaimURI>
+                <DisplayName>Cost Center</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>costCenter</AttributeID>
+                <Description>Cost Center</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/extendedExternalId</ClaimURI>
+                <DisplayName>Extended External ID</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>extendedExternalId</AttributeID>
+                <Description>Extended External ID</Description>
+            </Claim>
+        </Dialect>
+        <Dialect dialectURI="http://wso2.org/oidc/claim">
+            <Claim>
+                <ClaimURI>upn</ClaimURI>
+                <DisplayName>User Principal</DisplayName>
+                <AttributeID>uid</AttributeID>
+                <Description>The user principal name</Description>
+                <DisplayOrder>11</DisplayOrder>
+                <SupportedByDefault />
+                <MappedLocalClaim>http://wso2.org/claims/userprincipal</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>groups</ClaimURI>
+                <DisplayName>User Groups</DisplayName>
+                <AttributeID>role</AttributeID>
+                <Description>List of group names that have been assigned to the principal. This typically will require a mapping at the application container level to application deployment roles.</Description>
+                <DisplayOrder>12</DisplayOrder>
+                <SupportedByDefault />
+                <MappedLocalClaim>http://wso2.org/claims/role</MappedLocalClaim>
+            </Claim>
+        </Dialect>
+        <Dialect dialectURI="urn:ietf:params:scim:schemas:core:2.0:User">
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:emails</ClaimURI>
+                <DisplayName>Emails</DisplayName>
+                <AttributeID>mail</AttributeID>
+                <Description>Email Addresses</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault />
+                <RegEx>^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$</RegEx>
+                <MappedLocalClaim>http://wso2.org/claims/emailaddress</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:phoneNumbers</ClaimURI>
+                <DisplayName>Phone Numbers</DisplayName>
+                <AttributeID>phoneNumbers</AttributeID>
+                <Description>Phone Numbers</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault/>
+                <RegEx>^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$</RegEx>
+                <MappedLocalClaim>http://wso2.org/claims/phoneNumbers</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:photos</ClaimURI>
+                <DisplayName>Photo</DisplayName>
+                <AttributeID>photos</AttributeID>
+                <Description>Photo</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault />
+                <MappedLocalClaim>http://wso2.org/claims/photos</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:addresses</ClaimURI>
+                <DisplayName>Address</DisplayName>
+                <AttributeID>addresses</AttributeID>
+                <Description>Address</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault />
+                <MappedLocalClaim>http://wso2.org/claims/addresses</MappedLocalClaim>
+            </Claim>
+        </Dialect>
+    </Dialects>
+</ClaimConfig>
