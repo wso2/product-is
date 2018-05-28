@@ -128,6 +128,9 @@ public class ClaimDataMigrator extends Migrator {
     private void migrateClaimData(int tenantId) throws UserStoreException, ClaimMetadataException {
 
         UserRealm realm = ISMigrationServiceDataHolder.getRealmService().getTenantUserRealm(tenantId);
+        if (realm == null) {
+            return;
+        }
         String primaryDomainName = realm.getRealmConfiguration().getUserStoreProperty(UserCoreConstants.RealmConfig
                 .PROPERTY_DOMAIN_NAME);
         if (StringUtils.isBlank(primaryDomainName)) {

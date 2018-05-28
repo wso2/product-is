@@ -197,12 +197,18 @@ versions:
  -
   version: "5.6.0"
   migratorConfigs:
-   -
-    name: "SchemaMigrator"
-    order: 1
-    parameters:
-      location: "step1"
-      schema: "uma"
-  -
-    name: "ClaimDataMigrator"
-    order: 2
+    -
+      name: "SchemaMigrator"
+      order: 1
+      parameters:
+        location: "step1"
+        schema: "uma"
+    -
+      name: "SchemaMigrator"
+      order: 2
+      parameters:
+        location: "step1"
+        schema: "identity"
+    -
+      name: "ClaimDataMigrator"
+      order: 3
