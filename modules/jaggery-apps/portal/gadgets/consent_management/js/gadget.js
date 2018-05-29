@@ -266,7 +266,7 @@ function renderReceiptDetails(data) {
         '<li class="jstree-open" data-jstree=\'{"icon":"icon-book"}\'>All' +
         '<ul>' +
         '{{#receipts}}{{#services}}' +
-        '{{#purposes}}<li data-jstree=\'{"icon":"icon-book"}\' purposeid="{{purposeId}}">{{purpose}}' +
+        '{{#purposes}}<li data-jstree=\'{"icon":"icon-book"}\' purposeid="{{purposeId}}">{{purpose}}{{#if description}} : <span class="text-muted">{{description}}</span>{{/if}}' +
         '<ul>' +
         '{{#piiCategory}}<li data-jstree=\'{"icon":"icon-user", "selected":true}\' piicategoryid="{{piiCategoryId}}"' +
         ' class="selected">' +
@@ -287,10 +287,15 @@ function renderReceiptDetails(data) {
     var treeRendered = tree(receiptData);
 
     $("#tree-table").html(treeRendered);
-
     var container = $("#html1").jstree({
-        plugins: ["table", "sort", "checkbox", "actions", "wholerow"],
+        plugins: ["table", "sort", "checkbox", "actions"],
         checkbox: {"keep_selected_style": false},
+    });
+
+    container.bind('hover_node.jstree', function() {
+        var bar = $(this).find('.jstree-wholerow-hovered');
+        bar.css('height',
+            bar.parent().children('a.jstree-anchor').height() + 'px');
     });
 
     container.bind('ready.jstree', function (event, data) {
