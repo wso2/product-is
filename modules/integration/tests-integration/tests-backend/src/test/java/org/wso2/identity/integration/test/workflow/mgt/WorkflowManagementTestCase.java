@@ -87,6 +87,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
         Map<String, String> startupParameterMap1 = new HashMap<String, String>();
         startupParameterMap1.put("-DportOffset", "401");
+        startupParameterMap1.put("-Dprofile","full");
 
         AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
         CarbonTestServerManager server1 = new CarbonTestServerManager(context1, System.getProperty("carbon.zip"),
