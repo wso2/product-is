@@ -1621,6 +1621,11 @@
                 <artifactId>org.wso2.carbon.identity.oauth.uma.server.feature</artifactId>
                 <version>${carbon.identity.oauth.uma.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.x509certificate</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature</artifactId>
+                <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1713,6 +1718,7 @@
         <identity.event.handler.notification.version>1.0.20</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
         <identity.oauth2.validators.xacml.version>1.0.8</identity.oauth2.validators.xacml.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.3</org.wso2.carbon.extension.identity.x509certificate.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
