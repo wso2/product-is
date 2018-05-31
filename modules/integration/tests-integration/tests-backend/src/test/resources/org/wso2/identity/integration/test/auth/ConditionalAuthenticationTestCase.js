@@ -3,19 +3,20 @@ function onInitialRequest(context) {
     Log.info("--------------- ACR selected "+ acr);
     //comment
     switch(acr) {
-        case "acr1" : executeStep({id :'1',
-            on : {
-                success : function(context) {
+        case "acr1" :
+            executeStep(1, {
+                onSuccess : function(context) {
                     var isAdmin = hasRole(context.steps[1].subject, 'admin');
                     Log.info("--------------- Has Admin "+isAdmin);
                     if(isAdmin) {
                         executeStep({id :'2'});
                     }
                 }
-            }
-        });
+            });
             break;
-        case "acr2" : executeStep({id :'1'}); executeStep({id :'2'});  break;
-        default :  executeStep({id :'1'});  executeStep({id :'2'});
+        case "acr2" :
+            executeStep(1); executeStep(2);  break;
+        default :
+            executeStep(1);  executeStep(2);
     }
 }
