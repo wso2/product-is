@@ -1680,7 +1680,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.235</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.236</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1754,7 +1754,7 @@
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.6</authenticator.x509.version>
 
-        <conditional.authentication.functions.version>0.1.9</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>0.1.11</conditional.authentication.functions.version>
 
         <!-- Deprecated identity repos -->
         <identity.notification.email.version>5.1.1</identity.notification.email.version>
