@@ -10,14 +10,11 @@ function onInitialRequest(context) {
         log.info("--------------- cookie testcookie.version: " + context.request.cookies.testcookie.version);
         log.info("--------------- cookie testcookie.httpOnly: " + context.request.cookies.testcookie.httpOnly);
     } else {
-        executeStep({
-            id: '1',
-            on: {
-                success: function (context) {
-                    log.info("--------------- setting cookie : testcookie");
-                    context.response.headers["Set-Cookie"] = "testcookie=1FD36B269C61; Path=/; Secure;" +
-                        " HttpOnly; Expires=Wed, 31 Jan 2018 07:28:00 GMT"
-                }
+        executeStep(1, {
+            onSuccess: function (context) {
+                log.info("--------------- setting cookie : testcookie");
+                context.response.headers["Set-Cookie"] = "testcookie=1FD36B269C61; Path=/; Secure;" +
+                    " HttpOnly; Expires=Wed, 31 Jan 2018 07:28:00 GMT"
             }
         });
     }

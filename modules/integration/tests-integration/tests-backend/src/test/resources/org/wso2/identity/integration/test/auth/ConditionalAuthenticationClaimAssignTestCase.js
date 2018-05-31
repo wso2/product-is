@@ -17,15 +17,12 @@
  */
 
 function onInitialRequest(context) {
-    executeStep({
-        id: '1',
-        on: {
-            success: function (context) {
-                var fName = context.steps[1].subject.localClaims['http://wso2.org/claims/givenname'];
-                var lName = context.steps[1].subject.localClaims['http://wso2.org/claims/lastname'];
-                var displayName = fName + ' '+ lName + ' by Javascript';
-                context.steps[1].subject.localClaims['http://wso2.org/claims/displayName'] = displayName;
-            }
+    executeStep(1, {
+        onSuccess: function (context) {
+            var fName = context.steps[1].subject.localClaims['http://wso2.org/claims/givenname'];
+            var lName = context.steps[1].subject.localClaims['http://wso2.org/claims/lastname'];
+            var displayName = fName + ' '+ lName + ' by Javascript';
+            context.steps[1].subject.localClaims['http://wso2.org/claims/displayName'] = displayName;
         }
     });
 }
