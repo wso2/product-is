@@ -1441,7 +1441,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.siddhi</artifactId>
+                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.analytics</artifactId>
                 <version>${conditional.authentication.functions.version}</version>
             </dependency>
             <!-- Other Connectors packed with IS -->
@@ -1680,7 +1680,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.236</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.237</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1885,7 +1885,7 @@
         <json.version>3.0.0.wso2v1</json.version>
         <carbon.consent.mgt.version>1.0.53</carbon.consent.mgt.version>
         <carbon.database.utils.version>2.0.6</carbon.database.utils.version>
-        <carbon.identity.oauth.uma.version>1.0.3</carbon.identity.oauth.uma.version>
+        <carbon.identity.oauth.uma.version>1.0.4</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
