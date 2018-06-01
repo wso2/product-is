@@ -468,3 +468,9 @@ ul.dropdown-menu li a:hover{
     background: none!important;
 }
 
+.jstree-anchor {
+    width: 95%;
+    white-space : normal !important;
+    height : auto !important;
+    padding-right : 24px;
+}
