@@ -144,6 +144,25 @@ public class Utils {
         return httpClient.execute(post);
     }
 
+    public static HttpResponse sendPOSTJITHandler(HttpResponse response, String commonAuthUrl, String userAgent,
+            String referer,  HttpClient httpClient, String
+            pastreCookie) throws Exception {
+        String redirectUrl = getRedirectUrl(response);
+        Map<String, String> queryParams = getQueryParams(redirectUrl);
+        String sessionKey = queryParams.get("sessionDataKey");
+
+        HttpPost post = new HttpPost(commonAuthUrl);
+        post.setHeader("User-Agent", userAgent);
+        post.addHeader("Referer", referer);
+        post.addHeader("Cookie", pastreCookie);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        urlParameters.add(new BasicNameValuePair("password", "password"));
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
+    }
+
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
                                                     String referer,  HttpClient httpClient, String
                                                               pastreCookie) throws Exception {
@@ -199,6 +218,13 @@ public class Utils {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         return redirectUrl.contains("consent.do") ? true : false;
+
+    }
+
+    public static boolean isSignUpRequest(HttpResponse response) {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        return redirectUrl.contains("signup.do");
 
     }
 

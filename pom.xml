@@ -1685,7 +1685,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.242</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.11.244-SNAPSHOT</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1712,7 +1712,7 @@
         <identity.data.publisher.authentication.version>5.1.8</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.3</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.14</identity.governance.version>
+        <identity.governance.version>1.1.15-SNAPSHOT</identity.governance.version>
         <carbon.identity.auth.version>1.1.18</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.21</identity.event.handler.notification.version>
