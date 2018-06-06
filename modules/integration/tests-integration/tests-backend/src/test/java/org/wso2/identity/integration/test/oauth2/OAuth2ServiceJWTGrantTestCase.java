@@ -182,7 +182,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getCustomClaim(COUNTRY_OIDC_CLAIM),
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
                 COUNTRY_CLAIM_VALUE,
                 "User claims is not returned back as it is when ConvertToOIDCDialect is set to false");
         updateIdentityProviderWithClaimMappings();
@@ -402,6 +402,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
         appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
         appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+        appDTO.setIdTokenExpiryTime(3600);
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
                 + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm urn:ietf:params:oauth:grant-type:jwt-bearer");
         return appDTO;
