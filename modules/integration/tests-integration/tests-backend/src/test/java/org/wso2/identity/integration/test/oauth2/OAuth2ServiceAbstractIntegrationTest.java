@@ -114,35 +114,36 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return createApplication(appDTO);
 	}
 
-	/**
-	 * To set ServiceProvider Provider Claim configuration.
-	 *
-	 * @param serviceProvider Specific Service Provider.
-	 * @return Relevant service provider with updated claim configurations.
-	 */
-	public ServiceProvider setServiceProviderClaimConfig(ServiceProvider serviceProvider) {
+    /**
+     * To set ServiceProvider Provider Claim configuration.
+     *
+     * @param serviceProvider Specific Service Provider.
+     * @return Relevant service provider with updated claim configurations.
+     */
+    ServiceProvider setServiceProviderClaimConfig(ServiceProvider serviceProvider) {
 
-		ClaimConfig claimConfig = new ClaimConfig();
-		Claim emailClaim = new Claim();
-		emailClaim.setClaimUri(EMAIL_CLAIM_URI);
-		ClaimMapping emailClaimMapping = new ClaimMapping();
-		emailClaimMapping.setRequested(true);
-		emailClaimMapping.setLocalClaim(emailClaim);
-		emailClaimMapping.setRemoteClaim(emailClaim);
+        ClaimConfig claimConfig = new ClaimConfig();
+        Claim emailClaim = new Claim();
+        emailClaim.setClaimUri(EMAIL_CLAIM_URI);
+        ClaimMapping emailClaimMapping = new ClaimMapping();
+        emailClaimMapping.setRequested(true);
+        emailClaimMapping.setLocalClaim(emailClaim);
+        emailClaimMapping.setRemoteClaim(emailClaim);
 
-		Claim countryClaim = new Claim();
-		countryClaim.setClaimUri(COUNTRY_CLAIM_URI);
-		ClaimMapping countryClaimMapping = new ClaimMapping();
-		countryClaimMapping.setRequested(true);
-		countryClaimMapping.setLocalClaim(countryClaim);
-		countryClaimMapping.setRemoteClaim(countryClaim);
+        Claim countryClaim = new Claim();
+        countryClaim.setClaimUri(COUNTRY_CLAIM_URI);
+        ClaimMapping countryClaimMapping = new ClaimMapping();
+        countryClaimMapping.setRequested(true);
+        countryClaimMapping.setLocalClaim(countryClaim);
+        countryClaimMapping.setRemoteClaim(countryClaim);
 
-		claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
-				.ClaimMapping[]{emailClaimMapping, countryClaimMapping});
+        claimConfig.setClaimMappings(
+                new org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping[] { emailClaimMapping,
+                        countryClaimMapping });
 
-		serviceProvider.setClaimConfig(claimConfig);
-		return  serviceProvider;
-	}
+        serviceProvider.setClaimConfig(claimConfig);
+        return serviceProvider;
+    }
 
 	/**
 	 * Create Application with a given appDTO
