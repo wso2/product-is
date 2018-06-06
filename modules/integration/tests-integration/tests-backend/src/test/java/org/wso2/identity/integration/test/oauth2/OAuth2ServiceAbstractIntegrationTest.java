@@ -34,13 +34,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.bouncycastle.jce.X509Principal;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
@@ -56,17 +54,9 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import sun.security.provider.X509Factory;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.SignatureException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
@@ -124,6 +114,37 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return createApplication(appDTO);
 	}
 
+    /**
+     * To set ServiceProvider Provider Claim configuration.
+     *
+     * @param serviceProvider Specific Service Provider.
+     * @return Relevant service provider with updated claim configurations.
+     */
+    ServiceProvider setServiceProviderClaimConfig(ServiceProvider serviceProvider) {
+
+        ClaimConfig claimConfig = new ClaimConfig();
+        Claim emailClaim = new Claim();
+        emailClaim.setClaimUri(EMAIL_CLAIM_URI);
+        ClaimMapping emailClaimMapping = new ClaimMapping();
+        emailClaimMapping.setRequested(true);
+        emailClaimMapping.setLocalClaim(emailClaim);
+        emailClaimMapping.setRemoteClaim(emailClaim);
+
+        Claim countryClaim = new Claim();
+        countryClaim.setClaimUri(COUNTRY_CLAIM_URI);
+        ClaimMapping countryClaimMapping = new ClaimMapping();
+        countryClaimMapping.setRequested(true);
+        countryClaimMapping.setLocalClaim(countryClaim);
+        countryClaimMapping.setRemoteClaim(countryClaim);
+
+        claimConfig.setClaimMappings(
+                new org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping[] { emailClaimMapping,
+                        countryClaimMapping });
+
+        serviceProvider.setClaimConfig(claimConfig);
+        return serviceProvider;
+    }
+
 	/**
 	 * Create Application with a given appDTO
 	 *
@@ -149,17 +170,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appMgtclient.createApplication(serviceProvider);
 
 		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-		ClaimConfig claimConfig = new ClaimConfig();
-		Claim emailClaim = new Claim();
-		emailClaim.setClaimUri(EMAIL_CLAIM_URI);
-		ClaimMapping emailClaimMapping = new ClaimMapping();
-		emailClaimMapping.setRequested(true);
-		emailClaimMapping.setLocalClaim(emailClaim);
-		emailClaimMapping.setRemoteClaim(emailClaim);
-		claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
-				.ClaimMapping[]{emailClaimMapping});
-
-		serviceProvider.setClaimConfig(claimConfig);
+		serviceProvider = setServiceProviderClaimConfig(serviceProvider);
 		serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
 		List<InboundAuthenticationRequestConfig> authRequestList =
 		                                                           new ArrayList<InboundAuthenticationRequestConfig>();
