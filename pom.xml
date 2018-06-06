@@ -1691,7 +1691,7 @@
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.7</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.8</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.7</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.10</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1747,7 +1747,7 @@
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>1.0.12</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>1.0.13</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.0.5</identity.metadata.saml.version>
