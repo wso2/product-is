@@ -44,7 +44,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.PropertiesAdminServiceClient;
+import org.wso2.identity.integration.common.clients.registry.PropertiesAdminServiceClient;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 

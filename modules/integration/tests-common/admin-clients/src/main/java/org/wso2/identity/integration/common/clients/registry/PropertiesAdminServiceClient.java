@@ -16,11 +16,13 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.common.clients;
+package org.wso2.identity.integration.common.clients.registry;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceStub;
+import org.wso2.carbon.registry.properties.stub.beans.xsd.PropertiesBean;
+import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
 
@@ -46,6 +48,33 @@ public class PropertiesAdminServiceClient {
     public void updateProperty(String path, String key, String value, String oldKey) throws
             PropertiesAdminServiceRegistryExceptionException, RemoteException {
         stub.updateProperty(path, key, value, oldKey);
+    }
+
+    /**
+     * To get all the properties related with particular resource exist in the path.
+     *
+     * @param path      Relevant registry path.
+     * @param viewProps Whether to view properties.
+     * @return all the properties of the resource.
+     * @throws RemoteException                                  Remote Exception.
+     * @throws PropertiesAdminServiceRegistryExceptionException PropertiesAdminService Registry Exception.
+     */
+    public PropertiesBean getProperties(String path, String viewProps)
+            throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
+        return stub.getProperties(path, viewProps);
+    }
+
+    /**
+     * To remove a property from a registry resource.
+     *
+     * @param path     Path of registry resource.
+     * @param propName Relevant property name
+     * @throws RemoteException                                  Remote exception.
+     * @throws PropertiesAdminServiceRegistryExceptionException Properties Admin Service Registry Exception.
+     */
+    public void removeProperty(String path, String propName)
+            throws RemoteException, PropertiesAdminServiceRegistryExceptionException {
+        stub.removeProperty(path, propName);
     }
 
 }
