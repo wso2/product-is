@@ -78,6 +78,7 @@ import java.rmi.RemoteException;
  * This is a test class for self contained access tokens with JWT bearer grant type.
  */
 public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrationTest  {
+
     protected Log log = LogFactory.getLog(getClass());
     private ServerConfigurationManager serverConfigurationManager;
     private UserManagementClient userManagementClient;
