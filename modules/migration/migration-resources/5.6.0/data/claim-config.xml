@@ -1,0 +1,305 @@
+<!--
+  ~ Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  ~
+  -->
+
+<ClaimConfig>
+    <Dialects>
+        <Dialect dialectURI="http://wso2.org/claims">
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/userprincipal</ClaimURI>
+                <DisplayName>User Principal</DisplayName>
+                <AttributeID>uid</AttributeID>
+                <Description>User Principal</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/extendedRef</ClaimURI>
+                <DisplayName>Extended Ref</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>extendedRef</AttributeID>
+                <Description>Extended Ref</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/extendedDisplayName</ClaimURI>
+                <DisplayName>Extended Display Name</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>extendedDisplayName</AttributeID>
+                <Description>Extended Display Name</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/costCenter</ClaimURI>
+                <DisplayName>Cost Center</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>costCenter</AttributeID>
+                <Description>Cost Center</Description>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://wso2.org/claims/extendedExternalId</ClaimURI>
+                <DisplayName>Extended External ID</DisplayName>
+                <!-- Proper attribute Id in your user store must be configured for this -->
+                <AttributeID>extendedExternalId</AttributeID>
+                <Description>Extended External ID</Description>
+            </Claim>
+        </Dialect>
+        <Dialect dialectURI="http://wso2.org/oidc/claim">
+            <Claim>
+                <ClaimURI>upn</ClaimURI>
+                <DisplayName>User Principal</DisplayName>
+                <AttributeID>uid</AttributeID>
+                <Description>The user principal name</Description>
+                <DisplayOrder>11</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/userprincipal</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>groups</ClaimURI>
+                <DisplayName>User Groups</DisplayName>
+                <AttributeID>role</AttributeID>
+                <Description>List of group names that have been assigned to the principal. This typically will require a
+                    mapping at the application container level to application deployment roles.
+                </Description>
+                <DisplayOrder>12</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/role</MappedLocalClaim>
+            </Claim>
+        </Dialect>
+        <Dialect dialectURI="urn:ietf:params:scim:schemas:core:2.0:User">
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:emails</ClaimURI>
+                <DisplayName>Emails</DisplayName>
+                <AttributeID>mail</AttributeID>
+                <Description>Email Addresses</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault/>
+                <RegEx>^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$</RegEx>
+                <MappedLocalClaim>http://wso2.org/claims/emailaddress</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:phoneNumbers</ClaimURI>
+                <DisplayName>Phone Numbers</DisplayName>
+                <AttributeID>phoneNumbers</AttributeID>
+                <Description>Phone Numbers</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault/>
+                <RegEx>^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$</RegEx>
+                <MappedLocalClaim>http://wso2.org/claims/phoneNumbers</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:photos</ClaimURI>
+                <DisplayName>Photo</DisplayName>
+                <AttributeID>photos</AttributeID>
+                <Description>Photo</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/photos</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>urn:ietf:params:scim:schemas:core:2.0:User:addresses</ClaimURI>
+                <DisplayName>Address</DisplayName>
+                <AttributeID>addresses</AttributeID>
+                <Description>Address</Description>
+                <DisplayOrder>5</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/addresses</MappedLocalClaim>
+            </Claim>
+        </Dialect>
+        <Dialect dialectURI="http://eidas.europa.eu/attributes/naturalperson">
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier</ClaimURI>
+                <DisplayName>Person Identifier</DisplayName>
+                <AttributeID>scimId</AttributeID>
+                <Description>Person Identifier</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/userid</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName</ClaimURI>
+                <DisplayName>Current Family Name</DisplayName>
+                <AttributeID>sn</AttributeID>
+                <Description>Current Family Name</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/lastname</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName</ClaimURI>
+                <DisplayName>Current Given Name</DisplayName>
+                <AttributeID>givenName</AttributeID>
+                <Description>Current Given Name</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/givenname</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/DateOfBirth</ClaimURI>
+                <DisplayName>Date of birth</DisplayName>
+                <AttributeID>dateOfBirth</AttributeID>
+                <Description>Date of birth</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/dob</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/BirthName</ClaimURI>
+                <DisplayName>Birth Name</DisplayName>
+                <AttributeID>uid</AttributeID>
+                <Description>Birth Name</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/username</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/PlaceOfBirth</ClaimURI>
+                <DisplayName>Place of Birth</DisplayName>
+                <AttributeID>country</AttributeID>
+                <Description>Place of Birth</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/country</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/CurrentAddress</ClaimURI>
+                <DisplayName>Current Address</DisplayName>
+                <AttributeID>localityAddress</AttributeID>
+                <Description>Current Address</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/addresses</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/naturalperson/Gender</ClaimURI>
+                <DisplayName>Gender</DisplayName>
+                <AttributeID>gender</AttributeID>
+                <Description>Gender</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/gender</MappedLocalClaim>
+            </Claim>
+        </Dialect>
+        <Dialect dialectURI="http://eidas.europa.eu/attributes/legalperson">
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier</ClaimURI>
+                <DisplayName>Legal Person Identifier</DisplayName>
+                <AttributeID>extendedExternalId</AttributeID>
+                <Description>Legal Person Identifier</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/extendedExternalId</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/LegalName</ClaimURI>
+                <DisplayName>Legal Person Name</DisplayName>
+                <AttributeID>extendedDisplayName</AttributeID>
+                <Description>Legal Person Name</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/extendedDisplayName</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/LegalPersonAddress</ClaimURI>
+                <DisplayName>Legal Person Address</DisplayName>
+                <AttributeID>localityAddress</AttributeID>
+                <Description>Legal Person Address</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/addresses</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/VATRegistrationNumber</ClaimURI>
+                <DisplayName>VAT Registration Number</DisplayName>
+                <AttributeID>im</AttributeID>
+                <Description>VAT Registration Number</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/im</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/TaxReference</ClaimURI>
+                <DisplayName>Tax Reference</DisplayName>
+                <AttributeID>postalcode</AttributeID>
+                <Description>Tax Reference</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/postalcode</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/D-2012-17-EUIdentifier</ClaimURI>
+                <DisplayName>EU Identifier</DisplayName>
+                <AttributeID>externalId</AttributeID>
+                <Description>EU Identifier</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/externalid</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/LEI</ClaimURI>
+                <DisplayName>LEI</DisplayName>
+                <AttributeID>extendedRef</AttributeID>
+                <Description>LEI</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/extendedRef</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/EORI</ClaimURI>
+                <DisplayName>Economic Operator Registration and Identification</DisplayName>
+                <AttributeID>departmentNumber</AttributeID>
+                <Description>Economic Operator Registration and Identification</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/department</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/SEED</ClaimURI>
+                <DisplayName>System for Exchange of Excise Data Identifier</DisplayName>
+                <AttributeID>nickName</AttributeID>
+                <Description>System for Exchange of Excise Data Identifier</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/nickname</MappedLocalClaim>
+            </Claim>
+            <Claim>
+                <ClaimURI>http://eidas.europa.eu/attributes/legalperson/SIC</ClaimURI>
+                <DisplayName>Standard Industrial Classification</DisplayName>
+                <AttributeID>nickName</AttributeID>
+                <Description>Standard Industrial Classification</Description>
+                <Required/>
+                <DisplayOrder>1</DisplayOrder>
+                <SupportedByDefault/>
+                <MappedLocalClaim>http://wso2.org/claims/nickname</MappedLocalClaim>
+            </Claim>
+        </Dialect>
+    </Dialects>
+</ClaimConfig>

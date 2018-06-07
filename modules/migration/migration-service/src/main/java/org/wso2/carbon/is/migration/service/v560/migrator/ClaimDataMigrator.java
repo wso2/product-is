@@ -1,20 +1,23 @@
 /*
-* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ */
 
-package org.wso2.carbon.is.migration.service.v540.migrator;
+package org.wso2.carbon.is.migration.service.v560.migrator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -40,6 +43,7 @@ import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.claim.ClaimMapping;
 import org.wso2.carbon.user.core.claim.inmemory.ClaimConfig;
 
 import java.io.IOException;
@@ -62,6 +66,8 @@ public class ClaimDataMigrator extends Migrator {
 
     private ClaimConfig claimConfig;
 
+    private ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
+
     private CacheBackedLocalClaimDAO localClaimDAO = new CacheBackedLocalClaimDAO(new LocalClaimDAO());
 
     private CacheBackedExternalClaimDAO externalClaimDAO = new CacheBackedExternalClaimDAO(new ExternalClaimDAO());
@@ -72,10 +78,6 @@ public class ClaimDataMigrator extends Migrator {
         String filePath = Utility.getDataFilePath(CLAIM_CONFIG, getVersionConfig().getVersion());
         try {
             claimConfig = FileBasedClaimBuilder.buildClaimMappingsFromConfigFile(filePath);
-            if (claimConfig.getClaims().isEmpty()) {
-                log.info(Constant.MIGRATION_LOG + "No data to migrate related with claim mappings.");
-                return;
-            }
         } catch (IOException | XMLStreamException | UserStoreException e) {
             String message = "Error while building claims from config file";
             if (isContinueOnError()) {
@@ -83,6 +85,11 @@ public class ClaimDataMigrator extends Migrator {
             } else {
                 throw new MigrationClientException(message, e);
             }
+        }
+
+        if (claimConfig.getClaims().isEmpty()) {
+            log.info(Constant.MIGRATION_LOG + "No data to migrate related with claim mappings.");
+            return;
         }
 
         try {
@@ -120,8 +127,10 @@ public class ClaimDataMigrator extends Migrator {
      */
     private void migrateClaimData(int tenantId) throws UserStoreException, ClaimMetadataException {
 
-        ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
         UserRealm realm = ISMigrationServiceDataHolder.getRealmService().getTenantUserRealm(tenantId);
+        if (realm == null) {
+            return;
+        }
         String primaryDomainName = realm.getRealmConfiguration().getUserStoreProperty(UserCoreConstants.RealmConfig
                 .PROPERTY_DOMAIN_NAME);
         if (StringUtils.isBlank(primaryDomainName)) {
@@ -133,15 +142,15 @@ public class ClaimDataMigrator extends Migrator {
             claimDialects.add(claimDialect.getClaimDialectURI());
         }
 
-        Map<String, org.wso2.carbon.user.core.claim.ClaimMapping> externalClaims = new HashMap<>();
+        Map<String, ClaimMapping> externalClaims = new HashMap<>();
         Set<String> existingLocalClaimURIs = new HashSet<>();
 
         // Add local claim mappings.
-        for (Map.Entry<String, org.wso2.carbon.user.core.claim.ClaimMapping> entry : claimConfig.getClaims()
+        for (Map.Entry<String, ClaimMapping> entry : claimConfig.getClaims()
                 .entrySet()) {
 
             String claimURI = entry.getKey();
-            org.wso2.carbon.user.core.claim.ClaimMapping claimMapping = entry.getValue();
+            ClaimMapping claimMapping = entry.getValue();
             String claimDialectURI = claimMapping.getClaim().getDialectURI();
 
             if (ClaimConstants.LOCAL_CLAIM_DIALECT_URI.equals(claimDialectURI)) {
@@ -163,7 +172,7 @@ public class ClaimDataMigrator extends Migrator {
 
         Map<String, Set<String>> existingExternalClaimURIs = new HashMap<>();
         // Add external claim mappings.
-        for (Map.Entry<String, org.wso2.carbon.user.core.claim.ClaimMapping> entry : externalClaims.entrySet()) {
+        for (Map.Entry<String, ClaimMapping> entry : externalClaims.entrySet()) {
 
             String claimURI = entry.getKey();
             String claimDialectURI = entry.getValue().getClaim().getDialectURI();
