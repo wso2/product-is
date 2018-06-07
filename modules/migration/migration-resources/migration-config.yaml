@@ -212,3 +212,8 @@ versions:
     -
       name: "ClaimDataMigrator"
       order: 3
+    -
+      name: "SessionDataMigrator"
+      order: 4
+      parameters:
+        schema: "identity"
