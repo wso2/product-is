@@ -75,6 +75,8 @@ public class DataSourceManager {
             return umDataSource;
         } else if (schema.getName().equals(Schema.CONSENT.getName())) {
             return consentDataSource;
+        } else if (schema.getName().equals(Schema.UMA.getName())) {
+            return dataSource;
         }
         throw new MigrationClientException("DataSource is not available for " + schema);
     }
@@ -86,6 +88,8 @@ public class DataSourceManager {
             return umDataSource;
         } else if (schema.equals(Schema.CONSENT.getName())) {
             return consentDataSource;
+        } else if (schema.equals(Schema.UMA.getName())) {
+            return dataSource;
         }
         throw new MigrationClientException("DataSource is not available for " + schema);
     }
