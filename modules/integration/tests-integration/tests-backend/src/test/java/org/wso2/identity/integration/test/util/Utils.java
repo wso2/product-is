@@ -53,6 +53,8 @@ public class Utils {
 
     private static String RESIDENT_CARBON_HOME;
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    public static final String MODIFIED_USER_NAME = "modifiedUserName";
+    public static final String PASSWORD = "password";
 
     public static  boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
@@ -157,8 +159,8 @@ public class Utils {
         post.addHeader("Cookie", pastreCookie);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
-        urlParameters.add(new BasicNameValuePair("password", "password"));
-
+        urlParameters.add(new BasicNameValuePair("password", PASSWORD));
+        urlParameters.add(new BasicNameValuePair("username", MODIFIED_USER_NAME));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }
@@ -218,13 +220,6 @@ public class Utils {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         return redirectUrl.contains("consent.do") ? true : false;
-
-    }
-
-    public static boolean isSignUpRequest(HttpResponse response) {
-
-        String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("signup.do");
 
     }
 

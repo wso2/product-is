@@ -49,7 +49,7 @@ public class ISIntegrationTest {
     protected User userInfo;
     protected ContextUrls identityContextUrls;
     private static String jdbcClassName = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-    private LoginLogoutClient loginLogoutClient;
+    protected LoginLogoutClient loginLogoutClient;
 
     protected void init() throws Exception {
         init(TestUserMode.SUPER_TENANT_ADMIN);

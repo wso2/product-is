@@ -37,10 +37,10 @@
         </classes>
     </test>
     <!--<test name="is-tests-notification-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
-    <!--<classes>-->
+        <!--<classes>-->
     <!--<class name="org.wso2.identity.integration.test.user.profile.mgt.NotificationOnUserOperationTestCase"/>-->
     <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementNotificationTestCase"/>-->
-    <!--</classes>-->
+        <!--</classes>-->
     <!--</test>-->
 
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
