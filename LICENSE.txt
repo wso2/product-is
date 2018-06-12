@@ -76,6 +76,7 @@ com.google.guava_19.0.0.jar                                                     
 commons-beanutils-1.7.0.jar                                                     jarinbundle    apache2
 commons-cli-1.3.1.jar                                                           jar            apache2
 commons-cli_1.2.0.wso2v1.jar                                                    bundle         apache2
+commons-codec-1.4.jar                                                           jar            apache2
 commons-collections-3.2.2.jar                                                   jar            apache2
 commons-collections-3.2.2.wso2v1.jar                                            bundle         apache2
 commons-collections_3.2.2.wso2v1.jar                                            bundle         apache2
@@ -97,11 +98,11 @@ compass_2.0.1.wso2v2.jar                                                        
 cors-filter_1.7.0.wso2v1.jar                                                    bundle         apache2
 csrfguard_3.1.0.wso2v3.jar                                                      bundle         bsd
 cxf-bundle-2.7.16.wso2v1.jar                                                    bundle         apache2
-cxf-xjc-boolean-3.2.0.jar                                                       jar            apache2
-cxf-xjc-bug671-3.2.0.jar                                                        jar            apache2
-cxf-xjc-dv-3.2.0.jar                                                            jar            apache2
-cxf-xjc-runtime-3.2.0.jar                                                       jar            apache2
-cxf-xjc-ts-3.2.0.jar                                                            jar            apache2
+cxf-xjc-boolean-3.2.1.jar                                                       jar            apache2
+cxf-xjc-bug671-3.2.1.jar                                                        jar            apache2
+cxf-xjc-dv-3.2.1.jar                                                            jar            apache2
+cxf-xjc-runtime-3.2.1.jar                                                       jar            apache2
+cxf-xjc-ts-3.2.1.jar                                                            jar            apache2
 disruptor_3.3.2.wso2v2.jar                                                      bundle         apache2
 ehcache-core-2.5.1.jar                                                          jar            apache2
 ehcache_1.5.0.wso2v3.jar                                                        bundle         apache2
@@ -155,7 +156,7 @@ jackson-core-2.9.4.jar                                                          
 jackson-databind-2.9.4.jar                                                      jarinbundle    apache2
 java-property-utils_1.9.0.wso2v1.jar                                            bundle         apache2
 javasysmon_0.3.3.wso2v1.jar                                                     bundle         bsd
-javax.cache.wso2_4.4.31.jar                                                     jar            apache2
+javax.cache.wso2_4.4.32.jar                                                     jar            apache2
 javax.ws.rs-api-2.0-m10.jar                                                     jar            cddl+gpl
 jaxb-api-2.2.12.jar                                                             jar            cddl1
 jaxb-impl-2.2.2.jar                                                             jar            cddl+gpl
