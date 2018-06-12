@@ -35,7 +35,7 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : http://docs.wso2.org/wiki/display/IS550/WSO2+Identity+Server+Documentation
+* Wiki               : http://docs.wso2.org/wiki/display/IS560/WSO2+Identity+Server+Documentation
 * Issue Tracker      : https://github.com/wso2/product-is/issues
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: dev@wso2.org
