@@ -58,7 +58,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
     protected Map<Integer, AutomationContext> automationContextMap;
     private Map<Integer, Tomcat> tomcatServers;
-    private HttpClient httpClient;
+    protected HttpClient httpClient;
     private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
 

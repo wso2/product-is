@@ -68,18 +68,21 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
-    private static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
+    protected static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
     private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
                                                ".HTTPBinding=HTTP-Redirect";
+    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity"
+            + ".com/logout?SAML2.HTTPBinding=HTTP-Redirect";
+
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final int TOMCAT_8490 = 8490;
-    private static final int PORT_OFFSET_0 = 0;
+    protected static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     private static final String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
@@ -87,7 +90,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private String usrName = "testFederatedUser";
     private String usrPwd = "testFederatePassword";
     private String usrRole = "admin";
-
 
     //Claim Uris
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
@@ -278,10 +280,9 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         updateIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME, identityProvider);
     }
 
-    @Test(priority = 5, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
-        HttpClient client = getHttpClient();
+        HttpClient client = new DefaultHttpClient();
 
         String sessionId = sendSAMLRequestToPrimaryIS(client);
         Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
@@ -309,7 +310,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
     }
 
-
     private ClaimMapping[] getClaimMappings(){
         List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
 
@@ -332,6 +332,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
     }
+
 
     private String authenticateWithSecondaryIS(HttpClient client, String sessionId)
             throws Exception {
@@ -391,7 +392,14 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         String pastrCookie = Utils.getPastreCookie(response);
         if (Utils.requestMissingClaims(response)) {
             locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
-        } else if (Utils.isSignUpRequest(response)) {
+
+            if (locationHeader.contains("signup.do")) {
+                response = Utils.sendPOSTJITHandler(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                        PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
+                EntityUtils.consume(response.getEntity());
+                locationHeader = getHeaderValue(response, "Location");
+            }
+        } else if (locationHeader.contains("signup.do") || locationHeader.contains("register.do")) {
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
             response = Utils.sendPOSTJITHandler(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
@@ -399,6 +407,17 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
 
+            if (locationHeader.contains("signup.do")) {
+                EntityUtils.consume(response.getEntity());
+                response = Utils.sendPOSTJITHandler(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                        PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
+                EntityUtils.consume(response.getEntity());
+                locationHeader = getHeaderValue(response, "Location");
+
+                if (Utils.requestMissingClaims(response)) {
+                    locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
+                }
+            }
             if (Utils.requestMissingClaims(response)) {
                 locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
             }
