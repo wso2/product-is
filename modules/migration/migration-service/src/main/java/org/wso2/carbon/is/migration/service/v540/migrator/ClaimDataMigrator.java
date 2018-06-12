@@ -62,8 +62,6 @@ public class ClaimDataMigrator extends Migrator {
 
     private ClaimConfig claimConfig;
 
-    private ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
-
     private CacheBackedLocalClaimDAO localClaimDAO = new CacheBackedLocalClaimDAO(new LocalClaimDAO());
 
     private CacheBackedExternalClaimDAO externalClaimDAO = new CacheBackedExternalClaimDAO(new ExternalClaimDAO());
@@ -74,6 +72,10 @@ public class ClaimDataMigrator extends Migrator {
         String filePath = Utility.getDataFilePath(CLAIM_CONFIG, getVersionConfig().getVersion());
         try {
             claimConfig = FileBasedClaimBuilder.buildClaimMappingsFromConfigFile(filePath);
+            if (claimConfig.getClaims().isEmpty()) {
+                log.info(Constant.MIGRATION_LOG + "No data to migrate related with claim mappings.");
+                return;
+            }
         } catch (IOException | XMLStreamException | UserStoreException e) {
             String message = "Error while building claims from config file";
             if (isContinueOnError()) {
@@ -81,11 +83,6 @@ public class ClaimDataMigrator extends Migrator {
             } else {
                 throw new MigrationClientException(message, e);
             }
-        }
-
-        if (claimConfig.getClaims().isEmpty()) {
-            log.info(Constant.MIGRATION_LOG + "No data to migrate related with claim mappings.");
-            return;
         }
 
         try {
@@ -123,6 +120,7 @@ public class ClaimDataMigrator extends Migrator {
      */
     private void migrateClaimData(int tenantId) throws UserStoreException, ClaimMetadataException {
 
+        ClaimDialectDAO claimDialectDAO = new ClaimDialectDAO();
         UserRealm realm = ISMigrationServiceDataHolder.getRealmService().getTenantUserRealm(tenantId);
         String primaryDomainName = realm.getRealmConfiguration().getUserStoreProperty(UserCoreConstants.RealmConfig
                 .PROPERTY_DOMAIN_NAME);
