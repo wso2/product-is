@@ -394,7 +394,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
             locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
 
             if (locationHeader.contains("signup.do")) {
-                response = Utils.sendPOSTJITHandler(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
                         PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
                 EntityUtils.consume(response.getEntity());
                 locationHeader = getHeaderValue(response, "Location");
@@ -402,14 +402,14 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         } else if (locationHeader.contains("signup.do") || locationHeader.contains("register.do")) {
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
-            response = Utils.sendPOSTJITHandler(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+            response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
                     PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
 
             if (locationHeader.contains("signup.do")) {
                 EntityUtils.consume(response.getEntity());
-                response = Utils.sendPOSTJITHandler(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
                         PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
                 EntityUtils.consume(response.getEntity());
                 locationHeader = getHeaderValue(response, "Location");

@@ -32,7 +32,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
@@ -146,9 +149,20 @@ public class Utils {
         return httpClient.execute(post);
     }
 
-    public static HttpResponse sendPOSTJITHandler(HttpResponse response, String commonAuthUrl, String userAgent,
-            String referer,  HttpClient httpClient, String
-            pastreCookie) throws Exception {
+    /**
+     * To send the response to jit post authentication handler.
+     * @param response Relevant response.
+     * @param commonAuthUrl Common Auth URL.
+     * @param userAgent User Agent.
+     * @param referer Referer
+     * @param httpClient Http Client.
+     * @param pastreCookie Pastre Cookie.
+     * @return response
+     * @throws Exception Exception
+     */
+    public static HttpResponse sendPostJITHandlerResponse(HttpResponse response, String commonAuthUrl, String userAgent,
+            String referer, HttpClient httpClient, String pastreCookie) throws Exception {
+
         String redirectUrl = getRedirectUrl(response);
         Map<String, String> queryParams = getQueryParams(redirectUrl);
         String sessionKey = queryParams.get("sessionDataKey");
@@ -160,7 +174,8 @@ public class Utils {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
-        urlParameters.add(new BasicNameValuePair("username", MODIFIED_USER_NAME));
+        urlParameters.add(new BasicNameValuePair("username",
+                JustInTimeProvisioningTestCase.DOMAIN_ID + UserCoreConstants.DOMAIN_SEPARATOR + MODIFIED_USER_NAME));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }
