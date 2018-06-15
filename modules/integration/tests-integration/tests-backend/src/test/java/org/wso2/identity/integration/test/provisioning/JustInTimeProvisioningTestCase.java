@@ -139,7 +139,6 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         } finally {
             userStoreClient.deleteUser(Utils.MODIFIED_USER_NAME);
         }
-
     }
 
     @Test(priority = 7, groups = "wso2.is", description = "test just in time provisioning with only prompt consent")
@@ -154,6 +153,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
             userStoreClient.deleteUser(getFederatedTestUser());
         }
     }
+
     @Test(priority = 7, groups = "wso2.is", description = "test just in time provisioning with as in username")
     public void testSAMLToSAMLFederationWithAsIsUserNameUserStore() throws Exception {
 
@@ -212,8 +212,8 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     private void addSecondaryUserStore() throws Exception {
 
         String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
-                + "/repository/database/" + USER_STORE_DB_NAME,
+        H2DataBaseManager dbmanager = new H2DataBaseManager(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME,
                 DB_USER_NAME, DB_USER_PASSWORD);
         dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
         dbmanager.disconnect();
@@ -227,8 +227,8 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         propertyDTOs[0].setValue("org.h2.Driver");
 
         propertyDTOs[1].setName("url");
-        propertyDTOs[1].setValue("jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/"
-                + USER_STORE_DB_NAME);
+        propertyDTOs[1].setValue(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME);
 
         propertyDTOs[2].setName("userName");
         propertyDTOs[2].setValue(DB_USER_NAME);

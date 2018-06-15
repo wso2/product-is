@@ -333,7 +333,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
     }
 
-
     private String authenticateWithSecondaryIS(HttpClient client, String sessionId)
             throws Exception {
 
