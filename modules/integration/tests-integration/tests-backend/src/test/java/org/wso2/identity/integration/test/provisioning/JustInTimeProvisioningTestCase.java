@@ -148,8 +148,8 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         try {
             updateIdentityProviderJitConfiguration(false, false, true, UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME);
             super.testSAMLToSAMLFederation();
-            Assert.assertTrue(userStoreClient.isExistingUser(getFederatedTestUser()), "User addion failed with JIT "
-                    + "with prompt consent");
+            Assert.assertTrue(userStoreClient.isExistingUser(getFederatedTestUser()),
+                    "User addition failed for JIT with prompt consent");
         } finally {
             userStoreClient.deleteUser(getFederatedTestUser());
         }
