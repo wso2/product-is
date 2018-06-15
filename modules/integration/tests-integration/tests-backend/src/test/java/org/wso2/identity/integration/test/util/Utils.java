@@ -151,13 +151,14 @@ public class Utils {
 
     /**
      * To send the response to jit post authentication handler.
-     * @param response Relevant response.
+     *
+     * @param response      Relevant response.
      * @param commonAuthUrl Common Auth URL.
-     * @param userAgent User Agent.
-     * @param referer Referer
-     * @param httpClient Http Client.
-     * @param pastreCookie Pastre Cookie.
-     * @return response
+     * @param userAgent     User Agent.
+     * @param referer       Referer
+     * @param httpClient    Http Client.
+     * @param pastreCookie  Pastre Cookie.
+     * @return response Relevant response received.
      * @throws Exception Exception
      */
     public static HttpResponse sendPostJITHandlerResponse(HttpResponse response, String commonAuthUrl, String userAgent,
