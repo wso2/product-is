@@ -18,9 +18,9 @@
 <product xmlns="http://products.wso2.org/carbon">
     <properties>
        <property name="userforum">http://stackoverflow.com/questions/tagged/wso2is</property>
-       <property name="userguide">https://docs.wso2.com/display/IS550/WSO2+Identity+Server+Documentation</property>
+       <property name="userguide">https://docs.wso2.com/display/IS560/WSO2+Identity+Server+Documentation</property>
        <property name="mailinglist">http://wso2.org/mail</property>
-       <property name="issuetracker">https://wso2.org/jira/browse/IDENTITY</property>
+       <property name="issuetracker">https://github.com/wso2/product-is/issues</property>
        <property name="webAdminConsoleTitle">WSO2 Stratos Identity</property>
     </properties>
 </product>
