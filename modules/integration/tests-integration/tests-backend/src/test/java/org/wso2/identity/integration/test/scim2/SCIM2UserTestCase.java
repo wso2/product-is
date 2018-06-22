@@ -157,13 +157,13 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testGetUser")
     public void testFilterUser() throws Exception {
 
-        filterUsers(USER_NAME_ATTRIBUTE, "+Eq+", USERNAME);
-        filterUsers(USER_NAME_ATTRIBUTE, "+Co+", "m2us");
-        filterUsers(USER_NAME_ATTRIBUTE, "+Sw+", "scim");
-        filterUsers(USER_NAME_ATTRIBUTE, "+Ew+", "m2user");
+        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Eq+", USERNAME);
+        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Co+", "m2us");
+        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Sw+", "scim");
+        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Ew+", "m2user");
     }
 
-    private void filterUsers(String attributeName, String operator, String attributeValue) throws IOException {
+    private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
         String userResourcePath = getPath() + "?filter=" + attributeName + operator + attributeValue;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
