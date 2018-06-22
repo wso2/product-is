@@ -265,27 +265,13 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     @Test(dependsOnMethods = "testGetGroup")
     public void testFilterGroup() throws Exception {
-        String userResourcePath = getPath() + "?filter=" + SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE + "+Eq+" +
-                GROUPNAME;
-        HttpGet request = new HttpGet(userResourcePath);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
-                "has not been retrieved successfully");
-
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
-        EntityUtils.consume(response.getEntity());
-
-        String groupNameFromResponse = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
-                .get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE).toString();
-        //TODO: groupsName comes from this is <Userstore_domain>/displayName
-        assertTrue(groupNameFromResponse.contains(GROUPNAME));
-
-        String groupId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
-                (ID_ATTRIBUTE).toString();
-        assertEquals(groupId, this.groupId);
+        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Ew+", GROUPNAME);
+        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Sw+", "scim2");
+        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "2Gro");
+        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "up");
+        groupFilter(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, "+Eq+", USERNAME_1);
+        groupFilter(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, "+Co+", groupId);
     }
 
     @Test(dependsOnMethods = "testFilterGroup")
@@ -330,5 +316,34 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     private String getAuthzHeader() {
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + password).getBytes()).trim();
+    }
+
+    private void groupFilter(String attributeName, String operator, String searchAttribute) throws IOException {
+
+        String userResourcePath = getPath() + "?filter=" + attributeName + operator +
+                searchAttribute;
+        HttpGet request = new HttpGet(userResourcePath);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
+                "has not been retrieved successfully");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        String groupNameFromResponse = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
+                .get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE).toString();
+        //TODO: groupsName comes from this is <Userstore_domain>/displayName
+        if (SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE.equals(attributeName)) {
+            assertTrue(groupNameFromResponse.contains(searchAttribute));
+        } else {
+            assertTrue(groupNameFromResponse.contains(GROUPNAME));
+        }
+
+        String groupId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
+                (ID_ATTRIBUTE).toString();
+        assertEquals(groupId, this.groupId);
     }
 }
