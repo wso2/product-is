@@ -30,6 +30,8 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     public static final String DISPLAY_ATTRIBUTE = "display";
     public static final String MEMBERS_ATTRIBUTE = "members";
+    public static final String MEMBER_DISPLAY_ATTRIBUTE = "members.display";
+    public static final String META_LOCATION_ATTRIBUTE = "meta.location";
 
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
