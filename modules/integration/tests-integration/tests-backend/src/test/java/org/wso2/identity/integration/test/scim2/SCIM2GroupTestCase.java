@@ -266,12 +266,12 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testGetGroup")
     public void testFilterGroup() throws Exception {
 
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Ew+", GROUPNAME);
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Sw+", "scim2");
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "2Gro");
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "up");
-        groupFilter(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, "+Eq+", USERNAME_1);
-        groupFilter(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, "+Co+", groupId);
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Eq+", GROUPNAME);
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Sw+", "scim2");
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "2Gro");
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Ew+", "m2Group");
+        validateFilteredGroup(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, "+Eq+", USERNAME_1);
+        validateFilteredGroup(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, "+Co+", groupId);
     }
 
     @Test(dependsOnMethods = "testFilterGroup")
@@ -318,7 +318,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + password).getBytes()).trim();
     }
 
-    private void groupFilter(String attributeName, String operator, String searchAttribute) throws IOException {
+    private void validateFilteredGroup(String attributeName, String operator, String searchAttribute) throws IOException {
 
         String userResourcePath = getPath() + "?filter=" + attributeName + operator +
                 searchAttribute;
