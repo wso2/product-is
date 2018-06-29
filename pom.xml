@@ -1697,13 +1697,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.11.261</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.2</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.9</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.11</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.14</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.4.12</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.0.18</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1724,7 +1724,7 @@
         <identity.data.publisher.authentication.version>5.1.8</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.3</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.16</identity.governance.version>
+        <identity.governance.version>1.1.17</identity.governance.version>
         <carbon.identity.auth.version>1.1.18</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.21</identity.event.handler.notification.version>
@@ -1768,7 +1768,7 @@
         <authenticator.totp.version>2.0.11</authenticator.totp.version>
         <authenticator.office365.version>1.0.4</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.12</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.9</authenticator.emailotp.version>
+        <authenticator.emailotp.version>2.0.10</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.6</authenticator.x509.version>
 
