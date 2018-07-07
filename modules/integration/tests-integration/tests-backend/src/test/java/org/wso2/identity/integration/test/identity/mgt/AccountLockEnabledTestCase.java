@@ -63,6 +63,14 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private static final String TRUE_STRING = "true";
     private static final String DEFAULT = "default";
 
+    private String testLockUser3 = "TestLockUser3";
+    private String testLockUser3Password = "TestLockUser3Password";
+    private String testLockUser3WrongPassword = "TestLockUser3WrongPassword";
+    private String testLockUser4 = "TestLockUser4";
+    private String testLockUser4Password = "TestLockUser4Password";
+    private String testLockUser4WrongPassword = "TestLockUser4WrongPassword";
+    private static final String ACCOUNT_LOCK_BYPASS_ROLE = "Internal/bypassaccountlock";
+
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -136,7 +144,88 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     public void atEnd() throws Exception {
         usmClient.deleteUser(testLockUser1);
         usmClient.deleteUser(testLockUser2);
+        usmClient.deleteUser(testLockUser3);
+        usmClient.deleteUser(testLockUser4);
+        usmClient.deleteRole(ACCOUNT_LOCK_BYPASS_ROLE);
         disableAccountLocking(ENABLE_ACCOUNT_LOCK);
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully")
+    public void testLockByPassUnLockedAccount() {
+        try {
+            usmClient.addUser(testLockUser3, testLockUser3Password, new String[]{"admin"}, new ClaimValue[0], null, false);
+            usmClient.updateRoleListOfUser(testLockUser3,new String[]{"admin"}, new String[] {"admin", ACCOUNT_LOCK_BYPASS_ROLE});
+
+            int maximumAllowedFailedLogins = 5;
+            for (int i = 0; i < maximumAllowedFailedLogins; i++) {
+                try {
+                    authenticatorClient.login(testLockUser3, testLockUser3WrongPassword, "localhost");
+                } catch (Exception e) {
+                    log.error("Login attempt: " + i + " for user: " + testLockUser3 + " failed");
+                }
+            }
+
+            try {
+                authenticatorClient.login(testLockUser3, testLockUser3Password, "localhost");
+            } catch (Exception e) {
+                log.error("Login attempt for user: " + testLockUser3 + " failed");
+            }
+
+            ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(testLockUser3, new String[]
+                    {accountLockClaimUri}, "default");
+
+            String userAccountLockClaimValue = null;
+
+            if (ArrayUtils.isNotEmpty(claimValues)) {
+                userAccountLockClaimValue = claimValues[0].getValue();
+            }
+
+            Assert.assertFalse
+                    ("Test Failure : User Account Didn't by pass locking", Boolean.valueOf(userAccountLockClaimValue));
+
+        } catch (Exception e) {
+            log.error("Error occurred when by passing the test user.", e);
+        }
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully "+
+            "for a locked account")
+    public void testLockByPassLockedAccount() {
+        try {
+            usmClient.addUser(testLockUser4, testLockUser4Password, new String[]{"admin"}, new ClaimValue[0], null, false);
+
+            int maximumAllowedFailedLogins = 5;
+            for (int i = 0; i < maximumAllowedFailedLogins; i++) {
+                try {
+                    authenticatorClient.login(testLockUser4, testLockUser4WrongPassword, "localhost");
+                } catch (Exception e) {
+                    log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
+                }
+            }
+
+            ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(testLockUser4, new String[]
+                    {accountLockClaimUri}, "default");
+
+            String userAccountLockClaimValue = null;
+
+            if (ArrayUtils.isNotEmpty(claimValues)) {
+                userAccountLockClaimValue = claimValues[0].getValue();
+            }
+
+            Assert.assertTrue
+                    ("Test Failure : User Account Didn't by pass locking", Boolean.valueOf(userAccountLockClaimValue));
+
+            usmClient.updateRoleListOfUser(testLockUser4, new String[] {"admin"}, new String[] {"admin", ACCOUNT_LOCK_BYPASS_ROLE});
+            try {
+                authenticatorClient.login(testLockUser4, testLockUser4Password, "localhost");
+            } catch (Exception e) {
+                log.error("Login attempt for user: " + testLockUser4 + " failed");
+            }
+        } catch (Exception e) {
+            log.error("Error occurred when by passing the test user.", e);
+        }
     }
 
     protected String getISResourceLocation() {
