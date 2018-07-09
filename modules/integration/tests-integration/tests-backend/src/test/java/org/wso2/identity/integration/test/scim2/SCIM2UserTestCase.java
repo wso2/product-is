@@ -169,6 +169,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     }
 
     private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
+
         String userResourcePath = getPath() + "?filter=" + attributeName + operator + attributeValue;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
