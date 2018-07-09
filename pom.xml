@@ -1421,6 +1421,23 @@
                 <artifactId>org.wso2.carbon.identity.application.authenticator.fido</artifactId>
                 <version>${identity.local.auth.fido.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth.jwt</artifactId>
+                <version>${identity.local.auth.basicauth.version}</version>
+            </dependency>
+
+            <!-- Local Authentication API Connector -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.api.core</artifactId>
+                <version>${identity.local.auth.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.api.endpoint</artifactId>
+                <version>${identity.local.auth.api.version}</version>
+            </dependency>
 
             <!-- OAuth2 Grant Type extensions -->
             <dependency>
@@ -1760,9 +1777,12 @@
         <provisioning.connector.scim.version>5.1.10</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
-        <identity.local.auth.basicauth.version>5.4.1</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.0.1</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.13</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
+
+        <!-- Local Authentication API Connector Properties -->
+        <identity.local.auth.api.version>2.0.0</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>1.0.15</identity.oauth2.jwt.bearer.grant.version>
