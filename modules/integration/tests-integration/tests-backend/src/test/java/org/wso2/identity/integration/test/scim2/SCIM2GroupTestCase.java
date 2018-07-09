@@ -325,8 +325,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     private void validateFilteredGroup(String attributeName, String operator, String searchAttribute) throws IOException {
 
-        String userResourcePath = getPath() + "?filter=" + attributeName + operator +
-                searchAttribute;
+        String userResourcePath = getPath() + "?filter=" + attributeName + operator + searchAttribute;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
