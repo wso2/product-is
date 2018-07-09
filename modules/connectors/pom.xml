@@ -213,6 +213,29 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!-- Download local authentication API jar from nexus and copy to the authenticatorCopied/jar
+                    folder-->
+                    <execution>
+                        <id>download_local_auth_api_jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
+                                    <artifactId>org.wso2.carbon.identity.local.auth.api.core</artifactId>
+                                    <version>${identity.local.auth.api.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <!-- Download eamilOTP  authenticator endpoint war from nexus and copy to the authenticatorCopied/war folder-->
                     <execution>
                         <id>download_emailotp_war</id>
@@ -305,6 +328,32 @@
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>x509certificateauthenticationendpoint.war</destFileName>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/war
+                                    </outputDirectory>
+                                    <includes>**/*.war</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!-- Download local authentication API endpoint war from nexus and copy to the
+                    authenticatorCopied/war folder-->
+                    <execution>
+                        <id>download_local_auth_api_war</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
+                                    <artifactId>
+                                        org.wso2.carbon.identity.local.auth.api.endpoint
+                                    </artifactId>
+                                    <version>${identity.local.auth.api.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>api#identity#auth#v1.0.war</destFileName>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/war
                                     </outputDirectory>
                                     <includes>**/*.war</includes>
