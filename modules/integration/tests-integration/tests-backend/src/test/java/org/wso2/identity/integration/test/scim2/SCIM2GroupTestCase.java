@@ -61,6 +61,11 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_2 = "scim2user2@gmail.com";
     private static final String USERNAME_2 = "scim2user2";
 
+    private static final String EQUAL = "+Eq+";
+    private static final String STARTWITH = "+Sw+";
+    private static final String ENDWITH = "+Ew+";
+    private static final String CONTAINS = "+Co+";
+
     private CloseableHttpClient client;
     private String userId1;
     private String userId2;
@@ -266,12 +271,12 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testGetGroup")
     public void testFilterGroup() throws Exception {
 
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Ew+", GROUPNAME);
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Sw+", "scim2");
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "2Gro");
-        groupFilter(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, "+Co+", "up");
-        groupFilter(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, "+Eq+", USERNAME_1);
-        groupFilter(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, "+Co+", groupId);
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, EQUAL, GROUPNAME);
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, STARTWITH, GROUPNAME.substring(0, 4));
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, CONTAINS, GROUPNAME.substring(2, 4));
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, ENDWITH, GROUPNAME.substring(4, GROUPNAME.length()));
+        validateFilteredGroup(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, EQUAL, USERNAME_1);
+        validateFilteredGroup(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, CONTAINS, groupId);
     }
 
     @Test(dependsOnMethods = "testFilterGroup")
@@ -318,7 +323,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + password).getBytes()).trim();
     }
 
-    private void groupFilter(String attributeName, String operator, String searchAttribute) throws IOException {
+    private void validateFilteredGroup(String attributeName, String operator, String searchAttribute) throws IOException {
 
         String userResourcePath = getPath() + "?filter=" + attributeName + operator +
                 searchAttribute;
