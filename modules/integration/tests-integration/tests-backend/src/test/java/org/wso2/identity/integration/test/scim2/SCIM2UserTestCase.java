@@ -53,6 +53,11 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private CloseableHttpClient client;
 
 
+    private static final String EQUAL = "+Eq+";
+    private static final String STARTWITH = "+Sw+";
+    private static final String ENDWITH = "+Ew+";
+    private static final String CONTAINS = "+Co+";
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
@@ -157,10 +162,10 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testGetUser")
     public void testFilterUser() throws Exception {
 
-        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Eq+", USERNAME);
-        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Co+", "m2us");
-        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Sw+", "scim");
-        validateFilteredUser(USER_NAME_ATTRIBUTE, "+Ew+", "m2user");
+        validateFilteredUser(USER_NAME_ATTRIBUTE, EQUAL, USERNAME);
+        validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 4));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 3));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, ENDWITH, USERNAME.substring(4, USERNAME.length()));
     }
 
     private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
