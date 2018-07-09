@@ -153,9 +153,10 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully")
     public void testLockByPassUnLockedAccount() {
+
         try {
             usmClient.addUser(testLockUser3, testLockUser3Password, new String[]{"admin"}, new ClaimValue[0], null, false);
-            usmClient.updateRoleListOfUser(testLockUser3,new String[]{"admin"}, new String[] {"admin", ACCOUNT_LOCK_BYPASS_ROLE});
+            usmClient.updateRoleListOfUser(testLockUser3, new String[]{"admin"}, new String[]{"admin", ACCOUNT_LOCK_BYPASS_ROLE});
 
             int maximumAllowedFailedLogins = 5;
             for (int i = 0; i < maximumAllowedFailedLogins; i++) {
@@ -190,9 +191,10 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully "+
+    @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully " +
             "for a locked account")
     public void testLockByPassLockedAccount() {
+
         try {
             usmClient.addUser(testLockUser4, testLockUser4Password, new String[]{"admin"}, new ClaimValue[0], null, false);
 
@@ -217,7 +219,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             Assert.assertTrue
                     ("Test Failure : User Account Didn't by pass locking", Boolean.valueOf(userAccountLockClaimValue));
 
-            usmClient.updateRoleListOfUser(testLockUser4, new String[] {"admin"}, new String[] {"admin", ACCOUNT_LOCK_BYPASS_ROLE});
+            usmClient.updateRoleListOfUser(testLockUser4, new String[]{"admin"}, new String[]{"admin", ACCOUNT_LOCK_BYPASS_ROLE});
             try {
                 authenticatorClient.login(testLockUser4, testLockUser4Password, "localhost");
             } catch (Exception e) {
