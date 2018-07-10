@@ -1720,12 +1720,12 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.21</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.23</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.9</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.12</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.4.13</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.0.20</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
