@@ -69,7 +69,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private String testLockUser4 = "TestLockUser4";
     private String testLockUser4Password = "TestLockUser4Password";
     private String testLockUser4WrongPassword = "TestLockUser4WrongPassword";
-    private static final String ACCOUNT_LOCK_BYPASS_ROLE = "Internal/bypassaccountlock";
+    private static final String ACCOUNT_LOCK_BYPASS_ROLE = "Internal/system";
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
