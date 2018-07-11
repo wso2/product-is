@@ -135,6 +135,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 .getApplication("wso2carbon-local-sp");
         if (serviceProvider != null) {
             serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+            serviceProvider.setOwner(null);
             applicationManagementServiceClients.get(PORT_OFFSET_0).updateApplicationData(serviceProvider);
 
             IdentityProviderMgtServiceClient identityProviderMgtServiceClient = identityProviderMgtServiceClients.get
@@ -279,8 +280,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         String connector = "scim";
         JustInTimeProvisioningConfig jitpro = new JustInTimeProvisioningConfig();
         jitpro.setProvisioningEnabled(false);
-
-
+        serviceProvider.setOwner(null);
         org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider proIdp = new
                 org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
         proIdp.setIdentityProviderName(proProvider);
