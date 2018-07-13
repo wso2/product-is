@@ -55,19 +55,29 @@ public class DataExtractUtil {
         //todo ex. <input type="hidden" name="sessionDataKey"  value='8a433378-6d1f-434b-b574-a143dbb1a508'/>
         //todo if the jsp page formatted and value moved to the next line this will break. nice to have this fixed
 
-		List<KeyValue> keyValues = new ArrayList<KeyValue>();
-		BufferedReader rd =
-		                    new BufferedReader(new InputStreamReader(response.getEntity()
-		                                                                     .getContent()));
+		List<KeyValue> keyValues = new ArrayList<>();
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 		String line;
-
 		while ((line = rd.readLine()) != null) {
 			for (String key : keyPositionMap.keySet()) {
 				if (line.contains(key)) {
-					String[] tokens = line.split("'");
-					KeyValue keyValue = new KeyValue(key, tokens[keyPositionMap.get(key)]);
-					keyValues.add(keyValue);
-					return keyValues;
+					String[] tokens;
+					if (line.contains("'")) {
+                        tokens = line.split("'");
+                        KeyValue keyValue = new KeyValue(key, tokens[keyPositionMap.get(key)]);
+                        keyValues.add(keyValue);
+                        return keyValues;
+                    } else {
+                        String regexString = Pattern.quote(key + " value=\"") + "(.*?)" + Pattern.quote("\"");
+                        Pattern pattern = Pattern.compile(regexString);
+                        Matcher matcher = pattern.matcher(line);
+                        if (matcher.find()) {
+                            KeyValue keyValue = new KeyValue(key, matcher.group(1));
+                            keyValues.add(keyValue);
+                            return keyValues;
+                        }
+                        return null;
+                    }
 				}
 			}
 		}

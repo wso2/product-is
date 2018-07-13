@@ -32,7 +32,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>2.12.4</version>
+                <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
@@ -229,6 +229,48 @@
                                     <outputDirectory>
                                         ${basedir}/target/test-classes/samples/PassiveSTSSampleApp
                                     </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sample-authenticator-webapp</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/authenticators
+                                    </outputDirectory>
+                                    <destFileName>sample-auth.war</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sample-authenticator</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/authenticators
+                                    </outputDirectory>
+                                    <destFileName>org.wso2.carbon.identity.sample.extension.authenticators.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -652,6 +694,21 @@
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.testutil</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
+            <scope>test</scope>
+            <type>war</type>
         </dependency>
     </dependencies>
 </project>
