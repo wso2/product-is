@@ -186,6 +186,14 @@
                                     <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.common</artifactId>
+                                    <version>${conditional.authentication.functions.version}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
