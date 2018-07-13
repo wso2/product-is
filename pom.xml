@@ -1720,12 +1720,12 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.21</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.28</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.9</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.12</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.4.13</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.0.20</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
@@ -1747,7 +1747,7 @@
         <identity.data.publisher.authentication.version>5.1.8</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.3</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.19</identity.governance.version>
+        <identity.governance.version>1.1.20</identity.governance.version>
         <carbon.identity.auth.version>1.1.18</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.12</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.21</identity.event.handler.notification.version>
@@ -1762,7 +1762,7 @@
         <!-- Authenticator Properties -->
         <identity.outbound.auth.oidc.version>5.1.17</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.13</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.15</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
@@ -1777,7 +1777,7 @@
         <provisioning.connector.scim.version>5.1.10</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
-        <identity.local.auth.basicauth.version>6.0.1</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.0.2</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.13</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
@@ -1791,7 +1791,7 @@
         <identity.metadata.saml.version>1.0.5</identity.metadata.saml.version>
 
         <!-- Connectors -->
-        <authenticator.totp.version>2.0.11</authenticator.totp.version>
+        <authenticator.totp.version>2.0.12</authenticator.totp.version>
         <authenticator.office365.version>1.0.4</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.13</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.10</authenticator.emailotp.version>
@@ -1886,7 +1886,7 @@
         <axiom.wso2.version>1.2.11.wso2v10</axiom.wso2.version>
         <carbon.automation.version>4.4.3</carbon.automation.version>
         <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
-        <charon.orbit.version>2.1.5</charon.orbit.version>
+        <charon.orbit.version>2.1.6</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
         <commons-collections.version>3.2.2</commons-collections.version>
