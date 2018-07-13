@@ -9,15 +9,16 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
         <listener class-name="org.wso2.identity.integration.test.listeners.IdentityTestListener"/>
+        <listener class-name="org.wso2.carbon.identity.common.testng.CarbonBasedTestListener" />
     </listeners>
 
-    <test name="is-tests-initialize" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="is-tests-initialize" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
         </classes>
     </test>
 
-    <test name="is-tests-consent" parallel="false" group-by-instances="true">
+    <test name="is-tests-consent" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
@@ -58,7 +59,7 @@
         </classes>
     </test>
 
-    <test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="is-analytics-tests" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
@@ -192,17 +193,19 @@
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
+            <class name="org.wso2.identity.integration.test.auth.IdentifierFirstLoginTestCase" />
+            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
     </test>
 
-    <test name="UserStore-config-encryption-tests" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="UserStore-config-encryption-tests" preserve-order="true" parallel="false">
         <classes>
             <!--TODO uncomment after kernel 4.4.23 and carbon-identity-framework 5.11.51 upgrade-->
             <!--<class name="org.wso2.identity.integration.test.user.store.config.UserStorePasswordEncryption"/>-->
         </classes>
     </test>
 
-    <test name="is-tests-sequential" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="is-tests-sequential" preserve-order="true" parallel="false">
         <classes>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>

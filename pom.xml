@@ -481,7 +481,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18</version>
+                <version>${maven.surefire.plugin.version}</version>
             </plugin>
             <plugin>
                 <inherited>false</inherited>
@@ -1661,6 +1661,24 @@
                 <artifactId>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature</artifactId>
                 <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.testutil</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1876,7 +1894,8 @@
         <wso2.store.version>2.0.0</wso2.store.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
-        <testng.version>6.1.1</testng.version>
+        <testng.version>6.9.10</testng.version>
+        <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
         <carbon.deployment.version>4.7.19</carbon.deployment.version>
         <carbon.registry.version>4.6.38</carbon.registry.version>
         <carbon.multitenancy.version>4.6.11</carbon.multitenancy.version>
