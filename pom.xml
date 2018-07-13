@@ -1720,7 +1720,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.28</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.33</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1782,7 +1782,7 @@
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Properties -->
-        <identity.local.auth.api.version>2.0.0</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.1.0</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>1.0.15</identity.oauth2.jwt.bearer.grant.version>
