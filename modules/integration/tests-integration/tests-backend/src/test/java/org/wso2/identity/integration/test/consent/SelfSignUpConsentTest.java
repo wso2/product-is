@@ -348,11 +348,14 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         String name = FINANCIAL_PURPOSE_NAME;
         String description = FINANCIAL_PURPOSE_NAME;
-        financialPurposeId  = addPurpose(name, description);
+        String group = "SIGNUP";
+        String groupType = "SYSTEM";
+        financialPurposeId  = addPurpose(name, description, group, groupType, true);
 
     }
 
-    private String addPurpose(String name, String description) throws JSONException {
+    private String addPurpose(String name, String description, String group, String groupType, boolean mandatory)
+            throws JSONException {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
@@ -363,8 +366,19 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         RestClient restClient = new RestClient(clientConfig);
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "purposes");
 
-        String addPurposeString = "{\"purpose\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
-                description + "\" , \"piiCategories\": [" + 1 + "]}";
+        String addPurposeString = "{" +
+                                  "  \"purpose\": \"" + name + "\"," +
+                                  "  \"description\": \"" + description + "\"," +
+                                  "  \"group\": \"" + group + "\"," +
+                                  "  \"groupType\": \"" + groupType + "\"," +
+                                  "  \"mandatory\": \"" + mandatory + "\"," +
+                                  "  \"piiCategories\": [" +
+                                  "    {" +
+                                  "      \"piiCategoryId\": 1," +
+                                  "      \"mandatory\": true" +
+                                  "    }" +
+                                  "  ]" +
+                                  "}";
 
         String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .post(String.class, addPurposeString);
