@@ -44,7 +44,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.registry.PropertiesAdminServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -76,8 +76,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     private static final String USERNAME = "oauthuser";
     private static final String PASSWORD = "oauthuser";
 
-    private PropertiesAdminServiceClient propertiesAdminServiceClient;
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
+    private OauthAdminClient oauthAdminClient;
 
     private String openidScope = "sub,email,email_verified,name,family_name,given_name,middle_name,nickname," +
             "preferred_username,profile,picture,website,gender,birthdate,zoneinfo,locale,updated_at,phone_number," +
@@ -95,11 +95,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         remoteUSMServiceClient.addUser(USERNAME, PASSWORD,
                 null, getUserClaims(),
                 "default", false);
-        propertiesAdminServiceClient = new PropertiesAdminServiceClient(backendURL, sessionCookie);
-
-        propertiesAdminServiceClient.updateProperty(OPENID_SCOPE_RESOURCE, OPENID_SCOPE_PROPERTY, openidScope + "," +
-                OIDC_ROLE_CLAIM_URI, OPENID_SCOPE_PROPERTY);
-
+        oauthAdminClient = new OauthAdminClient(backendURL, sessionCookie);
+        String[] claim = {OIDC_ROLE_CLAIM_URI};
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
 
         ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
@@ -107,15 +104,13 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         externalClaimDTO.setExternalClaimURI(OIDC_ROLE_CLAIM_URI);
         externalClaimDTO.setMappedLocalClaimURI(ROLE_CLAIM_URI);
         claimMetadataManagementServiceClient.addExternalClaim(externalClaimDTO);
+        oauthAdminClient.updateScope(OPENID_SCOPE_PROPERTY, claim, null);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
         deleteApplication();
-        propertiesAdminServiceClient.updateProperty(OPENID_SCOPE_RESOURCE, OPENID_SCOPE_PROPERTY, openidScope,
-                OPENID_SCOPE_PROPERTY);
-
         remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
         remoteUSMServiceClient.deleteUser(USERNAME);
         claimMetadataManagementServiceClient.removeExternalClaim(OIDC_DIALECT_URI, OIDC_ROLE_CLAIM_URI);
