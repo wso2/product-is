@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.7.0-m3-SNAPSHOT</version>
+    <version>5.7.0-m3</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1982,7 +1982,7 @@
         <url>https://github.com/wso2/product-is.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-is.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-is.git</connection>
-        <tag>HEAD</tag>
+        <tag>v5.7.0-m3</tag>
     </scm>
 
 
