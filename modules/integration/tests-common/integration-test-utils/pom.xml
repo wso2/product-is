@@ -103,6 +103,14 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.msf4j</groupId>
+            <artifactId>msf4j-microservice</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

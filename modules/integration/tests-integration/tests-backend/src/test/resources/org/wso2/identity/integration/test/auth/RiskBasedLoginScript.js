@@ -1,4 +1,4 @@
-function onInitialRequest(context) {
+function onLoginRequest(context) {
     executeStep(1, {
         onSuccess: function (context) {
             var username = context.steps[1].subject.username;

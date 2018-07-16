@@ -69,7 +69,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_U
  */
 public class AbstractConditionalAuthenticationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    public static final String ENABLE_CONDITIONAL_AUTHENTICATION_FLAG = "enableConditionalAuthenticationFeature";
 
     protected IdentityProviderMgtServiceClient superTenantIDPMgtClient;
 

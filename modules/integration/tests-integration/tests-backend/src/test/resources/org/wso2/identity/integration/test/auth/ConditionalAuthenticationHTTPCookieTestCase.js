@@ -1,20 +1,20 @@
 function onLoginRequest(context) {
 
     if (context.request.cookies.testcookie) {
-        log.info("--------------- cookie testcookie found in request.");
-        log.info("--------------- cookie testcookie.value: " + context.request.cookies.testcookie.value);
-        log.info("--------------- cookie testcookie.domain: " + context.request.cookies.testcookie.domain);
-        log.info("--------------- cookie testcookie.max-age: " + context.request.cookies.testcookie["max-age"]);
-        log.info("--------------- cookie testcookie.path: " + context.request.cookies.testcookie.path);
-        log.info("--------------- cookie testcookie.secure: " + context.request.cookies.testcookie.secure);
-        log.info("--------------- cookie testcookie.version: " + context.request.cookies.testcookie.version);
-        log.info("--------------- cookie testcookie.httpOnly: " + context.request.cookies.testcookie.httpOnly);
+        Log.info("--------------- cookie testcookie found in request.");
+        Log.info("--------------- cookie testcookie.value: " + context.request.cookies.testcookie.value);
+        Log.info("--------------- cookie testcookie.domain: " + context.request.cookies.testcookie.domain);
+        Log.info("--------------- cookie testcookie.max-age: " + context.request.cookies.testcookie["max-age"]);
+        Log.info("--------------- cookie testcookie.path: " + context.request.cookies.testcookie.path);
+        Log.info("--------------- cookie testcookie.secure: " + context.request.cookies.testcookie.secure);
+        Log.info("--------------- cookie testcookie.version: " + context.request.cookies.testcookie.version);
+        Log.info("--------------- cookie testcookie.httpOnly: " + context.request.cookies.testcookie.httpOnly);
     } else {
         executeStep(1, {
             onSuccess: function (context) {
-                log.info("--------------- setting cookie : testcookie");
+                Log.info("--------------- setting cookie : testcookie");
                 context.response.headers["Set-Cookie"] = "testcookie=1FD36B269C61; Path=/; Secure;" +
-                    " HttpOnly; Expires=Wed, 31 Jan 2018 07:28:00 GMT"
+                    " HttpOnly; Expires=Wed, 31 Jan 2018 07:28:00 GMT";
             }
         });
     }

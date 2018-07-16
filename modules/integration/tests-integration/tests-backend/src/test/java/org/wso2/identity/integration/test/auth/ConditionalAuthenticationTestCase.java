@@ -22,6 +22,8 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.testng.annotations.AfterClass;
@@ -33,6 +35,7 @@ import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServer
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.script.xsd.AuthenticationScriptConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
@@ -47,6 +50,7 @@ import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
+import java.net.CookieManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,11 +82,10 @@ public class ConditionalAuthenticationTestCase extends AbstractConditionalAuthen
     private DefaultHttpClient client;
     private ServiceProvider serviceProvider;
     private HttpResponse response;
+    private CookieStore cookieStore;
 
     private String initialCarbonHome;
 
-    private boolean isEnableConditionalAuthenticationFeature =
-            System.getProperty(ENABLE_CONDITIONAL_AUTHENTICATION_FLAG) != null;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -102,6 +105,8 @@ public class ConditionalAuthenticationTestCase extends AbstractConditionalAuthen
         manager = new MultipleServersManager();
 
         client = new DefaultHttpClient();
+        cookieStore = new BasicCookieStore();
+        client.setCookieStore(cookieStore);
 
         startSecondaryIS();
         String script = getConditionalAuthScript("ConditionalAuthenticationTestCase.js");
@@ -137,23 +142,17 @@ public class ConditionalAuthenticationTestCase extends AbstractConditionalAuthen
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
-        if( !isEnableConditionalAuthenticationFeature) {
-            return;
-        }
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
         assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
                 "Failed to follow the conditional authentication steps.");
         EntityUtils.consume(response.getEntity());
+        cookieStore.clear();
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow based on HTTP Cookie.")
     public void testConditionalAuthenticationUsingHTTPCookie() throws Exception {
-
-        if( !isEnableConditionalAuthenticationFeature) {
-            return;
-        }
 
         // Update authentication script to handle authentication based on HTTP context.
         updateAuthScript("ConditionalAuthenticationHTTPCookieTestCase.js");
@@ -174,19 +173,18 @@ public class ConditionalAuthenticationTestCase extends AbstractConditionalAuthen
         assertTrue(hasTestCookie, "Failed to follow the conditional authentication steps. HTTP Cookie : "
                 + "testcookie was not found in the response.");
         EntityUtils.consume(response.getEntity());
+        cookieStore.clear();
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow with claim assignment.")
     public void testConditionalAuthenticationClaimAssignment() throws Exception {
 
-        if( !isEnableConditionalAuthenticationFeature) {
-            return;
-        }
         // Update authentication script to handle authentication based on HTTP context.
         updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
 
         EntityUtils.consume(response.getEntity());
+        cookieStore.clear();
     }
 
     /**
@@ -469,5 +467,22 @@ public class ConditionalAuthenticationTestCase extends AbstractConditionalAuthen
         outboundAuthConfig.setAuthenticationScriptConfig(config);
         serviceProvider.setLocalAndOutBoundAuthenticationConfig(outboundAuthConfig);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
+    }
+
+    protected LocalAndOutboundAuthenticationConfig createLocalAndOutboundAuthenticationConfig() throws Exception {
+
+        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig = super
+                .createLocalAndOutboundAuthenticationConfig();
+
+        AuthenticationStep authenticationStep2 = new AuthenticationStep();
+        authenticationStep2.setStepOrder(2);
+        authenticationStep2.setSubjectStep(false);
+        authenticationStep2.setAttributeStep(false);
+
+        authenticationStep2.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd
+                .IdentityProvider[]{getFederatedSAMLSSOIDP()});
+        localAndOutboundAuthenticationConfig.addAuthenticationSteps(authenticationStep2);
+
+        return localAndOutboundAuthenticationConfig;
     }
 }
