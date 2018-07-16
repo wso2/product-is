@@ -61,6 +61,11 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_2 = "scim2user2@gmail.com";
     private static final String USERNAME_2 = "scim2user2";
 
+    private static final String EQUAL = "+Eq+";
+    private static final String STARTWITH = "+Sw+";
+    private static final String ENDWITH = "+Ew+";
+    private static final String CONTAINS = "+Co+";
+
     private CloseableHttpClient client;
     private String userId1;
     private String userId2;
@@ -265,27 +270,13 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     @Test(dependsOnMethods = "testGetGroup")
     public void testFilterGroup() throws Exception {
-        String userResourcePath = getPath() + "?filter=" + SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE + "+Eq+" +
-                GROUPNAME;
-        HttpGet request = new HttpGet(userResourcePath);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
-                "has not been retrieved successfully");
-
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
-        EntityUtils.consume(response.getEntity());
-
-        String groupNameFromResponse = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
-                .get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE).toString();
-        //TODO: groupsName comes from this is <Userstore_domain>/displayName
-        assertTrue(groupNameFromResponse.contains(GROUPNAME));
-
-        String groupId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
-                (ID_ATTRIBUTE).toString();
-        assertEquals(groupId, this.groupId);
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, EQUAL, GROUPNAME);
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, STARTWITH, GROUPNAME.substring(0, 4));
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, CONTAINS, GROUPNAME.substring(2, 4));
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, ENDWITH, GROUPNAME.substring(4, GROUPNAME.length()));
+        validateFilteredGroup(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, EQUAL, USERNAME_1);
+        validateFilteredGroup(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, CONTAINS, groupId);
     }
 
     @Test(dependsOnMethods = "testFilterGroup")
@@ -330,5 +321,33 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     private String getAuthzHeader() {
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + password).getBytes()).trim();
+    }
+
+    private void validateFilteredGroup(String attributeName, String operator, String searchAttribute) throws IOException {
+
+        String userResourcePath = getPath() + "?filter=" + attributeName + operator + searchAttribute;
+        HttpGet request = new HttpGet(userResourcePath);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
+                "has not been retrieved successfully");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        String groupNameFromResponse = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
+                .get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE).toString();
+        //TODO: groupsName comes from this is <Userstore_domain>/displayName
+        if (SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE.equals(attributeName)) {
+            assertTrue(groupNameFromResponse.contains(searchAttribute));
+        } else {
+            assertTrue(groupNameFromResponse.contains(GROUPNAME));
+        }
+
+        String groupId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
+                (ID_ATTRIBUTE).toString();
+        assertEquals(groupId, this.groupId);
     }
 }
