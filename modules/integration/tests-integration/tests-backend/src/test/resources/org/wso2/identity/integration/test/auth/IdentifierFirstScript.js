@@ -1,5 +1,5 @@
 var username;
-function onInitialRequest(context) {
+function onLoginRequest(context) {
     promptUsername ();
 }
 

@@ -101,7 +101,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.plugin.version}</version>
+                <version>2.12.4</version>
                 <inherited>false</inherited>
                 <configuration>
                     <systemProperties>

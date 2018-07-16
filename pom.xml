@@ -481,7 +481,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.plugin.version}</version>
+                <version>2.18</version>
             </plugin>
             <plugin>
                 <inherited>false</inherited>
@@ -1662,22 +1662,14 @@
                 <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-core</artifactId>
+                <version>${msf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.testutil</artifactId>
-                <version>${carbon.identity.framework.version}</version>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-microservice</artifactId>
+                <version>${msf4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1894,8 +1886,7 @@
         <wso2.store.version>2.0.0</wso2.store.version>
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
-        <testng.version>6.9.10</testng.version>
-        <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
+        <testng.version>6.1.1</testng.version>
         <carbon.deployment.version>4.7.19</carbon.deployment.version>
         <carbon.registry.version>4.6.38</carbon.registry.version>
         <carbon.multitenancy.version>4.6.11</carbon.multitenancy.version>
@@ -1952,6 +1943,7 @@
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
+        <msf4j.version>2.6.2</msf4j.version>
     </properties>
 
     <repositories>

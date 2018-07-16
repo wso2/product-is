@@ -1,6 +1,5 @@
 package org.wso2.identity.integration.test.auth;
 
-import com.google.gson.Gson;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.io.FileUtils;
@@ -9,8 +8,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -19,35 +16,24 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
-import org.wso2.carbon.identity.common.testng.InjectMicroservicePort;
-import org.wso2.carbon.identity.common.testng.WithMicroService;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.utils.MicroserviceServer;
+import org.wso2.identity.integration.common.utils.MicroserviceUtil;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +46,6 @@ import javax.ws.rs.Produces;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 
-@WithMicroService
 @Path("/")
 public class RiskBasedLoginTestCase extends AbstractConditionalAuthenticationTestCase {
 
@@ -78,8 +63,7 @@ public class RiskBasedLoginTestCase extends AbstractConditionalAuthenticationTes
 
     Map<String, Integer> userRiskScores = new HashMap<>();
 
-    @InjectMicroservicePort
-    private int microServicePort;
+    MicroserviceServer microserviceServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -134,8 +118,12 @@ public class RiskBasedLoginTestCase extends AbstractConditionalAuthenticationTes
         createServiceProvider(PRIMARY_IS_APPLICATION_NAME,
                 applicationManagementServiceClient, oauthAdminClient, script);
 
+        microserviceServer = MicroserviceUtil.initMicroserviceServer();
+        MicroserviceUtil.deployService(microserviceServer, this);
+
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
-        updateResidentIDPProperty(superTenantResidentIDP, "adaptive_authentication.analytics.receiver", "http://localhost:" + microServicePort);
+        updateResidentIDPProperty(superTenantResidentIDP, "adaptive_authentication.analytics.receiver",
+                "http://localhost:" + microserviceServer.getPort());
 
         userRiskScores.put(userInfo.getUserName(), 0);
     }
@@ -149,6 +137,8 @@ public class RiskBasedLoginTestCase extends AbstractConditionalAuthenticationTes
 
         this.logManger.logOut();
         logManger = null;
+
+        MicroserviceUtil.destroyService(microserviceServer);
 
         File jarDestFile = new File(Utils.getResidentCarbonHome()
                 + File.separator + File.separator + "repository"
@@ -250,8 +240,8 @@ public class RiskBasedLoginTestCase extends AbstractConditionalAuthenticationTes
         AuthenticationStep authenticationStep2 = new AuthenticationStep();
         authenticationStep2.setStepOrder(2);
         LocalAuthenticatorConfig localConfig = new LocalAuthenticatorConfig();
-        localConfig.setName("SampleFingerprintAuthenticator");
-        localConfig.setDisplayName("fingerPrintAuth");
+        localConfig.setName("DemoFingerprintAuthenticator");
+        localConfig.setDisplayName("Demo Fingerprint Authenticator");
         localConfig.setEnabled(true);
         authenticationStep2.setLocalAuthenticatorConfigs(new LocalAuthenticatorConfig[]{localConfig});
         authenticationStep2.setSubjectStep(false);
