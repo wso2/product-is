@@ -1749,7 +1749,7 @@
         <identity.data.publisher.audit.version>1.0.3</identity.data.publisher.audit.version>
         <identity.governance.version>1.1.23</identity.governance.version>
         <carbon.identity.auth.version>1.1.18</carbon.identity.auth.version>
-        <identity.event.handler.account.lock.version>1.1.13</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.1.14</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.21</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
         <identity.oauth2.validators.xacml.version>1.0.9</identity.oauth2.validators.xacml.version>
