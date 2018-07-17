@@ -78,11 +78,12 @@ For WSO2 products, we use developer studio plugin in eclipse. The eclipse versio
 
        Refer point 5 for carbon.home path in below Section 1.1.1.4.
       o	Once the server starts, point your Web browser to https://localhost:9443/carbon/
+
 1.1.1.4	Troubleshooting
-  1.	We checked the pom.xml of product-is to find the compatible version of the carbon identity framework and carbon-kernel.
-  2.	To identify the starting point to run the code we have analyzed the wso2server.bat file in which we found that the start point of this code is from org.wso2.carbon.bootstrap class.
-  3.	We have to pass multiple command line arguments while starting the application otherwise we will get exception. So for identifying those command line arguments we have to analyze the wso2server.bat file and pass those arguments while starting the application.
-  4.	We get multiple dependency missing error so we have to add those dependencies manually which are given below:
+  1.	Check the pom.xml of product-is to find the compatible version of the carbon identity framework and carbon-kernel.
+  2.	To identify the starting point to run the code, analyze the wso2server.bat file to find the start point of the code. Eg. it is from org.wso2.carbon.bootstrap class.
+  3.	If you get any exception, you will have to pass multiple command line arguments while starting the application. For identifying those command line arguments you will have to analyze the wso2server.bat file and pass those arguments while starting the application.
+  4.	If you get multiple dependency missing error then try to add those dependencies manually. Some of which are given below:
       •	javax.annotation-api
       •	jta
       •	persistence-api
@@ -90,5 +91,5 @@ For WSO2 products, we use developer studio plugin in eclipse. The eclipse versio
       •	xercesImpl
       •	xml-apis
       •	commons-lang
-  5.	While running the application we have faced many issues like missing files and plugins. To resolve these issues, we have used the binary distribution zip file, which is created after building the product. For this we have set the {carbon.home} value in the arguments as the path of binary distribution folder, which is created after building the code in product-is folder at below location
+  5.	You may face issues like missing files and plugins while running the application. To resolve these issues, you can use the binary distribution zip file which will be created after building the product. For this we have set the {carbon.home} value in the arguments as the path of binary distribution folder, which is created after building the code in product-is folder at below location
            {product-is\modules\distribution\target}
