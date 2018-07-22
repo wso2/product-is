@@ -68,7 +68,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
-    private static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
+    protected static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
     private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
@@ -79,7 +79,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final int TOMCAT_8490 = 8490;
-    private static final int PORT_OFFSET_0 = 0;
+    protected static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     private static final String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
@@ -87,6 +87,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private String usrName = "testFederatedUser";
     private String usrPwd = "testFederatePassword";
     private String usrRole = "admin";
+    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity.com/logout?SAML2.HTTPBinding=HTTP-Redirect";
 
 
     //Claim Uris
@@ -278,10 +279,9 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         updateIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME, identityProvider);
     }
 
-    @Test(priority = 5, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
-        HttpClient client = getHttpClient();
+        HttpClient client = new DefaultHttpClient();
 
         String sessionId = sendSAMLRequestToPrimaryIS(client);
         Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
@@ -308,7 +308,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
         Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
     }
-
 
     private ClaimMapping[] getClaimMappings(){
         List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
@@ -353,7 +352,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+            response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
                             PORT_OFFSET_1), USER_AGENT , locationHeader, client, pastrCookie);
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
@@ -388,8 +387,17 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         HttpResponse response = new DefaultHttpClient().execute(request);
         String locationHeader = getHeaderValue(response, "Location");
+        String pastrCookie = Utils.getPastreCookie(response);
         if (Utils.requestMissingClaims(response)) {
-            String pastrCookie = Utils.getPastreCookie(response);
+            locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
+
+            if (locationHeader.contains("signup.do")) {
+                response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                        PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
+                EntityUtils.consume(response.getEntity());
+                locationHeader = getHeaderValue(response, "Location");
+            }
+        } else if (locationHeader.contains("signup.do") || locationHeader.contains("register.do")) {
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
@@ -397,9 +405,34 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
                     PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
+
+            if (locationHeader.contains("signup.do")) {
+                EntityUtils.consume(response.getEntity());
+                response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+                        PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
+                EntityUtils.consume(response.getEntity());
+                locationHeader = getHeaderValue(response, "Location");
+
+                if (Utils.requestMissingClaims(response)) {
+                    locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
+                }
+            }
+            if (Utils.requestMissingClaims(response)) {
+                locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
+            }
         }
         closeHttpConnection(response);
         return locationHeader;
+    }
+
+    private String handleMissingClaims(HttpResponse response, String locationHeader, HttpClient client, String
+            pastrCookie) throws Exception {
+        EntityUtils.consume(response.getEntity());
+
+        response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0),
+                USER_AGENT, locationHeader, client, pastrCookie);
+        EntityUtils.consume(response.getEntity());
+        return getHeaderValue(response, "Location");
     }
 
     private String getSAMLResponseFromPrimaryIS(HttpClient client, String redirectURL)

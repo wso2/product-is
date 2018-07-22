@@ -79,10 +79,15 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
 
         String name = "Financial 01";
         String description = "Financial Purpose 01";
-        JSONObject response = addPurpose(name, description);
+        String group = "SIGNUP";
+        String groupType = "SYSTEM";
+        JSONObject response = addPurpose(name, description, group, groupType, true);
 
-        Assert.assertEquals(name, response.get("purpose"));
-        Assert.assertEquals(description, response.get("description"));
+        Assert.assertEquals(response.get("purpose"), name);
+        Assert.assertEquals(response.get("description"), description);
+        Assert.assertEquals(response.get("group"), group);
+        Assert.assertEquals(response.get("groupType"), groupType);
+        Assert.assertEquals(response.get("mandatory"), true);
         Assert.assertNotNull(response.get("piiCategories"));
     }
 
@@ -146,7 +151,7 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
         return (JSONObject) JSONValue.parse(response);
     }
 
-    private JSONObject addPurpose(String name, String description) {
+    private JSONObject addPurpose(String name, String description, String group, String groupType, boolean mandatory) {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
@@ -157,8 +162,19 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
         RestClient restClient = new RestClient(clientConfig);
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "purposes");
 
-        String addPurposeString = "{\"purpose\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
-                description + "\" , \"piiCategories\": [" + 1 + "]}";
+        String addPurposeString = "{" +
+                "  \"purpose\": \"" + name + "\"," +
+                "  \"description\": \"" + description + "\"," +
+                "  \"group\": \"" + group + "\"," +
+                "  \"groupType\": \"" + groupType + "\"," +
+                "  \"mandatory\": \"" + mandatory + "\"," +
+                "  \"piiCategories\": [" +
+                "    {" +
+                "      \"piiCategoryId\": 1," +
+                "      \"mandatory\": true" +
+                "    }" +
+                "  ]" +
+                "}";
 
         String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .post(String.class, addPurposeString);
