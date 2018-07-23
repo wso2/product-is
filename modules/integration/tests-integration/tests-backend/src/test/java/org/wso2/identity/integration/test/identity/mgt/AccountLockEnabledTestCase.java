@@ -26,16 +26,21 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.identity.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+
+import java.rmi.RemoteException;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
@@ -60,6 +65,8 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
 
     private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.enable";
+    private static final String ENABLE_MAX_ACCOUNT_LOCK_COUNT = "account.lock.handler.On.Failure.Max.Attempts";
+    private static final String MAX_ACCOUNT_LOCK_COUNT = "5";
     private static final String TRUE_STRING = "true";
     private static final String DEFAULT = "default";
 
@@ -152,57 +159,49 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully")
-    public void testLockByPassUnLockedAccount() {
+    public void testLockByPassUnLockedAccount() throws
+            RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException, UserStoreException {
 
-        try {
-            usmClient.addUser(testLockUser3, testLockUser3Password, new String[]{"admin"}, new ClaimValue[0], null, false);
-            usmClient.updateRoleListOfUser(testLockUser3, new String[]{"admin"}, new String[]{"admin", ACCOUNT_LOCK_BYPASS_ROLE});
+        usmClient.addUser(testLockUser3, testLockUser3Password, new String[]{"admin"}, new ClaimValue[0], null, false);
+        usmClient.updateRoleListOfUser(testLockUser3, new String[]{"admin"}, new String[]{"admin", ACCOUNT_LOCK_BYPASS_ROLE});
 
-            int maximumAllowedFailedLogins = 5;
-            for (int i = 0; i < maximumAllowedFailedLogins; i++) {
-                try {
-                    authenticatorClient.login(testLockUser3, testLockUser3WrongPassword, "localhost");
-                } catch (Exception e) {
-                    log.error("Login attempt: " + i + " for user: " + testLockUser3 + " failed");
-                }
-            }
+        int maximumAllowedFailedLogins = Integer.parseInt(MAX_ACCOUNT_LOCK_COUNT) + 1;
+        for (int i = 0; i < maximumAllowedFailedLogins; i++) {
 
             try {
-                authenticatorClient.login(testLockUser3, testLockUser3Password, "localhost");
+                authenticatorClient.login(testLockUser3, testLockUser3WrongPassword, "localhost");
             } catch (Exception e) {
-                log.error("Login attempt for user: " + testLockUser3 + " failed");
+                log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
             }
-
-            ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(testLockUser3, new String[]
-                    {accountLockClaimUri}, "default");
-
-            String userAccountLockClaimValue = null;
-
-            if (ArrayUtils.isNotEmpty(claimValues)) {
-                userAccountLockClaimValue = claimValues[0].getValue();
-            }
-
-            Assert.assertFalse
-                    ("Test Failure : User Account Didn't by pass locking", Boolean.valueOf(userAccountLockClaimValue));
-
-        } catch (Exception e) {
-            log.error("Error occurred when by passing the test user.", e);
         }
+
+        ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(testLockUser3, new String[]
+                {accountLockClaimUri}, "default");
+
+        String userAccountLockClaimValue = null;
+
+        if (ArrayUtils.isNotEmpty(claimValues)) {
+            userAccountLockClaimValue = claimValues[0].getValue();
+        }
+
+        Assert.assertFalse
+                ("Test Failure : User failed to login", Boolean.valueOf(userAccountLockClaimValue));
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.is", description = "Check whether the user bypasses account locking successfully " +
-            "for a locked account")
-    public void testLockByPassLockedAccount() {
+    @Test(groups = "wso2.is", description = "For a locked account, after attaching the account lock bypass role check" +
+            "whether the account gets access to the system")
+    public void testLockByPassLockedAccount() throws
+            RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException, UserStoreException,
+            LoginAuthenticationExceptionException {
 
-        try {
             usmClient.addUser(testLockUser4, testLockUser4Password, new String[]{"admin"}, new ClaimValue[0], null, false);
 
-            int maximumAllowedFailedLogins = 5;
+            int maximumAllowedFailedLogins = Integer.parseInt(MAX_ACCOUNT_LOCK_COUNT);
             for (int i = 0; i < maximumAllowedFailedLogins; i++) {
                 try {
                     authenticatorClient.login(testLockUser4, testLockUser4WrongPassword, "localhost");
-                } catch (Exception e) {
+                 } catch (Exception e) {
                     log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
                 }
             }
@@ -217,17 +216,23 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             }
 
             Assert.assertTrue
-                    ("Test Failure : User Account Didn't by pass locking", Boolean.valueOf(userAccountLockClaimValue));
+                    ("Test Failure : User must be locked after exceeding configured no of unsuccessful attempts",
+                            Boolean.valueOf(userAccountLockClaimValue));
 
             usmClient.updateRoleListOfUser(testLockUser4, new String[]{"admin"}, new String[]{"admin", ACCOUNT_LOCK_BYPASS_ROLE});
-            try {
-                authenticatorClient.login(testLockUser4, testLockUser4Password, "localhost");
-            } catch (Exception e) {
-                log.error("Login attempt for user: " + testLockUser4 + " failed");
+            authenticatorClient.login(testLockUser4, testLockUser4Password, "localhost");
+
+            claimValues = usmClient.getUserClaimValuesForClaims(testLockUser4, new String[]
+                    {accountLockClaimUri}, "default");
+
+            userAccountLockClaimValue = null;
+
+            if (ArrayUtils.isNotEmpty(claimValues)) {
+                userAccountLockClaimValue = claimValues[0].getValue();
             }
-        } catch (Exception e) {
-            log.error("Error occurred when by passing the test user.", e);
-        }
+
+            Assert.assertFalse
+                    ("Test Failure : User failed to login", Boolean.valueOf(userAccountLockClaimValue));
     }
 
     protected String getISResourceLocation() {
@@ -242,11 +247,15 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get(DEFAULT));
 
-        Property[] newProperties = new Property[1];
+        Property[] newProperties = new Property[2];
         Property prop = new Property();
         prop.setName(option);
         prop.setValue(TRUE_STRING);
         newProperties[0] = prop;
+        Property propMaxCount = new Property();
+        propMaxCount.setName(ENABLE_MAX_ACCOUNT_LOCK_COUNT);
+        propMaxCount.setValue(MAX_ACCOUNT_LOCK_COUNT);
+        newProperties[1] = propMaxCount;
         identityGovernanceServiceClient.updateConfigurations(newProperties);
     }
 

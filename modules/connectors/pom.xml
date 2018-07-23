@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.7.0-m3-SNAPSHOT</version>
+        <version>5.7.0-m5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -181,6 +181,14 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
                                     <artifactId>org.wso2.carbon.identity.conditional.auth.functions.analytics</artifactId>
+                                    <version>${conditional.authentication.functions.version}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
+                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.common</artifactId>
                                     <version>${conditional.authentication.functions.version}</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
