@@ -16,7 +16,7 @@
  * under the License.
  */
 
-function onInitialRequest(context) {
+function onLoginRequest(context) {
     executeStep(1, {
         onSuccess: function (context) {
             var fName = context.steps[1].subject.localClaims['http://wso2.org/claims/givenname'];
