@@ -20,18 +20,18 @@ WSO2 products can use the Developer Studio plugin in Eclipse. The Eclipse versio
 1. Import source code of carbon-kernel from GitHub: You need to import carbon-kernel code into the Eclipse IDE from GitHub. Follow the steps below to achieve this:
    *	Open Eclipse.
    *	Select workspace for carbon-identity-framework.
-   *	Click on **File** - **Import** - **Projects** from Git? Clone URI-> Enter URI for carbon-identity-framework i.e. https://github.com/wso2/carbon-kernel.git and click on “Next” ? “Next” ? Enter Directory and click “Next” ? Click “Cancel”.
-   *	Again click on the **Import** option from the file menu. ?Select Existing Maven Projects and click on “Next”?Click on “Finish”.
-2. Import source code of carbon-identity-framework from GitHub: We have to import carbon-identity-framework code into eclipse from GitHub. For this we have to follow the below steps:
+   *	Click on **File** - **Import** - **Projects from Git** - **Clone URI** - Enter URI for carbon-identity-framework i.e., https://github.com/wso2/carbon-kernel.git and click on **Next** - **Next** - Enter Directory and click **Next** - Click **Cancel**.
+   *	Again click on the **Import** option from the file menu. Select **Existing Maven Projects** and click on **Next** - click on **Finish**.
+2. Import source code of carbon-identity-framework from GitHub: We have to import carbon-identity-framework code into Eclipse from GitHub. For this we have to follow the steps below:
    *	Open Eclipse.
    *	Select workspace for carbon-identity-framework.
-   *	Click on “File” ? Import ? Projects from Git? Clone URI ? Enter URI for carbon-identity-framework i.e. https://github.com/wso2/carbon-identity-framework.git and click “Next” ? Next ? Enter Directory and click on “Next” ? Click “Cancel”.
-   *	Again click on “Import” option from file menu ? Select Existing Maven Projects and click on “Next” ? Click on “Finish”.
-3. Import source code of wso2 identity-server from GitHub: We have to import identity-server code into eclipse from GitHub. For this we have to follow the below steps:
-   *	Open eclipse.
-   *	Select workspace for identity-server
-   *	Click on “File” ? Import ? Projects from Git ? Clone URI ? Enter URI for product-is i.e. https://github.com/wso2/product-is.git and click on “Next” ? Next ? Enter Directory and click “Next” ? Click “Cancel”.
-   *	Again click on “Import” option from file menu ? Select Existing Maven Projects and click on “Next”? Click on “Finish”.
+   *	Click on **File** - **Import** - **Projects from Git** - **Clone URI** - Enter URI for carbon-identity-framework i.e. https://github.com/wso2/carbon-identity-framework.git and click **Next** - **Next** - Enter Directory and click on **Next** - click **Cancel**.
+   *	Again click on **Import** from the file menu. Select **Existing Maven Projects** and click on **Next** - click on **Finish**.
+3. Import source code of WSO2 Identity Server from GitHub: We have to import the WSO2 Identity Server code into Eclipse from GitHub. For this we have to follow the steps below:
+   *	Open Eclipse.
+   *	Select workspace for identity-server.
+   *	Click on **File** - **Import** - **Projects from Git** - **Clone URI** - Enter URI for product-is i.e., https://github.com/wso2/product-is.git and click on **Next** - **Next** - Enter Directory and click **Next** - click **Cancel**.
+   *	Again click on **Import** option from the file menu. Select **Existing Maven Projects** and click on **Next** - click on **Finish**.
 
 ###	Build source code
 
