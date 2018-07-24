@@ -1720,7 +1720,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.49</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.56</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1777,12 +1777,12 @@
         <provisioning.connector.scim.version>5.1.10</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
-        <identity.local.auth.basicauth.version>6.0.2</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.0.3</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.13</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Properties -->
-        <identity.local.auth.api.version>2.1.0</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.1.1</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>1.0.15</identity.oauth2.jwt.bearer.grant.version>

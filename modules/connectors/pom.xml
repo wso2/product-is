@@ -361,7 +361,7 @@
                                     <version>${identity.local.auth.api.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
-                                    <destFileName>api#identity#auth#v1.0.war</destFileName>
+                                    <destFileName>api#identity#auth#v1.1.war</destFileName>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/war
                                     </outputDirectory>
                                     <includes>**/*.war</includes>
