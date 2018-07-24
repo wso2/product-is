@@ -1,4 +1,4 @@
-function onInitialRequest(context) {
+function onLoginRequest(context) {
     var acr = selectAcrFrom(context, ["acr1", "acr2"]);
     Log.info("--------------- ACR selected "+ acr);
     //comment

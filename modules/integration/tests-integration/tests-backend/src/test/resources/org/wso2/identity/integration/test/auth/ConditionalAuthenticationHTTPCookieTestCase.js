@@ -1,4 +1,4 @@
-function onInitialRequest(context) {
+function onLoginRequest(context) {
 
     if (context.request.cookies.testcookie) {
         log.info("--------------- cookie testcookie found in request.");
