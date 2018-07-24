@@ -26,21 +26,21 @@ import org.wso2.carbon.identity.application.authentication.framework.util.Framew
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
- * Sample Hardware-Key Authenticator.
+ * Sample Fingerprint Authenticator.
  */
-public class SampleHardwareKeyAuthenticator extends AbstractSampleAuthenticator {
+public class DemoFingerprintAuthenticator extends AbstractSampleAuthenticator {
 
     private static final long serialVersionUID = 6439291340285653402L;
-    private static final String HARDWARE_KEY_APP_URL = "HardwareKeyAppUrl";
+    private static final String FINGERPRINT_APP_URL = "FingerprintAppUrl";
 
     @Override
     public boolean canHandle(HttpServletRequest request) {
@@ -55,7 +55,7 @@ public class SampleHardwareKeyAuthenticator extends AbstractSampleAuthenticator 
     @Override
     protected String getPageUrlProperty() {
 
-        return HARDWARE_KEY_APP_URL;
+        return FINGERPRINT_APP_URL;
     }
 
     @Override
@@ -68,13 +68,36 @@ public class SampleHardwareKeyAuthenticator extends AbstractSampleAuthenticator 
     @Override
     public String getName() {
 
-        return "SampleHardwareKeyAuthenticator";
+        return "DemoFingerprintAuthenticator";
     }
 
     @Override
     public String getFriendlyName() {
 
-        return "Sample HardwareKey Authenticator";
+        return "Demo Fingerprint Authenticator";
+    }
+
+    @Override
+    public String getClaimDialectURI() {
+
+        return null;
+    }
+
+    @Override
+    public List<Property> getConfigurationProperties() {
+
+        List<Property> configProperties = new ArrayList<>();
+
+        Property appUrl = new Property();
+        appUrl.setName(FINGERPRINT_APP_URL);
+        appUrl.setValue(IdentityUtil.
+                getServerURL("sample-auth", true, true) + "/fpt.jsp");
+        appUrl.setDisplayName("Fingerprint URL");
+        appUrl.setRequired(true);
+        appUrl.setDescription("Enter demo Fingerprint URL value.");
+        appUrl.setDisplayOrder(0);
+        configProperties.add(appUrl);
+        return configProperties;
     }
 
     @Override
@@ -84,8 +107,7 @@ public class SampleHardwareKeyAuthenticator extends AbstractSampleAuthenticator 
             throws AuthenticationFailedException {
 
         String loginPage = IdentityUtil
-                .getServerURL("sample-auth", true, true) + "/hwk.jsp";
-
+                .getServerURL("sample-auth", true, true) + "/fpt.jsp";
         String queryParams =
                 FrameworkUtils.getQueryStringWithFrameworkContextId(context.getQueryParams(),
                         context.getCallerSessionKey(),
@@ -102,39 +124,11 @@ public class SampleHardwareKeyAuthenticator extends AbstractSampleAuthenticator 
                     + getName();
             String encodedUrl = URLEncoder.encode(callbackUrl, StandardCharsets.UTF_8.name());
             response.sendRedirect(response.encodeRedirectURL(loginPage + ("?" + queryParams)) +
-                    "&callbackUrl=" + encodedUrl + "&authenticators=SampleHardwareKeyAuthenticator:" + "LOCAL" +
+                    "&callbackUrl=" + encodedUrl + "&authenticators=DemoFingerprintAuthenticator:" + "LOCAL" +
                     retryParam);
         } catch (IOException e) {
-            throw new AuthenticationFailedException("Authentication failed for the Sample Hardware-key Authenticator.",
+            throw new AuthenticationFailedException("Authentication failed for the Demo Fingerprint Authenticator.",
                     e);
         }
-    }
-
-    @Override
-    public String getClaimDialectURI() {
-
-        return null;
-    }
-
-    @Override
-    public List<Property> getConfigurationProperties() {
-
-        List<Property> configProperties = new ArrayList<>();
-
-        Property appUrl = new Property();
-        appUrl.setName(HARDWARE_KEY_APP_URL);
-        appUrl.setValue(IdentityUtil
-                .getServerURL("sample-auth", true, true) + "/hwk.jsp");
-        appUrl.setDisplayName("Hardware Key Sample URL");
-        appUrl.setRequired(true);
-        appUrl.setDescription("Enter sample Hardware-Key URL value.");
-        appUrl.setDisplayOrder(0);
-        configProperties.add(appUrl);
-        return configProperties;
-    }
-
-    protected boolean retryAuthenticationEnabled() {
-
-        return true;
     }
 }
