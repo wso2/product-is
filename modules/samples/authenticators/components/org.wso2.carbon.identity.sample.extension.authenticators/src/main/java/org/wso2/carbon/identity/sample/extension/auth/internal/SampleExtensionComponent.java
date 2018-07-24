@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.RequestAttributeExtractor;
-import org.wso2.carbon.identity.sample.extension.auth.SampleFaceAuthenticator;
+import org.wso2.carbon.identity.sample.extension.auth.SampleFaceIdAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.SampleFingerprintAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.SampleHardwareKeyAuthenticator;
 
@@ -42,14 +42,14 @@ public class SampleExtensionComponent {
         try {
             SampleHardwareKeyAuthenticator sampleHardwareKeyAuthenticator = new SampleHardwareKeyAuthenticator();
             SampleFingerprintAuthenticator sampleFingerprintAuthenticator = new SampleFingerprintAuthenticator();
-            SampleFaceAuthenticator sampleFaceAuthenticator = new SampleFaceAuthenticator();
+            SampleFaceIdAuthenticator sampleFaceIdAuthenticator = new SampleFaceIdAuthenticator();
             RequestAttributeExtractor requestAttributeExtractor = new RequestAttributeExtractor();
             componentContext.getBundleContext()
                     .registerService(ApplicationAuthenticator.class.getName(), sampleHardwareKeyAuthenticator, null);
             componentContext.getBundleContext()
                     .registerService(ApplicationAuthenticator.class.getName(), sampleFingerprintAuthenticator, null);
             componentContext.getBundleContext()
-                    .registerService(ApplicationAuthenticator.class.getName(), sampleFaceAuthenticator, null);
+                    .registerService(ApplicationAuthenticator.class.getName(), sampleFaceIdAuthenticator, null);
             componentContext.getBundleContext()
                     .registerService(ApplicationAuthenticator.class.getName(), requestAttributeExtractor, null);
 

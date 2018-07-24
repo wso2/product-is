@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Sample Retina Authenticator.
  */
-public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
+public class SampleFaceIdAuthenticator extends AbstractSampleAuthenticator {
 
     private static final long serialVersionUID = 6439291340285653402L;
     private static final String APP_URL = "RetinaAppUrl";
@@ -68,13 +68,13 @@ public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
     @Override
     public String getName() {
 
-        return "SampleFaceAuthenticator";
+        return "SampleFaceIdAuthenticator";
     }
 
     @Override
     public String getFriendlyName() {
 
-        return "Sample Face Authenticator";
+        return "Sample FaceID Authenticator";
     }
 
     @Override
@@ -125,7 +125,7 @@ public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
             String encodedUrl = URLEncoder.encode(callbackUrl, StandardCharsets.UTF_8.name());
 
             response.sendRedirect(response.encodeRedirectURL(loginPage + ("?" + queryParams)) +
-                    "&callbackUrl=" + encodedUrl + "&authenticators=SampleFaceAuthenticator:" + "LOCAL" + retryParam);
+                    "&callbackUrl=" + encodedUrl + "&authenticators=SampleFaceIdAuthenticator:" + "LOCAL" + retryParam);
         } catch (IOException e) {
             throw new AuthenticationFailedException("Authentication failed for the sample Retina authenticator.", e);
         }
