@@ -24,9 +24,9 @@ Configuration
 <AuthenticatorConfigs>
 ...
 ...
-    <AuthenticatorConfig name="SampleHardwareKeyAuthenticator" enabled="true" />
-    <AuthenticatorConfig name="SampleFingerprintAuthenticator" enabled="true" />
-    <AuthenticatorConfig name="SampleRetinaAuthenticator" enabled="true" />
+    <AuthenticatorConfig name="DemoHardwareKeyAuthenticator" enabled="true" />
+    <AuthenticatorConfig name="DemoFingerprintAuthenticator" enabled="true" />
+    <AuthenticatorConfig name="DemoFaceIdAuthenticator" enabled="true" />
     <AuthenticatorConfig name="RequestAttributeExtractor" enabled="true">
         <Parameter name="Headers">User-Agent,Host</Parameter>
     </AuthenticatorConfig>
