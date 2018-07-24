@@ -348,7 +348,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         String name = FINANCIAL_PURPOSE_NAME;
         String description = FINANCIAL_PURPOSE_NAME;
-        String group = "SIGNUP";
+        String group = "SELF-SIGNUP";
         String groupType = "SYSTEM";
         financialPurposeId  = addPurpose(name, description, group, groupType, true);
 
