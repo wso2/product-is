@@ -50,7 +50,6 @@ import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
-import java.net.CookieManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +61,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUT
 /**
  * Test class to test the conditional authentication support using Javascript feature.
  */
-public class ConditionalAuthenticationTestCase extends AbstractConditionalAuthenticationTestCase {
+public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthenticationTestCase {
 
     private static final String IDENTITY_PROVIDER_ALIAS =
             "https://localhost:" + IS_DEFAULT_HTTPS_PORT + "/oauth2/token/";
