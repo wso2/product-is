@@ -288,6 +288,7 @@
       Enable following config to allow Emails as usernames.
     -->
     <EnableEmailUserName>true</EnableEmailUserName>
+    
     <!--
       Security configurations
     -->
