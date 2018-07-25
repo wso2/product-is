@@ -170,7 +170,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
             try {
                 authenticatorClient.login(testLockUser3, testLockUser3WrongPassword, "localhost");
-            } catch (Exception e) {
+            } catch (LoginAuthenticationExceptionException e) {
                 log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
             }
         }
@@ -185,7 +185,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         }
 
         Assert.assertFalse
-                ("Test Failure : User failed to login", Boolean.valueOf(userAccountLockClaimValue));
+                ("Lock claim should be false for a privilege user ", Boolean.valueOf(userAccountLockClaimValue));
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
@@ -201,7 +201,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             for (int i = 0; i < maximumAllowedFailedLogins; i++) {
                 try {
                     authenticatorClient.login(testLockUser4, testLockUser4WrongPassword, "localhost");
-                 } catch (Exception e) {
+                 } catch (LoginAuthenticationExceptionException e) {
                     log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
                 }
             }
@@ -216,7 +216,8 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             }
 
             Assert.assertTrue
-                    ("Test Failure : User must be locked after exceeding configured no of unsuccessful attempts",
+                    ("User must be locked after unsuccessful attempts exceed configured no of unsuccessful " +
+                                    "attempts",
                             Boolean.valueOf(userAccountLockClaimValue));
 
             usmClient.updateRoleListOfUser(testLockUser4, new String[]{"admin"}, new String[]{"admin", ACCOUNT_LOCK_BYPASS_ROLE});
@@ -231,8 +232,8 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                 userAccountLockClaimValue = claimValues[0].getValue();
             }
 
-            Assert.assertFalse
-                    ("Test Failure : User failed to login", Boolean.valueOf(userAccountLockClaimValue));
+            Assert.assertFalse("Lock Claim must be cleared after a successful login for a privilege user",
+                    Boolean.valueOf(userAccountLockClaimValue));
     }
 
     protected String getISResourceLocation() {
