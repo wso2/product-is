@@ -4,7 +4,7 @@
 
 All WSO2 products are based on a common platform called WSO2 Carbon. It is therefore essential to obtain and build this layer before attempting to build the desired product itself. The build process can be divided into three distinct steps:
 
-1.	Build the carbon-kernel code.
+1.	Build the carbon-kernel code. (Needed only if debugging low level user store, kernel , etc)
 2.	Build the carbon-identity-framework code.
 3.	Build the WSO2 identity server code.
 
@@ -15,7 +15,7 @@ All WSO2 products are based on a common platform called WSO2 Carbon. It is there
 
 ###	Import source code in Eclipse IDE
 
-WSO2 products can use the Developer Studio plugin in Eclipse. The Eclipse version (Luna Service Release 2 (4.4.2)) already contains this plugin from the following link: https://wso2.com/products/developer-studio/.
+Contributing to IS does not require Developer Studio plugin, however all WSO2 products can use the Developer Studio plugin in Eclipse. The Eclipse version (Luna Service Release 2 (4.4.2)) already contains this plugin from the following link: https://wso2.com/products/developer-studio/.
 
 1. Import source code of carbon-kernel from GitHub: You need to import carbon-kernel code into the Eclipse IDE from GitHub. Follow the steps below to achieve this:
    *	Open Eclipse.
@@ -47,8 +47,21 @@ WSO2 products can use the Developer Studio plugin in Eclipse. The Eclipse versio
         * clean install (To build the binary and source distributions with the tests)
         * clean install -Dmaven.test.skip=true (To build the binary and source distribution, without running any of the unit/integration tests).
 
-###	Run the application
+###	Run and debug the application
+Running the Identity server can be done in two methods.
+1. Remote Debug mode
+2. Running inside the eclipse
 
+### 1.  Remote Debug mode
+1. Run the WSO2 IS with debug option turned on. This will cause IS to wait until eclipse connects to the JVM running the IS.
+```
+./wso2server.sh -debug 5005
+```
+2. Configure the eclipse remote debug. Please see the article [at DZone](https://dzone.com/articles/how-debug-remote-java-applicat). Please use the port as 5005.
+
+
+
+### 2.  Running inside the eclipse
 1. Run the source code: To run the project, you need to follow the steps below:
    *	Right click on the `org.wso2.carbon.bootstrap` project and select **Run**. Then click on **Run Configuration**.
    *	Right click on the **Java Application** option and click **New**.
