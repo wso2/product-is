@@ -233,6 +233,50 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-sample-authenticator-webapp</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/authenticators
+                                    </outputDirectory>
+                                    <destFileName>sample-auth.war</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sample-authenticator</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/authenticators
+                                    </outputDirectory>
+                                    <destFileName>org.wso2.carbon.identity.sample.extension.authenticators.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
