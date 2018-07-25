@@ -67,7 +67,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_U
 /**
  * Test class to test the conditional authentication support using Javascript feature.
  */
-public class AbstractConditionalAuthenticationTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class AbstractAdaptiveAuthenticationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
 
     protected IdentityProviderMgtServiceClient superTenantIDPMgtClient;
