@@ -36,7 +36,6 @@ import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
 import org.wso2.identity.integration.test.utils.CommonConstants;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -161,7 +160,8 @@ public class Utils {
      * @throws Exception Exception
      */
     public static HttpResponse sendPostJITHandlerResponse(HttpResponse response, String commonAuthUrl, String userAgent,
-                                                          String referer, HttpClient httpClient, String pastreCookie) throws Exception {
+                                                          String referer, HttpClient httpClient, String pastreCookie)
+            throws Exception {
 
         String redirectUrl = getRedirectUrl(response);
         Map<String, String> queryParams = getQueryParams(redirectUrl);
@@ -300,7 +300,9 @@ public class Utils {
         return httpClient.execute(request);
     }
 
-    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, TestUserMode userMode, String tenantDomainParam, String tenantDomain, HttpClient httpClient) throws IOException {
+    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent,
+                                               TestUserMode userMode, String tenantDomainParam, String tenantDomain,
+                                               HttpClient httpClient) throws IOException {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
