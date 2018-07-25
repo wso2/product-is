@@ -372,7 +372,6 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         return purpose.getString("purposeId");
     }
 
-
     private HttpResponse sendGetRequest(HttpClient client, String locationURL) throws IOException {
 
         HttpGet getRequest = new HttpGet(locationURL);
