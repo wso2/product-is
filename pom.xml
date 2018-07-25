@@ -1661,6 +1661,16 @@
                 <artifactId>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature</artifactId>
                 <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-core</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.msf4j</groupId>
+                <artifactId>msf4j-microservice</artifactId>
+                <version>${msf4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1933,6 +1943,7 @@
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
+        <msf4j.version>2.6.2</msf4j.version>
     </properties>
 
     <repositories>
