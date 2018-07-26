@@ -192,7 +192,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         }
 
         Assert.assertFalse
-                ("Lock claim should be false for a privilege user ", Boolean.valueOf(userAccountLockClaimValue));
+                ("Lock claim should always be false for a privilege user ", Boolean.valueOf(userAccountLockClaimValue));
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})

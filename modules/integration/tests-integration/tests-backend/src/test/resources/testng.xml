@@ -86,6 +86,13 @@
         </classes>
     </test>
 
+
+    <test name="is-account-lock" preserve-order="true" parallel="false">
+    <classes>
+        <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
+    </classes>
+    </test>
+
     <test name="is-tests-all" preserve-order="true" parallel="false">
         <packages>
             <!--Entitlement Test Cases-->
@@ -105,7 +112,6 @@
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.AccountCredentialMgtConfigServiceTestCase" />-->
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.UserIdentityManagementServiceTestCase"/>-->
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
-            <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>-->
 
