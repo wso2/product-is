@@ -86,6 +86,12 @@
         </classes>
     </test>
 
+    <test name="is-account-lock" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-all" preserve-order="true" parallel="false">
         <packages>
             <!--Entitlement Test Cases-->
