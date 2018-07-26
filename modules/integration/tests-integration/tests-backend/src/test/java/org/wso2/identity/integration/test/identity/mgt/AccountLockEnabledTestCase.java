@@ -152,7 +152,6 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        usmClient.authenticate("admin", "admin");
         usmClient.deleteRole(ACCOUNT_LOCK_BYPASS_ROLE);
         usmClient.deleteUser(testLockUser1);
         usmClient.deleteUser(testLockUser2);
@@ -166,7 +165,6 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     public void testLockByPassUnLockedAccount() throws
             RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException, UserStoreException, LoginAuthenticationExceptionException {
 
-        usmClient.authenticate("admin", "admin");
         usmClient.addUser(testLockUser3, testLockUser3Password, new String[]{"admin"}, new ClaimValue[0], null,
          false);
         usmClient.updateRoleListOfUser(testLockUser3, new String[]{"admin"}, new String[]{"admin",
@@ -204,7 +202,6 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             RemoteUserStoreManagerServiceUserStoreExceptionException, RemoteException, UserStoreException,
             LoginAuthenticationExceptionException {
 
-        usmClient.authenticate("admin", "admin");
         usmClient.addUser(testLockUser4, testLockUser4Password, new String[]{"admin"}, new ClaimValue[0], null,
                 false);
         int maximumAllowedFailedLogins = Integer.parseInt(MAX_ACCOUNT_LOCK_COUNT);
