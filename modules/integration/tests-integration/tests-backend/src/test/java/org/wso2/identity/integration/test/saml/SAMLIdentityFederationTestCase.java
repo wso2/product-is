@@ -352,7 +352,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
                             PORT_OFFSET_1), USER_AGENT , locationHeader, client, pastrCookie);
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
@@ -401,7 +401,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
+            response = Utils.sendPostJITHandlerResponse(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT +
                     PORT_OFFSET_0), USER_AGENT, locationHeader, client, pastrCookie);
             EntityUtils.consume(response.getEntity());
             locationHeader = getHeaderValue(response, "Location");
