@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><ServiceProvider>
+  <ApplicationName>TestServer</ApplicationName>
+  <Description>test</Description>
+  <InboundAuthenticationConfig>
+    <InboundAuthenticationRequestConfigs>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>testServer</InboundAuthKey>
+        <InboundAuthType>samlsso</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <inboundConfiguration><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<samlssoServiceProviderDTO>
+    <issuer>testServer</issuer>
+    <assertionConsumerUrls>
+        <assertionConsumerUrl>http://www.wso2.com</assertionConsumerUrl>
+    </assertionConsumerUrls>
+    <defaultAssertionConsumerUrl>http://www.wso2.com</defaultAssertionConsumerUrl>
+    <certAlias>wso2carbon</certAlias>
+    <loginPageURL></loginPageURL>
+    <attributeConsumingServiceIndex>1417991331</attributeConsumingServiceIndex>
+    <doSingleLogout>true</doSingleLogout>
+    <doSignAssertions>true</doSignAssertions>
+    <doSignResponse>true</doSignResponse>
+    <requestedClaims/>
+    <requestedAudiences/>
+    <requestedRecipients/>
+    <enableAttributeProfile>false</enableAttributeProfile>
+    <isAssertionQueryRequestProfileEnabled>true</isAssertionQueryRequestProfileEnabled>
+    <enableAttributesByDefault>false</enableAttributesByDefault>
+    <nameIDFormat>urn/oasis/names/tc/SAML/1.1/nameid-format/emailAddress</nameIDFormat>
+    <idPInitSSOEnabled>false</idPInitSSOEnabled>
+    <idPInitSLOEnabled>false</idPInitSLOEnabled>
+    <idpInitSLOReturnToURLs/>
+    <doEnableEncryptedAssertion>false</doEnableEncryptedAssertion>
+    <doValidateSignatureInRequests>true</doValidateSignatureInRequests>
+    <signingAlgorithmURI>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signingAlgorithmURI>
+    <digestAlgorithmURI>http://www.w3.org/2000/09/xmldsig#sha1</digestAlgorithmURI>
+    <assertionEncryptionAlgorithmURI>http://www.w3.org/2001/04/xmlenc#aes256-cbc</assertionEncryptionAlgorithmURI>
+    <keyEncryptionAlgorithmURI>http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p</keyEncryptionAlgorithmURI>
+    <enableSAML2ArtifactBinding>false</enableSAML2ArtifactBinding>
+    <doValidateSignatureInArtifactResolve>false</doValidateSignatureInArtifactResolve>
+</samlssoServiceProviderDTO>
+]]></inboundConfiguration>
+        <Properties>
+          <Property>
+            <Name>attrConsumServiceIndex</Name>
+            <Value>1417991331</Value>
+            <IsConfidential>false</IsConfidential>
+            <Required>false</Required>
+            <DisplayOrder>0</DisplayOrder>
+            <IsAdvanced>false</IsAdvanced>
+          </Property>
+        </Properties>
+      </InboundAuthenticationRequestConfig>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>TestServer</InboundAuthKey>
+        <InboundAuthType>passivests</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <Properties/>
+      </InboundAuthenticationRequestConfig>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>TestServer</InboundAuthKey>
+        <InboundAuthType>openid</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <Properties/>
+      </InboundAuthenticationRequestConfig>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>dZPu_ZGd5BYoUpcdZSGlAtyLfuAa</InboundAuthKey>
+        <InboundAuthType>oauth2</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <inboundConfiguration><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<oAuthAppDO>
+    <oauthConsumerKey>dZPu_ZGd5BYoUpcdZSGlAtyLfuAa</oauthConsumerKey>
+    <oauthConsumerSecret>DNvHXM7XT9OI_ygn5V2TciN_Y2Ea</oauthConsumerSecret>
+    <applicationName>TestServer</applicationName>
+    <callbackUrl>http://localhost:8080/playground2/oauth2client</callbackUrl>
+    <oauthVersion>OAuth-2.0</oauthVersion>
+    <grantTypes>refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer implicit password client_credentials iwa:ntlm authorization_code urn:ietf:params:oauth:grant-type:jwt-bearer </grantTypes>
+    <scopeValidators>
+        <scopeValidator>Role based scope validator</scopeValidator>
+        <scopeValidator>XACML Scope Validator</scopeValidator>
+    </scopeValidators>
+    <pkceSupportPlain>true</pkceSupportPlain>
+    <pkceMandatory>false</pkceMandatory>
+    <userAccessTokenExpiryTime>3600</userAccessTokenExpiryTime>
+    <applicationAccessTokenExpiryTime>3600</applicationAccessTokenExpiryTime>
+    <refreshTokenExpiryTime>84600</refreshTokenExpiryTime>
+    <idTokenExpiryTime>3600</idTokenExpiryTime>
+    <audiences/>
+    <requestObjectSignatureValidationEnabled>false</requestObjectSignatureValidationEnabled>
+    <idTokenEncryptionEnabled>false</idTokenEncryptionEnabled>
+    <idTokenEncryptionAlgorithm>null</idTokenEncryptionAlgorithm>
+    <idTokenEncryptionMethod>null</idTokenEncryptionMethod>
+    <backChannelLogoutUrl></backChannelLogoutUrl>
+</oAuthAppDO>
+]]></inboundConfiguration>
+        <Properties/>
+      </InboundAuthenticationRequestConfig>
+    </InboundAuthenticationRequestConfigs>
+  </InboundAuthenticationConfig>
+  <LocalAndOutBoundAuthenticationConfig>
+    <AuthenticationSteps>
+      <AuthenticationStep>
+        <StepOrder>1</StepOrder>
+        <LocalAuthenticatorConfigs>
+          <LocalAuthenticatorConfig>
+            <Name>BasicAuthenticator</Name>
+            <DisplayName>basic</DisplayName>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+          </LocalAuthenticatorConfig>
+        </LocalAuthenticatorConfigs>
+        <FederatedIdentityProviders/>
+        <SubjectStep>true</SubjectStep>
+        <AttributeStep>true</AttributeStep>
+      </AuthenticationStep>
+      <AuthenticationStep>
+        <StepOrder>2</StepOrder>
+        <LocalAuthenticatorConfigs>
+          <LocalAuthenticatorConfig>
+            <Name>totp</Name>
+            <DisplayName>totp</DisplayName>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+          </LocalAuthenticatorConfig>
+        </LocalAuthenticatorConfigs>
+        <FederatedIdentityProviders/>
+        <SubjectStep>false</SubjectStep>
+        <AttributeStep>false</AttributeStep>
+      </AuthenticationStep>
+    </AuthenticationSteps>
+    <AuthenticationType>flow</AuthenticationType>
+    <alwaysSendBackAuthenticatedListOfIdPs>true</alwaysSendBackAuthenticatedListOfIdPs>
+    <subjectClaimUri>name</subjectClaimUri>
+    <UseTenantDomainInUsername>true</UseTenantDomainInUsername>
+    <UseUserstoreDomainInUsername>false</UseUserstoreDomainInUsername>
+    <EnableAuthorization>true</EnableAuthorization>
+    <AuthenticationScript enabled="true" language="application/javascript"><![CDATA[
+// Userstore-Based from Template...
+
+// This script will prompt 2FA to the app only for a selected set of user stores.
+// If the user is in one of the following user stores, user will be prompted 2FA
+var userStoresToStepUp = ['EMPLOYEES', 'CONTRACTORS'];
+
+function onLoginRequest(context) {
+    executeStep(1, {
+        onSuccess: function (context) {
+            // Extracting user store domain of authenticated subject from the first step
+            var userStoreDomain = context.currentKnownSubject.userStoreDomain;
+            // Checking if the user is from whitelisted tenant domain
+            if (userStoresToStepUp.indexOf(userStoreDomain) >= 0) {
+                executeStep(2);
+            }
+        }
+    });
+}
+
+// End of Userstore-Based.......
+]]></AuthenticationScript>
+  </LocalAndOutBoundAuthenticationConfig>
+  <RequestPathAuthenticatorConfigs/>
+  <InboundProvisioningConfig>
+    <ProvisioningUserStore/>
+    <IsProvisioningEnabled>false</IsProvisioningEnabled>
+    <IsDumbModeEnabled>false</IsDumbModeEnabled>
+  </InboundProvisioningConfig>
+  <OutboundProvisioningConfig>
+    <ProvisioningIdentityProviders/>
+  </OutboundProvisioningConfig>
+  <ClaimConfig>
+    <RoleClaimURI/>
+    <LocalClaimDialect>false</LocalClaimDialect>
+    <IdpClaim/>
+    <ClaimMappings>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/displayName</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>name</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>false</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/active</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>active</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>false</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+    </ClaimMappings>
+    <AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>
+    <SPClaimDialects/>
+  </ClaimConfig>
+  <PermissionAndRoleConfig>
+    <Permissions>
+      <ApplicationPermission>
+        <value>admin</value>
+      </ApplicationPermission>
+      <ApplicationPermission>
+        <value>test</value>
+      </ApplicationPermission>
+    </Permissions>
+    <RoleMappings>
+      <RoleMapping>
+        <localRole>
+          <LocalRoleName>test</LocalRoleName>
+        </localRole>
+        <remoteRole>sp_test</remoteRole>
+      </RoleMapping>
+      <RoleMapping>
+        <localRole>
+          <LocalRoleName>local</LocalRoleName>
+        </localRole>
+        <remoteRole>sp_local</remoteRole>
+      </RoleMapping>
+    </RoleMappings>
+    <IdpRoles/>
+  </PermissionAndRoleConfig>
+  <IsSaaSApp>false</IsSaaSApp>
+</ServiceProvider>
