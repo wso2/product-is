@@ -448,6 +448,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.conditional.auth.functions:org.wso2.carbon.identity.conditional.auth.functions.server.feature:${conditional.authentication.functions.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.idpmgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -918,7 +921,10 @@
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.api.idpmgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1397,7 +1403,10 @@
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.api.idpmgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1838,7 +1847,10 @@
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.api.idpmgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

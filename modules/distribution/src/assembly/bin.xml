@@ -293,6 +293,17 @@
             </includes>
         </fileSet>
 
+        <!--copy  idp-mgt resource endpoint feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#idp-mgt#v1.0.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy the oauth2 grant type extensions -->
         <fileSet>
             <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
@@ -1049,6 +1060,13 @@
             <source>target/getting-started/bin/hello-world.bat</source>
             <outputDirectory>wso2is-${pom.version}/getting-started/bin/</outputDirectory>
             <fileMode>755</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/idp-mgt-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
         </file>
     </files>
 </assembly>
