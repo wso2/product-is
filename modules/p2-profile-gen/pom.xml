@@ -445,6 +445,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.x509certificate:org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature:${org.wso2.carbon.extension.identity.x509certificate.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.conditional.auth.functions:org.wso2.carbon.identity.conditional.auth.functions.server.feature:${conditional.authentication.functions.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -910,6 +913,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
                                     <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
+                                    <version>${conditional.authentication.functions.version}</version>
                                 </feature>
 
                             </features>
@@ -1386,6 +1393,10 @@
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
                                     <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
+                                    <version>${conditional.authentication.functions.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
@@ -1823,6 +1834,10 @@
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
                                     <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
+                                    <version>${conditional.authentication.functions.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
@@ -2040,6 +2055,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
                                     <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
+                                    <version>${conditional.authentication.functions.version}</version>
                                 </feature>
 
                             </features>
