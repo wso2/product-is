@@ -30,11 +30,14 @@ import org.wso2.carbon.is.migration.service.v540.dao.OAuthDAO;
 import org.wso2.carbon.is.migration.service.v540.util.RegistryUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 import org.wso2.carbon.is.migration.util.Utility;
+import org.wso2.carbon.user.api.Tenant;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class handles the OAuth data migration.
@@ -111,10 +114,20 @@ public class OAuthDataMigrator extends Migrator {
 
         boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
         List<Integer> inactiveTenants = Utility.getInactiveTenants();
+        Set<Integer> tenantRangeID = new HashSet<>();
+        if (Utility.isMigrateTenantRange()) {
+            for (Tenant tenant : Utility.getTenants()) {
+                tenantRangeID.add(tenant.getId());
+            }
+        }
         for (OAuthConsumerApp consumerApp : consumerApps) {
             if (ignoreForInactiveTenants && inactiveTenants.contains(consumerApp.getTenantId())) {
                 log.info("Skipping OAuth2 consumer apps table migration for inactive tenant: " +
                         consumerApp.getTenantId());
+                continue;
+            }
+            if (Utility.isMigrateTenantRange() && !tenantRangeID.contains(consumerApp.getTenantId())) {
+                log.info("Skipping OAuth2 consumer apps table migration for tenant : " + consumerApp.getTenantId());
                 continue;
             }
             SpOAuth2ExpiryTimeConfiguration expiryTimeConfiguration = RegistryUtil.getSpTokenExpiryTimeConfig

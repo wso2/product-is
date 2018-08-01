@@ -7,6 +7,10 @@ continueOnError: "true"
 batchUpdate: "true"
 ignoreForInactiveTenants: "true"
 
+migrateTenantRange: "false"
+migrationStartingTenantID: "0"
+migrationEndingTenantID: "0"
+
 versions:
  -
   version: "5.0.0-SP1"
