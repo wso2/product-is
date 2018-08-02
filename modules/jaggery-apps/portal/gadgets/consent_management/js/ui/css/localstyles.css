@@ -193,3 +193,9 @@ text-align:right;
 	margin-left: 80px !important;
 }
 
+.requiredPiiCategory:after{
+    content: "*";
+    color: red;
+    padding-left: 1px;
+}
+

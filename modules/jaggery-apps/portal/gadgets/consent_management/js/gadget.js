@@ -274,7 +274,7 @@ function renderReceiptDetails(data) {
         '{{/piiCategory}}' +
         '{{#piiCategories}}<li data-jstree={{#if accepted}}\'{"icon":"icon-user",' +
         ' "selected":true}\'{{else}}\'{"icon":"icon-user"}\'{{/if}} piicategoryid="{{piiCategoryId}}">' +
-        '{{#if displayName}}{{displayName}}{{else}}{{piiCategory}}{{/if}}</li>{{/piiCategories}}' +
+        '{{#if displayName}}{{displayName}}{{else}}{{piiCategory}}{{/if}}{{#if mandatory}}<span class="requiredPiiCategory"></span>{{/if}}</li>{{/piiCategories}}' +
         '</ul>' +
         '</li>' +
         '</li>{{/purposes}}' +
