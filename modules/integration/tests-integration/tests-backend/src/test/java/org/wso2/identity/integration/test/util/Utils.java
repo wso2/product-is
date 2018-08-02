@@ -32,9 +32,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
 import org.wso2.identity.integration.test.utils.CommonConstants;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,8 @@ public class Utils {
 
     private static String RESIDENT_CARBON_HOME;
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    public static final String MODIFIED_USER_NAME = "modifiedUserName";
+    public static final String PASSWORD = "password";
 
     public static  boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
@@ -140,6 +143,39 @@ public class Utils {
             urlParameters.add(new BasicNameValuePair("claim_mand_"+claims[i], "providedClaimValue"));
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
+    }
+
+    /**
+     * To send the response to jit post authentication handler.
+     *
+     * @param response      Relevant response.
+     * @param commonAuthUrl Common Auth URL.
+     * @param userAgent     User Agent.
+     * @param referer       Referer
+     * @param httpClient    Http Client.
+     * @param pastreCookie  Pastre Cookie.
+     * @return response Relevant response received.
+     * @throws Exception Exception
+     */
+    public static HttpResponse sendPostJITHandlerResponse(HttpResponse response, String commonAuthUrl, String userAgent,
+                                                          String referer, HttpClient httpClient, String pastreCookie)
+            throws Exception {
+
+        String redirectUrl = getRedirectUrl(response);
+        Map<String, String> queryParams = getQueryParams(redirectUrl);
+        String sessionKey = queryParams.get("sessionDataKey");
+
+        HttpPost post = new HttpPost(commonAuthUrl);
+        post.setHeader("User-Agent", userAgent);
+        post.addHeader("Referer", referer);
+        post.addHeader("Cookie", pastreCookie);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
+        urlParameters.add(new BasicNameValuePair("password", PASSWORD));
+        urlParameters.add(new BasicNameValuePair("username",
+                JustInTimeProvisioningTestCase.DOMAIN_ID + UserCoreConstants.DOMAIN_SEPARATOR + MODIFIED_USER_NAME));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }
@@ -264,7 +300,9 @@ public class Utils {
         return httpClient.execute(request);
     }
 
-    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, TestUserMode userMode, String tenantDomainParam, String tenantDomain, HttpClient httpClient) throws IOException {
+    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent,
+                                               TestUserMode userMode, String tenantDomainParam, String tenantDomain,
+                                               HttpClient httpClient) throws IOException {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
