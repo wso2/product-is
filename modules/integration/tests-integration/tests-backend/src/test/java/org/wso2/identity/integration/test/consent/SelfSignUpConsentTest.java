@@ -350,11 +350,11 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         String description = FINANCIAL_PURPOSE_NAME;
         String group = "SELF-SIGNUP";
         String groupType = "SYSTEM";
-        financialPurposeId  = addPurpose(name, description, group, groupType, true);
+        financialPurposeId  = addPurpose(name, description, group, groupType);
 
     }
 
-    private String addPurpose(String name, String description, String group, String groupType, boolean mandatory)
+    private String addPurpose(String name, String description, String group, String groupType)
             throws JSONException {
 
         ClientConfig clientConfig = new ClientConfig();
@@ -371,7 +371,6 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
                                   "  \"description\": \"" + description + "\"," +
                                   "  \"group\": \"" + group + "\"," +
                                   "  \"groupType\": \"" + groupType + "\"," +
-                                  "  \"mandatory\": \"" + mandatory + "\"," +
                                   "  \"piiCategories\": [" +
                                   "    {" +
                                   "      \"piiCategoryId\": 1," +
