@@ -22,6 +22,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
+import java.io.IOException;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_ATTRIBUTE;
@@ -50,6 +52,11 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     private CloseableHttpClient client;
 
+
+    private static final String EQUAL = "+Eq+";
+    private static final String STARTWITH = "+Sw+";
+    private static final String ENDWITH = "+Ew+";
+    private static final String CONTAINS = "+Co+";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -154,7 +161,15 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     @Test(dependsOnMethods = "testGetUser")
     public void testFilterUser() throws Exception {
-        String userResourcePath = getPath() + "?filter=" + USER_NAME_ATTRIBUTE + "+Eq+" + USERNAME;
+
+        validateFilteredUser(USER_NAME_ATTRIBUTE, EQUAL, USERNAME);
+        validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 4));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 3));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, ENDWITH, USERNAME.substring(4, USERNAME.length()));
+    }
+
+    private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
+        String userResourcePath = getPath() + "?filter=" + attributeName + operator + attributeValue;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -167,7 +182,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         String usernameFromResponse = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
-                .get(USER_NAME_ATTRIBUTE).toString();
+                .get(attributeName).toString();
         assertEquals(usernameFromResponse, USERNAME);
 
         String userId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get

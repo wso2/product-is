@@ -84,7 +84,7 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Export user details")
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Export user details")
     public void testExportUserInfo() throws IOException {
 
         HttpGet request = new HttpGet(getPiInfoPath());
@@ -108,7 +108,7 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Export user details")
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Export user details")
     public void testExportUserInfoMe() throws IOException {
 
         HttpGet request = new HttpGet(getMePath());
