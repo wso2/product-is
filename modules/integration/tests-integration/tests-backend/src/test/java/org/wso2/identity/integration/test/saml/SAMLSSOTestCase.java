@@ -695,7 +695,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private boolean requestMissingClaims (HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("consent.do") ? true : false;
+        return redirectUrl.contains("consent.do");
 
     }
 }

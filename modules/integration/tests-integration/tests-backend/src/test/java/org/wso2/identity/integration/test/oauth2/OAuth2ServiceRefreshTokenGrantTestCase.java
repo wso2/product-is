@@ -94,7 +94,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
         Assert.assertNotNull(refreshToken, "Refresh token is null.");
     }
 
-    @Test(groups = "wso2.is", description = "Validate refresh token", dependsOnMethods = "testSendAuthorozedPost")
+    @Test(groups = "wso2.is", description = "Validate refresh token", dependsOnMethods = "testSendAuthorizedPost")
     public void testRefreshTokenGrant() throws Exception {
         List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
         postParameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
