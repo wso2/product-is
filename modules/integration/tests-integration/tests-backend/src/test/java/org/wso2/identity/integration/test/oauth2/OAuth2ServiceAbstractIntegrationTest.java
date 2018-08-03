@@ -172,12 +172,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
 		serviceProvider = setServiceProviderClaimConfig(serviceProvider);
 		serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-		List<InboundAuthenticationRequestConfig> authRequestList =
-		                                                           new ArrayList<InboundAuthenticationRequestConfig>();
+		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
 
 		if (consumerKey != null) {
-			InboundAuthenticationRequestConfig opicAuthenticationRequest =
-			                                                               new InboundAuthenticationRequestConfig();
+			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(consumerKey);
 			opicAuthenticationRequest.setInboundAuthType("oauth2");
 			if (consumerSecret != null && !consumerSecret.isEmpty()) {
@@ -192,8 +190,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		String passiveSTSRealm = SERVICE_PROVIDER_NAME;
 		if (passiveSTSRealm != null) {
-			InboundAuthenticationRequestConfig opicAuthenticationRequest =
-			                                                               new InboundAuthenticationRequestConfig();
+			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
 			opicAuthenticationRequest.setInboundAuthType("passivests");
 			authRequestList.add(opicAuthenticationRequest);
@@ -201,8 +198,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		String openidRealm = SERVICE_PROVIDER_NAME;
 		if (openidRealm != null) {
-			InboundAuthenticationRequestConfig opicAuthenticationRequest =
-			                                                               new InboundAuthenticationRequestConfig();
+			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(openidRealm);
 			opicAuthenticationRequest.setInboundAuthType("openid");
 			authRequestList.add(opicAuthenticationRequest);
@@ -339,7 +335,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey)
 	                                                                           throws ClientProtocolException,
 	                                                                           IOException {
-		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
@@ -386,6 +382,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
+		urlParameters.add(new BasicNameValuePair("scope-approval", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
 		if (consentClaims != null) {

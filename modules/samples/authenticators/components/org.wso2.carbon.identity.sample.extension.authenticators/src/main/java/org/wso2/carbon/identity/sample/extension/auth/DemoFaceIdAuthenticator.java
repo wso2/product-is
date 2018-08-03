@@ -37,10 +37,10 @@ import java.util.List;
 /**
  * Sample Retina Authenticator.
  */
-public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
+public class DemoFaceIdAuthenticator extends AbstractSampleAuthenticator {
 
     private static final long serialVersionUID = 6439291340285653402L;
-    private static final String APP_URL = "RetinaAppUrl";
+    private static final String APP_URL = "FaceIDAppUrl";
 
     @Override
     public boolean canHandle(HttpServletRequest request) {
@@ -68,13 +68,13 @@ public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
     @Override
     public String getName() {
 
-        return "SampleFaceAuthenticator";
+        return "DemoFaceIdAuthenticator";
     }
 
     @Override
     public String getFriendlyName() {
 
-        return "Sample Face Authenticator";
+        return "Demo FaceID Authenticator";
     }
 
     @Override
@@ -92,9 +92,9 @@ public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
         appUrl.setName(APP_URL);
         appUrl.setValue(IdentityUtil
                 .getServerURL("sample-auth", true, true) + "/retina.jsp");
-        appUrl.setDisplayName("Retina Sample URL");
+        appUrl.setDisplayName("FaceID Demo URL");
         appUrl.setRequired(true);
-        appUrl.setDescription("Enter sample Retina url value.");
+        appUrl.setDescription("Enter demo FaceID url value.");
         appUrl.setDisplayOrder(0);
         configProperties.add(appUrl);
         return configProperties;
@@ -125,9 +125,9 @@ public class SampleFaceAuthenticator extends AbstractSampleAuthenticator {
             String encodedUrl = URLEncoder.encode(callbackUrl, StandardCharsets.UTF_8.name());
 
             response.sendRedirect(response.encodeRedirectURL(loginPage + ("?" + queryParams)) +
-                    "&callbackUrl=" + encodedUrl + "&authenticators=SampleFaceAuthenticator:" + "LOCAL" + retryParam);
+                    "&callbackUrl=" + encodedUrl + "&authenticators=DemoFaceIdAuthenticator:" + "LOCAL" + retryParam);
         } catch (IOException e) {
-            throw new AuthenticationFailedException("Authentication failed for the sample Retina authenticator.", e);
+            throw new AuthenticationFailedException("Authentication failed for the demo FaceID authenticator.", e);
         }
     }
 }

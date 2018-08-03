@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.7.0-m5-SNAPSHOT</version>
+        <version>5.7.0-alpha2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -141,57 +141,6 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/jar
                                     </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>download_conditional_authentication_functions</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.user</artifactId>
-                                    <version>${conditional.authentication.functions.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.notification</artifactId>
-                                    <version>${conditional.authentication.functions.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.http</artifactId>
-                                    <version>${conditional.authentication.functions.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.analytics</artifactId>
-                                    <version>${conditional.authentication.functions.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                                    <artifactId>org.wso2.carbon.identity.conditional.auth.functions.common</artifactId>
-                                    <version>${conditional.authentication.functions.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
@@ -361,7 +310,7 @@
                                     <version>${identity.local.auth.api.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
-                                    <destFileName>api#identity#auth#v1.0.war</destFileName>
+                                    <destFileName>api#identity#auth#v1.1.war</destFileName>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/war
                                     </outputDirectory>
                                     <includes>**/*.war</includes>

@@ -94,4 +94,9 @@ public class OauthAdminClient {
             throws Exception {
         oauthAdminStub.updateConsumerApplication(application);
     }
+
+    public void updateScope(String scope, String[] newClaims, String[] deleteClaims) throws Exception {
+
+        oauthAdminStub.updateScope(scope, newClaims, deleteClaims);
+    }
 }

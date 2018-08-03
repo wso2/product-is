@@ -81,13 +81,12 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
         String description = "Financial Purpose 01";
         String group = "SIGNUP";
         String groupType = "SYSTEM";
-        JSONObject response = addPurpose(name, description, group, groupType, true);
+        JSONObject response = addPurpose(name, description, group, groupType);
 
         Assert.assertEquals(response.get("purpose"), name);
         Assert.assertEquals(response.get("description"), description);
         Assert.assertEquals(response.get("group"), group);
         Assert.assertEquals(response.get("groupType"), groupType);
-        Assert.assertEquals(response.get("mandatory"), true);
         Assert.assertNotNull(response.get("piiCategories"));
     }
 
@@ -151,7 +150,7 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
         return (JSONObject) JSONValue.parse(response);
     }
 
-    private JSONObject addPurpose(String name, String description, String group, String groupType, boolean mandatory) {
+    private JSONObject addPurpose(String name, String description, String group, String groupType) {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
@@ -167,7 +166,6 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
                                   "  \"description\": \"" + description + "\"," +
                                   "  \"group\": \"" + group + "\"," +
                                   "  \"groupType\": \"" + groupType + "\"," +
-                                  "  \"mandatory\": \"" + mandatory + "\"," +
                                   "  \"piiCategories\": [" +
                                   "    {" +
                                   "      \"piiCategoryId\": 1," +
