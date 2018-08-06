@@ -30,7 +30,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -89,12 +89,12 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
     //Claim Uris
-    private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
-    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
-    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
+    private static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
+    private static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
+    private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 
     //Force challenge question attributes
-    private static final String profileName = "default";
+    private static final String PROFILE_NAME = "default";
     private static final String FORCE_ADD_PW_RECOVERY_QUESTION = "Recovery.Question.Password.Forced.Enable";
 
     private static final String ADMIN = "admin";
@@ -113,7 +113,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
     @Factory(dataProvider = "samlConfigProvider")
     public ChallengeQuestionPostAuthnHandlerTestCase(SAMLConfig config) {
         if (log.isDebugEnabled()) {
-            log.info("Missing Challenge Question post-authentication handler Test initialized for " + config);
+            log.debug("Missing Challenge Question post-authentication handler Test initialized for " + config);
         }
         this.config = config;
     }
@@ -136,7 +136,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         ssoConfigServiceClient =
                 new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().build();
 
         createUser();
         createApplication();
@@ -177,7 +177,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
-        Boolean isAddSuccess = ssoConfigServiceClient
+        boolean isAddSuccess = ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
 
@@ -192,8 +192,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithDefaultSetting() {
-    //    httpClient = new DefaultHttpClient();
-
         try {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
@@ -236,8 +234,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
             EntityUtils.consume(response.getEntity());
-
-
         } catch (Exception e) {
             Assert.fail("Missing Challenge Question post authentication handler failed for " + config, e);
         }
@@ -247,7 +243,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithDisabledSetting() {
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().build();
         try {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
@@ -290,8 +286,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
             EntityUtils.consume(response.getEntity());
-
-
         } catch (Exception e) {
             Assert.fail("Missing Challenge Question post authentication handler failed for " + config, e);
         }
@@ -301,7 +295,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithEnabledSetting() {
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().build();
         try {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
@@ -361,7 +355,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP", "testLoginWithEnabledSetting"})
     public void testLoginWithChallengeQuestions() {
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().build();
         try {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
@@ -471,7 +465,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             // creating the user
             remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
                     null, getUserClaims(config.getUser().getSetUserClaims()),
-                    profileName, true);
+                    PROFILE_NAME, true);
         } catch (Exception e) {
             Assert.fail("Error while creating the user", e);
         }
@@ -511,28 +505,25 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         List<ClaimMapping> claimMappingList = new ArrayList<>();
 
         Claim firstNameClaim = new Claim();
-        firstNameClaim.setClaimUri(firstNameClaimURI);
+        firstNameClaim.setClaimUri(FIRST_NAME_CLAIM_URI);
         ClaimMapping firstNameClaimMapping = new ClaimMapping();
         firstNameClaimMapping.setRequested(true);
-        //firstNameClaimMapping.setMandatory(true);
         firstNameClaimMapping.setLocalClaim(firstNameClaim);
         firstNameClaimMapping.setRemoteClaim(firstNameClaim);
         claimMappingList.add(firstNameClaimMapping);
 
         Claim lastNameClaim = new Claim();
-        lastNameClaim.setClaimUri(lastNameClaimURI);
+        lastNameClaim.setClaimUri(LAST_NAME_CLAIM_URI);
         ClaimMapping lastNameClaimMapping = new ClaimMapping();
         lastNameClaimMapping.setRequested(true);
-        //lastNameClaimMapping.setMandatory(true);
         lastNameClaimMapping.setLocalClaim(lastNameClaim);
         lastNameClaimMapping.setRemoteClaim(lastNameClaim);
         claimMappingList.add(lastNameClaimMapping);
 
         Claim emailClaim = new Claim();
-        emailClaim.setClaimUri(emailClaimURI);
+        emailClaim.setClaimUri(EMAIL_CLAIM_URI);
         ClaimMapping emailClaimMapping = new ClaimMapping();
         emailClaimMapping.setRequested(true);
-        //emailClaimMapping.setMandatory(true);
         emailClaimMapping.setLocalClaim(emailClaim);
         emailClaimMapping.setRemoteClaim(emailClaim);
         claimMappingList.add(emailClaimMapping);
@@ -548,24 +539,24 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             claimValues = new ClaimValue[3];
 
             ClaimValue firstName = new ClaimValue();
-            firstName.setClaimURI(firstNameClaimURI);
+            firstName.setClaimURI(FIRST_NAME_CLAIM_URI);
             firstName.setValue(config.getUser().getNickname());
             claimValues[0] = firstName;
 
             ClaimValue lastName = new ClaimValue();
-            lastName.setClaimURI(lastNameClaimURI);
+            lastName.setClaimURI(LAST_NAME_CLAIM_URI);
             lastName.setValue(config.getUser().getUsername());
             claimValues[1] = lastName;
 
             ClaimValue email = new ClaimValue();
-            email.setClaimURI(emailClaimURI);
+            email.setClaimURI(EMAIL_CLAIM_URI);
             email.setValue(config.getUser().getEmail());
             claimValues[2] = email;
         } else {
             claimValues = new ClaimValue[1];
 
             ClaimValue lastName = new ClaimValue();
-            lastName.setClaimURI(lastNameClaimURI);
+            lastName.setClaimURI(LAST_NAME_CLAIM_URI);
             lastName.setValue(config.getUser().getUsername());
             claimValues[0] = lastName;
         }

@@ -57,6 +57,9 @@ public class Utils {
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     public static final String MODIFIED_USER_NAME = "modifiedUserName";
     public static final String PASSWORD = "password";
+    public static final String USER_AGENT = "User-Agent";
+    public static final String REFERER = "Referer";
+    public static final String SET_COOKIE = "Set-Cookie";
 
     public static boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
@@ -231,9 +234,9 @@ public class Utils {
         }
 
         HttpPost post = new HttpPost(commonAuthUrl);
-        post.setHeader("User-Agent", userAgent);
-        post.addHeader("Referer", referer);
-        post.addHeader("Set-Cookie", pastreCookie);
+        post.setHeader(USER_AGENT, userAgent);
+        post.addHeader(REFERER, referer);
+        post.addHeader(SET_COOKIE, pastreCookie);
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
