@@ -27,9 +27,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -102,7 +102,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    private HttpClient httpClient;
     private SAMLConfig config;
     private Tomcat tomcatServer;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
@@ -136,7 +135,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         ssoConfigServiceClient =
                 new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        httpClient = HttpClientBuilder.create().build();
 
         createUser();
         createApplication();
@@ -168,7 +166,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
-        httpClient = null;
         //Stopping tomcat
         tomcatServer.stop();
         tomcatServer.destroy();
@@ -192,14 +189,14 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithDefaultSetting() {
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
                     .getHttpBinding().binding), USER_AGENT, httpClient);
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
@@ -229,7 +226,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             EntityUtils.consume(response.getEntity());
 
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
-                    .SAML_RESPONSE_PARAM, samlResponse);
+                    .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
@@ -243,8 +240,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithDisabledSetting() {
-        httpClient = HttpClientBuilder.create().build();
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "false", true);
@@ -252,7 +248,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
                     .getHttpBinding().binding), USER_AGENT, httpClient);
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
@@ -281,7 +277,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
-                    .SAML_RESPONSE_PARAM, samlResponse);
+                    .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
@@ -295,8 +291,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithEnabledSetting() {
-        httpClient = HttpClientBuilder.create().build();
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "true", true);
@@ -304,7 +299,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
                     .getHttpBinding().binding), USER_AGENT, httpClient);
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
@@ -340,7 +335,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
-                    .SAML_RESPONSE_PARAM, samlResponse);
+                    .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
@@ -355,8 +350,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP", "testLoginWithEnabledSetting"})
     public void testLoginWithChallengeQuestions() {
-        httpClient = HttpClientBuilder.create().build();
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "true", true);
@@ -364,7 +358,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
                     .getHttpBinding().binding), USER_AGENT, httpClient);
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+                response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
@@ -393,7 +387,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
-                    .SAML_RESPONSE_PARAM, samlResponse);
+                    .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "Missing Challenge Question post authentication handler failed for " + config);
@@ -404,7 +398,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         }
     }
 
-    private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
+    private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue, CloseableHttpClient httpClient) throws IOException {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
