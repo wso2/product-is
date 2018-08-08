@@ -233,4 +233,9 @@
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase"/>-->
         </classes>
     </test>
+    <test name="force-challenge-question-testcase" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
+        </classes>
+    </test>
 </suite>
