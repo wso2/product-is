@@ -37,6 +37,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
     private ChallengeQuestionMgtAdminClient challengeQuestionsBobClient;
     private AuthenticatorClient loginManger;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    ChallengeQuestion challengeQuestionSet1;
 
     private static final String PROFILE_NAME = "default";
 
@@ -88,19 +89,18 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
 
         int countBefore = challengeQuestionsBobClient.getChallengeQuestionsForTenant(SUPER_TENANT).length;
 
-        ChallengeQuestion challengeQuestion = new ChallengeQuestion();
-        challengeQuestion.setQuestionSetId("newSet1");
-        challengeQuestion.setQuestionId("q1");
-        challengeQuestion.setQuestion("This is a new Challenge Question????");
-        challengeQuestion.setLocale("en_US");
-        challengeQuestionsBobClient.setChallengeQuestions(new ChallengeQuestion[]{challengeQuestion},
+        challengeQuestionSet1 = new ChallengeQuestion();
+        challengeQuestionSet1.setQuestionSetId("newSet1");
+        challengeQuestionSet1.setQuestionId("q1");
+        challengeQuestionSet1.setQuestion("This is a new Challenge Question????");
+        challengeQuestionSet1.setLocale("en_US");
+        challengeQuestionsBobClient.setChallengeQuestions(new ChallengeQuestion[]{challengeQuestionSet1},
                 SUPER_TENANT);
 
         int countAfter = challengeQuestionsBobClient.getChallengeQuestionsForTenant(SUPER_TENANT).length;
 
         assertTrue(countBefore + 1 == countAfter, "Adding a new challenge question failed in " + SUPER_TENANT);
     }
-
 
     @Test(groups = "wso2.is", description = "Getting challenge questions of a user", priority = 3, sequential = true)
     public void addChallengeQuestionByLocale() throws Exception {
@@ -154,7 +154,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
     }
 
     @Test(groups = "wso2.is", description = "Deleting challenge question in a locale", priority = 6, sequential = true)
-    public void deleteChallengeQuestionsByLocale() throws Exception{
+    public void deleteChallengeQuestionsByLocale() throws Exception {
         challengeQuestionsAdminClient = new ChallengeQuestionMgtAdminClient(backendURL,
                 isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getUserName());
@@ -168,6 +168,10 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
 
         // delete all the challenge questions in the xx_YY locale
         challengeQuestionsAdminClient.deleteChallengeQuestions(challengeQuestions, SUPER_TENANT);
+
+        // delete all added challenge questions in the en_US locale
+        challengeQuestionsAdminClient.deleteChallengeQuestions(new ChallengeQuestion[]{challengeQuestionSet1},
+                SUPER_TENANT);
 
         // retrieve challenge questions once again.
         challengeQuestions =
@@ -198,7 +202,6 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
         int count = challengeQuestionsAdminClient.getChallengeQuestionsForUser(bob).length;
         assertTrue(count > 1, "Default Challenge Questions not retrieved for user : " + bob.toString());
     }
-
 
 
     @Test(groups = "wso2.is", description = "Testing cross tenant access.")
