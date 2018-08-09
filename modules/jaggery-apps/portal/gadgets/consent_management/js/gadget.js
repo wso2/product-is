@@ -19,7 +19,7 @@
 const EXPIRY_DATE_STRING = "VALID_UNTIL:";
 const ALL_ATTRIBUTES_MANDATORY = true;
 var isResidentIDP = false;
-var allAttributes = [];
+var requiredAttributes = [];
 
 var receiptData; //populated with initial JSON payload
 var confirmationDialog = "<div class=\"modal fade\" id=\"messageModal\">\n" +
@@ -273,7 +273,7 @@ function renderReceiptDetails(data) {
         '{{#if piiCategoryDisplayName}}{{piiCategoryDisplayName}}{{else}}{{piiCategoryName}}{{/if}}</li>' +
         '{{/piiCategory}}' +
         '{{#piiCategories}}<li data-jstree={{#if accepted}}\'{"icon":"icon-user",' +
-        ' "selected":true}\'{{else}}\'{"icon":"icon-user"}\'{{/if}} piicategoryid="{{piiCategoryId}}">' +
+        ' "selected":true}\'{{else}}\'{"icon":"icon-user"}\'{{/if}} piicategoryid="{{piiCategoryId}}" ismandatory="{{mandatory}}">' +
         '{{#if displayName}}{{displayName}}{{else}}{{piiCategory}}{{/if}}{{#if mandatory}}<span class="requiredPiiCategory"></span>{{/if}}</li>{{/piiCategories}}' +
         '</ul>' +
         '</li>' +
@@ -292,21 +292,23 @@ function renderReceiptDetails(data) {
         checkbox: {"keep_selected_style": false},
     });
 
-    container.bind('hover_node.jstree', function() {
+    container.bind('hover_node.jstree', function () {
         var bar = $(this).find('.jstree-wholerow-hovered');
         bar.css('height',
             bar.parent().children('a.jstree-anchor').height() + 'px');
     });
 
     container.bind('ready.jstree', function (event, data) {
-        allAttributes = [];
+        requiredAttributes = [];
         var $tree = $(this);
         $($tree.jstree().get_json($tree, {
             flat: true
         }))
             .each(function (index, value) {
                 var node = container.jstree().get_node(this.id);
-                allAttributes.push(node.id);
+                if (this.li_attr.ismandatory == "true") {
+                    requiredAttributes.push(node.id);
+                }
             });
     });
 
@@ -350,10 +352,11 @@ function addActions(container) {
     $(".btn-update-settings").click(function () {
 
         var selectedAttributes = container.jstree(true).get_selected();
-        var allSelected = compareArrays(allAttributes, selectedAttributes) ? true : false;
-
-        if (ALL_ATTRIBUTES_MANDATORY && isResidentIDP) {
-            if (!allSelected) {
+        var isRequiredChecked = requiredAttributes.every(function (val) {
+            return selectedAttributes.indexOf(val) >= 0;
+        });
+        if (isResidentIDP) {
+            if (!isRequiredChecked) {
                 showWarning()
             } else {
                 showConfirm(container);
@@ -393,7 +396,7 @@ function showWarning() {
     $("#message").html(warningDialog);
     message({
         title: "Consent Selection",
-        content: 'Please select all consents in order to proceed.',
+        content: 'Please select all required consents in order to proceed.',
         type: 'warning',
         okCallback: function () {
         }
