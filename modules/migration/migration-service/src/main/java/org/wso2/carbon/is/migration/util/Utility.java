@@ -40,7 +40,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -143,14 +145,87 @@ public class Utility {
         return documentBuilder;
     }
 
-    public static List<Tenant> getTenants() {
-        List<Tenant> tenantList = new ArrayList<>();
+    /**
+     * Return all the tenants or tenant range by checking migrateTenantRange option is enabled.
+     *
+     * @return tenant set
+     * @throws MigrationClientException
+     */
+    public static Set<Tenant> getTenants() throws MigrationClientException {
+        // to decide whether we need to migrate tenant range
+        Set<Tenant> tenants;
+        Tenant[] tenantsArray;
+        try {
+            if (isMigrateTenantRange()) {
+                tenants = getTenantRange(getMigrationStartingTenantID(), getMigrationEndingTenantID());
+            } else {
+                tenantsArray = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+                tenants = new HashSet<>(Arrays.asList(tenantsArray));
+            }
+        } catch (UserStoreException e) {
+            String msg = "Error while retrieving the tenants.";
+            log.error(msg, e);
+            throw new MigrationClientException(msg, e);
+        }
+        return tenants;
+    }
+
+    /**
+     * Return tenants in given range.
+     *
+     * @param startingTenantID starting tenant ID
+     * @param endingTenantID   ending tenant ID
+     * @return tenant set.
+     * @throws MigrationClientException
+     */
+    private static Set<Tenant> getTenantRange(int startingTenantID, int endingTenantID)
+            throws MigrationClientException {
+        Set<Tenant> tenantsRange = new HashSet<>();
         try {
             Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
-            tenantList = Arrays.asList(tenants);
+            for (Tenant tenant : tenants) {
+                // check whether tenant is in the given range
+                if (tenant.getId() >= startingTenantID && tenant.getId() <= endingTenantID) {
+                    tenantsRange.add(tenant);
+                }
+            }
+            if (tenantsRange.isEmpty()) {
+                log.info("No tenant is available within the range (" + startingTenantID + " - " + endingTenantID
+                        + ") specified.");
+            }
         } catch (UserStoreException e) {
-            log.error("Error occurred while reading tenant list.");
+            String msg = "Error while getting tenant range (" + startingTenantID + " - " + endingTenantID
+                    + ") specified.";
+            log.error(msg, e);
+            throw new MigrationClientException(msg, e);
         }
-        return tenantList;
+        return tenantsRange;
+    }
+
+    /**
+     * Return whether tenant range migration option is enabled.
+     *
+     * @return boolean status of tenant range migration
+     */
+    public static boolean isMigrateTenantRange() {
+        return Config.getInstance().isMigrateTenantRange();
+    }
+
+    /**
+     * Return the migration starting tenant ID.
+     *
+     * @return int starting TenantID
+     */
+    public static int getMigrationStartingTenantID() {
+        return Config.getInstance().getMigrationStartingTenantID();
+    }
+
+    /**
+     * Return the migration ending tenant ID.
+     *
+     * @return int ending TenantID
+     */
+    public static int getMigrationEndingTenantID() {
+        return Config.getInstance().getMigrationEndingTenantID();
     }
 }
