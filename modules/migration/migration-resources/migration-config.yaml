@@ -7,10 +7,6 @@ continueOnError: "true"
 batchUpdate: "true"
 ignoreForInactiveTenants: "true"
 
-migrateTenantRange: "false"
-migrationStartingTenantID: "0"
-migrationEndingTenantID: "0"
-
 versions:
  -
   version: "5.0.0-SP1"
@@ -60,14 +56,19 @@ versions:
   version: "5.2.0"
   migratorConfigs:
    -
-    name: "SchemaMigrator"
+    name: "PermissionMigrator"
     order: 1
+    parameters:
+          schema: "um"
+       -
+        name: "SchemaMigrator"
+        order: 2
     parameters:
       location: "step1"
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 2
+    order: 3
     parameters:
       location: "step1"
       schema: "um"
@@ -127,17 +128,17 @@ versions:
       schema: "um"
    -
     name: "ClaimDataMigrator"
-    order: 3
+    order: 4
     parameters:
       schema: "um"
    -
     name: "OAuthDataMigrator"
-    order: 4
+    order: 5
     parameters:
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 5
+    order: 6
     parameters:
       location: "step2"
       schema: "identity"
