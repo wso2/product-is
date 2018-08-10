@@ -23,10 +23,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -81,7 +84,8 @@ public class RegistryDataManager {
         carbonContext.setTenantDomain(tenant.getDomain());
     }
 
-    public void migrateSubscriberPassword(boolean migrateActiveTenantsOnly) throws UserStoreException {
+    public void migrateSubscriberPassword(boolean migrateActiveTenantsOnly)
+            throws UserStoreException, MigrationClientException {
 
         //migrating super tenant configurations
         try {
@@ -92,7 +96,7 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Subscriber migration!");
@@ -128,10 +132,10 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
-                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Subscriber migration!");
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping keystore passwords migration!");
                 continue;
             }
             try {
@@ -151,10 +155,10 @@ public class RegistryDataManager {
      * Method to migrate encrypted password of SYSLOG_PROPERTIES registry resource
      *
      * @param migrateActiveTenantsOnly
-     * @throws UserStoreException
+     * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
      */
     public void migrateSysLogPropertyPassword(boolean migrateActiveTenantsOnly)
-            throws UserStoreException, RegistryException, CryptoException {
+            throws UserStoreException, RegistryException, CryptoException, MigrationClientException {
 
         //migrating super tenant configurations
         try {
@@ -163,7 +167,7 @@ public class RegistryDataManager {
         } catch (Exception e) {
             log.error("Error while migrating Sys log property password for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
         }
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping SYSLOG_PROPERTIES file migration. ");
@@ -184,10 +188,10 @@ public class RegistryDataManager {
      * @param migrateActiveTenantsOnly
      * @throws CryptoException
      * @throws RegistryException
-     * @throws UserStoreException
+     * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
      */
     public void migrateServicePrinciplePassword(boolean migrateActiveTenantsOnly) throws
-            CryptoException, RegistryException, UserStoreException {
+            CryptoException, RegistryException, UserStoreException, MigrationClientException {
 
         //migrating super tenant configurations
         try {
@@ -198,7 +202,7 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Service Principle Password migration!");

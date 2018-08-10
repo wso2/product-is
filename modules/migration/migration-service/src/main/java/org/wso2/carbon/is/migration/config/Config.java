@@ -41,6 +41,10 @@ public class Config {
     private boolean batchUpdate;
     private boolean ignoreForInactiveTenants;
 
+    private boolean migrateTenantRange;
+    private int migrationStartingTenantID;
+    private int migrationEndingTenantID;
+
     private List<Version> versions = new ArrayList<>();
 
     private static Config config = null;
@@ -143,5 +147,27 @@ public class Config {
         this.ignoreForInactiveTenants = ignoreForInactiveTenants;
     }
 
+    public boolean isMigrateTenantRange() {
+        return migrateTenantRange;
+    }
 
+    public void setMigrateTenantRange(boolean migrateTenantRange) {
+        this.migrateTenantRange = migrateTenantRange;
+    }
+
+    public int getMigrationStartingTenantID() {
+        return migrationStartingTenantID;
+    }
+
+    public void setMigrationStartingTenantID(int migrationStartingTenantID) {
+        this.migrationStartingTenantID = migrationStartingTenantID;
+    }
+
+    public int getMigrationEndingTenantID() {
+        return migrationEndingTenantID;
+    }
+
+    public void setMigrationEndingTenantID(int migrationEndingTenantID) {
+        this.migrationEndingTenantID = migrationEndingTenantID;
+    }
 }
