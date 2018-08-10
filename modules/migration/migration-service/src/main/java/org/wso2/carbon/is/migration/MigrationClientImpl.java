@@ -21,6 +21,7 @@ import org.wso2.carbon.identity.core.migrate.MigrationClient;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.is.migration.config.Config;
 import org.wso2.carbon.is.migration.util.Constant;
+import org.wso2.carbon.is.migration.util.Utility;
 
 import java.util.List;
 
@@ -66,6 +67,10 @@ public class MigrationClientImpl implements MigrationClient {
             }
 
             boolean isMigrationStarted = false ;
+            if (Utility.isMigrateTenantRange()) {
+                log.info("Migration started for the tenant range " + Utility.getMigrationStartingTenantID() + " - "
+                        + Utility.getMigrationEndingTenantID());
+            }
 
             for(VersionMigration versionMigration : versionMigrationList){
                 log.info(Constant.MIGRATION_LOG + "Start Version : " + versionMigration.getPreviousVersion() + " to "
