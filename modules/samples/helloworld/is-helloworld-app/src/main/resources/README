@@ -1,0 +1,48 @@
+Hello World is a simple OAuth app that can be used to quickly test single sign-on and other service provider
+configurations without requiring to host an application in external application server.
+
+Note that this application does not allow you to test inbound protocol configurations of the service provider. If you
+ wish to test different inbound protocols configurations with the service provider, you can try out our quick start
+ guide - https://docs.wso2.com/display/IS570/Quick+Start+Guide
+
+You can simply run the hello-world.sh/hello-world.bat script and the application will self register in the
+Identity Server and will be up and ready to test. The application will be registered in the Identity Server with the
+prefix 'HelloAuth-*', you can modify the edit the application from the management console to test different service
+provider configuration.
+
+In case, if you need to change the defaults of the application, you
+can refer the below optional arguments which can be provided during application startup.
+
+Before you begin, make sure the Identity Server is up and running and to provided the necessary parameters for the
+application below, only if the defaults configuration of the Identity Server is changed. e.g: hostname, port, admin
+credentials.
+
+Usage: sh hello-world.sh/hello-world.bat [OPTIONS]
+
+Available Options:
+
+   -h, --help       Display help menu and exit.
+   -H, --idphost    Hostname of the Identity Server. Default: localhost
+   -P, --idpport    Port of the Identity Server. Default: 9443
+   -a, --apphost    Hostname of the application. Set this if the application is
+                    accessed through a hostname other than localhost. This will be used to
+                    construct the redirect URI for the application
+   -p, --appport    Port which the application should start in. Default: 9090
+   -c, --appcontext URL context of the application. This will be use to construct app redirect URL. Default: /
+                    e.g: If the app is running as http://localhost:9090/hello/, provide the context as /hello
+   -u, --username   Admin username of Identity Server. This will be used to authenticate with APIs. Default: admin
+   -p, --password   Password of admin user. This will be used to authenticate with APIs. Default: admin
+
+If none of the above arguments are provided at the application startup, it will assume the default values.
+
+Additionally, you can also set the above parameter is conf/hello-world.properties file.
+Note: Changing the app.port or app.context parameter will not change the port and context which the application getting
+started. These values will be used to construct the redirect URL of the application during the application
+registration.
+
+This application is developed to provide a quick way to test a service provider with various configurations (except
+inbound protocol configuration) without requiring to host a third-party application in an external application
+container.
+
+If you wish to follow a more detailed samples on Identity Server use cases, please follow out Quick Start Guide:
+https://docs.wso2.com/display/IS570/Quick+Start+Guide
