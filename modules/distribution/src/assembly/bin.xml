@@ -549,6 +549,15 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>target/getting-started</directory>
+            <outputDirectory>wso2is-${pom.version}/getting-started</outputDirectory>
+            <excludes>
+                <exclude>**/hello-world.sh</exclude>
+                <exclude>**/hello-world.bat</exclude>
+            </excludes>
+            <fileMode>644</fileMode>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -1031,6 +1040,15 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
+        <file>
+            <source>target/getting-started/bin/hello-world.sh</source>
+            <outputDirectory>wso2is-${pom.version}/getting-started/bin/</outputDirectory>
+            <fileMode>755</fileMode>
+        </file>
+        <file>
+            <source>target/getting-started/bin/hello-world.bat</source>
+            <outputDirectory>wso2is-${pom.version}/getting-started/bin/</outputDirectory>
+            <fileMode>755</fileMode>
+        </file>
     </files>
 </assembly>
