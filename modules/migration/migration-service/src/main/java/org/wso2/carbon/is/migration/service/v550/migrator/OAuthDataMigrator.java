@@ -176,23 +176,32 @@ public class OAuthDataMigrator extends Migrator {
                         .base64DecodeAndDecrypt(oauthTokenInfo.getAccessToken(), "RSA");
                 String newEncryptedAccesTOken = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode
                         (decryptedAccessToken);
-                byte[] decryptedRefreshToken = CryptoUtil.getDefaultCryptoUtil()
-                        .base64DecodeAndDecrypt(oauthTokenInfo.getRefreshToken(), "RSA");
-                String newEncryptedRefreshToken = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode
-                        (decryptedRefreshToken);
+                byte[] decryptedRefreshToken = null;
+                String newEncryptedRefreshToken = null;
+                String refreshToken = oauthTokenInfo.getRefreshToken();
+                if (refreshToken != null) {
+                    decryptedRefreshToken = CryptoUtil.getDefaultCryptoUtil()
+                            .base64DecodeAndDecrypt(refreshToken, "RSA");
+                    newEncryptedRefreshToken = CryptoUtil.getDefaultCryptoUtil()
+                            .encryptAndBase64Encode(decryptedRefreshToken);
+                }
                 TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
                 String accessTokenHash = null;
                 String refreshTokenHash = null;
 
                 accessTokenHash = tokenPersistenceProcessor
                         .getProcessedAccessTokenIdentifier(new String(decryptedAccessToken, Charsets.UTF_8));
-                refreshTokenHash = tokenPersistenceProcessor
-                        .getProcessedRefreshToken(new String(decryptedRefreshToken, Charsets.UTF_8));
+                if (refreshToken != null) {
+                    refreshTokenHash = tokenPersistenceProcessor
+                            .getProcessedRefreshToken(new String(decryptedRefreshToken, Charsets.UTF_8));
+                }
 
                 OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(newEncryptedAccesTOken,newEncryptedRefreshToken,
                         oauthTokenInfo.getTokenId()));
                 updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
-                updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
+                if(refreshToken != null) {
+                    updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
+                }
                 updatedOauthTokenList.add(updatedOauthTokenInfo);
             }
         }
@@ -211,7 +220,10 @@ public class OAuthDataMigrator extends Migrator {
             String refreshToken = oauthTokenInfo.getRefreshToken();
             TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
             String accessTokenHash = tokenPersistenceProcessor.getProcessedAccessTokenIdentifier(accessToken);
-            String refreshTokenHash = tokenPersistenceProcessor.getProcessedRefreshToken(refreshToken);
+            String refreshTokenHash = null;
+            if(refreshToken != null) {
+                refreshTokenHash = tokenPersistenceProcessor.getProcessedRefreshToken(refreshToken);
+            }
             OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(accessToken, refreshToken,
                     oauthTokenInfo.getTokenId()));
             updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
