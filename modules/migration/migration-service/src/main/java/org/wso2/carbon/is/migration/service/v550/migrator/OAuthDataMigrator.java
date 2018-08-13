@@ -264,7 +264,7 @@ public class OAuthDataMigrator extends Migrator {
         try {
             List<AuthzCodeInfo> updatedAuthzCodeInfoList = transformAuthzCodeFromOldToNewEncryption(authzCodeInfoList);
             try (Connection connection = getDataSource().getConnection()) {
-                AuthzCodeDAO.getInstance().updateNewAuthzCodes(updatedAuthzCodeInfoList, connection);
+                AuthzCodeDAO.getInstance().updateNewEncryptedAuthzCodes(updatedAuthzCodeInfoList, connection);
             }
         } catch (CryptoException e) {
             throw new MigrationClientException("Error while encrypting in new encryption algorithm.", e);
