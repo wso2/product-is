@@ -152,9 +152,13 @@ button:focus {
     color: #555;
 }
 
-.auth-button:hover, .auth-button:focus, .auth-button:active  {
+.auth-button:hover, .auth-button:focus, .auth-button:active {
     border-color: #50b2e0;
     color: #555;
     background-color: #fff;
+}
+
+.app-home #collapse-auth-container {
+    display:none;
 }
 

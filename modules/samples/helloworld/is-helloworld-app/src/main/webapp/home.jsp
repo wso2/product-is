@@ -50,9 +50,9 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="Swift - Management Application">
+      <meta name="description" content="HelloAuth Application">
 
-      <title>PickUp Swift</title>
+      <title>HelloAuth</title>
 
       <!-- Bootstrap Core CSS -->
       <link href="libs/bootstrap_3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -95,7 +95,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="text-center welcome-text">Welcome John</h2>
+                    <h2 class="text-center welcome-text">Welcome</h2>
                     <div class="app-icon center-block">
                         <i class="fa fa-user"></i>
                     </div>
@@ -106,13 +106,13 @@
     <div class="row">
         <div class="col-md-12">
             <br>
-            <button href="#collapse1" class="btn btn-default nav-toggle center-block auth-button">Show Authentication
+            <button href="#collapse-auth-container" class="btn btn-default nav-toggle center-block auth-button">Show Authentication
             Details</button>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div id="collapse1" style="display:none">
+            <div id="collapse-auth-container">
                 <h3 class="token-header">Access Token</h3>
                 <div class="well">
                     <div class="access-token"><%=accessToken%></div>
