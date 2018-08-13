@@ -42,6 +42,7 @@
         <module>workflow</module>
         <module>authenticators</module>
         <module>microprofile</module>
+        <module>helloworld</module>
     </modules>
 
 </project>
