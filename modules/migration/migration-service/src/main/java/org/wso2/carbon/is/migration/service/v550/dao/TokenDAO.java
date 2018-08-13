@@ -32,7 +32,8 @@ import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AC
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_MYSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_ORACLE;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_TOKENS;
-import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ACCESS_TOKEN;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ENCRYPTED_ACCESS_TOKEN;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_PLAIN_TEXT_ACCESS_TOKEN;
 
 public class TokenDAO {
 
@@ -115,15 +116,36 @@ public class TokenDAO {
         return oauthTokenInfos;
     }
 
-    public void updateNewTokens(List<OauthTokenInfo> updatedOauthTokenList,Connection connection) throws SQLException {
+    public void updateNewEncryptedTokens(List<OauthTokenInfo> updatedOauthTokenList,Connection connection) throws SQLException {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCESS_TOKEN)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ENCRYPTED_ACCESS_TOKEN)) {
             for (OauthTokenInfo oauthTokenInfo : updatedOauthTokenList) {
                 preparedStatement.setString(1, oauthTokenInfo.getAccessToken());
                 preparedStatement.setString(2, oauthTokenInfo.getRefreshToken());
                 preparedStatement.setString(3, oauthTokenInfo.getAccessTokenHash());
                 preparedStatement.setString(4, oauthTokenInfo.getRefreshTokenhash());
                 preparedStatement.setString(5, oauthTokenInfo.getTokenId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            connection.commit();
+        }
+    }
+
+    /**
+     * Method to update acess token table with hash values of access tokens and refresh tokens.
+     * @param updatedOauthTokenList list of updated tokens information
+     * @param connection database connection
+     * @throws SQLException
+     */
+    public void updatePlainTextTokens(List<OauthTokenInfo> updatedOauthTokenList, Connection connection)
+            throws SQLException {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PLAIN_TEXT_ACCESS_TOKEN)) {
+            for (OauthTokenInfo oauthTokenInfo : updatedOauthTokenList) {
+                preparedStatement.setString(1, oauthTokenInfo.getAccessTokenHash());
+                preparedStatement.setString(2, oauthTokenInfo.getRefreshTokenhash());
+                preparedStatement.setString(3, oauthTokenInfo.getTokenId());
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();

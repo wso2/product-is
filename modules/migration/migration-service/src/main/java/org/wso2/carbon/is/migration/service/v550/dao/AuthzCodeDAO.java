@@ -16,7 +16,6 @@
 package org.wso2.carbon.is.migration.service.v550.dao;
 
 import org.wso2.carbon.is.migration.service.v550.bean.AuthzCodeInfo;
-import org.wso2.carbon.is.migration.service.v550.bean.OauthTokenInfo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,8 +31,8 @@ import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AU
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_MSSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_MYSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_ORACLE;
-import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ACCESS_TOKEN;
-import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_AUTHORIZATION_CODE;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_PLAIN_TEXT_AUTHORIZATION_CODE;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ENCRYPTED_AUTHORIZATION_CODE;
 
 public class AuthzCodeDAO {
 
@@ -120,7 +119,7 @@ public class AuthzCodeDAO {
     public void updateNewAuthzCodes(List<AuthzCodeInfo> updatedAuthzCodeList, Connection connection)
             throws SQLException {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_AUTHORIZATION_CODE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ENCRYPTED_AUTHORIZATION_CODE)) {
             for (AuthzCodeInfo authzCodeInfo : updatedAuthzCodeList) {
                 preparedStatement.setString(1, authzCodeInfo.getAuthorizationCode());
                 preparedStatement.setString(2, authzCodeInfo.getAuthorizationCodeHash());
@@ -131,4 +130,28 @@ public class AuthzCodeDAO {
             connection.commit();
         }
     }
+
+    /**
+     * This method will update the plain text authorization code table with hashed authorization code value in the
+     * hash column.
+     *
+     * @param updatedAuthzCodeList
+     * @param connection
+     * @throws SQLException
+     */
+    public void updatePlainTextAuthzCodes(List<AuthzCodeInfo> updatedAuthzCodeList, Connection connection)
+            throws SQLException {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PLAIN_TEXT_AUTHORIZATION_CODE)) {
+            for (AuthzCodeInfo authzCodeInfo : updatedAuthzCodeList) {
+                preparedStatement.setString(1, authzCodeInfo.getAuthorizationCodeHash());
+                preparedStatement.setString(2, authzCodeInfo.getCodeId());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            connection.commit();
+        }
+    }
+
+
 }

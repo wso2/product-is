@@ -52,7 +52,7 @@ public class OAuthDataMigrator extends Migrator {
         try {
             addHashColumns();
             deleteClientSecretHashColumn();
-            migrateOldEncryptedTokens();
+            migrateTokens();
             migrateAuthorizationCodes();
             migrateClientSecrets();
         } catch (SQLException e) {
@@ -95,29 +95,77 @@ public class OAuthDataMigrator extends Migrator {
         }
     }
 
-    public void migrateOldEncryptedTokens() throws MigrationClientException, SQLException {
+    /**
+     * Method to migrate encrypted tokens/plain text tokens.
+     * @throws MigrationClientException
+     * @throws SQLException
+     */
+    public void migrateTokens() throws MigrationClientException, SQLException {
 
         log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 access token table.");
+        List<OauthTokenInfo> oauthTokenList;
+        try (Connection connection = getDataSource().getConnection()) {
+            oauthTokenList = TokenDAO.getInstance().getAllAccessTokens(connection);
+        }
         try {
-            if(!isTokenHashColumnsAvailable && OAuth2Util.isEncryptionWithTransformationEnabled()){
-                List<OauthTokenInfo> oauthTokenList;
-                try (Connection connection = getDataSource().getConnection()) {
-                    oauthTokenList = TokenDAO.getInstance().getAllAccessTokens(connection);
-                }
-                List<OauthTokenInfo> updatedOauthTokenList = transformFromOldToNewEncryption(oauthTokenList);
-                try (Connection connection = getDataSource().getConnection()) {
-                    TokenDAO.getInstance().updateNewTokens(updatedOauthTokenList, connection);
-                }
-
+            //migrating RSA encrypted tokens to OAEP encryption
+            if(!isTokenHashColumnsAvailable && OAuth2Util.isEncryptionWithTransformationEnabled()) {
+                migrateOldEncryptedTokens(oauthTokenList);
+            }
+            //migrating plaintext tokens with hashed tokens.
+            if(!isTokenHashColumnsAvailable && !OAuth2Util.isTokenEncryptionEnabled()){
+                migratePlainTextTokens(oauthTokenList);
             }
         } catch (IdentityOAuth2Exception e) {
-            e.printStackTrace();
+            throw new MigrationClientException(e.getMessage(),e);
+        }
+
+    }
+
+    public void migrateOldEncryptedTokens(List<OauthTokenInfo> oauthTokenList)
+            throws MigrationClientException, SQLException, IdentityOAuth2Exception {
+
+        log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 access token table with encrypted tokens.");
+        try {
+            List<OauthTokenInfo> updatedOauthTokenList = null;
+            updatedOauthTokenList = transformFromOldToNewEncryption(oauthTokenList);
+
+            try (Connection connection = getDataSource().getConnection()) {
+                TokenDAO.getInstance().updateNewEncryptedTokens(updatedOauthTokenList, connection);
+            }
+
         } catch (CryptoException e) {
             e.printStackTrace();
+        } catch (IdentityOAuth2Exception e) {
+            throw new IdentityOAuth2Exception("Error while migration old encrypted tokens",e);
         }
     }
 
-    private List<OauthTokenInfo> transformFromOldToNewEncryption(List<OauthTokenInfo> oauthTokenList) throws CryptoException {
+    /**
+     * Method to migrate plain text tokens. This will add hashed tokens to acess token and refresh token hash columns.
+     * @param oauthTokenList list of tokens to be migrated
+     * @throws IdentityOAuth2Exception
+     * @throws MigrationClientException
+     * @throws SQLException
+     */
+    public void migratePlainTextTokens(List<OauthTokenInfo> oauthTokenList)
+            throws IdentityOAuth2Exception, MigrationClientException, SQLException {
+
+        log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 access token table with plain text tokens.");
+        try {
+            List<OauthTokenInfo> updatedOauthTokenList = generateTokenHashValues(oauthTokenList);
+            try (Connection connection = getDataSource().getConnection()) {
+                TokenDAO.getInstance().updatePlainTextTokens(updatedOauthTokenList, connection);
+            }
+        } catch (IdentityOAuth2Exception e) {
+            throw new IdentityOAuth2Exception("Error while migration plain text tokens", e);
+        }
+
+    }
+
+
+    private List<OauthTokenInfo> transformFromOldToNewEncryption(List<OauthTokenInfo> oauthTokenList)
+            throws CryptoException, IdentityOAuth2Exception {
         List<OauthTokenInfo> updatedOauthTokenList = new ArrayList<>();
 
         for(OauthTokenInfo oauthTokenInfo : oauthTokenList){
@@ -134,14 +182,12 @@ public class OAuthDataMigrator extends Migrator {
                 TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
                 String accessTokenHash = null;
                 String refreshTokenHash = null;
-                try {
-                    accessTokenHash = tokenPersistenceProcessor.getProcessedAccessTokenIdentifier
-                            (new String(decryptedAccessToken,Charsets.UTF_8));
-                    refreshTokenHash = tokenPersistenceProcessor.getProcessedRefreshToken(new String
-                            (decryptedRefreshToken,Charsets.UTF_8));
-                } catch (IdentityOAuth2Exception e) {
-                    e.printStackTrace();
-                }
+
+                accessTokenHash = tokenPersistenceProcessor
+                        .getProcessedAccessTokenIdentifier(new String(decryptedAccessToken, Charsets.UTF_8));
+                refreshTokenHash = tokenPersistenceProcessor
+                        .getProcessedRefreshToken(new String(decryptedRefreshToken, Charsets.UTF_8));
+
                 OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(newEncryptedAccesTOken,newEncryptedRefreshToken,
                         oauthTokenInfo.getTokenId()));
                 updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
@@ -153,35 +199,100 @@ public class OAuthDataMigrator extends Migrator {
         return updatedOauthTokenList;
     }
 
+    private List<OauthTokenInfo> generateTokenHashValues(List<OauthTokenInfo> oauthTokenList)
+            throws IdentityOAuth2Exception {
+
+        List<OauthTokenInfo> updatedOauthTokenList = new ArrayList<>();
+
+        for (OauthTokenInfo oauthTokenInfo : oauthTokenList) {
+
+            String accessToken = oauthTokenInfo.getAccessToken();
+            String refreshToken = oauthTokenInfo.getRefreshToken();
+            TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+            String accessTokenHash = tokenPersistenceProcessor.getProcessedAccessTokenIdentifier(accessToken);
+            String refreshTokenHash = tokenPersistenceProcessor.getProcessedRefreshToken(refreshToken);
+            OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(accessToken, refreshToken,
+                    oauthTokenInfo.getTokenId()));
+            updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
+            updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
+            updatedOauthTokenList.add(updatedOauthTokenInfo);
+        }
+        return updatedOauthTokenList;
+    }
+
     /**
-     * Method to migrate old encrypted authorization codes to new encrypted authorization codes
+     * Method to migrate old encrypted authorization codes/ plain text authorization codes.
      *
      * @throws MigrationClientException
      * @throws SQLException
      */
-    public void migrateAuthorizationCodes() throws MigrationClientException {
+    public void migrateAuthorizationCodes() throws MigrationClientException, SQLException {
 
         log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 authorization code table.");
+        List<AuthzCodeInfo> authzCodeInfoList;
+        try (Connection connection = getDataSource().getConnection()) {
+            authzCodeInfoList = AuthzCodeDAO.getInstance().getAllAuthzCodes(connection);
+        }
         try {
+            //migrating RSA encrypted authz codes to OAEP encryption
             if (!isAuthzCodeHashColumnAvailable && OAuth2Util.isEncryptionWithTransformationEnabled()) {
-                List<AuthzCodeInfo> authzCodeInfoList;
-                try (Connection connection = getDataSource().getConnection()) {
-                    authzCodeInfoList = AuthzCodeDAO.getInstance().getAllAuthzCodes(connection);
-                }
-                List<AuthzCodeInfo> updatedAuthzCodeInfoList = transformAuthzCodeFromOldToNewEncryption(
-                        authzCodeInfoList);
-                try (Connection connection = getDataSource().getConnection()) {
-                    AuthzCodeDAO.getInstance().updateNewAuthzCodes(updatedAuthzCodeInfoList, connection);
-                }
+                migrateOldEncryptedAuthzCodes(authzCodeInfoList);
+            }
+            //migrating plaintext authz codes with hashed authz codes.
+            if(!isAuthzCodeHashColumnAvailable && !OAuth2Util.isTokenEncryptionEnabled()){
+                migratePlainTextAuthzCodes(authzCodeInfoList);
             }
         } catch (IdentityOAuth2Exception e) {
             throw new MigrationClientException(
                     "Error while checking configurations for encryption with " + "transformation is enabled. ", e);
-        } catch (CryptoException e) {
-            throw new MigrationClientException(
-                    "Error while transforming authorization codes from old to new " + "encryption algorithm. ", e);
         } catch (SQLException e) {
             throw new MigrationClientException("Error while getting datasource connection. ", e);
+        }
+    }
+
+    /**
+     * This method will migrate authorization codes encrypted in RSA to OAEP.
+     * @param authzCodeInfoList list of authz codes
+     * @throws MigrationClientException
+     * @throws SQLException
+     */
+    public void migrateOldEncryptedAuthzCodes(List<AuthzCodeInfo> authzCodeInfoList)
+            throws MigrationClientException, SQLException {
+
+        log.info(Constant.MIGRATION_LOG
+                + "Migration starting on OAuth2 authorization table with encrypted authorization codes.");
+        try {
+            List<AuthzCodeInfo> updatedAuthzCodeInfoList = transformAuthzCodeFromOldToNewEncryption(authzCodeInfoList);
+            try (Connection connection = getDataSource().getConnection()) {
+                AuthzCodeDAO.getInstance().updateNewAuthzCodes(updatedAuthzCodeInfoList, connection);
+            }
+        } catch (CryptoException e) {
+            throw new MigrationClientException("Error while encrypting in new encryption algorithm.", e);
+        } catch (IdentityOAuth2Exception e) {
+            throw new MigrationClientException("Error while migrating old encrypted authz codes.", e);
+        }
+
+    }
+
+    /**
+     * This method will generate hash values of authorization codes and update the authorization code table with those values
+     *
+     * @param authzCodeInfoList
+     * @throws MigrationClientException
+     * @throws SQLException
+     */
+    public void migratePlainTextAuthzCodes(List<AuthzCodeInfo> authzCodeInfoList)
+            throws MigrationClientException, SQLException {
+
+        log.info(Constant.MIGRATION_LOG
+                + "Migration starting on OAuth2 authorization code table with plain text codes.");
+        try {
+            List<AuthzCodeInfo> updatedAuthzCodeInfoList = generateAuthzCodeHashValues(authzCodeInfoList);
+            try (Connection connection = getDataSource().getConnection()) {
+                AuthzCodeDAO.getInstance().updatePlainTextAuthzCodes(updatedAuthzCodeInfoList, connection);
+            }
+        } catch (IdentityOAuth2Exception e) {
+            throw new MigrationClientException("Error while migration plain text authorization codes.", e);
         }
     }
 
@@ -206,6 +317,23 @@ public class OAuthDataMigrator extends Migrator {
                 updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
                 updatedAuthzCodeInfoList.add(updatedAuthzCodeInfo);
             }
+        }
+        return updatedAuthzCodeInfoList;
+    }
+
+    private List<AuthzCodeInfo> generateAuthzCodeHashValues(List<AuthzCodeInfo> authzCodeInfoList)
+            throws IdentityOAuth2Exception {
+
+        List<AuthzCodeInfo> updatedAuthzCodeInfoList = new ArrayList<>();
+        for (AuthzCodeInfo authzCodeInfo : authzCodeInfoList) {
+
+            String authorizationCode = authzCodeInfo.getAuthorizationCode();
+            TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+            String authzCodeHash = tokenPersistenceProcessor.getProcessedAuthzCode(authorizationCode);
+            AuthzCodeInfo updatedAuthzCodeInfo = new AuthzCodeInfo(authorizationCode, authzCodeInfo.getCodeId());
+            updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
+            updatedAuthzCodeInfoList.add(updatedAuthzCodeInfo);
+
         }
         return updatedAuthzCodeInfoList;
     }
