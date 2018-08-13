@@ -118,7 +118,7 @@ public class AuthzCodeDAO {
      * @param connection database connection
      * @throws SQLException
      */
-    public void updateNewAuthzCodes(List<AuthzCodeInfo> updatedAuthzCodeList, Connection connection)
+    public void updateNewEncryptedAuthzCodes(List<AuthzCodeInfo> updatedAuthzCodeList, Connection connection)
             throws SQLException {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ENCRYPTED_AUTHORIZATION_CODE)) {
