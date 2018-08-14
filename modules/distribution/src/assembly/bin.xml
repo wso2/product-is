@@ -300,7 +300,7 @@
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>api#identity#idp-mgt#v1.0.war</include>
+                <include>api#identity#idp-mgt#v0.8.war</include>
             </includes>
         </fileSet>
 

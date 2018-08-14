@@ -449,7 +449,7 @@
                                     org.wso2.carbon.identity.conditional.auth.functions:org.wso2.carbon.identity.conditional.auth.functions.server.feature:${conditional.authentication.functions.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.idpmgt.server.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.api.idp.mgt:org.wso2.carbon.identity.api.idpmgt.server.feature:${identity.api.idpmgt.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -923,7 +923,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.api.idpmgt.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
+                                    <version>${identity.api.idpmgt.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1405,7 +1405,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.api.idpmgt.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
+                                    <version>${identity.api.idpmgt.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1849,7 +1849,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.api.idpmgt.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
+                                    <version>${identity.api.idpmgt.version}</version>
                                 </feature>
                             </features>
                         </configuration>

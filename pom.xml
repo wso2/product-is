@@ -1677,14 +1677,14 @@
                 <version>${msf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <groupId>org.wso2.carbon.identity.api.idp.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.api.idpmgt.server.feature</artifactId>
-                <version>${carbon.identity.framework.version}</version>
+                <version>${identity.api.idpmgt.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <groupId>org.wso2.carbon.identity.api.idp.mgt</groupId>
                 <artifactId>org.wso2.carbon.identity.api.idpmgt</artifactId>
-                <version>${carbon.identity.framework.version}</version>
+                <version>${identity.api.idpmgt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1961,6 +1961,7 @@
         <msf4j.version>2.6.2</msf4j.version>
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
         <org.eclipse.jetty.runner.version>9.4.11.v20180605</org.eclipse.jetty.runner.version>
+        <identity.api.idpmgt.version>0.8</identity.api.idpmgt.version>
     </properties>
 
     <repositories>
