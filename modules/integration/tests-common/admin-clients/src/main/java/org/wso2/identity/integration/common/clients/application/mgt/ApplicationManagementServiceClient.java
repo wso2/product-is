@@ -33,12 +33,14 @@ import org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.application.common.model.xsd.SpFileContent;
 import org.wso2.carbon.identity.application.mgt.stub.IdentityApplicationManagementServiceIdentityApplicationManagementException;
 import org.wso2.carbon.identity.application.mgt.stub.IdentityApplicationManagementServiceStub;
 import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUtil;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserStoreInfo;
+import sun.security.util.SecurityProviderConstants;
 
 public class ApplicationManagementServiceClient {
 
@@ -275,4 +277,49 @@ public class ApplicationManagementServiceClient {
         }
     }
 
+    /**
+     * Import service provider from spFile.
+     *
+     * @param serviceProviderContent
+     * @param fileName
+     * @throws Exception
+     */
+    public void importApplication(String serviceProviderContent, String fileName) throws Exception {
+
+        try {
+            if (debugEnabled) {
+                log.debug("Importing Service Provider ");
+            }
+            SpFileContent spFileContent = new SpFileContent();
+            spFileContent.setFileName(fileName);
+            spFileContent.setContent(serviceProviderContent);
+            stub.importApplication(spFileContent);
+        } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
+            log.error(e.getMessage(), e);
+            throw new Exception(e.getMessage());
+        }
+
+    }
+
+    /**
+     * Export service provider to spFile.
+     *
+     * @param spName
+     * @param exportSecret
+     * @return
+     * @throws Exception
+     */
+    public String exportApplication(String spName, boolean exportSecret) throws Exception {
+
+        try {
+            if (debugEnabled) {
+                log.debug("Exporting Service Provider " + spName);
+            }
+            return stub.exportApplication(spName, exportSecret);
+        } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
+            log.error(e.getMessage(), e);
+            throw new Exception(e.getMessage());
+        }
+
+    }
 }
