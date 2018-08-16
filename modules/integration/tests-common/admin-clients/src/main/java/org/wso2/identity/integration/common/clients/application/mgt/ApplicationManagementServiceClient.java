@@ -40,7 +40,6 @@ import org.wso2.carbon.integration.common.admin.client.utils.AuthenticateStubUti
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserStoreInfo;
-import sun.security.util.SecurityProviderConstants;
 
 public class ApplicationManagementServiceClient {
 
