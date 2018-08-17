@@ -221,7 +221,7 @@
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>api#identity#oauth2#dcr#v1.1.war</include>
+                <include>api#identity#oauth2#dcr#v1.0.war</include>
             </includes>
         </fileSet>
 
