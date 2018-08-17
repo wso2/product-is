@@ -19,7 +19,7 @@ package org.wso2.identity.integration.test.oauth2.dcrm.api.util;
 
 public class OAuthDCRMConstants {
     public static final String DCR_ENDPOINT_HOST_PART = "https://localhost:9853";
-    public static final String DCR_ENDPOINT_PATH_PART = "/api/identity/oauth2/dcr/v1.1/register/";
+    public static final String DCR_ENDPOINT_PATH_PART = "/api/identity/oauth2/dcr/v1.0/register/";
     public static final String CLIENT_NAME = "client_name";
     public static final String GRANT_TYPES = "grant_types";
     public static final String REDIRECT_URIS = "redirect_uris";
