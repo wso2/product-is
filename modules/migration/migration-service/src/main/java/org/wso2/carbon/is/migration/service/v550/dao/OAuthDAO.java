@@ -84,7 +84,10 @@ public class OAuthDAO {
                 }
             } catch (SQLException e) {
                 isConsumerSecretHashColumnsExist = false;
-                log.error("Error occured while executing the PreparedStatement." + e.getMessage());
+                if(log.isDebugEnabled()) {
+                    log.debug("Error occurred while executing the sql query: " + sql);
+                }
+                log.warn("Error occurred while executing the PreparedStatement." + e.getMessage());
             }
         } catch (SQLException e) {
             isConsumerSecretHashColumnsExist = false;
