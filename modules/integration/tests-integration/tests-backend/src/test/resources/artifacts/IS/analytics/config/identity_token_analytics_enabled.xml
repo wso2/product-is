@@ -516,7 +516,7 @@
             <Context>/oauth2/</Context>
             <Context>/scim2/</Context>
             <Context>/api/identity/entitlement/</Context>
-            <Context>/api/identity/oauth2/dcr/v1.0/</Context>
+            <Context>/api/identity/oauth2/dcr/v1.1/</Context>
         </WebApp>
         <Servlet>
             <Context>/identity/(.*)</Context>
