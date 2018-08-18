@@ -77,7 +77,7 @@ public class HelloWorldAppUtils {
     private static final String APP_PROPERTY_FILE_NAME = "hello-world.properties";
     private static final String DEFAULT_PROPERTY_FILE_PATH = "/WEB-INF/classes/" + APP_PROPERTY_FILE_NAME;
     private static final String AUTHORIZATION_BASIC_PREFIX = "Basic ";
-    private static final String OAUTH2_DCR_REGISTER_CONTEXT = "/api/identity/oauth2/dcr/v1.0/register";
+    private static final String OAUTH2_DCR_REGISTER_CONTEXT = "/api/identity/oauth2/dcr/v1.1/register";
     private static final String OAUTH2_AUTHZ_ENDPOINT_CONTEXT = OAUTH2_CONTEXT + "/authorize";
     private static final String OAUTH2_TOKEN_ENDPOINT_CONTEXT = OAUTH2_CONTEXT + "/token";
 
