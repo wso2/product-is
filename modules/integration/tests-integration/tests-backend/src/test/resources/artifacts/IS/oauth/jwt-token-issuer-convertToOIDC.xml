@@ -171,7 +171,7 @@
         <OIDCWebFingerEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/.well-known/webfinger</OIDCWebFingerEPUrl>
 
         <!-- For tenants below urls will be modified as https://<hostname>:<port>/t/<tenant domain>/<path>-->
-        <OAuth2DCREPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/api/identity/oauth2/dcr/v1.0/register</OAuth2DCREPUrl>
+        <OAuth2DCREPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/api/identity/oauth2/dcr/v1.1/register</OAuth2DCREPUrl>
         <OAuth2JWKSPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/jwks</OAuth2JWKSPage>
         <OIDCDiscoveryEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/oidcdiscovery</OIDCDiscoveryEPUrl>
 
@@ -725,16 +725,16 @@
 
         <Resource context="(.*)/api/identity/recovery/(.*)" secured="true" http-method="all"/>
         <Resource context="(.*)/.well-known(.*)" secured="true" http-method="all"/>
-        <Resource context="(.*)/api/identity/oauth2/dcr/v1.0/register(.*)" secured="true" http-method="POST">
+        <Resource context="(.*)/api/identity/oauth2/dcr/v1.1/register(.*)" secured="true" http-method="POST">
             <Permissions>/permission/admin/manage/identity/applicationmgt/create</Permissions>
         </Resource>
-        <Resource context="(.*)/api/identity/oauth2/dcr/v1.0/register(.*)" secured="true" http-method="DELETE">
+        <Resource context="(.*)/api/identity/oauth2/dcr/v1.1/register(.*)" secured="true" http-method="DELETE">
             <Permissions>/permission/admin/manage/identity/applicationmgt/delete</Permissions>
         </Resource>
-        <Resource context="(.*)/api/identity/oauth2/dcr/v1.0/register(.*)" secured="true" http-method="PUT">
+        <Resource context="(.*)/api/identity/oauth2/dcr/v1.1/register(.*)" secured="true" http-method="PUT">
             <Permissions>/permission/admin/manage/identity/applicationmgt/update</Permissions>
         </Resource>
-        <Resource context="(.*)/api/identity/oauth2/dcr/v1.0/register(.*)" secured="true" http-method="GET">
+        <Resource context="(.*)/api/identity/oauth2/dcr/v1.1/register(.*)" secured="true" http-method="GET">
             <Permissions>/permission/admin/manage/identity/applicationmgt/view</Permissions>
         </Resource>
         <Resource context="(.*)/identity/register(.*)" secured="true" http-method="all">
@@ -826,7 +826,7 @@
             <Context>/oauth2/</Context>
             <Context>/scim2/</Context>
             <Context>/api/identity/entitlement/</Context>
-            <Context>/api/identity/oauth2/dcr/v1.0/</Context>
+            <Context>/api/identity/oauth2/dcr/v1.1/</Context>
         </WebApp>
         <Servlet>
             <Context>/identity/(.*)</Context>
