@@ -219,22 +219,16 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testCreateGroup")
     public void testMultiAttributeFilterUser() throws Exception {
 
-        StringBuilder query = new StringBuilder(USER_NAME_ATTRIBUTE).append(STARTWITH).
-                append(USERNAMES.get(0).substring(0, 3)).append(AND_OPERATION).append(USER_NAME_ATTRIBUTE).
-                append(CONTAINS).append(USERNAMES.get(0).substring(2, 4)).append(AND_OPERATION).append(NAME_ATTRIBUTE).
-                append(".").append(FAMILY_NAME_ATTRIBUTE).append(ENDWITH).append(
-                FAMILY_NAME_CLAIM_VALUES.get(0).substring(5, 9));
-
-        validateMultiAttributeFilteredUser(query.toString(), userIds, USERNAMES);
-
-        query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
+        //Validate username and claim filter
+        StringBuilder query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
                 append(USERNAMES.get(2).substring(4, USERNAMES.get(2).length())).append(AND_OPERATION).
-                append(NAME_ATTRIBUTE).append(".").append(GIVEN_NAME_ATTRIBUTE).append(EQUAL).
-                append(GIVEN_NAME_CLAIM_VALUES.get(2));
+                append(NAME_ATTRIBUTE).append(".").append(FAMILY_NAME_ATTRIBUTE).append(EQUAL).
+                append(FAMILY_NAME_CLAIM_VALUES.get(2));
 
         validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(2)),
                 Arrays.asList(USERNAMES.get(2)));
 
+        //Validate username, claim and group filter
         query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
                 append(USERNAMES.get(1).substring(4, USERNAMES.get(1).length())).append(AND_OPERATION).append(GROUPS).
                 append(EQUAL).append(GROUPNAMES.get(0)).append(AND_OPERATION).append(NAME_ATTRIBUTE).append(".").
@@ -243,12 +237,24 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(1)),
                 Arrays.asList(USERNAMES.get(1)));
 
+        //Validate groups filter
         query = new StringBuilder(GROUPS).append(EQUAL).append(GROUPNAMES.get(0)).append(AND_OPERATION).
                 append(GROUPS).append(EQUAL).append(GROUPNAMES.get(1));
 
         validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(2)),
                 Arrays.asList(USERNAMES.get(2)));
 
+        query = new StringBuilder(USER_NAME_ATTRIBUTE).append(STARTWITH).
+                append(USERNAMES.get(0).substring(0, 3)).append(AND_OPERATION).append(USER_NAME_ATTRIBUTE).
+                append(CONTAINS).append(USERNAMES.get(0).substring(2, 4)).append(AND_OPERATION).append(NAME_ATTRIBUTE).
+                append(".").append(FAMILY_NAME_ATTRIBUTE).append(ENDWITH).append(
+                FAMILY_NAME_CLAIM_VALUES.get(0).substring(5, 9));
+
+        validateMultiAttributeFilteredUser(query.toString(), userIds, USERNAMES);
+
+        //Validate pagination
+        query.append("&count=3&startIndex=2");
+        validateMultiAttributeFilteredUser(query.toString(), userIds.subList(1, 4), USERNAMES.subList(1, 4));
     }
 
     private void validateMultiAttributeFilteredUser(String filter, List<String> userIds, List<String> userNames)
