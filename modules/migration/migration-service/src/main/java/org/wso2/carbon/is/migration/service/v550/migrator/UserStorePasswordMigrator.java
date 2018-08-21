@@ -66,8 +66,8 @@ public class UserStorePasswordMigrator extends Migrator {
                     continue;
                 }
                 File[] userstoreConfigs = getUserStoreConfigFiles(tenant.getId());
-                for(File file : userstoreConfigs) {
-                    if(file.isFile()){
+                for (File file : userstoreConfigs) {
+                    if (file.isFile()) {
                         updatePassword(file.getAbsolutePath());
                     }
                 }
@@ -80,8 +80,8 @@ public class UserStorePasswordMigrator extends Migrator {
     private void updateSuperTenantConfigs() {
         try {
             File[] userstoreConfigs = getUserStoreConfigFiles(Constant.SUPER_TENANT_ID);
-            for(File file : userstoreConfigs) {
-                if(file.isFile()){
+            for (File file : userstoreConfigs) {
+                if (file.isFile()) {
                     updatePassword(file.getAbsolutePath());
                 }
             }
@@ -94,12 +94,13 @@ public class UserStorePasswordMigrator extends Migrator {
 
         String carbonHome = System.getProperty(Constant.CARBON_HOME);
         String userStorePath;
-        if(tenantId == Constant.SUPER_TENANT_ID) {
-            userStorePath = Paths.get(carbonHome,
-                    new String[]{"repository", "deployment", "server", "userstores"}).toString();
+        if (tenantId == Constant.SUPER_TENANT_ID) {
+            userStorePath = Paths.get(carbonHome, new String[] { "repository", "deployment", "server", "userstores" })
+                    .toString();
         } else {
-            userStorePath = Paths.get(carbonHome,
-                    new String[]{"repository", "tenants", String.valueOf(tenantId), "userstores"}).toString();
+            userStorePath = Paths
+                    .get(carbonHome, new String[] { "repository", "tenants", String.valueOf(tenantId), "userstores" })
+                    .toString();
         }
         File[] files = new File(userStorePath).listFiles();
         return files != null ? files : new File[0];
@@ -119,8 +120,8 @@ public class UserStorePasswordMigrator extends Migrator {
             String newEncryptedPassword = null;
             while (it.hasNext()) {
                 OMElement element = (OMElement) it.next();
-                if ("password".equals(element.getAttributeValue(new QName("name"))) ||
-                        "ConnectionPassword".equals(element.getAttributeValue(new QName("name")))) {
+                if ("password".equals(element.getAttributeValue(new QName("name"))) || "ConnectionPassword"
+                        .equals(element.getAttributeValue(new QName("name")))) {
                     String encryptedPassword = element.getText();
                     newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(encryptedPassword);
                     if (StringUtils.isNotEmpty(newEncryptedPassword)) {
@@ -137,10 +138,10 @@ public class UserStorePasswordMigrator extends Migrator {
             log.error("Error while updating password for: " + filePath);
         } finally {
             try {
-                if(parser != null) {
+                if (parser != null) {
                     parser.close();
                 }
-                if(stream != null) {
+                if (stream != null) {
                     IdentityIOStreamUtils.closeInputStream(stream);
                 }
             } catch (XMLStreamException ex) {
