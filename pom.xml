@@ -1534,16 +1534,6 @@
                 <version>${identity.carbon.auth.mutual.ssl.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.notification.email</groupId>
-                <artifactId>org.wso2.carbon.identity.notification.mgt.email.feature</artifactId>
-                <version>${identity.notification.email.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.notification.json</groupId>
-                <artifactId>org.wso2.carbon.identity.notification.mgt.json.feature</artifactId>
-                <version>${identity.notification.json.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.workflow.user</groupId>
                 <artifactId>org.wso2.carbon.user.mgt.workflow.feature</artifactId>
                 <version>${identity.user.workflow.version}</version>
@@ -1814,10 +1804,6 @@
         <authenticator.x509.version>2.0.6</authenticator.x509.version>
 
         <conditional.authentication.functions.version>0.1.27</conditional.authentication.functions.version>
-
-        <!-- Deprecated identity repos -->
-        <identity.notification.email.version>5.1.1</identity.notification.email.version>
-        <identity.notification.json.version>5.1.1</identity.notification.json.version>
 
         <!-- Forget-me tool -->
         <forgetme.tool.version>1.1.20</forgetme.tool.version>
