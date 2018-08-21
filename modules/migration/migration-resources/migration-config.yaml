@@ -82,33 +82,38 @@ versions:
       location: "step1"
       schema: "identity"
    -
-    name: "ClaimDataMigrator"
+    name: "UserStorePasswordMigrator"
     order: 2
     parameters:
-      schema: "um"
+      schema: "identity"
    -
-    name: "PermissionDataMigrator"
+    name: "ClaimDataMigrator"
     order: 3
     parameters:
       schema: "um"
    -
-    name: "EmailTemplateDataMigrator"
+    name: "PermissionDataMigrator"
     order: 4
     parameters:
-      schema: "identity"
+      schema: "um"
    -
-    name: "ChallengeQuestionDataMigrator"
+    name: "EmailTemplateDataMigrator"
     order: 5
     parameters:
       schema: "identity"
    -
-    name: "ResidentIdpMetadataMigrator"
+    name: "ChallengeQuestionDataMigrator"
     order: 6
     parameters:
       schema: "identity"
    -
-    name: "OIDCScopeDataMigrator"
+    name: "ResidentIdpMetadataMigrator"
     order: 7
+    parameters:
+      schema: "identity"
+   -
+    name: "OIDCScopeDataMigrator"
+    order: 8
     parameters:
       schema: "identity"
  -
