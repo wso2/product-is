@@ -1,0 +1,44 @@
+<ServiceProvider>
+    <LocalAndOutBoundAuthenticationConfig>
+        <AuthenticationSteps>
+            <AuthenticationStep>
+                <StepOrder>1</StepOrder>
+                <LocalAuthenticatorConfigs>
+                    <LocalAuthenticatorConfig>
+                        <Name>BasicAuthenticator</Name>
+                        <DisplayName>basicauth</DisplayName>
+                        <IsEnabled>false</IsEnabled>
+                        <Properties/>
+                    </LocalAuthenticatorConfig>
+                </LocalAuthenticatorConfigs>
+                <FederatedIdentityProviders/>
+                <SubjectStep>true</SubjectStep>
+                <AttributeStep>true</AttributeStep>
+            </AuthenticationStep>
+            <AuthenticationStep>
+                <StepOrder>2</StepOrder>
+                <LocalAuthenticatorConfigs>
+                    <LocalAuthenticatorConfig>
+                        <Name>totp</Name>
+                        <DisplayName>totp</DisplayName>
+                        <IsEnabled>false</IsEnabled>
+                        <Properties/>
+                    </LocalAuthenticatorConfig>
+                </LocalAuthenticatorConfigs>
+                <FederatedIdentityProviders/>
+                <SubjectStep>false</SubjectStep>
+                <AttributeStep>false</AttributeStep>
+            </AuthenticationStep>
+        </AuthenticationSteps>
+        <AuthenticationType>flow</AuthenticationType>
+        <alwaysSendBackAuthenticatedListOfIdPs>false</alwaysSendBackAuthenticatedListOfIdPs>
+        <UseTenantDomainInUsername>false</UseTenantDomainInUsername>
+        <UseUserstoreDomainInUsername>false</UseUserstoreDomainInUsername>
+        <EnableAuthorization>false</EnableAuthorization>
+        <AuthenticationScript enabled="false" language="application/javascript"><![CDATA[function onLoginRequest(context) {
+  executeStep(1);
+  executeStep(2);
+}
+]]></AuthenticationScript>
+    </LocalAndOutBoundAuthenticationConfig>
+</ServiceProvider>
