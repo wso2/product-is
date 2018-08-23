@@ -22,15 +22,20 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.user.profile.stub.types.AssociatedAccountDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
+
+import java.io.File;
 
 public class UserProfileAdminTestCase extends ISIntegrationTest {
 
@@ -39,10 +44,28 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     private AuthenticatorClient logManger;
     private String userId1 = "UserProfileAdminTestUser1";
 
+
+    private File identityXml;
+    private ServerConfigurationManager serverConfigurationManager;
     private IdentityProviderMgtServiceClient idpMgtClient;
     
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+        super.init();
+
+        identityXml = new File(Utils.getResidentCarbonHome() + File.separator
+                + "repository" + File.separator + "conf" + File.separator
+                + "identity" + File.separator + "identity.xml");
+        File identityXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
+                "artifacts" + File.separator + "IS" + File.separator + "user" + File.separator
+                + "enable-federated-association.xml");
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy,
+                identityXml, true);
+
+        serverConfigurationManager.restartGracefully();
+
         super.init();
         logManger = new AuthenticatorClient(backendURL);
         
@@ -56,6 +79,13 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     public void atEnd() throws Exception {
         userMgtClient.deleteUser(userId1);
         logManger = null;
+        log.info("Replacing identity.xml with default configurations");
+
+        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
+        serverConfigurationManager.restartGracefully();
 
     }
     
