@@ -1725,7 +1725,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.115</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.118</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1798,10 +1798,10 @@
         <!-- Connectors -->
         <authenticator.totp.version>2.0.14</authenticator.totp.version>
         <authenticator.office365.version>1.0.4</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.14</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.11</authenticator.emailotp.version>
+        <authenticator.smsotp.version>2.0.15</authenticator.smsotp.version>
+        <authenticator.emailotp.version>2.0.12</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.7</authenticator.x509.version>
+        <authenticator.x509.version>2.0.8</authenticator.x509.version>
 
         <conditional.authentication.functions.version>0.1.27</conditional.authentication.functions.version>
 
