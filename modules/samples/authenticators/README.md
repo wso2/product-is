@@ -8,9 +8,7 @@ This describes the steps to configure and run the sample authenticators with Ide
 Prerequisites
 --------------
 
-Build Identity Server 5.5.0
-
-Tomcat 7 or above - To deploy the sample authenticator web app
+Build Identity Server 
 
 
 Configuration
@@ -21,26 +19,25 @@ Configuration
 
 2. Add the following entries under <AuthenticatorConfigs> in <IS_SERVER_HOME>/repository/conf/application-authentication.xml file.
 
+```
 <AuthenticatorConfigs>
 ...
 ...
     <AuthenticatorConfig name="DemoHardwareKeyAuthenticator" enabled="true" />
     <AuthenticatorConfig name="DemoFingerprintAuthenticator" enabled="true" />
     <AuthenticatorConfig name="DemoFaceIdAuthenticator" enabled="true" />
-    <AuthenticatorConfig name="RequestAttributeExtractor" enabled="true">
-        <Parameter name="Headers">User-Agent,Host</Parameter>
-    </AuthenticatorConfig>
     
 </AuthenticatorConfigs>
 
+```
 3. Copy the sample-auth.war in the target folder to <IS_SERVER_HOME>/repository/deployment/server/webapp folder.
 
 4. Restart WSO2 Identity Server.
 
 5. Following authenticators will be available under local authenticators after above configurations.
 
-    Sample Fingerprint Authenticator
-    Sample HardwareKey Authenticator
-    Sample Retina Authenticator
+    Demo Fingerprint Authenticator
+    Demo HardwareKey Authenticator
+    Demo Retina Authenticator
 
 
