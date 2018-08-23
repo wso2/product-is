@@ -120,6 +120,16 @@
                                     </outputDirectory>
                                     <includes>**/*.jar</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
+                                    <artifactId>org.wso2.carbon.identity.application.authentication.handler.identifier</artifactId>
+                                    <version>${identity.local.auth.basicauth.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

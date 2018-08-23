@@ -1426,6 +1426,11 @@
                 <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth.jwt</artifactId>
                 <version>${identity.local.auth.basicauth.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authentication.handler.identifier</artifactId>
+                <version>${identity.local.auth.basicauth.version}</version>
+            </dependency>
 
             <!-- Local Authentication API Connector -->
             <dependency>
@@ -1782,7 +1787,7 @@
         <provisioning.connector.scim.version>5.1.10</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Properties -->
-        <identity.local.auth.basicauth.version>6.0.4</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.0.5</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.13</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
 
