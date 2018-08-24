@@ -36,6 +36,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 public class UserProfileAdminTestCase extends ISIntegrationTest {
 
@@ -53,12 +54,12 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
 
-        identityXml = new File(Utils.getResidentCarbonHome() + File.separator
+        identityXml =  Paths.get(Utils.getResidentCarbonHome() + File.separator
                 + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "identity.xml");
-        File identityXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
+                + "identity" + File.separator + "identity.xml").toFile();
+        File identityXmlToCopy =  Paths.get(FrameworkPathUtil.getSystemResourceLocation() +
                 "artifacts" + File.separator + "IS" + File.separator + "user" + File.separator
-                + "enable-federated-association.xml");
+                + "enable-federated-association.xml").toFile();
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy,
@@ -81,7 +82,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         logManger = null;
         log.info("Replacing identity.xml with default configurations");
 
-        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
+        File defaultIdentityXML = Paths.get(getISResourceLocation() + File.separator + "default-identity.xml").toFile();
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
