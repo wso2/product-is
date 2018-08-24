@@ -188,6 +188,10 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
         org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP =
                 new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
         idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
+        org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig saml2SSOAuthnConfig = new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
+        saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
+        saml2SSOAuthnConfig.setDisplayName("samlsso");
+        idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
         authStep.setFederatedIdentityProviders(
                 new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{idP});
         serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(
