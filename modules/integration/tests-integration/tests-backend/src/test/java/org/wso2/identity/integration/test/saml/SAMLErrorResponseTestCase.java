@@ -115,7 +115,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         tomcatServer = getTomcat();
 
         URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + ARTIFACT_ID + ".war");
+                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + ARTIFACT_ID + ".war");
         startTomcat(tomcatServer, "/" + ARTIFACT_ID, resourceUrl.getPath());
     }
 
@@ -235,8 +235,8 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
     private void setSystemProperties() {
 
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
+                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty(JAVAX_NET_SSL_TRUSTORE, resourceUrl.getPath());
         System.setProperty(JAVAX_NET_SSL_TRUSTORE_PASSWORD, "wso2carbon");
         System.setProperty(JAVAX_NET_SSL_TRUSTORE_TYPE, "JKS");

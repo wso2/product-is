@@ -27,6 +27,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.apache.catalina.startup.Tomcat;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -84,7 +85,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
         try {
             tomcat = getTomcat();
             URL resourceUrl =
-                    getClass().getResource(File.separator + "samples" + File.separator +
+                    getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
                             "playground2.war");
             startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
 

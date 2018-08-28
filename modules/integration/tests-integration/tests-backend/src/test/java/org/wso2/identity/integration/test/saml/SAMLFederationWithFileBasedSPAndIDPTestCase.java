@@ -45,6 +45,7 @@ import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilExcepti
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -102,7 +103,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         startCarbonServer(PORT_OFFSET_1, secondaryISServer, startupParameters);
         // Deploy webapp in Tomcat
         super.startTomcat(TOMCAT_8490);
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
         super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
         // Create service clients
         super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants

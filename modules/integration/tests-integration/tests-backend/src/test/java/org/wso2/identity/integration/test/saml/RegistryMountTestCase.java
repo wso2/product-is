@@ -150,7 +150,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         log.info("Starting Tomcat");
         tomcatServer = getTomcat();
 
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + artifact + ".war");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + artifact + ".war");
         startTomcat(tomcatServer, "/" + artifact, resourceUrl.getPath());
 
         ssoConfigServiceClient

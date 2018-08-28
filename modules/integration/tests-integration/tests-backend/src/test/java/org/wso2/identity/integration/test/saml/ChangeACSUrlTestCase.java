@@ -42,6 +42,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -110,7 +111,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.startTomcat(TOMCAT_8490);
 
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
         super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
 
 

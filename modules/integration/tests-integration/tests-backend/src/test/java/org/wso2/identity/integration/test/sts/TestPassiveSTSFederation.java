@@ -21,6 +21,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -82,7 +83,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         super.startTomcat(TOMCAT_8490);
         super.addWebAppToTomcat(TOMCAT_8490, PASSIVE_STS_SAMPLE_APP_NAME,
-                                getClass().getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war").getPath());
+                                getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "PassiveSTSSampleApp.war").getPath());
         //servers getting ready...
         Thread.sleep(10000);
 

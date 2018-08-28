@@ -41,6 +41,7 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
@@ -93,7 +94,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
         try {
             tomcat = getTomcat();
             URL resourceUrl = getClass()
-                    .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+                    .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
             tomcat.addWebapp(tomcat.getHost(), "/travelocity.com", resourceUrl.getPath());
             tomcat.start();
         } catch (Exception e) {

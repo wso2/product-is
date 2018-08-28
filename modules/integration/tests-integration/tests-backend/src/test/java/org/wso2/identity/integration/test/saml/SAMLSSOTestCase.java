@@ -274,7 +274,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         tomcatServer = Utils.getTomcat(getClass());
 
         URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + config.getApp().getArtifact() + ".war");
+                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
         Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
 
     }

@@ -31,6 +31,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -241,7 +242,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
 
     private void registerAndDeployApplication() throws Exception {
         tomcat = getTomcat();
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "playground2.war");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "playground2.war");
         try {
             startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
         } catch (LifecycleException e) {

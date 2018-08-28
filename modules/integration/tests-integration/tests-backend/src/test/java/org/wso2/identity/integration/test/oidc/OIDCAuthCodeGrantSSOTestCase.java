@@ -38,6 +38,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
 import org.wso2.identity.integration.test.util.Utils;
@@ -438,7 +439,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     protected void deployApplications() {
 
         for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
-            URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + entry.getKey() +
+            URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + entry.getKey() +
                     "" + ".war");
             tomcat.addWebapp(tomcat.getHost(), entry.getValue().getApplicationContext(), resourceUrl.getPath());
         }
