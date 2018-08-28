@@ -144,8 +144,8 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
 
         //TODO: Uncomment below once the tomcat dependency issue is resolved
 //        URL resourceUrl = getClass()
-//                .getResource(File.separator + "samples" + File.separator + "org.wso2.sample.is .sso.agent.war");
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+//                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "org.wso2.sample.is .sso.agent.war");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
         startTomcat(tomcatServer, "/travelocity.com", resourceUrl.getPath());
 
     }
@@ -210,8 +210,8 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     }
 
     private void setSystemProperties() {
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                                                 + "products" + File.separator + "wso2carbon.jks");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
+                                                 + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
                            "wso2carbon");

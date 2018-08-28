@@ -109,7 +109,7 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
         try {
             tomcat = getTomcat();
             URL resourceUrl = getClass()
-                    .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+                    .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
             startTomcat(tomcat, "/travelocity.com", resourceUrl.getPath());
 
         } catch (Exception e) {

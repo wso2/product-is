@@ -27,20 +27,16 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.carbon.identity.user.store.configuration.stub.api.Properties;
-import org.wso2.carbon.identity.user.store.configuration.stub.api.Property;
-import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
-import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class ISIntegrationTest {
 
+    public static final String URL_SEPARATOR = "/";
     protected Log log = LogFactory.getLog(getClass());
     protected AutomationContext isServer;
     protected String backendURL;
@@ -133,8 +129,8 @@ public class ISIntegrationTest {
 //    }
 
     public void setSystemproperties() {
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
+        URL resourceUrl = getClass().getResource(URL_SEPARATOR + "keystores" + URL_SEPARATOR
+                + "products" + URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
                 "wso2carbon");

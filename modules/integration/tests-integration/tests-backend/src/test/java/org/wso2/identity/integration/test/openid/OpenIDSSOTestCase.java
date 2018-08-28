@@ -183,7 +183,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         log.info("Starting Tomcat");
         tomcatServer = getTomcat();
         URL resourceURL =
-                getClass().getResource(File.separator + "samples" + File.separator + config.getAppType().getArtifact()
+                getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getAppType().getArtifact()
                                        + ".war");
         tomcatServer.addWebapp(tomcatServer.getHost(), "/" + config.getAppType().getArtifact(), resourceURL.getPath());
         tomcatServer.start();
@@ -291,8 +291,8 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     }
 
     private void setSystemProperties() {
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
+                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
                 "wso2carbon");

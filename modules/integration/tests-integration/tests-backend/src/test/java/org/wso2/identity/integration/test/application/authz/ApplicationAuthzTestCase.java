@@ -37,6 +37,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
@@ -111,7 +112,7 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         tomcatServer = Utils.getTomcat(getClass());
 
         URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
         Utils.startTomcat(tomcatServer, "/" + APPLICATION_NAME, resourceUrl.getPath());
 
     }

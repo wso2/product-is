@@ -42,6 +42,7 @@ import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -354,7 +355,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private void deployTravelocity() throws Exception {
 
         tomcat = getTomcat();
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator +
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
                 "travelocity.com.war");
         startTomcat(tomcat, OAuth2Constant.TRAVELOCITY_APP_CONTEXT_ROOT, resourceUrl.getPath());
     }
