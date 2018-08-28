@@ -34,6 +34,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
@@ -104,7 +105,7 @@ public class Utils {
     }
 
     public static void setSystemProperties(Class classIn) {
-        URL resourceUrl = classIn.getResource(File.separator + "keystores" + File.separator + "products" + File
+        URL resourceUrl = classIn.getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR + "products" + File
                 .separator + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");

@@ -189,7 +189,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         tomcatServer = getTomcat();
 
         URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + config.getApp().getArtifact() + ".war");
+                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
         startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
 
     }
@@ -286,8 +286,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         try {
             log.info("RESPONSE " + this.samlResponse);
             String id = QueryClientUtils.getAssertionId(this.samlResponse);
-            URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                    + "products" + File.separator + "wso2carbon.jks");
+            URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
+                    + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
             ClientSignKeyDataHolder signKeyDataHolder = null;
             try {
                 signKeyDataHolder = new ClientSignKeyDataHolder(resourceUrl.getPath(),
@@ -309,8 +309,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     public void testSAMLAttributeQueryRequest() throws Exception {
 
         try {
-            URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                    + "products" + File.separator + "wso2carbon.jks");
+            URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
+                    + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
             ClientSignKeyDataHolder signKeyDataHolder = new ClientSignKeyDataHolder(resourceUrl.getPath(),
                     "wso2carbon", "wso2carbon");
             String serverURL = TestUserMode.TENANT_ADMIN.equals(config.getUserMode()) ? WSO2IS_TENANT_URL : WSO2IS_URL;
@@ -373,8 +373,8 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
 
     private void setSystemProperties() {
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
+                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
                 "wso2carbon");

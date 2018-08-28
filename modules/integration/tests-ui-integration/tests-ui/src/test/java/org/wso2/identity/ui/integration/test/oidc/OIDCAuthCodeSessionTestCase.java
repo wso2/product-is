@@ -289,7 +289,7 @@ public class OIDCAuthCodeSessionTestCase extends OIDCAbstractUIIntegrationTest {
 
         for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
             URL resourceUrl =
-                    getClass().getResource(File.separator + "samples" + File.separator + entry.getKey() + ".war");
+                    getClass().getResource(URL_SEPARATOR + "samples" + URL_SEPARATOR + entry.getKey() + ".war");
             tomcat.addWebapp(tomcat.getHost(), entry.getValue().getApplicationContext(), resourceUrl.getPath());
         }
     }

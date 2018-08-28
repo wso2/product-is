@@ -48,6 +48,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -110,10 +111,10 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
 //TODO: Need to fix tomcat issue
         super.startTomcat(TOMCAT_8490);
-//        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", getClass().getResource(File.separator + "samples" +
-//                                                                                        File.separator + "org.wso2.sample.is.sso.agent.war").getPath());
+//        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" +
+//                                                                                        ISIntegrationTest.URL_SEPARATOR + "org.wso2.sample.is.sso.agent.war").getPath());
 
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
         super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
 
 

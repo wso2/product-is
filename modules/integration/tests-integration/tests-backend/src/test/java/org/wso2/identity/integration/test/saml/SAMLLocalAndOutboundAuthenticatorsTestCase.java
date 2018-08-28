@@ -263,7 +263,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
         log.info("Starting Tomcat");
         tomcatServer = Utils.getTomcat(getClass());
 
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + config.getApplication
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApplication
                 ().getArtifact() + "" + ".war");
         Utils.startTomcat(tomcatServer, "/" + config.getApplication().getArtifact(), resourceUrl.getPath());
 
