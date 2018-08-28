@@ -265,7 +265,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         log.info("Starting Tomcat");
         tomcatServer = Utils.getTomcat(getClass());
 
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + config.getApp()
+        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp()
                 .getArtifact() + ".war");
         Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
 
