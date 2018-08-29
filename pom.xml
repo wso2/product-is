@@ -1808,7 +1808,7 @@
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.8</authenticator.x509.version>
 
-        <conditional.authentication.functions.version>0.1.27</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>0.1.28</conditional.authentication.functions.version>
 
         <!-- Forget-me tool -->
         <forgetme.tool.version>1.1.20</forgetme.tool.version>
