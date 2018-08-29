@@ -44,12 +44,6 @@
             <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>is-helloworld-app</artifactId>
-            <type>war</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
@@ -109,35 +103,6 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target/forget-me</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-sample</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.is</groupId>
-                                    <artifactId>is-helloworld-app</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/getting-started/webapp</outputDirectory>
-                                    <destFileName>hello-world.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.eclipse.jetty</groupId>
-                                    <artifactId>jetty-runner</artifactId>
-                                    <version>${org.eclipse.jetty.runner.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/getting-started/lib</outputDirectory>
-                                    <destFileName>jetty-runner.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -402,25 +367,6 @@
                                     </fileset>
                                 </copy>
                                 <delete dir="${tempdir}" />
-
-                                <mkdir dir="target/getting-started/bin" />
-                                <copy todir="target/getting-started/bin" overwrite="false">
-                                    <fileset dir="../samples/helloworld/is-helloworld-app/src/main/resources/">
-                                        <include name="hello-world.sh" />
-                                        <include name="hello-world.bat" />
-                                    </fileset>
-                                </copy>
-                                <mkdir dir="target/getting-started/conf" />
-                                <copy todir="target/getting-started/conf" overwrite="false">
-                                    <fileset dir="../samples/helloworld/is-helloworld-app/src/main/resources/">
-                                        <include name="hello-world.properties" />
-                                    </fileset>
-                                </copy>
-                                <copy todir="target/getting-started" overwrite="false">
-                                    <fileset dir="../samples/helloworld/is-helloworld-app/src/main/resources/">
-                                        <include name="README" />
-                                    </fileset>
-                                </copy>
                             </tasks>
                         </configuration>
                     </execution>
@@ -441,7 +387,6 @@
                                 <delete dir="target/site" />
                                 <delete dir="src/site" />
                                 <delete dir="target/forget-me" />
-                                <delete dir="target/getting-started" />
                             </tasks>
                         </configuration>
                     </execution>
