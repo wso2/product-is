@@ -119,8 +119,9 @@ public class UserStorePasswordMigrator extends Migrator {
             String newEncryptedPassword = null;
             while (it.hasNext()) {
                 OMElement element = (OMElement) it.next();
-                if ("password".equals(element.getAttributeValue(new QName("name"))) || "ConnectionPassword"
-                        .equals(element.getAttributeValue(new QName("name")))) {
+                if ("true".equals(element.getAttributeValue(new QName("encrypted"))) && (
+                        "password".equals(element.getAttributeValue(new QName("name"))) || "ConnectionPassword"
+                                .equals(element.getAttributeValue(new QName("name"))))) {
                     String encryptedPassword = element.getText();
                     newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(encryptedPassword);
                     if (StringUtils.isNotEmpty(newEncryptedPassword)) {
