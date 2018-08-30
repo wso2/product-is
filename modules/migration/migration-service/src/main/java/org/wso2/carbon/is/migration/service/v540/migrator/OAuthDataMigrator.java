@@ -152,11 +152,7 @@ public class OAuthDataMigrator extends Migrator {
                 consumerApp.setRefreshTokenExpiryTime(refreshTokenExpiryTime);
             }
 
-            if (consumerApp.getApplicationAccessTokenExpiryTime() != 3600
-                    || consumerApp.getUserAccessTokenExpiryTime() != 3600
-                    || consumerApp.getRefreshTokenExpiryTime() != 84600) {
-                updatedConsumerApps.add(consumerApp);
-            }
+            updatedConsumerApps.add(consumerApp);
         }
 
         if (!updatedConsumerApps.isEmpty()) {
