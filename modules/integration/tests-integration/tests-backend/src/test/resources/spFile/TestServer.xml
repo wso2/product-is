@@ -209,18 +209,6 @@ function onLoginRequest(context) {
       </ApplicationPermission>
     </Permissions>
     <RoleMappings>
-      <RoleMapping>
-        <localRole>
-          <LocalRoleName>test</LocalRoleName>
-        </localRole>
-        <remoteRole>sp_test</remoteRole>
-      </RoleMapping>
-      <RoleMapping>
-        <localRole>
-          <LocalRoleName>local</LocalRoleName>
-        </localRole>
-        <remoteRole>sp_local</remoteRole>
-      </RoleMapping>
     </RoleMappings>
     <IdpRoles/>
   </PermissionAndRoleConfig>
