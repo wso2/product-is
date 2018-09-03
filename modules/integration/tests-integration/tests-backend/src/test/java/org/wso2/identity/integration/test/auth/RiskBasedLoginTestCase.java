@@ -42,6 +42,7 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.MicroserviceServer;
 import org.wso2.identity.integration.common.utils.MicroserviceUtil;
 import org.wso2.identity.integration.test.util.Utils;
@@ -89,11 +90,12 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         super.init();
 
         InputStream webappUrl = getClass()
-                .getResourceAsStream(File.separator + "samples" + File.separator + "authenticators" + File.separator +
-                        "sample-auth.war");
+                .getResourceAsStream(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
+                        "authenticators" + ISIntegrationTest.URL_SEPARATOR + "sample-auth.war");
 
         InputStream jarUrl = getClass()
-                .getResourceAsStream(File.separator + "samples" + File.separator + "authenticators" + File.separator +
+                .getResourceAsStream(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
+                        "authenticators" + ISIntegrationTest.URL_SEPARATOR +
                         "org.wso2.carbon.identity.sample.extension.authenticators.jar");
 
         File jarDestFile = new File(Utils.getResidentCarbonHome()
