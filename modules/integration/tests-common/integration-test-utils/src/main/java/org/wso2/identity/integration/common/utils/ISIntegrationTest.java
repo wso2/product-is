@@ -129,9 +129,9 @@ public class ISIntegrationTest {
 //    }
 
     public void setSystemproperties() {
-        URL resourceUrl = getClass().getResource(URL_SEPARATOR + "keystores" + URL_SEPARATOR
-                + "products" + URL_SEPARATOR + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
+
+        System.setProperty("javax.net.ssl.trustStore", FrameworkPathUtil.getSystemResourceLocation() + File.separator +
+                "keystores" + File.separator  + "products" + File.separator + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword",
                 "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
