@@ -12,6 +12,7 @@ var identityProviderMgtClient = require('controllers/service-clients/identityPro
 var userProfileMgtClient = require('controllers/service-clients/userProfileMgtClient.jag');
 var identityProviderAdminClient = require('controllers/service-clients/identityProviderAdminClient.jag');
 var userCoreUtils = Packages.org.wso2.carbon.user.core.util.UserCoreUtil;
+var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 
 if (action != null) {
@@ -51,14 +52,21 @@ if (action != null) {
             print(getErrorMessage(e.message));
         }
     } else if (action == 'fedConnect') {
-        var idPId = request.getParameter('idPId');
-        var username = request.getParameter('username');
 
-        try {
-            userProfileMgtClient.associateID(idPId, username);
-            print('{"success":true}');
-        } catch (e) {
-            print(getErrorMessage(e.message));
+        var isAllowed = identityUtil.isFederatedUserAssociationEnabled();
+
+        if (isAllowed == 'true') {
+            var idPId = request.getParameter('idPId');
+            var username = request.getParameter('username');
+
+            try {
+                userProfileMgtClient.associateID(idPId, username);
+                print('{"success":true}');
+            } catch (e) {
+                print(getErrorMessage(e.message));
+            }
+        } else {
+            print(getErrorMessage('Error:Federated user association is not allowed in the server'));
         }
     } else if (action == 'associatedIdList') {
 
