@@ -28,7 +28,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
+import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
@@ -291,8 +293,10 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     private void setSystemProperties() {
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
+
+        File trustStoreLocation = new File(FrameworkPathUtil.getSystemResourceLocation() + File.separator +
+                "keystores" + File.separator  + "products" + File.separator + "wso2carbon.jks");
+        System.setProperty("javax.net.ssl.trustStore", trustStoreLocation.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
