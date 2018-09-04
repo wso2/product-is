@@ -78,6 +78,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String SAML_IDP_SLO_URL = SAML_SSO_URL + "?slo=true";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
@@ -306,7 +307,7 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                             "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLRelayStateDecode" })
+    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLSSOIdPLogout" })
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
@@ -462,8 +463,27 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
                         "" + receivedRelayState + "\n");
             }
 
+            EntityUtils.consumeQuietly(response.getEntity());
+
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
+            dependsOnMethods = { "testSAMLRelayStateDecode" })
+    public void testSAMLSSOIdPLogout() throws Exception {
+
+        try {
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+                HttpResponse response = Utils.sendGetRequest(SAML_IDP_SLO_URL, USER_AGENT, httpClient);
+                String resultPage = extractDataFromResponse(response);
+
+                Assert.assertTrue(resultPage.contains("You have successfully logged out") &&
+                        !resultPage.contains("error"), "SAML SSO IdP Logout failed for " + config);
+            }
+        } catch (Exception e) {
+            Assert.fail("SAML SSO IdP Logout test failed for " + config, e);
         }
     }
 
