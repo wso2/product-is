@@ -142,7 +142,7 @@ public class EntitlementRestServiceTestCase extends ISIntegrationTest {
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testPublishPolicy"}, description = "Test get decision")
-    public void testGetDecision() throws IOException {
+    public void testGetDecision() throws Exception {
 
         HttpPost postRequest = new HttpPost(String.format(ENDPOINT, serverPort, "pdp"));
         postRequest.setHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -193,6 +193,7 @@ public class EntitlementRestServiceTestCase extends ISIntegrationTest {
         StringEntity entity = new StringEntity(request);
         postRequest.setEntity(entity);
 
+        Thread.sleep(5000);
 
         HttpResponse response = httpClient.execute(postRequest);
 
