@@ -1522,6 +1522,11 @@
                 and dependencies section)
             -->
             <dependency>
+                <groupId>org.wso2.carbon.healthcheck</groupId>
+                <artifactId>org.wso2.carbon.healthcheck.server.feature</artifactId>
+                <version>${carbon.healthcheck.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.carbon.auth.saml2</groupId>
                 <artifactId>org.wso2.carbon.identity.authenticator.saml2.sso.feature</artifactId>
                 <version>${identity.carbon.auth.saml2.version}</version>
@@ -1941,6 +1946,7 @@
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
         <msf4j.version>2.6.2</msf4j.version>
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
+        <carbon.healthcheck.version>1.0.0</carbon.healthcheck.version>
     </properties>
 
     <repositories>
