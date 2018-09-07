@@ -442,6 +442,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.conditional.auth.functions:org.wso2.carbon.identity.conditional.auth.functions.server.feature:${conditional.authentication.functions.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.healthcheck:org.wso2.carbon.healthcheck.server.feature:${carbon.healthcheck.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -903,6 +906,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.healthcheck.server.feature.group</id>
+                                    <version>${carbon.healthcheck.version}</version>
                                 </feature>
 
                             </features>
@@ -1375,7 +1382,10 @@
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.healthcheck.server.feature.group</id>
+                                    <version>${carbon.healthcheck.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1808,7 +1818,10 @@
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.healthcheck.server.feature.group</id>
+                                    <version>${carbon.healthcheck.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -2030,7 +2043,10 @@
                                     <id>org.wso2.carbon.identity.conditional.auth.functions.server.feature.group</id>
                                     <version>${conditional.authentication.functions.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.healthcheck.server.feature.group</id>
+                                    <version>${carbon.healthcheck.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

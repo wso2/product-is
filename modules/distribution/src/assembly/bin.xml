@@ -293,6 +293,16 @@
             </includes>
         </fileSet>
 
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#health-check#v1.0.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy the oauth2 grant type extensions -->
         <fileSet>
             <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
@@ -1029,6 +1039,11 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/certificate-validation.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/health-check-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
     </files>
