@@ -1816,7 +1816,7 @@
         <conditional.authentication.functions.version>0.1.28</conditional.authentication.functions.version>
 
         <!-- Forget-me tool -->
-        <forgetme.tool.version>1.1.20</forgetme.tool.version>
+        <forgetme.tool.version>1.1.21</forgetme.tool.version>
 
         <!--Identity Repo Versions End-->
 
