@@ -1730,13 +1730,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.140</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.141</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.9</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.22</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.42</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.50</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1845,7 +1845,7 @@
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>3.8.1</junit.version>
-        <carbon.kernel.version>4.4.34</carbon.kernel.version>
+        <carbon.kernel.version>4.4.35</carbon.kernel.version>
         <carbon.commons.version>4.6.43</carbon.commons.version>
         <carbon.dashboards.version>2.0.19</carbon.dashboards.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
