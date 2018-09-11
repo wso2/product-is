@@ -115,23 +115,20 @@ public class DBSeperationTestCase extends ISIntegrationTest {
     public void updateIdpTest() {
         try {
             IdentityProvider identityProvider = new IdentityProvider();
-            identityProvider.setIdentityProviderName("tenantIdp");
+            identityProvider.setIdentityProviderName(TENANT_IDP);
             ProvisioningConnectorConfig scimConfig = new ProvisioningConnectorConfig();
             scimConfig.setName("scim");
             Property userProperty = new Property();
             userProperty.setName("scim-username");
             userProperty.setValue("admin");
             scimConfig.addProvisioningProperties(userProperty);
-            identityProvider.setProvisioningConnectorConfigs(new ProvisioningConnectorConfig[]{scimConfig});
+            identityProvider.setProvisioningConnectorConfigs(new ProvisioningConnectorConfig[] { scimConfig });
             identityProviderMgtServiceClient.addIdP(identityProvider);
             identityProviderMgtServiceClient.deleteIdP(TENANT_IDP);
-            Assert.assertFalse("Failed to delete IdP: " + TENANT_IDP + " when UM tables and Identity tables are " +
-                    "separated into two databases.", logViewer.getAllRemoteSystemLogs()[0].getPriority().equals
-                    ("ERROR") && logViewer.getAllRemoteSystemLogs()[0].getMessage().contains("Error when provisioning" +
-                    " IDP deletion"));
+            IdentityProvider deletedIdP = identityProviderMgtServiceClient.getIdPByName(TENANT_IDP);
+            Assert.assertNull("Failed to delete the IdP :" + TENANT_IDP, deletedIdP);
         } catch (Exception e) {
             Assert.fail("Identity Provider addition or deletion failed at database separation test.");
         }
-
     }
 }
