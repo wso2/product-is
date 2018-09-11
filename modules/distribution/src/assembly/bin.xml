@@ -551,6 +551,14 @@
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>target/forget-me-webapp/</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
+            <includes>
+                <include>forgetme#v1.0.war</include>
+            </includes>
+            <fileMode>644</fileMode>
+        </fileSet>
 
         <!--Copy scope validator to dropins dropins.-->
         <fileSet>
