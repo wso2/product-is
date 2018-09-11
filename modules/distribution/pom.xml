@@ -44,6 +44,11 @@
             <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
         </dependency>
         <dependency>
+          <groupId>org.wso2.carbon.privacy</groupId>
+          <artifactId>org.wso2.carbon.privacy.forgetme.rest</artifactId>
+          <type>war</type>
+        </dependency>
+        <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
@@ -103,6 +108,26 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target/forget-me</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-forgetme-war</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.privacy</groupId>
+                                    <artifactId>org.wso2.carbon.privacy.forgetme.rest</artifactId>
+                                    <version>${forgetme.tool.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>forgetme#v1.0.war</destFileName>
+                                    <outputDirectory>target/forget-me-webapp</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
