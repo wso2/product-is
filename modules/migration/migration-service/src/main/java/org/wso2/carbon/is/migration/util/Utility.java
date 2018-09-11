@@ -203,6 +203,22 @@ public class Utility {
     }
 
     /**
+     * Return the tenant IDs of all the tenants or tenant range by checking migrateTenantRange option is enabled.
+     *
+     * @return tenant ID set
+     * @throws MigrationClientException
+     */
+    public static Set<Integer> getTenantIDs() throws MigrationClientException {
+        Set<Integer> tenantIDs = new HashSet<>();
+        if (Utility.isMigrateTenantRange()) {
+            for (Tenant tenant : getTenants()) {
+                tenantIDs.add(tenant.getId());
+            }
+        }
+        return tenantIDs;
+    }
+
+    /**
      * Return whether tenant range migration option is enabled.
      *
      * @return boolean status of tenant range migration
