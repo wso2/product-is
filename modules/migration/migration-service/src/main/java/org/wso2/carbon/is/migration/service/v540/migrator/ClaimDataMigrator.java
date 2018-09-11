@@ -93,20 +93,10 @@ public class ClaimDataMigrator extends Migrator {
             Set<Tenant> tenants = Utility.getTenants();
             List<Integer> inactiveTenants = Utility.getInactiveTenants();
             boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
-            Set<Integer> tenantRangeID = new HashSet<>();
-            if (Utility.isMigrateTenantRange()) {
-                for (Tenant tenant : Utility.getTenants()) {
-                    tenantRangeID.add(tenant.getId());
-                }
-            }
             for (Tenant tenant : tenants) {
                 int tenantId = tenant.getId();
                 if (ignoreForInactiveTenants && inactiveTenants.contains(tenantId)) {
                     log.info("Skipping claim data migration for Inactive tenant : " + tenantId);
-                    continue;
-                }
-                if (Utility.isMigrateTenantRange() && !tenantRangeID.contains(tenantId)) {
-                    log.info("Tenant " + tenantId + " is not in range, Skipping claim data migration.");
                     continue;
                 }
                 migrateClaimData(tenant.getId());
