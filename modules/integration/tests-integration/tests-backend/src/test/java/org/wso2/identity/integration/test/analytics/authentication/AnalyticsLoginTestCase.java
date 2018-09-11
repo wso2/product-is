@@ -99,7 +99,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private ThriftServer thriftServer;
     private ServerConfigurationManager serverConfigurationManager;
     HttpClient sharedHttpClient = new DefaultHttpClient();
-    private static final Long WAIT_TIME = 3000L;
+    private static final Long WAIT_TIME = 10000L;
 
 
     private String resultPage;
