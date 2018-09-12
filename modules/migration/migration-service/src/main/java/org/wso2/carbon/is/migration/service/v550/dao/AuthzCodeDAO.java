@@ -79,6 +79,8 @@ public class AuthzCodeDAO {
             } catch (SQLException e) {
                 isAuthzCodeColumnsExist = false;
             }
+        } catch (SQLException e) {
+            isAuthzCodeColumnsExist = false;
         }
         return isAuthzCodeColumnsExist;
     }

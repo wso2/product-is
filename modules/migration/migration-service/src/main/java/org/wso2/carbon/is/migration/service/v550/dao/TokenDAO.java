@@ -83,6 +83,8 @@ public class TokenDAO {
             } catch (SQLException e) {
                 isTokenHashColumnsExist = false;
             }
+        } catch (SQLException e) {
+            isTokenHashColumnsExist = false;
         }
         return isTokenHashColumnsExist;
     }
