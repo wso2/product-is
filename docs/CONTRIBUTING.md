@@ -9,9 +9,9 @@ All WSO2 products are based on a common platform called WSO2 Carbon. It is there
 3.	Build the WSO2 identity server code.
 
 > **Note**: This was tested with the following versions of the products:
->  * carbon-identity-framework – v5.7.5
->  * carbon-kernel – v 4.4.11
->  * product-is – v5.3.0
+>  * carbon-identity-framework – v5.12.153
+>  * carbon-kernel – v 4.4.35
+>  * product-is – v5.7.0
 
 ###	Import source code in Eclipse IDE
 
