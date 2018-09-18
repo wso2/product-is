@@ -293,6 +293,16 @@
             </includes>
         </fileSet>
 
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#health-check#v1.0.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy the oauth2 grant type extensions -->
         <fileSet>
             <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
@@ -539,6 +549,14 @@
         <fileSet>
             <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/</directory>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>target/forget-me-webapp/</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
+            <includes>
+                <include>forgetme#v1.0.war</include>
+            </includes>
             <fileMode>644</fileMode>
         </fileSet>
 
@@ -1029,6 +1047,19 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/certificate-validation.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/health-check-config.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <!--In-Place Updates-->
+        <file>
+            <source>updates/product.txt</source>
+            <outputDirectory>wso2is-${pom.version}/updates/</outputDirectory>
+            <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
     </files>
