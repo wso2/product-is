@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.is.migration.service.v530.migrator;
+package org.wso2.carbon.is.migration.service.v540.migrator;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -27,10 +27,10 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.service.v530.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.service.Migrator;
+import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 import org.wso2.carbon.user.api.Tenant;
-import org.wso2.carbon.is.migration.service.Migrator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +46,8 @@ import javax.xml.stream.XMLStreamReader;
 
 public class UserStorePasswordMigrator extends Migrator {
 
-    private static final Log log = LogFactory.getLog(UserStorePasswordMigrator.class);
+    private static final Log log = LogFactory.getLog(
+            UserStorePasswordMigrator.class);
 
     @Override
     public void migrate() throws MigrationClientException {
