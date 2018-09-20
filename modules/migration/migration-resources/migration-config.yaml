@@ -120,6 +120,11 @@ versions:
   version: "5.4.0"
   migratorConfigs:
    -
+    name: "PermissionMigrator"
+    order: 1
+    parameters:
+      schema: "um"
+   -
     name: "SchemaMigrator"
     order: 1
     parameters:

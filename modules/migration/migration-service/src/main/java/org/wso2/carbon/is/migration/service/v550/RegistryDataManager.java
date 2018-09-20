@@ -221,6 +221,8 @@ public class RegistryDataManager {
     }
 
     private void migrateKeyStorePasswordForTenant(int tenantId) throws RegistryException, CryptoException {
+
+        IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenantId);
         Registry registry = IdentityTenantUtil.getRegistryService().getGovernanceSystemRegistry(tenantId);
         if (registry.resourceExists(KEYSTORE_RESOURCE_PATH)) {
             Collection keyStoreCollection = (Collection) registry.get(KEYSTORE_RESOURCE_PATH);
@@ -228,6 +230,7 @@ public class RegistryDataManager {
                 updateRegistryProperties(registry, keyStorePath,
                         new ArrayList<>(Arrays.asList(PASSWORD, PRIVATE_KEY_PASS)));
             }
+            log.info("keystore migration successful for tenant : " + IdentityTenantUtil.getTenantDomain(tenantId));
         }
     }
 
