@@ -104,7 +104,7 @@ public class PermissionMigrator extends Migrator {
     }
 
     public List<RolePermission> getDuplicatedRolePermissions(Connection connection,
-                                                             List<Permission> duplicatedPermissions) throws MigrationClientException, SQLException {
+            List<Permission> duplicatedPermissions) throws MigrationClientException, SQLException {
 
         List<RolePermission> allRolePermissions = getAllRolePermissions(connection);
         List<RolePermission> uniqueRolePermissions = new ArrayList<>();
@@ -134,7 +134,7 @@ public class PermissionMigrator extends Migrator {
     }
 
     private List<UserPermission> getDuplicatedUserPermissions(Connection connection,
-                                                              List<Permission> duplicatedPermissions) throws MigrationClientException, SQLException {
+            List<Permission> duplicatedPermissions) throws MigrationClientException, SQLException {
 
         List<UserPermission> allUserPermissions = getAllUserPermissions(connection);
         List<UserPermission> uniqueUserPermissions = new ArrayList<>();
@@ -168,7 +168,7 @@ public class PermissionMigrator extends Migrator {
         List<Permission> allPermissions = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(getPermissionSelectQuery());
-             ResultSet resultSet = statement.executeQuery()) {
+                ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Permission permission = new Permission(resultSet.getInt("UM_ID"), resultSet.getString("UM_RESOURCE_ID"),
                         resultSet.getString("UM_ACTION"), resultSet.getInt("UM_TENANT_ID"));
@@ -188,7 +188,7 @@ public class PermissionMigrator extends Migrator {
         List<RolePermission> allRolePermissions = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(getRolePermissionSelectQuery());
-             ResultSet resultSet = statement.executeQuery()) {
+                ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 RolePermission rolePermission = new RolePermission(resultSet.getInt("UM_ID"),
                         resultSet.getInt("UM_PERMISSION_ID"), resultSet.getString("UM_ROLE_NAME"),
@@ -209,7 +209,7 @@ public class PermissionMigrator extends Migrator {
         List<UserPermission> allUserPermissions = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(getUserPermissionSelectQuery());
-             ResultSet resultSet = statement.executeQuery()) {
+                ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 UserPermission userPermission = new UserPermission(resultSet.getInt("UM_ID"),
                         resultSet.getInt("UM_PERMISSION_ID"), resultSet.getString("UM_USER_NAME"),
@@ -226,32 +226,23 @@ public class PermissionMigrator extends Migrator {
 
     private String getPermissionSelectQuery() throws MigrationClientException {
 
-        if (Utility.isMigrateTenantRange()) {
-            return SQLConstants.SELECT_ALL_PERMISSIONS + " WHERE UM_TENANT_ID IN (" + StringUtils
-                    .join(getSelectedTenants(), ",") + ")";
-        }
+
         return SQLConstants.SELECT_ALL_PERMISSIONS;
     }
 
     private String getRolePermissionSelectQuery() throws MigrationClientException {
 
-        if (Utility.isMigrateTenantRange()) {
-            return SQLConstants.SELECT_ALL_ROLE_PERMISSIONS + " WHERE UM_TENANT_ID IN (" + StringUtils
-                    .join(getSelectedTenants(), ",") + ")";
-        }
+
         return SQLConstants.SELECT_ALL_ROLE_PERMISSIONS;
     }
 
     private String getUserPermissionSelectQuery() throws MigrationClientException {
 
-        if (Utility.isMigrateTenantRange()) {
-            return SQLConstants.SELECT_ALL_USER_PERMISSIONS + " WHERE UM_TENANT_ID IN (" + StringUtils
-                    .join(getSelectedTenants(), ",") + ")";
-        }
+
         return SQLConstants.SELECT_ALL_USER_PERMISSIONS;
     }
 
-    private List<Integer> getSelectedTenants() throws MigrationClientException {
+    /*private List<Integer> getSelectedTenants() throws MigrationClientException {
 
         int startingTenantID = Utility.getMigrationStartingTenantID();
         int endingTenantID = Utility.getMigrationEndingTenantID();
@@ -271,7 +262,7 @@ public class PermissionMigrator extends Migrator {
             selectedTenants.add(i);
         }
         return selectedTenants;
-    }
+    }*/
 
     private void updateRolePermissionTable(Connection connection, List<Permission> permissions)
             throws SQLException, MigrationClientException {
