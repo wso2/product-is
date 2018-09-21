@@ -60,9 +60,9 @@ versions:
     order: 1
     parameters:
           schema: "um"
-       -
-        name: "SchemaMigrator"
-        order: 2
+   -
+    name: "SchemaMigrator"
+    order: 2
     parameters:
       location: "step1"
       schema: "identity"
