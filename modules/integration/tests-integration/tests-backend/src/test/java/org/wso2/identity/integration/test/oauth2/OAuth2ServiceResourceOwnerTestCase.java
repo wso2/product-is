@@ -34,14 +34,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,6 +64,11 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	private DefaultHttpClient client;
 	private Tomcat tomcat;
 
+	private static final String lockedUser = "test_locked_user";
+	private static final String lockedUserPassword = "test_locked_user_pass";
+	private static final String ACCOUNT_LOCK_CLAIM_URI = "http://wso2.org/claims/identity/accountLocked";
+	protected IdentityGovernanceServiceClient identityGovernanceServiceClient;
+
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 		super.init(TestUserMode.SUPER_TENANT_USER);
@@ -74,10 +81,17 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 		setSystemproperties();
 		client = new DefaultHttpClient();
+
+		identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
+		setAccountLocking("true");
+		createLockedUser(lockedUser, lockedUserPassword);
 	}
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
+		setAccountLocking("false");
+		deleteUser(lockedUser);
+
 		deleteApplication();
 		removeOAuthApplicationData();
 		stopTomcat(tomcat);
@@ -303,4 +317,76 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
         Assert.assertEquals(errormsg, "invalid_request", "Invalid error message");
     }
+
+	@Test(groups = "wso2.is", description = "Send authorize request for locked user", dependsOnMethods =
+			"testSendInvalidAuthenticationPost")
+	public void testSendLockedAuthenticationPost() throws Exception {
+
+		HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("grant_type",
+				OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+		urlParameters.add(new BasicNameValuePair("username", lockedUser));
+		urlParameters.add(new BasicNameValuePair("password", lockedUserPassword));
+
+		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":" + consumerSecret)
+				.getBytes()).trim());
+		request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+		request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+		HttpResponse response = client.execute(request);
+
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+		Object obj = JSONValue.parse(rd);
+		String errormsg = ((JSONObject) obj).get("error_description").toString();
+
+		EntityUtils.consume(response.getEntity());
+		Assert.assertTrue(errormsg.contains("17003 Account is locked for user " + lockedUser));
+	}
+
+	private void setAccountLocking(String value) {
+
+		log.info("Set account locking: " + value);
+
+		Property[] newProperties = new Property[1];
+		Property prop = new Property();
+		prop.setName("account.lock.handler.enable");
+		prop.setValue(value);
+		newProperties[0] = prop;
+
+		try {
+			identityGovernanceServiceClient.updateConfigurations(newProperties);
+		} catch (Exception e) {
+			Assert.fail("Error while updating resident idp", e);
+		}
+	}
+
+	private void createLockedUser(String username, String password) {
+
+		log.info("Creating User " + username);
+
+		ClaimValue[] claimValues = new ClaimValue[1];
+		// Need to add this claim and have the value true in order to test the fix
+		ClaimValue accountLockClaim = new ClaimValue();
+		accountLockClaim.setClaimURI(ACCOUNT_LOCK_CLAIM_URI);
+		accountLockClaim.setValue(Boolean.TRUE.toString());
+		claimValues[0] = accountLockClaim;
+
+		try {
+			remoteUSMServiceClient.addUser(username, password, null, claimValues, null, false);
+		} catch (Exception e) {
+			Assert.fail("Error while creating the user", e);
+		}
+	}
+
+	private void deleteUser(String username) {
+		log.info("Deleting User " + username);
+		try {
+			remoteUSMServiceClient.deleteUser(username);
+		} catch (Exception e) {
+			Assert.fail("Error while deleting the user", e);
+		}
+	}
 }
