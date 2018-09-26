@@ -50,11 +50,15 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
     private final String templateName1 = "TestTemplate1";
     private final String templateName2 = "TestTemplate2";
     private final String templateName3 = "TestTemplate3";
+    private final String templateName4 = "TestTemplate4";
+    private final String templateName5 = "TestTemplate5";
     private final String templateDesc1 = "This is a template with custom claim configurations for travelocity";
     private final String templateDesc2 = "This is a template with TOTP authentication";
     private String templateContent1;
     private String templateContent2;
     private String templateContent3;
+    private String templateContent4;
+    private String templateContent5;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -66,6 +70,8 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
         templateContent1 = readResource("spTemplate/" + templateName1 + ".xml");
         templateContent2 = readResource("spTemplate/" + templateName2 + ".xml");
         templateContent3 = readResource("spTemplate/" + templateName3 + ".xml");
+        templateContent4 = readResource("spTemplate/" + templateName4 + ".xml");
+        templateContent5 = readResource("spTemplate/" + templateName5 + ".xml");
     }
 
     @AfterClass(alwaysRun = true)
@@ -86,7 +92,7 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
             assertNotNull(receivedSpTemplate1, "Failed to retrieve a Service Provider template");
             assertEquals(receivedSpTemplate1.getName(), templateName1,
                     "Failed to create a Service Provider template");
-            assertEquals(spTemplate1.getDescription(), templateDesc1, "Failed to create a Service Provider " +
+            assertEquals(receivedSpTemplate1.getDescription(), templateDesc1, "Failed to create a Service Provider " +
                     "template");
 
             SpTemplate spTemplate2 = getSpTemplate(templateName2, templateDesc2, templateContent2);
@@ -96,10 +102,36 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
             assertNotNull(receivedSpTemplate2, "Failed to retrieve a Service Provider template");
             assertEquals(receivedSpTemplate2.getName(), templateName2,
                     "Failed to create a Service Provider template");
-            assertEquals(spTemplate2.getDescription(), templateDesc2, "Failed to create a Service Provider " +
+            assertEquals(receivedSpTemplate2.getDescription(), templateDesc2, "Failed to create a Service Provider " +
+                    "template");
+
+            SpTemplate spTemplate3 = getSpTemplate(templateName5, null, templateContent5);
+            applicationManagementServiceClient.createApplicationTemplate(spTemplate3);
+            SpTemplate receivedSpTemplate3 = applicationManagementServiceClient.getApplicationTemplate
+                    (templateName5);
+            assertNotNull(receivedSpTemplate3, "Failed to retrieve a Service Provider template");
+            assertEquals(receivedSpTemplate3.getName(), templateName5,
+                    "Failed to create a Service Provider template");
+            assertEquals(receivedSpTemplate3.getDescription(), null, "Failed to create a Service Provider " +
                     "template");
         } catch (Exception e) {
             fail("Error while trying to read Service provider Template", e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing create service provider template with unsupported config")
+    public void testCreateApplicationTemplateWithUnsupportedConfig() {
+
+        try {
+            SpTemplate spTemplate = getSpTemplate(templateName3, null, templateContent3);
+            applicationManagementServiceClient.createApplicationTemplate(spTemplate);
+
+            SpTemplate receivedSpTemplate = applicationManagementServiceClient.getApplicationTemplate
+                    (templateName3);
+            assertNull(receivedSpTemplate, "Successfully created a Service Provider template with invalid " +
+                    "config");
+        } catch (Exception e) {
+            assertTrue(true);
         }
     }
 
@@ -107,11 +139,11 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
     public void testCreateApplicationTemplateWithInvalidConfig() {
 
         try {
-            SpTemplate spTemplate = getSpTemplate(templateName3, null, templateContent3);
+            SpTemplate spTemplate = getSpTemplate(templateName4, null, templateContent4);
             applicationManagementServiceClient.createApplicationTemplate(spTemplate);
 
             SpTemplate receivedSpTemplate = applicationManagementServiceClient.getApplicationTemplate
-                    (templateName1);
+                    (templateName4);
             assertNull(receivedSpTemplate, "Successfully created a Service Provider template with invalid " +
                     "config");
         } catch (Exception e) {
@@ -144,7 +176,7 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
     public void testGetAllApplicationTemplates() {
 
         try {
-            SpTemplate[] templates = applicationManagementServiceClient.getAllApplicationTemplates();
+            SpTemplate[] templates = applicationManagementServiceClient.getAllApplicationTemplateInfo();
             assertNotNull(templates, "Failed to retrieve all the Service Provider templates");
             assertEquals(2, templates.length, "Loading incorrect number of templates");
             for (SpTemplate spTemplateDTO : templates) {
@@ -175,7 +207,7 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
             ServiceProvider serviceProvider = applicationManagementServiceClient.getApplication
                     (applicationName1);
             SpTemplate spTemplate = getSpTemplate(templateName, templateDesc, null);
-            applicationManagementServiceClient.createServiceProviderAsTemplate(serviceProvider, spTemplate);
+            applicationManagementServiceClient.createApplicationTemplateFromSP(serviceProvider, spTemplate);
 
             SpTemplate receivedSpTemplate = applicationManagementServiceClient.getApplicationTemplate
                     (templateName);
