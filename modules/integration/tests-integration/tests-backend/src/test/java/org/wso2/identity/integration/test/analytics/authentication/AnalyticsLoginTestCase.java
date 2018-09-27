@@ -65,6 +65,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
@@ -100,9 +101,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     HttpClient sharedHttpClient = new DefaultHttpClient();
     private static final Long WAIT_TIME = 10000L;
-
-
-    private String resultPage;
 
     private enum HttpBinding {
         HTTP_REDIRECT("HTTP-Redirect"),
@@ -513,6 +511,19 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             Assert.assertEquals(eventStreamData[15], "NOT_AVAILABLE");
             // authenticationStep
             Assert.assertEquals(eventStreamData[16], "1");
+            List<String> auditReads = waitUntilWriteToAuditLogs("dummy");
+
+            Assert.assertTrue(auditReads.size() > 0);
+            Optional<String> result = auditReads.stream().filter(s -> s.contains("ContextIdentifier")).findFirst();
+            if (result.isPresent()) {
+                Assert.assertTrue(result.get().contains("Initiator : dummy"), "Audit log doesn't contain " +
+                        "username as initiator");
+                Assert.assertTrue(result.get().contains("\"StepNo\" : \"1\""), "Audit log doesn't contain step " +
+                        "number");
+            } else {
+                Assert.fail("No Audit log found for authentication step failure of dummy user");
+            }
+
         } catch (Exception e) {
             Assert.fail("SAML SSO Login Analytics test failed for " + config, e);
         } finally {
@@ -789,5 +800,18 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             if (thriftServer.getPreservedEventList().size() == eventCount) ;
             break;
         }
+    }
+
+    protected List<String> waitUntilWriteToAuditLogs(String content) throws IOException {
+
+        List<String> auditReads = new ArrayList<>();
+        long terminationTime = System.currentTimeMillis() + WAIT_TIME;
+        while (System.currentTimeMillis() < terminationTime) {
+            auditReads = Utils.readAuditLogLineWithContent(content);
+            if ((auditReads != null && auditReads.size() > 1)) {
+                break;
+            }
+        }
+        return auditReads;
     }
 }
