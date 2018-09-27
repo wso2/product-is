@@ -33,7 +33,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
+import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -42,10 +42,10 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -434,5 +434,30 @@ public class Utils {
             }
         }
         return urlParameters;
+    }
+
+    /**
+     * Read audit log lines with a given content.
+     *
+     * @param content Content to be searched in audit log.
+     * @return List of lines which contains the given string.
+     * @throws IOException IOException.
+     */
+    public static List<String> readAuditLogLineWithContent(String content) throws IOException {
+
+        String fileName = CarbonUtils.getCarbonHome()
+                + ISIntegrationTest.URL_SEPARATOR +
+                "repository" + ISIntegrationTest.URL_SEPARATOR + "logs" + ISIntegrationTest.URL_SEPARATOR +
+                "audit.log";
+        List<String> results = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                if (currentLine.contains(content)) {
+                    results.add(currentLine);
+                }
+            }
+        }
+        return results;
     }
 }
