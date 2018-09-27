@@ -1,0 +1,168 @@
+<ServiceProvider>
+    <LocalAndOutBoundAuthenticationConfig>
+        <AuthenticationSteps>
+            <AuthenticationStep>
+                <StepOrder>1</StepOrder>
+                <LocalAuthenticatorConfigs>
+                    <LocalAuthenticatorConfig>
+                        <Name>BasicAuthenticator</Name>
+                        <DisplayName>basic</DisplayName>
+                        <IsEnabled>false</IsEnabled>
+                        <Properties/>
+                    </LocalAuthenticatorConfig>
+                </LocalAuthenticatorConfigs>
+                <FederatedIdentityProviders/>
+                <SubjectStep>true</SubjectStep>
+                <AttributeStep>true</AttributeStep>
+            </AuthenticationStep>
+            <AuthenticationStep>
+                <StepOrder>2</StepOrder>
+                <LocalAuthenticatorConfigs>
+                    <LocalAuthenticatorConfig>
+                        <Name>totp</Name>
+                        <DisplayName>totp</DisplayName>
+                        <IsEnabled>false</IsEnabled>
+                        <Properties/>
+                    </LocalAuthenticatorConfig>
+                    <LocalAuthenticatorConfig>
+                        <Name>FIDOAuthenticator</Name>
+                        <DisplayName>fido</DisplayName>
+                        <IsEnabled>false</IsEnabled>
+                        <Properties/>
+                    </LocalAuthenticatorConfig>
+                </LocalAuthenticatorConfigs>
+                <FederatedIdentityProviders/>
+                <SubjectStep>false</SubjectStep>
+                <AttributeStep>false</AttributeStep>
+            </AuthenticationStep>
+        </AuthenticationSteps>
+        <AuthenticationType>flow</AuthenticationType>
+        <alwaysSendBackAuthenticatedListOfIdPs>true</alwaysSendBackAuthenticatedListOfIdPs>
+        <subjectClaimUri>email</subjectClaimUri>
+        <UseTenantDomainInUsername>true</UseTenantDomainInUsername>
+        <UseUserstoreDomainInRoles>true</UseUserstoreDomainInRoles>
+        <UseUserstoreDomainInUsername>true</UseUserstoreDomainInUsername>
+        <EnableAuthorization>true</EnableAuthorization>
+        <AuthenticationScript enabled="true" language="application/javascript"><![CDATA[
+// Role-Based from Template...
+
+// This script will step up authentication for any user belonging
+// to one of the given roles
+// If the user has any of the below roles, authentication will be stepped up
+var rolesToStepUp = ['admin', 'manager'];
+
+function onLoginRequest(context) {
+    executeStep(1, {
+        onSuccess: function (context) {
+            // Extracting authenticated subject from the first step
+            var user = context.currentKnownSubject;
+            // Checking if the user is assigned to one of the given roles
+            var hasRole = hasAnyOfTheRoles(user, rolesToStepUp);
+            if (hasRole) {
+                Log.info(user.username + ' Has one of Roles: ' + rolesToStepUp.toString());
+                executeStep(2);
+            }
+        }
+    });
+}
+
+// End of Role-Based.......
+]]></AuthenticationScript>
+    </LocalAndOutBoundAuthenticationConfig>
+    <RequestPathAuthenticatorConfigs>
+        <RequestPathAuthenticatorConfig>
+            <Name>OAuthRequestPathAuthenticator</Name>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+        </RequestPathAuthenticatorConfig>
+        <RequestPathAuthenticatorConfig>
+            <Name>BasicAuthRequestPathAuthenticator</Name>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+        </RequestPathAuthenticatorConfig>
+    </RequestPathAuthenticatorConfigs>
+    <InboundProvisioningConfig>
+        <ProvisioningUserStore>PRIMARY</ProvisioningUserStore>
+        <IsProvisioningEnabled>false</IsProvisioningEnabled>
+        <IsDumbModeEnabled>false</IsDumbModeEnabled>
+    </InboundProvisioningConfig>
+    <OutboundProvisioningConfig>
+        <ProvisioningIdentityProviders>
+            <IdentityProvider>
+                <THUMB_PRINT>thumbPrint</THUMB_PRINT>
+                <CERT_VALUE>certValue</CERT_VALUE>
+                <JSON_ARRAY_IDENTIFIER>[</JSON_ARRAY_IDENTIFIER>
+                <EMPTY_JSON_ARRAY>[]</EMPTY_JSON_ARRAY>
+                <IdentityProviderName>idp1</IdentityProviderName>
+                <IsPrimary>false</IsPrimary>
+                <IsFederationHub>false</IsFederationHub>
+                <IsEnabled>false</IsEnabled>
+                <FederatedAuthenticatorConfigs/>
+                <ProvisioningConnectorConfigs/>
+                <DefaultProvisioningConnectorConfig>
+                    <blocking>true</blocking>
+                    <enabled>false</enabled>
+                    <name>googleapps</name>
+                    <rulesEnabled>true</rulesEnabled>
+                </DefaultProvisioningConnectorConfig>
+                <JustInTimeProvisioningConfig>
+                    <IsProvisioningEnabled>true</IsProvisioningEnabled>
+                    <IsDumbModeEnabled>false</IsDumbModeEnabled>
+                    <IsPasswordProvisioningEnabled>false</IsPasswordProvisioningEnabled>
+                    <AllowModifyUserName>false</AllowModifyUserName>
+                    <PromptConsent>false</PromptConsent>
+                </JustInTimeProvisioningConfig>
+            </IdentityProvider>
+        </ProvisioningIdentityProviders>
+    </OutboundProvisioningConfig>
+    <ClaimConfig>
+        <RoleClaimURI>email</RoleClaimURI>
+        <LocalClaimDialect>false</LocalClaimDialect>
+        <IdpClaim/>
+        <ClaimMappings>
+            <ClaimMapping>
+                <LocalClaim>
+                    <ClaimUri>http://wso2.org/claims/addresses.formatted</ClaimUri>
+                    <claimId>0</claimId>
+                </LocalClaim>
+                <RemoteClaim>
+                    <ClaimUri>email</ClaimUri>
+                    <claimId>0</claimId>
+                </RemoteClaim>
+                <RequestClaim>true</RequestClaim>
+                <MandatoryClaim>true</MandatoryClaim>
+            </ClaimMapping>
+            <ClaimMapping>
+                <LocalClaim>
+                    <ClaimUri>http://wso2.org/claims/active</ClaimUri>
+                    <claimId>0</claimId>
+                </LocalClaim>
+                <RemoteClaim>
+                    <ClaimUri>active</ClaimUri>
+                    <claimId>0</claimId>
+                </RemoteClaim>
+                <RequestClaim>true</RequestClaim>
+                <MandatoryClaim>true</MandatoryClaim>
+            </ClaimMapping>
+        </ClaimMappings>
+        <AlwaysSendMappedLocalSubjectId>true</AlwaysSendMappedLocalSubjectId>
+        <SPClaimDialects/>
+    </ClaimConfig>
+    <PermissionAndRoleConfig>
+        <Permissions>
+            <ApplicationPermission>
+                <value>permission1</value>
+            </ApplicationPermission>
+        </Permissions>
+        <RoleMappings>
+            <RoleMapping>
+                <localRole>
+                    <LocalRoleName>admin</LocalRoleName>
+                </localRole>
+                <remoteRole>role1</remoteRole>
+            </RoleMapping>
+        </RoleMappings>
+        <IdpRoles/>
+    </PermissionAndRoleConfig>
+    <IsSaaSApp>false</IsSaaSApp>
+</ServiceProvider>
