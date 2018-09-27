@@ -178,9 +178,10 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
         try {
             SpTemplate[] templates = applicationManagementServiceClient.getAllApplicationTemplateInfo();
             assertNotNull(templates, "Failed to retrieve all the Service Provider templates");
-            assertEquals(2, templates.length, "Loading incorrect number of templates");
+            assertEquals(3, templates.length, "Loading incorrect number of templates");
             for (SpTemplate spTemplateDTO : templates) {
-                if (!templateName1.equals(spTemplateDTO.getName()) && !templateName2.equals(spTemplateDTO.getName())) {
+                if (!templateName1.equals(spTemplateDTO.getName()) && !templateName2.equals(spTemplateDTO.getName())
+                        && !templateName5.equals(spTemplateDTO.getName())) {
                     fail("Retrieved incorrect template name: " + spTemplateDTO.getName());
                 } else {
                     assertTrue(true, "Retrieved correct template name: " + spTemplateDTO.getName());
