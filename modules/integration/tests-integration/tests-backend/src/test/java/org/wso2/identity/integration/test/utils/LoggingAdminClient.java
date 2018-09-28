@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.saml.common;
+package org.wso2.identity.integration.test.utils;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
