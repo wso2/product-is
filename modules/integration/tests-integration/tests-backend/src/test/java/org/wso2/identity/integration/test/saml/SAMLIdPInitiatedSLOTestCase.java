@@ -36,28 +36,32 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.saml.common.LoggingAdminClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This test class tests SAML IdP initiated SLO functionality for two SAML applications. Since logout requests are sent
  * to every session participant asynchronously, there is no way of validating this from the application side.
- * Therefore debug log for org.wso2.carbon.identity.sso.saml.logout.LogoutRequestSender has to be enabled to check this
+ * Therefore debug log for org.wso2.carbon.identity.sso.saml.logout.LogoutRequestSender is enabled to check this
  * functionality.
  */
 public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
@@ -110,6 +114,9 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
 
     private String resultPage;
 
+    private LogViewerClient logViewer;
+    private LoggingAdminClient logAdmin;
+
     private static class SAMLUser {
 
         private String username;
@@ -121,7 +128,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
         private boolean setUserClaims;
 
         SAMLUser(String username, String password, String tenantDomain, String tenantAwareUsername, String email,
-             String nickname, boolean setUserClaims) {
+                 String nickname, boolean setUserClaims) {
             this.username = username;
             this.password = password;
             this.tenantDomain = tenantDomain;
@@ -205,10 +212,13 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
         tomcatServer = Utils.getTomcat(getClass());
         deployApplications(tomcatServer);
         tomcatServer.start();
+
+        logAdmin = new LoggingAdminClient(backendURL, sessionCookie);
+        logViewer = new LogViewerClient(backendURL, sessionCookie);
     }
 
     @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception{
+    public void testClear() throws Exception {
 
         deleteUser();
         deleteApplications();
@@ -240,7 +250,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
-            dependsOnMethods = { "testAddSP" })
+            dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOLogin() {
 
         try {
@@ -270,7 +280,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
-            if(StringUtils.isNotBlank(redirectUrl)) {
+            if (StringUtils.isNotBlank(redirectUrl)) {
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, applications.get(APPLICATION_ONE)
                         .getArtifact(), httpClient);
             }
@@ -293,10 +303,14 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing SAML IdP initiated SLO", groups = "wso2.is",
-            dependsOnMethods = { "testSAMLSSOLogin" })
+            dependsOnMethods = {"testSAMLSSOLogin"})
     public void testSAMLIdpInitiatedSLO() throws Exception {
 
         try {
+            logAdmin.updateLoggerData("org.wso2.carbon.identity.sso.saml.logout.LogoutRequestSender",
+                    LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
+            logViewer.clearLogs();
+
             HttpResponse response = Utils.sendGetRequest(SAML_IDP_SLO_URL, USER_AGENT, httpClient);
             String resultPage = extractDataFromResponse(response);
 
@@ -305,36 +319,29 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
                     applications.get(APPLICATION_ONE).getArtifact() + " & " +
                     applications.get(APPLICATION_TWO).getArtifact());
 
-            File filePath = new File(FrameworkPathUtil.getCarbonHome() + ISIntegrationTest.URL_SEPARATOR +
-                    "repository" + ISIntegrationTest.URL_SEPARATOR + "logs" + ISIntegrationTest.URL_SEPARATOR +
-                    "wso2carbon.log");
-            Scanner scanner = new Scanner(filePath);
+            boolean requestOneSentLogFound = checkForLog(logViewer,
+                    "single logout request is sent to : http://localhost:8490/travelocity.com/home.jsp is " +
+                            "returned with OK", 2);
+            Assert.assertTrue(requestOneSentLogFound, "System Log not found. Single logout request is not " +
+                    "sent to travelocity.com app.");
 
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.contains("DEBUG")) {
-                    if (line.contains("single logout request is sent to : http://localhost:8490/travelocity.com/home.jsp is returned with OK")) {
-                        Assert.assertEquals("single logout request is sent to : " +
-                                        samlssoServiceProviderDTOs[0].getAssertionConsumerUrls()[0] + " is returned with OK",
-                                "single logout request is sent to : http://localhost:8490/travelocity.com/home.jsp is returned with OK");
-                    } else if (line.contains("single logout request is sent to : http://localhost:8490/travelocity.com-saml-tenantwithoutsigning/home.jsp " +
-                            "is returned with OK")) {
-                        Assert.assertEquals("single logout request is sent to : "+
-                                        samlssoServiceProviderDTOs[1].getAssertionConsumerUrls()[0] +" is returned with OK",
-                                "single logout request is sent to : http://localhost:8490/travelocity.com-saml-tenantwithoutsigning/home.jsp " +
-                                        "is returned with OK");
-                    } else if (line.contains("Logout response received for issuer: travelocity.com-saml-tenantwithoutsigning " +
-                            "for tenant domain: carbon.super")) {
-                        Assert.assertEquals("Logout response received for issuer: " +
-                                        samlssoServiceProviderDTOs[1].getIssuer() + " for tenant domain: " + tenantDomain,
-                                "Logout response received for issuer: travelocity.com-saml-tenantwithoutsigning for tenant domain: carbon.super");
-                    } else if (line.contains("Logout response received for issuer: travelocity.com for tenant domain: carbon.super")) {
-                        Assert.assertEquals("Logout response received for issuer: " +
-                                        samlssoServiceProviderDTOs[0].getIssuer() + " for tenant domain: " + tenantDomain,
-                                "Logout response received for issuer: travelocity.com for tenant domain: carbon.super");
-                    }
-                }
-            }
+            boolean requestTwoSentLogFound = checkForLog(logViewer,
+                    "single logout request is sent to : http://localhost:8490/travelocity.com-saml-" +
+                            "tenantwithoutsigning/home.jsp is returned with OK", 2);
+            Assert.assertTrue(requestTwoSentLogFound, "System Log not found. Single logout request is not " +
+                    "sent to travelocity.com-saml-tenantwithoutsigning app.");
+
+            boolean responseOneReceivedLogFound = checkForLog(logViewer,
+                    "Logout response received for issuer: travelocity.com for tenant domain: carbon.super",
+                    2);
+            Assert.assertTrue(responseOneReceivedLogFound, "System Log not found. Logout response is not " +
+                    "received for issuer travelocity.com");
+
+            boolean responseTwoReceivedLogFound = checkForLog(logViewer,
+                    "Logout response received for issuer: travelocity.com-saml-tenantwithoutsigning for " +
+                            "tenant domain: carbon.super", 2);
+            Assert.assertTrue(responseTwoReceivedLogFound, "System Log not found. Logout response is not " +
+                    "received for issuer travelocity.com-saml-tenantwithoutsigning");
         } catch (Exception e) {
             Assert.fail("SAML IdP initiated SLO test failed for " + applications.get(APPLICATION_ONE).
                     getArtifact() + " & " + applications.get(APPLICATION_TWO).getArtifact(), e);
@@ -367,7 +374,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
         }
     }
 
-    protected ClaimValue[] getUserClaims(boolean setClaims){
+    protected ClaimValue[] getUserClaims(boolean setClaims) {
 
         ClaimValue[] claimValues;
 
@@ -492,7 +499,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(samlApp.getArtifact());
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[] {String.format(ACS_URL,
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(ACS_URL,
                 samlApp.getArtifact())});
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, samlApp.getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
@@ -517,7 +524,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
         return httpClient.execute(post);
     }
 
-    protected boolean requestMissingClaims (HttpResponse response) {
+    protected boolean requestMissingClaims(HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         return redirectUrl.contains("consent.do");
@@ -556,7 +563,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
-            if(StringUtils.isNotBlank(redirectUrl)) {
+            if (StringUtils.isNotBlank(redirectUrl)) {
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, applications.get(APPLICATION_TWO)
                         .getArtifact(), httpClient);
             }
@@ -574,4 +581,37 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
         }
     }
 
+    public static boolean checkForLog(LogViewerClient logViewerClient, String expected, int timeout) throws
+            InterruptedException, RemoteException, LogViewerLogViewerException {
+
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (assertIfLogExists(logViewerClient, expected)) {
+                logExists = true;
+                break;
+            }
+        }
+        return logExists;
+    }
+
+    private static boolean assertIfLogExists(LogViewerClient logViewerClient, String expected)
+            throws RemoteException, LogViewerLogViewerException {
+
+        LogEvent[] systemLogs;
+        systemLogs = logViewerClient.getAllRemoteSystemLogs();
+        boolean matchFound = false;
+        if (systemLogs != null) {
+            for (LogEvent logEvent : systemLogs) {
+                if (logEvent == null) {
+                    continue;
+                }
+                if (logEvent.getMessage().contains(expected)) {
+                    matchFound = true;
+                    break;
+                }
+            }
+        }
+        return matchFound;
+    }
 }
