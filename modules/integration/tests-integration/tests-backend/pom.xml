@@ -697,5 +697,10 @@
             <artifactId>oauth2-oidc-sdk</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.logging.admin.stub</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
