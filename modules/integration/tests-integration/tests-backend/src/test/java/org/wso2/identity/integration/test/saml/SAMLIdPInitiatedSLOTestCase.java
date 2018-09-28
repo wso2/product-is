@@ -46,9 +46,9 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.saml.common.LoggingAdminClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.LoggingAdminClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +56,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This test class tests SAML IdP initiated SLO functionality for two SAML applications. Since logout requests are sent
@@ -100,6 +99,7 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private static final String profileName = "default";
+    private static final Long WAIT_TIME = 10000L;
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -321,25 +321,24 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
 
             boolean requestOneSentLogFound = checkForLog(logViewer,
                     "single logout request is sent to : http://localhost:8490/travelocity.com/home.jsp is " +
-                            "returned with OK", 2);
+                            "returned with OK");
             Assert.assertTrue(requestOneSentLogFound, "System Log not found. Single logout request is not " +
                     "sent to travelocity.com app.");
 
             boolean requestTwoSentLogFound = checkForLog(logViewer,
                     "single logout request is sent to : http://localhost:8490/travelocity.com-saml-" +
-                            "tenantwithoutsigning/home.jsp is returned with OK", 2);
+                            "tenantwithoutsigning/home.jsp is returned with OK");
             Assert.assertTrue(requestTwoSentLogFound, "System Log not found. Single logout request is not " +
                     "sent to travelocity.com-saml-tenantwithoutsigning app.");
 
             boolean responseOneReceivedLogFound = checkForLog(logViewer,
-                    "Logout response received for issuer: travelocity.com for tenant domain: carbon.super",
-                    2);
+                    "Logout response received for issuer: travelocity.com for tenant domain: carbon.super");
             Assert.assertTrue(responseOneReceivedLogFound, "System Log not found. Logout response is not " +
                     "received for issuer travelocity.com");
 
             boolean responseTwoReceivedLogFound = checkForLog(logViewer,
                     "Logout response received for issuer: travelocity.com-saml-tenantwithoutsigning for " +
-                            "tenant domain: carbon.super", 2);
+                            "tenant domain: carbon.super");
             Assert.assertTrue(responseTwoReceivedLogFound, "System Log not found. Logout response is not " +
                     "received for issuer travelocity.com-saml-tenantwithoutsigning");
         } catch (Exception e) {
@@ -581,12 +580,12 @@ public class SAMLIdPInitiatedSLOTestCase extends ISIntegrationTest {
         }
     }
 
-    public static boolean checkForLog(LogViewerClient logViewerClient, String expected, int timeout) throws
+    public static boolean checkForLog(LogViewerClient logViewerClient, String expected) throws
             InterruptedException, RemoteException, LogViewerLogViewerException {
 
         boolean logExists = false;
-        for (int i = 0; i < timeout; i++) {
-            TimeUnit.SECONDS.sleep(1);
+        long terminationTime = System.currentTimeMillis() + WAIT_TIME;
+        while (System.currentTimeMillis() < terminationTime) {
             if (assertIfLogExists(logViewerClient, expected)) {
                 logExists = true;
                 break;
