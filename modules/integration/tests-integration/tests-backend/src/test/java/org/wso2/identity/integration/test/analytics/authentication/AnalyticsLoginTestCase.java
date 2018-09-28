@@ -417,7 +417,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
+ /*   @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLogin"})
     public void testSAMLSSOLoginWithExistingSession() throws IOException {
         HttpResponse response = null;
@@ -454,9 +454,9 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 EntityUtils.consume(response.getEntity());
             }
         }
-    }
+    }*/
 
-    @Test(alwaysRun = true, description = "Testing SAML SSO login fail", groups = "wso2.is",
+    /*@Test(alwaysRun = true, description = "Testing SAML SSO login fail", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLogout"})
     public void testSAMLSSOLoginFail() throws IOException {
         HttpResponse response = null;
@@ -532,9 +532,9 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 EntityUtils.consume(response.getEntity());
             }
         }
-    }
+    }*/
 
-    @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
+/*    @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLoginWithExistingSession"})
     public void testSAMLSSOLogout() throws Exception {
         HttpResponse response = null;
@@ -564,7 +564,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 EntityUtils.consume(response.getEntity());
             }
         }
-    }
+    }*/
 
 
     @DataProvider(name = "samlConfigProvider")
