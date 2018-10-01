@@ -49,8 +49,6 @@
             scope = "default";
         }
 
-        session.setAttribute(OAuth2Constants.CONSUMER_KEY, consumerKey);
-        session.setAttribute(OAuth2Constants.CONSUMER_SECRET, consumerSecret);
         session.setAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE, authzGrantType);
         session.setAttribute(OAuth2Constants.CONSUMER_KEY, consumerKey);
         session.setAttribute(OAuth2Constants.CONSUMER_SECRET, consumerSecret);
@@ -71,6 +69,7 @@
 
 <script type="text/javascript">
     window.location = "oauth2.jsp?reset=true";
+    alert("Please fill all required fields");
 </script>
 
 <%
@@ -123,9 +122,11 @@
 
 <script type="text/javascript">
     window.location = "oauth2.jsp?reset=true";
+    alert("Please fill all required fields");
 </script>
 
 <%
+        return;
     }
     accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                       .setGrantType(GrantType.CLIENT_CREDENTIALS)
@@ -140,9 +141,11 @@
 
 <script type="text/javascript">
     window.location = "oauth2.jsp?reset=true";
+    alert("Please fill all required fields");
 </script>
 
 <%
+                return;
             }
             accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                               .setGrantType(GrantType.PASSWORD)
@@ -185,5 +188,3 @@
     window.location = "oauth2.jsp";
 </script>
 
-
-    

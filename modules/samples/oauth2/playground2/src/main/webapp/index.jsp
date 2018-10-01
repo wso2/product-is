@@ -41,7 +41,7 @@
 <table style="width:100%;text-align:center;'">
 <tr>
 <td style="text-align:center;width:100%">        						
-<a href="oauth2.jsp?reset=true"><img src="images/import.png" /></a>
+<a href="oauth2.jsp"><img src="images/import.png" /></a>
 </td>
 </tr>
 
