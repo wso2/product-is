@@ -126,6 +126,7 @@
 </script>
 
 <%
+        return;
     }
     accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                       .setGrantType(GrantType.CLIENT_CREDENTIALS)
@@ -143,6 +144,7 @@
 </script>
 
 <%
+                return;
             }
             accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                               .setGrantType(GrantType.PASSWORD)
@@ -185,5 +187,3 @@
     window.location = "oauth2.jsp";
 </script>
 
-
-    

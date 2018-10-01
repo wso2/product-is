@@ -7,6 +7,8 @@
 <%@ page import="java.util.UUID" %>
 <%@ page import="org.apache.commons.codec.binary.Base64" %>
 <%@ page import="org.wso2.sample.identity.oauth2.OpenIDConnectConstants" %>
+<%@ page import="org.wso2.sample.identity.oauth2.SessionIdStore" %>
+<%@ page import="java.net.URI" %>
 <%@ page import="org.wso2.sample.identity.oauth2.ApplicationConfig" %>
 <%@ page import="java.util.logging.Logger" %>
 <%@ page import="org.wso2.sample.identity.oauth2.ContextEventListener" %>
@@ -145,7 +147,7 @@
             var scope = document.getElementById("scope").value;
             var implicitResponseType = document.getElementById("response_type").value;
 
-            document.getElementById("logutep").style.display = "none";
+            document.getElementById("logoutep").style.display = "none";
             document.getElementById("sessionep").style.display = "none";
 
             if ('code' == grantType) {
@@ -156,9 +158,10 @@
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
                 document.getElementById("formPost").style.display = "none";
+                document.getElementById("implicitRespType").style.display = "none";
 
                 if (scope.indexOf("openid") > -1) {
-                    document.getElementById("logutep").style.display = "";
+                    document.getElementById("logoutep").style.display = "";
                     document.getElementById("sessionep").style.display = "";
                 }
             } else if ('token' == grantType) {
@@ -181,6 +184,7 @@
                 document.getElementById("recownertr").style.display = "";
                 document.getElementById("recpasswordtr").style.display = "";
                 document.getElementById("formPost").style.display = "none";
+                document.getElementById("implicitRespType").style.display = "none";
             } else if ('client_credentials' == grantType) {
                 document.getElementById("clientsecret").style.display = "";
                 document.getElementById("callbackurltr").style.display = "none";
@@ -189,12 +193,13 @@
                 document.getElementById("recownertr").style.display = "none";
                 document.getElementById("recpasswordtr").style.display = "none";
                 document.getElementById("formPost").style.display = "none";
+                document.getElementById("implicitRespType").style.display = "none";
             }
 
             return true;
         }
 
-        function getAcceesToken() {
+        function getAccessToken() {
             var fragment = window.location.hash.substring(1);
             if (fragment.indexOf("&") > 0) {
                 var arrParams = fragment.split("&");
@@ -373,7 +378,7 @@
                     "</tr>";
                 $(html).prependTo('#implicit-id-token-token');
                 $("#encryptedIdToken").val(idToken);
-                $("#accessToken").val(getAcceesToken());
+                $("#accessToken").val(getAccessToken());
             } else {
                 html =
                     "<tr>" +
@@ -390,9 +395,11 @@
                     "</tr>";
                 $(html).prependTo('#implicit-id-token-token');
                 $("#idToken").val(idToken);
-                $("#accessToken").val(getAcceesToken());
+                $("#accessToken").val(getAccessToken());
             }
         }
+
+        window.onload = setVisibility;
     </script>
 
 </head>
@@ -520,7 +527,7 @@
                                        style="width:450px"></td>
                         </tr>
 
-                        <tr id="logutep" style="display:none">
+                        <tr id="logoutep" style="display:none">
                             <td>Logout Endpoint :</td>
                             <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" value="<%=logoutEndpoint%>"
                                        style="width:450px">
@@ -580,7 +587,7 @@
                 </form>
             </div>
 
-            <%} else if (code != null && accessToken == null) { %>
+            <% } else if (code != null && accessToken == null) { %>
             <div>
                 <form action="oauth2-get-access-token.jsp" id="loginForm" method="post">
 
@@ -618,7 +625,7 @@
                             %>
                             <td>
                                 <button type="button" class="button"
-                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';">
+                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';<%session.invalidate();%>">
                                     Logout
                                 </button>
                             </td>
@@ -680,7 +687,7 @@
                             %>
                             <td>
                                 <button type="button" class="button"
-                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';">
+                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';<%session.invalidate();%>">
                                     Logout
                                 </button>
                             </td>
@@ -731,7 +738,7 @@
                             %>
                             <td>
                                 <button type="button" class="button"
-                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';">
+                                        onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';<%session.invalidate();%>">
                                     Logout
                                 </button>
                             </td>
@@ -784,6 +791,23 @@
                 }
             } else if (OpenIDConnectConstants.ID_TOKEN.equals(implicitResponseType)) {
             %>
+            <%  if(request.getParameter("idToken")==null){%>
+                    <script>
+                        console.log("IdToken is null.");
+                    </script>
+            <%
+                } else {
+                    String sid = SessionIdStore.getSid(request.getParameter("idToken"));
+                    if(sid!=null) {
+                        SessionIdStore.storeSession(sid,session);
+            %>
+                        <script>
+                            console.log("Session Id stored.");
+                        </script>
+            <%
+                    }
+                }
+            %>
             <div>
                 <table class="user_pass_table" id="implicit-id-token">
                     <tbody>
@@ -795,13 +819,38 @@
                             makeList(decodedIdToken);
                         </script>
                     </tr>
+                    <tr>
+                        <td>
+                            <button type="button" class="button"
+                                    onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';<%session.invalidate();%>">
+                                Logout
+                            </button>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
-                <%session.invalidate();%>
+                <%--<%session.invalidate();%>--%>
             </div>
 
             <%
             } else if (OpenIDConnectConstants.ID_TOKEN_TOKEN.equals(implicitResponseType)) {
+            %>
+            <%  if(request.getParameter("idToken")==null){%>
+                    <script>
+                        console.log("IdToken is null.");
+                    </script>
+            <%
+                } else {
+                    String sid = SessionIdStore.getSid(request.getParameter("idToken"));
+                    if(sid!=null) {
+                        SessionIdStore.storeSession(sid,session);
+            %>
+                        <script>
+                            console.log("Session Id stored.");
+                        </script>
+            <%
+                    }
+                }
             %>
             <div>
                 <table class="user_pass_table" id="implicit-id-token-token">
@@ -809,13 +858,23 @@
                     <tr>
                         <script type="text/javascript">
                             var idtoken = getIDtoken();
+                            storeSID(idtoken);
                             renderImplicitFlowIdTokenTokenHTML(idtoken);
                             var decodedIdToken = JSON.parse(getDecodedIDToken());
                             makeList(decodedIdToken);
                         </script>
                     </tr>
                     </tbody>
+                    <tr>
+                        <td>
+                            <button type="button" class="button"
+                                    onclick="document.location.href='<%=(String)session.getAttribute(OAuth2Constants.OIDC_LOGOUT_ENDPOINT)%>';<%session.invalidate();%>">
+                                Logout
+                            </button>
+                        </td>
+                    </tr>
                 </table>
+                <%--<%session.invalidate();%>--%>
             </div>
             <%
             } else if (grantType != null && OAuth2Constants.OAUTH2_GRANT_TYPE_IMPLICIT.equals(grantType)) {
@@ -829,7 +888,7 @@
                             <td><label>Access Token :</label></td>
                             <td><input id="accessToken" name="accessToken" style="width:450px"/>
                                 <script type="text/javascript">
-                                    document.getElementById("accessToken").value = getAcceesToken();
+                                    document.getElementById("accessToken").value = getAccessToken();
                                 </script>
                         </tr>
                         <% if (application.getInitParameter("setup").equals("AM")) { %>
