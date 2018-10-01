@@ -8,6 +8,8 @@
 <%@ page import="org.apache.oltu.oauth2.common.message.types.ResponseType" %>
 <%@ page import="org.wso2.sample.identity.oauth2.OAuthTokenPKCERequestBuilder" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="org.wso2.sample.identity.oauth2.SessionIdStore" %>
+<%@ page import="com.nimbusds.jwt.SignedJWT" %>
 <%
     try {
 
@@ -37,7 +39,7 @@
         OAuthClientRequest accessRequest = oAuthTokenPKCERequestBuilder.setGrantType(GrantType.AUTHORIZATION_CODE)
                 .setClientId(consumerKey)
                 .setClientSecret(consumerSecret)
-                .setRedirectURI(request.getParameter("callbackurl"))
+                .setRedirectURI(request.getParameter(OAuth2Constants.CALL_BACK_URL))
                 .setCode(code)
                 .buildBodyMessage();
 
@@ -48,9 +50,16 @@
         String accessToken = oAuthResponse.getParam(OAuth2Constants.ACCESS_TOKEN);
         session.setAttribute(OAuth2Constants.ACCESS_TOKEN, accessToken);
 
-        String idToken = oAuthResponse.getParam("id_token");
+        String idToken = oAuthResponse.getParam(OAuth2Constants.ID_TOKEN);
         if (idToken != null) {
-            session.setAttribute("id_token", idToken);
+            session.setAttribute(OAuth2Constants.ID_TOKEN, idToken);
+            String sid = SessionIdStore.getSid(idToken);
+            if(sid!=null) {
+                SessionIdStore.storeSession(sid, session);
+            }
+
+            String sub = (String) SignedJWT.parse(idToken).getJWTClaimsSet().getSubject();
+            session.setAttribute("logged_in_user", sub);
         }
 
     } catch (Exception e) {

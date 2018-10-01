@@ -35,6 +35,12 @@
     </servlet>
 
     <servlet>
+        <servlet-name>OIDCBackchannelLogoutServlet</servlet-name>
+        <servlet-class>org.wso2.sample.identity.oauth2.OIDCBackchannelLogoutServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>OAuth2AccessResourcePage</servlet-name>
         <jsp-file>/oauth2-access-resource.jsp</jsp-file>
         <load-on-startup>0</load-on-startup>
@@ -43,6 +49,12 @@
     <servlet>
         <servlet-name>IDTokenDecrypterServlet</servlet-name>
         <servlet-class>org.wso2.sample.identity.oauth2.IDTokenDecrypterServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>IDTokenExtractorServlet</servlet-name>
+        <servlet-class>org.wso2.sample.identity.oauth2.IDTokenExtractorServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     
    <servlet-mapping>
@@ -58,6 +70,16 @@
     <servlet-mapping>
         <servlet-name>IDTokenDecrypterServlet</servlet-name>
         <url-pattern>/IDTokenDecrypterServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OIDCBackchannelLogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>IDTokenExtractorServlet</servlet-name>
+        <url-pattern>/IDTokenExtractorServlet</url-pattern>
     </servlet-mapping>
 
     <listener>
