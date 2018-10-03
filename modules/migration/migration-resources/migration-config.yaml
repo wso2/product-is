@@ -253,3 +253,8 @@ versions:
       parameters:
         location: "step1"
         schema: "consent"
+    -
+      name: "OAuthDataMigrator"
+      order: 4
+      parameters:
+        schema: "identity"

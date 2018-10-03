@@ -65,9 +65,14 @@ public class OauthTokenInfo {
     private String refreshToken;
 
     private String tokenId;
+
     public OauthTokenInfo(String accessToken, String refreshToken, String tokenId) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.tokenId = tokenId;
+    }
+
+    public OauthTokenInfo(String tokenId) {
         this.tokenId = tokenId;
     }
 }
