@@ -61,18 +61,19 @@ public class PermissionDataMigrator extends Migrator {
 
     protected void migrateOldPermission(Element permission) throws MigrationClientException {
         Connection umConnection = null;
+        ResultSet oldPermissionsRS = null;
         try {
             umConnection = getDataSource().getConnection();
             umConnection.setAutoCommit(false);
             String oldPermission = permission.getAttribute("old");
             NodeList newPermList = permission.getElementsByTagName("new");
-            ResultSet oldPermissionsRS = selectExistingPermissions(oldPermission, umConnection);
+            oldPermissionsRS = selectExistingPermissions(oldPermission, umConnection);
             umConnection.commit();
             addNewPermissions(oldPermissionsRS, newPermList);
         } catch (SQLException e) {
             log.error("Error while migrating permission data", e);
         } finally {
-            IdentityDatabaseUtil.closeConnection(umConnection);
+            IdentityDatabaseUtil.closeAllConnections(umConnection, oldPermissionsRS, null);
 
         }
     }
@@ -92,9 +93,9 @@ public class PermissionDataMigrator extends Migrator {
     private void addNewPermissions(ResultSet oldPermissionsRS, NodeList newPermList) throws MigrationClientException {
         Connection umConnection = null;
         try {
+            umConnection = getDataSource().getConnection();
+            umConnection.setAutoCommit(false);
             while (oldPermissionsRS.next()) {
-                umConnection = getDataSource().getConnection();
-                umConnection.setAutoCommit(false);
                 String action = oldPermissionsRS.getString("UM_ACTION");
                 int tenantId = oldPermissionsRS.getInt("UM_TENANT_ID");
                 int moduleId = oldPermissionsRS.getInt("UM_MODULE_ID");
