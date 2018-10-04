@@ -35,6 +35,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class handles the OAuth data migration.
@@ -111,10 +112,15 @@ public class OAuthDataMigrator extends Migrator {
 
         boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
         List<Integer> inactiveTenants = Utility.getInactiveTenants();
+        Set<Integer> tenantRangeID = Utility.getTenantIDs();
         for (OAuthConsumerApp consumerApp : consumerApps) {
             if (ignoreForInactiveTenants && inactiveTenants.contains(consumerApp.getTenantId())) {
                 log.info("Skipping OAuth2 consumer apps table migration for inactive tenant: " +
                         consumerApp.getTenantId());
+                continue;
+            }
+            if (Utility.isMigrateTenantRange() && !tenantRangeID.contains(consumerApp.getTenantId())) {
+                log.info("Skipping OAuth2 consumer apps table migration for tenant : " + consumerApp.getTenantId());
                 continue;
             }
             SpOAuth2ExpiryTimeConfiguration expiryTimeConfiguration = RegistryUtil.getSpTokenExpiryTimeConfig

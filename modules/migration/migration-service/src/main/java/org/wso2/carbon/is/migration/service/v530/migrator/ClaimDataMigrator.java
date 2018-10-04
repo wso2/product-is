@@ -450,7 +450,7 @@ public class ClaimDataMigrator extends Migrator{
             migrateLocalClaimData(SUPER_TENANT_ID);
 
             // Migrate other tenants.
-            List<Tenant> tenants = Utility.getTenants();
+            Set<Tenant> tenants = Utility.getTenants();
             List<Integer> inactiveTenants = Utility.getInactiveTenants();
             boolean ignoreForInactiveTenants = isIgnoreForInactiveTenants();
             for (Tenant tenant : tenants) {
