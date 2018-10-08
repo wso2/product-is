@@ -24,6 +24,10 @@ $(function() {
 
 				$.each(userWidgets, function(i, w) {
 
+                    if (w.authorized !== 'true') {
+                        return;
+                    }
+
                             var el = $('<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">' +
 								'<div id="'+w.id+'" class="layout_block gs_w" ' +
 								'data-title="'+w.title+'" data-wid="'+w.wid+'" data-url="'+w.url+'" data-prefs="'+w.prefs+'"> ' +

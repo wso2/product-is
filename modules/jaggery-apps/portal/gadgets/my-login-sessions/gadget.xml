@@ -22,7 +22,6 @@
     </ModulePrefs>
     <Content type="html" view="default">
         <![CDATA[
-        <script type="text/javascript" src="/portal/csrf.js"></script>
         <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
@@ -61,6 +60,7 @@
 
     <Content type="html" view="home">
         <![CDATA[
+        <script type="text/javascript" src="/portal/csrf.js"></script>
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript" src="js/modal.js"></script>
