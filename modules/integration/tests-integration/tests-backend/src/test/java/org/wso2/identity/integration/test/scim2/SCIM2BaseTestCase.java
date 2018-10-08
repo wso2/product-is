@@ -14,6 +14,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String SCIM2_ME_ENDPOINT = "/scim2/Me";
     public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
     public static final String SCIM2_GROUPS_ENDPOINT = "/scim2/Groups";
+    public static final String SCIM_RESOURCE_TYPES_ENDPOINT = "/scim2/ResourceTypes";
 
     public static final String USER_NAME_ATTRIBUTE = "userName";
     public static final String FAMILY_NAME_ATTRIBUTE = "familyName";
@@ -32,6 +33,9 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String MEMBERS_ATTRIBUTE = "members";
     public static final String MEMBER_DISPLAY_ATTRIBUTE = "members.display";
     public static final String META_LOCATION_ATTRIBUTE = "meta.location";
+    public static final String LIST_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:ListResponse";
+    public static final String RESOURCE_TYPE_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:ResourceType";
+    public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
 
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
