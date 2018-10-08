@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -29,13 +30,17 @@ import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_HOME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_WORK_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ERROR_SCHEMA;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.FAMILY_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.LIST_SCHEMA;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.RESOURCE_TYPE_SCHEMA;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM_RESOURCE_TYPES_ENDPOINT;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PARAM;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
@@ -138,6 +143,36 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         assertNotNull(userId);
     }
 
+    @Test
+    public void testAddUserFailure() throws Exception {
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        JSONObject rootObject = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
+
+        JSONObject names = new JSONObject();
+        rootObject.put(NAME_ATTRIBUTE, names);
+        rootObject.put(USER_NAME_ATTRIBUTE, "passwordIncompatibleUser");
+        rootObject.put(PASSWORD_ATTRIBUTE, "a");
+
+        StringEntity entity = new StringEntity(rootObject.toString());
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        JSONArray schemasArray = (JSONArray)((JSONObject) responseObj).get("schemas");
+        Assert.assertNotNull(schemasArray);
+        Assert.assertEquals(schemasArray.size(), 1);
+        Assert.assertEquals(schemasArray.get(0).toString(), ERROR_SCHEMA);
+    }
+
     @Test(dependsOnMethods = "testCreateUser")
     public void testGetUser() throws Exception {
         String userResourcePath = getPath() + "/" + userId;
@@ -173,7 +208,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-
+        request.addHeader(HttpHeaders.ACCEPT, "application/scim+json");
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
                 "has not been retrieved successfully");
@@ -212,6 +247,37 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
+    }
+
+    @Test
+    public void testGetResourceTypes() throws Exception {
+
+        String resourcePathEndpoint = SERVER_URL + SCIM_RESOURCE_TYPES_ENDPOINT;
+        HttpGet request = new HttpGet(resourcePathEndpoint);
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "Error while executing GET to resourceTypes " +
+                "Endpoint");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        JSONObject resourceResponse = ((JSONObject) responseObj);
+        Long totalResults = (Long) resourceResponse.get("totalResults");
+        Assert.assertEquals("2", Long.toString(totalResults));
+
+        JSONArray rootSchemas = (JSONArray) resourceResponse.get("schemas");
+        Assert.assertEquals(rootSchemas.get(0).toString(), LIST_SCHEMA);
+
+        JSONArray resourcesArray = (JSONArray) resourceResponse.get("Resources");
+        Assert.assertEquals(resourcesArray.size(), 2);
+
+        JSONObject resource = (JSONObject) resourcesArray.get(0);
+        JSONArray resourceSchemas = (JSONArray) resource.get("schemas");
+        Assert.assertEquals(resourceSchemas.size(), 1);
+        Assert.assertEquals(resourceSchemas.get(0).toString(), RESOURCE_TYPE_SCHEMA);
+
     }
 
     private String getPath() {
