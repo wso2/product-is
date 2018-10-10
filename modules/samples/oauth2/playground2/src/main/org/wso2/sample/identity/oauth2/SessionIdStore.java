@@ -15,6 +15,7 @@ public class SessionIdStore {
     private static Map<String, HttpSession> sessionMap = new HashMap<>();
 
     public static void storeSession(String sid, HttpSession session) {
+        log.info("Storing session: " + session.getId() + " against the sid: " + sid);
         sessionMap.put(sid, session);
     }
 
@@ -24,6 +25,7 @@ public class SessionIdStore {
     }
 
     public static HttpSession getSession(String sid) {
+        log.info("Retrieving session: " + sessionMap.get(sid).getId() + " for the sid: " + sid);
         return sessionMap.get(sid);
     }
 
