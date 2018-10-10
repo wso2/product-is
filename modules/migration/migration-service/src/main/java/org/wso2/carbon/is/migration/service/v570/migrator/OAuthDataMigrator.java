@@ -2,6 +2,7 @@ package org.wso2.carbon.is.migration.service.v570.migrator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
@@ -13,6 +14,7 @@ import org.wso2.carbon.is.migration.util.Constant;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OAuthDataMigrator extends Migrator {
@@ -97,35 +99,58 @@ public class OAuthDataMigrator extends Migrator {
         if (oauthTokenList != null) {
             JSONObject accessTokenHashObject;
             JSONObject refreshTokenHashObject;
+            List<OauthTokenInfo> alreadyProcessedRecords = new ArrayList<>();
 
             for (OauthTokenInfo tokenInfo : oauthTokenList) {
-                accessTokenHashObject = new JSONObject();
-                String oldAccessTokenHash = tokenInfo.getAccessTokenHash();
-                accessTokenHashObject.put(ALGORITHM, hashAlgorithm);
-                accessTokenHashObject.put(HASH, oldAccessTokenHash);
-                tokenInfo.setAccessTokenHash(accessTokenHashObject.toString());
 
-                refreshTokenHashObject = new JSONObject();
-                String oldRefreshTokenHash = tokenInfo.getRefreshTokenhash();
-                refreshTokenHashObject.put(ALGORITHM, hashAlgorithm);
-                refreshTokenHashObject.put(HASH,oldRefreshTokenHash);
-                tokenInfo.setRefreshTokenhash(refreshTokenHashObject.toString());
+                String oldAccessTokenHash = tokenInfo.getAccessTokenHash();
+                try {
+                    //If hash column already is a JSON value, no need to update the record
+                    new JSONObject(oldAccessTokenHash);
+                    alreadyProcessedRecords.add(tokenInfo);
+                } catch (JSONException e) {
+                    //Exception is thrown because the hash value is not a json
+                    accessTokenHashObject = new JSONObject();
+                    accessTokenHashObject.put(ALGORITHM, hashAlgorithm);
+                    accessTokenHashObject.put(HASH, oldAccessTokenHash);
+                    tokenInfo.setAccessTokenHash(accessTokenHashObject.toString());
+
+                    refreshTokenHashObject = new JSONObject();
+                    String oldRefreshTokenHash = tokenInfo.getRefreshTokenhash();
+                    refreshTokenHashObject.put(ALGORITHM, hashAlgorithm);
+                    refreshTokenHashObject.put(HASH, oldRefreshTokenHash);
+                    tokenInfo.setRefreshTokenhash(refreshTokenHashObject.toString());
+                }
             }
+            oauthTokenList.removeAll(alreadyProcessedRecords);
         }
+    }
+
+    private void hhvvfsv(String hash) {
+
     }
 
     private void updateAuthzCodeHashColumnValues(List<AuthzCodeInfo> authzCodeInfos, String hashAlgorithm) {
 
         if (authzCodeInfos != null) {
             JSONObject authzCodeHashObject;
+            List<AuthzCodeInfo> alreadyProcessedRecords = new ArrayList<>();
 
             for (AuthzCodeInfo authzCodeInfo : authzCodeInfos) {
-                authzCodeHashObject = new JSONObject();
                 String oldAuthzCodeHash = authzCodeInfo.getAuthorizationCodeHash();
-                authzCodeHashObject.put(ALGORITHM, hashAlgorithm);
-                authzCodeHashObject.put(HASH, oldAuthzCodeHash);
-                authzCodeInfo.setAuthorizationCodeHash(authzCodeHashObject.toString());
+                try {
+                    //If hash column already is a JSON value, no need to update the record
+                    new JSONObject(oldAuthzCodeHash);
+                    alreadyProcessedRecords.add(authzCodeInfo);
+                } catch (JSONException e) {
+                    //Exception is thrown because the hash value is not a json
+                    authzCodeHashObject = new JSONObject();
+                    authzCodeHashObject.put(ALGORITHM, hashAlgorithm);
+                    authzCodeHashObject.put(HASH, oldAuthzCodeHash);
+                    authzCodeInfo.setAuthorizationCodeHash(authzCodeHashObject.toString());
+                }
             }
+            authzCodeInfos.removeAll(alreadyProcessedRecords);
         }
     }
 }
