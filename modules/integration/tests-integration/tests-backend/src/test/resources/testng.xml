@@ -96,6 +96,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.application.mgt.ImportExportServiceProviderTest"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.application.mgt.DefaultAuthSeqManagementTestCase"/>
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase"/>
