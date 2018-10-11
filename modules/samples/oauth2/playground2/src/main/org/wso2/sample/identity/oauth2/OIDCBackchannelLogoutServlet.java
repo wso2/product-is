@@ -40,8 +40,13 @@ public class OIDCBackchannelLogoutServlet extends HttpServlet {
             e.printStackTrace();
         }
         HttpSession session = SessionIdStore.getSession(sid);
-        log.info("Session invalidated.");
-        session.invalidate();
+
+        if (session != null) {
+            session.invalidate();
+            log.info("Session invalidated successfully.");
+        } else {
+            log.info("Cannot find corresponding session.");
+        }
 
     }
 }
