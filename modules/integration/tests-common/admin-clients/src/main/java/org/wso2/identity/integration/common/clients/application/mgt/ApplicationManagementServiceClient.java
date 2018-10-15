@@ -189,6 +189,26 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     * Get all basic application information for a matching filter.
+     *
+     * @param filter Application name filter
+     * @return Application Basic Information array
+     * @throws Exception
+     */
+    public ApplicationBasicInfo[] getApplicationBasicInfo(String filter) throws Exception {
+
+        try {
+            return stub.getApplicationBasicInfo(filter);
+        } catch (RemoteException e) {
+            log.error(e.getMessage(), e);
+            throw new Exception(e.getMessage());
+        } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
+            log.error(e.getMessage(), e);
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    /**
      *
      * @param serviceProvider
      * @throws Exception
