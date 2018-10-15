@@ -573,7 +573,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
      *Introduced user delayed time period in between each request to match the test method with the real user behaviour.
      * @param
      */
-    private void introduceUserDelay (int delayTimeInMilliseconds)throws Exception  {
+    private void introduceUserDelay(int delayTimeInMilliseconds) throws Exception  {
         Thread.sleep(delayTimeInMilliseconds);
     }
 
