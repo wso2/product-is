@@ -32,7 +32,6 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  * This class tests Analytics login data publish handling and Analytics session data publish handling functionalities.
@@ -81,14 +80,8 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AnalyticsLoginTes
             copyAuthenticationDataPublisher();
             serverConfigurationManager.restartForcefully();
 
-        } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in identity-event.properties");
-        } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in identity-event.properties");
-        } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in identity-event.properties");
-        } catch (IOException e) {
-            log.error("Error while changing configurations in identity-event.properties");
+        } catch (AutomationUtilException | XPathExpressionException | IOException e) {
+            log.error("Error while changing configurations in identity-event.properties", e);
         }
     }
 
@@ -112,14 +105,8 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AnalyticsLoginTes
             copyAuthenticationDataPublisher();
             serverConfigurationManager.restartForcefully();
 
-        } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in identity-event.properties to default configurations");
-        } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in identity-event.properties to default configurations");
-        } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in identity-event.properties to default configurations");
-        } catch (IOException e) {
-            log.error("Error while changing configurations in identity-event.properties to default configurations");
+        } catch (AutomationUtilException | XPathExpressionException | IOException e) {
+            log.error("Error while changing configurations in identity-event.properties to default configuration", e);
         }
     }
 

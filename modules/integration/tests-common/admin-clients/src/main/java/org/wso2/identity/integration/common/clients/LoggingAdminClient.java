@@ -16,13 +16,12 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.utils;
+package org.wso2.identity.integration.common.clients;
 
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.logging.admin.stub.LoggingAdminStub;
-import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 public class LoggingAdminClient {
 
