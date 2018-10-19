@@ -189,6 +189,23 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     * Get all basic application information for a matching filter.
+     *
+     * @param filter Application name filter
+     * @return Application Basic Information array
+     * @throws AxisFault
+     */
+    public ApplicationBasicInfo[] getApplicationBasicInfo(String filter) throws AxisFault {
+
+        try {
+            return stub.getApplicationBasicInfo(filter);
+        } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
+            log.error(e.getMessage(), e);
+            throw new AxisFault(e.getMessage(), e);
+        }
+    }
+
+    /**
      *
      * @param serviceProvider
      * @throws Exception
