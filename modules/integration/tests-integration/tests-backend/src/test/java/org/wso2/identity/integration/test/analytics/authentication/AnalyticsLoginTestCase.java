@@ -98,11 +98,11 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private SAMLConfig config;
     private Tomcat tomcatServer;
     private ThriftServer thriftServer;
-    private ServerConfigurationManager serverConfigurationManager;
+    protected ServerConfigurationManager serverConfigurationManager;
     HttpClient sharedHttpClient = new DefaultHttpClient();
     private static final Long WAIT_TIME = 10000L;
 
-    private enum HttpBinding {
+    protected enum HttpBinding {
         HTTP_REDIRECT("HTTP-Redirect"),
         HTTP_POST("HTTP-POST");
         String binding;
@@ -112,11 +112,11 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         }
     }
 
-    private enum ClaimType {
+    protected enum ClaimType {
         LOCAL, CUSTOM, NONE
     }
 
-    private enum User {
+    protected enum User {
         SUPER_TENANT_USER("samlAnalyticsuser1", "samlAnalyticsuser1", "carbon.super", "samlAnalyticsuser1", "samlAnalyticsuser1@abc.com",
                 "samlnickuser1"),
         TENANT_USER("samlAnalyticsuser2@wso2.com", "samlAnalyticsuser2", "wso2.com", "samlAnalyticsuser2", "samlAnalyticsuser2@abc.com",
@@ -166,7 +166,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
     ;
 
-    private enum App {
+    protected enum App {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false);
@@ -188,14 +188,14 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         }
     }
 
-    private static class SAMLConfig {
+    protected static class SAMLConfig {
         private TestUserMode userMode;
         private User user;
         private HttpBinding httpBinding;
         private ClaimType claimType;
         private App app;
 
-        private SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
+        protected SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
             this.userMode = userMode;
             this.user = user;
             this.httpBinding = httpBinding;
