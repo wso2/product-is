@@ -59,8 +59,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     private static final String SAML_APP_ONE_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String SAML_APP_TWO_ACS_URL = "http://localhost:8490/travelocity.com-saml-tenantwithoutsigning/home.jsp";
 
-    private SAMLConfig config1;
-    private SAMLConfig config2;
+    private SAMLConfig samlConfigOne;
+    private SAMLConfig samlConfigTwo;
 
     private Tomcat tomcatServer;
     private String resultPage;
@@ -72,13 +72,13 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     private static final Long WAIT_TIME = 10000L;
 
     @Factory(dataProvider = "samlConfigProvider")
-    public SAMLIdPInitiatedSLOTestCase(SAMLConfig config1, SAMLConfig config2) {
+    public SAMLIdPInitiatedSLOTestCase(SAMLConfig samlConfigOne, SAMLConfig samlConfigTwo) {
 
         if (log.isDebugEnabled()) {
-            log.info("Test initialized for " + config1 + " & " + config2);
+            log.info("Test initialized for " + samlConfigOne + " & " + samlConfigTwo);
         }
-        this.config1 = config1;
-        this.config2 = config2;
+        this.samlConfigOne = samlConfigOne;
+        this.samlConfigTwo = samlConfigTwo;
     }
 
     @DataProvider(name = "samlConfigProvider")
@@ -95,17 +95,17 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(config1.getUserMode());
+        super.init(samlConfigOne.getUserMode());
         super.testInit();
 
-        super.createUser(config1);
-        super.createApplication(config1, APPLICATION_ONE);
-        super.createApplication(config2, APPLICATION_TWO);
+        super.createUser(samlConfigOne);
+        super.createApplication(samlConfigOne, APPLICATION_ONE);
+        super.createApplication(samlConfigTwo, APPLICATION_TWO);
 
         log.info("Starting Tomcat");
         tomcatServer = Utils.getTomcat(getClass());
-        deployApplication(tomcatServer, config1);
-        deployApplication(tomcatServer, config2);
+        deployApplication(tomcatServer, samlConfigOne);
+        deployApplication(tomcatServer, samlConfigTwo);
         tomcatServer.start();
 
         logAdmin = new LoggingAdminClient(backendURL, sessionCookie);
@@ -115,7 +115,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        super.deleteUser(config1);
+        super.deleteUser(samlConfigOne);
         super.deleteApplication(APPLICATION_ONE);
         super.deleteApplication(APPLICATION_TWO);
 
@@ -131,19 +131,19 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
         Boolean isAddSuccess;
 
-        isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(config1));
-        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config1);
+        isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(samlConfigOne));
+        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + samlConfigOne);
 
         samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config1.getApp().getArtifact(),
-                "Adding a service provider has failed for " + config1);
+        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), samlConfigOne.getApp().getArtifact(),
+                "Adding a service provider has failed for " + samlConfigOne);
 
-        isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(config2));
-        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config2);
+        isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(samlConfigTwo));
+        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + samlConfigTwo);
 
         samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[1].getIssuer(), config2.getApp().getArtifact(),
-                "Adding a service provider has failed for " + config2);
+        Assert.assertEquals(samlssoServiceProviderDTOs[1].getIssuer(), samlConfigTwo.getApp().getArtifact(),
+                "Adding a service provider has failed for " + samlConfigTwo);
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
@@ -153,18 +153,20 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         try {
             HttpResponse response;
 
-            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config1.getApp().getArtifact(),
-                    config1.getHttpBinding().binding), USER_AGENT, httpClient);
+            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, samlConfigOne.getApp().getArtifact(),
+                    samlConfigOne.getHttpBinding().binding), USER_AGENT, httpClient);
             String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-            response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config1);
+            response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest,
+                    samlConfigOne);
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config1.getApp().getArtifact(),
+            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, samlConfigOne.getApp().getArtifact(),
                     httpClient);
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config1.getApp().
-                    getArtifact(), config1.getUser().getUsername(), config1.getUser().getPassword(), httpClient);
+            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, samlConfigOne.getApp().
+                            getArtifact(), samlConfigOne.getUser().getUsername(), samlConfigOne.getUser().getPassword()
+                    , httpClient);
 
             if (Utils.requestMissingClaims(response)) {
                 String pastrCookie = Utils.getPastreCookie(response);
@@ -172,28 +174,29 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL
-                        , config1.getApp().getArtifact()), httpClient, pastrCookie);
+                        , samlConfigOne.getApp().getArtifact()), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
             if (StringUtils.isNotBlank(redirectUrl)) {
-                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config1.getApp().getArtifact(),
-                        httpClient);
+                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, samlConfigOne.getApp().
+                        getArtifact(), httpClient);
             }
 
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
 
-            response = super.sendSAMLMessage(String.format(ACS_URL, config1.getApp().getArtifact()),
-                    CommonConstants.SAML_RESPONSE_PARAM, samlResponse, config1);
+            response = super.sendSAMLMessage(String.format(ACS_URL, samlConfigOne.getApp().getArtifact()),
+                    CommonConstants.SAML_RESPONSE_PARAM, samlResponse, samlConfigOne);
             resultPage = DataExtractUtil.getContentData(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config1.getUser().getTenantAwareUsername()),
-                    "SAML SSO Login failed for " + config1.getApp().getArtifact());
+            Assert.assertTrue(resultPage.contains("You are logged in as " + samlConfigOne.getUser().
+                    getTenantAwareUsername()), "SAML SSO Login failed for " + samlConfigOne.getApp().
+                    getArtifact());
 
         } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + config1.getApp().getArtifact(), e);
+            Assert.fail("SAML SSO Login test failed for " + samlConfigOne.getApp().getArtifact(), e);
         }
 
         doSSOtoAppTwo();
@@ -213,7 +216,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
             Assert.assertTrue(resultPage.contains("You have successfully logged out") &&
                     !resultPage.contains("error"), "SAML IdP initiated SLO failed for " +
-                    config1.getApp().getArtifact() + " & " + config2.getApp().getArtifact());
+                    samlConfigOne.getApp().getArtifact() + " & " + samlConfigTwo.getApp().getArtifact());
 
             boolean requestOneSentLogFound = checkForLog(logViewer,
                     "single logout request is sent to : " + SAML_APP_ONE_ACS_URL + " is returned with OK");
@@ -236,8 +239,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
             Assert.assertTrue(responseTwoReceivedLogFound, "System Log not found. Logout response is not " +
                     "received for issuer travelocity.com-saml-tenantwithoutsigning");
         } catch (Exception e) {
-            Assert.fail("SAML IdP initiated SLO test failed for " + config1.getApp().getArtifact() + " & " +
-                    config2.getApp().getArtifact(), e);
+            Assert.fail("SAML IdP initiated SLO test failed for " + samlConfigOne.getApp().getArtifact()
+                    + " & " + samlConfigTwo.getApp().getArtifact(), e);
         }
     }
 
@@ -246,36 +249,38 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         try {
             HttpResponse response;
 
-            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config2.getApp().getArtifact(),
-                    config2.getHttpBinding().binding), USER_AGENT, httpClient);
+            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, samlConfigTwo.getApp().getArtifact(),
+                    samlConfigTwo.getHttpBinding().binding), USER_AGENT, httpClient);
             String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-            response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config2);
+            response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest,
+                    samlConfigTwo);
 
             if (Utils.requestMissingClaims(response)) {
                 String pastrCookie = Utils.getPastreCookie(response);
                 Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL
-                        , config2.getApp().getArtifact()), httpClient, pastrCookie);
+                        , samlConfigTwo.getApp().getArtifact()), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
             if (StringUtils.isNotBlank(redirectUrl)) {
-                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config2.getApp().getArtifact(),
-                        httpClient);
+                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, samlConfigTwo.getApp().
+                        getArtifact(), httpClient);
             }
 
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
-            response = super.sendSAMLMessage(String.format(ACS_URL, config2.getApp().getArtifact()),
-                    CommonConstants.SAML_RESPONSE_PARAM, samlResponse, config2);
+            response = super.sendSAMLMessage(String.format(ACS_URL, samlConfigTwo.getApp().getArtifact()),
+                    CommonConstants.SAML_RESPONSE_PARAM, samlResponse, samlConfigTwo);
             resultPage = DataExtractUtil.getContentData(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config1.getUser().getTenantAwareUsername()),
-                    "SAML SSO Login failed for " + config2.getApp().getArtifact());
+            Assert.assertTrue(resultPage.contains("You are logged in as " + samlConfigOne.getUser().
+                    getTenantAwareUsername()), "SAML SSO Login failed for " + samlConfigTwo.getApp().
+                    getArtifact());
         } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + config2.getApp().getArtifact(), e);
+            Assert.fail("SAML SSO Login test failed for " + samlConfigTwo.getApp().getArtifact(), e);
         }
     }
 
