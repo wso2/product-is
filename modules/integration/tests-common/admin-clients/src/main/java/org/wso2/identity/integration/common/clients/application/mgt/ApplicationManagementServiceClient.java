@@ -193,18 +193,15 @@ public class ApplicationManagementServiceClient {
      *
      * @param filter Application name filter
      * @return Application Basic Information array
-     * @throws Exception
+     * @throws AxisFault
      */
-    public ApplicationBasicInfo[] getApplicationBasicInfo(String filter) throws Exception {
+    public ApplicationBasicInfo[] getApplicationBasicInfo(String filter) throws AxisFault {
 
         try {
             return stub.getApplicationBasicInfo(filter);
-        } catch (RemoteException e) {
+        } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
             log.error(e.getMessage(), e);
-            throw new Exception(e.getMessage());
-        } catch (IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
-            log.error(e.getMessage(), e);
-            throw new Exception(e.getMessage());
+            throw new AxisFault(e.getMessage(), e);
         }
     }
 
