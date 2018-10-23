@@ -12,6 +12,7 @@ var identityProviderMgtClient = require('controllers/service-clients/identityPro
 var userProfileMgtClient = require('controllers/service-clients/userProfileMgtClient.jag');
 var identityProviderAdminClient = require('controllers/service-clients/identityProviderAdminClient.jag');
 var userCoreUtils = Packages.org.wso2.carbon.user.core.util.UserCoreUtil;
+var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 
 if (action != null) {
