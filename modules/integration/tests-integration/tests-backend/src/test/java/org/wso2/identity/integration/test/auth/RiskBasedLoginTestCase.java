@@ -171,11 +171,15 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 + File.separator + "deployment" + File.separator
                 + "server" + File.separator + "webapps" + File.separator + "sample-auth.war");
         warDestFile.delete();
+
         File warDestFolder = new File(Utils.getResidentCarbonHome()
-                + File.separator + File.separator + "repository"
-                + File.separator + "deployment" + File.separator
-                + "server" + File.separator + "webapps" + File.separator + "sample-auth");
-        FileUtils.deleteDirectory(warDestFolder);
+                    + File.separator + File.separator + "repository"
+                    + File.separator + "deployment" + File.separator
+                    + "server" + File.separator + "webapps" + File.separator + "sample-auth");
+
+        if(warDestFolder.exists()) {
+            FileUtils.deleteDirectory(warDestFolder);
+        }
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
