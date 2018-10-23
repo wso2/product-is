@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.8.0-m5-SNAPSHOT</version>
+        <version>5.8.0-m6-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -226,6 +226,10 @@
         <dependency>
             <groupId>org.wso2.carbon.registry</groupId>
             <artifactId>org.wso2.carbon.registry.properties.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.logging.admin.stub</artifactId>
         </dependency>
     </dependencies>
 

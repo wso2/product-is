@@ -61,6 +61,7 @@
     <test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
+            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginDataPublishHandlingTestCase"/>
             <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
         </classes>
     </test>
@@ -96,6 +97,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.application.mgt.ImportExportServiceProviderTest"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.application.mgt.DefaultAuthSeqManagementTestCase"/>
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase"/>
@@ -211,6 +213,7 @@
         <classes>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLLocalAndOutboundAuthenticatorsTestCase"/>-->
