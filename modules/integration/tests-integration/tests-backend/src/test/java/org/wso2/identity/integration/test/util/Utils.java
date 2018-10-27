@@ -21,8 +21,10 @@ package org.wso2.identity.integration.test.util;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -30,6 +32,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -46,6 +49,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -343,7 +347,7 @@ public class Utils {
         String url = "";
         for (Header header : headers) {
             if ("Location".equals(header.getName())) {
-                url = header.getValue();
+                url = header.getValue().replace("ecp/","");
             }
         }
         return url;
@@ -364,6 +368,24 @@ public class Utils {
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", userAgent);
         return httpClient.execute(request);
+    }
+    public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient, String username, String password ,String soapRequest){
+        HttpPost request = new HttpPost(url);
+        HttpResponse response = null;
+        String auth = username + ":" + password;
+        byte[] encodedAuth = Base64.encodeBase64(
+                auth.getBytes(StandardCharsets.ISO_8859_1));
+        String authHeader = "Basic " + new String(encodedAuth);
+        System.out.println(authHeader);
+        request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
+        request.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
+        try {
+            request.setEntity(new StringEntity(soapRequest));
+            response = httpClient.execute(request);
+        } catch(Exception e){
+            //handle the exception
+        }
+        return response;
     }
 
     public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, TestUserMode userMode, String tenantDomainParam, String tenantDomain, HttpClient httpClient) throws IOException {

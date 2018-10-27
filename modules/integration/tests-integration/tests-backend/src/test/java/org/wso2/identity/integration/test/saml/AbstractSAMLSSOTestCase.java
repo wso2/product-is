@@ -33,6 +33,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -66,6 +67,9 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
+    protected static final String SAML_ECP_SSO_URL = "https://localhost:9853/ecp";
+    protected static final String SAML_ECP_ACS_URL = "https://localhost/Shibboleth.sso/SAML2/ECP";
+
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
@@ -81,7 +85,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     protected enum HttpBinding {
 
         HTTP_REDIRECT("HTTP-Redirect"),
-        HTTP_POST("HTTP-POST");
+        HTTP_POST("HTTP-POST"),
+        HTTP_SOAP("SOAP");
 
         String binding;
 
@@ -166,7 +171,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     protected enum App {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
-        TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false);
+        TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
+        ECP_APP("https://localhost/shibboleth",false);
 
         private String artifact;
         private boolean signingEnabled;
@@ -299,6 +305,15 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
                 new InboundAuthenticationRequestConfig[]{requestConfig});
 
+        if(config.httpBinding.equals(HttpBinding.HTTP_SOAP)){
+            //for the request path authenticator in setting saml ecp sps
+            RequestPathAuthenticatorConfig requestPathAuthenticatorConfig = new RequestPathAuthenticatorConfig();
+            requestPathAuthenticatorConfig.setName("BasicAuthRequestPathAuthenticator");
+
+            serviceProvider.setRequestPathAuthenticatorConfigs(
+                    new RequestPathAuthenticatorConfig[] { requestPathAuthenticatorConfig });
+        }
+
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
@@ -395,6 +410,29 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
+        if (config.getClaimType() != AbstractSAMLSSOTestCase.ClaimType.NONE) {
+            samlssoServiceProviderDTO.setEnableAttributeProfile(true);
+            samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
+        }
+
+        return samlssoServiceProviderDTO;
+    }
+
+    public SAMLSSOServiceProviderDTO createECPServiceProviderDTO(SAMLConfig config) {
+
+        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
+        samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
+//        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{SAML_ECP_ACS_URL});
+//        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(SAML_ECP_ACS_URL);
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{SAML_ECP_ACS_URL});
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(SAML_ECP_ACS_URL);
+        samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
+        samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
+        samlssoServiceProviderDTO.setDoSignAssertions(config.getApp().isSigningEnabled());
+        samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
+        samlssoServiceProviderDTO.setDoSingleLogout(true);
+        samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
+        samlssoServiceProviderDTO.setSamlECP(true);
         if (config.getClaimType() != AbstractSAMLSSOTestCase.ClaimType.NONE) {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
