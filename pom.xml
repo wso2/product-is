@@ -1343,6 +1343,11 @@
                 <artifactId>commons-pool</artifactId>
                 <version>${commons.pool.wso2.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
+                <artifactId>encoder</artifactId>
+                <version>${owasp.encoder.version}</version>
+            </dependency>
 
             <!-- Outbound Authenticators -->
             <dependency>
@@ -1960,6 +1965,7 @@
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
         <carbon.healthcheck.version>1.0.0</carbon.healthcheck.version>
         <carbon.logging.admin.stub.version>4.6.46</carbon.logging.admin.stub.version>
+        <owasp.encoder.version>1.2.0.wso2v1</owasp.encoder.version>
     </properties>
 
     <repositories>
