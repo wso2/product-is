@@ -126,10 +126,6 @@ public class OAuthDataMigrator extends Migrator {
         }
     }
 
-    private void hhvvfsv(String hash) {
-
-    }
-
     private void updateAuthzCodeHashColumnValues(List<AuthzCodeInfo> authzCodeInfos, String hashAlgorithm) {
 
         if (authzCodeInfos != null) {
