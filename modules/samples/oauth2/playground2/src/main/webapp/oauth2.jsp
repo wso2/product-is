@@ -11,7 +11,6 @@
 <%@ page import="java.util.logging.Logger" %>
 <%@ page import="org.wso2.sample.identity.oauth2.ContextEventListener" %>
 <%@ page import="java.util.logging.Level" %>
-<%@ page import="org.owasp.encoder.Encode" %>
 <%
     Logger LOGGER = Logger.getLogger(ContextEventListener.class.getName());
 
@@ -460,14 +459,13 @@
 
                         <tr>
                             <td><label>Client Id : </label></td>
-                            <td><input type="text" id="consumerKey" name="consumerKey"
-                                       value="<%=Encode.forHtmlAttribute(consumerKey)%>" style="width:450px"></td>
+                            <td><input type="text" id="consumerKey" name="consumerKey" value="<%=consumerKey%>" style="width:450px"></td>
                         </tr>
 
                         <tr id="clientsecret" style="display:none">
                             <td><label>Client Secret : </label></td>
                             <td><input type="password" id="consumerSecret" name="consumerSecret"
-                                       value="<%=Encode.forHtmlAttribute(consumerSecret)%>" style="width:450px">
+                                       value="<%=consumerSecret%>" style="width:450px">
                             </td>
                         </tr>
 
@@ -484,8 +482,8 @@
 
                         <tr>
                             <td><label>Scope : </label></td>
-                            <td><input type="text" id="scope" name="scope" onchange="setVisibility();"
-                                       value="<%=Encode.forHtmlAttribute(scopeName)%>">
+                            <td><input type="text" id="scope" name="scope" value="<%=scopeName%>"
+                                       onchange="setVisibility();">
                             </td>
                         </tr>
                         <tr id="implicitRespType" style="display: none">
@@ -504,35 +502,35 @@
 
                         <tr id="callbackurltr">
                             <td><label>Callback URL : </label></td>
-                            <td><input type="text" id="callbackurl" name="callbackurl"
-                                       value="<%=Encode.forHtmlAttribute(callbackUrl)%>" style="width:450px">
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>"
+                                       style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="authzep">
                             <td>Authorize Endpoint :</td>
-                            <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint"
-                                       value="<%=Encode.forHtmlAttribute(authorizeEndpoint)%>" style="width:450px">
+                            <td><input type="text" id="authorizeEndpoint" name="authorizeEndpoint" value="<%=authorizeEndpoint%>"
+                                       style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="accessep" style="display:none">
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint"
-                                       value="<%=Encode.forHtmlAttribute(accessTokenEndpoint)%>" style="width:450px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint"  value="<%=accessTokenEndpoint%>"
+                                       style="width:450px"></td>
                         </tr>
 
                         <tr id="logutep" style="display:none">
                             <td>Logout Endpoint :</td>
-                            <td><input type="text" id="logoutEndpoint" name="logoutEndpoint"
-                                       value="<%=Encode.forHtmlAttribute(logoutEndpoint)%>" style="width:450px">
+                            <td><input type="text" id="logoutEndpoint" name="logoutEndpoint" value="<%=logoutEndpoint%>"
+                                       style="width:450px">
                             </td>
                         </tr>
 
                         <tr id="sessionep" style="display:none">
                             <td>Session Iframe Endpoint :</td>
-                            <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint"
-                                       value="<%=Encode.forHtmlAttribute(sessionIFrameEndpoint)%>" style="width:450px"></td>
+                            <td><input type="text" id="sessionIFrameEndpoint" name="sessionIFrameEndpoint" value="<%=sessionIFrameEndpoint%>"
+                                       style="width:450px"></td>
                         </tr>
 
                         <tr id="pkceOption">
@@ -552,7 +550,7 @@
                         <tr id="pkceChallenge">
                             <td>PKCE Code Challenge</td>
                             <td><input type="text" style="width: 450px" readonly name="code_challenge"
-                                       value="<%=Encode.forHtmlAttribute(code_challenge)%>"></td>
+                                       value="<%=code_challenge%>"></td>
                         </tr>
                         <tr id="pkceVerifier">
                             <td>PKCE Code Verifier [length : <%=code_verifier.length()%>]</td>
@@ -570,7 +568,7 @@
                         <tr id="acr">
                             <td>Authentication Context Class/LoA</td>
                             <td><input type="text" style="width: 450px" name="acr_values"
-                                       value="<%=Encode.forHtmlAttribute(acr_values)%>"></td>
+                                       value="<%=acr_values%>"></td>
                         </tr>
 
                         <tr>
@@ -594,18 +592,15 @@
                         </tr>
                         <tr>
                             <td>Callback URL :</td>
-                            <td><input type="text" id="callbackurl" name="callbackurl"
-                                       value="<%=Encode.forHtmlAttribute(callbackUrl)%>" style="width:450px"></td>
+                            <td><input type="text" id="callbackurl" name="callbackurl" value="<%=callbackUrl%>" style="width:450px"></td>
                         </tr>
                         <tr>
                             <td>Access Token Endpoint :</td>
-                            <td><input type="text" id="accessEndpoint" name="accessEndpoint"
-                                       value="<%=Encode.forHtmlAttribute(accessTokenEndpoint)%>" style="width:450px"></td>
+                            <td><input type="text" id="accessEndpoint" name="accessEndpoint" value="<%=accessTokenEndpoint%>" style="width:450px"></td>
                         </tr>
                         <tr>
                             <td><label>Client Secret : </label></td>
-                            <td><input type="password" id="consumerSecret" name="consumerSecret"
-                                       value="<%=Encode.forHtmlAttribute(consumerSecret)%>" style="width:450px">
+                            <td><input type="password" id="consumerSecret" name="consumerSecret" value="<%=consumerSecret%>" style="width:450px">
                             </td>
                         </tr>
                         <% if (session.getAttribute(OAuth2Constants.OAUTH2_USE_PKCE) != null) {%>
@@ -654,12 +649,12 @@
                         <tr>
                             <td><label>Access Token :</label></td>
                             <td><input id="accessToken" name="accessToken" style="width:450px"
-                                       value="<%=Encode.forHtmlAttribute(accessToken)%>"/>
+                                       value="<%=accessToken%>"/>
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text"
-                                       value="<%=Encode.forHtmlAttribute(userInfo)%>" style="width:450px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" value="<%=userInfo%>"
+                                       style="width:450px"/>
                         </tr>
                         <tr>
                             <td><label>Encrypted ID Token :</label></td>
@@ -719,13 +714,12 @@
                         </tr>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:450px"
-                                       value="<%=Encode.forHtmlAttribute(accessToken)%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:450px" value="<%=accessToken%>"/>
                         </tr>
                         <tr>
                             <td><label>UserInfo Endpoint :</label></td>
-                            <td><input id="resource_url" name="resource_url" type="text"
-                                       value="<%=Encode.forHtmlAttribute(userInfo)%>" style="width:450px"/>
+                            <td><input id="resource_url" name="resource_url" type="text" value="<%=userInfo%>"
+                                       style="width:450px"/>
                         </tr>
 
                         <tr>
@@ -763,8 +757,7 @@
                         <tbody>
                         <tr>
                             <td><label>Access Token :</label></td>
-                            <td><input id="accessToken" name="accessToken" style="width:450px"
-                                       value="<%=Encode.forHtmlAttribute(accessToken)%>"/>
+                            <td><input id="accessToken" name="accessToken" style="width:450px" value="<%=accessToken%>"/>
                         </tr>
                         <% if (application.getInitParameter("setup").equals("AM")) { %>
                         <tr>
