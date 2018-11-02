@@ -22,7 +22,7 @@ No deployment instructions are needed.
 Invoke the SCIM 2 user create request as shown below. Use an HTTP client like cURL.
 
 ```
-Curl -k -X POST \
+curl -k -X POST \
   https://localhost:9443/scim2/Users/ \
   -H 'Authorization: Basic YWRtaW46YWRtaW4=' \
   -H 'Cache-Control: no-cache' \
