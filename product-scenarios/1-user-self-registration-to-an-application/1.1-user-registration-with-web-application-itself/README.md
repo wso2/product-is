@@ -47,9 +47,9 @@ Curl -k -X POST \
 
 ### Test Cases
 
-1.1.1.1 Create user with valid SCIM 2.0 request (Happy path)
-1.1.1.2 Create user with malformed request
-1.1.1.3 Create user without authorization headers
+1.1.1.1 Create user with valid SCIM 2.0 request (Happy path)</br>
+1.1.1.2 Create user with malformed request</br>
+1.1.1.3 Create user without authorization headers</br>
 
 
 
