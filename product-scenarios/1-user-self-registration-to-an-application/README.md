@@ -7,6 +7,6 @@ Let's take a scenario where an organization has an web application that provides
 Developer
 
 ## Sub-Scenarios
-1.1 User registration provided in the web application itself</br>
-1.2 User registration provided in the centralized identity provider</br>
-1.3 User registration using social identity provider</br>
+- [1.1 User registration provided in the web application itself](product-scenarios/1-user-self-registration-to-an-application/1.1-user-registration-with-web-application-itself/README.md)
+- 1.2 User registration provided in the centralized identity provider
+- 1.3 User registration using social identity provider
