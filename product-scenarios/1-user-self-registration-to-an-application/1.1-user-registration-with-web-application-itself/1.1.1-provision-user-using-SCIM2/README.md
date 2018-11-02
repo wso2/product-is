@@ -21,6 +21,7 @@ No deployment instructions are needed.
 
 Invoke the SCIM 2 user create request as shown below. Use an HTTP client like cURL.
 
+```
 Curl -k -X POST \
   https://localhost:9443/scim2/Users/ \
   -H 'Authorization: Basic YWRtaW46YWRtaW4=' \
@@ -36,7 +37,7 @@ Curl -k -X POST \
   "userName": "jane",
   "password": "jane123"
 }'
-
+```
 
 
 - Create user with valid SCIM 2.0 request (Happy path)
