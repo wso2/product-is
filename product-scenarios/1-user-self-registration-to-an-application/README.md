@@ -1,15 +1,12 @@
-# Sub Scenario 1.1 - User registration provided in the web application itself
+# 01. User Self Registration to an application
 
+## Business use-case narrative
+Let's take a scenario where an organization has an web application that provides a particular service. To consume that service, end users need to create an account in this organization.
 
-### Sub Scenario Narrative
+## Persona
+Developer
 
-Using provisioning APIs in identity server, trigger user creation in IS from the web application.
-
-
-### Test Scenarios
-You can provision user into identity server in the following ways. 
-
-1.1.1 Provision user in identity server using SCIM2 API</br>
-1.1.2 Provision user in identity server using SCIM1.1 API</br>
-
-
+## Sub-Scenarios
+1.1 User registration provided in the web application itself</br>
+1.2 User registration provided in the centralized identity provider</br>
+1.3 User registration using social identity provider</br>
