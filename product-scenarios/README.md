@@ -1,6 +1,6 @@
 # Identity Server Product Scenarios
 
-## 01. User Self Registration to an application
+## [01. User Self Registration to an application](product-scenarios/1-user-self-registration-to-an-application/README.md)
 
 ### Business use-case narrative
 
