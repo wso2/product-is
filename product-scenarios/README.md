@@ -1,14 +1,18 @@
-# Scenario 1 - User Self Registration to an application
+# Identity Server Product Scenarios
+
+## 01. User Self Registration to an application
 
 ### Business use-case narrative
 
 Let's take a scenario where an organization has an web application that provides a particular service. To consume that service, end users need to create an account in this organization.
 
-### Persona
-Developer
+## 02. Single Sign On for web applications
 
-### Sub-Scenarios
-1.1 User registration provided in the web application itself</br>
-1.2 User registration provided in the centralized identity provider</br>
-1.3 User registration using social identity provider</br>
+### Business use-case narrative
+
+Let's take a scenario where an organization has an multiple web applications that provides a different services. To 
+enhance user experience by avoiding the need of maintaining multiple credentials for each applications and need to 
+provide credentials at each login for different application, single sign on experience need to be added.
+
+
 
