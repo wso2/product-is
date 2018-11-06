@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Identity-Scenario-Results">
+    <parameter name="useDefaultListeners" value="false"/>
+
+    <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMTestCase"/>
+        </classes>
+    </test>
+</suite>
