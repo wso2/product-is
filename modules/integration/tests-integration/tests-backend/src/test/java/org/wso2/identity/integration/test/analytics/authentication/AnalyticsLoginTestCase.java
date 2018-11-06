@@ -335,7 +335,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                         httpClient);
             }
 
-            introduceUserDelay(2000);
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             EntityUtils.consume(response.getEntity());
             response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
@@ -346,7 +345,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
 
-                introduceUserDelay(2000);
                 response = Utils.sendPOSTConsentMessage(response,
                         String.format(COMMON_AUTH_URL, DEFAULT_PORT),
                         USER_AGENT, ACS_URL, httpClient, pastrCookie);
@@ -356,7 +354,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
             response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
-            introduceUserDelay(2000);
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse);
             EntityUtils.consume(response.getEntity());
@@ -569,14 +566,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         }
     }*/
 
-    /**
-     *Introduced user delayed time period in between each request to match the test method with the real user behaviour.
-     * @param
-     */
-    private void introduceUserDelay(int delayTimeInMilliseconds) throws Exception  {
-        Thread.sleep(delayTimeInMilliseconds);
-    }
-
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
         return new SAMLConfig[][]{
@@ -770,7 +759,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         Assert.assertEquals(sessionObjects[4], 1);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-        Assert.assertTrue((Long) sessionObjects[2] < (Long) sessionObjects[14]);
+        Assert.assertTrue((Long) sessionObjects[2] <= (Long) sessionObjects[14]);
     }
 
     public void assertSessionUpdateEvent(Event sessionEvent) {
