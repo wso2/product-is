@@ -17,22 +17,22 @@
   ~ under the License.
   -->
 
-<project name="travelocity-app-build" default="clear-slf4j-libs" basedir="../../../../../../">
+<project name="avis-app-build" default="clear-slf4j-libs" basedir="../../../../../../">
     <description>
-        This script builds a war file for the travelocity app by removing all slf4j libs from the classpath.
+        This script builds a war file for the avis app by removing all slf4j libs from the classpath.
     </description>
     <!-- set global properties for this build -->
     <property name="build" location="${basedir}/target/test-classes/samples"/>
-    <property name="travelocity.webapp"
+    <property name="avis.webapp"
               location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
-    <property name="travelocity.webapp.classes" location="${travelocity.webapp}/WEB-INF/classes"/>
-    <property name="travelocity.webapp.lib" location="${travelocity.webapp}/WEB-INF/lib"/>
+    <property name="avis.webapp.classes" location="${avis.webapp}/WEB-INF/classes"/>
+    <property name="avis.webapp.lib" location="${avis.webapp}/WEB-INF/lib"/>
     <property name="properties" location="${basedir}/src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent"/>
 
     <target name="clear-slf4j-libs">
 
         <delete>
-            <fileset dir="${travelocity.webapp.lib}">
+            <fileset dir="${avis.webapp.lib}">
                 <include name="jul-to-slf4j-*.jar"/>
                 <include name="log4j-over-slf4j-*.jar"/>
                 <include name="jcl-over-slf4j-*.jar"/>
@@ -40,15 +40,15 @@
             </fileset>
         </delete>
 
-        <delete file="${travelocity.webapp.classes}/travelocity.properties"/>
-        <copy file="${properties}/travelocity.properties"
-              tofile="${travelocity.webapp.classes}/travelocity.properties"/>
-        <war destfile="${build}/travelocity.com.war" webxml="${travelocity.webapp}/WEB-INF/web.xml">
-            <fileset dir="${travelocity.webapp}/">
+        <delete file="${avis.webapp.classes}/avis.properties"/>
+        <copy file="${properties}/avis.properties"
+              tofile="${avis.webapp.classes}/avis.properties"/>
+        <war destfile="${build}/avis.com.war" webxml="${avis.webapp}/WEB-INF/web.xml">
+            <fileset dir="${avis.webapp}/">
                 <exclude name="**/WEB-INF/**"/>
             </fileset>
-            <lib dir="${travelocity.webapp.lib}/"/>
-            <classes dir="${travelocity.webapp.classes}/">
+            <lib dir="${avis.webapp.lib}/"/>
+            <classes dir="${avis.webapp.classes}/">
             </classes>
         </war>
     </target>
