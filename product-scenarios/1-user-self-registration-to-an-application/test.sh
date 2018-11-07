@@ -22,7 +22,12 @@ mvn clean install
 
 echo "Copying surefire-reports to data bucket"
 
-cp -r 1.1-user-registration-with-web-application-itself/1.1.1-provision-user-using-SCIM2/target/surefire-reports ${DIR}
+#mkdir -p ${DIR}/1-user-self-registration-to-an-application/1.1-user-registration-with-web-application-itself/1.1.1-provision-user-using-SCIM2
+#cp -r 1.1-user-registration-with-web-application-itself/1.1.1-provision-user-using-SCIM2/target/surefire-reports ${DIR}/1-user-self-registration-to-an-application/1.1-user-registration-with-web-application-itself/1.1.1-provision-user-using-SCIM2
+
+mkdir -p ${DIR}/1-user-self-registration-to-an-application/1.1-user-registration-with-web-application-itself/1.1.2-provision-user-using-SCIM1.1
+cp -r 1.1-user-registration-with-web-application-itself/1.1.2-provision-user-using-SCIM1.1/target/surefire-reports ${DIR}/1-user-self-registration-to-an-application/1.1-user-registration-with-web-application-itself/1.1.2-provision-user-using-SCIM1.1
+
 ls ${DIR}
 
 
