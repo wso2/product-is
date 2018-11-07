@@ -48,7 +48,6 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
