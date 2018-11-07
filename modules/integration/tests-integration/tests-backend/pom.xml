@@ -289,6 +289,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent/travelocity-app-build.xml" target="clear-slf4j-libs" />
+                                <ant antfile="src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent/avis-app-build.xml" target="clear-slf4j-libs" />
                                 <ant antfile="src/test/resources/artifacts/IS/passivests/sts-app-build.xml" target="clear-slf4j-libs" />
                             </tasks>
                         </configuration>
