@@ -2,13 +2,12 @@
 
 ### 1.1.1 Provision user in identity server using SCIM2 API
 
-| TestCaseID | TestCase                                             | Test steps                                                            | Status      |
-|------------|------------------------------------------------------|-----------------------------------------------------------------------|-------------|
-| 1.1.1.1    | Provision a single user in IS using the SCIM2 API    | **Given**: Test environment is set properly                           | Automated   |
-|            |                                                      | **When** : A request sends to create a user using SCIM2 API           |             |
-|            |                                                      | **Then** : The user should be provisioned in IS                       |             |
-| 1.1.1.2    | Provision user with malformed request using SCIM2    | **Given**: A malformed requests payload exists                        | Not Started |
-|            |                                                      | **When** : A malformed request sends to create a user using SCIM2 API |             |
-|            |                                                      | **Then** : The user shouldn't be created & valid error message appear |             |
-|            |                                                      |                                                                       |             |
-
+| TestCaseID | TestCase                                                      | Test Behaviour                                                                                                                                                                                            | Status      |
+|------------|---------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| 1.1.1.1    | Provision a single user in IS using the SCIM2 API             | **Given**: Test environment is set properly</br> **When** : A request sends to create a user using SCIM2 API</br> **Then** : The user should be provisioned in IS                                     | Automated   |
+| 1.1.1.2    | Provision a user with malformed request using SCIM2           | **Given**: Test environment is set properly</br> **When** : A malformed request (missing mandatory attribute) sends to create a user</br> **Then** : Proper client side error message should appear   | Automated   |
+| 1.1.1.3    | Provision user with a validation failure  request using SCIM2 | **Given**: Test environment is set properly</br> **When** : An invalid request (password policy violation) sends to create a user</br> **Then** : Proper server side error message should appear      | Automated   |
+| 1.1.1.4    | Provision an already existing user using SCIM2                | **Given**: A user exists in the server</br> **When** : Send a request to create a user with an existing username</br> **Then** : User should not be created                                           | Automated   |
+| 1.1.1.5    | Provision a user without authorization headers using SCIM2    | **Given**: Test environment is set properly</br> **When** : Send a request to create user without the authentication header</br> **Then** : Client should get unauthorized response                   | Automated   |
+| 1.1.1.6    | Provision a user without content type header using SCIM2      | **Given**: Test environment is set properly</br> **When** : Send a request to create user without the content-type header</br> **Then** : Request should be failed with proper error message          | Automated   |
+| 1.1.1.7    | Provision a user with all possible attributes using SCIM2     | **Given**: Test environment is set properly</br> **When** : Send a request to create a user including all the default supported attributes</br> **Then** : User should be created with all attributes | Automated   |

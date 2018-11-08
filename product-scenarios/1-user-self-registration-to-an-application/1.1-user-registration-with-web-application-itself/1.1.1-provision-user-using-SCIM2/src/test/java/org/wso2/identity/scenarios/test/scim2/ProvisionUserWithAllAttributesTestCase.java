@@ -36,11 +36,15 @@ import org.wso2.identity.scenarios.test.scim2.ScenarioTestBase;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
-public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
+public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
     private String userId;
     private CloseableHttpClient client;
+    private String WORKEMAIL = "scimwrk@test.com";
+    private String HOMEEMAIL = "scimhome@test.com";
+    private String PRIMARYSTATE = "true";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -49,8 +53,8 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         client = HttpClients.createDefault();
     }
 
-    @Test(description = "1.1.1.1")
-    public void testSCIM2CreateUser() throws Exception {
+    @Test(description = "1.1.1.7")
+    public void testSCIM2CreateUserWithAllAttributes() throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;
         HttpPost request = new HttpPost(scimEndpoint);
@@ -61,10 +65,22 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         JSONArray schemas = new JSONArray();
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
         JSONObject names = new JSONObject();
+        names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
+        JSONObject emailWork = new JSONObject();
+        emailWork.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_WORK_ATTRIBUTE);
+        emailWork.put(SCIMConstants.VALUE_PARAM, WORKEMAIL);
+        JSONObject emailHome = new JSONObject();
+        emailHome.put(SCIMConstants.PRIMARY_PARAM, PRIMARYSTATE);
+        emailHome.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_HOME_ATTRIBUTE);
+        emailHome.put(SCIMConstants.VALUE_PARAM, HOMEEMAIL);
+        JSONArray emails = new JSONArray();
+        emails.add(emailWork);
+        emails.add(emailHome);
+        rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
 
         StringEntity entity = new StringEntity(rootObject.toString());
         request.setEntity(entity);
@@ -81,10 +97,23 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         userId = ((JSONObject) responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
         assertNotNull(userId);
 
-        testDeleteUser();
+        testGetSCIMUser();
+        testDeleteSCIMUser();
     }
 
-    private void testDeleteUser() throws Exception {
+    private void testGetSCIMUser() throws Exception {
+        String userResourcePath =
+                getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT + "/" + userId;
+        HttpGet request = new HttpGet(userResourcePath);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+
+        HttpResponse response = client.execute(request);
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        assertTrue(responseObj.toString().contains(SCIMConstants.USERNAME));
+        assertTrue(responseObj.toString().contains(WORKEMAIL));
+    }
+
+    private void testDeleteSCIMUser() throws Exception {
 
         String userResourcePath =
                 getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT + "/" + userId;
