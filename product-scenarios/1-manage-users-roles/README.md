@@ -16,4 +16,5 @@ operations such as delete/update users as well.
 - [1.5 User should be able to update his/her account details](1.5-user-update-account-details/README.md)
 - [1.6 User password/username policies should be validated while doing the user operations](1.6-user-validate-policies/README.md)
 - [1.7 Privileged users should be able to manage roles](1.7-manage-user-roles/README.md)
-- [1.8 Users operations should be able to do through approval process](1.8-user-workflow-approval/README.md)
+- [1.8 Privileged users should be able to manage users](1.8-manage-users/README.md)
+- [1.9 Users operations should be able to do through approval process](1.9-user-workflow-approval/README.md)
