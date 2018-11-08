@@ -1,7 +1,7 @@
 # 1.7 Privileged users should be able to manage roles
 
 ## Business use-case narrative
-As an administrator I should be able to add/update user roles and assign/unassign roles of the users.
+Privilege users can add/update user roles and assign/unassign roles of the users.
 
 ## Persona
 Admin

@@ -1,7 +1,7 @@
 # 1.8 Privileged users should be able to manage users
 
 ## Business use-case narrative
-As an administrator I should be able to manage users and assign/unassign roles of the users.
+Privilege users can manage users and  assign/un-assign roles of the users.
 
 ## Persona
 Admin
