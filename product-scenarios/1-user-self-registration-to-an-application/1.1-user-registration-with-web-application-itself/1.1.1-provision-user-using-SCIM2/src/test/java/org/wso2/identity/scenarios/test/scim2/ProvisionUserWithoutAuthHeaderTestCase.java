@@ -20,26 +20,20 @@ package org.wso2.identity.scenarios.test.scim2;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.test.scim2.ScenarioTestBase;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
-public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
+public class ProvisionUserWithoutAuthHeaderTestCase extends ScenarioTestBase {
 
-    private String userId;
     private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
@@ -49,12 +43,11 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         client = HttpClients.createDefault();
     }
 
-    @Test(description = "1.1.1.1")
-    public void testSCIM2CreateUser() throws Exception {
+    @Test(description = "1.1.1.5")
+    public void testSCIMUserWithoutAuthHeader() throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;
         HttpPost request = new HttpPost(scimEndpoint);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
 
         JSONObject rootObject = new JSONObject();
@@ -70,40 +63,8 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 201, "User has not been created successfully");
-
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
-        EntityUtils.consume(response.getEntity());
-
-        String usernameFromResponse = ((JSONObject) responseObj).get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(usernameFromResponse, SCIMConstants.USERNAME);
-
-        userId = ((JSONObject) responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
-        assertNotNull(userId);
-
-        testDeleteUser();
-    }
-
-    private void testDeleteUser() throws Exception {
-
-        String userResourcePath =
-                getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT + "/" + userId;
-        HttpDelete request = new HttpDelete(userResourcePath);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
-
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 204, "User has not been retrieved successfully");
-        EntityUtils.consume(response.getEntity());
-        userResourcePath =
-                getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT + "/" + userId;
-        HttpGet getRequest = new HttpGet(userResourcePath);
-        getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        getRequest.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
-
-        response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 404, "User has not been deleted successfully");
-        EntityUtils.consume(response.getEntity());
+        assertEquals(response.getStatusLine().getStatusCode(), 401,
+                "User creation should fail without auth header hence server should have returned an unauthorized message");
     }
 
 }
