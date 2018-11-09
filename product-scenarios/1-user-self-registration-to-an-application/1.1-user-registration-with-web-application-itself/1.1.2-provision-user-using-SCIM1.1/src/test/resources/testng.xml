@@ -3,7 +3,7 @@
 <suite name="Identity-Scenario-Results">
     <parameter name="useDefaultListeners" value="false"/>
 
-    <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
+    <test name="is-usr-mgt-scim1" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMTestCase"/>
         </classes>
