@@ -330,6 +330,7 @@
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.appone-app-build" />
                                 <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.apptwo-app-build" />
+                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.usersession-app-build" />
                             </tasks>
                         </configuration>
                         <goals>

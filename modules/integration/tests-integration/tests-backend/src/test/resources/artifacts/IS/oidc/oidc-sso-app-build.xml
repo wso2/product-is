@@ -48,4 +48,15 @@
             <classes dir="${playground2.webapp.classes}/"></classes>
         </war>
     </target>
+
+    <target name="playground.usersession-app-build">
+        <war destfile="${build}/playground.usersession.war"
+             webxml="${playground2.webapp}/WEB-INF/web.xml">
+            <fileset dir="${playground2.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib dir="${playground2.webapp.lib}/"/>
+            <classes dir="${playground2.webapp.classes}/"></classes>
+        </war>
+    </target>
 </project>

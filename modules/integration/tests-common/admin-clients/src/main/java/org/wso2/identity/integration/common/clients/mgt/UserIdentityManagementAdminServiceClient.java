@@ -56,4 +56,9 @@ public class UserIdentityManagementAdminServiceClient {
             throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
         userIdentityManagementAdminServicestub.enableUserAccount(userName, notificationType);
     }
+
+    public void resetUserPassword(String userName, String password)
+            throws UserIdentityManagementAdminServiceIdentityMgtServiceExceptionException, RemoteException {
+        userIdentityManagementAdminServicestub.resetUserPassword(userName, password);
+    }
 }

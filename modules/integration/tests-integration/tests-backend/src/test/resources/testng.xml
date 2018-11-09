@@ -113,6 +113,7 @@
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.identity.mgt.PasswordHistoryValidationTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.identity.mgt.UserSessionManagementTest"/>
 
             <class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>
 
