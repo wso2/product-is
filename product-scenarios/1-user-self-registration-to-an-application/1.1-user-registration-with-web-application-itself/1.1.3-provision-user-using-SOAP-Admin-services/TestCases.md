@@ -4,7 +4,7 @@
 
 | TestCaseID | TestCase                                             | Test steps                                                            | Status      |
 |------------|------------------------------------------------------|-----------------------------------------------------------------------|-------------|
-| 1.1.3.1    | Provision a new user role using SOAP Service    | **Given**: Test environment is set properly                           | Automated   |
+| 1.1.3.1    | Provision a new user role using SOAP Service    | **Given**: Test environment is set properly                           | Inprogress   |
 |            |                                                      | **When** : A request sends to create a user using SCIM2 API           |             |
 |            |                                                      | **Then** : The user role  should be provisioned in identity server                       |             |
 | 1.1.3.2    | Provision a new user  using SOAP Service            | **Given**: Test environment is set                           | Not Started |
@@ -25,7 +25,7 @@
 |            |                                                      | **When** : A request is sent to add a user without passing the username calling a SOAP Service |             |
 |            |                                                      | **Then** : The user records should  not be added  |             |
 |            |                                                      |                                                                       |             |
-| 1.1.3.7    | Update a user role permission via SOAP Service    | **Given**: A user role  is already provisioned properly                           | Automated   |
+| 1.1.3.7    | Update a user role permission via SOAP Service    | **Given**: A user role  is already provisioned properly                           | Not Started   |
 |            |                                                      | **When** : Details are entered to update the user role-permission by calling a SOAP Service           |             |
 |            |                                                      | **Then** : The user role-permission should  be updated                       |             |
 | 1.1.3.8    | List the existing user roles            | **Given**: A user role   already provisioned exists                           | Not Started |
