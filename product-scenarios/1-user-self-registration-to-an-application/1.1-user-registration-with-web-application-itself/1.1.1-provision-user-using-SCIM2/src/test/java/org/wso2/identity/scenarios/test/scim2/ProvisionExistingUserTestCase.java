@@ -82,7 +82,7 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         testDeleteUser();
     }
 
-    private HttpResponse testCreateSCSIM2User(String scim_username, String scim_password) throws Exception {
+    private HttpResponse testCreateSCSIM2User(String scimUsername, String scimPassword) throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;
         HttpPost request = new HttpPost(scimEndpoint);
@@ -95,8 +95,8 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, scim_username);
-        rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, scim_password);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, scimUsername);
+        rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, scimPassword);
 
         StringEntity entity = new StringEntity(rootObject.toString());
         request.setEntity(entity);

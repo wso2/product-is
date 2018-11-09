@@ -102,6 +102,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
     }
 
     private void testGetSCIMUser() throws Exception {
+
         String userResourcePath =
                 getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT + "/" + userId;
         HttpGet request = new HttpGet(userResourcePath);

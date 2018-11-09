@@ -78,7 +78,6 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         assertNotNull(schemasArray);
         assertEquals(schemasArray.get(0).toString(), SCIMConstants.ERROR_SCHEMA);
         assertTrue(responseObj.toString().contains("Credential is not valid"));
-
     }
 
 }
