@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.identity.scenarios.test.scim;
+package org.wso2.identity.scenarios.commons;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
@@ -46,7 +46,7 @@ public class ScenarioTestBase {
     public static final String ADMIN_PASSWORD = "admin";
 
     protected static final int ARTIFACT_DEPLOYMENT_WAIT_TIME_MS = 120000;
-    protected static final String RESOURCE_LOCATION = System.getProperty("framework.resource.location");
+    protected static final String RESOURCE_LOCATION = System.getProperty("common.resource.location");
 
     /**
      * This is a utility method to load the deployment details.
