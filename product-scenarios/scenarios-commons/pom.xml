@@ -17,13 +17,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>user-self-registration-using-webapplication-test</artifactId>
+        <artifactId>product-scenarios</artifactId>
+        <relativePath>../pom.xml</relativePath>
         <version>5.7.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <name>Common Utilities</name>
-    <artifactId>common-utils</artifactId>
+    <name>Scenarios Commons</name>
+    <artifactId>scenarios-commons</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -63,23 +64,36 @@
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpcore</artifactId>
+            <version>${httpcore.wso2.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>${commons.codec.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
+            <version>${commons.httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>3.3</version>
+            <version>${commons.net.version}</version>
         </dependency>
     </dependencies>
+
+    <properties>
+        <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
+        <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
+        <commons.codec.version>1.8</commons.codec.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
+        <commons.net.version>3.3</commons.net.version>
+    </properties>
+
 </project>
