@@ -53,6 +53,12 @@
                             </value>
                         </property>
                         <property>
+                            <name>common.resource.location</name>
+                            <value>
+                                ${basedir}/../common-utils/src/main/resources/
+                            </value>
+                        </property>
+                        <property>
                             <name>server.list</name>
                             <value>
                                 IS
@@ -122,8 +128,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.httpcomponents.wso2</groupId>
-            <artifactId>httpcore</artifactId>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>common-utils</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
@@ -212,5 +218,5 @@
             <artifactId>commons-net</artifactId>
             <version>3.3</version>
         </dependency>
-    </dependencies>
+     </dependencies>
 </project>

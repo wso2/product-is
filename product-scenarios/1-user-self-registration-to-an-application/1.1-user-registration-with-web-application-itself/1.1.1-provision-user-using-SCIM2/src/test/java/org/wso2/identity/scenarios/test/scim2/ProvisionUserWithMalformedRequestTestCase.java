@@ -30,7 +30,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.scenarios.test.scim2.ScenarioTestBase;
+import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
