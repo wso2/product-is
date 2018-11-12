@@ -37,10 +37,9 @@ public class MigrationClientImpl implements MigrationClient {
     public void execute() throws MigrationClientException {
 
         try {
-
             Config config = Config.getInstance();
 
-            if(!config.isMigrationEnable()){
+            if (!config.isMigrationEnable()) {
                 return;
             }
 
@@ -104,8 +103,5 @@ public class MigrationClientImpl implements MigrationClient {
         log.info("............................................................................................");
         log.info("............................................................................................");
         log.info("............................................................................................");
-
-
     }
-
 }
