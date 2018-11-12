@@ -55,7 +55,7 @@
                         <property>
                             <name>common.resource.location</name>
                             <value>
-                                ${basedir}/../common-utils/src/main/resources/
+                                ${basedir}/../../../scenarios-commons/src/main/resources/
                             </value>
                         </property>
                         <property>
@@ -129,7 +129,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.is</groupId>
-            <artifactId>common-utils</artifactId>
+            <artifactId>scenarios-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>

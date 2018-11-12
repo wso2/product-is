@@ -18,6 +18,7 @@ set -o xtrace
 DIR=$2
 export DATA_BUCKET_LOCATION=$DIR
 
+mvn clean install -f ../pom.xml
 mvn clean install
 
 echo "Copying surefire-reports to data bucket"
