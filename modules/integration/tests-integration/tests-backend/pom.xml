@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.8.0-m7-SNAPSHOT</version>
+        <version>5.8.0-m9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -289,6 +289,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent/travelocity-app-build.xml" target="clear-slf4j-libs" />
+                                <ant antfile="src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent/avis-app-build.xml" target="clear-slf4j-libs" />
                                 <ant antfile="src/test/resources/artifacts/IS/passivests/sts-app-build.xml" target="clear-slf4j-libs" />
                             </tasks>
                         </configuration>

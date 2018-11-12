@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m7-SNAPSHOT</version>
+        <version>5.8.0-m9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -206,9 +206,9 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=[%d] %5p {%c} - %x %m %n" value="log4j.appender.CARBON_MEMORY.layout.ConversionPattern=TID: [%T] [%S] [%d] %P%5p {%c} - %x %m {%c}%n${line.separator}log4j.appender.CARBON_MEMORY.layout.TenantPattern=%U%@%D [%T] [%S]${line.separator}log4j.appender.CARBON_MEMORY.columnList=%T,%S,%A,%d,%c,%p,%m,%H,%I,%Stacktrace" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE" value="log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE${line.separator}log4j.logger.DELETE_EVENT_LOGGER=INFO, DELETE_EVENT_LOGFILE" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE" value="log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE${line.separator}log4j.logger.DELETE_EVENT_LOGGER=INFO, DELETE_EVENT_LOGFILE${line.separator}log4j.logger.TRANSACTION_LOGGER=INFO, TRANSACTION_LOGGER" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.additivity.AUDIT_LOG=false" value="log4j.additivity.AUDIT_LOG=false${line.separator}${line.separator}log4j.appender.DELETE_EVENT_LOGFILE=org.apache.log4j.FileAppender${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.File=${carbon.home}/repository/logs/delete-event.log${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.Append=true${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout=org.apache.log4j.PatternLayout${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout.ConversionPattern=%m %n${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.threshold=INFO${line.separator}log4j.additivity.DELETE_EVENT_LOGFILE=false" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j.properties" token="log4j.additivity.AUDIT_LOG=false" value="log4j.additivity.AUDIT_LOG=false${line.separator}${line.separator}log4j.appender.DELETE_EVENT_LOGFILE=org.apache.log4j.FileAppender${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.File=${carbon.home}/repository/logs/delete-event.log${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.Append=true${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout=org.apache.log4j.PatternLayout${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.layout.ConversionPattern=%m %n${line.separator}log4j.appender.DELETE_EVENT_LOGFILE.threshold=INFO${line.separator}log4j.additivity.DELETE_EVENT_LOGFILE=false${line.separator}${line.separator}log4j.appender.TRANSACTION_LOGGER=org.apache.log4j.FileAppender${line.separator}log4j.appender.TRANSACTION_LOGGER.File=${carbon.home}/repository/logs/transaction.log${line.separator}log4j.appender.TRANSACTION_LOGGER.Append=true${line.separator}log4j.appender.TRANSACTION_LOGGER.layout=org.apache.log4j.PatternLayout${line.separator}log4j.appender.TRANSACTION_LOGGER.layout.ConversionPattern=[%d] - %m %n${line.separator}log4j.appender.TRANSACTION_LOGGER.threshold=INFO${line.separator}log4j.additivity.TRANSACTION_LOGGER=false" />
 
                                 <!-- Update carbon webapps web.xml file for HttpHeaderSecurityFilter to skip /oidc/* path from antiClickJacking  -->
                                 <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" match="(?s)&lt;filter&gt;\s+&lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;.*&lt;/filter&gt;" replace="${security-header-filter-is-token}" />
