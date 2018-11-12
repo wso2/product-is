@@ -422,8 +422,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
-//        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{SAML_ECP_ACS_URL});
-//        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(SAML_ECP_ACS_URL);
         samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{SAML_ECP_ACS_URL});
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(SAML_ECP_ACS_URL);
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
