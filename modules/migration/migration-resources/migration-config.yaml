@@ -234,11 +234,17 @@ versions:
         location: "step1"
         schema: "identity"
     -
-      name: "ClaimDataMigrator"
+      name: "SpClaimDialectSchemaMigrator"
       order: 3
+      parameters:
+        location: "step2"
+        schema: "identity"
+    -
+      name: "ClaimDataMigrator"
+      order: 4
     -
       name: "SessionDataMigrator"
-      order: 4
+      order: 5
       parameters:
         schema: "identity"
  -
