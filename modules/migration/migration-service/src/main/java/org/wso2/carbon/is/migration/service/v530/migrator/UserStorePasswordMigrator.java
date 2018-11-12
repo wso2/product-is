@@ -27,7 +27,7 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.service.v530.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.is.migration.service.Migrator;

@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.is.migration.service.v550.util;
+package org.wso2.carbon.is.migration.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.core.util.CryptoException;
