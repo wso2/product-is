@@ -23,6 +23,8 @@ import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -67,6 +69,8 @@ public class Utils {
     public static final String USER_AGENT = "User-Agent";
     public static final String REFERER = "Referer";
     public static final String SET_COOKIE = "Set-Cookie";
+
+    private static final Log log = LogFactory.getLog(Utils.class);
 
     public static boolean nameExists(FlaggedName[] allNames, String inputName) {
         boolean exists = false;
@@ -383,7 +387,7 @@ public class Utils {
             request.setEntity(new StringEntity(soapRequest));
             response = httpClient.execute(request);
         } catch(Exception e){
-            //handle the exception
+            log.error("Error while sending the ECP Request");
         }
         return response;
     }
