@@ -188,7 +188,7 @@ public class RegistryDataManager {
      * @param migrateActiveTenantsOnly
      * @throws CryptoException
      * @throws RegistryException
-     * @throws UserStoreException
+     * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
      */
     public void migrateServicePrinciplePassword(boolean migrateActiveTenantsOnly) throws
             CryptoException, RegistryException, UserStoreException, MigrationClientException {

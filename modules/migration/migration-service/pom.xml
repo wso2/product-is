@@ -124,7 +124,8 @@
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
                             org.apache.commons.logging; version="${version.commons.logging}",
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version.range}",
-                            org.yaml.snakeyaml; version="${snakeyaml.version.range}"
+                            org.yaml.snakeyaml; version="${snakeyaml.version.range}",
+                            org.apache.commons.lang; version="${commons-lang.wso2.osgi.version.range}",
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
