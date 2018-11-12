@@ -58,8 +58,7 @@ public class MigrationClientImpl implements MigrationClient {
             log.info("............................................................................................");
 
             VersionMigrationHolder versionMigrationHolder = VersionMigrationHolder.getInstance();
-            List<VersionMigration> versionMigrationList
-                    = versionMigrationHolder.getVersionMigrationList();
+            List<VersionMigration> versionMigrationList = versionMigrationHolder.getVersionMigrationList();
 
             log.info("Migration Versions List.........................");
             for (VersionMigration versionMigration : versionMigrationList) {
@@ -72,18 +71,18 @@ public class MigrationClientImpl implements MigrationClient {
                         + Utility.getMigrationEndingTenantID());
             }
 
-            for(VersionMigration versionMigration : versionMigrationList){
+            for (VersionMigration versionMigration : versionMigrationList) {
                 log.info(Constant.MIGRATION_LOG + "Start Version : " + versionMigration.getPreviousVersion() + " to "
-                         + versionMigration.getCurrentVersion());
-                if(!isMigrationStarted && versionMigration.getPreviousVersion().equals(config.getCurrentVersion())){
+                        + versionMigration.getCurrentVersion());
+                if (!isMigrationStarted && versionMigration.getPreviousVersion().equals(config.getCurrentVersion())) {
                     versionMigration.migrate();
-                    isMigrationStarted = true ;
+                    isMigrationStarted = true;
                     continue;
                 }
 
-                if(isMigrationStarted){
+                if (isMigrationStarted) {
                     versionMigration.migrate();
-                    if(versionMigration.getCurrentVersion().equals(config.getMigrateVersion())){
+                    if (versionMigration.getCurrentVersion().equals(config.getMigrateVersion())) {
                         break;
                     }
                 }
