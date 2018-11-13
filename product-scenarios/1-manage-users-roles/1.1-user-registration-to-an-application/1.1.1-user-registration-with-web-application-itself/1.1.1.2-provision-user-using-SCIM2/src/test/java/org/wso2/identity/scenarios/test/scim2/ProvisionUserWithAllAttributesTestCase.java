@@ -53,7 +53,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         client = HttpClients.createDefault();
     }
 
-    @Test(description = "1.1.1.1.7")
+    @Test(description = "1.1.1.2.7")
     public void testSCIM2CreateUserWithAllAttributes() throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;

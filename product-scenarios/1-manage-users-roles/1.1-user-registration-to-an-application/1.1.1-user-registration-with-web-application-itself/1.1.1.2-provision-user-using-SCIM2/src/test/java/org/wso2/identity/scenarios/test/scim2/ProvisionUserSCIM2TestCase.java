@@ -49,7 +49,7 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         client = HttpClients.createDefault();
     }
 
-    @Test(description = "1.1.1.1.1")
+    @Test(description = "1.1.1.2.1")
     public void testSCIM2CreateUser() throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;

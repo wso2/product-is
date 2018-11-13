@@ -43,7 +43,7 @@ public class ProvisionUserWithoutAuthHeaderTestCase extends ScenarioTestBase {
         client = HttpClients.createDefault();
     }
 
-    @Test(description = "1.1.1.1.5")
+    @Test(description = "1.1.1.2.5")
     public void testSCIMUserWithoutAuthHeader() throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;

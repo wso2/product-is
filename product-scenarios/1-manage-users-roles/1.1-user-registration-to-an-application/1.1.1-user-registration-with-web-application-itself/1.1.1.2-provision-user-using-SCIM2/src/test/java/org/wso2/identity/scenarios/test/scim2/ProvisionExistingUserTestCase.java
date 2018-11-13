@@ -64,7 +64,7 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         assertNotNull(userId);
     }
 
-    @Test(description = "1.1.1.1.4")
+    @Test(description = "1.1.1.2.4")
     public void testSCIM2CreateExistingUser() throws Exception {
 
         HttpResponse response = testCreateSCSIM2User(USERNAME, PASSWORD);

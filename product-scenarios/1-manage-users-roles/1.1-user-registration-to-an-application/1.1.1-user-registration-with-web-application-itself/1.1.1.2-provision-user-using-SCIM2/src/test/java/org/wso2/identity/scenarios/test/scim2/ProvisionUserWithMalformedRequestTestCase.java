@@ -48,7 +48,7 @@ public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase 
         client = HttpClients.createDefault();
     }
 
-    @Test(description = "1.1.1.1.2")
+    @Test(description = "1.1.1.2.2")
     public void testMalformedSCIMUserCreate() throws Exception {
 
         String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;

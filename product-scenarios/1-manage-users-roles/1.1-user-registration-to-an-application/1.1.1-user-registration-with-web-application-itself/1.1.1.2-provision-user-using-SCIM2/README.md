@@ -1,4 +1,4 @@
-# 1.1.1.1 Provision user in identity server using SCIM2 API
+# 1.1.1.2 Provision user in identity server using SCIM2 API
 
 ## When to use this approach
 
