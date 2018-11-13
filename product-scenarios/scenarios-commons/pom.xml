@@ -86,6 +86,40 @@
             <artifactId>commons-net</artifactId>
             <version>${commons.net.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.idp.mgt.stub</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency><dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.claim.metadata.mgt.stub</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -94,6 +128,8 @@
         <commons.codec.version>1.8</commons.codec.version>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <commons.net.version>3.3</commons.net.version>
+        <carbon.identity.framework.version>5.12.182</carbon.identity.framework.version>
+        <carbon.kernel.version>4.4.35</carbon.kernel.version>
     </properties>
 
 </project>

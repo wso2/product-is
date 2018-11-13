@@ -46,6 +46,7 @@
         <module>modules/styles</module>
         <module>modules/samples</module>
         <module>modules/integration</module>
+        <module>product-scenarios</module>
     </modules>
 
     <licenses>

@@ -1,4 +1,4 @@
-# 2.6.1 Applications can be create through DCR API
+# 2.1.1 Applications can be create through DCR API
 
 ## Business use-case narrative
 -TODO

@@ -17,21 +17,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <groupId>org.wso2</groupId>
-        <artifactId>wso2</artifactId>
-        <version>1</version>
+        <groupId>org.wso2.is</groupId>
+        <artifactId>product-scenarios</artifactId>
+        <version>5.7.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>user-single-sign-on-tests</artifactId>
-    <name>On-boarding An Application</name>
+    <name>User Single Sign On Tests</name>
     <packaging>pom</packaging>
     <groupId>org.wso2.is</groupId>
     <version>5.7.0</version>
     <url>http://wso2.org/projects/identity</url>
 
     <modules>
-        <module>2.6-application-creation</module>
+        <module>2.1-application-management</module>
+        <module>2.2-sso-for-web-app</module>
     </modules>
 
     <pluginRepositories>
@@ -242,6 +244,21 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons.codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.identity.integration.common.clients</artifactId>
+                <version>${product.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

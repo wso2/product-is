@@ -18,22 +18,25 @@
 
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>2.6-application-creation</artifactId>
+        <artifactId>user-single-sign-on-tests</artifactId>
         <version>5.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>2.6.2-soap-api</artifactId>
+    <artifactId>2.1-sso-for-web-app</artifactId>
     <packaging>pom</packaging>
-    <name>Create an Application Using SOAP APIs</name>
+    <name>SSO for Web Apps</name>
 
+    <modules>
+        <module>2.2.1-sso-with-central-idp</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.wso2.is</groupId>
-                <artifactId>scenarios-commons</artifactId>
+                <artifactId>common-utils</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
         </dependencies>

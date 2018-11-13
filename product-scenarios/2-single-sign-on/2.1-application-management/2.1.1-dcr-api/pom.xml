@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -14,23 +14,19 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>user-single-sign-on-tests</artifactId>
+        <artifactId>2.1-application-management</artifactId>
         <version>5.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>2.6-application-creation</artifactId>
-    <name>On-boarding An Application</name>
+    <artifactId>2.1.2-dcr-api</artifactId>
     <packaging>pom</packaging>
-
-    <modules>
-        <module>2.6.1-dcr-api</module>
-        <module>2.6.2-soap-api</module>
-    </modules>
+    <name>Create an Application Using SOAP APIs</name>
 
 
     <dependencyManagement>
