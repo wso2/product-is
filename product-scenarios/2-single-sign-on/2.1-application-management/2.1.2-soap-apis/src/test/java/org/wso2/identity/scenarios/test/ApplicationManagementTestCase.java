@@ -1,5 +1,7 @@
+
 /*
- *  Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -8,12 +10,13 @@
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ * /
  */
 
 package org.wso2.identity.scenarios.test;
@@ -26,6 +29,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.identity.application.common.model.xsd.ApplicationBasicInfo;
 import org.wso2.carbon.identity.application.common.model.xsd.ApplicationPermission;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -54,6 +58,7 @@ import org.wso2.identity.scenarios.commons.clients.UserManagementClient;
 import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.scenarios.commons.clients.claims.ClaimMetadataManagementServiceClient;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,12 +70,8 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     private static final String BASIC_AUTH_REQUEST_PATH_AUTHENTICATOR = "BasicAuthRequestPathAuthenticator";
     private static final String BASIC_AUTH_REQUEST_AUTHENTICATOR_DISPLAYNAME = "basic-auth";
     public static final String SUBJECT_CLAIM_URI = "subject_claim_uri";
-    public static final String SERVICES = "/services/";
-    private ConfigurationContext configContext;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
-    private String backendURL;
     private UserManagementClient userMgtClient;
-    private String backendServiceURL;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
     private static String LOGIN_ROLE = "LoginRole";
@@ -79,8 +80,6 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     private static String IDP_CLAIM_1 = "idpClaim_1";
     private static String TEST_ASSOCIATION_USERNAME_1 = "testAssociationUser";
     private static String TEST_ASSOCIATION_PASSWORD_1 = "testAssociationPass";
-    private AuthenticatorClient loginClient;
-    private String sessionCookie;
     //    private static final String SSO_URL = "SSOUrl";
     //    private static final String SP_ENTITY_ID = "SPEntityId";
     //    private static final String IDP_ENTITY_ID = "IdPEntityId";
@@ -90,12 +89,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         setKeyStoreProperties();
-        backendURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
-        backendServiceURL = backendURL + SERVICES;
-        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
-                , null);
-        loginClient = new AuthenticatorClient(backendServiceURL);
-        sessionCookie = loginClient.login(ADMIN_USERNAME, ADMIN_PASSWORD, null);
+        super.init();
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
                 configContext);
         userMgtClient = new UserManagementClient(backendServiceURL, sessionCookie);
