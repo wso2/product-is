@@ -98,7 +98,6 @@ public class ProvisionUserSOAPServiceTestCase extends ScenarioTestBase {
     public void finishing() {
     }
 
-
     public void addUserRole()throws RemoteException,RemoteUserStoreManagerServiceUserStoreExceptionException,java.lang.NullPointerException {
 
         String CARBON_HOME = getDeploymentProperties().getProperty("CARBON_HOME_PATH");
