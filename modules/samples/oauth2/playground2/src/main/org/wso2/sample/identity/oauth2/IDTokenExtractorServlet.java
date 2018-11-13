@@ -31,15 +31,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+/**
+ * Servlet for extracting ID Token claims for Implicit Grant
+ */
 public class IDTokenExtractorServlet extends HttpServlet {
 
-    private static Log log = LogFactory.getLog(OIDCBackchannelLogoutServlet.class);
+    private static Log log = LogFactory.getLog(IDTokenExtractorServlet.class);
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         String idToken = req.getParameter("idToken");
         String user = null;
@@ -54,12 +55,12 @@ public class IDTokenExtractorServlet extends HttpServlet {
 
             HttpSession session = req.getSession();
             if (user != null) {
-                log.info("Logged in user: "+user);
+                log.info("Logged in user: " + user);
                 session.setAttribute(OAuth2Constants.LOGGED_IN_USER, user);
             }
 
             if (sid != null) {
-                SessionIdStore.storeSession(sid,session);
+                SessionIdStore.storeSession(sid, session);
             }
 
             resp.setContentType("application/json");
@@ -69,7 +70,7 @@ public class IDTokenExtractorServlet extends HttpServlet {
             out.print(respData.toString());
 
         } catch (ParseException e) {
-            log.error("Invalid Token sent to IDTokenExtractorServlet");
+            log.error("Invalid Token sent to IDTokenExtractorServlet: " + e);
         }
     }
 }

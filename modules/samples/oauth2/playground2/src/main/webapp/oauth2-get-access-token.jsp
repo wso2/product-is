@@ -54,7 +54,7 @@
         if (idToken != null) {
             session.setAttribute(OAuth2Constants.ID_TOKEN, idToken);
             String sid = SessionIdStore.getSid(idToken);
-            if(sid!=null) {
+            if (sid != null) {
                 SessionIdStore.storeSession(sid, session);
             }
 
