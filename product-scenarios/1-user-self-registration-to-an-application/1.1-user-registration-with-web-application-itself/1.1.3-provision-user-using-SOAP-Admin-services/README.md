@@ -36,28 +36,6 @@ Note:</path/to/data/bucket> indicate the location where the infrastructure.prope
 
 
 ```
-curl -k -X POST \
-  https://localhost:9443/scim2/Users/ \
-  -H 'Authorization: Basic YWRtaW46YWRtaW4=' \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/scim+json' \
-  -d '{
-  "schemas": [
-    
-  ],
-  "name": {
-    "givenName": "jane"
-  },
-  "userName": "jane",
-  "password": "jane123"
-}'
-```
-
-
-- Create user with valid SCIM 2.0 request (Happy path)
-- Create user with malformed request
-- Create user without authorization headers
-
 
 ## Observability
 N/A
@@ -66,6 +44,6 @@ N/A
 N/A
 
 ## APIs
-https://docs.wso2.com/display/IS540/apidocs/SCIM2-endpoints/#!/operations#UsersEndpoint#createUser
+https://docs.wso2.com/display/IS530/Managing+Users+and+Roles+with+APIs#ManagingUsersandRoleswithAPIs-addUser()
 
 ## See Also
