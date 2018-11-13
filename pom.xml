@@ -1787,7 +1787,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Properties -->
-        <identity.outbound.auth.oidc.version>5.1.17</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.1.18</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.1.19</identity.outbound.auth.samlsso.version>
 
