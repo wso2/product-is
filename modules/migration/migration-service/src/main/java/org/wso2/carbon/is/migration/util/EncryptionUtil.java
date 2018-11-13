@@ -34,4 +34,16 @@ public class EncryptionUtil {
     public static boolean isNewlyEncrypted(String encryptedValue) throws CryptoException {
         return CryptoUtil.getDefaultCryptoUtil().base64DecodeAndIsSelfContainedCipherText(encryptedValue);
     }
+
+    public static String getNewEncryptedUserstorePassword(String encryptedValue) throws CryptoException {
+        if (StringUtils.isNotEmpty(encryptedValue) && !isNewlyEncryptedUserstorePassword(encryptedValue)) {
+            byte[] decryptedPassword = SecondaryUserstoreCryptoUtil.getInstance().base64DecodeAndDecrypt(encryptedValue, "RSA");
+            return SecondaryUserstoreCryptoUtil.getInstance().encryptAndBase64Encode(decryptedPassword);
+        }
+        return null;
+    }
+
+    public static boolean isNewlyEncryptedUserstorePassword(String encryptedValue) throws CryptoException {
+        return SecondaryUserstoreCryptoUtil.getInstance().base64DecodeAndIsSelfContainedCipherText(encryptedValue);
+    }
 }

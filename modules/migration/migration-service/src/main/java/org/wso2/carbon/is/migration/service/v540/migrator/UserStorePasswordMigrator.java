@@ -124,7 +124,7 @@ public class UserStorePasswordMigrator extends Migrator {
                         "password".equals(element.getAttributeValue(new QName("name"))) || "ConnectionPassword"
                                 .equals(element.getAttributeValue(new QName("name"))))) {
                     String encryptedPassword = element.getText();
-                    newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(encryptedPassword);
+                    newEncryptedPassword = EncryptionUtil.getNewEncryptedUserstorePassword(encryptedPassword);
                     if (StringUtils.isNotEmpty(newEncryptedPassword)) {
                         element.setText(newEncryptedPassword);
                     }
