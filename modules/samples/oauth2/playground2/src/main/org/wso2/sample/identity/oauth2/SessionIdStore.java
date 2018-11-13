@@ -23,13 +23,16 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Cache class for storing HttpSession against sid
+ */
 public class SessionIdStore {
+
     private static Log log = LogFactory.getLog(SessionIdStore.class);
     private static Map<String, HttpSession> sessionMap = new HashMap<>();
 
@@ -48,7 +51,4 @@ public class SessionIdStore {
         return sessionMap.get(sid);
     }
 
-    public static void store(HttpServletRequest req) {
-        log.info(req);
-    }
 }
