@@ -60,19 +60,14 @@ versions:
   version: "5.2.0"
   migratorConfigs:
    -
-    name: "PermissionMigrator"
-    order: 1
-    parameters:
-          schema: "um"
-   -
     name: "SchemaMigrator"
-    order: 2
+    order: 1
     parameters:
       location: "step1"
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 3
+    order: 2
     parameters:
       location: "step1"
       schema: "um"
