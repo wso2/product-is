@@ -20,6 +20,7 @@
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>1</version>
+        <relativePath></relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
