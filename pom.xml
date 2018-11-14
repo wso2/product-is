@@ -1747,13 +1747,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.197</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.200</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.12</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.23</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.68</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.70</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1774,7 +1774,7 @@
         <identity.data.publisher.authentication.version>5.1.10</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.7</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.4</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.45</identity.governance.version>
+        <identity.governance.version>1.1.46</identity.governance.version>
         <carbon.identity.auth.version>1.1.21</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.14</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.22</identity.event.handler.notification.version>
@@ -1787,7 +1787,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Properties -->
-        <identity.outbound.auth.oidc.version>5.1.17</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.1.18</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.1.19</identity.outbound.auth.samlsso.version>
 
