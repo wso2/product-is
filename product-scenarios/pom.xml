@@ -67,4 +67,55 @@
         </plugins>
     </build>
 
+    <properties>
+        <json.simple.version>1.1</json.simple.version>
+        <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
+        <httpcore.version>4.3.3</httpcore.version>
+        <commons.httpclient.version>3.1</commons.httpclient.version>
+        <httpclient.version>4.3.3</httpclient.version>
+        <commons.codec.version>1.8</commons.codec.version>
+        <testng.version>6.9.10</testng.version>
+        <commons.lang.version>2.6</commons.lang.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${json.simple.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons.httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>scenarios-commons</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
