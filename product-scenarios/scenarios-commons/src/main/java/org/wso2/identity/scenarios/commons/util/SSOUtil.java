@@ -32,8 +32,10 @@ import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
-import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE;
+import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ALWAYS;
+import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ONCE;
 import static org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_FORM;
+import static org.wso2.identity.scenarios.commons.util.Constants.DENY;
 import static org.wso2.identity.scenarios.commons.util.Constants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CLIENT_ID;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CODE;
@@ -126,8 +128,8 @@ public class SSOUtil {
     }
 
     /**
-     * Sends OAuth consent submit request. This consent is only for OAuth and not for user attribute sharing related
-     * consent.
+     * Sends OAuth consent submit request. This consent will be an 'Approve Once' submit and only for OAuth and not
+     * for user attribute sharing related consent.
      *
      * @param client HttpClient to be used for request sending.
      * @param sessionDataKeyConsent Session key related to the consent request.
@@ -135,11 +137,60 @@ public class SSOUtil {
      * @return @return HttpResponse with the consent submit response.
      * @throws IOException If error occurs while sending the consent submit.
      */
-    public static HttpResponse sendOAuthConsentApprovalPost(HttpClient client, String sessionDataKeyConsent, String
+    public static HttpResponse sendOAuthConsentApproveOncePost(HttpClient client, String sessionDataKeyConsent, String
             authzEndpointUrl) throws IOException {
 
+        return sendOAuthConsentPost(client, sessionDataKeyConsent, authzEndpointUrl, APPROVE_ONCE);
+    }
+
+    /**
+     * Sends OAuth consent submit request. This consent will be an 'Approve Always' submit and only for OAuth and not
+     * for user attribute sharing related consent.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param sessionDataKeyConsent Session key related to the consent request.
+     * @param authzEndpointUrl Authorization endpoint URL.
+     * @return @return HttpResponse with the consent submit response.
+     * @throws IOException If error occurs while sending the consent submit.
+     */
+    public static HttpResponse sendOAuthConsentApproveAlwaysPost(HttpClient client, String sessionDataKeyConsent,
+                                                                 String authzEndpointUrl) throws IOException {
+
+        return sendOAuthConsentPost(client, sessionDataKeyConsent, authzEndpointUrl, APPROVE_ALWAYS);
+    }
+
+    /**
+     * Sends OAuth consent submit request. This consent will be a 'Deny' submit and only for OAuth and not
+     * for user attribute sharing related consent.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param sessionDataKeyConsent Session key related to the consent request.
+     * @param authzEndpointUrl Authorization endpoint URL.
+     * @return @return HttpResponse with the consent submit response.
+     * @throws IOException If error occurs while sending the consent submit.
+     */
+    public static HttpResponse sendOAuthConsentDenyPost(HttpClient client, String sessionDataKeyConsent,
+                                                                 String authzEndpointUrl) throws IOException {
+
+        return sendOAuthConsentPost(client, sessionDataKeyConsent, authzEndpointUrl, DENY);
+    }
+
+    /**
+     * Sends OAuth consent submit request. This consent will only for OAuth and not for user attribute sharing
+     * related consent.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param sessionDataKeyConsent Session key related to the consent request.
+     * @param authzEndpointUrl Authorization endpoint URL.
+     * @param consentInput OAuth consent input. Applicable values: approve, approveAlways, deny.
+     * @return @return HttpResponse with the consent submit response.
+     * @throws IOException If error occurs while sending the consent submit.
+     */
+    public static HttpResponse sendOAuthConsentPost(HttpClient client, String sessionDataKeyConsent, String
+            authzEndpointUrl, String consentInput) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(PARAM_CONSENT, APPROVE));
+        urlParameters.add(new BasicNameValuePair(PARAM_CONSENT, consentInput));
         urlParameters.add(new BasicNameValuePair(PARAM_SESSION_DATA_KEY_CONSENT, sessionDataKeyConsent));
 
         return sendPostRequestWithParameters(client, urlParameters, authzEndpointUrl, null);
