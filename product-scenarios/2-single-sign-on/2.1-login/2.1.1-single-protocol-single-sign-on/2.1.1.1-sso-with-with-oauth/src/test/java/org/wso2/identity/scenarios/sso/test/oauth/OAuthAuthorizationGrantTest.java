@@ -58,7 +58,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.send
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.getSessionDataConsentKeyFromConsentPage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendAuthorizeGet;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendLoginPost;
-import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendOAuthConsentApprovalPost;
+import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendOAuthConsentApproveOncePost;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendTokenRequest;
 
 public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
@@ -159,7 +159,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
     @Test(description = "2.1.1.1.1", dependsOnMethods = "initOAuthConsent")
     public void submitOAuthConsent() throws Exception {
 
-        HttpResponse response = sendOAuthConsentApprovalPost(client, sessionDataKeyConsent, authzEndpoint);
+        HttpResponse response = sendOAuthConsentApproveOncePost(client, sessionDataKeyConsent, authzEndpoint);
         Assert.assertNotNull(response, "OAuth consent POST is null.");
         authzCode = getAuthzCode(response);
     }
