@@ -1,35 +1,27 @@
-
 /*
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- * /
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.wso2.identity.scenarios.test;
 
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.identity.application.common.model.xsd.ApplicationBasicInfo;
 import org.wso2.carbon.identity.application.common.model.xsd.ApplicationPermission;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -52,13 +44,11 @@ import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ClaimPropertyDTO;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.LocalClaimDTO;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
-import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
 import org.wso2.identity.scenarios.commons.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.scenarios.commons.clients.UserManagementClient;
 import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.scenarios.commons.clients.claims.ClaimMetadataManagementServiceClient;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,22 +59,17 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     private static final String IDP_ROLE_1 = "idpRole_1";
     private static final String BASIC_AUTH_REQUEST_PATH_AUTHENTICATOR = "BasicAuthRequestPathAuthenticator";
     private static final String BASIC_AUTH_REQUEST_AUTHENTICATOR_DISPLAYNAME = "basic-auth";
-    public static final String SUBJECT_CLAIM_URI = "subject_claim_uri";
+    private static final String SUBJECT_CLAIM_URI = "subject_claim_uri";
+    private static final String LOGIN_ROLE = "LoginRole";
+    private static final String SP_CLAIM_1 = "spClaim_1";
+    private static final String ROLE_CLAIM = "roleClaim";
+    private static final String IDP_CLAIM_1 = "idpClaim_1";
+    private static final String TEST_ASSOCIATION_USERNAME_1 = "testAssociationUser";
+    private static final String TEST_ASSOCIATION_PASSWORD_1 = "testAssociationPass";
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private UserManagementClient userMgtClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
-    private static String LOGIN_ROLE = "LoginRole";
-    private static final String SP_CLAIM_1 = "spClaim_1";
-    private static final String ROLE_CLAIM = "roleClaim";
-    private static String IDP_CLAIM_1 = "idpClaim_1";
-    private static String TEST_ASSOCIATION_USERNAME_1 = "testAssociationUser";
-    private static String TEST_ASSOCIATION_PASSWORD_1 = "testAssociationPass";
-    //    private static final String SSO_URL = "SSOUrl";
-    //    private static final String SP_ENTITY_ID = "SPEntityId";
-    //    private static final String IDP_ENTITY_ID = "IdPEntityId";
-//    private static String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -93,7 +78,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
                 configContext);
         userMgtClient = new UserManagementClient(backendServiceURL, sessionCookie);
-        userMgtClient.addRole(IDP_ROLE_1, new String[0], new String[] { PERMISSION_ADMIN_LOGIN });
+        userMgtClient.addRole(IDP_ROLE_1, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendServiceURL);
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendServiceURL, sessionCookie);
         populateData();
@@ -110,7 +95,6 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
         claimMetadataManagementServiceClient.removeLocalClaim(SP_CLAIM_1);
         claimMetadataManagementServiceClient.removeLocalClaim(IDP_CLAIM_1);
         claimMetadataManagementServiceClient.removeLocalClaim(ROLE_CLAIM);
-       // identityProviderMgtServiceClient.deleteIdP("fed_idp");
     }
 
     public void populateData() throws Exception {
@@ -150,7 +134,6 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
 
         return localClaimDTO1;
     }
-
 
 
     @BeforeMethod
@@ -297,7 +280,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
             ServiceProvider updatedServiceProvider = applicationManagementServiceClient
                     .getApplication(applicationName);
             Assert.assertEquals(updatedServiceProvider.getInboundProvisioningConfig()
-                    .getProvisioningUserStore()
+                            .getProvisioningUserStore()
                     , "scim-inbound-userstore", "Failed update provisioning user store");
         } catch (Exception e) {
             Assert.fail("Error while trying to update inbound provisioning data", e);
@@ -347,10 +330,10 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
             Assert.assertEquals(identityProvider.getJustInTimeProvisioningConfig()
                     .getProvisioningEnabled(), true, "Update JIT provisioning config failed");
             Assert.assertEquals(identityProvider.getDefaultProvisioningConnectorConfig()
-                    .getBlocking(), true
+                            .getBlocking(), true
                     , "Set provisioning connector blocking failed");
             Assert.assertEquals(identityProvider.getDefaultProvisioningConnectorConfig().getName
-                    (), connector
+                            (), connector
                     , "Set default provisioning connector failed");
 
         } catch (Exception e) {
@@ -418,11 +401,11 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
             ServiceProvider updatedServiceProvider = applicationManagementServiceClient
                     .getApplication(applicationName);
             Assert.assertEquals(updatedServiceProvider.getInboundAuthenticationConfig()
-                    .getInboundAuthenticationRequestConfigs()[0].getInboundAuthKey(), "samlIssuer"
+                            .getInboundAuthenticationRequestConfigs()[0].getInboundAuthKey(), "samlIssuer"
                     , "Failed update Inbound Auth key");
 
             Assert.assertEquals(updatedServiceProvider.getInboundAuthenticationConfig()
-                    .getInboundAuthenticationRequestConfigs()[0].getInboundAuthType(), "samlsso"
+                            .getInboundAuthenticationRequestConfigs()[0].getInboundAuthType(), "samlsso"
                     , "Failed update Inbound Auth type");
 
             Property[] updatedProperties = updatedServiceProvider.getInboundAuthenticationConfig()
@@ -436,82 +419,6 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
             Assert.fail("Error while trying to update Inbound Authenticator Configuration", e);
         }
     }
-
-//    @Test(alwaysRun = true, description = "Testing update Outbound Authenticator Configuration")
-//    public void testOutboundAuthenticatorConfiguration() {
-//        String applicationName = "TestServiceProvider";
-//
-//        try {
-//            ServiceProvider serviceProvider = applicationManagementServiceClient.getApplication
-//                    (applicationName);
-//
-//            serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType
-//                    ("federated");
-//            AuthenticationStep authStep = new AuthenticationStep();
-//            IdentityProvider idp = new IdentityProvider();
-//            idp.setIdentityProviderName("fed_idp");
-//            FederatedAuthenticatorConfig customConfig = new FederatedAuthenticatorConfig();
-//            customConfig.setName(SAMLSSOAUTHENTICATOR);
-//            customConfig.setDisplayName("samlsso");
-//            customConfig.setEnabled(true);
-//            customConfig.setProperties(getSAML2SSOAuthnConfigProperties());
-//            idp.setDefaultAuthenticatorConfig(customConfig);
-//            idp.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{customConfig});
-//
-//            JustInTimeProvisioningConfig jitConfig = new JustInTimeProvisioningConfig();
-//            jitConfig.setProvisioningEnabled(true);
-//            jitConfig.setProvisioningUserStore("PRIMARY");
-//            idp.setJustInTimeProvisioningConfig(jitConfig);
-//
-//            createIdp(idp);
-//            authStep.setFederatedIdentityProviders(new IdentityProvider[]{idp});
-//
-//            serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(
-//                    new AuthenticationStep[]{authStep});
-//
-//            serviceProvider.getLocalAndOutBoundAuthenticationConfig()
-//                    .setSubjectClaimUri("subject_claim_uri");
-//
-//            applicationManagementServiceClient.updateApplicationData(serviceProvider);
-//            ServiceProvider updatedServiceProvider = applicationManagementServiceClient
-//                    .getApplication(applicationName);
-//
-//            Assert.assertEquals(updatedServiceProvider.getLocalAndOutBoundAuthenticationConfig()
-//                    .getAuthenticationSteps()[0].getFederatedIdentityProviders()[0]
-//                    .getIdentityProviderName(), "fed_idp"
-//                    , "Failed update Authentication step");
-//
-//            Assert.assertEquals(updatedServiceProvider.getLocalAndOutBoundAuthenticationConfig()
-//                    .getSubjectClaimUri(), "subject_claim_uri", "Failed update subject claim uri");
-//
-//        } catch (Exception e) {
-//            Assert.fail("Error while trying to update Outbound Authenticator Configuration", e);
-//        }
-//    }
-
-//    private void createIdp(IdentityProvider idp) throws Exception {
-//
-//        org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider identityProvider
-//                = new org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider();
-//
-//        identityProvider.setIdentityProviderName(idp.getIdentityProviderName());
-//        org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig
-//                federatedAuthenticatorConfig
-//                = new org.wso2.carbon.identity.application.common.model.idp.xsd.
-//                FederatedAuthenticatorConfig();
-//
-//        federatedAuthenticatorConfig.setName(idp.getDefaultAuthenticatorConfig().getName());
-//        federatedAuthenticatorConfig.setEnabled(idp.getDefaultAuthenticatorConfig().getEnabled());
-//
-//        identityProvider.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity
-//                .application.common.model
-//                .idp.xsd.FederatedAuthenticatorConfig[]{federatedAuthenticatorConfig});
-//
-//        identityProvider.setDefaultAuthenticatorConfig(federatedAuthenticatorConfig);
-//
-//
-//        identityProviderMgtServiceClient.addIdP(identityProvider);
-//    }
 
     @Test(alwaysRun = true, description = "2.1.2.9")
     public void testUpdateApplicationPermissions() {
@@ -654,9 +561,9 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     public void testRetrieveFederatedIdPsWithLoginPermission() {
         try {
             userMgtClient
-                    .addRole(LOGIN_ROLE, new String[0], new String[] { PERMISSION_ADMIN_LOGIN });
+                    .addRole(LOGIN_ROLE, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
             userMgtClient
-                    .addUser(TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1, new String[] {LOGIN_ROLE}, null);
+                    .addUser(TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1, new String[]{LOGIN_ROLE}, null);
 
             ApplicationManagementServiceClient appManageServiceClient =
                     new ApplicationManagementServiceClient(TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1,
@@ -664,33 +571,10 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
             IdentityProvider[] idps = appManageServiceClient.getAllFederatedIdentityProvider();
 
             Assert.assertTrue(idps != null && idps.length != 0,
-                              "Federated IdPs have been retrieved by a" +
-                              " user with login permission.");
+                    "Federated IdPs have been retrieved by a" +
+                            " user with login permission.");
         } catch (Exception e) {
             Assert.fail("Error while trying to retrieve federated idps with login permission", e);
         }
     }
-
-
-//    private Property[] getSAML2SSOAuthnConfigProperties() {
-//
-//        Property[] properties = new Property[3];
-//        Property property = new Property();
-//        property.setName(IDP_ENTITY_ID);
-//        property.setValue("samlFedIdP");
-//        properties[0] = property;
-//
-//        property = new Property();
-//        property.setName(SP_ENTITY_ID);
-//        property.setValue("samlFedSP");
-//        properties[1] = property;
-//
-//        property = new Property();
-//        property.setName(SSO_URL);
-//        property.setValue("https://localhost:9453/samlsso");
-//        properties[2] = property;
-//
-//        return properties;
-//    }
-
 }

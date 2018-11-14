@@ -1,22 +1,19 @@
 /*
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- * /
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package org.wso2.identity.scenarios.commons.clients.Idp;
 
 import org.apache.axis2.AxisFault;
@@ -48,9 +45,8 @@ public class IdentityProviderMgtServiceClient {
     private UserAdminStub userAdminStub;
 
     /**
-     *
-     * @param userName User name
-     * @param password Password
+     * @param userName   User name
+     * @param password   Password
      * @param backEndUrl Backend Carbon server URL
      * @throws AxisFault
      */
@@ -66,9 +62,8 @@ public class IdentityProviderMgtServiceClient {
     }
 
     /**
-     *
      * @param sessionCookie HttpSession cookie
-     * @param backEndUrl Backend Carbon server URL
+     * @param backEndUrl    Backend Carbon server URL
      * @throws AxisFault
      */
     public IdentityProviderMgtServiceClient(String sessionCookie, String backEndUrl)
@@ -84,9 +79,9 @@ public class IdentityProviderMgtServiceClient {
     }
 
     /**
-     * @param cookie HttpSession cookie
+     * @param cookie     HttpSession cookie
      * @param backEndUrl Backend Carbon server URL
-     * @param configCtx Axis2 Configuration Context
+     * @param configCtx  Axis2 Configuration Context
      */
     public IdentityProviderMgtServiceClient(String cookie, String backEndUrl,
                                             ConfigurationContext configCtx) {
@@ -118,7 +113,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Retrieves Resident Identity provider for a given tenant
-     * 
+     *
      * @return <code>FederatedIdentityProvider</code>
      * @throws Exception Error when getting Resident Identity Providers
      */
@@ -133,7 +128,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Updated Resident Identity provider for a given tenant
-     * 
+     *
      * @return <code>FederatedIdentityProvider</code>
      * @throws Exception Error when getting Resident Identity Providers
      */
@@ -148,9 +143,9 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Retrieves registered Identity providers for a given tenant
-     * 
+     *
      * @return List of <code>FederatedIdentityProvider</code>. IdP names, primary IdP and home realm
-     *         identifiers of each IdP
+     * identifiers of each IdP
      * @throws Exception Error when getting list of Identity Providers
      */
     public List<IdentityProvider> getIdPs() throws Exception {
@@ -169,9 +164,9 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Retrieves Enabled registered Identity providers for a given tenant
-     * 
+     *
      * @return List of <code>FederatedIdentityProvider</code>. IdP names, primary IdP and home realm
-     *         identifiers of each IdP
+     * identifiers of each IdP
      * @throws Exception Error when getting list of Identity Providers
      */
     public List<IdentityProvider> getEnabledIdPs() throws Exception {
@@ -191,7 +186,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Retrieves Identity provider information about a given tenant by Identity Provider name
-     * 
+     *
      * @param idPName Unique name of the Identity provider of whose information is requested
      * @return <code>FederatedIdentityProvider</code> Identity Provider information
      * @throws Exception Error when getting Identity Provider information by IdP name
@@ -207,9 +202,9 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Adds an Identity Provider to the given tenant
-     * 
+     *
      * @param identityProvider <code><FederatedIdentityProvider/code></code> federated Identity
-     *        Provider information
+     *                         Provider information
      * @throws Exception Error when adding Identity Provider information
      */
     public void addIdP(IdentityProvider identityProvider) throws Exception {
@@ -225,7 +220,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Deletes an Identity Provider from a given tenant
-     * 
+     *
      * @param idPName Name of the IdP to be deleted
      * @throws Exception Error when deleting Identity Provider information
      */
@@ -239,8 +234,8 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Updates a given Identity Provider information
-     * 
-     * @param oldIdPName existing IdP name
+     *
+     * @param oldIdPName       existing IdP name
      * @param identityProvider <code>FederatedIdentityProvider</code> new IdP information
      * @throws Exception Error when updating Identity Provider information
      */
@@ -255,6 +250,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Get all available custom federated authenticators
+     *
      * @return
      * @throws Exception
      */
@@ -288,6 +284,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Get all available federated authenticators
+     *
      * @return all available federated authenticators
      * @throws Exception
      */
@@ -313,7 +310,6 @@ public class IdentityProviderMgtServiceClient {
     }
 
     /**
-     * 
      * @return
      * @throws Exception
      */
@@ -341,6 +337,7 @@ public class IdentityProviderMgtServiceClient {
 
     /**
      * Function to retrieve all provisioning connectors
+     *
      * @return all provisioning connectors
      * @throws Exception
      */
@@ -350,9 +347,9 @@ public class IdentityProviderMgtServiceClient {
             ProvisioningConnectorConfig[] provisioningConnectorConfigs = idPMgtStub
                     .getAllProvisioningConnectors();
             if (provisioningConnectorConfigs != null && provisioningConnectorConfigs.length > 0
-                && provisioningConnectorConfigs[0] != null) {
+                    && provisioningConnectorConfigs[0] != null) {
                 for (ProvisioningConnectorConfig config : provisioningConnectorConfigs) {
-                        provisioningConnectors.put(config.getName(), config);
+                    provisioningConnectors.put(config.getName(), config);
                 }
             }
         } catch (Exception e) {
@@ -363,7 +360,6 @@ public class IdentityProviderMgtServiceClient {
     }
 
     /**
-     * 
      * @return
      * @throws Exception
      */
@@ -378,7 +374,6 @@ public class IdentityProviderMgtServiceClient {
     }
 
     /**
-     * 
      * @return
      * @throws Exception
      */
