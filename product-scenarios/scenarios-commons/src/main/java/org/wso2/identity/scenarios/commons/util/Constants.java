@@ -24,11 +24,13 @@ public class Constants {
     private Constants() {
     }
 
-    public static final String APPROVE = "approve";
+    public static final String APPROVE_ONCE = "approve";
+    public static final String APPROVE_ALWAYS = "approveAlways";
     public static final String BASIC = "Basic";
     public static final String CLIENT_NAME = "client_name";
     public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
     public static final String CONTENT_TYPE_APPLICATION_FORM = "application/x-www-form-urlencoded";
+    public static final String DENY = "deny";
     public static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     public static final String PARAM_CLIENT_ID = "client_id";
     public static final String PARAM_CLIENT_SECRET = "client_secret";
