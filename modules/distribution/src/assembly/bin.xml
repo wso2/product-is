@@ -224,6 +224,16 @@
                 <include>api#identity#oauth2#dcr#v1.1.war</include>
             </includes>
         </fileSet>
+        <!--copy jaxrs web app for Template Management feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#template#mgt#v1.0.0.war</include>
+            </includes>
+        </fileSet>
 
 
         <!--copy jaxrs web app for Mex feature-->

@@ -914,6 +914,14 @@
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.template.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
