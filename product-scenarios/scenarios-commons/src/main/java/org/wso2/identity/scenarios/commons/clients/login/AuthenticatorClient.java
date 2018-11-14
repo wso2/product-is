@@ -17,7 +17,6 @@
  *  under the License.
  * /
  */
-
 package org.wso2.identity.scenarios.commons.clients.login;
 
 import org.apache.axis2.AxisFault;
