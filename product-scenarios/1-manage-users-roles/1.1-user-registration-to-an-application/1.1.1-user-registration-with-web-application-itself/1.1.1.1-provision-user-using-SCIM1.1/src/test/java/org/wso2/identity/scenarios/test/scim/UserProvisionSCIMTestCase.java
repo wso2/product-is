@@ -118,5 +118,4 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
     }
-
 }
