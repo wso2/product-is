@@ -18,8 +18,11 @@
 
 package org.wso2.identity.scenarios.commons;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +53,13 @@ public class ScenarioTestBase {
 
     protected static final int ARTIFACT_DEPLOYMENT_WAIT_TIME_MS = 120000;
     protected static final String RESOURCE_LOCATION = System.getProperty("common.resource.location");
+
+    protected String backendURL;
+    protected String backendServiceURL;
+    protected AuthenticatorClient loginClient;
+    protected String sessionCookie;
+    protected static final String SERVICES = "/services/";
+    protected ConfigurationContext configContext;
 
     /**
      * This is a utility method to load the deployment details.
@@ -99,5 +109,14 @@ public class ScenarioTestBase {
         Base64.Encoder encoder = java.util.Base64.getEncoder();
         String encodedHeader = encoder.encodeToString(String.join(":", ADMIN_USERNAME, ADMIN_PASSWORD).getBytes());
         return String.join(" ", "Basic", encodedHeader);
+    }
+
+    public void init() throws Exception {
+        backendURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
+        backendServiceURL = backendURL + SERVICES;
+        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
+                , null);
+        loginClient = new AuthenticatorClient(backendServiceURL);
+        sessionCookie = loginClient.login(ADMIN_USERNAME, ADMIN_PASSWORD, null);
     }
 }

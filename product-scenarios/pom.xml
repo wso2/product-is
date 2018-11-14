@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -33,6 +34,8 @@
 
     <modules>
         <module>scenarios-commons</module>
+        <module>2-single-sign-on</module>
+        <module>1-manage-users-roles</module>
     </modules>
 
     <build>
@@ -76,6 +79,8 @@
         <commons.codec.version>1.8</commons.codec.version>
         <testng.version>6.9.10</testng.version>
         <commons.lang.version>2.6</commons.lang.version>
+        <carbon.identity.framework.version>5.12.182</carbon.identity.framework.version>
+        <carbon.kernel.version>4.4.35</carbon.kernel.version>
     </properties>
 
     <dependencyManagement>
@@ -115,6 +120,41 @@
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.utils</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.idp.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.claim.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.claim.metadata.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+                <version>${carbon.kernel.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

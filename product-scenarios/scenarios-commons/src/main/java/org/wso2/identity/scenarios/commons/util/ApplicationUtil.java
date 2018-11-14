@@ -44,11 +44,11 @@ public class ApplicationUtil {
      * Register application with DCR.
      *
      * @param dcrEndpoint DCR Endpoint URL.
-     * @param appName Application name.
+     * @param appName     Application name.
      * @param redirectUri Redirect URL.
-     * @param grants Supported grant types by the application.
-     * @param username Authenticating username.
-     * @param password Authenticating user password.
+     * @param grants      Supported grant types by the application.
+     * @param username    Authenticating username.
+     * @param password    Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during app creation.
      */
@@ -80,10 +80,11 @@ public class ApplicationUtil {
 
     /**
      * Delete application with DCR.
+     *
      * @param dcrEndpoint DCR Endpoint URL.
-     * @param clientId Client ID of the application
-     * @param username Authenticating username.
-     * @param password Authenticating user password.
+     * @param clientId    Client ID of the application
+     * @param username    Authenticating username.
+     * @param password    Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during app creation.
      */
