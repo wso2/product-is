@@ -8,7 +8,7 @@ multiple applications.
 End User
 
 ## Sub-Scenarios
-- [2.1.1 Single protocol single sign-on.]()
+- [2.1.1 Single protocol single sign-on](2.1.1-single-protocol-single-sign-on/README.md)
 - [2.1.2 Cross protocol single sign-on]()
 - [2.1.3 An application needs user attributes of the authenticated user.]()
 - [2.1.4 An application needs roles of the authenticated user.]()

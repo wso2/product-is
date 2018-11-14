@@ -18,7 +18,6 @@
 
 package org.wso2.identity.scenarios.commons;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,8 +27,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Properties;
 
+/**
+ * Base test case for IS scenario tests.
+ */
 public class ScenarioTestBase {
 
     private static final String INPUTS_LOCATION = System.getenv("DATA_BUCKET_LOCATION");
@@ -56,7 +59,7 @@ public class ScenarioTestBase {
      * <p>
      * This method loads these files into one single properties, and return it.
      *
-     * @return properties the deployment properties
+     * @return properties the deployment properties.
      */
     public static Properties getDeploymentProperties() {
 
@@ -93,6 +96,8 @@ public class ScenarioTestBase {
 
     public String getAuthzHeader() {
 
-        return "Basic " + Base64.encodeBase64String((ADMIN_USERNAME + ":" + ADMIN_PASSWORD).getBytes()).trim();
+        Base64.Encoder encoder = java.util.Base64.getEncoder();
+        String encodedHeader = encoder.encodeToString(String.join(":", ADMIN_USERNAME, ADMIN_PASSWORD).getBytes());
+        return String.join(" ", "Basic", encodedHeader);
     }
 }
