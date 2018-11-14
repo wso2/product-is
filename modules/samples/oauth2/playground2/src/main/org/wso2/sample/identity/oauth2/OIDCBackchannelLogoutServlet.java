@@ -20,7 +20,9 @@ package org.wso2.sample.identity.oauth2;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.BasicConfigurator;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,14 +39,21 @@ public class OIDCBackchannelLogoutServlet extends HttpServlet {
 
     private static Log log = LogFactory.getLog(OIDCBackchannelLogoutServlet.class);
 
+    public void init(ServletConfig config) throws SecurityException {
+
+        BasicConfigurator.configure();
+    }
+
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException {
+
         doPost(req, resp);
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException {
-        log.info("Logout request received.");
+
+        log.info("Backchannel logout request received.");
 
         String sid = null;
         try {
@@ -57,11 +66,10 @@ public class OIDCBackchannelLogoutServlet extends HttpServlet {
 
         if (session != null) {
             session.invalidate();
+            SessionIdStore.removeSession(sid);
             log.info("Session invalidated successfully.");
         } else {
             log.info("Cannot find corresponding session.");
         }
-
     }
-
 }
