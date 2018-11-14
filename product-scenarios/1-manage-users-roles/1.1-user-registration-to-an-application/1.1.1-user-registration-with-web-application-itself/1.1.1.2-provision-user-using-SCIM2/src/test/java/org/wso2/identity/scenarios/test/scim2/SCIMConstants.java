@@ -23,6 +23,7 @@ public class SCIMConstants {
     public static final String OPERATIONS_ATTRIBUTE = "Operations";
     public static final String STATUS_ATTRIBUTE = "status";
     public static final String LOCATION_ATTRIBUTE = "location";
+    public static final String DATA_ATTRIBUTE = "data";
     public static final String BULK_ATTRIBUTE = "bulkId";
     public static final String PASSWORD_ATTRIBUTE = "password";
     public static final String ID_ATTRIBUTE = "id";

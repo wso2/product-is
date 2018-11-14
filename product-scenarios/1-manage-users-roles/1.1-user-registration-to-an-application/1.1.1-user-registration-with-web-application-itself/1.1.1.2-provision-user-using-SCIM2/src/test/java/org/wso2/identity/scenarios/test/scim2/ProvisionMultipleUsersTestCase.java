@@ -72,11 +72,11 @@ public class ProvisionMultipleUsersTestCase extends ScenarioTestBase {
         schemaBulk.add(SCIMConstants.BULK_SCHEMA);
         JSONArray schemaUser = new JSONArray();
         schemaUser.add(SCIMConstants.USER_SCHEMA);
-        rootObject.put("schemas", schemaBulk);
+        rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemaBulk);
 
         JSONArray operations = new JSONArray();
         JSONObject data1 = new JSONObject();
-        data1.put("schemas", schemaUser);
+        data1.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemaUser);
         data1.put(SCIMConstants.USER_NAME_ATTRIBUTE, USERNAME1);
         data1.put(SCIMConstants.PASSWORD_ATTRIBUTE, PASSWORD1);
 
@@ -89,13 +89,13 @@ public class ProvisionMultipleUsersTestCase extends ScenarioTestBase {
         bulkuser1.put(SCIMConstants.METHOD_ATTRIBUTE, SCIMConstants.METHOD_PARM);
         bulkuser1.put(SCIMConstants.PATH_ATTRIBUTE, SCIMConstants.PATH_PARM);
         bulkuser1.put(SCIMConstants.BULK_ATTRIBUTE, "bulkid01");
-        bulkuser1.put("data", data1);
+        bulkuser1.put(SCIMConstants.DATA_ATTRIBUTE, data1);
 
         JSONObject bulkuser2 = new JSONObject();
         bulkuser2.put(SCIMConstants.METHOD_ATTRIBUTE, SCIMConstants.METHOD_PARM);
         bulkuser2.put(SCIMConstants.PATH_ATTRIBUTE, SCIMConstants.PATH_PARM);
         bulkuser2.put(SCIMConstants.BULK_ATTRIBUTE, "bulkid02");
-        bulkuser2.put("data", data2);
+        bulkuser2.put(SCIMConstants.DATA_ATTRIBUTE, data2);
 
         operations.add(bulkuser1);
         operations.add(bulkuser2);
