@@ -14,7 +14,6 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.test.util.Utils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -64,14 +63,12 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
         super.deleteApplication(APPLICATION_NAME);
         super.testClear();
         resetISConfiguration();
-        ;
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createECPServiceProviderDTO(config));
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
-
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
         log.debug(samlssoServiceProviderDTOs[0].getIssuer());
@@ -111,8 +108,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
             log.debug(responseCode);
             Assert.assertEquals(responseCode, 200, "Successful login failure response returned code " + responseCode);
             Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"),"Successfully  identified the login failure "+config);
-
-
         } catch (Exception e) {
             Assert.fail("SAML ECP Login failure test failed for " + config, e);
         }
@@ -130,8 +125,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
             int responseCode = response.getStatusLine().getStatusCode();
             log.debug(responseCode);
             Assert.assertEquals(responseCode, 500, "Successfully returned a SOAP fault with internal server error " + responseCode);
-
-
         } catch (Exception e) {
             Assert.fail("SAML ECP SOAP fault test failed for " + config, e);
         }
@@ -158,7 +151,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     private void changeISConfiguration() throws Exception {
-
         log.info("Replacing identity.xml changing the entity id of SSOService");
 
         String carbonHome = CarbonUtils.getCarbonHome();
@@ -174,7 +166,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     private void resetISConfiguration() throws Exception {
-
         log.info("Replacing identity.xml with default configurations");
         File defaultIdentityXml = new File(getISResourceLocation() + File.separator + "default-identity.xml");
         serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXml,
@@ -210,9 +201,4 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
                 "derID=\"https://idp.is.com\"/></samlp:IDPList></samlp:Scoping></samlp:AuthnRequest></S:Body></S:Envelope>";
         return samlReq;
     }
-
-
 }
-
-
-

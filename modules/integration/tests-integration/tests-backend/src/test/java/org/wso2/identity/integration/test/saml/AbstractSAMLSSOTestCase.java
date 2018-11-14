@@ -69,7 +69,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
     protected static final String SAML_ECP_SSO_URL = "https://localhost:9853/ecp";
     protected static final String SAML_ECP_ACS_URL = "https://localhost/Shibboleth.sso/SAML2/ECP";
-
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
