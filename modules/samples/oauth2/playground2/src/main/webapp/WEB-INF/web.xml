@@ -39,6 +39,12 @@
         <servlet-class>org.wso2.sample.identity.oauth2.OIDCBackchannelLogoutServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
+    
+    <servlet>
+        <servlet-name>OIDCFrontchannelLogoutServlet</servlet-name>
+        <servlet-class>org.wso2.sample.identity.oauth2.OIDCFrontchannelLogoutServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
 
     <servlet>
         <servlet-name>OAuth2AccessResourcePage</servlet-name>
@@ -74,7 +80,12 @@
 
     <servlet-mapping>
         <servlet-name>OIDCBackchannelLogoutServlet</servlet-name>
-        <url-pattern>/logout</url-pattern>
+        <url-pattern>/bclogout</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>OIDCFrontchannelLogoutServlet</servlet-name>
+        <url-pattern>/fclogout</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
@@ -85,4 +96,14 @@
     <listener>
         <listener-class>org.wso2.sample.identity.oauth2.ContextEventListener</listener-class>
     </listener>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>securedplayground2</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 </web-app>

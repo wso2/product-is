@@ -1,11 +1,4 @@
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants"%>
-<%--<%--%>
-
-    <%--session.removeAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);--%>
-    <%--session.removeAttribute(OAuth2Constants.ACCESS_TOKEN);--%>
-    <%--session.removeAttribute(OAuth2Constants.CODE);--%>
-
- <%--%>--%>
 
 <!DOCTYPE html>
 <html><head>
