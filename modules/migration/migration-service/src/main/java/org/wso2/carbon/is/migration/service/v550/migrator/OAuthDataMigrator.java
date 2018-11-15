@@ -65,6 +65,7 @@ public class OAuthDataMigrator extends Migrator {
         try (Connection connection = getDataSource().getConnection()) {
             isTokenHashColumnsAvailable = TokenDAO.getInstance().isTokenHashColumnsAvailable(connection);
             isAuthzCodeHashColumnAvailable = AuthzCodeDAO.getInstance().isAuthzCodeHashColumnAvailable(connection);
+            connection.commit();
         }
         if (!isTokenHashColumnsAvailable) {
             try (Connection connection = getDataSource().getConnection()) {
@@ -85,9 +86,9 @@ public class OAuthDataMigrator extends Migrator {
 
         try (Connection connection = getDataSource().getConnection()) {
             isClientSecretHashColumnsAvailable = OAuthDAO.getInstance().isConsumerSecretHashColumnAvailable(connection);
-
+            connection.commit();
         }
-        if(isClientSecretHashColumnsAvailable){
+        if (isClientSecretHashColumnsAvailable) {
             try (Connection connection = getDataSource().getConnection()) {
                 OAuthDAO.getInstance().deleteConsumerSecretHashColumn(connection);
                 connection.commit();

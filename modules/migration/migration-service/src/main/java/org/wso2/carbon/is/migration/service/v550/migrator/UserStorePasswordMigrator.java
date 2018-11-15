@@ -26,9 +26,8 @@ import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.service.Migrator;
-import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.user.api.Tenant;
@@ -124,7 +123,7 @@ public class UserStorePasswordMigrator extends Migrator {
                         "password".equals(element.getAttributeValue(new QName("name"))) || "ConnectionPassword"
                                 .equals(element.getAttributeValue(new QName("name"))))) {
                     String encryptedPassword = element.getText();
-                    newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(encryptedPassword);
+                    newEncryptedPassword = EncryptionUtil.getNewEncryptedUserstorePassword(encryptedPassword);
                     if (StringUtils.isNotEmpty(newEncryptedPassword)) {
                         element.setText(newEncryptedPassword);
                     }

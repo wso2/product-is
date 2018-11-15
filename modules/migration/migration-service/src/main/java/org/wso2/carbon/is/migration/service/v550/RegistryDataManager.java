@@ -26,8 +26,7 @@ import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
@@ -188,7 +187,7 @@ public class RegistryDataManager {
      * @param migrateActiveTenantsOnly
      * @throws CryptoException
      * @throws RegistryException
-     * @throws UserStoreException
+     * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
      */
     public void migrateServicePrinciplePassword(boolean migrateActiveTenantsOnly) throws
             CryptoException, RegistryException, UserStoreException, MigrationClientException {

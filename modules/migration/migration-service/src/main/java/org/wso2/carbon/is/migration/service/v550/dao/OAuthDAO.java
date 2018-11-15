@@ -76,22 +76,18 @@ public class OAuthDAO {
             throw new MigrationClientException("Error while retrieving metadata from connection.", e);
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try {
-                ResultSet resultSet = preparedStatement.executeQuery();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet != null) {
                     resultSet.findColumn(CONSUMER_SECRET_HASH);
                     isConsumerSecretHashColumnsExist = true;
                 }
-            } catch (SQLException e) {
-                isConsumerSecretHashColumnsExist = false;
-                if(log.isDebugEnabled()) {
-                    log.debug("Error occurred while executing the sql query: " + sql);
-                }
-                log.warn("Error occurred while executing the PreparedStatement." + e.getMessage());
             }
         } catch (SQLException e) {
             isConsumerSecretHashColumnsExist = false;
-            log.error("Error occured while creating the PreparedStatement." + e.getMessage());
+            if (log.isDebugEnabled()) {
+                log.debug("Error occurred while executing the sql query: " + sql, e);
+            }
+            log.info("CONSUMER_SECRET_HASH column does not exist.");
         }
         return isConsumerSecretHashColumnsExist;
     }
