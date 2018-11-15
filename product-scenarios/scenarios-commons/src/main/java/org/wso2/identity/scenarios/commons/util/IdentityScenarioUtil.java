@@ -177,4 +177,9 @@ public class IdentityScenarioUtil {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         return  (JSONObject) JSONValue.parse(rd);
     }
+
+    public static String bese64Decode(String encodedString){
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+        return new String(decodedBytes);
+    }
 }

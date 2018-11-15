@@ -73,7 +73,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        setKeyStoreProperties();
+
         super.init();
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
                 configContext);
@@ -560,19 +560,15 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     @Test(alwaysRun = true, description = "Retrieve all federated IdPs with login permission")
     public void testRetrieveFederatedIdPsWithLoginPermission() {
         try {
-            userMgtClient
-                    .addRole(LOGIN_ROLE, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
-            userMgtClient
-                    .addUser(TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1, new String[]{LOGIN_ROLE}, null);
+            userMgtClient.addRole(LOGIN_ROLE, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
+            userMgtClient.addUser(TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1, new String[]{LOGIN_ROLE}, null);
 
-            ApplicationManagementServiceClient appManageServiceClient =
-                    new ApplicationManagementServiceClient(TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1,
-                            backendServiceURL, configContext);
+            ApplicationManagementServiceClient appManageServiceClient = new ApplicationManagementServiceClient
+                    (TEST_ASSOCIATION_USERNAME_1, TEST_ASSOCIATION_PASSWORD_1, backendServiceURL, configContext);
             IdentityProvider[] idps = appManageServiceClient.getAllFederatedIdentityProvider();
 
-            Assert.assertTrue(idps != null && idps.length != 0,
-                    "Federated IdPs have been retrieved by a" +
-                            " user with login permission.");
+            Assert.assertTrue(idps != null && idps.length != 0, "Federated IdPs have been retrieved by a user with " +
+                    "login permission.");
         } catch (Exception e) {
             Assert.fail("Error while trying to retrieve federated idps with login permission", e);
         }

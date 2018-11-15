@@ -112,7 +112,7 @@ public class ScenarioTestBase {
     }
 
     public void init() throws Exception {
-
+        setKeyStoreProperties();
         backendURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
         backendServiceURL = backendURL + SERVICES;
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);

@@ -17,9 +17,12 @@
 package org.wso2.identity.scenarios.commons.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,10 +31,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.wso2.identity.scenarios.commons.util.Constants.HEADER_SET_COOKIE;
+import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY;
 
 /**
  * Use to extract data from HttpResponse.
@@ -291,5 +298,89 @@ public class DataExtractUtil {
 
             return key;
         }
+    }
+
+    public static String getSessionDataKey(HttpResponse response) throws IOException {
+
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"" + PARAM_SESSION_DATA_KEY + "\"", 1);
+        List<DataExtractUtil.KeyValue> keyValues = extractDataFromResponse(response, keyPositionMap);
+        if (keyValues != null && keyValues.size() > 0) {
+            String sessionDataKey = keyValues.get(0).getValue();
+            EntityUtils.consume(response.getEntity());
+            return sessionDataKey;
+        }
+        return null;
+    }
+
+    public static boolean requestMissingClaims(HttpResponse response) {
+
+        String redirectUrl = getRedirectUrlFromResponse(response);
+        return redirectUrl.contains("consent.do");
+
+    }
+
+    public static String getRedirectUrlFromResponse(HttpResponse response) {
+        Header[] headers = response.getAllHeaders();
+        String url = "";
+        for (Header header : headers) {
+            if (HttpHeaders.LOCATION.equals(header.getName())) {
+                url = header.getValue();
+            }
+        }
+        return url;
+    }
+
+    public static String getCookieFromResponse(HttpResponse response, String cookieName) {
+
+        String pastrCookie = null;
+        boolean foundPastrCookie = false;
+        Header[] headers = response.getHeaders(HEADER_SET_COOKIE);
+        if (headers != null) {
+            int i = 0;
+            while (!foundPastrCookie && i < headers.length) {
+                if (headers[i].getValue().contains(cookieName)) {
+                    pastrCookie = headers[i].getValue().split(";")[0];
+                    foundPastrCookie = true;
+                }
+                i++;
+            }
+        }
+        return pastrCookie;
+    }
+
+    public static Map<String, String> getQueryParams(String Url) throws Exception {
+
+        Map<String, String> queryParams = new HashMap<>();
+
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(Url), "UTF-8");
+        for (NameValuePair param : params) {
+            queryParams.put(param.getName(), param.getValue());
+        }
+        return queryParams;
+    }
+
+    public static String extractValueFromResponse(HttpResponse response, String Key, Integer position)
+            throws
+            IOException {
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put(Key, position);
+        List<DataExtractUtil.KeyValue> extracted = extractDataFromResponse(response,keyPositionMap);
+        if(!extracted.isEmpty()) {
+            return extracted.get(0).getValue();
+        }
+        return null;
+    }
+
+    public static String extractFullContentFromResponse(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+        StringBuilder result = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+        rd.close();
+        return result.toString();
     }
 }
