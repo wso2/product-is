@@ -77,8 +77,14 @@
         <commons.codec.version>1.8</commons.codec.version>
         <testng.version>6.9.10</testng.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <carbon.identity.framework.version>5.12.182</carbon.identity.framework.version>
         <carbon.kernel.version>4.4.35</carbon.kernel.version>
+        <carbon.identity.framework.version>5.12.182</carbon.identity.framework.version>
+        <identity.inbound.provisioning.scim.version>5.3.31</identity.inbound.provisioning.scim.version>
+        <identity.user.ws.version>5.1.11</identity.user.ws.version>
+        <axis2.wso2.version>1.6.1-wso2v28</axis2.wso2.version>
+        <rampart.wso2.version>1.6.1-wso2v27</rampart.wso2.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <version.commons.logging>1.1.1</version.commons.logging>
     </properties>
 
     <dependencyManagement>
@@ -130,9 +136,29 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.application.common</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.inbound.provisioning.scim</groupId>
+                <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
+                <version>${identity.inbound.provisioning.scim.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.utils</artifactId>
                 <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.ws</groupId>
+                <artifactId>org.wso2.carbon.um.ws.api</artifactId>
+                <version>${identity.user.ws.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
@@ -153,6 +179,26 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
                 <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${axis2.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2-client</artifactId>
+                <version>1.6.1-wso2v28</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-policy</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
