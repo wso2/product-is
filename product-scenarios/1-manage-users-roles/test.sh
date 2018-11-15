@@ -19,7 +19,8 @@ DIR=$2
 export DATA_BUCKET_LOCATION=${DIR}
 
 # Build scenarios-commons
-mvn clean install -f ../pom.xml
+mvn clean install -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+-fae -B -f ../pom.xml
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
