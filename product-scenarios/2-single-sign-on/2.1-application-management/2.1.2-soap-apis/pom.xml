@@ -132,40 +132,8 @@
             <artifactId>scenarios-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec.wso2</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.extensions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automationutils</groupId>
-            <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automationutils</groupId>
-            <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automationutils</groupId>
-            <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
@@ -174,16 +142,6 @@
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.wink</groupId>
-            <artifactId>wink-client</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.charon</groupId>
-            <artifactId>org.wso2.charon.core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -206,12 +164,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.wso2</groupId>
-            <artifactId>hibernate</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -20,8 +20,8 @@ package org.wso2.identity.scenarios.commons;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
 
 import java.io.File;
@@ -42,7 +42,7 @@ public class ScenarioTestBase {
     private static final String INFRASTRUCTURE_PROPERTIES = "infrastructure.properties";
     private static final String DEPLOYMENT_PROPERTIES = "deployment.properties";
     private static final String JOB_PROPERTIES = "testplan-props.properties";
-    private static final Log LOG = LogFactory.getLog(ScenarioTestBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScenarioTestBase.class);
 
     public static final String MGT_CONSOLE_URL = "MgtConsoleUrl";
     public static final String CARBON_SERVER_URL = "CarbonServerUrl";
@@ -112,10 +112,10 @@ public class ScenarioTestBase {
     }
 
     public void init() throws Exception {
+
         backendURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
         backendServiceURL = backendURL + SERVICES;
-        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
-                , null);
+        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         loginClient = new AuthenticatorClient(backendServiceURL);
         sessionCookie = loginClient.login(ADMIN_USERNAME, ADMIN_PASSWORD, null);
     }
