@@ -21,9 +21,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -65,6 +67,28 @@ public class IdentityScenarioUtil {
     }
 
     /**
+     * Send POST request with a JSON payload.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param url Request URL.
+     * @param jsonObject JSON object for post request.
+     * @param headers Request headers.
+     * @return HttpResponse containing the response.
+     * @throws IOException If error occurs while sending the request.
+     */
+    public static HttpResponse sendPostRequestWithJSON(HttpClient client, String url,
+                                                       JSONObject jsonObject, Header[] headers) throws IOException {
+
+        HttpPost request = new HttpPost(url);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        request.setEntity(new StringEntity(jsonObject.toString()));
+
+        return client.execute(request);
+    }
+
+    /**
      * Send GET request for a given URL with the request query parameters.
      *
      * @param client HttpClient to be used for request sending.
@@ -77,6 +101,23 @@ public class IdentityScenarioUtil {
     public static HttpResponse sendGetRequest(HttpClient client, String url, Map<String, String> params) throws
             IOException, URISyntaxException {
 
+        return sendGetRequest(client, url, params, null);
+    }
+
+    /**
+     * Send GET request for a given URL with the request query parameters.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param url Request URL.
+     * @param params Request query parameters.
+     * @param headers Request headers.
+     * @return HttpResponse containing the response.
+     * @throws IOException If error occurs while sending the request.
+     * @throws URISyntaxException If error occurs while constructing the request URL.
+     */
+    public static HttpResponse sendGetRequest(HttpClient client, String url, Map<String, String> params,
+                                              Header[] headers) throws IOException, URISyntaxException {
+
         URIBuilder uriBuilder = new URIBuilder(url);
         if (params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -85,7 +126,30 @@ public class IdentityScenarioUtil {
         }
 
         HttpGet getRequest = new HttpGet(uriBuilder.build());
+        if (headers != null) {
+            getRequest.setHeaders(headers);
+        }
+
         return client.execute(getRequest);
+    }
+
+    /**
+     * Send DELETE request for a given URL.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param url Request URL.
+     * @param headers Request headers.
+     * @return HttpResponse containing the response.
+     * @throws IOException If error occurs while sending the request.
+     */
+    public static HttpResponse sendDeleteRequest(HttpClient client, String url, Header[] headers) throws IOException {
+
+        HttpDelete deleteRequest = new HttpDelete(url);
+        if (headers != null) {
+            deleteRequest.setHeaders(headers);
+        }
+
+        return client.execute(deleteRequest);
     }
 
     /**
