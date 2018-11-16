@@ -16,15 +16,13 @@
 
 package org.wso2.identity.scenarios.commons.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHeaders;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.json.simple.JSONObject;
-
 import java.io.IOException;
 
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
@@ -35,10 +33,18 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.send
  */
 public class SCIMProvisioningUtil {
 
-    protected Log log = LogFactory.getLog(getClass());
 
-    public static final String SCIM_11_ENDPOINT = "/wso2/scim";
-
+    /**Headers
+     * @param username               Authenticating username.
+     * @param password               Authenticating user password.
+     */
+    private static Header[]  getHeader(String username, String password){
+        Header[] headers = {
+                new BasicHeader(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON),
+                new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password))
+        };
+        return headers;
+    }
 
     /**
      * Provision a new user
@@ -49,11 +55,10 @@ public class SCIMProvisioningUtil {
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during app creation.
      */
-
     public static HttpResponse provisionUserSCIM11(String serverURL, JSONObject jsonObject,
                                                    String username, String password) throws IOException {
 
-        return provisionSCIM11Entity(serverURL, "Users", jsonObject, username, password);
+        return provisionSCIM11Entity(serverURL,Constants.SCIM_ENDPOINT_USER, jsonObject, username, password);
     }
 
 
@@ -67,20 +72,13 @@ public class SCIMProvisioningUtil {
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during app creation.
      */
-
     public static HttpResponse provisionSCIM11Entity(String serverURL, String scim11EndpointType, JSONObject jsonObject,
                                                    String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpoint = serverURL + SCIM_11_ENDPOINT + "/" + scim11EndpointType;
+        String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + scim11EndpointType;
 
-        Header[] headers = {
-                new BasicHeader("Content-type", "application/json"),
-                new BasicHeader("Authorization", constructBasicAuthzHeader(username, password))
-        };
-
-
-        return sendPostRequestWithJSON(client, scimEndpoint, jsonObject, headers);
+        return sendPostRequestWithJSON(client, scimEndpoint, jsonObject,getHeader(username, password));
     }
 
     /**
@@ -92,7 +90,6 @@ public class SCIMProvisioningUtil {
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during app creation.
      */
-
     public static HttpResponse deleteUser(String serverURL,String userId,
                                           String username, String password) throws IOException {
 
@@ -108,22 +105,12 @@ public class SCIMProvisioningUtil {
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during app creation.
      */
-
-
     public static HttpResponse deleteUserEntity(String serverURL, String userID,
                                                      String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpoint = serverURL + SCIM_11_ENDPOINT + "/" + "Users/"+ userID;
+        String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + Constants.SCIM_ENDPOINT_USER+ "/" + userID;
 
-        Header[] headers = {
-                new BasicHeader("Content-type", "application/json"),
-                new BasicHeader("Authorization", constructBasicAuthzHeader(username, password))
-        };
-
-
-        return sendDeleteRequest(client, scimEndpoint, headers);
+        return sendDeleteRequest(client, scimEndpoint, getHeader(username, password));
     }
-
 }
-
