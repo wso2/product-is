@@ -29,9 +29,9 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.cons
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
 
-  /**
-   *  Utility class for common functions for user management scenario.
-   */
+    /**
+     *  Utility class for common functions for user management scenario.
+     */
 public class SCIMProvisioningUtil {
 
     /**
