@@ -52,4 +52,6 @@ public class Constants {
     public static final String OAUTH_AUTHORIZE_URI_CONTEXT = "/oauth2/authorize";
     public static final String OAUTH_TOKEN_URI_CONTEXT = "/oauth2/token";
     public static final String COMMONAUTH_URI_CONTEXT = "/commonauth";
+    public static final String SCIM_11_ENDPOINT = "/wso2/scim";
+    public static final String SCIM_ENDPOINT_USER="Users";
 }
