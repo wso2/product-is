@@ -46,7 +46,7 @@ import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractFu
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getCookieFromResponse;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getRedirectUrlFromResponse;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getSessionDataKey;
-import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.requestMissingClaims;
+import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsentRequested;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractSAMLRequest;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractSAMLResponse;
@@ -157,7 +157,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             response = sendLoginPostMessage(sessionKey, samlSSOIDPUrl, USER_AGENT, ACS_URL, config.getApp()
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
 
-            if (requestMissingClaims(response)) {
+            if (isConsentRequested(response)) {
                 String pastrCookie = getCookieFromResponse(response, "pastr");
                 assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());

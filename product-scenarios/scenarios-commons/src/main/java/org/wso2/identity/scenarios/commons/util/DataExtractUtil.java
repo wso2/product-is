@@ -48,7 +48,7 @@ public class DataExtractUtil {
     /**
      * Extract data from http response with the given keywords.
      *
-     * @param response HttpResponse for extracting data.
+     * @param response       HttpResponse for extracting data.
      * @param keyPositionMap Search keys.
      * @return Search values.
      * @throws IOException If error occurs while data extraction.
@@ -93,7 +93,7 @@ public class DataExtractUtil {
     /**
      * Extract input values from http response
      *
-     * @param response HttpResponse for extracting data.
+     * @param response       HttpResponse for extracting data.
      * @param keyPositionMap Search key map.
      * @return Search values.
      * @throws IOException If error occurs while data extraction.
@@ -125,7 +125,7 @@ public class DataExtractUtil {
     /**
      * Extract label values from response.
      *
-     * @param response HttpResponse for extracting data.
+     * @param response       HttpResponse for extracting data.
      * @param keyPositionMap Search key map.
      * @return Search values.
      * @throws IOException If error occurs while data extraction.
@@ -137,7 +137,7 @@ public class DataExtractUtil {
         List<KeyValue> keyValues = new ArrayList<>();
         BufferedReader rd =
                 new BufferedReader(new InputStreamReader(response.getEntity()
-                                                                 .getContent()));
+                        .getContent()));
 
         String line;
 
@@ -161,7 +161,7 @@ public class DataExtractUtil {
     /**
      * Extract table row data from http response
      *
-     * @param response HttpResponse for extracting data.
+     * @param response       HttpResponse for extracting data.
      * @param keyPositionMap Search key map.
      * @return Search values.
      * @throws IOException If error occurs while data extraction.
@@ -173,7 +173,7 @@ public class DataExtractUtil {
         List<KeyValue> keyValues = new ArrayList<>();
         BufferedReader rd =
                 new BufferedReader(new InputStreamReader(response.getEntity()
-                                                                 .getContent()));
+                        .getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
             for (String key : keyPositionMap.keySet()) {
@@ -201,7 +201,7 @@ public class DataExtractUtil {
     /**
      * Extract session consent data from response
      *
-     * @param response HttpResponse for extracting data.
+     * @param response       HttpResponse for extracting data.
      * @param keyPositionMap Search key map.
      * @return Session consent data.
      * @throws IOException If error occurs while data extraction.
@@ -214,7 +214,7 @@ public class DataExtractUtil {
         List<KeyValue> keyValues = new ArrayList<>();
         BufferedReader rd =
                 new BufferedReader(new InputStreamReader(response.getEntity()
-                                                                 .getContent()));
+                        .getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
             for (String key : keyPositionMap.keySet()) {
@@ -268,7 +268,7 @@ public class DataExtractUtil {
 
         String param = null;
         List<NameValuePair> params = URLEncodedUtils.parse(new URI(URIString),
-                                                           String.valueOf(StandardCharsets.UTF_8));
+                String.valueOf(StandardCharsets.UTF_8));
         for (NameValuePair param1 : params) {
             if (StringUtils.equals(param1.getName(), key)) {
                 param = param1.getValue();
@@ -300,6 +300,13 @@ public class DataExtractUtil {
         }
     }
 
+    /**
+     * Extract the sessionDataKey value from the HTML response content
+     *
+     * @param response HttpResponse for extracting data.
+     * @return sessionDataKey if found, null otherwise
+     * @throws IOException
+     */
     public static String getSessionDataKey(HttpResponse response) throws IOException {
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
@@ -313,13 +320,25 @@ public class DataExtractUtil {
         return null;
     }
 
-    public static boolean requestMissingClaims(HttpResponse response) {
+    /**
+     * Check whether user consent is requested.
+     *
+     * @param response HttpResponse for extracting data.
+     * @return true if consent page is presented.
+     */
+    public static boolean isConsentRequested(HttpResponse response) {
 
         String redirectUrl = getRedirectUrlFromResponse(response);
         return redirectUrl.contains("consent.do");
 
     }
 
+    /**
+     * Extract redirect URL from the response
+     *
+     * @param response HttpResponse for extracting data.
+     * @return Location Header
+     */
     public static String getRedirectUrlFromResponse(HttpResponse response) {
         Header[] headers = response.getAllHeaders();
         String url = "";
@@ -331,6 +350,13 @@ public class DataExtractUtil {
         return url;
     }
 
+    /**
+     * Extract an specific Cookie from the response
+     *
+     * @param response   HttpResponse for extracting data.
+     * @param cookieName name of the cookie to be extracted
+     * @return extracted cookie value, null if not found
+     */
     public static String getCookieFromResponse(HttpResponse response, String cookieName) {
 
         String pastrCookie = null;
@@ -349,29 +375,52 @@ public class DataExtractUtil {
         return pastrCookie;
     }
 
+    /**
+     * Extract query parameters in a URL
+     *
+     * @param Url url for extracting data.
+     * @return HashMap of extracted query parameters
+     * @throws Exception
+     */
     public static Map<String, String> getQueryParams(String Url) throws Exception {
 
         Map<String, String> queryParams = new HashMap<>();
 
-        List<NameValuePair> params = URLEncodedUtils.parse(new URI(Url), "UTF-8");
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(Url), StandardCharsets.UTF_8.name());
         for (NameValuePair param : params) {
             queryParams.put(param.getName(), param.getValue());
         }
         return queryParams;
     }
 
+    /**
+     * Extract a particular value from the response
+     *
+     * @param response HttpResponse for extracting data
+     * @param Key      Key that needs to be extracted.
+     * @param position position of the key is placed.
+     * @return search value if found
+     * @throws IOException
+     */
     public static String extractValueFromResponse(HttpResponse response, String Key, Integer position)
             throws
             IOException {
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put(Key, position);
-        List<DataExtractUtil.KeyValue> extracted = extractDataFromResponse(response,keyPositionMap);
-        if(!extracted.isEmpty()) {
+        List<DataExtractUtil.KeyValue> extracted = extractDataFromResponse(response, keyPositionMap);
+        if (!extracted.isEmpty()) {
             return extracted.get(0).getValue();
         }
         return null;
     }
 
+    /**
+     * Extract the full content of the response as a String
+     *
+     * @param response HttpResponse for extracting data
+     * @return response content
+     * @throws IOException
+     */
     public static String extractFullContentFromResponse(HttpResponse response) throws IOException {
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));

@@ -47,10 +47,10 @@ public class IdentityScenarioUtil {
     /**
      * Send POST request with a payload.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client        HttpClient to be used for request sending.
      * @param urlParameters Request POST parameters.
-     * @param url Request URL.
-     * @param headers Request headers.
+     * @param url           Request URL.
+     * @param headers       Request headers.
      * @return HttpResponse containing the response.
      * @throws IOException If error occurs while sending the request.
      */
@@ -69,10 +69,10 @@ public class IdentityScenarioUtil {
     /**
      * Send POST request with a JSON payload.
      *
-     * @param client HttpClient to be used for request sending.
-     * @param url Request URL.
+     * @param client     HttpClient to be used for request sending.
+     * @param url        Request URL.
      * @param jsonObject JSON object for post request.
-     * @param headers Request headers.
+     * @param headers    Request headers.
      * @return HttpResponse containing the response.
      * @throws IOException If error occurs while sending the request.
      */
@@ -92,10 +92,10 @@ public class IdentityScenarioUtil {
      * Send GET request for a given URL with the request query parameters.
      *
      * @param client HttpClient to be used for request sending.
-     * @param url Request URL.
+     * @param url    Request URL.
      * @param params Request query parameters.
      * @return HttpResponse containing the response.
-     * @throws IOException If error occurs while sending the request.
+     * @throws IOException        If error occurs while sending the request.
      * @throws URISyntaxException If error occurs while constructing the request URL.
      */
     public static HttpResponse sendGetRequest(HttpClient client, String url, Map<String, String> params) throws
@@ -107,12 +107,12 @@ public class IdentityScenarioUtil {
     /**
      * Send GET request for a given URL with the request query parameters.
      *
-     * @param client HttpClient to be used for request sending.
-     * @param url Request URL.
-     * @param params Request query parameters.
+     * @param client  HttpClient to be used for request sending.
+     * @param url     Request URL.
+     * @param params  Request query parameters.
      * @param headers Request headers.
      * @return HttpResponse containing the response.
-     * @throws IOException If error occurs while sending the request.
+     * @throws IOException        If error occurs while sending the request.
      * @throws URISyntaxException If error occurs while constructing the request URL.
      */
     public static HttpResponse sendGetRequest(HttpClient client, String url, Map<String, String> params,
@@ -136,8 +136,8 @@ public class IdentityScenarioUtil {
     /**
      * Send DELETE request for a given URL.
      *
-     * @param client HttpClient to be used for request sending.
-     * @param url Request URL.
+     * @param client  HttpClient to be used for request sending.
+     * @param url     Request URL.
      * @param headers Request headers.
      * @return HttpResponse containing the response.
      * @throws IOException If error occurs while sending the request.
@@ -155,7 +155,7 @@ public class IdentityScenarioUtil {
     /**
      * Constructs basic authorization header.
      *
-     * @param key Credential identifier.
+     * @param key    Credential identifier.
      * @param secret Credential secret.
      * @return Basic authorization header.
      */
@@ -168,6 +168,7 @@ public class IdentityScenarioUtil {
 
     /**
      * Read JSON payload from the response.
+     *
      * @param response HttpResponse with data.
      * @return JSON parsed payload.
      * @throws IOException If error occurs while parsing JSON payload.
@@ -175,10 +176,16 @@ public class IdentityScenarioUtil {
     public static JSONObject getJSONFromResponse(HttpResponse response) throws IOException {
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        return  (JSONObject) JSONValue.parse(rd);
+        return (JSONObject) JSONValue.parse(rd);
     }
 
-    public static String bese64Decode(String encodedString){
+    /**
+     * Decode base64 encoded String
+     *
+     * @param encodedString string tobe Base64 decoded
+     * @return Base64 decoded string
+     */
+    public static String bese64Decode(String encodedString) {
         byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
         return new String(decodedBytes);
     }

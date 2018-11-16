@@ -28,6 +28,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -273,21 +274,36 @@ public class SSOUtil {
                 contentTypeHeader});
     }
 
-    public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
-            artifact, HttpClient httpClient) throws IOException {
-        Header[] headers = response.getAllHeaders();
-        String url = "";
-        for (Header header : headers) {
-            if (HttpHeaders.LOCATION.equals(header.getName())) {
-                url = header.getValue();
-            }
-        }
-        HttpGet request = new HttpGet(url);
-        request.addHeader(HttpHeaders.USER_AGENT, userAgent);
-        request.addHeader(HttpHeaders.REFERER, String.format(acsUrl, artifact));
-        return httpClient.execute(request);
+    /**
+     * Send redirect request
+     * @param response HttpResponse to be referred for request sending.
+     * @param userAgent User-Agent
+     * @param referrer Referer Url
+     * @param artifact
+     * @param httpClient HttpClient to be used for request sending.
+     * @return HttpResponse after redirect
+     * @throws IOException
+     */
+    public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String referrer, String
+            artifact, HttpClient httpClient) throws IOException, URISyntaxException {
+        String url = getRedirectUrlFromResponse(response);
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
+        headers[1] = new BasicHeader(HttpHeaders.REFERER, String.format(referrer, artifact));
+        return sendGetRequest(httpClient, url, null, headers);
     }
 
+    /**
+     * Post user consent to Consent page
+     * @param response HttpResponse to be referred for request sending.
+     * @param commonAuthUrl commonauth URL
+     * @param userAgent user-Agent
+     * @param referer referer URL
+     * @param httpClient HttpClient to be used for request sending.
+     * @param pastreCookie 'pastre' Cookie
+     * @return response after submitting consent
+     * @throws Exception
+     */
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
                                                       String referer, HttpClient httpClient, String
                                                               pastreCookie) throws Exception {

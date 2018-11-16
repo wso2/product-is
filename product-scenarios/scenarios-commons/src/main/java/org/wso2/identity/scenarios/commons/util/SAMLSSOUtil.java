@@ -20,7 +20,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
@@ -37,13 +36,12 @@ public class SAMLSSOUtil {
 
     public static HttpResponse sendLoginPostMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
-        HttpPost post = new HttpPost(url);
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
         headers[1] = new BasicHeader(HttpHeaders.REFERER, String.format(acsUrl, artifact));
-        Map<String,String> urlParameters = new HashMap<>();
+        Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put(TOCOMMONAUTH, "true");
-        return  sendLoginPostWithParamsAndHeaders(httpClient, sessionKey, url, userName,  password, urlParameters,
+        return sendLoginPostWithParamsAndHeaders(httpClient, sessionKey, url, userName, password, urlParameters,
                 headers);
     }
 
