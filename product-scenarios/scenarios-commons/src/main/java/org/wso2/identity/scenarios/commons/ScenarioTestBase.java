@@ -56,6 +56,7 @@ public class ScenarioTestBase {
 
     protected String backendURL;
     protected String backendServiceURL;
+    protected String webAppHost = "http://localhost:8080";
     protected AuthenticatorClient loginClient;
     protected String sessionCookie;
     protected static final String SERVICES = "/services/";

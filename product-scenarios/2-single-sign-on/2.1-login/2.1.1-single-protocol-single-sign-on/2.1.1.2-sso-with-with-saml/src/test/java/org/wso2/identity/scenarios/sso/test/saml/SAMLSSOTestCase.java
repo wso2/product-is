@@ -61,8 +61,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     // SAML Application attributes
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
 
-    private static final String SAML_SSO_INDEX_URL = "http://localhost:8080/%s/";
-    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8080/%s/logout?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_INDEX_URL = "/%s/";
+    private static final String SAML_SSO_LOGOUT_URL = "/%s/logout?SAML2.HTTPBinding=%s";
 
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
@@ -76,7 +76,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLSSOTestCase(SAMLConfig config) {
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.info("SAML SSO Test initialized for " + config);
         }
         this.config = config;
@@ -92,7 +92,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception{
+    public void testClear() throws Exception {
         super.deleteUser(config);
         super.deleteApplication(APPLICATION_NAME);
         super.testClear();
@@ -106,80 +106,84 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
         Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
-                            "Adding a service provider has failed for " + config);
+                "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSAMLSSOLogin" })
+    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
         assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.2.1", dependsOnMethods = { "testAddSP" })
+    @Test(alwaysRun = true, description = "2.1.1.2.1", dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOIsPassiveLogin() throws Exception {
         try {
 
             CloseableHttpClient client = HttpClients.createDefault();
             HttpResponse response;
-            response = sendGetRequest(client, String.format(SAML_SSO_INDEX_URL, config.getApp().getArtifact(),
-                    config.getHttpBinding().binding), null,  new Header[]{userAgentHeader});
+            response = sendGetRequest(client, String.format(webAppHost + SAML_SSO_INDEX_URL, config.getApp()
+                    .getArtifact(), config.getHttpBinding().binding), null, new Header[]{userAgentHeader});
             String samlResponse = extractSAMLResponse(response);
             assertNotNull(samlResponse, "SAMLResponse is not recived in Passive Login.");
             samlResponse = IdentityScenarioUtil.bese64Decode(samlResponse);
-            assertTrue(samlResponse.contains("Destination=\"" + String.format(ACS_URL, config.getApp().getArtifact()) + "\""));
+            assertTrue(samlResponse.contains("Destination=\"" + String.format(webAppHost + ACS_URL, config.getApp()
+                    .getArtifact()) + "\""));
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
     }
 
     @Test(alwaysRun = true, description = "2.1.1.2.3", groups = "wso2.is",
-          dependsOnMethods = { "testSAMLSSOIsPassiveLogin" })
+            dependsOnMethods = {"testSAMLSSOIsPassiveLogin"})
     public void testSAMLSSOLogin() {
         try {
             HttpResponse response;
 
-            response = sendGetRequest(httpClient, String.format(SAML_SSO_LOGIN_URL, config.getApp
+            response = sendGetRequest(httpClient, String.format(webAppHost + SAML_SSO_LOGIN_URL, config.getApp
                     ().getArtifact(), config.getHttpBinding().binding), null, new Header[]{userAgentHeader});
 
-            if (config.getHttpBinding() == HttpBinding.HTTP_POST){
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
                 String samlRequest = extractSAMLRequest(response);
                 assertNotNull(samlRequest, "SAML Request is not available");
                 response = super.sendSAMLMessage(samlSSOIDPUrl, SAML_REQUEST_PARAM, samlRequest, config);
                 EntityUtils.consume(response.getEntity());
 
-                response = sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
+                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getApp()
+                                .getArtifact(),
                         httpClient);
             }
 
             String sessionKey = getSessionDataKey(response);
             assertNotNull(sessionKey, "SessionDataKey is not available in the response.");
-            response = sendLoginPostMessage(sessionKey, samlSSOIDPUrl, USER_AGENT, ACS_URL, config.getApp()
-                    .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
+            response = sendLoginPostMessage(sessionKey, samlSSOIDPUrl, USER_AGENT, webAppHost + ACS_URL, config
+                            .getApp().getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(),
+                    httpClient);
 
             if (isConsentRequested(response)) {
                 String pastrCookie = getCookieFromResponse(response, "pastr");
                 assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
 
-                response = sendPOSTConsentMessage(response, commonAuthUrl, USER_AGENT, String.format(ACS_URL, config.getApp()
-                        .getArtifact()), httpClient, pastrCookie);
+                response = sendPOSTConsentMessage(response, commonAuthUrl, USER_AGENT, String.format(webAppHost +
+                        ACS_URL, config.getApp().getArtifact()), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
             String redirectUrl = getRedirectUrlFromResponse(response);
-            if(StringUtils.isNotBlank(redirectUrl)) {
-                response = sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
-                        httpClient);
+            if (StringUtils.isNotBlank(redirectUrl)) {
+                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getApp()
+                        .getArtifact(), httpClient);
             }
             String samlResponse = extractSAMLResponse(response);
             EntityUtils.consume(response.getEntity());
 
-            response = super.sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), SAML_RESPONSE_PARAM, samlResponse, config);
+            response = super.sendSAMLMessage(String.format(webAppHost + ACS_URL, config.getApp().getArtifact()),
+                    SAML_RESPONSE_PARAM, samlResponse, config);
             resultPage = extractFullContentFromResponse(response);
 
             assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
-                              "SAML SSO Login failed for " + config);
+                    "SAML SSO Login failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
@@ -293,13 +297,13 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 //    }
 
     @DataProvider(name = "samlConfigProvider")
-    public static SAMLConfig[][] samlConfigProvider(){
-        return  new SAMLConfig[][]{
+    public static SAMLConfig[][] samlConfigProvider() {
+        return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                                ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
 //                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
 //                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)}
-                                //,
+                //,
 //                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
 //                                ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
 //                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
@@ -320,11 +324,11 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         };
     }
 
-    private void assertLocalClaims(String claims){
+    private void assertLocalClaims(String claims) {
         Map<String, String> attributeMap = extractClaims(claims);
         assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
         Assert.assertEquals(attributeMap.get(firstNameClaimURI), config.getUser().getNickname(),
-                            "Expected claim value for nickname is " + config.getUser().getNickname());
+                "Expected claim value for nickname is " + config.getUser().getNickname());
         assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
         Assert.assertEquals(attributeMap.get(lastNameClaimURI), config.getUser().getUsername(),
                 "Expected claim value for lastname is " + config.getUser().getUsername());
@@ -333,23 +337,23 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                 "Expected claim value for email is " + config.getUser().getEmail());
     }
 
-    private void assertNoneClaims(String claims){
+    private void assertNoneClaims(String claims) {
         String[] dataArray = StringUtils.substringsBetween(claims, "<td>", "</td>");
         Assert.assertNull(dataArray, "Claims are not expected for " + config);
     }
 
 
-    private Map<String,String> extractClaims(String claimString){
+    private Map<String, String> extractClaims(String claimString) {
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
-        Map<String,String> attributeMap = new HashMap<String, String>();
+        Map<String, String> attributeMap = new HashMap<String, String>();
         String key = null;
         String value;
-        for (int i = 0; i< dataArray.length; i++){
-            if((i%2) == 0){
+        for (int i = 0; i < dataArray.length; i++) {
+            if ((i % 2) == 0) {
                 key = dataArray[i];
-            }else{
+            } else {
                 value = dataArray[i].trim();
-                attributeMap.put(key,value);
+                attributeMap.put(key, value);
             }
         }
 

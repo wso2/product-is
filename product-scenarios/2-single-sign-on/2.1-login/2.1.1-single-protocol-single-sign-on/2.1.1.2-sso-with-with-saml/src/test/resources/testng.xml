@@ -21,7 +21,7 @@
 
     <test name="is-single-sign-on" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.sso.test.saml.SAMLSSOTestCase"/>
+            <!--<class name="org.wso2.identity.scenarios.sso.test.saml.SAMLSSOTestCase"/>-->
         </classes>
     </test>
 </suite>

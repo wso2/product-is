@@ -20,9 +20,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -55,9 +55,9 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
 
     protected static final String SAML_SSO_URL = "%s/samlsso";
     protected static final String SAML_IDP_SLO_URL = SAML_SSO_URL + "?slo=true";
-    protected static final String SAML_SSO_LOGIN_URL = "http://localhost:8080/%s/samlsso?SAML2.HTTPBinding=%s";
+    protected static final String SAML_SSO_LOGIN_URL = "/%s/samlsso?SAML2.HTTPBinding=%s";
     protected static final String COMMON_AUTH_URL = "%s/commonauth";
-    protected static final String ACS_URL = "http://localhost:8080/%s/home.jsp";
+    protected static final String ACS_URL = "/%s/home.jsp";
 
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
@@ -72,7 +72,7 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    protected HttpClient httpClient;
+    protected CloseableHttpClient httpClient;
 
     protected String samlSSOIDPUrl;
     protected String samlIdpSloUrl;
@@ -388,9 +388,10 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(ACS_URL,
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(webAppHost + ACS_URL,
                 config.getApp().getArtifact())});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()));
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(webAppHost + ACS_URL, config.getApp()
+                .getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(config.getApp().isSigningEnabled());
