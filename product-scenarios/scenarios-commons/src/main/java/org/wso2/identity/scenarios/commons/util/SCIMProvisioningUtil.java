@@ -28,17 +28,18 @@ import java.io.IOException;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
-/**
- *  Utility class for common functions for user management scenario.
- */
+
+  /**
+   *  Utility class for common functions for user management scenario.
+   */
 public class SCIMProvisioningUtil {
 
-
-    /**Headers
-     * @param username               Authenticating username.
-     * @param password               Authenticating user password.
+    /**
+     * Headers
+     * @param username    Authenticating username.
+     * @param password    Authenticating user password.
      */
-    private static Header[]  getHeader(String username, String password){
+    private static Header[]  getCommonHeaders(String username, String password){
         Header[] headers = {
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON),
                 new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password))
@@ -53,64 +54,61 @@ public class SCIMProvisioningUtil {
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
-     * @throws IOException If error occurs during app creation.
+     * @throws IOException If error occurs during user creation.
      */
     public static HttpResponse provisionUserSCIM11(String serverURL, JSONObject jsonObject,
                                                    String username, String password) throws IOException {
-
-        return provisionSCIM11Entity(serverURL,Constants.SCIM_ENDPOINT_USER, jsonObject, username, password);
+        return provisionSCIM11Entity(serverURL, jsonObject, username, password);
     }
 
-
     /**
-     * Provision a new user
+     * Provision a new SCIM 1.1 entity
      * @param serverURL              the server url
-     * @param scim11EndpointType     type ex:User,Bulk,Group
      * @param jsonObject             the json object of the scim payload
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
-     * @throws IOException If error occurs during app creation.
+     * @throws IOException If error occurs during user creation.
      */
-    public static HttpResponse provisionSCIM11Entity(String serverURL, String scim11EndpointType, JSONObject jsonObject,
-                                                   String username, String password) throws IOException {
+    public static HttpResponse provisionSCIM11Entity(String serverURL, JSONObject jsonObject,
+                                                     String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + scim11EndpointType;
+        String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + Constants.SCIM_ENDPOINT_USER;
 
-        return sendPostRequestWithJSON(client, scimEndpoint, jsonObject,getHeader(username, password));
+        return sendPostRequestWithJSON(client, scimEndpoint, jsonObject, getCommonHeaders(username, password));
     }
 
     /**
-     * Delete a  user
+     * Delete a user
      * @param serverURL              the server url.
      * @param userId                 the ID of the user to be deleted.
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
-     * @throws IOException If error occurs during app creation.
+     * @throws IOException If error occurs during user deletion.
      */
-    public static HttpResponse deleteUser(String serverURL,String userId,
+    public static HttpResponse deleteUser(String serverURL, String userId,
                                           String username, String password) throws IOException {
 
-        return deleteUserEntity(serverURL,userId,username, password);
+        return deleteSCIM11Entity(serverURL, userId, username, password);
     }
 
     /**
-     * Delete a  user
+     * Delete a SCIM 1.1 entity
      * @param serverURL              the server url
      * @param userID                 the ID of the user to be deleted
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
-     * @throws IOException If error occurs during app creation.
+     * @throws IOException If error occurs during user deletion.
      */
-    public static HttpResponse deleteUserEntity(String serverURL, String userID,
-                                                     String username, String password) throws IOException {
+    public static HttpResponse deleteSCIM11Entity(String serverURL, String userID,
+                                                  String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
         String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + Constants.SCIM_ENDPOINT_USER+ "/" + userID;
 
-        return sendDeleteRequest(client, scimEndpoint, getHeader(username, password));
+        return sendDeleteRequest(client, scimEndpoint, getCommonHeaders(username, password));
     }
 }
