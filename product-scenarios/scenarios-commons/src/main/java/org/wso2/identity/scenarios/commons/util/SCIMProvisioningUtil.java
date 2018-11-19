@@ -51,66 +51,70 @@ public class SCIMProvisioningUtil {
     /**
      * Provision a new user
      * @param serverURL              the server url
+     * @param scimEndPoint           the scim endpoint for 1.1 or 2.0
      * @param jsonObject             the json object of the scim payload
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user creation.
      */
-    public static HttpResponse provisionUserSCIM11(String serverURL, JSONObject jsonObject,
+    public static HttpResponse provisionUserSCIM(String serverURL, JSONObject jsonObject, String scimEndPoint,
                                                    String username, String password) throws IOException {
 
-        return provisionSCIM11Entity(serverURL, jsonObject, username, password);
+        return provisionSCIMEntity(serverURL, jsonObject, scimEndPoint, username, password);
     }
 
     /**
-     * Provision a new SCIM 1.1 entity
+     * Provision a new SCIM entity
      * @param serverURL              the server url
+     * @param scimEndPoint           the scim endpoint 1.1 or 2.0
      * @param jsonObject             the json object of the scim payload
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user creation.
      */
-    public static HttpResponse provisionSCIM11Entity(String serverURL, JSONObject jsonObject,
+    public static HttpResponse provisionSCIMEntity(String serverURL, JSONObject jsonObject, String scimEndPoint,
                                                      String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + Constants.SCIM_ENDPOINT_USER;
+        String scimEndpointURL = serverURL +"/" + scimEndPoint + "/" + Constants.SCIM_ENDPOINT_USER;
 
-        return sendPostRequestWithJSON(client, scimEndpoint, jsonObject, getCommonHeaders(username, password));
+        return sendPostRequestWithJSON(client, scimEndpointURL, jsonObject, getCommonHeaders(username, password));
     }
 
     /**
      * Delete a user
      * @param serverURL              the server url.
      * @param userId                 the ID of the user to be deleted.
+     * @param scimEndPoint           the scim endpoint for 1.1 or 2.0
      * @param username               Authenticating username.
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user deletion.
      */
-    public static HttpResponse deleteUser(String serverURL, String userId,
+    public static HttpResponse deleteUser(String serverURL, String userId, String scimEndPoint,
                                           String username, String password) throws IOException {
 
-        return deleteSCIM11Entity(serverURL, userId, username, password);
+        return deleteSCIMEntity(serverURL, userId, scimEndPoint, username, password);
     }
 
     /**
-     * Delete a SCIM 1.1 entity
+     * Delete a SCIM  entity
      * @param serverURL              the server url
      * @param userID                 the ID of the user to be deleted
      * @param username               Authenticating username.
+     * @param scimEndPoint           the scim endpoint for 1.1 or 2.0
      * @param password               Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user deletion.
      */
-    public static HttpResponse deleteSCIM11Entity(String serverURL, String userID,
+    public static HttpResponse deleteSCIMEntity(String serverURL, String userID, String scimEndPoint,
                                                   String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpoint = serverURL + Constants.SCIM_11_ENDPOINT + "/" + Constants.SCIM_ENDPOINT_USER+ "/" + userID;
+        String scimEndpointURL = serverURL + "/" + scimEndPoint + "/" + Constants.SCIM_ENDPOINT_USER+ "/" + userID;
 
-        return sendDeleteRequest(client, scimEndpoint, getCommonHeaders(username, password));
+        return sendDeleteRequest(client, scimEndpointURL, getCommonHeaders(username, password));
     }
 }
