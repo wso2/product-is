@@ -46,7 +46,7 @@ public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
     @Override
     public void migrate() throws MigrationClientException {
 
-        if (!isDatabaseSPClaimDialectStoringSupportAvailable()) {
+        if (!isSPClaimDialectStoringSupportAvailable()) {
             log.info("SP_CLAIM_DIALECT does not exist in the database. Hence adding the table.");
             super.migrate();
         } else {
@@ -62,47 +62,38 @@ public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
      *
      * @return
      */
-    private boolean isDatabaseSPClaimDialectStoringSupportAvailable() {
+    private boolean isSPClaimDialectStoringSupportAvailable() {
 
-        Connection connection = null;
-        try {
-            connection = IdentityDatabaseUtil.getDBConnection();
-        } catch (IdentityRuntimeException e) {
-            return false;
-        }
-
-        if (connection != null) {
-            PreparedStatement preparedStatement = null;
-            ResultSet results = null;
-            try {
+        try (Connection connection = IdentityDatabaseUtil.getDBConnection()) {
+            if (connection != null) {
                 String sql;
                 if (connection.getMetaData().getDriverName().contains("MySQL")
-                        || connection.getMetaData().getDriverName().contains("H2")) {
+                        || connection.getMetaData().getDriverName().contains("H2")
+                        || connection.getMetaData().getDriverName().contains("PostgreSQL")) {
                     sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL;
                 } else if (connection.getMetaData().getDatabaseProductName().contains("DB2")) {
                     sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_DB2SQL;
                 } else if (connection.getMetaData().getDriverName().contains("MS SQL") ||
                         connection.getMetaData().getDriverName().contains("Microsoft")) {
                     sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MSSQL;
-                } else if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
-                    sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL;
                 } else {
                     sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_ORACLE;
                 }
 
-                preparedStatement = connection.prepareStatement(sql);
-
-                // Executing the query will return no results, if the needed database scheme is not there.
-                results = preparedStatement.executeQuery();
-
-                if (results.next()) {
-                    return true;
+                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                    // Executing the query will return no results, if the needed database scheme is not there.
+                    try (ResultSet results = preparedStatement.executeQuery()) {
+                        if (results.next()) {
+                            return true;
+                        }
+                    }
                 }
-            } catch (SQLException ignore) {
-            } finally {
-                IdentityApplicationManagementUtil.closeResultSet(results);
-                IdentityApplicationManagementUtil.closeStatement(preparedStatement);
             }
+        } catch (IdentityRuntimeException e) {
+            log.error("Error while obtaining connection to check the existence of database table SP_CLAIM_DIALECT.", e);
+        } catch (SQLException e) {
+            log.error("Error while closing connection  after checking the existence of database table " +
+                    "SP_CLAIM_DIALECT.", e);
         }
         return false;
     }
