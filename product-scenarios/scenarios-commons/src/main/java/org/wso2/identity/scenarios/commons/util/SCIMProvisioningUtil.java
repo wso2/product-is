@@ -59,7 +59,7 @@ public class SCIMProvisioningUtil {
      * @throws IOException If error occurs during user creation.
      */
     public static HttpResponse provisionUserSCIM(String serverURL, JSONObject jsonObject, String scimEndPoint,
-                                                   String username, String password) throws IOException {
+                                                 String username, String password) throws IOException {
 
         return provisionSCIMEntity(serverURL, jsonObject, scimEndPoint, username, password);
     }
@@ -75,7 +75,7 @@ public class SCIMProvisioningUtil {
      * @throws IOException If error occurs during user creation.
      */
     public static HttpResponse provisionSCIMEntity(String serverURL, JSONObject jsonObject, String scimEndPoint,
-                                                     String username, String password) throws IOException {
+                                                   String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
         String scimEndpointURL = serverURL +"/" + scimEndPoint + "/" + Constants.SCIM_ENDPOINT_USER;
@@ -110,7 +110,7 @@ public class SCIMProvisioningUtil {
      * @throws IOException If error occurs during user deletion.
      */
     public static HttpResponse deleteSCIMEntity(String serverURL, String userID, String scimEndPoint,
-                                                  String username, String password) throws IOException {
+                                                String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
         String scimEndpointURL = serverURL + "/" + scimEndPoint + "/" + Constants.SCIM_ENDPOINT_USER+ "/" + userID;
