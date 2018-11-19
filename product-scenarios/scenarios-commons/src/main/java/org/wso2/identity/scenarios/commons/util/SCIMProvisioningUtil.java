@@ -26,12 +26,12 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 
-    /**
-     *  Utility class for common functions for user management scenario.
-     */
+/**
+ *  Utility class for common functions for user management scenario.
+ */
 public class SCIMProvisioningUtil {
 
     /**
@@ -39,7 +39,8 @@ public class SCIMProvisioningUtil {
      * @param username    Authenticating username.
      * @param password    Authenticating user password.
      */
-    private static Header[]  getCommonHeaders(String username, String password){
+    private static Header[]  getCommonHeaders(String username, String password) {
+
         Header[] headers = {
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON),
                 new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(username, password))
@@ -58,6 +59,7 @@ public class SCIMProvisioningUtil {
      */
     public static HttpResponse provisionUserSCIM11(String serverURL, JSONObject jsonObject,
                                                    String username, String password) throws IOException {
+
         return provisionSCIM11Entity(serverURL, jsonObject, username, password);
     }
 
