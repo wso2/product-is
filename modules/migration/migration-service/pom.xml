@@ -126,6 +126,7 @@
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version.range}",
                             org.yaml.snakeyaml; version="${snakeyaml.version.range}",
                             org.apache.commons.lang; version="${commons-lang.wso2.osgi.version.range}",
+                            org.wso2.carbon.base.api,
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
