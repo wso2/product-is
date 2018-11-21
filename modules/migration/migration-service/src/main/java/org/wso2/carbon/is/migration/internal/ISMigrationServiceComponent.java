@@ -19,8 +19,10 @@ package org.wso2.carbon.is.migration.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.identity.core.migrate.MigrationClient;
 import org.wso2.carbon.is.migration.MigrationClientImpl;
+import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 
 
@@ -29,6 +31,10 @@ import org.wso2.carbon.user.core.service.RealmService;
  * @scr.reference name="realm.service"
  * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
  * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ * @scr.reference name="server.configuration.service" interface="org.wso2.carbon.base.api.ServerConfigurationService"
+ * cardinality="1..1" policy="dynamic"  bind="setServerConfigurationService" unbind="unsetServerConfigurationService"
+ * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
+ * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */
 public class ISMigrationServiceComponent {
 
@@ -89,4 +95,19 @@ public class ISMigrationServiceComponent {
         ISMigrationServiceDataHolder.setRealmService(null);
     }
 
+    protected void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+        ISMigrationServiceDataHolder.setServerConfigurationService(serverConfigurationService);
+    }
+
+    protected void unsetServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+        ISMigrationServiceDataHolder.setServerConfigurationService(null);
+    }
+
+    protected void setRegistryService(RegistryService registryService) {
+        ISMigrationServiceDataHolder.setRegistryService(registryService);
+    }
+
+    protected void unsetRegistryService(RegistryService registryService) {
+        ISMigrationServiceDataHolder.setRegistryService(null);
+    }
 }
