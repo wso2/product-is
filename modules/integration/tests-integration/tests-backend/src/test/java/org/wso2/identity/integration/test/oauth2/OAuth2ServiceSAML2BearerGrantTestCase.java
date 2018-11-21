@@ -16,11 +16,12 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -72,6 +73,8 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private static final Log log = LogFactory.getLog(OAuth2ServiceSAML2BearerGrantTestCase.class);
+
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -101,6 +104,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         consumerSecret = oauthApp.getOauthConsumerSecret();
 
         client = HttpClientBuilder.create().build();
+        log.info(String.format("Oauth app initialized with key: %s, secret: %s.", consumerKey, consumerSecret));
     }
 
     @AfterClass(alwaysRun = true)
@@ -142,11 +146,22 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         try {
 
             // Set some invalid audience.
-            SAMLSSOServiceProviderDTO serviceProvider = ssoConfigServiceClient.getServiceProviders()
-                    .getServiceProviders()[0];
+            ServiceProvider application = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+            SAMLSSOServiceProviderDTO[] serviceProviders =
+                    ssoConfigServiceClient.getServiceProviders().getServiceProviders();
+            SAMLSSOServiceProviderDTO serviceProvider = null;
+            for (SAMLSSOServiceProviderDTO serviceProviderDTO : serviceProviders) {
+                if ("travelocity.com".equals(serviceProviderDTO.getIssuer())) {
+                    serviceProvider = serviceProviderDTO;
+                    break;
+                }
+            }
+
+            Assert.assertNotNull(serviceProvider, "No service provider exists for issuer travelocity.com");
             serviceProvider.setRequestedAudiences(new String [] {});
             ssoConfigServiceClient.removeServiceProvider("travelocity.com");
             ssoConfigServiceClient.addServiceProvider(serviceProvider);
+            appMgtclient.updateApplicationData(application);
 
             // Get a SAML response.
             String samlResponse = getSAMLResponse();
@@ -216,6 +231,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
             throw new Exception("App creation failed.");
         }
 
+        appMgtclient.updateApplicationData(serviceProvider);
         return samlssoServiceProviderDTO;
     }
 
@@ -256,19 +272,42 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         response = Utils.sendGetRequest(String.format("http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s",
                 "travelocity.com", "HTTP-POST"), USER_AGENT, client);
 
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "HTTP 200 expected for POST binding " +
+                "initiation request");
         String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
+        Assert.assertTrue(StringUtils.isNotBlank(samlRequest), "SAML request in response body is empty");
         response = sendSAMLRequest(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
         EntityUtils.consume(response.getEntity());
 
+        Assert.assertTrue(StringUtils.isNotBlank(Utils.getRedirectUrl(response)), "Location header not present in the" +
+                " response to SAML request");
+
         response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, "travelocity.com", client);
 
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "HTTP 200 expected for request login page.");
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+        Assert.assertTrue(StringUtils.isNotBlank(sessionKey), "Session Key can't be empty.");
         response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, "travelocity.com",
                 userInfo.getUserName(), userInfo.getPassword(), client);
         EntityUtils.consume(response.getEntity());
 
-        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, "travelocity.com", client);
+        if (requestMissingClaims(response)) {
+            String pastrCookie = Utils.getPastreCookie(response);
+            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL,
+                    "travelocity.com"), client, pastrCookie);
+            EntityUtils.consume(response.getEntity());
+        }
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        if (StringUtils.isNotBlank(redirectUrl)) {
+            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, "travelocity.com", client);
+        }
+
         String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+        Assert.assertTrue(StringUtils.isNotBlank(samlResponse), "SAML response in response body is empty");
         return new String(Base64.decodeBase64(samlResponse));
     }
 
@@ -357,5 +396,11 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator +
                 "travelocity.com.war");
         startTomcat(tomcat, OAuth2Constant.TRAVELOCITY_APP_CONTEXT_ROOT, resourceUrl.getPath());
+    }
+
+    private boolean requestMissingClaims(HttpResponse response) {
+
+        String redirectUrl = Utils.getRedirectUrl(response);
+        return redirectUrl.contains("consent.do");
     }
 }
