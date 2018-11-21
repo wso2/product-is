@@ -88,7 +88,7 @@ export DATA_BUCKET_LOCATION=${INPUT_DIR}
 
 
 mvn clean install -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-${MAVEN_OPTS} -fae -B -f ./pom.xml
+-fae -B -f ./pom.xml
 
 
 #=============== Copy Surefire Reports ===========================================
