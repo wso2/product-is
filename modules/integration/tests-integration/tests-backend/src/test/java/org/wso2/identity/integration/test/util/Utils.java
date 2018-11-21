@@ -373,6 +373,7 @@ public class Utils {
         request.addHeader("User-Agent", userAgent);
         return httpClient.execute(request);
     }
+
     public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient, String username, String password ,String soapRequest){
         HttpPost request = new HttpPost(url);
         HttpResponse response = null;
@@ -380,7 +381,6 @@ public class Utils {
         byte[] encodedAuth = Base64.encodeBase64(
                 auth.getBytes(StandardCharsets.ISO_8859_1));
         String authHeader = "Basic " + new String(encodedAuth);
-        System.out.println(authHeader);
         request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
         try {

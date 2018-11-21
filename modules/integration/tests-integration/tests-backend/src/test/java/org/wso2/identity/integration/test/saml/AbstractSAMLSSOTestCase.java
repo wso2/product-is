@@ -67,7 +67,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
-    protected static final String SAML_ECP_SSO_URL = "https://localhost:9853/ecp";
+    protected static final String SAML_ECP_SSO_URL = "https://localhost:9853/samlecp";
     protected static final String SAML_ECP_ACS_URL = "https://localhost/Shibboleth.sso/SAML2/ECP";
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";

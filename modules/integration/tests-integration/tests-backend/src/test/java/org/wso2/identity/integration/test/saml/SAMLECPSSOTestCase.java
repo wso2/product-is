@@ -8,7 +8,11 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
@@ -39,8 +43,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider(){
         return  new SAMLConfig[][]{
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_SOAP,
-                        ClaimType.LOCAL, App.ECP_APP)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_SOAP,
                         ClaimType.LOCAL, App.ECP_APP)},
         };
