@@ -21,7 +21,8 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -30,11 +31,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
 import java.net.URL;
@@ -58,7 +59,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	private String consumerKey;
 	private String consumerSecret;
 
-	private DefaultHttpClient client;
+	private HttpClient client;
 	private Tomcat tomcat;
 
 	@BeforeClass(alwaysRun = true)
@@ -72,7 +73,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 				isServer.getInstance().getHosts().get("default"));
 
 		setSystemproperties();
-		client = new DefaultHttpClient();
+		client = HttpClientBuilder.create().build();
 	}
 
 	@AfterClass(alwaysRun = true)
