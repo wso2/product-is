@@ -363,6 +363,6 @@ Resources:
 # Print details of the created stack 
 #####################################
 Outputs:
-  BastionEIP:
-    Value: !Sub '${WSO2EnvBastionInstance.PublicIp}'
-    Description: Elastic IP of the Bastion Instance
+  ISSamplesHttpUrl:
+    Value: !Sub 'http://${WSO2EnvBastionInstance.PublicIp}:8080'
+    Description: Public access Tomcat URL
