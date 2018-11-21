@@ -31,7 +31,6 @@
 
     <modules>
         <module>2.1.1.1-sso-with-with-oauth</module>
-        <module>2.1.1.2-sso-with-with-saml</module>
     </modules>
 
 </project>

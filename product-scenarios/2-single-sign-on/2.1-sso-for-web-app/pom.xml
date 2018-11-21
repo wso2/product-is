@@ -29,7 +29,7 @@
     <name>SSO for Web Apps</name>
 
     <modules>
-        <module>2.2.1-sso-with-central-idp</module>
+        <module>2.1.1-sso-with-central-idp</module>
     </modules>
 
     <dependencyManagement>

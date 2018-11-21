@@ -98,7 +98,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         super.testClear();
     }
 
-    @Test(description = "2.1.1.2.1", priority = 1)
+    @Test(description = "2.1.1.1.1", priority = 1)
     public void testAddSP() throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(config));
         assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
@@ -116,7 +116,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.2.1", dependsOnMethods = {"testAddSP"})
+    @Test(alwaysRun = true, description = "2.1.1.1.1", dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOIsPassiveLogin() throws Exception {
         try {
 
@@ -134,7 +134,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         }
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.2.3", groups = "wso2.is",
+    @Test(alwaysRun = true, description = "2.1.1.1.3", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOIsPassiveLogin"})
     public void testSAMLSSOLogin() {
         try {
@@ -189,138 +189,11 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         }
     }
 
-
-//
-//    @Test(alwaysRun = true, description = "Testing SAML SSO Claims", groups = "wso2.is",
-//          dependsOnMethods = { "testSAMLSSOLogin" })
-//    public void testClaims() {
-//        String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
-//
-//        switch (config.getClaimType()){
-//            case LOCAL:
-//                assertLocalClaims(claimString);
-//                break;
-//            case NONE:
-//                assertNoneClaims(claimString);
-//                break;
-//        }
-//    }
-//
-//    @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
-//          dependsOnMethods = { "testSAMLSSOLogin" })
-//    public void testSAMLSSOLogout() throws Exception {
-//        try {
-//            HttpResponse response;
-//
-//            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGOUT_URL, config.getApp().getArtifact(), config
-//                    .getHttpBinding().binding), USER_AGENT, httpClient);
-//
-//            if (config.getHttpBinding() == HttpBinding.HTTP_POST){
-//                String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-//                response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
-//            }
-//
-//            String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
-//            response = super.sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
-//                    .SAML_RESPONSE_PARAM, samlResponse, config);
-//            String resultPage = extractDataFromResponse(response);
-//
-//            Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
-//                              "SAML SSO Logout failed for " + config);
-//        } catch (Exception e) {
-//            Assert.fail("SAML SSO Logout test failed for " + config, e);
-//        }
-//    }
-//
-//
-//    @Test(alwaysRun = true, description = "Testing SAML RelayState decode", groups = "wso2.is", dependsOnMethods =
-//            {"testSAMLSSOLogout"})
-//    public void testSAMLRelayStateDecode() throws Exception {
-//        try {
-//            String relayState = "https%3A%2F%2Fwww.google.com%2Fa%2Fcoolguseconcepts" +
-//                    ".com%2FServiceLogin%3Fservice%3Dmail%26passive%3Dtrue%26rm%3Dfalse%26continue%3Dhttps%253A%252F" +
-//                    "%252Fmail.google.com%252Fa%252Fcoolguseconcepts" +
-//                    ".com%252F%26ss%3D1%26ltmpl%3Ddefault%26ltmplcache%3D2%26emr%3D1%26osid%3D1%26scope%3Dhttp%3A%2F" +
-//                    "%2Fmeyerweb.com%2Feric%2Ftools%2Fdencoder%2F%2bhttp%3A%2F%2Fmeyerweb" +
-//                    ".com%2Feric%2Ftools%2Fdencoder%2F&";
-//            HttpResponse response;
-//            response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
-//                    .getHttpBinding().binding), USER_AGENT, httpClient);
-//
-//            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
-//                String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-//                Map<String, String> paramters = new HashMap<String, String>();
-//                paramters.put(CommonConstants.SAML_REQUEST_PARAM, samlRequest);
-//                paramters.put("RelayState", relayState);
-//                response = Utils.sendSAMLMessage(SAML_SSO_URL, paramters, USER_AGENT, config.getUserMode(),
-//                        TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain(), httpClient);
-//                EntityUtils.consume(response.getEntity());
-//                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
-//                        httpClient);
-//
-//                String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-//                response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
-//                        .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
-//                EntityUtils.consume(response.getEntity());
-//
-//                response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
-//                        httpClient);
-//                String receivedRelayState = Utils.extractDataFromResponse(response, "RelayState", 5);
-//                relayState = relayState.replaceAll("&", "&amp;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").
-//                        replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace("\n", "");
-//                Assert.assertEquals(relayState, receivedRelayState, "Sent parameter : " + relayState + "\nRecieved : " +
-//                        "" + receivedRelayState + "\n");
-//            }
-//
-//            EntityUtils.consumeQuietly(response.getEntity());
-//
-//        } catch (Exception e) {
-//            Assert.fail("SAML SSO Logout test failed for " + config, e);
-//        }
-//    }
-//
-//    @Test(alwaysRun = true, description = "Testing SAML SSO logout", groups = "wso2.is",
-//            dependsOnMethods = { "testSAMLRelayStateDecode" })
-//    public void testSAMLSSOIdPLogout() throws Exception {
-//
-//        try {
-//            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
-//                HttpResponse response = Utils.sendGetRequest(SAML_IDP_SLO_URL, USER_AGENT, httpClient);
-//                String resultPage = extractDataFromResponse(response);
-//
-//                Assert.assertTrue(resultPage.contains("You have successfully logged out") &&
-//                        !resultPage.contains("error"), "SAML SSO IdP Logout failed for " + config);
-//            }
-//        } catch (Exception e) {
-//            Assert.fail("SAML SSO IdP Logout test failed for " + config, e);
-//        }
-//    }
-
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
         return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-//                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)}
-                //,
-//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-//                                ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-//                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-//                                ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-//                                ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-//                                ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-//                                ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-
-//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
-//                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
-//                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
-//                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)}
         };
     }
 
