@@ -21,33 +21,43 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ALWAYS;
 import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ONCE;
 import static org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_FORM;
+import static org.wso2.identity.scenarios.commons.util.Constants.COOKIE;
 import static org.wso2.identity.scenarios.commons.util.Constants.DENY;
 import static org.wso2.identity.scenarios.commons.util.Constants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CLIENT_ID;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CONSENT;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_GRANT_TYPE;
+import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_MANDATORY_CLAIMS;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_PASSWORD;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_REDIRECT_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_REQUESTED_CLAIMS;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_RESPONSE_TYPE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SCOPE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY_CONSENT;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_USERNAME;
+import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getQueryParams;
+import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getRedirectUrlFromResponse;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithParameters;
 
@@ -119,12 +129,41 @@ public class SSOUtil {
     public static HttpResponse sendLoginPost(HttpClient client, String sessionDataKey, String commonauthEndpointUrl,
                                              String username, String password) throws IOException {
 
+        List<NameValuePair> urlParameters = getBasicLoginParams(sessionDataKey, username, password);
+        return sendPostRequestWithParameters(client, urlParameters, commonauthEndpointUrl, null);
+    }
+
+    /**
+     * Submits user credentials at SSO basic auth login page.
+     *
+     * @param client HttpClient to be used for request sending.
+     * @param sessionDataKey Session key related to the authentication request.
+     * @param endpointUrl IS login endpoint URL.
+     * @param username Authenticating username.
+     * @param password Authenticating user password.
+     * @return @return HttpResponse with the credential submit response.
+     * @throws IOException If error occurs while credential submit.
+     */
+    public static HttpResponse sendLoginPostWithParamsAndHeaders(HttpClient client, String sessionDataKey, String
+            endpointUrl, String username, String password, Map<String,String> params, Header[] headers)
+            throws
+            IOException {
+
+        List<NameValuePair> urlParameters = getBasicLoginParams(sessionDataKey, username, password);
+        if (!params.isEmpty()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+            }
+        }
+        return sendPostRequestWithParameters(client, urlParameters, endpointUrl, headers);
+    }
+
+    private static List<NameValuePair> getBasicLoginParams(String sessionDataKey, String username, String password) {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(PARAM_USERNAME, username));
         urlParameters.add(new BasicNameValuePair(PARAM_PASSWORD, password));
         urlParameters.add(new BasicNameValuePair(PARAM_SESSION_DATA_KEY, sessionDataKey));
-
-        return sendPostRequestWithParameters(client, urlParameters, commonauthEndpointUrl, null);
+        return urlParameters;
     }
 
     /**
@@ -233,5 +272,86 @@ public class SSOUtil {
 
         return sendPostRequestWithParameters(client, requestParams, tokenEndpoint, new Header[]{authzHeader,
                 contentTypeHeader});
+    }
+
+    /**
+     * Send redirect request
+     * @param response HttpResponse to be referred for request sending.
+     * @param userAgent User-Agent
+     * @param referrer Referer Url
+     * @param artifact
+     * @param httpClient HttpClient to be used for request sending.
+     * @return HttpResponse after redirect
+     * @throws IOException
+     */
+    public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String referrer, String
+            artifact, HttpClient httpClient) throws IOException, URISyntaxException {
+        String url = getRedirectUrlFromResponse(response);
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
+        headers[1] = new BasicHeader(HttpHeaders.REFERER, String.format(referrer, artifact));
+        return sendGetRequest(httpClient, url, null, headers);
+    }
+
+    /**
+     * Post user consent to Consent page
+     * @param response HttpResponse to be referred for request sending.
+     * @param commonAuthUrl commonauth URL
+     * @param userAgent user-Agent
+     * @param referer referer URL
+     * @param httpClient HttpClient to be used for request sending.
+     * @param pastreCookie 'pastre' Cookie
+     * @return response after submitting consent
+     * @throws Exception
+     */
+    public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
+                                                      String referer, HttpClient httpClient, String
+                                                              pastreCookie) throws Exception {
+        String redirectUrl = getRedirectUrlFromResponse(response);
+        Map<String, String> queryParams = getQueryParams(redirectUrl);
+
+
+        String sessionKey = queryParams.get(PARAM_SESSION_DATA_KEY);
+        String mandatoryClaims = queryParams.get(PARAM_MANDATORY_CLAIMS);
+        String requestedClaims = queryParams.get(PARAM_REQUESTED_CLAIMS);
+        String consentRequiredClaims;
+
+        if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(mandatoryClaims);
+            joiner.add(requestedClaims);
+            consentRequiredClaims = joiner.toString();
+        } else if (isNotBlank(mandatoryClaims)) {
+            consentRequiredClaims = mandatoryClaims;
+        } else {
+            consentRequiredClaims = requestedClaims;
+        }
+
+        String[] claims;
+        if (isNotBlank(consentRequiredClaims)) {
+            claims = consentRequiredClaims.split(",");
+        } else {
+            claims = new String[0];
+        }
+
+        HttpPost post = new HttpPost(commonAuthUrl);
+        post.setHeader(HttpHeaders.USER_AGENT, userAgent);
+        post.addHeader(HttpHeaders.REFERER, referer);
+        post.addHeader(COOKIE, pastreCookie);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+
+        for (int i = 0; i < claims.length; i++) {
+
+            if (isNotBlank(claims[i])) {
+                String[] claimMeta = claims[i].split("_", 2);
+                if (claimMeta.length == 2) {
+                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                }
+            }
+        }
+        urlParameters.add(new BasicNameValuePair(PARAM_SESSION_DATA_KEY, sessionKey));
+        urlParameters.add(new BasicNameValuePair("consent", "approve"));
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return httpClient.execute(post);
     }
 }

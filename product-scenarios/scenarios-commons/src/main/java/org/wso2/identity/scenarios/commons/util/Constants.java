@@ -42,6 +42,8 @@ public class Constants {
     public static final String PARAM_REDIRECT_URI = "redirect_uri";
     public static final String PARAM_REDIRECT_URIS = "redirect_uris";
     public static final String PARAM_RESPONSE_TYPE = "response_type";
+    public static final String PARAM_MANDATORY_CLAIMS = "mandatoryClaims";
+    public static final String PARAM_REQUESTED_CLAIMS = "requestedClaims";
     public static final String PARAM_SCOPE = "scope";
     public static final String PARAM_SESSION_DATA_KEY = "sessionDataKey";
     public static final String PARAM_SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
@@ -55,4 +57,9 @@ public class Constants {
     public static final String SCIM1_USERS_ENDPOINT = "wso2/scim";
     public static final String SCIM2_USERS_ENDPOINT = "scim2";
     public static final String SCIM_ENDPOINT_USER = "Users";
+    public static final String SAML_REQUEST_PARAM = "SAMLRequest";
+    public static final String SAML_RESPONSE_PARAM = "SAMLResponse";
+    public static final String TOCOMMONAUTH = "tocommonauth";
+    public static final String COOKIE = "Cookie";
+    public static final String HEADER_SET_COOKIE = "Set-Cookie";
 }
