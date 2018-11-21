@@ -34,14 +34,14 @@ import java.sql.SQLException;
 public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
     private static final Log log = LogFactory.getLog(SpClaimDialectSchemaMigrator.class);
 
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL = "SELECT * FROM INFORMATION_SCHEMA.TABLES " +
-            "WHERE TABLE_NAME='SP_CLAIM_DIALECT' LIMIT 1";
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_DB2SQL = "SELECT tabname FROM SYSCAT.TABLES WHERE " +
-            "TABNAME = 'SP_CLAIM_DIALECT'";
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MSSQL = "SELECT * FROM sysobjects WHERE name = " +
-            "'SP_CLAIM_DIALECT'";
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_ORACLE = "SELECT table_name from user_tables where " +
-            "table_name='SP_CLAIM_DIALECT'";
+    public static final String CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_MYSQL = "SELECT ID FROM SP_CLAIM_DIALECT " +
+            "LIMIT 1";
+    public static final String CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_DB2SQL = "SELECT ID FROM SP_CLAIM_DIALECT" +
+            " FETCH FIRST 1 ROWS ONLY";
+    public static final String CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_MSSQL = "SELECT TOP 1 ID FROM " +
+            "SP_CLAIM_DIALECT";
+    public static final String CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_ORACLE = "SELECT ID FROM " +
+            "SP_CLAIM_DIALECT WHERE ROWNUM < 2";
 
     @Override
     public void migrate() throws MigrationClientException {
@@ -64,45 +64,36 @@ public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
      */
     private boolean isDatabaseSPClaimDialectStoringSupportAvailable() {
 
-        Connection connection = null;
-        try {
-            connection = IdentityDatabaseUtil.getDBConnection();
-        } catch (IdentityRuntimeException e) {
-            return false;
-        }
-
-        if (connection != null) {
-            PreparedStatement preparedStatement = null;
-            ResultSet results = null;
-            try {
+        try (Connection connection = IdentityDatabaseUtil.getDBConnection()) {
+            if (connection != null) {
                 String sql;
                 if (connection.getMetaData().getDriverName().contains("MySQL")
-                        || connection.getMetaData().getDriverName().contains("H2")) {
-                    sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL;
+                        || connection.getMetaData().getDriverName().contains("H2")
+                        || connection.getMetaData().getDriverName().contains("PostgreSQL")) {
+                    sql = CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_MYSQL;
                 } else if (connection.getMetaData().getDatabaseProductName().contains("DB2")) {
-                    sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_DB2SQL;
+                    sql = CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_DB2SQL;
                 } else if (connection.getMetaData().getDriverName().contains("MS SQL") ||
                         connection.getMetaData().getDriverName().contains("Microsoft")) {
-                    sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MSSQL;
-                } else if (connection.getMetaData().getDriverName().contains("PostgreSQL")) {
-                    sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL;
+                    sql = CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_MSSQL;
                 } else {
-                    sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_ORACLE;
+                    sql = CHECK_AVAILABILITY_OF_SP_CLAIM_DIALECT_TABLE_ORACLE;
                 }
-
-                preparedStatement = connection.prepareStatement(sql);
-
-                // Executing the query will return no results, if the needed database scheme is not there.
-                results = preparedStatement.executeQuery();
-
-                if (results.next()) {
-                    return true;
+                try (PreparedStatement preparedStatement
+                             = connection.prepareStatement(sql)) {
+                    // Executing the query will return no results, if the needed database scheme is not there.
+                    try (ResultSet results = preparedStatement.executeQuery()) {
+                        if (results.next()) {
+                            return true;
+                        }
+                    }
+                } catch (SQLException ignore) {
+                    //Ignore. Exception can be thrown when the table does not exist.
                 }
-            } catch (SQLException ignore) {
-            } finally {
-                IdentityApplicationManagementUtil.closeResultSet(results);
-                IdentityApplicationManagementUtil.closeStatement(preparedStatement);
             }
+        } catch (SQLException e) {
+            log.error("Error while retrieving the database connection to check the existence of SP_CLAIM_DIALECT " +
+                    "table", e);
         }
         return false;
     }
