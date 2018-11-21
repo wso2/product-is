@@ -48,6 +48,7 @@ public class ScenarioTestBase {
     public static final String CARBON_SERVER_URL = "CarbonServerUrl";
     public static final String IS_HTTP_URL = "ISHttpUrl";
     public static final String IS_HTTPS_URL = "ISHttpsUrl";
+    public static final String IS_SAMPLES_HTTP_URL = "ISSamplesHttpUrl";
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "admin";
 
@@ -56,7 +57,7 @@ public class ScenarioTestBase {
 
     protected String backendURL;
     protected String backendServiceURL;
-    protected String webAppHost = "http://localhost:8080";
+    protected String webAppHost;
     protected AuthenticatorClient loginClient;
     protected String sessionCookie;
     protected static final String SERVICES = "/services/";
@@ -115,6 +116,7 @@ public class ScenarioTestBase {
     public void init() throws Exception {
         setKeyStoreProperties();
         backendURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
+        webAppHost = getDeploymentProperties().getProperty(IS_SAMPLES_HTTP_URL);
         backendServiceURL = backendURL + SERVICES;
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         loginClient = new AuthenticatorClient(backendServiceURL);
