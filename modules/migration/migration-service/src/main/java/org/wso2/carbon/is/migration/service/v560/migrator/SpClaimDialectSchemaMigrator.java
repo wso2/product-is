@@ -20,8 +20,6 @@ package org.wso2.carbon.is.migration.service.v560.migrator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.application.common.util.IdentityApplicationManagementUtil;
-import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.is.migration.service.SchemaMigrator;
@@ -34,14 +32,12 @@ import java.sql.SQLException;
 public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
     private static final Log log = LogFactory.getLog(SpClaimDialectSchemaMigrator.class);
 
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL = "SELECT * FROM INFORMATION_SCHEMA.TABLES " +
-            "WHERE TABLE_NAME='SP_CLAIM_DIALECT' LIMIT 1";
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_DB2SQL = "SELECT tabname FROM SYSCAT.TABLES WHERE " +
-            "TABNAME = 'SP_CLAIM_DIALECT'";
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MSSQL = "SELECT * FROM sysobjects WHERE name = " +
-            "'SP_CLAIM_DIALECT'";
-    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_ORACLE = "SELECT table_name from user_tables where " +
-            "table_name='SP_CLAIM_DIALECT'";
+    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MYSQL = "SELECT ID FROM SP_CLAIM_DIALECT LIMIT 1";
+    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_DB2SQL = "SELECT ID FROM SP_CLAIM_DIALECT FETCH FIRST" +
+            " 1 ROWS ONLY";
+    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_MSSQL = "SELECT TOP 1 ID FROM SP_CLAIM_DIALECT";
+    public static final String IS_SP_CLAIM_DIALECT_TABLE_EXISTS_ORACLE = "SELECT ID FROM SP_CLAIM_DIALECT WHERE " +
+            "ROWNUM < 2";
 
     @Override
     public void migrate() throws MigrationClientException {
@@ -79,7 +75,6 @@ public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
                 } else {
                     sql = IS_SP_CLAIM_DIALECT_TABLE_EXISTS_ORACLE;
                 }
-
                 try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                     // Executing the query will return no results, if the needed database scheme is not there.
                     try (ResultSet results = preparedStatement.executeQuery()) {
@@ -87,13 +82,13 @@ public class SpClaimDialectSchemaMigrator extends SchemaMigrator {
                             return true;
                         }
                     }
+                } catch (SQLException ignore) {
+                    //Ignore. Exception can be thrown when the table does not exist.
                 }
             }
-        } catch (IdentityRuntimeException e) {
-            log.error("Error while obtaining connection to check the existence of database table SP_CLAIM_DIALECT.", e);
         } catch (SQLException e) {
-            log.error("Error while closing connection  after checking the existence of database table " +
-                    "SP_CLAIM_DIALECT.", e);
+            log.error("Error while retrieving the database connection to check the existence of SP_CLAIM_DIALECT " +
+                    "table", e);
         }
         return false;
     }
