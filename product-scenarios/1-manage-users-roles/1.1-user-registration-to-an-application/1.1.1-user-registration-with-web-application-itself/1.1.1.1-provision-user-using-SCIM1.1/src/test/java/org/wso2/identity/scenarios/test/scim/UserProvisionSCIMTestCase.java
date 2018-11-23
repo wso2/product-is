@@ -18,7 +18,6 @@
 
 package org.wso2.identity.scenarios.test.scim;
 
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -49,7 +48,6 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
-
     }
 
     @Test(description = "1.1.1.1.1")
@@ -67,20 +65,18 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
-        userNameResponse=rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse,SCIMConstants.USERNAME,"username not found");
-
+        userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
+        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
     }
 
     @AfterClass(alwaysRun = true)
     public void testDeleteUser() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
-        userId=responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
+        userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
-        response = SCIMProvisioningUtil.deleteUser(backendURL,userId,Constants.SCIM1_USERS_ENDPOINT,  ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
-
     }
 
 }
