@@ -28,7 +28,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <!--<module>2.1.2-soap-apis</module>-->
+        <module>2.1.2-soap-apis</module>
     </modules>
 
     <dependencyManagement>
