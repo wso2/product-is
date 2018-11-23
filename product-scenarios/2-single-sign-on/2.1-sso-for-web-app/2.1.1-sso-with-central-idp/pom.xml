@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>2.2.1-sso-with-central-idp</artifactId>
+    <artifactId>2.1.1-sso-with-central-idp</artifactId>
     <name>SSO with a Local Identity Server</name>
     <packaging>pom</packaging>
 
