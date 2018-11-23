@@ -201,6 +201,9 @@
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.auth.IdentifierFirstLoginTestCase" />
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
+
+            <!--Function library management test cases-->
+            <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
         </classes>
     </test>
 
