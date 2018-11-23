@@ -55,10 +55,10 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         client = HttpClients.createDefault();
         super.init();
         scimUsersEndpoint = backendURL + SCIMConstants.SCIM_ENDPOINT + SEPERATOR + Constants.SCIM_ENDPOINT_USER;
+        testSCIMCreateFirstUser();
     }
 
-    @Test
-    public void testSCIMCreateFirstUser() throws Exception {
+    private void testSCIMCreateFirstUser() throws Exception {
 
         JSONObject userObject = new JSONObject();
         JSONArray schemas = new JSONArray();
@@ -71,11 +71,9 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, userObject, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
-
-
     }
 
-    @Test(description = "1.1.1.1.11", dependsOnMethods = "testSCIMCreateFirstUser")
+    @Test(description = "1.1.1.1.11")
     public void testSCIMCreateSecondUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
@@ -103,7 +101,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
 
     }
-    
+
     private Header getFaultyAuthzHeader() {
 
         return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(SCIMConstants.USERNAME, SCIMConstants.PASSWORD));
