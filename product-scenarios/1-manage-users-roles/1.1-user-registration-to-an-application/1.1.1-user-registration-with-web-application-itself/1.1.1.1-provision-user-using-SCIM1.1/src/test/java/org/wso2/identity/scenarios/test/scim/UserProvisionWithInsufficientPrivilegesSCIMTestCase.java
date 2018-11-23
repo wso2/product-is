@@ -89,10 +89,6 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
                 new Header[]{getFaultyAuthzHeader(), getContentTypeApplicationJSONHeader()});
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_UNAUTHORIZED, "User is not authorized to perform provisioning");
-
-        JSONObject responseObj = getJSONFromResponse(response);
-        String responseData = responseObj.toJSONString();
-        assertEquals(responseData,"{\"Errors\":[{\"code\":\"500\",\"description\":\"User is not authorized to perform provisioning\"}]}");
     }
 
     @AfterClass(alwaysRun = true)
