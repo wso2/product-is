@@ -73,6 +73,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         emailHome.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_HOME_ATTRIBUTE);
         emailHome.put(SCIMConstants.VALUE_PARAM, HOMEEMAIL);
         JSONArray emails = new JSONArray();
+
         emails.add(emailWork);
         emails.add(emailHome);
         rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
@@ -85,7 +86,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testDeleteUser() throws Exception {
+    public void cleanup() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
