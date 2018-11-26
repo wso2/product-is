@@ -21,13 +21,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>2.2.1-sso-with-central-idp</artifactId>
+        <artifactId>2.1.1-sso-with-central-idp</artifactId>
         <version>5.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>2.2.1.1-sso-with-SAML</artifactId>
+    <artifactId>2.1.1.1-sso-with-saml</artifactId>
     <packaging>jar</packaging>
     <name>SSO with SAML Protocol</name>
 
