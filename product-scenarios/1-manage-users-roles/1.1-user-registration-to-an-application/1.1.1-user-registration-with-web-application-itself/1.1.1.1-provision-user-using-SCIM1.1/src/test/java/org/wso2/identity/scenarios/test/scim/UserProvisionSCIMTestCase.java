@@ -68,8 +68,7 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
     }
-
-    @AfterClass(alwaysRun = true)
+    @Test(dependsOnMethods ="testSCIMCreateUser")
     public void testDeleteUser() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
@@ -80,3 +79,4 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
     }
 
 }
+
