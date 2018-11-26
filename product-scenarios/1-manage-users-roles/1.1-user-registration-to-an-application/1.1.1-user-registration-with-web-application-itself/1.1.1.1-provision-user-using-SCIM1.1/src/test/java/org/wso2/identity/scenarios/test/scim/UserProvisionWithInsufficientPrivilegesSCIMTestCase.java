@@ -99,7 +99,6 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
 
         response = SCIMProvisioningUtil.deleteUser(backendURL,userId,Constants.SCIM1_USERS_ENDPOINT,  ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
-
     }
 
     private Header getFaultyAuthzHeader() {
