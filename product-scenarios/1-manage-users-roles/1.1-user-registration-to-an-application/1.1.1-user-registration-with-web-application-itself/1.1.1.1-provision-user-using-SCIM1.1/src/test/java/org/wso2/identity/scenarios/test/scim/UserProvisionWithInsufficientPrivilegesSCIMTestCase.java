@@ -92,7 +92,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
     }
 
     @AfterClass(alwaysRun = true)
-    public void testDeletFirsteUser() throws Exception {
+    public void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId=responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
