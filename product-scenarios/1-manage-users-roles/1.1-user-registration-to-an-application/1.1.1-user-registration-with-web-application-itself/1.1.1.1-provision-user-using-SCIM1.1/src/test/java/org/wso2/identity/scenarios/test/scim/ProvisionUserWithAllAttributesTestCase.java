@@ -50,6 +50,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
         setKeyStoreProperties();
         client = HttpClients.createDefault();
+
         super.init();
     }
 
