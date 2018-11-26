@@ -109,14 +109,14 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                 "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
+    @Test(description = "2.1.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
         assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.1.1", dependsOnMethods = {"testAddSP"})
+    @Test(alwaysRun = true, description = "2.1.1.1.2", dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOIsPassiveLogin() throws Exception {
         try {
 
@@ -134,7 +134,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         }
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.1.3", groups = "wso2.is",
+    @Test(alwaysRun = true, description = "2.1.1.1.4", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOIsPassiveLogin"})
     public void testSAMLSSOLogin() {
         try {
