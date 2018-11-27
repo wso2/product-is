@@ -18,7 +18,7 @@ set -o xtrace
 
 HOME=`pwd`
 TEST_SCRIPT=test.sh
-SUREFIRE_DIR="test-outputs/scenarios"
+
 
 function usage()
 {
@@ -95,4 +95,4 @@ mvn clean install -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf
 
 echo "Copying surefire-reports to ${OUTPUT_DIR}"
 
-find ${HOME}/* -name "surefire-reports" -exec cp --parents -r {} ${OUTPUT_DIR}/${SUREFIRE_DIR} \;
+find ./* -name "surefire-reports" -exec cp --parents -r {} ${OUTPUT_DIR} \;
