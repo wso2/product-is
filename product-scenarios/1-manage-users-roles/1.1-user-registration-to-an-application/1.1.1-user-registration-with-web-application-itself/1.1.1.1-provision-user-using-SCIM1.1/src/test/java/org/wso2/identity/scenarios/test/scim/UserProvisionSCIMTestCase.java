@@ -24,7 +24,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
@@ -47,10 +46,11 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
 
         setKeyStoreProperties();
         client = HttpClients.createDefault();
+
         super.init();
     }
 
-    @Test(description = "1.1.1.1.1")
+    @Test(description = "1.1.2.1.1.1")
     public void testSCIMCreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
@@ -62,7 +62,7 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
@@ -75,7 +75,7 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
     }
 
