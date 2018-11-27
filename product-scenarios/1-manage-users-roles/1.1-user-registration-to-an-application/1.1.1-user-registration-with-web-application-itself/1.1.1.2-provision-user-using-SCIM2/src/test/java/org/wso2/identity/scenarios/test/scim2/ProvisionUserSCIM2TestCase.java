@@ -18,29 +18,18 @@
 
 package org.wso2.identity.scenarios.test.scim2;
 
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import org.wso2.identity.scenarios.commons.ScenarioTestBase;
-import org.wso2.identity.scenarios.commons.util.Constants;
-import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
+import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
@@ -94,4 +83,3 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
     }
 
 }
-
