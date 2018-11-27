@@ -13,15 +13,16 @@ Into a "target" folder and deploy the sample into tomcat instance.
 Before starting the tomcat instance it will alter the configurations of the "travelocity.com" based on the provided 
 ISHttpsUrl.
 
-### - How to Run?
-
 #### - For MacOS
     sh deploy-samples-mac.sh <ISHttpsURL>
     
     ex: sh deploy-samples-mac.sh https://wso2.com:9443
     
-#### - For Linus
+#### - For Linux
     sh deploy-samples-linux.sh <ISHttpsURL>
 
     ex: sh deploy-samples-linux.sh https://wso2.is.com:443
 
+`Note: <ISHttpsURL> is the URL of IS-deployment.
+Script will override the reference to default IDP configurations according to the provided <ISHttpsURL> 
+If you do not specify the <ISHttpsURL> then the sample applications will be deployed with default configurations.`
