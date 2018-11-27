@@ -25,22 +25,24 @@ import org.wso2.carbon.webapp.mgt.stub.types.carbon.VersionedWebappMetadata;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappMetadata;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
 import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappsWrapper;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.activation.DataHandler;
 
 /**
  * Client that enable the functions of WebappAdmin service.
  */
 public class WebAppAdminClient {
+
     private WebappAdminStub webappAdminStub;
 
     public WebAppAdminClient(String backendUrl, String sessionCookie) throws AxisFault {
+
         String serviceName = "WebappAdmin";
         String endPoint = backendUrl + serviceName;
         webappAdminStub = new WebappAdminStub(endPoint);
@@ -58,6 +60,7 @@ public class WebAppAdminClient {
      */
 
     public boolean uploadWarFile(String filePath) throws RemoteException, MalformedURLException {
+
         File file = new File(filePath);
         String fileName = file.getName();
         URL url = new URL("file:///" + filePath);
@@ -81,9 +84,9 @@ public class WebAppAdminClient {
      */
     public WebappsWrapper getPagedWebAppsSummary(String searchString, String webAppType, String webAppState, int pageNo)
             throws RemoteException {
+
         return webappAdminStub.getPagedWebappsSummary(searchString, webAppType, webAppState, pageNo);
     }
-
 
     /**
      * Get WebApp list for the given search String.
@@ -93,7 +96,8 @@ public class WebAppAdminClient {
      * @throws RemoteException - Exception occurs when call the method getPagedWebAppsSummary().
      */
     public List<String> getWebAppList(String webAppNameSearchString) throws RemoteException {
-        List<String> list = new ArrayList<String>();
+
+        List<String> list = new ArrayList<>();
         WebappsWrapper wrapper = getPagedWebAppsSummary(webAppNameSearchString, "ALL", "ALL", 0);
         VersionedWebappMetadata[] webAppGroups = wrapper.getWebapps();
 
@@ -117,6 +121,7 @@ public class WebAppAdminClient {
      */
     public WebappsWrapper getPagedFaultyWebAppsSummary(String searchString, String webAppType, int pageNo)
             throws RemoteException {
+
         return webappAdminStub.getPagedFaultyWebappsSummary(searchString, webAppType, pageNo);
     }
 
@@ -128,7 +133,8 @@ public class WebAppAdminClient {
      * @throws RemoteException - Exception occurs when call the method getPagedFaultyWebAppsSummary().
      */
     public List<String> getFaultyWebAppList(String webAppNameSearchString) throws RemoteException {
-        List<String> list = new ArrayList<String>();
+
+        List<String> list = new ArrayList<>();
         WebappsWrapper wrapper = getPagedFaultyWebAppsSummary(webAppNameSearchString, "ALL", 0);
         VersionedWebappMetadata[] webAppGroups = wrapper.getWebapps();
 
@@ -141,11 +147,12 @@ public class WebAppAdminClient {
     }
 
     public void deleteWebAppList(List<String> webAppList, String host) throws RemoteException {
-        List<String> webAppKey = new ArrayList<String>();
-        for(String webApp: webAppList){
-            webAppKey.add(webappAdminStub.getStartedWebapp(webApp + ".war",host).getWebappKey());
+
+        List<String> webAppKey = new ArrayList<>();
+        for (String webApp : webAppList) {
+            webAppKey.add(webappAdminStub.getStartedWebapp(webApp + ".war", host).getWebappKey());
         }
-        webappAdminStub.deleteAllWebApps(webAppKey.toArray(new String[webAppKey.size()]));
+        webappAdminStub.deleteAllWebApps(webAppKey.toArray(new String[0]));
     }
 
 }
