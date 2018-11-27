@@ -53,6 +53,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
 
         setKeyStoreProperties();
         client = HttpClients.createDefault();
+
         super.init();
         scimUsersEndpoint = backendURL + SEPERATOR +  Constants.SCIMEndpoints.SCIM1_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
         testSCIMCreateFirstUser();
