@@ -34,6 +34,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
+import org.wso2.identity.scenarios.commons.util.Constants;
 
 public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase {
 
@@ -64,13 +65,9 @@ public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase 
         rootObject.put(USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, SCIMConstants.SCIM2_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
-
-
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_BAD_REQUEST,
                 "User creation request is malformed hence server should have returned a bad request");
-
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
