@@ -54,7 +54,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
-        scimUsersEndpoint = backendURL + SCIMConstants.SCIM_ENDPOINT + SEPERATOR + Constants.SCIM_ENDPOINT_USER;
+        scimUsersEndpoint = backendURL + SEPERATOR +  Constants.SCIMEndpoints.SCIM1_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
         testSCIMCreateFirstUser();
     }
 
@@ -69,11 +69,11 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         userObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         userObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, userObject, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, userObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER , ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
     }
 
-    @Test(description = "1.1.1.1.11")
+    @Test(description = "1.1.2.1.1.11")
     public void testSCIMCreateSecondUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
@@ -97,7 +97,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId=responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
-        response = SCIMProvisioningUtil.deleteUser(backendURL,userId,Constants.SCIM1_USERS_ENDPOINT,  ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
     }
 
