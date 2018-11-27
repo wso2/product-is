@@ -379,7 +379,7 @@ public class Utils {
         HttpResponse response = null;
         String auth = username + ":" + password;
         byte[] encodedAuth = Base64.encodeBase64(
-                auth.getBytes(StandardCharsets.ISO_8859_1));
+                auth.getBytes(StandardCharsets.UTF_8));
         String authHeader = "Basic " + new String(encodedAuth);
         request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
