@@ -53,7 +53,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         super.init();
     }
 
-    @Test(description = "1.1.1.1.7")
+    @Test(description = "1.1.2.1.1.7")
     public void testSCIMCreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
@@ -78,20 +78,18 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         emails.add(emailHome);
         rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
-
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    public void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
-
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIM1_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
     }
 
