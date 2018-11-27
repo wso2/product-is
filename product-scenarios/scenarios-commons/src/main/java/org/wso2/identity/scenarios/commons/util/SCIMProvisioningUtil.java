@@ -35,6 +35,8 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.send
  */
 public class SCIMProvisioningUtil {
 
+    public static final String URL_PATH_SEPARATOR = "/";
+
     /**
      * Headers
      *
@@ -55,17 +57,17 @@ public class SCIMProvisioningUtil {
      *
      * @param serverURL        the server url
      * @param scimEndPoint     the scim endpoint for 1.1 or 2.0
-     * @param scimDynamicValue the scim endpoint for User or Bulk
+     * @param scimResource the scim endpoint for User or Bulk
      * @param jsonObject       the json object of the scim payload
      * @param username         Authenticating username.
      * @param password         Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user creation.
      */
-    public static HttpResponse provisionUserSCIM(String serverURL, JSONObject jsonObject, String scimEndPoint, String scimDynamicValue,
+    public static HttpResponse provisionUserSCIM(String serverURL, JSONObject jsonObject, String scimEndPoint, String scimResource,
                                                  String username, String password) throws IOException {
 
-        return provisionSCIMEntity(serverURL, jsonObject, scimEndPoint, scimDynamicValue, username, password);
+        return provisionSCIMEntity(serverURL, jsonObject, scimEndPoint, scimResource, username, password);
     }
 
     /**
@@ -73,17 +75,17 @@ public class SCIMProvisioningUtil {
      *
      * @param serverURL        the server url
      * @param scimEndPoint     the scim endpoint 1.1 or 2.0
-     * @param scimDynamicValue the scim endpoint for User or Bulk
+     * @param scimResource     the scim endpoint for User or Bulk
      * @param jsonObject       the json object of the scim payload
      * @param username         Authenticating username.
      * @param password         Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user creation.
      */
-    public static HttpResponse provisionSCIMEntity(String serverURL, JSONObject jsonObject, String scimEndPoint, String scimDynamicValue, String username, String password) throws IOException {
+    public static HttpResponse provisionSCIMEntity(String serverURL, JSONObject jsonObject, String scimEndPoint, String scimResource, String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpointURL = serverURL + "/" + scimEndPoint + "/" + scimDynamicValue;
+        String scimEndpointURL = serverURL + URL_PATH_SEPARATOR + scimEndPoint + URL_PATH_SEPARATOR + scimResource;
 
         return sendPostRequestWithJSON(client, scimEndpointURL, jsonObject, getCommonHeaders(username, password));
     }
@@ -94,16 +96,16 @@ public class SCIMProvisioningUtil {
      * @param serverURL        the server url.
      * @param userId           the ID of the user to be deleted.
      * @param scimEndPoint     the scim endpoint for 1.1 or 2.0
-     * @param scimDynamicValue the scim endpoint for User or Bulk
+     * @param scimResource the scim endpoint for User or Bulk
      * @param username         Authenticating username.
      * @param password         Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user deletion.
      */
-    public static HttpResponse deleteUser(String serverURL, String userId, String scimEndPoint, String scimDynamicValue,
+    public static HttpResponse deleteUser(String serverURL, String userId, String scimEndPoint, String scimResource,
                                           String username, String password) throws IOException {
 
-        return deleteSCIMEntity(serverURL, userId, scimEndPoint, scimDynamicValue, username, password);
+        return deleteSCIMEntity(serverURL, userId, scimEndPoint, scimResource, username, password);
     }
 
     /**
@@ -113,16 +115,16 @@ public class SCIMProvisioningUtil {
      * @param userID           the ID of the user to be deleted
      * @param username         Authenticating username.
      * @param scimEndPoint     the scim endpoint for 1.1 or 2.0
-     * @param scimDynamicValue the scim endpoint for User or Bulk
+     * @param scimResource the scim endpoint for User or Bulk
      * @param password         Authenticating user password.
      * @return HttpResponse with the result.
      * @throws IOException If error occurs during user deletion.
      */
-    public static HttpResponse deleteSCIMEntity(String serverURL, String userID, String scimEndPoint, String scimDynamicValue,
+    public static HttpResponse deleteSCIMEntity(String serverURL, String userID, String scimEndPoint, String scimResource,
                                                 String username, String password) throws IOException {
 
         HttpClient client = HttpClients.createDefault();
-        String scimEndpointURL = serverURL + "/" + scimEndPoint + "/" + scimDynamicValue + "/" + userID;
+        String scimEndpointURL = serverURL + URL_PATH_SEPARATOR + scimEndPoint + URL_PATH_SEPARATOR + scimResource + URL_PATH_SEPARATOR + userID;
 
         return sendDeleteRequest(client, scimEndpointURL, getCommonHeaders(username, password));
     }
