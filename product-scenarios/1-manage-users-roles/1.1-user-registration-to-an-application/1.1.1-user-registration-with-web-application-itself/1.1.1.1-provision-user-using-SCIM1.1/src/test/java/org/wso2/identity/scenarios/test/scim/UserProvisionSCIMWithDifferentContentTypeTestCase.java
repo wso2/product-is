@@ -53,10 +53,10 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         client = HttpClients.createDefault();
         super.init();
 
-        scimUsersEndpoint = backendURL + SCIMConstants.SCIM_ENDPOINT + SEPERATOR + Constants.SCIM_ENDPOINT_USER;
+        scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM1_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
     }
 
-    @Test(description = "1.1.1.1.10")
+    @Test(description = "1.1.2.1.1.10")
     public void testWrongContentType() throws Exception {
 
         JSONObject rootObject = new JSONObject();
