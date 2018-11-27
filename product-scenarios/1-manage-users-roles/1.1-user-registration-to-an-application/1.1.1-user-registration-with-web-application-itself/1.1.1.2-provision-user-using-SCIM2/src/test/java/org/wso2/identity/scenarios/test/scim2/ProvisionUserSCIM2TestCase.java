@@ -49,7 +49,6 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
 
         setKeyStoreProperties();
         client = HttpClients.createDefault();
-
         super.init();
     }
 
@@ -81,5 +80,4 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
     }
-
 }
