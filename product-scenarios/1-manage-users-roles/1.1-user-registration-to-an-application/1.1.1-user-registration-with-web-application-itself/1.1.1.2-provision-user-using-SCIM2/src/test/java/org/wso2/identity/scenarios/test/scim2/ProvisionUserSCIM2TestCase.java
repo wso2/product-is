@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 
 
+import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
@@ -37,7 +38,6 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
 
     private CloseableHttpClient client;
-    private String scimUsersEndpoint;
     private String userNameResponse;
     private String userId;
 
@@ -62,10 +62,10 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
-        rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.SCIM2USER);
+        rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.SCIM2PASSWORD);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, SCIMConstants.SCIM2_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
@@ -78,7 +78,7 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, SCIMConstants.SCIM2_USERS_ENDPOINT, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
     }
 
