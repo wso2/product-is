@@ -24,9 +24,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -83,7 +83,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
 
     private Tomcat tomcat;
-    private HttpClient client;
+    private CloseableHttpClient client;
 
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
 
@@ -146,6 +146,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         try {
 
+            client = HttpClientBuilder.create().build();
             // Set some invalid audience.
             ServiceProvider application = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
             SAMLSSOServiceProviderDTO[] serviceProviders =
@@ -280,6 +281,14 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         response = sendSAMLRequest(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
         EntityUtils.consume(response.getEntity());
 
+        // Added temporarily to debug intermittent failure.
+        if (response.getStatusLine().getStatusCode() != 302) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            log.error("Unexpected status code " + response.getStatusLine().getStatusCode() + "\n\nResponse " +
+                    "body:\n" + responseBody);
+        }
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 302, "Expected a redirection response to SAML " +
+                "request.");
         Assert.assertTrue(StringUtils.isNotBlank(Utils.getRedirectUrl(response)), "Location header not present in the" +
                 " response to SAML request");
 
