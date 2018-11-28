@@ -44,6 +44,7 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
     private String scimUsersEndpoint;
     private final String SEPERATOR = "/";
     private JSONArray schemasArray;
+    private final String CONTENT_TYPE ="application/xml";
 
     HttpResponse response;
 
@@ -73,8 +74,9 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "User has not been created successfully");
 
-        JSONObject responseObj = getJSONFromResponse(response);
         schemasArray = (JSONArray) (rootObject).get("schemas");
+        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable");
+
         assertNotNull(schemasArray);
     }
 
@@ -85,6 +87,6 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
 
     private Header getContentTypeApplicationXMLHeader() {
 
-        return new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/xml");
+        return new BasicHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE );
     }
 }
