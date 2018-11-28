@@ -22,6 +22,7 @@ package org.wso2.identity.scenarios.commons.util;
 public class Constants {
 
     private Constants() {
+
     }
 
     public static final String APPROVE_ONCE = "approve";
@@ -62,4 +63,17 @@ public class Constants {
     public static final String TOCOMMONAUTH = "tocommonauth";
     public static final String COOKIE = "Cookie";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
+
+    /**
+     * SCIM Endpoints.
+     */
+    public static class SCIMEndpoints {
+
+        public static final String SCIM1_ENDPOINT = "wso2/scim";
+        public static final String SCIM2_ENDPOINT = "wso2/scim2";
+        public static final String SCIM_ENDPOINT_BULK = "Bulk";
+        public static final String SCIM_ENDPOINT_USER = "Users";
+
+    }
+
 }
