@@ -82,4 +82,3 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has been deleted successfully");
 
     }
-}

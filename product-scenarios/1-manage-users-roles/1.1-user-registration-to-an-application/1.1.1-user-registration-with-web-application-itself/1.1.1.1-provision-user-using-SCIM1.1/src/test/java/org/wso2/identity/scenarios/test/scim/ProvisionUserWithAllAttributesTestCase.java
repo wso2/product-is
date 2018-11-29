@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.scenarios.test.scim2;
+package org.wso2.identity.scenarios.test.scim;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -24,24 +24,25 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
-
-
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
+
 import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
-
-public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
-
-    private CloseableHttpClient client;
-    private String userNameResponse;
-    private String userId;
+public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
     HttpResponse response;
+    private CloseableHttpClient client;
+    private String HOMEEMAIL = "scimhome@test.com";
+    private String PRIMARYSTATE = "true";
+    private String userNameResponse;
+    private String userId;
+    private String WORKEMAIL = "scimwrk@test.com";
 
 
     @BeforeClass(alwaysRun = true)
@@ -52,32 +53,44 @@ public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
         super.init();
     }
 
-    @Test(description = "1.1.2.1.2.1")
-    public void testSCIM2CreateUser() throws Exception {
+    @Test(description = "1.1.2.1.1.7")
+    public void testSCIMCreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
         JSONObject names = new JSONObject();
+        names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
+        JSONObject emailWork = new JSONObject();
+        emailWork.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_WORK_ATTRIBUTE);
+        emailWork.put(SCIMConstants.VALUE_PARAM, WORKEMAIL);
+        JSONObject emailHome = new JSONObject();
+        emailHome.put(SCIMConstants.PRIMARY_PARAM, PRIMARYSTATE);
+        emailHome.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_HOME_ATTRIBUTE);
+        emailHome.put(SCIMConstants.VALUE_PARAM, HOMEEMAIL);
+        JSONArray emails = new JSONArray();
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        emails.add(emailWork);
+        emails.add(emailHome);
+        rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
+
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
-
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
     }
 
-    @Test(dependsOnMethods = "testSCIM2CreateUser")
-    private void testDeleteUser() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
-
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
     }
+
 }

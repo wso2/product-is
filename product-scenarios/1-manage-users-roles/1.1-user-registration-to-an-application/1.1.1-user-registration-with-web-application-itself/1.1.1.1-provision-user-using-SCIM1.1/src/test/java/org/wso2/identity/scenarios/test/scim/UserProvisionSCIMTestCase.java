@@ -18,46 +18,39 @@
 
 package org.wso2.identity.scenarios.test.scim;
 
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
-
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
+import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 public class UserProvisionSCIMTestCase extends ScenarioTestBase {
 
-    private String userId;
     private CloseableHttpClient client;
-    private String scimUsersEndpoint;
+    private String userNameResponse;
+    private String userId;
+
+    HttpResponse response;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         setKeyStoreProperties();
         client = HttpClients.createDefault();
-        scimUsersEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM_ENDPOINT + "/Users";
+
+        super.init();
     }
 
-    @Test(description = "1.1.1.2.1")
+    @Test(description = "1.1.2.1.1.1")
     public void testSCIMCreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
@@ -69,43 +62,22 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-        HttpResponse response = sendPostRequestWithJSON(client, scimUsersEndpoint, rootObject,
-                new Header[]{getBasicAuthzHeader(), getContentTypeApplicationJSONHeader()});
-
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
-        JSONObject responseObj = getJSONFromResponse(response);
-        String usernameFromResponse = responseObj.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(usernameFromResponse, SCIMConstants.USERNAME, "Username not found.");
-
-        userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
-        assertNotNull(userId, "User id not found.");
-        EntityUtils.consume(response.getEntity());
+        userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
+        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
     }
-
-    @AfterClass(alwaysRun = true)
+    
+    @Test(dependsOnMethods ="testSCIMCreateUser")
     public void testDeleteUser() throws Exception {
 
-        String endpoint = String.join("/", scimUsersEndpoint, userId);
-        HttpResponse response = sendDeleteRequest(client, endpoint,
-                new Header[]{getBasicAuthzHeader(), getContentTypeApplicationJSONHeader()});
+        JSONObject responseObj = getJSONFromResponse(this.response);
+        userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been retrieved successfully");
-        EntityUtils.consume(response.getEntity());
-
-        response = sendGetRequest(client, endpoint, null,
-                new Header[]{getBasicAuthzHeader(), getContentTypeApplicationJSONHeader()});
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_FOUND, "User has not been deleted successfully");
-        EntityUtils.consume(response.getEntity());
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
     }
 
-    private Header getBasicAuthzHeader() {
-
-        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(ADMIN_USERNAME, ADMIN_PASSWORD));
-    }
-
-    private Header getContentTypeApplicationJSONHeader() {
-
-        return new BasicHeader(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON);
-    }
 }
+
