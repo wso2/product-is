@@ -35,7 +35,7 @@ public class SCIMConstants {
     public static final String PRIMARY_PARAM = "primary";
     public static final String SCHEMAS_ATTRIBUTE = "schemas";
     public static final String TYPE_PARAM = "type";
-    public static final String USERNAME = "scim1user";
+    public static final String USERNAME = "scimuser";
     public static final String USER_NAME_ATTRIBUTE = "userName";
     public static final String VALUE_PARAM = "value";
 }

@@ -37,7 +37,7 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         super.init();
         Map.Entry<HttpResponse, JSONObject> valueAndIndex = testCreateSCSIMUser();
         response = valueAndIndex.getKey();
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has been created successfully");
 
     }
 
