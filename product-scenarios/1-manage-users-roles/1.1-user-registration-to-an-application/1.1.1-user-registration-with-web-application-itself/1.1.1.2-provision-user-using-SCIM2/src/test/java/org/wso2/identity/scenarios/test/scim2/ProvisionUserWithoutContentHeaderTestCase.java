@@ -70,7 +70,7 @@ public class ProvisionUserWithoutContentHeaderTestCase extends ScenarioTestBase 
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE,
-                "User creation should failed without the Content Type header");
+                "The expected response code 406 has not been received");
 
         EntityUtils.consume(response.getEntity());
         schemasArray = (JSONArray) (rootObject).get("schemas");

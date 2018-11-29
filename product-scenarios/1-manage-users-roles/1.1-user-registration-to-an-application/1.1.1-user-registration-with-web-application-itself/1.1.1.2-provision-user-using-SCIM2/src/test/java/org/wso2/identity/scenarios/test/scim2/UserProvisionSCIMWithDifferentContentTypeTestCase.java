@@ -72,9 +72,9 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         response = sendPostRequestWithJSON(client, scimUsersEndpoint, rootObject,
                 new Header[]{getBasicAuthzHeader(), getContentTypeApplicationXMLHeader()});
 
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "User has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "The expected response code 406 has not been received");
 
-        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable","The Content-Type is not applicable for user provisioning");
+        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable","The expected Content-Type has been received");
 
         schemasArray = (JSONArray) (rootObject).get("schemas");
         assertNotNull(schemasArray);
