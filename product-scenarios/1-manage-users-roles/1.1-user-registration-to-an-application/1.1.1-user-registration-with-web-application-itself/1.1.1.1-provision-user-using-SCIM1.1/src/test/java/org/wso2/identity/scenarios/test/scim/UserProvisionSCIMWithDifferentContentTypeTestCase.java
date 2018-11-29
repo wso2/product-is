@@ -72,7 +72,7 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         HttpResponse response = sendPostRequestWithJSON(client, scimUsersEndpoint, rootObject,
                 new Header[]{getBasicAuthzHeader(), getContentTypeApplicationXMLHeader()});
 
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "The expected status code has not been received");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "The expected status code 406  has not been received");
         JSONObject responseObj = getJSONFromResponse(response);
         responseMessage = responseObj.toJSONString();
 
@@ -89,4 +89,3 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         return new BasicHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE);
     }
 }
-
