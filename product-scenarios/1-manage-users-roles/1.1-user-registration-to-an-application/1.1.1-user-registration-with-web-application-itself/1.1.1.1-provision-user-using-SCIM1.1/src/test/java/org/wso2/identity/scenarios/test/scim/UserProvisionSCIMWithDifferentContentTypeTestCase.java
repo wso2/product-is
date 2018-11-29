@@ -76,7 +76,7 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         JSONObject responseObj = getJSONFromResponse(response);
         responseMessage = responseObj.toJSONString();
 
-        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable");
+        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable","The Content-Type is not applicable for user provisioning");
     }
 
     private Header getBasicAuthzHeader() {
