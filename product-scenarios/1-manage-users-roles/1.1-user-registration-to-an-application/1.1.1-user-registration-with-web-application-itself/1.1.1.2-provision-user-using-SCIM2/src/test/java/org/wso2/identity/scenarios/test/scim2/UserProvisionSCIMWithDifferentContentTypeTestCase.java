@@ -74,9 +74,9 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "User has not been created successfully");
 
-        schemasArray = (JSONArray) (rootObject).get("schemas");
-        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable");
+        assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable","The Content-Type is not applicable for user provisioning");
 
+        schemasArray = (JSONArray) (rootObject).get("schemas");
         assertNotNull(schemasArray);
     }
 
