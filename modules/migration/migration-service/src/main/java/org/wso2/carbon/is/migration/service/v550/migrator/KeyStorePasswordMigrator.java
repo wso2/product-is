@@ -34,7 +34,10 @@ public class KeyStorePasswordMigrator extends Migrator {
             migrateKeystorePasswords();
         } catch (Exception e) {
             String errorMsg = "Error while migrating key store passwords";
-            throw new MigrationClientException(errorMsg, e);
+            if (!isContinueOnError()) {
+                throw new MigrationClientException(errorMsg, e);
+            }
+            log.error(errorMsg, e);
         }
     }
 
@@ -42,6 +45,6 @@ public class KeyStorePasswordMigrator extends Migrator {
 
         log.info(Constant.MIGRATION_LOG + "Migration starting on Key Stores");
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
-        registryDataManager.migrateKeyStorePassword(isIgnoreForInactiveTenants());
+        registryDataManager.migrateKeyStorePassword(isIgnoreForInactiveTenants(), isContinueOnError());
     }
 }

@@ -99,7 +99,17 @@ public class ClaimDataMigrator extends Migrator {
                     log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping claim data migration!");
                     continue;
                 }
-                migrateClaimData(tenant.getId());
+                try {
+                    migrateClaimData(tenant.getId());
+                } catch (UserStoreException | ClaimMetadataException e) {
+                    String message = "Error while migrating claim data for tenant: " + tenant.getDomain();
+
+                    if (isContinueOnError()) {
+                        log.error(message, e);
+                    } else {
+                        throw e;
+                    }
+                }
             }
         } catch (UserStoreException | ClaimMetadataException e) {
             String message = "Error while migrating claim data";

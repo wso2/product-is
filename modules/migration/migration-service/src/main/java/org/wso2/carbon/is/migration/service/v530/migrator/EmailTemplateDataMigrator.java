@@ -42,7 +42,7 @@ public class EmailTemplateDataMigrator extends Migrator{
     public void migrateEmailTemplateData()  {
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
         try {
-            registryDataManager.migrateEmailTemplates(isIgnoreForInactiveTenants());
+            registryDataManager.migrateEmailTemplates(isIgnoreForInactiveTenants(), isContinueOnError());
         } catch (Exception e) {
             log.error("Error while migrating email templates", e);
         }

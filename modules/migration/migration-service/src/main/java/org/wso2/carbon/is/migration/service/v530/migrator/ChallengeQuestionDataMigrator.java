@@ -40,7 +40,7 @@ public class ChallengeQuestionDataMigrator extends Migrator {
 
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
         try {
-            registryDataManager.migrateChallengeQuestions(isIgnoreForInactiveTenants());
+            registryDataManager.migrateChallengeQuestions(isIgnoreForInactiveTenants(), isContinueOnError());
         } catch (Exception e) {
             log.error("Error while migrating challange questions", e);
         }
