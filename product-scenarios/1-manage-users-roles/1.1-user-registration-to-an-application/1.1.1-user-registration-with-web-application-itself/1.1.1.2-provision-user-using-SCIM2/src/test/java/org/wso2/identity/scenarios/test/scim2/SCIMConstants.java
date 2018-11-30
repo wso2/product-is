@@ -20,7 +20,7 @@ package org.wso2.identity.scenarios.test.scim2;
 
 public class SCIMConstants {
 
-    public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
+    public static final String SCIM2_USERS_ENDPOINT = "scim2";
     public static final String SCIM2_BULK_USERS_ENDPOINT = "/scim2/Bulk";
     public static final String SCHEMAS_ATTRIBUTE = "schemas";
     public static final String GIVEN_NAME_ATTRIBUTE = "givenName";
@@ -35,10 +35,17 @@ public class SCIMConstants {
     public static final String USER_NAME_ATTRIBUTE = "userName";
     public static final String PASSWORD_ATTRIBUTE = "password";
     public static final String ID_ATTRIBUTE = "id";
-    public static final String GIVEN_NAME_CLAIM_VALUE = "user2";
     public static final String FAMILY_NAME_CLAIM_VALUE = "scim2";
     public static final String USERNAME = "scim2user";
     public static final String PASSWORD = "scim2pwd";
     public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    public static final String GIVEN_NAME_CLAIM_VALUE = "user1";
+    public static final String SCIM2USER = "scim2user";
+    public static final String SCIM2PASSWORD = "scim2pwd";
+    public static final String DISPLAY_NAME = "displayName";
+    public static final String DISPLAY = "display";
+    public static final String MEMBERS = "members";
+    public static final String VALUE = "value";
+    public static final String ROLE_NAME = "TestRole";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
 }

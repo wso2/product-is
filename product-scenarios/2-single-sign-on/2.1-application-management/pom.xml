@@ -28,7 +28,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>2.1.1-dcr-api</module>
         <module>2.1.2-soap-apis</module>
     </modules>
 
