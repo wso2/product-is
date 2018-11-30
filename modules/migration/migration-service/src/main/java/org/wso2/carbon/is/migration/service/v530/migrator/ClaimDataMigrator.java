@@ -233,7 +233,7 @@ public class ClaimDataMigrator extends Migrator{
                 out = new PrintWriter("claim-migration.txt");
                 out.println(report.toString());
             } catch (FileNotFoundException e) {
-                log.error("Error while creating claim Migration Report");
+                log.error("Error while creating claim Migration Report", e);
             } finally {
                 if (out != null) {
                     out.close();
