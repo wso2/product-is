@@ -20,12 +20,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.service.v530.dao.IdpMetaDataDAO;
+import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.user.api.Tenant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Migrates default governance connector properties for tenants created on IS 5.2.0
@@ -93,7 +95,7 @@ public class ResidentIdpMetadataManager {
         /*
             Migrating the default governance connector configurations for tenant resident IDPs.
          */
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
 
             try {
