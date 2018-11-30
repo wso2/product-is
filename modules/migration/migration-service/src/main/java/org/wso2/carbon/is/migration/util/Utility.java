@@ -100,13 +100,13 @@ public class Utility {
     public static List<Integer> getInactiveTenants() {
         List<Integer> inactiveTenants = new ArrayList<>();
         try {
-            Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+            Set<Tenant> tenants = Utility.getTenants();
             for (Tenant tenant : tenants) {
                 if (!tenant.isActive()) {
                     inactiveTenants.add(tenant.getId());
                 }
             }
-        } catch (UserStoreException e) {
+        } catch (MigrationClientException e) {
             log.error("Error while getting inactive tenant details. Assuming zero inactive tenants.", e);
             return new ArrayList<>();
         }
