@@ -47,7 +47,6 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
     private String WORKEMAIL = "test@work.com";
     private String PROFILE_URL ="https://login.example.com/bjensen";
 
-
     HttpResponse response;
 
 
@@ -99,6 +98,68 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
         emails.add(emailWork);
         emails.add(emailHome);
         rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
+
+        JSONObject address = new JSONObject();
+        address.put(SCIMConstants.ADDRESS_STREET_ATTRIBUTE,SCIMConstants.ADDRESS_STREET_VALUE);
+        address.put(SCIMConstants.ADDRESS_LOCALITY_ATTRIBUTE,SCIMConstants.ADDRESS_LOCALITY_VALUE);
+        address.put(SCIMConstants.ADDRESS_REGION_ATTRIBUTE,SCIMConstants.ADDRESS_REGION_VALUE);
+        address.put(SCIMConstants.ADDRESS_POSTAL_CODE_ATTRIBUTE,SCIMConstants.ADDRESS_POSTAL_CODE_VALUE);
+        address.put(SCIMConstants.ADDRESS_COUNTRY_ATTRIBUTE,SCIMConstants.ADDRESS_COUNTRY_VALUE);
+        address.put(SCIMConstants.ADDRESS_FORMATTED_ATTRIBUTE,SCIMConstants.ADDRESS_FORMATTED_VALUE);
+        address.put(SCIMConstants.ADDRESS_TYPE_ATTRIBUTE, SCIMConstants.ADDRESS_TYPE_VALUE);
+        address.put(SCIMConstants.ADDRESS_PRIMARY_ATTRIBUTE,SCIMConstants.ADDRESS_PRIMARY_VALUE);
+
+
+        JSONArray phone = new JSONArray();
+        phone.add(SCIMConstants.PHONE_NUMBER_VALUE);
+        rootObject.put(SCIMConstants.PHONE_NUMBER_ATTRIBUTE, phone);
+        rootObject.put(SCIMConstants.PHONE_NUMBER_TYPE_ATTRIBUTE,SCIMConstants.PHONE_NUMBER_TYPE_VALUE);
+
+        JSONArray imsArray = new JSONArray();
+        imsArray.add(SCIMConstants.IMS_VALUE);
+        rootObject.put(SCIMConstants.IMS_ATTRIBUTE,imsArray);
+        rootObject.put(SCIMConstants.IMS_VALUE_ATTRIBUTE,SCIMConstants.IMS_VALUE);
+        rootObject.put(SCIMConstants.IMS_TYPE_ATTRIBUTE,SCIMConstants.IMS_TYPE_ATTRIBUTE_VALUE);
+
+        JSONArray photo = new JSONArray();
+        phone.add(SCIMConstants.PHOTO_VALUE);
+        rootObject.put(SCIMConstants.PHOTO_ATTIBUTE,photo);
+        rootObject.put(SCIMConstants.PHOTO_VALUE_ATTRIBUTE,SCIMConstants.PHOTO_VALUE);
+        rootObject.put(SCIMConstants.PHOTO_TYPE_ATTRIBUTE,SCIMConstants.PHOTO_TYPE_ATTRIBUTE_VALUE);
+
+
+        rootObject.put(SCIMConstants.USER_TYPE_ATTRIBUTE,SCIMConstants.USER_TYPE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_TITEL_ATTRIBUTE,SCIMConstants.USER_TYPE_TITLE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_LANGUAGE_ATTRIBUTE,SCIMConstants.USET_TYPE_LANGUAGE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_LOCALE_ATTRIBUTE,SCIMConstants.USER_TYPE_LOCALE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_TIME_ZONE_ATTRIBUTE, SCIMConstants.USER_TYPE_TIME_ZONE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_ACTIVE_ATTRIBUTE,SCIMConstants.USER_TYPE_ACTIVE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_PASSWORD_ATTRIBUTE,SCIMConstants.PASSWORD);
+
+
+        JSONArray groupsAttribute = new JSONArray();
+        groupsAttribute.add(SCIMConstants.GROUP_VALUE);
+        rootObject.put(SCIMConstants.GROUP_ATTRIBUTE,groupsAttribute);
+
+        JSONArray groupsRef = new JSONArray();
+        groupsRef.add(SCIMConstants.GROUP_REF_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.GROUP_REF_ATTRIBUTE,groupsRef);
+
+        JSONArray groupsDisplay = new JSONArray();
+        groupsDisplay.add(SCIMConstants.GROUP_DISPLAY_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.GROUP_DISPLAY_ATTRIBUTE,groupsDisplay);
+
+        JSONArray lastModified = new JSONArray();
+        lastModified.add(SCIMConstants.META_LASTMODIFIED_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_LASTMODIFIED_ATTRIBUTE,lastModified);
+
+        JSONArray metaVersion = new JSONArray();
+        metaVersion.add(SCIMConstants.META_VERTSION_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_VERTSION_ATTRIBUTE,metaVersion);
+
+        JSONArray metaLocation = new JSONArray();
+        metaLocation.add(SCIMConstants.META_LOCATION_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_LOCATION_ATTRIBUTE,metaLocation);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
