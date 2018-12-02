@@ -100,6 +100,77 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         emails.add(emailHome);
         rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
 
+        JSONObject address = new JSONObject();
+        address.put(SCIMConstants.ADDRESS_STREET_ATTRIBUTE,SCIMConstants.ADDRESS_STREET_VALUE);
+        address.put(SCIMConstants.ADDRESS_LOCALITY_ATTRIBUTE,SCIMConstants.ADDRESS_LOCALITY_VALUE);
+        address.put(SCIMConstants.ADDRESS_REGION_ATTRIBUTE,SCIMConstants.ADDRESS_REGION_VALUE);
+        address.put(SCIMConstants.ADDRESS_POSTAL_CODE_ATTRIBUTE,SCIMConstants.ADDRESS_POSTAL_CODE_VALUE);
+        address.put(SCIMConstants.ADDRESS_COUNTRY_ATTRIBUTE,SCIMConstants.ADDRESS_COUNTRY_VALUE);
+        address.put(SCIMConstants.ADDRESS_FORMATTED_ATTRIBUTE,SCIMConstants.ADDRESS_FORMATTED_VALUE);
+        address.put(SCIMConstants.ADDRESS_TYPE_ATTRIBUTE, SCIMConstants.ADDRESS_TYPE_VALUE);
+        address.put(SCIMConstants.ADDRESS_PRIMARY_ATTRIBUTE,SCIMConstants.ADDRESS_PRIMARY_VALUE);
+
+
+        JSONArray phone = new JSONArray();
+        phone.add(SCIMConstants.PHONE_NUMBER_VALUE);
+        rootObject.put(SCIMConstants.PHONE_NUMBER_ATTRIBUTE, phone);
+        rootObject.put(SCIMConstants.PHONE_NUMBER_TYPE_ATTRIBUTE,SCIMConstants.PHONE_NUMBER_TYPE_VALUE);
+
+        JSONArray imsArray = new JSONArray();
+        imsArray.add(SCIMConstants.IMS_VALUE);
+        rootObject.put(SCIMConstants.IMS_ATTRIBUTE,imsArray);
+        rootObject.put(SCIMConstants.IMS_VALUE_ATTRIBUTE,SCIMConstants.IMS_VALUE);
+        rootObject.put(SCIMConstants.IMS_TYPE_ATTRIBUTE,SCIMConstants.IMS_TYPE_ATTRIBUTE_VALUE);
+
+       JSONArray photo = new JSONArray();
+        phone.add(SCIMConstants.PHOTO_VALUE);
+        rootObject.put(SCIMConstants.PHOTO_ATTIBUTE,photo);
+        rootObject.put(SCIMConstants.PHOTO_VALUE_ATTRIBUTE,SCIMConstants.PHOTO_VALUE);
+        rootObject.put(SCIMConstants.PHOTO_TYPE_ATTRIBUTE,SCIMConstants.PHOTO_TYPE_ATTRIBUTE_VALUE);
+
+
+        rootObject.put(SCIMConstants.USER_TYPE_ATTRIBUTE,SCIMConstants.USER_TYPE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_TITEL_ATTRIBUTE,SCIMConstants.USER_TYPE_TITLE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_LANGUAGE_ATTRIBUTE,SCIMConstants.USET_TYPE_LANGUAGE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_LOCALE_ATTRIBUTE,SCIMConstants.USER_TYPE_LOCALE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_TIME_ZONE_ATTRIBUTE, SCIMConstants.USER_TYPE_TIME_ZONE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_ACTIVE_ATTRIBUTE,SCIMConstants.USER_TYPE_ACTIVE_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.USER_TYPE_PASSWORD_ATTRIBUTE,SCIMConstants.PASSWORD);
+
+
+        JSONArray groups1 = new JSONArray();
+        groups1.add(SCIMConstants.GROUP_VALUE);
+        rootObject.put(SCIMConstants.GROUP_ATTRIBUTE,groups1);
+
+        JSONArray groups2 = new JSONArray();
+        groups2.add(SCIMConstants.GROUP_REF_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.GROUP_REF_ATTRIBUTE,groups2);
+
+        JSONArray groups3 = new JSONArray();
+        groups3.add(SCIMConstants.GROUP_DISPLAY_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.GROUP_DISPLAY_ATTRIBUTE,groups3);
+
+        rootObject.put(SCIMConstants.EMPLOYEE_NUMBER_ATTRIBUTE,SCIMConstants.EMPLOYEE_NUMBER_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.COST_CENTER_ATTRIBUTE,SCIMConstants.COST_CENTER_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.ORGANIZATION_ATTRIBUTE,SCIMConstants.ORGANIZATION_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.DIVISION_ATTRIBUTE,SCIMConstants.DIVISION_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.DEPARTMENT_ATTRIBUTE,SCIMConstants.DEPARTMENT_ATTRIBUTE_VALUE);
+
+        JSONArray managerId = new JSONArray();
+        managerId.add(SCIMConstants.MANAGER_ID_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.MANAGER_ID_ATTRIBUTE,managerId);
+
+
+        JSONArray managerRef = new JSONArray();
+        managerRef.add(SCIMConstants.MANAGER_REF_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.MANAGER_REF_ATTRIBUTE,managerRef);
+
+
+        JSONArray created = new JSONArray();
+        created.add(SCIMConstants.META_CREATED_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_CREATED_ATTRIBUTE,created);
+
+
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
