@@ -65,9 +65,13 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
         JSONObject  rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
         schemas.add(SCIMConstants.USER_SCHEMA);
+
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE,schemas);
+        rootObject.put(SCIMConstants.ID_ATTRIBUTE,SCIMConstants.ID_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.EXTERNAL_ID_ATTRIBUTE,SCIMConstants.EXTERNAL_ID_ATTRIBUTE_VALUE);
 
         JSONObject names = new JSONObject();
+        names.put(SCIMConstants.FORMATTED_NAME_ATTRIBUTE,SCIMConstants.FORMATTED_NAME);
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.MIDDLE_NAME_ATTRIBUTE,SCIMConstants.MIDDLE_NAME_CLAIM_VALUE);
@@ -104,7 +108,7 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
    }
 
     @Test(dependsOnMethods = "testSCIM2CreateUserWithFullRequest")
-    private void testDeleteUser() throws Exception {
+    private void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();

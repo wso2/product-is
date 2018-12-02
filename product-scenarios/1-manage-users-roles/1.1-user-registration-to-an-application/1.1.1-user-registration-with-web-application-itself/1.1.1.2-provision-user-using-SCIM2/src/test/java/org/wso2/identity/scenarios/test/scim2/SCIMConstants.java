@@ -1,3 +1,4 @@
+
 /*
  *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -38,6 +39,9 @@ public class SCIMConstants {
     public static final String USER_NAME_ATTRIBUTE = "userName";
     public static final String PASSWORD_ATTRIBUTE = "password";
     public static final String ID_ATTRIBUTE = "id";
+    public static final String ID_ATTRIBUTE_VALUE = "2819c223-7f76-453a-919d-413861904646";
+    public static final String EXTERNAL_ID_ATTRIBUTE ="externalId";
+    public static final String EXTERNAL_ID_ATTRIBUTE_VALUE = "701984";
     public static final String FAMILY_NAME_CLAIM_VALUE = "scim2";
     public static final String HONORIFIC_PREFIX_CLAIM_VALUE = "Mr";
     public static final String HONORIFIC_SURFIX_CLAIM_VALUE = "III";
@@ -58,6 +62,8 @@ public class SCIMConstants {
     public static final String VALUE = "value";
     public static final String ROLE_NAME = "TestRole";
     public static final String ROLE_NAME_ATTRIBUTE = "roles";
+    public static final String FORMATTED_NAME_ATTRIBUTE ="formatted";
+    public static final String FORMATTED_NAME = "Ms. Barbara J Jensen III";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
     public static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:User";
     public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
