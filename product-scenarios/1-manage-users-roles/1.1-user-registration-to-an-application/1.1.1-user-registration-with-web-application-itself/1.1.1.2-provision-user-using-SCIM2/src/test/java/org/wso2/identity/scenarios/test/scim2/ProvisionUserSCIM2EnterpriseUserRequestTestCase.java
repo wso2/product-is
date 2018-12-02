@@ -108,7 +108,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
    }
 
     @Test(dependsOnMethods = "testSCIM2CreateEnterpriseUserRequest")
-    private void testDeleteUser() throws Exception {
+    private void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
