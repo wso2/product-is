@@ -64,7 +64,8 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
 
         JSONObject  rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
-        rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
+        schemas.add(SCIMConstants.USER_SCHEMA);
+        rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE,schemas);
 
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
@@ -83,10 +84,10 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
 
         JSONObject emailWork = new JSONObject();
         emailWork.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_WORK_ATTRIBUTE);
+        emailWork.put(SCIMConstants.PRIMARY_PARAM, PRIMARYSTATE);
         emailWork.put(SCIMConstants.VALUE_PARAM, WORKEMAIL);
 
         JSONObject emailHome = new JSONObject();
-        emailHome.put(SCIMConstants.PRIMARY_PARAM, PRIMARYSTATE);
         emailHome.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_HOME_ATTRIBUTE);
         emailHome.put(SCIMConstants.VALUE_PARAM, HOMEEMAIL);
 
