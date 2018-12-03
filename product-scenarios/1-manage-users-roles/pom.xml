@@ -30,7 +30,7 @@
     <version>5.7.0</version>
 
     <modules>
-        <module>1.1-user-registration-to-an-application</module>
+        <module>1.1-user-registration</module>
     </modules>
 
     <pluginRepositories>
