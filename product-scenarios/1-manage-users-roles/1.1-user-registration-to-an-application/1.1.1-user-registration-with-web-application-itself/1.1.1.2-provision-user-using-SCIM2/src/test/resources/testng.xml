@@ -5,7 +5,7 @@
 
     <test name="is-usr-mgt-scim2" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithValidationFailuresTestCase"/>
+            <!--class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithValidationFailuresTestCase"/-->
         </classes>
     </test>
 </suite>
