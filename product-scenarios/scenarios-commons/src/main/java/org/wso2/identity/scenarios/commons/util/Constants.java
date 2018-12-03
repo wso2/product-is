@@ -70,7 +70,7 @@ public class Constants {
     public static class SCIMEndpoints {
 
         public static final String SCIM1_ENDPOINT = "wso2/scim";
-        public static final String SCIM2_ENDPOINT = "wso2/scim2";
+        public static final String SCIM2_ENDPOINT = "scim2";
         public static final String SCIM_ENDPOINT_BULK = "Bulk";
         public static final String SCIM_ENDPOINT_USER = "Users";
 
