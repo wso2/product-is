@@ -6,6 +6,16 @@
     <test name="is-usr-mgt-scim1" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithAllAttributesTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithMalformedRequestTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.SCIM1ProvisionUserWithValidationFailuresTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionExistingUserTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithAllAttributesTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithoutAuthHeaderTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithoutContentHeaderTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.AnonymousProvisioningTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMWithDifferentContentTypeTestCase"/>
+            <!--class name="org.wso2.identity.scenarios.test.scim.UserProvisionWithInsufficientPrivilegesSCIMTestCase"/-->
         </classes>
     </test>
 </suite>
