@@ -139,6 +139,8 @@ public class SCIMConstants {
     public static final String META_ATTRIBUTE = "meta";
     public static final String META_CREATED_ATTRIBUTE = "created";
     public static final String META_CREATED_ATTRIBUTE_VALUE = "2010-01-23T04:56:22Z";
+    public static final String META_RESOURCE_TYPE_ATTRIBUTE = "resourceType";
+    public static final String META_RESOURCE_TYPE_ATTRIBUTE_VALUE = "User";
     public static final String META_LASTMODIFIED_ATTRIBUTE = "lastModified";
     public static final String META_LASTMODIFIED_ATTRIBUTE_VALUE = "2011-05-13T04:42:34Z";
     public static final String META_VERTSION_ATTRIBUTE = "version";
