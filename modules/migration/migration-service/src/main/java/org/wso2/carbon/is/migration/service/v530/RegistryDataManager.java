@@ -30,7 +30,7 @@ import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.util.Utils;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
@@ -131,8 +131,7 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder
-                .getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Email Templates migration!!!!");
@@ -218,7 +217,7 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping challenge question migration!!!!");
@@ -317,7 +316,7 @@ public class RegistryDataManager {
 
         // since copying oidc-config file for super tenant is handled by the OAuth component we only need to handle
         // this in migrated tenants.
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping copying OIDC Scopes Data !!!!");
