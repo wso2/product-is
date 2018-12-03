@@ -56,7 +56,7 @@ public class DataSourceManager {
             initUMDataSource();
             initConsentDataSource();
         } catch (MigrationClientException e) {
-            log.error("Error while initializing datasource manager.");
+            log.error("Error while initializing datasource manager.", e);
         }
         initOracleDataSource();
     }

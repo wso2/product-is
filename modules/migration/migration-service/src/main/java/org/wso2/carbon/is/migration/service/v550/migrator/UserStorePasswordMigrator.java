@@ -135,7 +135,7 @@ public class UserStorePasswordMigrator extends Migrator {
                 documentElement.serialize(outputStream);
             }
         } catch (XMLStreamException ex) {
-            log.error("Error while updating password for: " + filePath);
+            log.error("Error while updating password for: " + filePath, ex);
         } finally {
             try {
                 if (parser != null) {
