@@ -107,7 +107,7 @@ public class Utility {
                 }
             }
         } catch (UserStoreException e) {
-            log.error("Error while getting inactive tenant details. Assuming zero inactive tenants.");
+            log.error("Error while getting inactive tenant details. Assuming zero inactive tenants.", e);
             return new ArrayList<>();
         }
 

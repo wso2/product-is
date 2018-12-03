@@ -126,7 +126,7 @@ public class RegistryDataManager {
             migrateKeyStorePasswordForTenant(SUPER_TENANT_ID);
             log.info("Keystore passwords migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
         } catch (Exception e) {
-            log.error("Error while migrating Keystore passwords for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+            log.error("Error while migrating Keystore passwords for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
             throw e;
         }
 
@@ -142,7 +142,7 @@ public class RegistryDataManager {
                 migrateKeyStorePasswordForTenant(tenant.getId());
                 log.info("Keystore passwords migrated for tenant : " + tenant.getDomain());
             } catch (Exception e) {
-                log.error("Error while migrating keystore passwords for tenant : " + tenant.getDomain());
+                log.error("Error while migrating keystore passwords for tenant : " + tenant.getDomain(), e);
                 throw e;
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
