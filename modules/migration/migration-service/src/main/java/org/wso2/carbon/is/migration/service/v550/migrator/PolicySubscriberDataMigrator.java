@@ -36,7 +36,7 @@ public class PolicySubscriberDataMigrator extends Migrator {
         log.info(Constant.MIGRATION_LOG + "Migration starting on Subscriber resources");
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
         try {
-            registryDataManager.migrateSubscriberPassword(isIgnoreForInactiveTenants());
+            registryDataManager.migrateSubscriberPassword(isIgnoreForInactiveTenants(), isContinueOnError());
         } catch (Exception e) {
             log.error("Error while migrating Policy Subscribers", e);
         }
