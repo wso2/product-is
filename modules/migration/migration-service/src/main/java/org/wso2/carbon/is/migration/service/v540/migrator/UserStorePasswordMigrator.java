@@ -57,7 +57,7 @@ public class UserStorePasswordMigrator extends Migrator {
         updateTenantConfigs();
     }
 
-    private void updateTenantConfigs() {
+    private void updateTenantConfigs() throws MigrationClientException {
 
         try {
             Set<Tenant> tenants = Utility.getTenants();
@@ -66,15 +66,27 @@ public class UserStorePasswordMigrator extends Migrator {
                     log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping secondary userstore migration!");
                     continue;
                 }
-                File[] userstoreConfigs = getUserStoreConfigFiles(tenant.getId());
-                for (File file : userstoreConfigs) {
-                    if (file.isFile()) {
-                        updatePassword(file.getAbsolutePath());
+                try {
+                    File[] userstoreConfigs = getUserStoreConfigFiles(tenant.getId());
+                    for (File file : userstoreConfigs) {
+                        if (file.isFile()) {
+                            updatePassword(file.getAbsolutePath());
+                        }
                     }
+                } catch (FileNotFoundException | IdentityException | CryptoException e) {
+                    String msg = "Error while updating secondary user store password for tenant: " + tenant.getDomain();
+                    if (!isContinueOnError()) {
+                        throw new MigrationClientException(msg, e);
+                    }
+                    log.error(msg, e);
                 }
             }
-        } catch (Exception e) {
-            log.error("Error while updating secondary user store password for tenant", e);
+        } catch (MigrationClientException e) {
+            String msg = "Error while updating secondary user store password for tenant";
+            if (!isContinueOnError()) {
+                throw e;
+            }
+            log.error(msg, e);
         }
     }
 
