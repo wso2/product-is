@@ -48,8 +48,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 
 public class ThriftServer implements Runnable {
-	private static Log log = LogFactory.getLog(ThriftServer.class);
-	private final String FILE_STREAM_DEFINITION_EXT = ".json";
+
+    private static Log log = LogFactory.getLog(ThriftServer.class);
+	private static final String FILE_STREAM_DEFINITION_EXT = ".json";
 	private AbstractStreamDefinitionStore streamDefinitionStore = new InMemoryStreamDefinitionStore();
 	private ThriftDataReceiver thriftDataReceiver;
 	private boolean eventReceived = false;
@@ -160,17 +161,15 @@ public class ThriftServer implements Runnable {
 	}
 
 	public void resetPreservedEventList() {
+
+        log.info("Clearing event list with " + preservedEventList.size() + " events.");
 		preservedEventList.clear();
 	}
 
 	public List<StreamDefinition> loadStreamDefinitions() {
 
-		String relativeFilePath = FrameworkPathUtil.getSystemResourceLocation() +
-		                          "artifacts" + File.separator + "ESB" + File.separator +
-		                          testCaseResourceFolderName;
-		String directoryPath = relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
-		directoryPath = getResourceFilePath(testCaseResourceFolderName,"");
-		GenericExtFilter filter = new GenericExtFilter(FILE_STREAM_DEFINITION_EXT);
+        String directoryPath = getResourceFilePath(testCaseResourceFolderName, "");
+        GenericExtFilter filter = new GenericExtFilter(FILE_STREAM_DEFINITION_EXT);
 		File directory = new File(directoryPath);
 		List<StreamDefinition> streamDefinitions = new ArrayList<StreamDefinition>();
 		if (!directory.exists()) {
@@ -233,19 +232,6 @@ public class ThriftServer implements Runnable {
 
 		public boolean accept(File dir, String name) {
 			return (name.endsWith(ext));
-		}
-	}
-
-	public void waitToReceiveEvents(int maxWaitTime, int expectedCount){
-		for(int i = 0; i < maxWaitTime; i = i + 5000){
-			if(msgCount.get() >= expectedCount){
-				break;
-			}
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				//ignored
-			}
 		}
 	}
 }
