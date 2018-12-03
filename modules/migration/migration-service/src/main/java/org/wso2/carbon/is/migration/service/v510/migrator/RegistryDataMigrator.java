@@ -59,11 +59,11 @@ public class RegistryDataMigrator extends Migrator {
             log.info("MIGRATION-LOGS >> SAML Service Provider details are migrated successfully for tenant : " +
                      MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
         } catch (Exception e) {
-            log.error("MIGRATION-ERROR-LOGS-039 >> Error while migrating registry data for tenant : " +
-                      MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, e);
             if (!isContinueOnError()) {
                 throw new MigrationClientException("Error while executing the migration.", e);
             }
+            log.error("MIGRATION-ERROR-LOGS-039 >> Error while migrating registry data for tenant : " +
+                      MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, e);
         }
 
         //migrating tenant configurations
@@ -87,10 +87,10 @@ public class RegistryDataMigrator extends Migrator {
                     log.info("MIGRATION-LOGS >> SAML Service Provider details are migrated successfully for tenant : "
                             + tenant.getDomain());
                 } catch (Exception e) {
-                    log.error("MIGRATION-ERROR-LOGS-040 >> Error while executing the migration.", e);
                     if (!isContinueOnError()) {
                         throw new MigrationClientException("Error while executing the migration.", e);
                     }
+                    log.error("MIGRATION-ERROR-LOGS-040 >> Error while executing the migration.", e);
                 } finally {
                     try {
                         PrivilegedCarbonContext.endTenantFlow();
