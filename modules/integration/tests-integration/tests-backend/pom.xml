@@ -508,6 +508,10 @@
             <artifactId>org.wso2.identity.integration.common.utils</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.template.mgt</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
             <exclusions>
