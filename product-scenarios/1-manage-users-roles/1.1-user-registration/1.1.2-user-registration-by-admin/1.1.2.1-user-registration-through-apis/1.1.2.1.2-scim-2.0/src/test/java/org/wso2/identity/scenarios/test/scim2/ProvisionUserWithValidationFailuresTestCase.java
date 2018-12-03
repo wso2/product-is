@@ -18,10 +18,8 @@
 
 package org.wso2.identity.scenarios.test.scim2;
 
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -31,30 +29,34 @@ import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
+import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
+import org.wso2.identity.scenarios.commons.util.Constants;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+
 public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBase {
 
     private CloseableHttpClient client;
     private String PASSWORD = "ab";
+    private String scimUsersEndpoint;
+    private final String SEPERATOR = "/";
+    JSONArray schemasArray;
+
+    HttpResponse response;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         setKeyStoreProperties();
         client = HttpClients.createDefault();
+        super.init();
     }
 
-    @Test(description = "1.1.1.1.3")
+    @Test(description = "1.1.2.1.2.3")
     public void testInvalidSCIMUserCreate() throws Exception {
-
-        String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM2_USERS_ENDPOINT;
-        HttpPost request = new HttpPost(scimEndpoint);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
 
         JSONObject rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
@@ -65,19 +67,18 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, PASSWORD);
 
-        StringEntity entity = new StringEntity(rootObject.toString());
-        request.setEntity(entity);
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
 
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 500,
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
                 "Password validation failed at user creation hence server should have returned a bad request");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
-        JSONArray schemasArray = (JSONArray) ((JSONObject) responseObj).get("schemas");
+
+        schemasArray = (JSONArray) (rootObject).get("schemas");
         assertNotNull(schemasArray);
-        assertEquals(schemasArray.get(0).toString(), SCIMConstants.ERROR_SCHEMA);
         assertTrue(responseObj.toString().contains("Credential is not valid"));
     }
 
 }
+
