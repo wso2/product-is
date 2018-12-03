@@ -6,7 +6,7 @@
   ~ you may not use this file except in compliance with the License.
   ~ You may obtain a copy of the License at
   ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing, software
   ~ distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,20 +18,18 @@
 
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>user-registration-to-an-application-test</artifactId>
+        <artifactId>access-delegation-tests</artifactId>
         <version>5.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>user-registration-with-web-application-itself-test</artifactId>
+    <artifactId>access-protected-resource</artifactId>
     <packaging>pom</packaging>
-    <name>User Registration With Web Application Itself</name>
-    <version>5.7.0</version>
+    <name>Access protected resource</name>
 
     <modules>
-        <module>1.1.1.1-provision-user-using-SCIM1.1</module>
-        <!--<module>1.1.1.2-provision-user-using-SCIM2</module>-->
+        <module>3.1.1-issue-access-token</module>
     </modules>
 
 </project>
