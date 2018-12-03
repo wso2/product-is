@@ -41,7 +41,6 @@ import org.wso2.carbon.is.migration.service.v530.bean.Claim;
 import org.wso2.carbon.is.migration.service.v530.bean.Dialect;
 import org.wso2.carbon.is.migration.service.v530.bean.MappedAttribute;
 import org.wso2.carbon.is.migration.service.v540.util.FileBasedClaimBuilder;
-import org.wso2.carbon.is.migration.util.Constant;
 import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserRealm;
@@ -49,7 +48,6 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.claim.inmemory.ClaimConfig;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -63,6 +61,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.is.migration.util.Constant.MIGRATION_LOG;
 import static org.wso2.carbon.is.migration.util.Constant.SUPER_TENANT_ID;
@@ -456,7 +455,7 @@ public class ClaimDataMigrator extends Migrator{
             for (Tenant tenant : tenants) {
                 int tenantId = tenant.getId();
                 if (ignoreForInactiveTenants && inactiveTenants.contains(tenantId)) {
-                    log.info("Skipping claim data migration for inactive tenant: " + tenantId);
+                    log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping claim data migration!");
                     continue;
                 }
                 migrateLocalClaimData(tenant.getId());
