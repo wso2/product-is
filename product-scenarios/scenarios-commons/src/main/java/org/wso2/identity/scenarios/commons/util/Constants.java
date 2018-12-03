@@ -24,7 +24,6 @@ public class Constants {
     private Constants() {
 
     }
-
     public static final String APPROVE_ONCE = "approve";
     public static final String APPROVE_ALWAYS = "approveAlways";
     public static final String BASIC = "Basic";
