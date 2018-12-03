@@ -6,7 +6,7 @@
   ~ you may not use this file except in compliance with the License.
   ~ You may obtain a copy of the License at
   ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing, software
   ~ distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,14 +17,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>user-registration-with-web-application-itself-test</artifactId>
+        <artifactId>access-protected-resource</artifactId>
         <version>5.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <name>Provision User Using SCIM1.1</name>
-    <artifactId>provision-user-using-scim1.1-test</artifactId>
+    <name>Issue access token</name>
+    <artifactId>issue-access-token</artifactId>
     <packaging>jar</packaging>
 
     <build>
@@ -55,7 +55,7 @@
                         <property>
                             <name>common.resource.location</name>
                             <value>
-                                ${basedir}/../../../../scenarios-commons/src/main/resources/
+                                ${basedir}/../../../scenarios-commons/src/main/resources/
                             </value>
                         </property>
                         <property>
@@ -152,5 +152,5 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
-     </dependencies>
+    </dependencies>
 </project>
