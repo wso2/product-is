@@ -78,7 +78,6 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
 
         errorResponse = SCIMProvisioningUtil.provisionUserSCIM(backendURL, this.rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(errorResponse.getStatusLine().getStatusCode(), HttpStatus.SC_CONFLICT, "User has not been created successfully");
-
         Object responseObj = JSONValue.parse(EntityUtils.toString(errorResponse.getEntity()));
         assertTrue(
                 responseObj.toString().contains("User with the name: " + USERNAME + " already exists in the system"));
