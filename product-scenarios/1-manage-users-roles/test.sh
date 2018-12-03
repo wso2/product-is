@@ -38,7 +38,7 @@ echo "Copying surefire-reports to data bucket"
 BASE_SCENARIO=1-manage-users-roles
 
 #1.1.1.1-provision-user-using-SCIM1.1
-TEST_SCENARIO_DIR=1.1-user-registration-to-an-application/1.1.1-user-registration-with-web-application-itself/1.1.1.1-provision-user-using-SCIM1.1
+TEST_SCENARIO_DIR=1.1-user-registration/1.1.2-user-registration-by-admin/1.1.2.1-user-registration-through-apis/1.1.2.1.1-scim-1.1
 mkdir -p ${DIR}/${BASE_SCENARIO}/${TEST_SCENARIO_DIR}
 cp -r ${TEST_SCENARIO_DIR}/target/surefire-reports ${DIR}/${BASE_SCENARIO}/${TEST_SCENARIO_DIR}
 
