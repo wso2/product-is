@@ -17,7 +17,6 @@
  */
 package org.wso2.identity.integration.test.analytics.authentication;
 
-
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.catalina.startup.Tomcat;
@@ -29,7 +28,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -56,16 +57,14 @@ import org.wso2.identity.integration.test.analytics.commons.ThriftServer;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import javax.xml.xpath.XPathExpressionException;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.xml.xpath.XPathExpressionException;
 
 public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
@@ -77,7 +76,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
-    public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
+    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -98,8 +97,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private SAMLConfig config;
     private Tomcat tomcatServer;
     private ThriftServer thriftServer;
-    protected ServerConfigurationManager serverConfigurationManager;
-    HttpClient sharedHttpClient = new DefaultHttpClient();
+    private ServerConfigurationManager serverConfigurationManager;
+    private CloseableHttpClient sharedHttpClient = HttpClientBuilder.create().build();
     private static final Long WAIT_TIME = 10000L;
 
     protected enum HttpBinding {
@@ -288,7 +287,7 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
 
-        Boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
+        boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
 
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
@@ -302,8 +301,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         HttpResponse response = null;
         try {
             HttpClient httpClient = sharedHttpClient;
-            response = Utils.sendGetRequest(String.format(SAML_SSO_INDEX_URL, config.getApp().getArtifact(), config
-                    .getHttpBinding().binding), USER_AGENT, httpClient);
+            response = Utils.sendGetRequest(String.format(SAML_SSO_INDEX_URL, config.getApp().getArtifact()),
+                    USER_AGENT, httpClient);
             String samlResponse = Utils.extractDataFromResponse(response, "name='SAMLResponse'", 5);
 
             samlResponse = new String(Base64.decodeBase64(samlResponse));
@@ -345,9 +344,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
 
-                response = Utils.sendPOSTConsentMessage(response,
-                        String.format(COMMON_AUTH_URL, DEFAULT_PORT),
-                        USER_AGENT, ACS_URL, httpClient, pastrCookie);
+                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, ACS_URL, httpClient,
+                        pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
@@ -362,7 +360,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
             Event sessionEvent = null;
             Event authStepEvent = null;
-            Event overallAuthEvent = null;
 
             for (Event event : thriftServer.getPreservedEventList()) {
                 String streamId = event.getStreamId();
@@ -371,19 +368,15 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
                 }
                 if (authenticationStreamId.equalsIgnoreCase(streamId)) {
                     Object[] eventStreamData = event.getPayloadData();
-                    if ("overall".equalsIgnoreCase((String) eventStreamData[2])) {
-                        overallAuthEvent = event;
-                    } else if ("step".equalsIgnoreCase((String) eventStreamData[2])) {
+                    if ("step".equalsIgnoreCase((String) eventStreamData[2])) {
                         authStepEvent = event;
                     }
                 }
             }
-
+            Assert.assertNotNull(authStepEvent, "Auth step event can't be null.");
             assertSessionEvent(sessionEvent);
 
-            Object[] eventStreamData = overallAuthEvent.getPayloadData();
-
-            eventStreamData = authStepEvent.getPayloadData();
+            Object[] eventStreamData = authStepEvent.getPayloadData();
             // authenticationSuccess
             Assert.assertEquals(eventStreamData[3], false);
             // userName
@@ -764,41 +757,28 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
 
     public void assertSessionUpdateEvent(Event sessionEvent) {
         Object[] sessionObjects = sessionEvent.getPayloadData();
-        // Assert.assertTrue((Long)sessionObjects[1] < (Long)sessionObjects[2]);
         Assert.assertEquals(sessionObjects[4], 2);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-        //  Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
     }
 
     public void assertSessionTerminationEvent(Event sessionEvent) {
+
         Object[] sessionObjects = sessionEvent.getPayloadData();
-        // Assert.assertTrue((Long) sessionObjects[1] < (Long) sessionObjects[2]);
         Assert.assertEquals(sessionObjects[4], 0);
         Assert.assertEquals(sessionObjects[5], "samlAnalyticsuser1");
         Assert.assertEquals(sessionObjects[6], "PRIMARY");
-        // Assert.assertTrue((Long)sessionObjects[2] < (Long)sessionObjects[10]);
-    }
-
-    private String extractDataFromResponse(HttpResponse response) throws IOException {
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-        StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-        rd.close();
-        return result.toString();
     }
 
     private void waitUntilEventsReceive(int eventCount) {
 
         long terminationTime = System.currentTimeMillis() + WAIT_TIME;
         while (System.currentTimeMillis() < terminationTime) {
-            if (thriftServer.getPreservedEventList().size() == eventCount) ;
-            break;
+            if (thriftServer.getPreservedEventList().size() >= eventCount) {
+                break;
+            }
         }
+        log.error("Waiting for events " + eventCount + " timed out.");
     }
 
     protected List<String> waitUntilWriteToAuditLogs(String content) throws IOException {
