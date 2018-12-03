@@ -47,6 +47,26 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
     private String WORKEMAIL = "test@work.com";
     private String PROFILE_URL ="https://login.example.com/bjensen";
 
+    private String x509CertificateValue = "MIIDQzCCAqygAwIBAgICEAAwDQYJKoZIhvcNAQEFBQAwTjELMAkGA1UEBhMCVVMx\n" +
+            "EzARBgNVBAgMCkNhbGlmb3JuaWExFDASBgNVBAoMC2V4YW1wbGUuY29tMRQwEgYD\n" +
+            "VQQDDAtleGFtcGxlLmNvbTAeFw0xMTEwMjIwNjI0MzFaFw0xMjEwMDQwNjI0MzFa\n" +
+            "MH8xCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlhMRQwEgYDVQQKDAtl\n" +
+            "eGFtcGxlLmNvbTEhMB8GA1UEAwwYTXMuIEJhcmJhcmEgSiBKZW5zZW4gSUlJMSIw\n" +
+            "IAYJKoZIhvcNAQkBFhNiamVuc2VuQGV4YW1wbGUuY29tMIIBIjANBgkqhkiG9w0B\n" +
+            "AQEFAAOCAQ8AMIIBCgKCAQEA7Kr+Dcds/JQ5GwejJFcBIP682X3xpjis56AK02bc\n" +
+            "1FLgzdLI8auoR+cC9/Vrh5t66HkQIOdA4unHh0AaZ4xL5PhVbXIPMB5vAPKpzz5i\n" +
+            "PSi8xO8SL7I7SDhcBVJhqVqr3HgllEG6UClDdHO7nkLuwXq8HcISKkbT5WFTVfFZ\n" +
+            "zidPl8HZ7DhXkZIRtJwBweq4bvm3hM1Os7UQH05ZS6cVDgweKNwdLLrT51ikSQG3\n" +
+            "DYrl+ft781UQRIqxgwqCfXEuDiinPh0kkvIi5jivVu1Z9QiwlYEdRbLJ4zJQBmDr\n" +
+            "SGTMYn4lRc2HgHO4DqB/bnMVorHB0CC6AV1QoFK4GPe1LwIDAQABo3sweTAJBgNV\n" +
+            "HRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZp\n" +
+            "Y2F0ZTAdBgNVHQ4EFgQU8pD0U0vsZIsaA16lL8En8bx0F/gwHwYDVR0jBBgwFoAU\n" +
+            "dGeKitcaF7gnzsNwDx708kqaVt0wDQYJKoZIhvcNAQEFBQADgYEAA81SsFnOdYJt\n" +
+            "Ng5Tcq+/ByEDrBgnusx0jloUhByPMEVkoMZ3J7j1ZgI8rAbOkNngX8+pKfTiDz1R\n" +
+            "C4+dx8oU6Za+4NJXUjlL5CvV6BEYb1+QAEJwitTVvxB/A67g42/vzgAtoRUeDov1\n" +
+            "GFiBZ+GNF/cAYKcMtGcrs2i97ZkJMo=";
+
+
 
     HttpResponse response;
 
@@ -150,6 +170,12 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         groups3.add(SCIMConstants.GROUP_DISPLAY_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.GROUP_DISPLAY_ATTRIBUTE,groups3);
 
+        JSONArray cert = new JSONArray();
+        cert.add(x509CertificateValue);
+        rootObject.put(SCIMConstants.X509_CERTIFICAT_ATTRIBUTE,cert);
+        rootObject.put(SCIMConstants.URN_ATTRIBUTE, SCIMConstants.ENTERPRISE_SCHEMA);
+
+
         rootObject.put(SCIMConstants.EMPLOYEE_NUMBER_ATTRIBUTE,SCIMConstants.EMPLOYEE_NUMBER_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.COST_CENTER_ATTRIBUTE,SCIMConstants.COST_CENTER_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.ORGANIZATION_ATTRIBUTE,SCIMConstants.ORGANIZATION_ATTRIBUTE_VALUE);
@@ -160,17 +186,28 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         managerId.add(SCIMConstants.MANAGER_ID_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.MANAGER_ID_ATTRIBUTE,managerId);
 
-
         JSONArray managerRef = new JSONArray();
         managerRef.add(SCIMConstants.MANAGER_REF_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.MANAGER_REF_ATTRIBUTE,managerRef);
 
+        rootObject.put(SCIMConstants.MANAGER_DISPLAY_NAME_ATTRIBUTE,SCIMConstants.MANAGER_DISPLAY_NAME_ATTRIBUTE_VALUE);
 
         JSONArray created = new JSONArray();
         created.add(SCIMConstants.META_CREATED_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.META_CREATED_ATTRIBUTE,created);
 
+        JSONArray lastModified = new JSONArray();
+        lastModified.add(SCIMConstants.META_LASTMODIFIED_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_LASTMODIFIED_ATTRIBUTE,lastModified);
 
+        JSONArray metaVersion = new JSONArray();
+        metaVersion.add(SCIMConstants.META_VERTSION_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_VERTSION_ATTRIBUTE,metaVersion);
+
+        JSONArray metaLocation = new JSONArray();
+        metaLocation.add(SCIMConstants.META_LOCATION_ATTRIBUTE_VALUE);
+        rootObject.put(SCIMConstants.META_LOCATION_ATTRIBUTE,metaLocation);
+        
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 

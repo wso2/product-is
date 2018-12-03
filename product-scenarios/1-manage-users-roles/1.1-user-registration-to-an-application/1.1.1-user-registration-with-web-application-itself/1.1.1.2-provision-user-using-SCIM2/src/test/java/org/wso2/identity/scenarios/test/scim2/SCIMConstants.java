@@ -126,6 +126,9 @@ public class SCIMConstants {
     public static final String DEPARTMENT_ATTRIBUTE = "department";
     public static final String DEPARTMENT_ATTRIBUTE_VALUE = "Tour Operations";
 
+    public static final String X509_CERTIFICAT_ATTRIBUTE = "x509Certificates";
+    public static final String URN_ATTRIBUTE = "urn";
+
     public static final String MANAGER_ATTRIBUTE = "manager";
     public static final String MANAGER_ID_ATTRIBUTE = "managerId";
     public static final String MANAGER_ID_ATTRIBUTE_VALUE = "26118915-6090-4610-87e4-49d8ca9f808d";
