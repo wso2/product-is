@@ -96,7 +96,7 @@ public class ClaimDataMigrator extends Migrator {
             for (Tenant tenant : tenants) {
                 int tenantId = tenant.getId();
                 if (ignoreForInactiveTenants && inactiveTenants.contains(tenantId)) {
-                    log.info("Skipping claim data migration for Inactive tenant : " + tenantId);
+                    log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping claim data migration!");
                     continue;
                 }
                 migrateClaimData(tenant.getId());

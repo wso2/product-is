@@ -26,11 +26,11 @@ import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.util.EncryptionUtil;
-import org.wso2.carbon.is.migration.util.Constant;
-import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.is.migration.service.Migrator;
+import org.wso2.carbon.is.migration.util.Constant;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.Utility;
+import org.wso2.carbon.user.api.Tenant;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -56,9 +57,9 @@ public class UserStorePasswordMigrator extends Migrator {
     }
 
     private void updateTenantConfigs() {
-        Tenant[] tenants;
+
         try {
-            tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+            Set<Tenant> tenants = Utility.getTenants();
             for (Tenant tenant : tenants) {
                 if (isIgnoreForInactiveTenants() && !tenant.isActive()) {
                     log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping secondary userstore migration!");
