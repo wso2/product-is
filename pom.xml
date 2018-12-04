@@ -1772,7 +1772,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.199-SNAPSHOT</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.217-SNAPSHOT</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
