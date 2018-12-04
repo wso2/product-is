@@ -75,6 +75,11 @@ public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase 
 
         assertNotNull(schemasArray);
         assertTrue(responseObj.toString().contains("Required attribute userName is missing"));
+        EntityUtils.consume(response.getEntity());
+        JSONArray schemasArray = new JSONArray();
+        schemasArray.add(responseObj);
+
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA);
     }
 
 }
