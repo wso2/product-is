@@ -20,7 +20,7 @@ package org.wso2.identity.scenarios.test.scim2;
 
 public class SCIMConstants {
 
-	   public static final String SCIM2_USERS_ENDPOINT = "scim2";
+   public static final String SCIM2_USERS_ENDPOINT = "scim2";
    public static final String SCIM2_BULK_USERS_ENDPOINT = "/scim2/Bulk";
    public static final String SCHEMAS_ATTRIBUTE = "schemas";
    public static final String GIVEN_NAME_ATTRIBUTE = "givenName";
@@ -138,7 +138,7 @@ public class SCIMConstants {
    public static final String URN_ATTRIBUTE = "urn";
 
 
-    public static final String META_ATTRIBUTE = "meta";
+   public static final String META_ATTRIBUTE = "meta";
    public static final String META_CREATED_ATTRIBUTE = "created";
    public static final String META_CREATED_ATTRIBUTE_VALUE = "2010-01-23T04:56:22Z";
    public static final String META_RESOURCE_TYPE_ATTRIBUTE = "resourceType";
