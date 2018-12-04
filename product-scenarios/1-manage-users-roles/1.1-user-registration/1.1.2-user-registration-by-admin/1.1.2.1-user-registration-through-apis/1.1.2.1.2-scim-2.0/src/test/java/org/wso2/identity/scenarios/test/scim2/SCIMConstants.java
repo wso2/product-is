@@ -48,5 +48,5 @@ public class SCIMConstants {
     public static final String VALUE = "value";
     public static final String ROLE_NAME = "TestRole";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
-    
+    public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
 }
