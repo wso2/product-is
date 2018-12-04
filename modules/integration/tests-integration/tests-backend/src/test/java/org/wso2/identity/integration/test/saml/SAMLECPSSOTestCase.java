@@ -48,18 +48,18 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String APPLICATION_NAME = "SAML-ECP-TestApplication";
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
-    private static final String SAML_ECP_ISSUER = "https://localhost/shibboleth";
+    private static final String SAML_ECP_ISSUER = "https://localhost/ecp-sp";
     @Factory(dataProvider = "samlConfigProvider")
-    public SAMLECPSSOTestCase(SAMLConfig config){
-        if (log.isDebugEnabled()){
+    public SAMLECPSSOTestCase(SAMLConfig config) {
+        if (log.isDebugEnabled()) {
             log.info("SAML SSO Test initialized for " + config);
         }
         this.config = config;
     }
 
     @DataProvider(name = "samlConfigProvider")
-    public static SAMLConfig[][] samlConfigProvider(){
-        return  new SAMLConfig[][]{
+    public static SAMLConfig[][] samlConfigProvider() {
+        return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_SOAP,
                         ClaimType.LOCAL, App.ECP_APP)},
         };
@@ -76,7 +76,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception{
+    public void testClear() throws Exception {
 
         super.deleteUser(config);
         super.deleteApplication(APPLICATION_NAME);
@@ -95,52 +95,52 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
                 "Adding a service provider has failed for " + config);
     }
 
-    @Test(alwaysRun = true, description = "Testing SAML ECP login", groups = "wso2.is" , dependsOnMethods = { "testAddSP" })
+    @Test(alwaysRun = true, description = "Testing SAML ECP login", groups = "wso2.is", dependsOnMethods = {"testAddSP"})
     public void testSAMLECPLogin() {
         try {
             HttpResponse response;
-            String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL ,SAML_ECP_ISSUER);
-            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL,USER_AGENT, httpClient, config.getUser().getUsername() ,config.getUser().getPassword(), samlECPReq );
+            String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
+            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), config.getUser().getPassword(), samlECPReq);
             String result = extractDataFromResponse(response);
-            log.debug("This is the Result "+result);
+            log.debug("This is the Result " + result);
             int responseCode = response.getStatusLine().getStatusCode();
             log.debug(responseCode);
             Assert.assertEquals(responseCode, 200, "Successful login response returned code " + responseCode);
-            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:Success"),"Successfully Authenticated the user for "+config);
-            Assert.assertTrue(result.contains("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"),"Successfully retrieved the SAML Response bound with SOAP");
+            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:Success"), "Successfully Authenticated the user for " + config);
+            Assert.assertTrue(result.contains("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"), "Successfully retrieved the SAML Response bound with SOAP");
 
         } catch (Exception e) {
             Assert.fail("SAML ECP Login test failed for " + config, e);
         }
     }
 
-    @Test(description = "Testing SAML ECP login failure" ,groups = "wso2.is" ,dependsOnMethods = {"testSAMLECPLogin"})
-    public void testSAMLECPAuthnFailLogin(){
+    @Test(description = "Testing SAML ECP login failure", groups = "wso2.is", dependsOnMethods = {"testSAMLECPLogin"})
+    public void testSAMLECPAuthnFailLogin() {
         try {
             httpClient = new DefaultHttpClient();
             HttpResponse response;
-            String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL ,SAML_ECP_ISSUER);
-            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL,USER_AGENT, httpClient, config.getUser().getUsername() ,"RandomPassword", samlECPReq );
+            String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
+            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), "RandomPassword", samlECPReq);
             String result = extractDataFromResponse(response);
-            log.debug("This is the Result "+result);
+            log.debug("This is the Result " + result);
             int responseCode = response.getStatusLine().getStatusCode();
             log.debug(responseCode);
             Assert.assertEquals(responseCode, 200, "Successful login failure response returned code " + responseCode);
-            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"),"Successfully  identified the login failure "+config);
+            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"), "Successfully  identified the login failure " + config);
         } catch (Exception e) {
             Assert.fail("SAML ECP Login failure test failed for " + config, e);
         }
     }
 
-    @Test(description = "Testing SAML ECP SOAP faults for invalid requests" ,groups = "wso2.is" ,dependsOnMethods = {"testSAMLECPAuthnFailLogin"})
-    public void testSOAPFault(){
+    @Test(description = "Testing SAML ECP SOAP faults for invalid requests", groups = "wso2.is", dependsOnMethods = {"testSAMLECPAuthnFailLogin"})
+    public void testSOAPFault() {
         try {
             httpClient = new DefaultHttpClient();
             HttpResponse response;
-            String samlECPReq =buildInvalidECPSAMLRequest(SAML_ECP_ACS_URL ,SAML_ECP_ISSUER);
-            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL,USER_AGENT, httpClient, config.getUser().getUsername() ,config.getUser().getPassword(), samlECPReq );
+            String samlECPReq = buildInvalidECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
+            response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), config.getUser().getPassword(), samlECPReq);
             String result = extractDataFromResponse(response);
-            log.debug("This is the Result "+result);
+            log.debug("This is the Result " + result);
             int responseCode = response.getStatusLine().getStatusCode();
             log.debug(responseCode);
             Assert.assertEquals(responseCode, 500, "Successfully returned a SOAP fault with internal server error " + responseCode);
@@ -149,7 +149,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
         }
     }
 
-    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = { "testSOAPFault" })
+    @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testSOAPFault"})
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
@@ -193,30 +193,30 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
 
-    private String  buildECPSAMLRequest(String acsUrl, String isuuer){
+    private String buildECPSAMLRequest(String acsUrl, String isuuer) {
         String samlReq = null;
         DateTime dt = new DateTime();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
         String dtStr = fmt.print(dt);
-        samlReq = "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><samlp:AuthnRequest xmlns"     +
-                ":samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" AssertionConsumerServiceURL=\""+ acsUrl +"\" ID=\"_ec102"  +
-                "5e786e6fff206ef63909029202a\" IssueInstant=\""+ dtStr +"\" ProtocolBinding=\"urn:oasis:names:tc:SAML:2.0"  +
-                ":bindings:PAOS\" Version=\"2.0\"><saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">"+ isuuer
-                +"</saml:Issuer><samlp:NameIDPolicy AllowCreate=\"1\"/><samlp:Scoping><samlp:IDPList><samlp:IDPEntry Provi" +
+        samlReq = "<S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><samlp:AuthnRequest xmlns" +
+                ":samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" AssertionConsumerServiceURL=\"" + acsUrl + "\" ID=\"_ec102" +
+                "5e786e6fff206ef63909029202a\" IssueInstant=\"" + dtStr + "\" ProtocolBinding=\"urn:oasis:names:tc:SAML:2.0" +
+                ":bindings:PAOS\" Version=\"2.0\"><saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">" + isuuer
+                + "</saml:Issuer><samlp:NameIDPolicy AllowCreate=\"1\"/><samlp:Scoping><samlp:IDPList><samlp:IDPEntry Provi" +
                 "derID=\"https://idp.is.com\"/></samlp:IDPList></samlp:Scoping></samlp:AuthnRequest></S:Body></S:Envelope>";
         return samlReq;
     }
 
-    private String buildInvalidECPSAMLRequest(String acsUrl,String isuuer){
+    private String buildInvalidECPSAMLRequest(String acsUrl, String isuuer) {
         String samlReq = null;
         DateTime dt = new DateTime();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
         String dtStr = fmt.print(dt);
-        samlReq = "<S: xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><samlp:AuthnRequest xmlns"     +
-                ":samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" AssertionConsumerServiceURL=\""+ acsUrl +"\" ID=\"_ec102"  +
-                "5e786e6fff206ef63909029202a\" IssueInstant=\""+ dtStr +"\" ProtocolBinding=\"urn:oasis:names:tc:SAML:2.0"  +
-                ":bindings:PAOS\" Version=\"2.0\"><saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">"+ isuuer
-                +"</saml:Issuer><samlp:NameIDPolicy AllowCreate=\"1\"/><samlp:Scoping><samlp:IDPList><samlp:IDPEntry Provi" +
+        samlReq = "<S: xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><samlp:AuthnRequest xmlns" +
+                ":samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" AssertionConsumerServiceURL=\"" + acsUrl + "\" ID=\"_ec102" +
+                "5e786e6fff206ef63909029202a\" IssueInstant=\"" + dtStr + "\" ProtocolBinding=\"urn:oasis:names:tc:SAML:2.0" +
+                ":bindings:PAOS\" Version=\"2.0\"><saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">" + isuuer
+                + "</saml:Issuer><samlp:NameIDPolicy AllowCreate=\"1\"/><samlp:Scoping><samlp:IDPList><samlp:IDPEntry Provi" +
                 "derID=\"https://idp.is.com\"/></samlp:IDPList></samlp:Scoping></samlp:AuthnRequest></S:Body></S:Envelope>";
         return samlReq;
     }

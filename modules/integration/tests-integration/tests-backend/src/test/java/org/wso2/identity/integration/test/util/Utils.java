@@ -374,7 +374,7 @@ public class Utils {
         return httpClient.execute(request);
     }
 
-    public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient, String username, String password ,String soapRequest){
+    public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient, String username, String password, String soapRequest) {
         HttpPost request = new HttpPost(url);
         HttpResponse response = null;
         String auth = username + ":" + password;
@@ -386,7 +386,7 @@ public class Utils {
         try {
             request.setEntity(new StringEntity(soapRequest));
             response = httpClient.execute(request);
-        } catch(Exception e){
+        } catch (Exception e) {
             log.error("Error while sending the ECP Request");
         }
         return response;

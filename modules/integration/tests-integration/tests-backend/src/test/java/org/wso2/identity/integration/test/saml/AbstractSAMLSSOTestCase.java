@@ -171,7 +171,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
-        ECP_APP("https://localhost/shibboleth",false);
+        ECP_APP("https://localhost/ecp-sp",false);
 
         private String artifact;
         private boolean signingEnabled;
@@ -304,15 +304,12 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
                 new InboundAuthenticationRequestConfig[]{requestConfig});
 
-        if(config.httpBinding.equals(HttpBinding.HTTP_SOAP)){
-            //for the request path authenticator in setting saml ecp sps
+        if (config.httpBinding.equals(HttpBinding.HTTP_SOAP)) {
             RequestPathAuthenticatorConfig requestPathAuthenticatorConfig = new RequestPathAuthenticatorConfig();
             requestPathAuthenticatorConfig.setName("BasicAuthRequestPathAuthenticator");
-
             serviceProvider.setRequestPathAuthenticatorConfigs(
-                    new RequestPathAuthenticatorConfig[] { requestPathAuthenticatorConfig });
+                    new RequestPathAuthenticatorConfig[]{requestPathAuthenticatorConfig});
         }
-
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
