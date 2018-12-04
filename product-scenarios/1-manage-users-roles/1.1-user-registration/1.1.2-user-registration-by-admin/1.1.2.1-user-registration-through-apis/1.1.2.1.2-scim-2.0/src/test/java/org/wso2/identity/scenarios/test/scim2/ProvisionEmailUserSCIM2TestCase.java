@@ -76,7 +76,6 @@ public class ProvisionEmailUserSCIM2TestCase extends ScenarioTestBase {
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId = (responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
         assertNotNull(userId);
-
     }
 
     @Test(dependsOnMethods = "testSCIM2CreateUser")
