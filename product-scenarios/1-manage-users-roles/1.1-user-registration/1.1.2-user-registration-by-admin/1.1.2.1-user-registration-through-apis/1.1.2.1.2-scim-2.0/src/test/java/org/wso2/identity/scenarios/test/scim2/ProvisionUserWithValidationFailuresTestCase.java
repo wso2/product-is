@@ -33,7 +33,6 @@ import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 import org.wso2.identity.scenarios.commons.util.Constants;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 
@@ -60,6 +59,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
 
         JSONObject rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
+
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
@@ -74,7 +74,10 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
-        
+        JSONArray schemasArray = new JSONArray();
+        schemasArray.add(responseObj);
+
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA);
         assertTrue(responseObj.toString().contains("Credential is not valid"));
     }
 
