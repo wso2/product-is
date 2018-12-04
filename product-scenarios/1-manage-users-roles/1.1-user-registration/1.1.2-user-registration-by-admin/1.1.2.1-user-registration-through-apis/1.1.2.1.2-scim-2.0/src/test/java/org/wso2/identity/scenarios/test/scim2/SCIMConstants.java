@@ -146,8 +146,7 @@ public class SCIMConstants {
     public static final String META_VERTSION_ATTRIBUTE_VALUE = "W\\//\"3694e05e9dff591\"";
     public static final String META_LOCATION_ATTRIBUTE = "location";
     public static final String META_LOCATION_ATTRIBUTE_VALUE = "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646";
-
-
+    
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
     public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
 }
