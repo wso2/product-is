@@ -74,7 +74,6 @@ public class Constants {
         public static final String SCIM_ENDPOINT_BULK = "Bulk";
         public static final String SCIM_ENDPOINT_USER = "Users";
         public static final String SCIM_ANONYMOUS_USER = "Me";
-
     }
 
 }
