@@ -130,7 +130,6 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         address.put(SCIMConstants.ADDRESS_TYPE_ATTRIBUTE, SCIMConstants.ADDRESS_TYPE_VALUE);
         address.put(SCIMConstants.ADDRESS_PRIMARY_ATTRIBUTE,SCIMConstants.ADDRESS_PRIMARY_VALUE);
 
-
         JSONArray phone = new JSONArray();
         phone.add(SCIMConstants.PHONE_NUMBER_VALUE);
         rootObject.put(SCIMConstants.PHONE_NUMBER_ATTRIBUTE, phone);
@@ -142,12 +141,11 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         rootObject.put(SCIMConstants.IMS_VALUE_ATTRIBUTE,SCIMConstants.IMS_VALUE);
         rootObject.put(SCIMConstants.IMS_TYPE_ATTRIBUTE,SCIMConstants.IMS_TYPE_ATTRIBUTE_VALUE);
 
-       JSONArray photo = new JSONArray();
+        JSONArray photo = new JSONArray();
         phone.add(SCIMConstants.PHOTO_VALUE);
         rootObject.put(SCIMConstants.PHOTO_ATTIBUTE,photo);
         rootObject.put(SCIMConstants.PHOTO_VALUE_ATTRIBUTE,SCIMConstants.PHOTO_VALUE);
         rootObject.put(SCIMConstants.PHOTO_TYPE_ATTRIBUTE,SCIMConstants.PHOTO_TYPE_ATTRIBUTE_VALUE);
-
 
         rootObject.put(SCIMConstants.USER_TYPE_ATTRIBUTE,SCIMConstants.USER_TYPE_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.USER_TYPE_TITEL_ATTRIBUTE,SCIMConstants.USER_TYPE_TITLE_ATTRIBUTE_VALUE);
@@ -156,7 +154,6 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         rootObject.put(SCIMConstants.USER_TYPE_TIME_ZONE_ATTRIBUTE, SCIMConstants.USER_TYPE_TIME_ZONE_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.USER_TYPE_ACTIVE_ATTRIBUTE,SCIMConstants.USER_TYPE_ACTIVE_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.USER_TYPE_PASSWORD_ATTRIBUTE,SCIMConstants.PASSWORD);
-
 
         JSONArray groups1 = new JSONArray();
         groups1.add(SCIMConstants.GROUP_VALUE);
@@ -174,7 +171,6 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         cert.add(x509CertificateValue);
         rootObject.put(SCIMConstants.X509_CERTIFICAT_ATTRIBUTE,cert);
         rootObject.put(SCIMConstants.URN_ATTRIBUTE, SCIMConstants.ENTERPRISE_SCHEMA);
-
 
         rootObject.put(SCIMConstants.EMPLOYEE_NUMBER_ATTRIBUTE,SCIMConstants.EMPLOYEE_NUMBER_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.COST_CENTER_ATTRIBUTE,SCIMConstants.COST_CENTER_ATTRIBUTE_VALUE);
