@@ -20,7 +20,7 @@ package org.wso2.identity.scenarios.test.scim2;
 
 public class SCIMConstants {
 
-	   public static final String SCIM2_USERS_ENDPOINT = "scim2";
+   public static final String SCIM2_USERS_ENDPOINT = "scim2";
    public static final String SCIM2_BULK_USERS_ENDPOINT = "/scim2/Bulk";
    public static final String SCHEMAS_ATTRIBUTE = "schemas";
    public static final String GIVEN_NAME_ATTRIBUTE = "givenName";
