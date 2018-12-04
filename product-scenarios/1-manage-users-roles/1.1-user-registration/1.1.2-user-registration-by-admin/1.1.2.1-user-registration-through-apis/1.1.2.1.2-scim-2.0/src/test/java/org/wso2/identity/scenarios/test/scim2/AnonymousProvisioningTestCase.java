@@ -62,7 +62,8 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     @Test(description = "1.1.2.1.2.15")
     private  void selfRegister() throws  Exception {
 
-        scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ANONYMOUS_USER;
+        scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +
+                Constants.SCIMEndpoints.SCIM_ANONYMOUS_USER;
 
         HttpPost request = new HttpPost(scimUsersEndpoint);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -97,7 +98,8 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created" +
+                " successfully");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
@@ -112,14 +114,16 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "selfRegister")
     private void cleanUp() throws Exception {
 
-        String scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER + SEPERATOR + userId;
+        String scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER + SEPERATOR + userId;
 
         HttpDelete delete = new HttpDelete(scimUsersEndpoint);
         delete.addHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(ADMIN_USERNAME, ADMIN_PASSWORD));
         delete.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
 
         HttpResponse response = client.execute(delete);
-        assertEquals(response.getStatusLine().getStatusCode(), org.apache.commons.httpclient.HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), org.apache.commons.httpclient.HttpStatus.SC_NO_CONTENT,
+                "User has not been deleted successfully");
 
         EntityUtils.consume(response.getEntity());
     }
