@@ -25,16 +25,17 @@ import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
+
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 
@@ -75,6 +76,13 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE, "The expected response code 406 has not been received");
 
         assertEquals(response.getStatusLine().getReasonPhrase(), "Not Acceptable","The expected Content-Type has not been received");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+        JSONArray schemasArray = new JSONArray();
+        schemasArray.add(responseObj);
+
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA);
     }
 
     private Header getBasicAuthzHeader() {

@@ -25,16 +25,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
-
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+
 
 public class ProvisionUserWithoutContentHeaderTestCase extends ScenarioTestBase {
 
@@ -65,14 +63,13 @@ public class ProvisionUserWithoutContentHeaderTestCase extends ScenarioTestBase 
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
+
         StringEntity entity = new StringEntity(rootObject.toString());
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_ACCEPTABLE,
                 "The expected response code 406 has not been received");
-
-        EntityUtils.consume(response.getEntity());
     }
 
 }
