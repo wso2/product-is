@@ -74,9 +74,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
-
-        schemasArray = (JSONArray) (rootObject).get("schemas");
-        assertNotNull(schemasArray);
+        
         assertTrue(responseObj.toString().contains("Credential is not valid"));
     }
 
