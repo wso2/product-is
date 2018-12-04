@@ -73,8 +73,6 @@ public class ProvisionUserWithoutContentHeaderTestCase extends ScenarioTestBase 
                 "The expected response code 406 has not been received");
 
         EntityUtils.consume(response.getEntity());
-        schemasArray = (JSONArray) (rootObject).get("schemas");
-        assertNotNull(schemasArray);
     }
 
 }
