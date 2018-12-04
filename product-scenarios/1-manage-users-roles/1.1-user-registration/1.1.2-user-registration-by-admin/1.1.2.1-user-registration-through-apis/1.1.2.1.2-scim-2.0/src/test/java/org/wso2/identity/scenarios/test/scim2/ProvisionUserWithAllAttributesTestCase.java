@@ -103,4 +103,3 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been deleted successfully");
     }
 }
-
