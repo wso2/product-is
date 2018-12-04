@@ -50,7 +50,8 @@ public class ProvisionUserWithoutContentHeaderTestCase extends ScenarioTestBase 
     @Test(description = "1.1.2.1.2.6")
     public void testSCIMUserWithoutContentHeader() throws Exception {
 
-        String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
+        String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SEPERATOR +
+                Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
         HttpPost request = new HttpPost(scimEndpoint);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
 
