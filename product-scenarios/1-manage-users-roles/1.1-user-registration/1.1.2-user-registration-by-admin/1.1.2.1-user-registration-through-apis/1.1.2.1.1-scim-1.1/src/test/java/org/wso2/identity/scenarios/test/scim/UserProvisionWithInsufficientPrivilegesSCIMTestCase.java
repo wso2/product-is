@@ -54,7 +54,8 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
-        scimUsersEndpoint = backendURL + SEPERATOR +  Constants.SCIMEndpoints.SCIM1_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
+        scimUsersEndpoint = backendURL + SEPERATOR +  Constants.SCIMEndpoints.SCIM1_ENDPOINT + SEPERATOR +
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
         testSCIMCreateFirstUser();
     }
 
@@ -69,8 +70,10 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER , ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM1_ENDPOINT,
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER , ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created" +
+                " successfully");
     }
 
     @Test(description = "1.1.2.1.1.11")
@@ -83,7 +86,8 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         HttpResponse response = sendPostRequestWithJSON(client, scimUsersEndpoint, rootObject,
                 new Header[]{getFaultyAuthzHeader(), getContentTypeApplicationJSONHeader()});
 
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_UNAUTHORIZED, "User is not authorized to perform provisioning");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_UNAUTHORIZED, "User is not authorized" +
+                " to perform provisioning");
     }
 
     @AfterClass(alwaysRun = true)
@@ -92,13 +96,17 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         JSONObject responseObj = getJSONFromResponse(this.response);
         userId=responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been deleted successfully");
+        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM1_ENDPOINT,
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER,
+                ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been " +
+                "deleted successfully");
     }
 
     private Header getFaultyAuthzHeader() {
 
-        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(SCIMConstants.USERNAME, SCIMConstants.PASSWORD));
+        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(SCIMConstants.USERNAME,
+                SCIMConstants.PASSWORD));
     }
 
     private Header getContentTypeApplicationJSONHeader() {
@@ -106,4 +114,3 @@ public class UserProvisionWithInsufficientPrivilegesSCIMTestCase extends Scenari
         return new BasicHeader(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON);
     }
 }
-
