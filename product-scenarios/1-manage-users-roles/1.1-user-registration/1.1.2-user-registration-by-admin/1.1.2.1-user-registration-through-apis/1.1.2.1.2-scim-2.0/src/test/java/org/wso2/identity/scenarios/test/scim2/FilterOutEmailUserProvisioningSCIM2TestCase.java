@@ -54,7 +54,7 @@ public class FilterOutEmailUserProvisioningSCIM2TestCase extends ScenarioTestBas
         super.init();
     }
 
-    @Test(description = "1.1.2.1.2.14")
+    @Test(description = "1.1.2.1.2.16")
     public void testSCIM2CreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
@@ -66,8 +66,10 @@ public class FilterOutEmailUserProvisioningSCIM2TestCase extends ScenarioTestBas
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, EMAIL_ID);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR, "Username format is not valid ");
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR, "Username " +
+                "format is not valid ");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
         assertEquals(userNameResponse, EMAIL_ID, "username not found");
