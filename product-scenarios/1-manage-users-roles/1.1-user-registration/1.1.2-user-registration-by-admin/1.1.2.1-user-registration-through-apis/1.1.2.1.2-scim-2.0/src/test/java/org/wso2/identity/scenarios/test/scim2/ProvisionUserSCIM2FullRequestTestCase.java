@@ -146,7 +146,6 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
         rootObject.put(SCIMConstants.PHOTO_VALUE_ATTRIBUTE,SCIMConstants.PHOTO_VALUE);
         rootObject.put(SCIMConstants.PHOTO_TYPE_ATTRIBUTE,SCIMConstants.PHOTO_TYPE_ATTRIBUTE_VALUE);
 
-
         rootObject.put(SCIMConstants.USER_TYPE_ATTRIBUTE,SCIMConstants.USER_TYPE_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.USER_TYPE_TITEL_ATTRIBUTE,SCIMConstants.USER_TYPE_TITLE_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.USER_TYPE_LANGUAGE_ATTRIBUTE,SCIMConstants.USET_TYPE_LANGUAGE_ATTRIBUTE_VALUE);
@@ -170,8 +169,7 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
         JSONArray cert = new JSONArray();
         cert.add(x509CertificateValue);
         rootObject.put(SCIMConstants.X509_CERTIFICAT_ATTRIBUTE,cert);
-
-
+        
         JSONArray resourceType = new JSONArray();
         resourceType.add(SCIMConstants.META_RESOURCE_TYPE_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.META_RESOURCE_TYPE_ATTRIBUTE,resourceType);
