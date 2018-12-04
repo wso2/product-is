@@ -20,8 +20,7 @@ package org.wso2.identity.scenarios.test.scim2;
 
 public class SCIMConstants {
 
-    
-   public static final String SCIM2_USERS_ENDPOINT = "scim2";
+    public static final String SCIM2_USERS_ENDPOINT = "scim2";
     public static final String SCIM2_BULK_USERS_ENDPOINT = "/scim2/Bulk";
     public static final String SCHEMAS_ATTRIBUTE = "schemas";
     public static final String GIVEN_NAME_ATTRIBUTE = "givenName";
@@ -148,7 +147,6 @@ public class SCIMConstants {
     public static final String META_LOCATION_ATTRIBUTE = "location";
     public static final String META_LOCATION_ATTRIBUTE_VALUE = "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646";
 
-
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
-public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
+    public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
 }
