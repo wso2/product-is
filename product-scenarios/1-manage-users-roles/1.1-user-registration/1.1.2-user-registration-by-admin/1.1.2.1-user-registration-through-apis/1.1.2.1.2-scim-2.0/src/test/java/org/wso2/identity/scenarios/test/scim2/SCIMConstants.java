@@ -135,8 +135,10 @@ public class SCIMConstants {
    public static final String MANAGER_DISPLAY_NAME_ATTRIBUTE_VALUE = "John Smith";
 
    public static final String X509_CERTIFICAT_ATTRIBUTE = "x509Certificates";
+   public static final String URN_ATTRIBUTE = "urn";
 
-   public static final String META_ATTRIBUTE = "meta";
+
+    public static final String META_ATTRIBUTE = "meta";
    public static final String META_CREATED_ATTRIBUTE = "created";
    public static final String META_CREATED_ATTRIBUTE_VALUE = "2010-01-23T04:56:22Z";
    public static final String META_RESOURCE_TYPE_ATTRIBUTE = "resourceType";
