@@ -5,13 +5,9 @@
 
     <test name="is-usr-mgt-scim2" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2TestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithMalformedRequestTestCase"/>
-            <!--<class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithValidationFailuresTestCase"/>-->
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionExistingUserTestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithoutAuthHeaderTestCase"/>
-            <!--<class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithoutContentHeaderTestCase"/>-->
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithAllAttributesTestCase"/>
+            <!-- Run this test case only when the default value of UsernameJavaRegEx in JDBC user store has been changed
+            to block @ sign ex:[a-zA-Z0-9._\-|//]{3,30}$ -->
+            <!--class name="org.wso2.identity.scenarios.test.scim2.FilterOutEmailUserProvisioningSCIM2TestCase"/-->
         </classes>
     </test>
 </suite>
