@@ -80,8 +80,8 @@ public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase 
         JSONArray schemasArray = new JSONArray();
         schemasArray.add(responseObj);
 
-        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA,"Expected ERROR_SCHEMA not" +
-                " returned");
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA,"Expected ERROR_SCHEMA " +
+                "not returned");
     }
 
 }
