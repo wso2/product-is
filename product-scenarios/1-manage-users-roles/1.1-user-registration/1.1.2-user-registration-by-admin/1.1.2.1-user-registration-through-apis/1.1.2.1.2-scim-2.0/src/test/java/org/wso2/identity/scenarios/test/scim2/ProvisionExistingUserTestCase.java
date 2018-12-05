@@ -40,8 +40,6 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
 
     private String userId;
     private CloseableHttpClient client;
-    private String USERNAME = "scim2user";
-    private String PASSWORD = "scim2pwd";
     private String userNameResponse;
     HttpResponse response, errorResponse;
     JSONObject rootObject;
@@ -78,13 +76,15 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
     @Test(description = "1.1.2.1.2.4")
     public void testSCIM2CreateExistingUser() throws Exception {
 
-        errorResponse = SCIMProvisioningUtil.provisionUserSCIM(backendURL, this.rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        errorResponse = SCIMProvisioningUtil.provisionUserSCIM(backendURL, this.rootObject,
+                Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME,
+                ADMIN_PASSWORD);
         assertEquals(errorResponse.getStatusLine().getStatusCode(), HttpStatus.SC_CONFLICT, "User has not been " +
                 "created successfully");
         Object responseObj = JSONValue.parse(EntityUtils.toString(errorResponse.getEntity()));
         assertTrue(
-                responseObj.toString().contains("User with the name: " + USERNAME + " already exists in the system"));
+                responseObj.toString().contains("User with the name: " + SCIMConstants.USERNAME + " already exists in" +
+                        " the system"));
     }
 
     @AfterClass(alwaysRun = true)
