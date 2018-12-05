@@ -24,6 +24,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
@@ -80,7 +81,7 @@ public class ProvisionEmailUserSCIM2TestCase extends ScenarioTestBase {
         assertNotNull(userId);
     }
 
-    @Test(dependsOnMethods = "testSCIM2CreateUser")
+    @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
 
         response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
