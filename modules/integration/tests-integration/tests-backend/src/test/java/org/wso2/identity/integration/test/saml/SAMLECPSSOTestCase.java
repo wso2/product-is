@@ -44,11 +44,12 @@ import java.io.InputStreamReader;
 public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private SAMLConfig config;
-    private static final Log log = LogFactory.getLog(AbstractSAMLSSOTestCase.class);
+    private static final Log log = LogFactory.getLog(SAMLECPSSOTestCase.class);
     private static final String APPLICATION_NAME = "SAML-ECP-TestApplication";
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
     private static final String SAML_ECP_ISSUER = "https://localhost/ecp-sp";
+
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLECPSSOTestCase(SAMLConfig config) {
         if (log.isDebugEnabled()) {
@@ -77,7 +78,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
-
         super.deleteUser(config);
         super.deleteApplication(APPLICATION_NAME);
         super.testClear();
@@ -90,7 +90,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
-        log.debug(samlssoServiceProviderDTOs[0].getIssuer());
         Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
                 "Adding a service provider has failed for " + config);
     }
@@ -102,12 +101,13 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
             String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
             response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), config.getUser().getPassword(), samlECPReq);
             String result = extractDataFromResponse(response);
-            log.debug("This is the Result " + result);
+            if(log.isDebugEnabled()){
+                log.debug("Response : " + result);
+            }
             int responseCode = response.getStatusLine().getStatusCode();
-            log.debug(responseCode);
-            Assert.assertEquals(responseCode, 200, "Successful login response returned code " + responseCode);
-            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:Success"), "Successfully Authenticated the user for " + config);
-            Assert.assertTrue(result.contains("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"), "Successfully retrieved the SAML Response bound with SOAP");
+            Assert.assertEquals(responseCode, 200, "Login failure with response returned code " + responseCode);
+            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:Success"), "Failed to authenticate the user for " + config);
+            Assert.assertTrue(result.contains("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"), "Failed to retrieve the SAML Response bound with SOAP");
 
         } catch (Exception e) {
             Assert.fail("SAML ECP Login test failed for " + config, e);
@@ -122,11 +122,12 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
             String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
             response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), "RandomPassword", samlECPReq);
             String result = extractDataFromResponse(response);
-            log.debug("This is the Result " + result);
+            if(log.isDebugEnabled()){
+                log.debug("Response : " + result);
+            }
             int responseCode = response.getStatusLine().getStatusCode();
-            log.debug(responseCode);
-            Assert.assertEquals(responseCode, 200, "Successful login failure response returned code " + responseCode);
-            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"), "Successfully  identified the login failure " + config);
+            Assert.assertEquals(responseCode, 200, "Login failure with response returned code " + responseCode);
+            Assert.assertTrue(result.contains("urn:oasis:names:tc:SAML:2.0:status:AuthnFailed"), "Fail to identify the login failure " + config);
         } catch (Exception e) {
             Assert.fail("SAML ECP Login failure test failed for " + config, e);
         }
@@ -140,10 +141,11 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
             String samlECPReq = buildInvalidECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
             response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), config.getUser().getPassword(), samlECPReq);
             String result = extractDataFromResponse(response);
-            log.debug("This is the Result " + result);
+            if(log.isDebugEnabled()){
+                log.debug("Response : " + result);
+            }
             int responseCode = response.getStatusLine().getStatusCode();
-            log.debug(responseCode);
-            Assert.assertEquals(responseCode, 500, "Successfully returned a SOAP fault with internal server error " + responseCode);
+            Assert.assertEquals(responseCode, 500, "Fail to return a SOAP fault with internal server error " + responseCode);
         } catch (Exception e) {
             Assert.fail("SAML ECP SOAP fault test failed for " + config, e);
         }
@@ -152,8 +154,8 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testSOAPFault"})
     public void testRemoveSP()
             throws Exception {
-        Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
-        Assert.assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
+        Boolean isServiceProviderRemoved = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
+        Assert.assertTrue(isServiceProviderRemoved, "Removing a service provider has failed for " + config);
     }
 
 
@@ -170,8 +172,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     private void changeISConfiguration() throws Exception {
-        log.info("Replacing identity.xml changing the entity id of SSOService");
-
+        log.info("Replacing identity.xml disabling the consent Management");
         String carbonHome = CarbonUtils.getCarbonHome();
         identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File
