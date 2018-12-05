@@ -70,13 +70,6 @@
         }
 
         error = request.getParameter(OAuth2Constants.ERROR);
-        if(error != null) {
-%>
-        <script>
-            alert(<%= error%>);
-        </script>
-<%
-        }
         grantType = (String) session.getAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
         implicitResponseType = (String) session.getAttribute(OpenIDConnectConstants.IMPLICIT_RESPONSE_TYPE);
         if (StringUtils.isNotBlank(request.getHeader(OAuth2Constants.REFERER)) &&
