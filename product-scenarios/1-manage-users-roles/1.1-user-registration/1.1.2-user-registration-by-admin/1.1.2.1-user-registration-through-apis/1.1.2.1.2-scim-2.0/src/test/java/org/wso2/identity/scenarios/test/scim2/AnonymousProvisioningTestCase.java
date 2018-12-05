@@ -30,6 +30,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
@@ -111,7 +112,7 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
         assertNotNull(userId);
     }
 
-    @Test(dependsOnMethods = "selfRegister")
+    @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
 
         String scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +
