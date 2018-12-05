@@ -24,6 +24,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
@@ -213,7 +214,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
    }
 
-    @Test(dependsOnMethods = "testSCIM2CreateEnterpriseUserRequest")
+    @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
 
         JSONObject responseObj = getJSONFromResponse(this.response);
