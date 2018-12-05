@@ -69,7 +69,6 @@
 
 <script type="text/javascript">
     window.location = "oauth2.jsp?reset=true";
-    alert("Please fill all required fields");
 </script>
 
 <%
@@ -122,11 +121,9 @@
 
 <script type="text/javascript">
     window.location = "oauth2.jsp?reset=true";
-    alert("Please fill all required fields");
 </script>
 
 <%
-        return;
     }
     accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                       .setGrantType(GrantType.CLIENT_CREDENTIALS)
@@ -141,11 +138,9 @@
 
 <script type="text/javascript">
     window.location = "oauth2.jsp?reset=true";
-    alert("Please fill all required fields");
 </script>
 
 <%
-                return;
             }
             accessRequestBuilder = OAuthClientRequest.tokenLocation(accessEndpoint)
                                               .setGrantType(GrantType.PASSWORD)
