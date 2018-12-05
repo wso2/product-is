@@ -79,6 +79,7 @@ public class FilterOutEmailUserProvisioningSCIM2TestCase extends ScenarioTestBas
         JSONArray schemasArray = new JSONArray();
         schemasArray.add(responseObj);
 
-        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA);
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA,"The expected" +
+                " ERROR_SCHEMA is not returned");
     }
 }
