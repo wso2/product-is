@@ -86,7 +86,8 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
                 responseObj.toString().contains("User with the name: " + SCIMConstants.USERNAME + " already exists in" +
                         " the system"));
 
-        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA);
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA,"Expected ERROR SCHEMA not" +
+                " returned");
     }
 
     @AfterClass(alwaysRun = true)
