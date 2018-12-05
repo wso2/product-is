@@ -37,6 +37,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
+/**
+ * This class is for assign existing user via SCIM 1.1.
+ */
 public class ProvisionExistingUserTestCase extends ScenarioTestBase {
 
     private String userId;
@@ -50,10 +53,10 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         super.init();
         Map.Entry<HttpResponse, JSONObject> valueAndIndex = testCreateSCSIMUser();
         response = valueAndIndex.getKey();
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has been created successfully");
     }
 
-    @Test
+    @Test(description = "1.1.2.1.4")
     public void testSCIMCreateExistingUser() throws Exception {
 
         Map.Entry<HttpResponse, JSONObject> valueAndIndex = testCreateSCSIMUser();
