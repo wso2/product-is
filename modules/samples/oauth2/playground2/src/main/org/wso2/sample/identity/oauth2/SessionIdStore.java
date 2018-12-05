@@ -50,12 +50,13 @@ public class SessionIdStore {
 
     public static HttpSession getSession(String sid) {
 
-        if (sessionMap.get(sid) != null) {
+        if (sid != null && sessionMap.get(sid) != null) {
             log.info("Retrieving session: " + sessionMap.get(sid).getId() + " for the sid: " + sid);
+            return sessionMap.get(sid);
         } else {
             log.error("No session found for the sid: " + sid);
+            return null;
         }
-        return sessionMap.get(sid);
     }
 
     public static void removeSession(String sid) {
