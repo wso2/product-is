@@ -45,12 +45,16 @@ public class SessionIdStore {
     public static String getSid(String idToken) throws ParseException {
 
         String sid = (String) SignedJWT.parse(idToken).getJWTClaimsSet().getClaim("sid");
-        return idToken != null ? sid : null;
+        return sid;
     }
 
     public static HttpSession getSession(String sid) {
 
-        log.info("Retrieving session: " + sessionMap.get(sid).getId() + " for the sid: " + sid);
+        if (sessionMap.get(sid) != null) {
+            log.info("Retrieving session: " + sessionMap.get(sid).getId() + " for the sid: " + sid);
+        } else {
+            log.error("No session found for the sid: " + sid);
+        }
         return sessionMap.get(sid);
     }
 

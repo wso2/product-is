@@ -28,6 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Servlet for handling Frontchannel Logout requests
+ */
 public class OIDCFrontchannelLogoutServlet extends HttpServlet {
 
     private static Log log = LogFactory.getLog(OIDCFrontchannelLogoutServlet.class);

@@ -40,7 +40,7 @@ public class IDTokenExtractorServlet extends HttpServlet {
     private static Log log = LogFactory.getLog(IDTokenExtractorServlet.class);
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+            throws IOException {
 
         String idToken = req.getParameter("idToken");
         String user = null;
@@ -70,7 +70,7 @@ public class IDTokenExtractorServlet extends HttpServlet {
             out.print(respData.toString());
 
         } catch (ParseException e) {
-            log.error("Invalid Token sent to IDTokenExtractorServlet: " + e);
+            log.error("Invalid Token sent to IDTokenExtractorServlet.", e);
         }
     }
 }

@@ -34,7 +34,6 @@ import java.text.ParseException;
 /**
  * Servlet for handling Backchannel logout requests
  */
-
 public class OIDCBackchannelLogoutServlet extends HttpServlet {
 
     private static Log log = LogFactory.getLog(OIDCBackchannelLogoutServlet.class);
@@ -60,7 +59,7 @@ public class OIDCBackchannelLogoutServlet extends HttpServlet {
             sid = (String) SignedJWT.parse(req.getParameter("logoutToken")).getJWTClaimsSet().getClaim("sid");
             log.info("Logout token: " + req.getParameter("logoutToken"));
         } catch (ParseException e) {
-            log.error("Error in generating Logout Token.");
+            log.error("Error in generating Logout Token.", e);
         }
         HttpSession session = SessionIdStore.getSession(sid);
 

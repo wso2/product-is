@@ -336,8 +336,6 @@
                         var dataJSON = JSON.parse(data);
 
                         if(dataJSON.hasOwnProperty("user")){
-                            //var loggedInUser = JSON.stringify(dataJSON.user);
-                            //$("#logged-in-user-label").val(loggedInUser);
                             var loggedInUser = dataJSON.user;
                             document.getElementById('logged-in-user-label').innerText = loggedInUser;
                             console.log("Logged in user: " + loggedInUser);
