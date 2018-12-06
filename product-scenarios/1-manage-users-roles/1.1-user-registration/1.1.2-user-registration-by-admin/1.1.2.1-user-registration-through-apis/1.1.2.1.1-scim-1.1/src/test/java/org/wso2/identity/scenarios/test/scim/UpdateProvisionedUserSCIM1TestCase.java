@@ -52,6 +52,7 @@ public class UpdateProvisionedUserSCIM1TestCase extends ScenarioTestBase {
     private String firstName;
     private String SEPERATOR = "/";
     private String NEWNAME = "testuser";
+    private String NEW_LAST_NAME = "lastname";
 
     JSONObject responseObj;
 
@@ -75,6 +76,7 @@ public class UpdateProvisionedUserSCIM1TestCase extends ScenarioTestBase {
 
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
+        names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE,SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
         rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
@@ -108,6 +110,7 @@ public class UpdateProvisionedUserSCIM1TestCase extends ScenarioTestBase {
 
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, NEWNAME);
+        names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE,NEW_LAST_NAME);
         updateUserObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
         updateUserObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         updateUserObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
