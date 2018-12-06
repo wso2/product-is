@@ -34,6 +34,7 @@ import java.rmi.RemoteException;
  */
 public class FunctionLibraryManagementServiceClient {
 
+    public static final String FUNCTION_LIBRARY_MANAGEMENT_SERVICE = "FunctionLibraryManagementAdminService";
     FunctionLibraryManagementAdminServiceStub stub;
 
     /**
@@ -47,7 +48,7 @@ public class FunctionLibraryManagementServiceClient {
     public FunctionLibraryManagementServiceClient(String cookie, String backendServerURL,
                                                   ConfigurationContext configCtx) throws AxisFault {
 
-        String serviceURL = backendServerURL + "FunctionLibraryManagementAdminService";
+        String serviceURL = backendServerURL + FUNCTION_LIBRARY_MANAGEMENT_SERVICE;
         stub = new FunctionLibraryManagementAdminServiceStub(configCtx, serviceURL);
 
         ServiceClient client = stub._getServiceClient();
@@ -122,15 +123,15 @@ public class FunctionLibraryManagementServiceClient {
     /**
      * Update an existing function library.
      *
-     * @param functionLibrary        Function library
      * @param oldFunctionLibraryName Previous name of function library
+     * @param functionLibrary        Function library
      * @throws AxisFault
      */
-    public void updateFunctionLibrary(FunctionLibrary functionLibrary, String oldFunctionLibraryName)
+    public void updateFunctionLibrary(String oldFunctionLibraryName, FunctionLibrary functionLibrary)
             throws AxisFault {
 
         try {
-            stub.updateFunctionLibrary(functionLibrary, oldFunctionLibraryName);
+            stub.updateFunctionLibrary(oldFunctionLibraryName, functionLibrary);
         } catch (RemoteException | FunctionLibraryManagementAdminServiceFunctionLibraryManagementException e) {
             handleException(e);
         }
@@ -144,7 +145,7 @@ public class FunctionLibraryManagementServiceClient {
      */
     private void handleException(Exception e) throws AxisFault {
 
-        String errorMessage = "Unknown error occurred.";
+        String errorMessage = null;
 
         if (e instanceof FunctionLibraryManagementAdminServiceFunctionLibraryManagementException) {
             FunctionLibraryManagementAdminServiceFunctionLibraryManagementException exception =
