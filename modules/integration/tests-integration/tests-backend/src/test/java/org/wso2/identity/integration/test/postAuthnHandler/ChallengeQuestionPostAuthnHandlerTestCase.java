@@ -162,6 +162,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
     public void testClear() throws Exception {
         deleteUser();
         deleteApplication();
+
         updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "false", true);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
