@@ -65,7 +65,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         super.init();
     }
 
-    @Test(description = "1.1.2.1.2.1")
+    @Test(description = "1.1.2.1.2.18")
     public void testSCIM2CreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
