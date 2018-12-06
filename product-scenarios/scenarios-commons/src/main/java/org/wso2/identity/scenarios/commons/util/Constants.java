@@ -76,4 +76,11 @@ public class Constants {
 
     }
 
+    public static class ClaimURIs {
+
+        public static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+        public static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
+        public static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
+    }
+
 }
