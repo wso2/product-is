@@ -5,7 +5,7 @@
 
     <test name="is-usr-mgt-scim1" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.UpdateProvisionedUserSCIM1TestCase"/>
         </classes>
     </test>
 </suite>
