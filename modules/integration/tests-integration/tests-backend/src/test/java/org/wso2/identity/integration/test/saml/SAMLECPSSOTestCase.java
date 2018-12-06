@@ -20,7 +20,9 @@ package org.wso2.identity.integration.test.saml;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -95,7 +97,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @Test(alwaysRun = true, description = "Testing SAML ECP login", groups = "wso2.is", dependsOnMethods = {"testAddSP"})
     public void testSAMLECPLogin() {
-        try {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpResponse response;
             String samlECPReq = buildECPSAMLRequest(SAML_ECP_ACS_URL, SAML_ECP_ISSUER);
             response = Utils.sendECPPostRequest(SAML_ECP_SSO_URL, USER_AGENT, httpClient, config.getUser().getUsername(), config.getUser().getPassword(), samlECPReq);
@@ -172,7 +174,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private void changeISConfiguration() throws Exception {
         log.info("Replacing identity.xml disabling the consent Management");
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File
                 .separator + "identity.xml");

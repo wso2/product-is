@@ -351,7 +351,7 @@ public class Utils {
         String url = "";
         for (Header header : headers) {
             if ("Location".equals(header.getName())) {
-                url = header.getValue().replace("ecp/","");
+                url = header.getValue();
             }
         }
         return url;
