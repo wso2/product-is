@@ -117,7 +117,7 @@
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>scenarios-commons</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
