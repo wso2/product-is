@@ -45,7 +45,8 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
         super.init();
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
                 , null);
-        functionLibraryManagementServiceClient = new FunctionLibraryManagementServiceClient(sessionCookie, backendURL, configContext);
+        functionLibraryManagementServiceClient = new FunctionLibraryManagementServiceClient(sessionCookie, backendURL,
+                configContext);
     }
 
     @AfterClass(alwaysRun = true)
@@ -60,8 +61,9 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
         String functionLibraryName = "TestFunctionLibrary1";
         try {
             createFunctionLibrary(functionLibraryName);
-            Assert.assertEquals(functionLibraryManagementServiceClient.getFunctionLibrary(functionLibraryName).getFunctionLibraryName(),
-                    functionLibraryName, "Failed to create a Function Library");
+            Assert.assertEquals(functionLibraryManagementServiceClient.getFunctionLibrary(
+                    functionLibraryName).getFunctionLibraryName(), functionLibraryName,
+                    "Failed to create a Function Library");
         } catch (AxisFault axisFault) {
             Assert.fail("Error while trying to create a Function Library", axisFault);
         }
@@ -99,7 +101,8 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
         String functionLibraryName = "TestFunctionLibrary";
 
         try {
-            FunctionLibrary functionLibrary = functionLibraryManagementServiceClient.getFunctionLibrary(functionLibraryName);
+            FunctionLibrary functionLibrary =
+                    functionLibraryManagementServiceClient.getFunctionLibrary(functionLibraryName);
             Assert.assertEquals(functionLibrary.getFunctionLibraryName(), functionLibraryName,
                     "Failed to retrieve a function library");
         } catch (AxisFault axisFault) {
@@ -113,15 +116,17 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
         String functionLibraryName = "TestFunctionLibrary";
 
         try {
-            FunctionLibrary functionLibrary = functionLibraryManagementServiceClient.getFunctionLibrary(functionLibraryName);
+            FunctionLibrary functionLibrary =
+                    functionLibraryManagementServiceClient.getFunctionLibrary(functionLibraryName);
             functionLibrary.setDescription("updated description");
-            functionLibrary.setFunctionLibraryScript("updated function library description");
-            functionLibraryManagementServiceClient.updateFunctionLibrary(functionLibrary, functionLibraryName);
+            functionLibrary.setFunctionLibraryScript("function updatedTest(name){};module.exports.updatedTet = updatedTest;");
+            functionLibraryManagementServiceClient.updateFunctionLibrary(functionLibraryName, functionLibrary);
             FunctionLibrary updatedFunctionLibrary = null;
             updatedFunctionLibrary = functionLibraryManagementServiceClient.getFunctionLibrary(functionLibraryName);
             Assert.assertEquals(updatedFunctionLibrary.getDescription(), "updated description",
                     "Failed update function library description");
-            Assert.assertEquals(updatedFunctionLibrary.getFunctionLibraryScript(), "updated function library description",
+            Assert.assertEquals(updatedFunctionLibrary.getFunctionLibraryScript(),
+                    "function updatedTest(name){};module.exports.updatedTet = updatedTest;",
                     "Failed update function library script");
         } catch (AxisFault axisFault) {
             Assert.fail("Error while trying to update FunctionLibrary", axisFault);
@@ -176,7 +181,7 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
             FunctionLibrary functionLibrary = new FunctionLibrary();
             functionLibrary.setFunctionLibraryName(functionLibraryName);
             functionLibrary.setDescription("This is a Test Function Library");
-            functionLibrary.setFunctionLibraryScript("Test Function Library script");
+            functionLibrary.setFunctionLibraryScript("function test(name){}; module.exports.test=test;");
             functionLibraryManagementServiceClient.createFunctionLibrary(functionLibrary);
         } catch (AxisFault axisFault) {
             Assert.fail("Error while trying to create Function Library", axisFault);
