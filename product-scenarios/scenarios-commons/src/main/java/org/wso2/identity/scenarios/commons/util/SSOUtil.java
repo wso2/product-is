@@ -26,6 +26,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -41,6 +43,9 @@ import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ALWAYS;
 import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ONCE;
 import static org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_FORM;
 import static org.wso2.identity.scenarios.commons.util.Constants.COOKIE;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.DENY;
 import static org.wso2.identity.scenarios.commons.util.Constants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CLIENT_ID;
@@ -353,5 +358,25 @@ public class SSOUtil {
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
+    }
+
+    public static ClaimMapping[] getClaimMappings() {
+
+        List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
+        addClaimMapping(claimMappingList, FIRST_NAME_CLAIM_URI);
+        addClaimMapping(claimMappingList, LAST_NAME_CLAIM_URI);
+        addClaimMapping(claimMappingList, EMAIL_CLAIM_URI);
+
+        return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
+    }
+
+    private static void addClaimMapping(List<ClaimMapping> claimMappingList, String emailClaimUri) {
+        Claim emailClaim = new Claim();
+        emailClaim.setClaimUri(emailClaimUri);
+        ClaimMapping emailClaimMapping = new ClaimMapping();
+        emailClaimMapping.setRequested(true);
+        emailClaimMapping.setLocalClaim(emailClaim);
+        emailClaimMapping.setRemoteClaim(emailClaim);
+        claimMappingList.add(emailClaimMapping);
     }
 }

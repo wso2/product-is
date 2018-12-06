@@ -25,15 +25,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
+import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.scenarios.commons.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -42,6 +40,8 @@ import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStor
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.wso2.identity.scenarios.commons.util.SSOUtil.getClaimMappings;
 
 public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
 
@@ -63,10 +63,6 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
     //Claim Uris
-    private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
-    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
-    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
-
     private static final String profileName = "default";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
@@ -88,79 +84,6 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         HttpBinding(String binding) {
 
             this.binding = binding;
-        }
-    }
-
-    protected enum ClaimType {
-
-        LOCAL, CUSTOM, NONE
-    }
-
-    protected enum User {
-
-        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1",
-                true),
-        //        TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2",
-//                true),
-        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser3", "samluser3", "carbon.super", "samluser3",
-                "providedClaimValue", "providedClaimValue", false);
-//        ,
-//        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser4@wso2.com", "samluser4", "wso2.com", "samluser4",
-//                "providedClaimValue", "providedClaimValue", false);
-
-        private String username;
-        private String password;
-        private String tenantDomain;
-        private String tenantAwareUsername;
-        private String email;
-        private String nickname;
-        private boolean setUserClaims;
-
-        User(String username, String password, String tenantDomain, String tenantAwareUsername, String email,
-             String nickname, boolean setUserClaims) {
-
-            this.username = username;
-            this.password = password;
-            this.tenantDomain = tenantDomain;
-            this.tenantAwareUsername = tenantAwareUsername;
-            this.email = email;
-            this.nickname = nickname;
-            this.setUserClaims = setUserClaims;
-        }
-
-        public String getUsername() {
-
-            return username;
-        }
-
-        public String getPassword() {
-
-            return password;
-        }
-
-        public String getTenantDomain() {
-
-            return tenantDomain;
-        }
-
-        public String getTenantAwareUsername() {
-
-            return tenantAwareUsername;
-        }
-
-        public String getEmail() {
-
-            return email;
-        }
-
-        public String getNickname() {
-
-            return nickname;
-        }
-
-        public boolean getSetUserClaims() {
-
-            return setUserClaims;
         }
     }
 
@@ -189,20 +112,17 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         }
     }
 
-    protected static class SAMLConfig {
+    protected static class SAMLConfig extends TestConfig {
 
         private TestUserMode userMode;
-        private User user;
         private HttpBinding httpBinding;
-        private ClaimType claimType;
         private App app;
 
         protected SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
+            super(userMode, user, claimType);
 
             this.userMode = userMode;
-            this.user = user;
             this.httpBinding = httpBinding;
-            this.claimType = claimType;
             this.app = app;
         }
 
@@ -216,16 +136,6 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
             return app;
         }
 
-        public User getUser() {
-
-            return user;
-        }
-
-        public ClaimType getClaimType() {
-
-            return claimType;
-        }
-
         public HttpBinding getHttpBinding() {
 
             return httpBinding;
@@ -235,10 +145,10 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         public String toString() {
 
             return "SAMLConfig[" +
-                    ", userMode=" + userMode.name() +
-                    ", user=" + user.getUsername() +
+                    "  userMode=" + userMode.name() +
+                    ", user=" + super.getUser().getUsername() +
                     ", httpBinding=" + httpBinding +
-                    ", claimType=" + claimType +
+                    ", claimType=" + super.getClaimType() +
                     ", app=" + app.getArtifact() +
                     ']';
         }
@@ -264,17 +174,8 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         httpClient = null;
     }
 
-    public void createUser(SAMLConfig config) {
-
-        log.info("Creating User " + config.getUser().getUsername());
-        try {
-            // creating the user
-            remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
-                    null, getUserClaims(config.getUser().getSetUserClaims(), config),
-                    profileName, true);
-        } catch (Exception e) {
-            log.error("Error while creating the user", e);
-        }
+    protected void createUser(SAMLConfig config) {
+        super.createUser(config, remoteUSMServiceClient, "default");
     }
 
     public void createApplication(SAMLConfig config, String appName) throws Exception {
@@ -305,14 +206,8 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 
-    public void deleteUser(SAMLConfig config) {
-
-        log.info("Deleting User " + config.getUser().getUsername());
-        try {
-            remoteUSMServiceClient.deleteUser(config.getUser().getTenantAwareUsername());
-        } catch (Exception e) {
-            log.error("Error while deleting the user", e);
-        }
+    protected void deleteUser(SAMLConfig config) {
+        super.deleteUser(config, remoteUSMServiceClient);
     }
 
     public void deleteApplication(String appName) throws Exception {
@@ -320,69 +215,6 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         applicationManagementServiceClient.deleteApplication(appName);
     }
 
-    public ClaimValue[] getUserClaims(boolean setClaims, SAMLConfig config) {
-
-        ClaimValue[] claimValues;
-
-        if (setClaims) {
-            claimValues = new ClaimValue[3];
-
-            ClaimValue firstName = new ClaimValue();
-            firstName.setClaimURI(firstNameClaimURI);
-            firstName.setValue(config.getUser().getNickname());
-            claimValues[0] = firstName;
-
-            ClaimValue lastName = new ClaimValue();
-            lastName.setClaimURI(lastNameClaimURI);
-            lastName.setValue(config.getUser().getUsername());
-            claimValues[1] = lastName;
-
-            ClaimValue email = new ClaimValue();
-            email.setClaimURI(emailClaimURI);
-            email.setValue(config.getUser().getEmail());
-            claimValues[2] = email;
-        } else {
-            claimValues = new ClaimValue[1];
-
-            ClaimValue lastName = new ClaimValue();
-            lastName.setClaimURI(lastNameClaimURI);
-            lastName.setValue(config.getUser().getUsername());
-            claimValues[0] = lastName;
-        }
-
-        return claimValues;
-    }
-
-    public ClaimMapping[] getClaimMappings() {
-
-        List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
-
-        Claim firstNameClaim = new Claim();
-        firstNameClaim.setClaimUri(firstNameClaimURI);
-        ClaimMapping firstNameClaimMapping = new ClaimMapping();
-        firstNameClaimMapping.setRequested(true);
-        firstNameClaimMapping.setLocalClaim(firstNameClaim);
-        firstNameClaimMapping.setRemoteClaim(firstNameClaim);
-        claimMappingList.add(firstNameClaimMapping);
-
-        Claim lastNameClaim = new Claim();
-        lastNameClaim.setClaimUri(lastNameClaimURI);
-        ClaimMapping lastNameClaimMapping = new ClaimMapping();
-        lastNameClaimMapping.setRequested(true);
-        lastNameClaimMapping.setLocalClaim(lastNameClaim);
-        lastNameClaimMapping.setRemoteClaim(lastNameClaim);
-        claimMappingList.add(lastNameClaimMapping);
-
-        Claim emailClaim = new Claim();
-        emailClaim.setClaimUri(emailClaimURI);
-        ClaimMapping emailClaimMapping = new ClaimMapping();
-        emailClaimMapping.setRequested(true);
-        emailClaimMapping.setLocalClaim(emailClaim);
-        emailClaimMapping.setRemoteClaim(emailClaim);
-        claimMappingList.add(emailClaimMapping);
-
-        return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
-    }
 
     public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config) {
 
@@ -398,7 +230,7 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
-        if (config.getClaimType() != AbstractSAMLSSOTestCase.ClaimType.NONE) {
+        if (config.getClaimType() != TestConfig.ClaimType.NONE) {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         }
