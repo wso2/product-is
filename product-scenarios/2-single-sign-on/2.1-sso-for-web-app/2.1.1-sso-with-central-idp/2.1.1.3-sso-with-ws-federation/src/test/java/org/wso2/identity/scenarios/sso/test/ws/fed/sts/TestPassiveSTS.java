@@ -67,7 +67,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
     private static final String SERVICE_PROVIDER_NAME = "PassiveSTSSampleApp";
     private static final String SERVICE_PROVIDER_Desc = "PassiveSTS Service Provider";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL = "%s/PassiveSTSSampleApp";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL = "%s/PassiveSTSSampleApp/index.jsp";
     private final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
     private static final String URN_OASIS_NAMES_TC_SAML_2_0_ASSERTION = "urn:oasis:names:tc:SAML:2.0:assertion";
     private static final String PASSIVESTS_URI_CONTEXT = "/passivests";
