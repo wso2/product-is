@@ -22,7 +22,9 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
+import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +34,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Properties;
+
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
 
 /**
  * Base test case for IS scenario tests.
@@ -121,5 +127,61 @@ public class ScenarioTestBase {
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         loginClient = new AuthenticatorClient(backendServiceURL);
         sessionCookie = loginClient.login(ADMIN_USERNAME, ADMIN_PASSWORD, null);
+    }
+
+    public void createUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient, String profileName) {
+
+        LOG.info("Creating User " + config.getUser().getUsername());
+        try {
+            // creating the user
+            remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
+                    null, getUserClaims(config.getUser().getSetUserClaims(), config),
+                    profileName, true);
+        } catch (Exception e) {
+            LOG.error("Error while creating the user", e);
+        }
+    }
+
+    public void deleteUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient) {
+
+        LOG.info("Deleting User " + config.getUser().getUsername());
+        try {
+            remoteUSMServiceClient.deleteUser(config.getUser().getTenantAwareUsername());
+        } catch (Exception e) {
+            LOG.error("Error while deleting the user", e);
+        }
+    }
+
+    public ClaimValue[] getUserClaims(boolean setClaims, TestConfig config) {
+
+        ClaimValue[] claimValues;
+
+        if (setClaims) {
+            claimValues = new ClaimValue[3];
+
+            ClaimValue firstName = new ClaimValue();
+            firstName.setClaimURI(FIRST_NAME_CLAIM_URI);
+            firstName.setValue(config.getUser().getNickname());
+            claimValues[0] = firstName;
+
+            ClaimValue lastName = new ClaimValue();
+            lastName.setClaimURI(LAST_NAME_CLAIM_URI);
+            lastName.setValue(config.getUser().getUsername());
+            claimValues[1] = lastName;
+
+            ClaimValue email = new ClaimValue();
+            email.setClaimURI(EMAIL_CLAIM_URI);
+            email.setValue(config.getUser().getEmail());
+            claimValues[2] = email;
+        } else {
+            claimValues = new ClaimValue[1];
+
+            ClaimValue lastName = new ClaimValue();
+            lastName.setClaimURI(LAST_NAME_CLAIM_URI);
+            lastName.setValue(config.getUser().getUsername());
+            claimValues[0] = lastName;
+        }
+
+        return claimValues;
     }
 }
