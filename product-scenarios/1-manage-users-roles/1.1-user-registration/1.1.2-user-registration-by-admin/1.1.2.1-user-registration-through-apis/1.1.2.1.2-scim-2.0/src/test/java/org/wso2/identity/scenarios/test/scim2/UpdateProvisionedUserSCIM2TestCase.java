@@ -51,7 +51,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
     private String updateURL;
     private String firstName;
     private String SEPERATOR = "/";
-    private String NEWNAME = "testuser";
+    private String NEW_NAME = "testuser";
 
     JSONObject responseObj;
 
@@ -63,10 +63,10 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
+        createUser();
     }
 
-    @Test(description = "1.1.2.1.2.18")
-    public void testSCIM2CreateUser() throws Exception {
+    public void createUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
@@ -91,7 +91,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
                 "does not exist");
     }
 
-    @Test(dependsOnMethods = "testSCIM2CreateUser")
+    @Test(description = "1.1.2.1.2.18")
     public void testUpdateUser() throws Exception {
 
         responseObj = getJSONFromResponse(this.response);
@@ -105,7 +105,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         updateUserObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
 
         JSONObject names = new JSONObject();
-        names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, NEWNAME);
+        names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, NEW_NAME);
         updateUserObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
         updateUserObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         updateUserObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
@@ -115,12 +115,12 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
 
         firstName = updateUserObject.get(SCIMConstants.NAME_ATTRIBUTE).toString();
-        assertEquals(firstName.substring(14,22),NEWNAME,"The given first name " +
+        assertEquals(firstName.substring(14,22),NEW_NAME,"The given first name " +
                 "does not exist");
     }
 
     @AfterClass(alwaysRun = true)
-    private void testDeleteUser() throws Exception {
+    private void cleanUp() throws Exception {
 
         userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
 
