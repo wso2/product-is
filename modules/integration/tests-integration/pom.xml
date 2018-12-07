@@ -86,6 +86,10 @@
             <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.functions.library.mgt</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.inbound.provisioning.scim</groupId>
             <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
             <scope>test</scope>
