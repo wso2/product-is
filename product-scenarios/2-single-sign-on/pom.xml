@@ -30,7 +30,7 @@
     <version>5.7.0</version>
 
     <modules>
-        <module>2.1-sso-for-web-app</module>
+        <module>2.1-sso-with-central-idp</module>
         <module>2.1-application-management</module>
     </modules>
 

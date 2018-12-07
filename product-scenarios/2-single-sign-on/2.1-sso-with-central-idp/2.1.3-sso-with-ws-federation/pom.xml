@@ -55,7 +55,7 @@
                         <property>
                             <name>common.resource.location</name>
                             <value>
-                                ${basedir}/../../../../scenarios-commons/src/main/resources/
+                                ${basedir}/../../../scenarios-commons/src/main/resources/
                             </value>
                         </property>
                         <property>

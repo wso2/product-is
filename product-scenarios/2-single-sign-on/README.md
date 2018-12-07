@@ -7,6 +7,9 @@ An organization can have two or more web applications. Single sign on can be use
 multiple applications. 
 
 ## Sub-Scenarios
-- [2.1 SSO for web applications. ](2.1-sso-for-web-app/README.md)
-- [2.2 SSO for mobile applications](2.2-sso-mobile/README.md)
-- [2.3 SSO for Single Page Applications (SPA)](2.3-sso-spa/README.md)
+- [2.1 SSO for web applications with the centralized Identity Provider. Authenticate with username password of a 
+local user](2.1-sso-with-central-idp/README.md)
+- [2.2 Single sign-on for  web applications with the federated Identity Provider](2.2-sso-with-federated-idp/README.md)
+- [2.3 Single sign-on for  web applications with strong authentication](2.3-sso-with-strong-auth/README.md)
+- [2.4 Control access to an application while authentication](2.4-sso-with-access-control/README.md)
+- [2.5 Single Sign On with delegated access control](2.5-sso-with-deligated-access-control/README.md)
