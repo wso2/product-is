@@ -65,7 +65,8 @@ public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase 
         rootObject.put(USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
+                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_BAD_REQUEST,
                 "User creation request is malformed hence server should have returned a bad request");
 
@@ -75,6 +76,12 @@ public class ProvisionUserWithMalformedRequestTestCase extends ScenarioTestBase 
 
         assertNotNull(schemasArray);
         assertTrue(responseObj.toString().contains("Required attribute userName is missing"));
+        EntityUtils.consume(response.getEntity());
+        JSONArray schemasArray = new JSONArray();
+        schemasArray.add(responseObj);
+
+        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA,"Expected ERROR_SCHEMA " +
+                "not returned");
     }
 
 }
