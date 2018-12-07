@@ -37,6 +37,8 @@ cd apache-tomcat-8.5.35/
 if [ $# -eq 0 ]
   then
     echo "ISHttpsUrl is not provided, hence using default configurations."
+    sed -i.bak 's,http://localhost:8080/PassiveSTSSampleApp/,http://localhost:8080/PassiveSTSSampleApp/index.jsp,g' webapps/PassiveSTSSampleApp/WEB-INF/web.xml
+
   else
     sed -i.bak 's,https://localhost:9443,'$(echo ${ISHttpsUrl})',g' webapps/travelocity.com/WEB-INF/classes/travelocity.properties
     sed -i.bak 's,SAML2.IdPEntityId=localhost,SAML2.IdPEntityId='$(echo ${ISHttpsUrl} | sed 's,https://,,g' | sed 's,:9443,,g' | sed 's,:443,,g')',g' webapps/travelocity.com/WEB-INF/classes/travelocity.properties
