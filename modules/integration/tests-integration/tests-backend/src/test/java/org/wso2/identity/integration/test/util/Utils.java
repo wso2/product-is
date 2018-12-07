@@ -374,21 +374,18 @@ public class Utils {
         return httpClient.execute(request);
     }
 
-    public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient, String username, String password, String soapRequest) {
+    public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient,
+                                                  String username, String password, String soapRequest) throws Exception {
         HttpPost request = new HttpPost(url);
-        HttpResponse response = null;
+        HttpResponse response;
         String auth = username + ":" + password;
         byte[] encodedAuth = Base64.encodeBase64(
                 auth.getBytes(StandardCharsets.UTF_8));
         String authHeader = "Basic " + new String(encodedAuth);
         request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         request.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
-        try {
-            request.setEntity(new StringEntity(soapRequest));
-            response = httpClient.execute(request);
-        } catch (Exception e) {
-            log.error("Error while sending the ECP Request");
-        }
+        request.setEntity(new StringEntity(soapRequest));
+        response = httpClient.execute(request);
         return response;
     }
 
