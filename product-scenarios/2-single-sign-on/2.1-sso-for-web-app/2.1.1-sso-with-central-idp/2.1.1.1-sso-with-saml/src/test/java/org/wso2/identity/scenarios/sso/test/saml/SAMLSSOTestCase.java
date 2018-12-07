@@ -32,6 +32,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil;
 
@@ -40,6 +41,9 @@ import java.util.Map;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertNotNull;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_REQUEST_PARAM;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_RESPONSE_PARAM;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractFullContentFromResponse;
@@ -63,11 +67,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private static final String SAML_SSO_INDEX_URL = "/%s/";
     private static final String SAML_SSO_LOGOUT_URL = "/%s/logout?SAML2.HTTPBinding=%s";
-
-    //Claim Uris
-    private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
-    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
-    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private SAMLConfig config;
     private Header userAgentHeader;
@@ -192,21 +191,21 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
         return new SAMLConfig[][]{
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)}
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, TestConfig.User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        TestConfig.ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)}
         };
     }
 
     private void assertLocalClaims(String claims) {
         Map<String, String> attributeMap = extractClaims(claims);
-        assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
-        Assert.assertEquals(attributeMap.get(firstNameClaimURI), config.getUser().getNickname(),
+        assertTrue(attributeMap.containsKey(FIRST_NAME_CLAIM_URI), "Claim nickname is expected");
+        Assert.assertEquals(attributeMap.get(FIRST_NAME_CLAIM_URI), config.getUser().getNickname(),
                 "Expected claim value for nickname is " + config.getUser().getNickname());
-        assertTrue(attributeMap.containsKey(lastNameClaimURI), "Claim lastname is expected");
-        Assert.assertEquals(attributeMap.get(lastNameClaimURI), config.getUser().getUsername(),
+        assertTrue(attributeMap.containsKey(LAST_NAME_CLAIM_URI), "Claim lastname is expected");
+        Assert.assertEquals(attributeMap.get(LAST_NAME_CLAIM_URI), config.getUser().getUsername(),
                 "Expected claim value for lastname is " + config.getUser().getUsername());
-        assertTrue(attributeMap.containsKey(emailClaimURI), "Claim email is expected");
-        Assert.assertEquals(attributeMap.get(emailClaimURI), config.getUser().getEmail(),
+        assertTrue(attributeMap.containsKey(EMAIL_CLAIM_URI), "Claim email is expected");
+        Assert.assertEquals(attributeMap.get(EMAIL_CLAIM_URI), config.getUser().getEmail(),
                 "Expected claim value for email is " + config.getUser().getEmail());
     }
 
