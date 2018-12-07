@@ -49,6 +49,7 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
     private CloseableHttpClient client;
     private String scimUsersEndpoint;
 
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -57,7 +58,7 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         scimUsersEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM_ENDPOINT + "/Users";
     }
 
-    @Test(description = "1.1.1.2.1")
+    @Test(description = "1.1.2.1.1")
     public void testSCIMCreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
