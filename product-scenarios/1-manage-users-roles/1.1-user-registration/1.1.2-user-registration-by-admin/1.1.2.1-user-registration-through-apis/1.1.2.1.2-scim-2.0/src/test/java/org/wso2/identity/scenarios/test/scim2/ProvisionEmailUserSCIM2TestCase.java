@@ -33,20 +33,17 @@ import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
-public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
+
+public class ProvisionEmailUserSCIM2TestCase extends ScenarioTestBase {
 
     private CloseableHttpClient client;
     private String userNameResponse;
+    private final String EMAIL_ID="scim2user@wso2.com";
     private String userId;
-
-    private String HOMEEMAIL = "test@home.com";
-    private String PRIMARYSTATE = "true";
-    private String SEPERATOR = "/";
-    private String WORKEMAIL = "test@work.com";
-
 
     HttpResponse response;
 
@@ -59,50 +56,38 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         super.init();
     }
 
-    @Test(description = "1.1.2.1.2.7")
-    public void testSCIM2CreateUserWithAllAttributes() throws Exception {
+    @Test(description = "1.1.2.1.2.14")
+    public void testSCIM2CreateUser() throws Exception {
 
-        JSONObject  rootObject = new JSONObject();
+        JSONObject rootObject = new JSONObject();
         JSONArray schemas = new JSONArray();
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
         JSONObject names = new JSONObject();
-        names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, EMAIL_ID);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
-
-        JSONObject emailWork = new JSONObject();
-        emailWork.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_WORK_ATTRIBUTE);
-        emailWork.put(SCIMConstants.VALUE_PARAM, WORKEMAIL);
-
-        JSONObject emailHome = new JSONObject();
-        emailHome.put(SCIMConstants.PRIMARY_PARAM, PRIMARYSTATE);
-        emailHome.put(SCIMConstants.TYPE_PARAM, SCIMConstants.EMAIL_TYPE_HOME_ATTRIBUTE);
-        emailHome.put(SCIMConstants.VALUE_PARAM, HOMEEMAIL);
-
-        JSONArray emails = new JSONArray();
-        emails.add(emailWork);
-        emails.add(emailHome);
-        rootObject.put(SCIMConstants.EMAILS_ATTRIBUTE, emails);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "Username format is not " +
+                "valid ");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
-   }
+        assertEquals(userNameResponse, EMAIL_ID, "username not found");
+
+        JSONObject responseObj = getJSONFromResponse(this.response);
+        userId = (responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
+    }
 
     @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
-
-        JSONObject responseObj = getJSONFromResponse(this.response);
-        userId = responseObj.get(SCIMConstants.ID_ATTRIBUTE).toString();
-        assertNotNull(userId);
 
         response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been " +
                 "deleted successfully");
     }
+
 }
