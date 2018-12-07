@@ -255,14 +255,14 @@ public class SSOUtil {
      * @throws IOException If error occurs while sending the token request.
      */
     public static HttpResponse sendTokenRequest(HttpClient client,String authzCode, String tokenEndpoint, String
-            clientId, String clientSecret, String redirectUri, String scope, Map<String, String> params) throws
+            clientId, String clientSecret, String redirectUri, String grantType, String scope, Map<String, String> params) throws
             IOException {
 
         Header authzHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, IdentityScenarioUtil.constructBasicAuthzHeader
                 (clientId, clientSecret));
         Header contentTypeHeader = new BasicHeader(CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM);
         List<NameValuePair> requestParams = new ArrayList<>();
-        requestParams.add(new BasicNameValuePair(PARAM_GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE));
+        requestParams.add(new BasicNameValuePair(PARAM_GRANT_TYPE, grantType));
         requestParams.add(new BasicNameValuePair(PARAM_CODE, authzCode));
         requestParams.add(new BasicNameValuePair(PARAM_REDIRECT_URI, redirectUri));
 

@@ -168,7 +168,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
     public void getOAuthToken() throws Exception {
 
         HttpResponse response = sendTokenRequest(client, authzCode, tokenEndpoint, clientId, clientSecret,
-                                                 REDIRECT_URL, null, null);
+                                                 REDIRECT_URL, GRANT_TYPE_AUTHORIZATION_CODE, null,null);
         Assert.assertNotNull(response, "OAuth token POST is null.");
 
         JSONObject json = getJSONFromResponse(response);
