@@ -15,6 +15,7 @@
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2EnterpriseUserRequestTestCase" />
+            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionExistingUserTestCase"/>
         </classes>
     </test>
 </suite>
