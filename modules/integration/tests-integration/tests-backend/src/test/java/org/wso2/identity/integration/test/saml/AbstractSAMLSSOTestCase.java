@@ -171,7 +171,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
-        ECP_APP("https://localhost/ecp-sp",false);
+        ECP_APP("https://localhost/ecp-sp", false);
 
         private String artifact;
         private boolean signingEnabled;
