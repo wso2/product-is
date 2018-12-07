@@ -46,6 +46,7 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
     HttpResponse response, errorResponse;
     JSONObject rootObject;
 
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
