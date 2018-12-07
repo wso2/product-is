@@ -11,7 +11,8 @@
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithMalformedRequestTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2FullRequestTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithAllAttributesTestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionEmailUserSCIM2TestCase"/>
+            <!--The ProvisionEmailUserSCIM2TestCase works only with jdbc user store and fails with embedded ldap due to regex -->
+	    <class name="org.wso2.identity.scenarios.test.scim2.ProvisionEmailUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2EnterpriseUserRequestTestCase" />
