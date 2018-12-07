@@ -97,6 +97,8 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         names.put(SCIMConstants.FORMATTED_NAME_ATTRIBUTE,SCIMConstants.FORMATTED_NAME);
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
+
+        /* when running with embedded ldap https://github.com/wso2/product-is/issues/3954 error occurs */
         names.put(SCIMConstants.MIDDLE_NAME_ATTRIBUTE,SCIMConstants.MIDDLE_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.HONORIFIC_PREFIX_ATTRIBUTE,SCIMConstants.HONORIFIC_PREFIX_CLAIM_VALUE);
         names.put(SCIMConstants.HONORIFIC_SUFFIX_ATTRIBUTE,SCIMConstants.HONORIFIC_SURFIX_CLAIM_VALUE);
