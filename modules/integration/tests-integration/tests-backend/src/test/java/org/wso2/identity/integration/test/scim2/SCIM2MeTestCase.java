@@ -50,7 +50,7 @@ public class SCIM2MeTestCase extends SCIM2BaseTestCase {
     private static final String EMAIL_TYPE_HOME_CLAIM_URI = "home";
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     private static final String USERNAME = "scim2user";
-    private static final String PASSWORD = "testPassword";
+    private static final String PASSWORD = "password:123";
 
     private CloseableHttpClient client;
 
