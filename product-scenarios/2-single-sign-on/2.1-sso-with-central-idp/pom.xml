@@ -32,8 +32,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>2.1.1.1-sso-with-saml</module>
-        <module>2.1.1.3-sso-with-ws-federation</module>
+        <module>2.1.1-sso-with-saml</module>
+        <module>2.1.3-sso-with-ws-federation</module>
     </modules>
 
 </project>

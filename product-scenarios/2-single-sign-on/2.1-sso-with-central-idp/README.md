@@ -8,7 +8,7 @@ multiple applications. SSO can be support by the centralized Identity provider i
 End User
 
 ## Sub-Scenarios
-- [2.1.1.1 Single sign-on for  web applications using SAML](2.2.1.1-sso-with-saml/README.md)
-- [2.1.1.2 Single sign-on for  web applications using OIDC](2.2.1.2-sso-with-oidc/README.md)
-- [2.1.1.3 Single sign-on for  web applications using WS-Federation](2.2.1.3-sso-with-ws-federation/README.md)
-- [2.1.1.4 Single sign-on for  web applications using Multiple Protocols](2.2.1.4-sso-with-cross-protocol/README.md)
+- [2.1.1.1 Single sign-on for  web applications using SAML](2.1.1-sso-with-saml/README.md)
+- [2.1.1.2 Single sign-on for  web applications using OIDC](2.1.2-sso-with-oidc/README.md)
+- [2.1.1.3 Single sign-on for  web applications using WS-Federation](2.1.3-sso-with-ws-federation/README.md)
+- [2.1.1.4 Single sign-on for  web applications using Multiple Protocols](2.1.4-sso-with-cross-protocol/README.md)
