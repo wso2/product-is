@@ -17,9 +17,9 @@
  */
 
 package org.wso2.identity.scenarios.test.scim;
-
 public class SCIMConstants {
 
+    static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
     static final String SCIM_ENDPOINT = "/wso2/scim";
     static final String SCHEMAS_ATTRIBUTE = "schemas";
     static final String GIVEN_NAME_ATTRIBUTE = "givenName";
@@ -30,4 +30,27 @@ public class SCIMConstants {
     static final String GIVEN_NAME_CLAIM_VALUE = "user1";
     static final String USERNAME = "scim1user";
     static final String PASSWORD = "scim1pwd";
+    static final String URL_PATH_SEPARATOR = "/";
+    public static final String FAMILY_NAME_ATTRIBUTE = "familyName";
+    public static final String FAMILY_NAME_CLAIM_VALUE = "scim2";
+    public static final String TYPE_PARAM = "type";
+    public static final String EMAIL_TYPE_WORK_ATTRIBUTE = "work";
+    public static final String EMAIL_TYPE_HOME_ATTRIBUTE = "home";
+    public static final String VALUE_PARAM = "value";
+    public static final String PRIMARY_PARAM = "primary";
+    public static final String EMAILS_ATTRIBUTE = "emails";
+    public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
+
+
+    /**
+     * Operators
+     */
+    public static class Operators {
+
+        public static final String EQUAL = "+Eq+";
+        public static final String STARTWITH = "+Sw+";
+        public static final String ENDWITH = "+Ew+";
+        public static final String CONTAINS = "+Co+";
+    }
 }
+

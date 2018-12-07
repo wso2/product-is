@@ -6,6 +6,12 @@
     <test name="is-usr-mgt-scim1" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.UpdateProvisionedUserSCIM1TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithAllAttributesTestCase"/>
+            <!--Please enable the below test case once https://github.com/wso2/product-is/issues/4022 is fixed -->
+            <!--class name="org.wso2.identity.scenarios.test.scim
+            .UserProvisionWithInsufficientPrivilegesSCIMTestCase"/-->
+            <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMWithDifferentContentTypeTestCase"/>
         </classes>
     </test>
 </suite>
