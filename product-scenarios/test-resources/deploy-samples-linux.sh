@@ -26,6 +26,11 @@ unzip apache-tomcat-8.5.35.zip
 #wget http://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/org.wso2.sample.is.sso.agent/5.7.0/org.wso2.sample.is.sso.agent-5.7.0.war
 unzip org.wso2.sample.is.sso.agent-5.7.0.war -d travelocity.com
 mv travelocity.com apache-tomcat-8.5.35/webapps/
+
+wget http://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/PassiveSTSSampleApp/5.7.0/PassiveSTSSampleApp-5.7.0.war
+unzip PassiveSTSSampleApp-5.7.0.war -d PassiveSTSSampleApp
+mv PassiveSTSSampleApp apache-tomcat-8.5.35/webapps/
+
 cd apache-tomcat-8.5.35/
 
 if [ $# -eq 0 ]
@@ -34,7 +39,12 @@ if [ $# -eq 0 ]
   else
     sed -i 's,https://localhost:9443,'$(echo ${ISHttpsUrl})',g' webapps/travelocity.com/WEB-INF/classes/travelocity.properties
     sed -i 's,SAML2.IdPEntityId=localhost,SAML2.IdPEntityId='$(echo ${ISHttpsUrl} | sed 's,https://,,g' | sed 's,:9443,,g' | sed 's,:443,,g')',g' webapps/travelocity.com/WEB-INF/classes/travelocity.properties
-    #sed -i.bak 's,http://localhost:8080,http://${TomcatHost}:8080,g' webapps/travelocity.com/WEB-INF/classes/travelocity.properties
+    #sed -i 's,http://localhost:8080,http://${TomcatHost}:8080,g' webapps/travelocity.com/WEB-INF/classes/travelocity.properties
+
+    sed -i 's,https://localhost:9443,'$(echo ${ISHttpsUrl})',g' webapps/PassiveSTSSampleApp/WEB-INF/web.xml
+    sed -i 's,http://localhost:8080/PassiveSTSSampleApp/,http://localhost:8080/PassiveSTSSampleApp/index.jsp,g' webapps/PassiveSTSSampleApp/WEB-INF/web.xml
+    #sed -i 's,http://localhost:8080/PassiveSTSSampleApp/,http://${TomcatHost}:8080/PassiveSTSSampleApp/index.jsp,g' webapps/PassiveSTSSampleApp/WEB-INF/web.xml
+
 fi
 
 cd bin
