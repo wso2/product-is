@@ -55,6 +55,7 @@ public class Constants {
     public static final String OAUTH_AUTHORIZE_URI_CONTEXT = "/oauth2/authorize";
     public static final String OAUTH_TOKEN_URI_CONTEXT = "/oauth2/token";
     public static final String COMMONAUTH_URI_CONTEXT = "/commonauth";
+    public static final String INTROSPECTION_URI = "/oauth2/introspect";
     public static final String SCIM1_USERS_ENDPOINT = "wso2/scim";
     public static final String SCIM2_USERS_ENDPOINT = "scim2";
     public static final String SCIM_ENDPOINT_USER = "Users";
@@ -63,6 +64,7 @@ public class Constants {
     public static final String TOCOMMONAUTH = "tocommonauth";
     public static final String COOKIE = "Cookie";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
+    public static final String TOKEN = "token";
 
     /**
      * SCIM Endpoints.

@@ -45,6 +45,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.COMMONAUTH_URI_
 import static org.wso2.identity.scenarios.commons.util.Constants.DCR_REGISTER_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
+import static org.wso2.identity.scenarios.commons.util.Constants.INTROSPECTION_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.OAUTH_AUTHORIZE_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.OAUTH_TOKEN_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_ACCESS_TOKEN;
@@ -60,6 +61,7 @@ import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendAuthorizeGet;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendLoginPost;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendOAuthConsentApproveOncePost;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendTokenRequest;
+import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendTokenValidateRequest;
 
 public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
 
@@ -75,11 +77,12 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
     private String commonauthEndpoint;
     private String sessionDataKey;
     private String oAuthConsentUrl;
+    private String introspectionEndpoint;
     private String sessionDataKeyConsent;
     private String authzCode;
+    private String token;
 
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+    @BeforeClass(alwaysRun = true) public void testInit() throws Exception {
 
         setKeyStoreProperties();
         String serverURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
@@ -87,25 +90,25 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         authzEndpoint = serverURL + OAUTH_AUTHORIZE_URI_CONTEXT;
         tokenEndpoint = serverURL + OAUTH_TOKEN_URI_CONTEXT;
         commonauthEndpoint = serverURL + COMMONAUTH_URI_CONTEXT;
+        introspectionEndpoint = serverURL + INTROSPECTION_URI;
+
         client = HttpClients.createDefault();
 
         registerApplication();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
 
-         deleteApplication();
-         client.close();
+        deleteApplication();
+        client.close();
     }
 
     private void registerApplication() throws IOException {
 
         HttpResponse response = ApplicationUtil.registerDCRApplication(dcrEndpoint, APPLICATION_NAME, REDIRECT_URL,
-                                                                       new String[] {GRANT_TYPE_AUTHORIZATION_CODE},
-                                                                       ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "Application registration " +
-                                                                                      "failed.");
+                new String[] { GRANT_TYPE_AUTHORIZATION_CODE }, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
+                "Application registration " + "failed.");
         JSONObject responseObj = getJSONFromResponse(response);
         clientId = responseObj.get(PARAM_CLIENT_ID).toString();
         assertNotNull(clientId, "Client ID is null.");
@@ -117,11 +120,10 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
 
         HttpResponse response = deleteDCRApplication(dcrEndpoint, clientId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
-                     "Application deletion failed.");
+                "Application deletion failed.");
     }
 
-    @Test(description = "2.1.1.1.1")
-    public void intiAuthorizeRequest() throws Exception {
+    @Test(description = "3.1.1.1.1") public void intiAuthorizeRequest() throws Exception {
 
         HttpResponse response = sendAuthorizeGet(client, authzEndpoint, clientId, REDIRECT_URL, null, null);
         assertNotNull(response, "Response for authorize GET is null");
@@ -131,11 +133,11 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "intiAuthorizeRequest")
-    public void authenticate() throws Exception {
+    @Test(description = "3.1.1.1.1", dependsOnMethods = "intiAuthorizeRequest") public void authenticate()
+            throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey, commonauthEndpoint, ADMIN_USERNAME,
-                                              ADMIN_PASSWORD);
+                ADMIN_PASSWORD);
         assertNotNull(response, "Response for login POST is null");
 
         Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
@@ -144,8 +146,8 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "authenticate")
-    public void initOAuthConsent() throws Exception {
+    @Test(description = "3.1.1.1.1", dependsOnMethods = "authenticate") public void initOAuthConsent()
+            throws Exception {
 
         HttpResponse response = sendGetRequest(client, oAuthConsentUrl, null);
         assertNotNull(response, "Response for oauth consent GET is null");
@@ -156,23 +158,32 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "initOAuthConsent")
-    public void submitOAuthConsent() throws Exception {
+    @Test(description = "3.1.1.1.1", dependsOnMethods = "initOAuthConsent") public void submitOAuthConsent()
+            throws Exception {
 
         HttpResponse response = sendOAuthConsentApproveOncePost(client, sessionDataKeyConsent, authzEndpoint);
         Assert.assertNotNull(response, "OAuth consent POST is null.");
         authzCode = getAuthzCode(response);
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "submitOAuthConsent")
-    public void getOAuthToken() throws Exception {
+    @Test(description = "3.1.1.1.1", dependsOnMethods = "submitOAuthConsent") public void getOAuthToken()
+            throws Exception {
 
-        HttpResponse response = sendTokenRequest(client, authzCode, tokenEndpoint, clientId, clientSecret,
-                                                 REDIRECT_URL, GRANT_TYPE_AUTHORIZATION_CODE, null,null);
+        HttpResponse response = sendTokenRequest(client, authzCode, tokenEndpoint, clientId, clientSecret, REDIRECT_URL,
+                GRANT_TYPE_AUTHORIZATION_CODE, null, null);
         Assert.assertNotNull(response, "OAuth token POST is null.");
 
         JSONObject json = getJSONFromResponse(response);
         Assert.assertNotNull(json.get(PARAM_ACCESS_TOKEN), "Access token is not available in the token response.");
+        token = json.get(PARAM_ACCESS_TOKEN).toString();
+    }
+
+    @Test(description = "3.1.1.1.1", dependsOnMethods = "getOAuthToken") public void validateOAuthToken()
+            throws Exception {
+        HttpResponse response = sendTokenValidateRequest(client, ADMIN_USERNAME, ADMIN_PASSWORD, token,
+                introspectionEndpoint);
+        JSONObject json = getJSONFromResponse(response);
+        Assert.assertEquals(json.get("active").toString(), "true", "Access token is not a valid access " + "token");
     }
 
     private String getSessionDataKey(HttpResponse response) throws IOException {

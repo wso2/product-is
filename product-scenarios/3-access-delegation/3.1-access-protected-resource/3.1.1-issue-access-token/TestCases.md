@@ -1,7 +1,7 @@
 # Test Case Template
 
-### 2.1.1.1 Sing sign-on with OAuth
+### 3.1.1 Get access token using authorization code grant flow and validate the access token 
 
 | TestCaseID | TestCase                                                        | Test Behaviour                                                                                                                                                                                            | Status    |
 |------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| 2.1.1.1.1    | Sign in to an application using OAuth             | **Given**: Test environment is set properly</br> **When** : An application sign in to IS with a user through OAuth</br> **Then** : The application should receive an access token      | NotStarted     |
+| 3.1.1.1.1   | Get access token using authorization code grant with valid mandatory values and validate the access token using Introspection API             | **Given**: Test environment is set properly</br> **When** : Get access token using authorization code grant flow</br> **Then** : The application should receive an valid access token      | NotStarted     |
