@@ -12,6 +12,7 @@
             <!--class name="org.wso2.identity.scenarios.test.scim
             .UserProvisionWithInsufficientPrivilegesSCIMTestCase"/-->
             <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMWithDifferentContentTypeTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.UpdateProvisionedUserRoleSCIM1TestCase"/>
         </classes>
     </test>
 </suite>
