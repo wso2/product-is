@@ -35,6 +35,7 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil;
+import org.wso2.identity.scenarios.commons.util.SAMLSSOUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +53,11 @@ import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getRedire
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getSessionDataKey;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsentRequested;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
+import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractRelayState;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractSAMLRequest;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractSAMLResponse;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.sendLoginPostMessage;
+import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.sendPostMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendPOSTConsentMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectRequest;
 
@@ -108,7 +111,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                 "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "2.1.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
+    @Test(description = "2.1.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOIdPLogout"})
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
@@ -185,6 +188,124 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                     "SAML SSO Login failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "2.1.1.1.5", groups = "wso2.is",
+            dependsOnMethods = {"testSAMLSSOLogin"})
+    public void testClaims() {
+        String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
+
+        switch (config.getClaimType()) {
+            case LOCAL:
+                assertLocalClaims(claimString);
+                break;
+            case NONE:
+                assertNoneClaims(claimString);
+                break;
+        }
+    }
+
+    @Test(alwaysRun = true, description = "2.1.1.1.6", groups = "wso2.is",
+            dependsOnMethods = {"testSAMLSSOLogin"})
+    public void testSAMLSSOLogout() throws Exception {
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpResponse response;
+
+            response = sendGetRequest(httpClient, String.format(webAppHost + SAML_SSO_LOGOUT_URL, config.getApp
+                    ().getArtifact(), config.getHttpBinding().binding), null, new Header[]{userAgentHeader});
+
+
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+                String samlRequest = extractSAMLRequest(response);
+                EntityUtils.consume(response.getEntity());
+                assertNotNull(samlRequest, "SAML Request is not available");
+                response = super.sendSAMLMessage(samlSSOIDPUrl, SAML_REQUEST_PARAM, samlRequest, config);
+
+            }
+
+            String samlResponse = extractSAMLResponse(response);
+            EntityUtils.consume(response.getEntity());
+            response = super.sendSAMLMessage(String.format(webAppHost + ACS_URL, config.getApp().getArtifact()),
+                    SAML_RESPONSE_PARAM, samlResponse, config);
+
+            String resultPage = extractFullContentFromResponse(response);
+            EntityUtils.consume(response.getEntity());
+            Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
+                    "SAML SSO Logout failed for " + config);
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Logout test failed for " + config, e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "2.1.1.1.7", groups = "wso2.is", dependsOnMethods =
+            {"testSAMLSSOLogout"})
+    public void testSAMLRelayStateDecode() throws Exception {
+        try {
+            String relayState = "https%3A%2F%2Fwww.google.com%2Fa%2Fcoolguseconcepts" +
+                    ".com%2FServiceLogin%3Fservice%3Dmail%26passive%3Dtrue%26rm%3Dfalse%26continue%3Dhttps%253A%252F" +
+                    "%252Fmail.google.com%252Fa%252Fcoolguseconcepts" +
+                    ".com%252F%26ss%3D1%26ltmpl%3Ddefault%26ltmplcache%3D2%26emr%3D1%26osid%3D1%26scope%3Dhttp%3A%2F" +
+                    "%2Fmeyerweb.com%2Feric%2Ftools%2Fdencoder%2F%2bhttp%3A%2F%2Fmeyerweb" +
+                    ".com%2Feric%2Ftools%2Fdencoder%2F&";
+            HttpResponse response;
+            response = sendGetRequest(httpClient, String.format(webAppHost + SAML_SSO_LOGIN_URL, config.
+                            getApp().getArtifact(), config.getHttpBinding().binding), null,
+                    new Header[]{userAgentHeader});
+
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+                String samlRequest = extractSAMLRequest(response);
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put(SAML_REQUEST_PARAM, samlRequest);
+                parameters.put("RelayState", relayState);
+                response = SAMLSSOUtil.sendSAMLMessage(samlSSOIDPUrl, parameters, USER_AGENT, config.getUserMode(),
+                        TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain(), httpClient);
+
+                EntityUtils.consume(response.getEntity());
+                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getApp().getArtifact(),
+                        httpClient);
+
+                String sessionKey = getSessionDataKey(response);
+
+                response = sendPostMessage(sessionKey, commonAuthUrl, USER_AGENT, webAppHost + ACS_URL, config
+                                .getApp().getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(),
+                        httpClient);
+                EntityUtils.consume(response.getEntity());
+
+                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config
+                                .getApp().getArtifact(),
+                        httpClient);
+                String receivedRelayState = extractRelayState(response);
+                EntityUtils.consume(response.getEntity());
+                relayState = relayState.replaceAll("&", "&amp;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;").
+                        replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace("\n", "");
+                Assert.assertEquals(relayState, receivedRelayState, "Sent parameter : " + relayState + "\nRecieved : " +
+                        "" + receivedRelayState + "\n");
+            }
+
+            EntityUtils.consumeQuietly(response.getEntity());
+
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Logout test failed for " + config, e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "2.1.1.1.8", groups = "wso2.is",
+            dependsOnMethods = {"testSAMLRelayStateDecode"})
+    public void testSAMLSSOIdPLogout() throws Exception {
+
+        try {
+            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+
+                HttpResponse response = sendGetRequest(httpClient, samlIdpSloUrl, null, new Header[]{userAgentHeader});
+                String resultPage = extractFullContentFromResponse(response);
+                EntityUtils.consume(response.getEntity());
+                Assert.assertTrue(resultPage.contains("You have successfully logged out") &&
+                        !resultPage.contains("error"), "SAML SSO IdP Logout failed for " + config);
+            }
+        } catch (Exception e) {
+            Assert.fail("SAML SSO IdP Logout test failed for " + config, e);
         }
     }
 

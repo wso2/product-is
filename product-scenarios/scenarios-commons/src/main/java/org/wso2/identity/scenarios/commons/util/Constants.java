@@ -60,6 +60,7 @@ public class Constants {
     public static final String SCIM_ENDPOINT_USER = "Users";
     public static final String SAML_REQUEST_PARAM = "SAMLRequest";
     public static final String SAML_RESPONSE_PARAM = "SAMLResponse";
+    public static final String RELAY_STATE_PARAM = "RelayState";
     public static final String TOCOMMONAUTH = "tocommonauth";
     public static final String COOKIE = "Cookie";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
