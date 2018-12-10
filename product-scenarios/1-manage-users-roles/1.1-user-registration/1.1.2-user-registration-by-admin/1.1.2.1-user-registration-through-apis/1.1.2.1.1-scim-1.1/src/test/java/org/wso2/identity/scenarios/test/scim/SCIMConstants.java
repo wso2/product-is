@@ -39,8 +39,13 @@ public class SCIMConstants {
     public static final String VALUE_PARAM = "value";
     public static final String PRIMARY_PARAM = "primary";
     public static final String EMAILS_ATTRIBUTE = "emails";
+    public static final String ROLE_NAME = "Engineering";
+    public static final String ADMIN_ROLE = "Admin";
+    public static final String DISPLAY = "display";
+    public static final String ROLE_DISPLAY_NAME_ATTRIBUTE = "displayName";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
-
+    public static final String GROUP_ENDPOINT = "Groups";
+    public static final String MEMBERS = "members";
 
     /**
      * Operators

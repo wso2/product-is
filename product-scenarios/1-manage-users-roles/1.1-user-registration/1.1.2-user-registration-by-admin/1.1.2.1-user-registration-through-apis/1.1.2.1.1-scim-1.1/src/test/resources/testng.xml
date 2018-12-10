@@ -8,10 +8,20 @@
             <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim.UpdateProvisionedUserSCIM1TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim.ProvisionUserWithAllAttributesTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMWithDifferentContentTypeTestCase"/>
+
             <!--Please enable the below test case once https://github.com/wso2/product-is/issues/4022 is fixed -->
             <!--class name="org.wso2.identity.scenarios.test.scim
             .UserProvisionWithInsufficientPrivilegesSCIMTestCase"/-->
-            <class name="org.wso2.identity.scenarios.test.scim.UserProvisionSCIMWithDifferentContentTypeTestCase"/>
+
+            <!--Please enable this test case once https://github.com/wso2/product-is/issues/4173 is fixed -->
+            <!--class name="org.wso2.identity.scenarios.test.scim.UpdateProvisionedUserRoleSCIM1TestCase"/-->
+
+            <!--Please enable this test case once https://github.com/wso2/product-is/issues/4173 and https://github.com/wso2/product-is/issues/4022
+            are fixed -->
+
+            <!--class
+            name="org.wso2.identity.scenarios.test.scim.ProvisionedUserDeleteSelfSCIM1TestCase"/-->
         </classes>
     </test>
 </suite>
