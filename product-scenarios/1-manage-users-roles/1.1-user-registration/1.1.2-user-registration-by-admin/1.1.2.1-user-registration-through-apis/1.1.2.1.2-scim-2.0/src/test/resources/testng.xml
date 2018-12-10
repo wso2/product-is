@@ -5,16 +5,16 @@
 
     <test name="is-usr-mgt-scim2" preserve-order="true" parallel="false">
         <classes>
-            
+
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UserProvisionSCIMWithDifferentContentTypeTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithoutContentHeaderTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithMalformedRequestTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2FullRequestTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithAllAttributesTestCase"/>
-           
+
             <!--The ProvisionEmailUserSCIM2TestCase works only with jdbc user store and fails with embedded ldap due to regex -->
-	        
+
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionEmailUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningTestCase"/>
@@ -22,6 +22,7 @@
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionExistingUserTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithValidationFailuresTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UserProvisionWithInsufficientPrivilegesSCIM2TestCase"/>
+
             <!--run this test case only if         <Resource context="(.*)/scim2/Me" secured="true" http-method="POST">
             is set to false -->
 	    <!--class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningWithoutHeaderTestCase"/-->  
@@ -29,6 +30,9 @@
             to block @ sign ex:[a-zA-Z0-9._\-|//]{3,30}$ -->
             <!--class name="org.wso2.identity.scenarios.test.scim2.FilterOutEmailUserProvisioningSCIM2TestCase"/-->
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserRoleSCIM2TestCase"/>
+            <!--Please uncomment this test case when a tenant is created in the identity server ex:admin@engineering
+            .com-->
+            <!--class name="org.wso2.identity.scenarios.test.scim2.ProvisionTenantUserSCIM2TestCase"/-->
         </classes>
     </test>
 </suite>

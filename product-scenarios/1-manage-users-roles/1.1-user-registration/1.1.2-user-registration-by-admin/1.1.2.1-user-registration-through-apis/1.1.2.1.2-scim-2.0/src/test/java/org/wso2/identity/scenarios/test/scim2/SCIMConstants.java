@@ -59,7 +59,7 @@ public class SCIMConstants {
    public static final String DISPLAY = "display";
    public static final String MEMBERS = "members";
    public static final String VALUE = "value";
-   public static final String ROLE_NAME = "TestRole";
+   public static final String ROLE_NAME = "Engineering";
    public static final String ROLE_NAME_ATTRIBUTE = "roles";
    public static final String FORMATTED_NAME_ATTRIBUTE ="formatted";
    public static final String FORMATTED_NAME = "Ms. Barbara J Jensen III";
@@ -137,7 +137,6 @@ public class SCIMConstants {
    public static final String X509_CERTIFICAT_ATTRIBUTE = "x509Certificates";
    public static final String URN_ATTRIBUTE = "urn";
 
-
    public static final String META_ATTRIBUTE = "meta";
    public static final String META_CREATED_ATTRIBUTE = "created";
    public static final String META_CREATED_ATTRIBUTE_VALUE = "2010-01-23T04:56:22Z";
@@ -149,6 +148,9 @@ public class SCIMConstants {
    public static final String META_VERTSION_ATTRIBUTE_VALUE = "W\\//\"3694e05e9dff591\"";
    public static final String META_LOCATION_ATTRIBUTE = "location";
    public static final String META_LOCATION_ATTRIBUTE_VALUE = "https://example.com/v1/Users/2819c223-7f76-453a-919d-413861904646";
+   public static final String TENANT_DOMAIN = "/t/engineering.com";
+   public static final String TENANT_ADMIN_UN = "admin@engineering.com";
+   public static final String TENANT_ADMIN_PW = "admin";
 
    public static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:User";
    public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
