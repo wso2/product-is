@@ -51,4 +51,7 @@ public final class OAuth2Constants {
     public static final String OAUTH2_FORM_POST = "form_post";
     public static final String OAUTH2_RESPONSE_MODE = "response_mode";
 
+    // User info
+    public static final String LOGGED_IN_USER = "logged_in_user";
+
 }

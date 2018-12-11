@@ -20,10 +20,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.is.migration.service.Migrator;
-import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
 
 import java.io.File;

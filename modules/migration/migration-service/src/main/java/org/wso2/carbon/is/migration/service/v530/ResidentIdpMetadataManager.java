@@ -18,14 +18,15 @@ package org.wso2.carbon.is.migration.service.v530;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.service.v530.dao.IdpMetaDataDAO;
+import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.user.api.Tenant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Migrates default governance connector properties for tenants created on IS 5.2.0
@@ -87,13 +88,14 @@ public class ResidentIdpMetadataManager {
     }};
 
 
+    @Deprecated
     public void migrateResidentIdpMetaData(boolean migrateActiveTenantsOnly) throws Exception {
 
         IdpMetaDataDAO idpMetaDataDAO = IdpMetaDataDAO.getInstance();
         /*
             Migrating the default governance connector configurations for tenant resident IDPs.
          */
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
 
             try {
@@ -132,5 +134,52 @@ public class ResidentIdpMetadataManager {
         }
     }
 
+    public void migrateResidentIdpMetaData(boolean migrateActiveTenantsOnly, boolean continueOnError) throws Exception {
+
+        IdpMetaDataDAO idpMetaDataDAO = IdpMetaDataDAO.getInstance();
+        /*
+            Migrating the default governance connector configurations for tenant resident IDPs.
+         */
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+
+            try {
+                if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                    log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Resident IDP " +
+                             "metadata migration!!!!");
+                    continue;
+                }
+
+                // get the resident IDP id of the tenant
+                int idpId = idpMetaDataDAO.getResidentIdpId(tenant.getId());
+                if (idpId == -9999) {
+                    log.error("Couldn't find resident idp id of tenant : " + tenant.getDomain());
+                    continue;
+                }
+
+                // already available resident idp property names
+                List<String> availablePropertyNames = idpMetaDataDAO.getAvailableConfigNames(tenant.getId(), idpId);
+                List<IdpMetaDataDAO.IdpMetaData> idpMetaDataToAdd = new ArrayList<>(); // default properties that we need to add
+                // we try and insert the missing properties
+                for (Map.Entry<String, String> entry : DEFAULT_PROPERTIES.entrySet()) {
+                    // first check if the connector property is already defined in the resident IDP
+                    if (!availablePropertyNames.contains(entry.getKey())) {
+                        String msg = "Setting '%s' default connector property value to '%s' in tenant : %s";
+                        log.info(String.format(msg, entry.getKey(), entry.getValue(), tenant.getDomain()));
+
+                        idpMetaDataToAdd.add(new IdpMetaDataDAO.IdpMetaData(idpId, entry.getKey(), entry.getValue(),
+                                                                            null, tenant.getId()));
+                    }
+                }
+                // write the missing properties to the DB
+                idpMetaDataDAO.addIdpMetaData(idpMetaDataToAdd);
+            } catch (Exception ex) {
+                if (!continueOnError) {
+                    throw ex;
+                }
+                log.error("Error while migrating IDP metadata of tenant: " + tenant.getDomain(), ex);
+            }
+        }
+    }
 
 }

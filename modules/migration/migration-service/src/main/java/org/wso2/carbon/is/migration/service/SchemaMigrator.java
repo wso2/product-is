@@ -46,7 +46,7 @@ public class SchemaMigrator extends Migrator {
 
     public static final String LOCATION = "location" ;
 
-    private String location ;
+    private String location;
 
     private Connection conn = null;
     private Statement statement;

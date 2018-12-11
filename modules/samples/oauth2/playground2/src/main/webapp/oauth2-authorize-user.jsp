@@ -49,8 +49,6 @@
             scope = "default";
         }
 
-        session.setAttribute(OAuth2Constants.CONSUMER_KEY, consumerKey);
-        session.setAttribute(OAuth2Constants.CONSUMER_SECRET, consumerSecret);
         session.setAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE, authzGrantType);
         session.setAttribute(OAuth2Constants.CONSUMER_KEY, consumerKey);
         session.setAttribute(OAuth2Constants.CONSUMER_SECRET, consumerSecret);
@@ -185,5 +183,3 @@
     window.location = "oauth2.jsp";
 </script>
 
-
-    

@@ -88,7 +88,7 @@ public class OAuthDataMigrator extends Migrator {
             isClientSecretHashColumnsAvailable = OAuthDAO.getInstance().isConsumerSecretHashColumnAvailable(connection);
             connection.commit();
         }
-        if(isClientSecretHashColumnsAvailable){
+        if (isClientSecretHashColumnsAvailable) {
             try (Connection connection = getDataSource().getConnection()) {
                 OAuthDAO.getInstance().deleteConsumerSecretHashColumn(connection);
                 connection.commit();

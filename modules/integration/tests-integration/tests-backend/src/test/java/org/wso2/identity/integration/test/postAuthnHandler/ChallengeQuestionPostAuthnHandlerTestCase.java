@@ -163,6 +163,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         deleteUser();
         deleteApplication();
 
+        updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "false", true);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
