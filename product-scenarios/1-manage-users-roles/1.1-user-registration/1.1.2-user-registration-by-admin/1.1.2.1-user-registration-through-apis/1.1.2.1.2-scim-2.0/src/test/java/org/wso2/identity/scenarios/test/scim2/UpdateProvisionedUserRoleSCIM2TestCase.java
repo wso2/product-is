@@ -114,7 +114,7 @@ public class UpdateProvisionedUserRoleSCIM2TestCase extends ScenarioTestBase {
         assertEquals(roleNameFromResponse,SCIMConstants.ROLE_NAME,"Expected Role name does not exist");
     }
 
-    @Test(description = "1.1.2.1.2.18")
+    @Test(description = "1.1.2.1.2.19")
     public void testAddMemberToRole() throws Exception {
 
         responseObj = getJSONFromResponse(this.response);
