@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m9-SNAPSHOT</version>
+        <version>5.8.0-m13-SNAPSHOT</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
@@ -126,6 +126,7 @@
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version.range}",
                             org.yaml.snakeyaml; version="${snakeyaml.version.range}",
                             org.apache.commons.lang; version="${commons-lang.wso2.osgi.version.range}",
+                            org.wso2.carbon.base.api,
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

@@ -26,10 +26,10 @@ import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
 import org.wso2.carbon.is.migration.service.Migrator;
-import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Constant;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.user.api.Tenant;
 
 import java.io.File;
@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -56,24 +57,36 @@ public class UserStorePasswordMigrator extends Migrator {
         updateTenantConfigs();
     }
 
-    private void updateTenantConfigs() {
-        Tenant[] tenants;
+    private void updateTenantConfigs() throws MigrationClientException {
+
         try {
-            tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+            Set<Tenant> tenants = Utility.getTenants();
             for (Tenant tenant : tenants) {
                 if (isIgnoreForInactiveTenants() && !tenant.isActive()) {
                     log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping secondary userstore migration!");
                     continue;
                 }
-                File[] userstoreConfigs = getUserStoreConfigFiles(tenant.getId());
-                for (File file : userstoreConfigs) {
-                    if (file.isFile()) {
-                        updatePassword(file.getAbsolutePath());
+                try {
+                    File[] userstoreConfigs = getUserStoreConfigFiles(tenant.getId());
+                    for (File file : userstoreConfigs) {
+                        if (file.isFile()) {
+                            updatePassword(file.getAbsolutePath());
+                        }
                     }
+                } catch (FileNotFoundException | IdentityException | CryptoException e) {
+                    String msg = "Error while updating secondary user store password for tenant: " + tenant.getDomain();
+                    if (!isContinueOnError()) {
+                        throw new MigrationClientException(msg, e);
+                    }
+                    log.error(msg, e);
                 }
             }
-        } catch (Exception e) {
-            log.error("Error while updating secondary user store password for tenant", e);
+        } catch (MigrationClientException e) {
+            String msg = "Error while updating secondary user store password for tenant";
+            if (!isContinueOnError()) {
+                throw e;
+            }
+            log.error(msg, e);
         }
     }
 
@@ -124,7 +137,7 @@ public class UserStorePasswordMigrator extends Migrator {
                         "password".equals(element.getAttributeValue(new QName("name"))) || "ConnectionPassword"
                                 .equals(element.getAttributeValue(new QName("name"))))) {
                     String encryptedPassword = element.getText();
-                    newEncryptedPassword = EncryptionUtil.getNewEncryptedValue(encryptedPassword);
+                    newEncryptedPassword = EncryptionUtil.getNewEncryptedUserstorePassword(encryptedPassword);
                     if (StringUtils.isNotEmpty(newEncryptedPassword)) {
                         element.setText(newEncryptedPassword);
                     }
@@ -136,7 +149,7 @@ public class UserStorePasswordMigrator extends Migrator {
                 documentElement.serialize(outputStream);
             }
         } catch (XMLStreamException ex) {
-            log.error("Error while updating password for: " + filePath);
+            log.error("Error while updating password for: " + filePath, ex);
         } finally {
             try {
                 if (parser != null) {

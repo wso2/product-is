@@ -226,23 +226,32 @@ public class PermissionMigrator extends Migrator {
 
     private String getPermissionSelectQuery() throws MigrationClientException {
 
-
+        if (Utility.isMigrateTenantRange()) {
+            return SQLConstants.SELECT_ALL_PERMISSIONS + " WHERE UM_TENANT_ID IN (" + StringUtils
+                    .join(getSelectedTenants(), ",") + ")";
+        }
         return SQLConstants.SELECT_ALL_PERMISSIONS;
     }
 
     private String getRolePermissionSelectQuery() throws MigrationClientException {
 
-
+        if (Utility.isMigrateTenantRange()) {
+            return SQLConstants.SELECT_ALL_ROLE_PERMISSIONS + " WHERE UM_TENANT_ID IN (" + StringUtils
+                    .join(getSelectedTenants(), ",") + ")";
+        }
         return SQLConstants.SELECT_ALL_ROLE_PERMISSIONS;
     }
 
     private String getUserPermissionSelectQuery() throws MigrationClientException {
 
-
+        if (Utility.isMigrateTenantRange()) {
+            return SQLConstants.SELECT_ALL_USER_PERMISSIONS + " WHERE UM_TENANT_ID IN (" + StringUtils
+                    .join(getSelectedTenants(), ",") + ")";
+        }
         return SQLConstants.SELECT_ALL_USER_PERMISSIONS;
     }
 
-    /*private List<Integer> getSelectedTenants() throws MigrationClientException {
+    private List<Integer> getSelectedTenants() throws MigrationClientException {
 
         int startingTenantID = Utility.getMigrationStartingTenantID();
         int endingTenantID = Utility.getMigrationEndingTenantID();
@@ -262,7 +271,7 @@ public class PermissionMigrator extends Migrator {
             selectedTenants.add(i);
         }
         return selectedTenants;
-    }*/
+    }
 
     private void updateRolePermissionTable(Connection connection, List<Permission> permissions)
             throws SQLException, MigrationClientException {

@@ -1,11 +1,4 @@
 <%@page import="org.wso2.sample.identity.oauth2.OAuth2Constants"%>
-<%
-    
-    session.removeAttribute(OAuth2Constants.OAUTH2_GRANT_TYPE);
-    session.removeAttribute(OAuth2Constants.ACCESS_TOKEN);
-    session.removeAttribute(OAuth2Constants.CODE);
-
- %>
 
 <!DOCTYPE html>
 <html><head>
@@ -41,7 +34,7 @@
 <table style="width:100%;text-align:center;'">
 <tr>
 <td style="text-align:center;width:100%">        						
-<a href="oauth2.jsp?reset=true"><img src="images/import.png" /></a>
+<a href="oauth2.jsp"><img src="images/import.png" /></a>
 </td>
 </tr>
 
