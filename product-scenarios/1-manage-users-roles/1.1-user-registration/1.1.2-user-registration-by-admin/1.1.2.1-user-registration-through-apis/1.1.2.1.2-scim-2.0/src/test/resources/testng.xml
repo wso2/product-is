@@ -14,7 +14,6 @@
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithAllAttributesTestCase"/>
 
             <!--The ProvisionEmailUserSCIM2TestCase works only with jdbc user store and fails with embedded ldap due to regex -->
-
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionEmailUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningTestCase"/>
@@ -25,11 +24,17 @@
 
             <!--run this test case only if         <Resource context="(.*)/scim2/Me" secured="true" http-method="POST">
             is set to false -->
-	    <!--class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningWithoutHeaderTestCase"/-->  
+	    <!--class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningWithoutHeaderTestCase"/-->
+
+
 	    <!-- Run this test case only when the default value of UsernameJavaRegEx in JDBC user store has been changed
             to block @ sign ex:[a-zA-Z0-9._\-|//]{3,30}$ -->
             <!--class name="org.wso2.identity.scenarios.test.scim2.FilterOutEmailUserProvisioningSCIM2TestCase"/-->
-            <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserRoleSCIM2TestCase"/>
+
+            <!--class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserRoleSCIM2TestCase"/-->
+            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionedUserDeleteSelfSCIM2TestCase"/>
+
+
             <!--Please uncomment this test case when a tenant is created in the identity server ex:admin@engineering
             .com-->
             <!--class name="org.wso2.identity.scenarios.test.scim2.ProvisionTenantUserSCIM2TestCase"/-->

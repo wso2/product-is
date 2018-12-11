@@ -107,7 +107,7 @@ public class SCIMConstants {
    public static final String USER_TYPE_ACTIVE_ATTRIBUTE_VALUE = "true";
    public static final String USER_TYPE_PASSWORD_ATTRIBUTE  = "password";
 
-   public static final String GROUP_ATTRIBUTE = "groups";
+   public static final String GROUP_ATTRIBUTE = "Groups";
    public static final String GROUP_VALUE_ATTRIBUTE = "value";
    public static final String GROUP_VALUE = "e9e30dba-f08f-4109-8486-d5c6a331660a";
    public static final String GROUP_REF_ATTRIBUTE = "$ref";
@@ -151,6 +151,7 @@ public class SCIMConstants {
    public static final String TENANT_DOMAIN = "/t/engineering.com";
    public static final String TENANT_ADMIN_UN = "admin@engineering.com";
    public static final String TENANT_ADMIN_PW = "admin";
+   public static final String GROUP_ENDPOINT = "Groups";
 
    public static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:User";
    public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
