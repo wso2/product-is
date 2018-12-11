@@ -89,11 +89,11 @@ public class ProvisionedUserDeleteSelfSCIM2TestCase extends ScenarioTestBase {
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER + SEPERATOR + userId;
 
         response= deleteUserRequest(client,userEndPoint,getUnauthorizeHeaders());
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN, "User has not been " +
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN, "User has been " +
                 "deleted successfully");
     }
 
-    
+
     @AfterClass(alwaysRun = true)
     public void cleanUp() throws Exception {
 
