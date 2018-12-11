@@ -55,7 +55,7 @@ if (action != null) {
 
         var isAllowed = identityUtil.isFederatedUserAssociationEnabled();
 
-        if (isAllowed == 'true') {
+        if (isAllowed) {
             var idPId = request.getParameter('idPId');
             var username = request.getParameter('username');
 

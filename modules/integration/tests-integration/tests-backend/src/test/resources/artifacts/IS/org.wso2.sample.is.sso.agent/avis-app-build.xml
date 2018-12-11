@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project name="avis-app-build" default="clear-slf4j-libs" basedir="../../../../../../">
+    <description>
+        This script builds a war file for the avis app by removing all slf4j libs from the classpath.
+    </description>
+    <!-- set global properties for this build -->
+    <property name="build" location="${basedir}/target/test-classes/samples"/>
+    <property name="avis.webapp"
+              location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
+    <property name="avis.webapp.classes" location="${avis.webapp}/WEB-INF/classes"/>
+    <property name="avis.webapp.lib" location="${avis.webapp}/WEB-INF/lib"/>
+    <property name="properties" location="${basedir}/src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent"/>
+
+    <target name="clear-slf4j-libs">
+
+        <delete>
+            <fileset dir="${avis.webapp.lib}">
+                <include name="jul-to-slf4j-*.jar"/>
+                <include name="log4j-over-slf4j-*.jar"/>
+                <include name="jcl-over-slf4j-*.jar"/>
+                <include name="slf4j-api-*.jar"/>
+            </fileset>
+        </delete>
+
+        <delete file="${avis.webapp.classes}/avis.properties"/>
+        <copy file="${properties}/avis.properties"
+              tofile="${avis.webapp.classes}/avis.properties"/>
+        <war destfile="${build}/avis.com.war" webxml="${avis.webapp}/WEB-INF/web.xml">
+            <fileset dir="${avis.webapp}/">
+                <exclude name="**/WEB-INF/**"/>
+            </fileset>
+            <lib dir="${avis.webapp.lib}/"/>
+            <classes dir="${avis.webapp.classes}/">
+            </classes>
+        </war>
+    </target>
+</project>

@@ -42,6 +42,7 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.webappmgt.WebAppAdminClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.MicroserviceServer;
 import org.wso2.identity.integration.common.utils.MicroserviceUtil;
@@ -51,8 +52,10 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +65,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 
@@ -73,6 +77,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private AuthenticatorClient logManger;
     private OauthAdminClient oauthAdminClient;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
+    private WebAppAdminClient webAppAdminClient;
     private CookieStore cookieStore = new BasicCookieStore();
     private HttpClient client;
     private HttpResponse response;
@@ -125,6 +130,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 .createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
+        webAppAdminClient = new WebAppAdminClient(backendURL, sessionCookie);
 
         client = HttpClientBuilder.create()
                 .disableRedirectHandling()
@@ -165,24 +171,51 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 + File.separator + "components" + File.separator
                 + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar");
         jarDestFile.delete();
+        boolean deleted = deleteWebApp("sample-auth");
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.restartGracefully();
+
+        deleted = deleted || deleteWebApp("sample-auth");
+        Assert.assertTrue(deleted, "sample-auth webapp deletion failed.");
+    }
+
+    /**
+     * Deletes a webapp from the is server.
+     *
+     * This first tries to delete the webapp via the webapp admin service.
+     * Failing that, it tries to delete the war and exploded dir manually.
+     *
+     * @param webappName the name of the webapp to be deleted.
+     * @return deletion status
+     * @throws Exception for any unhandled exceptions in this test utility
+     */
+    private boolean deleteWebApp(String webappName) throws Exception {
+        List<String> webAppList = new ArrayList<>();
+        webAppList.add(webappName);
+        webAppAdminClient.deleteWebAppList(webAppList, isServer.getDefaultInstance().getHosts().get("default"));
 
         File warDestFile = new File(Utils.getResidentCarbonHome()
                 + File.separator + File.separator + "repository"
                 + File.separator + "deployment" + File.separator
-                + "server" + File.separator + "webapps" + File.separator + "sample-auth.war");
-        warDestFile.delete();
-
+                + "server" + File.separator + "webapps" + File.separator + webappName + ".war");
         File warDestFolder = new File(Utils.getResidentCarbonHome()
-                    + File.separator + File.separator + "repository"
-                    + File.separator + "deployment" + File.separator
-                    + "server" + File.separator + "webapps" + File.separator + "sample-auth");
+                + File.separator + File.separator + "repository"
+                + File.separator + "deployment" + File.separator
+                + "server" + File.separator + "webapps" + File.separator + webappName);
+        if (warDestFile.exists() || warDestFolder.exists()) {
+            log.warn("Webapp deletion via WebAppAdmin service failed. Trying manual deletion..");
+            boolean deleted = warDestFile.delete();
 
-        if(warDestFolder.exists()) {
-            FileUtils.deleteDirectory(warDestFolder);
+            try {
+                FileUtils.deleteDirectory(warDestFolder);
+            } catch (IOException e) {
+                log.error("Error while deleting webapp directory: " + warDestFile, e);
+                return false;
+            }
+            return deleted;
         }
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.restartGracefully();
+        return true;
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")

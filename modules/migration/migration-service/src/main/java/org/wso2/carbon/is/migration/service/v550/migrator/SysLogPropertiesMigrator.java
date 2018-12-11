@@ -40,16 +40,22 @@ public class SysLogPropertiesMigrator extends Migrator {
 
         log.info(Constant.MIGRATION_LOG + "Migration starting on SYSLOG_PROPERTIES file");
         try {
-            RegistryDataManager.getInstance().migrateSysLogPropertyPassword(isIgnoreForInactiveTenants());
-        } catch (UserStoreException e) {
-            throw new MigrationClientException("Error while retrieving all tenants. ", e);
-        } catch (RegistryException e) {
-            throw new MigrationClientException("Error while accessing registry and loading SYSLOG_PROPERTIES file. ",
-                    e);
-        } catch (CryptoException e) {
-            throw new MigrationClientException("Error while encrypting/decrypting SYSLOG_PROPERTIES password. ", e);
-        } /*catch (IdentityException e) {
-            throw new MigrationClientException("Error while initializing registry using IdentityTenantUtil. ", e);
-        }*/
+            try {
+                RegistryDataManager.getInstance().migrateSysLogPropertyPassword(isIgnoreForInactiveTenants(),
+                                                                                isContinueOnError());
+            } catch (UserStoreException e) {
+                throw new MigrationClientException("Error while retrieving all tenants. ", e);
+            } catch (RegistryException e) {
+                throw new MigrationClientException("Error while accessing registry and loading SYSLOG_PROPERTIES file" +
+                                                   ".", e);
+            } catch (CryptoException e) {
+                throw new MigrationClientException("Error while encrypting/decrypting SYSLOG_PROPERTIES password. ", e);
+            }
+        } catch (MigrationClientException e) {
+            if (!isContinueOnError()) {
+                throw e;
+            }
+            log.error("Error while migrating SLOG_PROPERTIES registry resource.", e);
+        }
     }
 }
