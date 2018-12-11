@@ -129,7 +129,7 @@ public class UpdateProvisionedUserRoleSCIM1TestCase extends ScenarioTestBase {
         groupObject.put(SCIMConstants.ROLE_DISPLAY_NAME_ATTRIBUTE, ROLE_NAME);
 
         JSONArray members = new JSONArray();
-        for (int i = 0; i < SCIMConstants.USER_NAME_ATTRIBUTE.length(); i++) {
+        for (int i = 0; i < 1; i++) {
             JSONObject member = new JSONObject();
             member.put(DISPLAY, SCIMConstants.USERNAME);
             member.put(SCIMConstants.VALUE_PARAM, userId);

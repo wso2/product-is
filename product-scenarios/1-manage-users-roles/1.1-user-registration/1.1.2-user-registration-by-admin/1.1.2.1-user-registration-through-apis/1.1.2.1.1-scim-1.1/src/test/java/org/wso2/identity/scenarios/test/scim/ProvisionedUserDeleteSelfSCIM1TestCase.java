@@ -105,7 +105,7 @@ public class ProvisionedUserDeleteSelfSCIM1TestCase extends ScenarioTestBase {
 
         groupObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
         JSONArray members = new JSONArray();
-        for (int i = 0; i < SCIMConstants.USER_NAME_ATTRIBUTE.length(); i++) {
+        for (int i = 0; i < 1; i++) {
             JSONObject member = new JSONObject();
             member.put(SCIMConstants.DISPLAY, SCIMConstants.USERNAME);
             member.put(SCIMConstants.VALUE_PARAM, userId);
