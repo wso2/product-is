@@ -90,6 +90,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <identity.inbound.auth.saml.version>5.4.23</identity.inbound.auth.saml.version>
         <identity.user.ws.version>5.1.11</identity.user.ws.version>
+        <identity.inbound.auth.oauth.version>6.0.63</identity.inbound.auth.oauth.version>
     </properties>
 
     <dependencyManagement>
@@ -179,6 +180,11 @@
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.claim.metadata.mgt.stub</artifactId>
                 <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
+                <version>${identity.inbound.auth.oauth.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
