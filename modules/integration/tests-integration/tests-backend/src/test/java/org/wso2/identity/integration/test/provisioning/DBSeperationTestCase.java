@@ -32,6 +32,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 
@@ -43,22 +44,20 @@ public class DBSeperationTestCase extends ISIntegrationTest {
     private static final String TENANT_IDP = "tenantIdp";
     private static final String TENANT_ADMIN = "admin";
     private File masterDatasourceXml;
+    private File consentMgtXml;
     private File identityXml;
     private File userMgtXml;
     private File registryXml;
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
-    private TenantManagementServiceClient tenantServiceClient;
-    private String TENANT_DOMAIN = "tenant.com";
-    private LogViewerClient logViewer;
-    private String serverConfDir;
+    private static final String TENANT_DOMAIN = "tenant.com";
     private String artifactsDir;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.init();
 
-        serverConfDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf";
+        String serverConfDir = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf";
         artifactsDir = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" + File
                 .separator + "provisioning";
 
@@ -66,6 +65,9 @@ public class DBSeperationTestCase extends ISIntegrationTest {
                 "master-datasources.xml");
         File masterDatasourcesXmlToCopy = new File(artifactsDir + File.separator + "master-datasources-dbseperated" +
                 ".xml");
+
+        consentMgtXml = new File(serverConfDir + File.separator + "consent-mgt-config.xml");
+        File consentMgtXmlToCopy = new File(artifactsDir + File.separator + "consent-mgt-config-dbseperated.xml");
 
         identityXml = new File(serverConfDir + File.separator + "identity" + File.separator + "identity.xml");
         File identityXmlToCopy = new File(artifactsDir + File.separator + "identity-dbseperated.xml");
@@ -79,6 +81,7 @@ public class DBSeperationTestCase extends ISIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(masterDatasourcesXmlToCopy, masterDatasourceXml,
                 true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(consentMgtXmlToCopy, consentMgtXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy, identityXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(userMgtXmlToCopy, userMgtXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy, registryXml,
@@ -87,23 +90,24 @@ public class DBSeperationTestCase extends ISIntegrationTest {
 
         super.init();
 
-        tenantServiceClient = new TenantManagementServiceClient(backendURL, sessionCookie);
+        TenantManagementServiceClient tenantServiceClient = new TenantManagementServiceClient(backendURL, sessionCookie);
         tenantServiceClient.addTenant(TENANT_DOMAIN, TENANT_ADMIN, "password", TENANT_ADMIN + "@" + TENANT_DOMAIN,
                 TENANT_ADMIN, "User");
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(TENANT_ADMIN + "@" + TENANT_DOMAIN,
                 "password", backendURL);
-        logViewer = new LogViewerClient(backendURL, getSessionCookie());
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
         File masterDatasourcesXmlToCopy = new File(artifactsDir + File.separator + "master-datasources-default.xml");
+        File consentMgtXmlToCopy = new File(artifactsDir + File.separator + "consent-mgt-config-default.xml");
         File identityXmlToCopy = new File(getISResourceLocation() + File.separator + "default-identity.xml");
         File userMgtXmlToCopy = new File(artifactsDir + File.separator + "user-mgt-default.xml");
         File registryXmlToCopy = new File(artifactsDir + File.separator + "registry-default.xml");
 
         serverConfigurationManager.applyConfigurationWithoutRestart(masterDatasourcesXmlToCopy, masterDatasourceXml,
                 true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(consentMgtXmlToCopy, consentMgtXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy, identityXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(userMgtXmlToCopy, userMgtXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy, registryXml,
