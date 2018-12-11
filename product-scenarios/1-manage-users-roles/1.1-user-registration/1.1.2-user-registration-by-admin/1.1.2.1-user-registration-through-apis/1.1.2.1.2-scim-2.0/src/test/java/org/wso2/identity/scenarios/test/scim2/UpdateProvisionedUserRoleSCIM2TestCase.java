@@ -94,9 +94,10 @@ public class UpdateProvisionedUserRoleSCIM2TestCase extends ScenarioTestBase {
         firstName = rootObject.get(SCIMConstants.NAME_ATTRIBUTE).toString();
         assertEquals(firstName.substring(14,19),SCIMConstants.GIVEN_NAME_CLAIM_VALUE,"The given first name " +
                 "does not exist");
+        createRole();
     }
 
-    @Test
+
     public void createRole() throws Exception {
 
         groupObject = new JSONObject();
@@ -113,7 +114,7 @@ public class UpdateProvisionedUserRoleSCIM2TestCase extends ScenarioTestBase {
         assertEquals(roleNameFromResponse,SCIMConstants.ROLE_NAME,"Expected Role name does not exist");
     }
 
-    @Test(description = "1.1.2.1.2.18", dependsOnMethods = "createRole")
+    @Test(description = "1.1.2.1.2.18")
     public void testAddMemberToRole() throws Exception {
 
         responseObj = getJSONFromResponse(this.response);
