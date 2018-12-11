@@ -54,7 +54,7 @@ public class FilterOutEmailUserProvisioningSCIM2TestCase extends ScenarioTestBas
         super.init();
     }
 
-    @Test(description = "1.1.2.1.2.16")
+    @Test(description = "1.1.2.1.2.13")
     public void testSCIM2CreateUser() throws Exception {
 
         JSONObject rootObject = new JSONObject();
