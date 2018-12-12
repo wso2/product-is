@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<ConsentManager xmlns="http://wso2.org/carbon/consent/management">
+    <DataSource>
+        <!-- Include a data source name (jndiConfigName) from the set of data sources defined in master-datasources
+        .xml -->
+        <Name>jdbc/WSO2CarbonDB</Name>
+    </DataSource>
+    <PIIController>
+        <PiiController>change-me</PiiController>
+        <Contact>change-me</Contact>
+        <Email>change-me</Email>
+        <Phone>change-me</Phone>
+        <OnBehalf>false</OnBehalf>
+        <PiiControllerUrl>change-me</PiiControllerUrl>
+        <Address>
+            <Country>change-me</Country>
+            <Locality>change-me</Locality>
+            <Region>change-me</Region>
+            <PostOfficeBoxNumber>change-me</PostOfficeBoxNumber>
+            <PostalCode>change-me</PostalCode>
+            <StreetAddress>change-me</StreetAddress>
+        </Address>
+    </PIIController>
+    <SearchLimits>
+        <Purpose>100</Purpose>
+    </SearchLimits>
+</ConsentManager>
