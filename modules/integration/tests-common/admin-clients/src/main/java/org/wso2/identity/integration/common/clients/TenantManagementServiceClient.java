@@ -76,17 +76,28 @@ public class TenantManagementServiceClient {
     public void addTenant(TenantInfoBean tenantInfoBean)
             throws RemoteException, TenantMgtAdminServiceExceptionException {
 
-        String tenantDomain = tenantInfoBean.getTenantDomain();
-        TenantInfoBean tenantInfoBeanGet = tenantMgtAdminServiceStub.getTenant(tenantDomain);
-        if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() != 0) {
-            tenantMgtAdminServiceStub.activateTenant(tenantDomain);
-            log.info("Tenant domain " + tenantDomain + " Activated successfully");
-        } else if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() == 0) {
-            tenantMgtAdminServiceStub.addTenant(tenantInfoBean);
-            tenantMgtAdminServiceStub.activateTenant(tenantDomain);
-            log.info("Tenant domain " + tenantDomain + " created and activated successfully");
-        } else {
-            log.info("Tenant domain " + tenantDomain + " already registered");
+        try {
+            String tenantDomain = tenantInfoBean.getTenantDomain();
+            TenantInfoBean tenantInfoBeanGet = tenantMgtAdminServiceStub.getTenant(tenantDomain);
+            if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() != 0) {
+                tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+                log.info("Tenant domain " + tenantDomain + " Activated successfully");
+            } else if (!tenantInfoBeanGet.getActive() && tenantInfoBeanGet.getTenantId() == 0) {
+                tenantMgtAdminServiceStub.addTenant(tenantInfoBean);
+                tenantMgtAdminServiceStub.activateTenant(tenantDomain);
+                log.info("Tenant domain " + tenantDomain + " created and activated successfully");
+            } else {
+                log.info("Tenant domain " + tenantDomain + " already registered");
+            }
+        } catch (Throwable e) {
+            if (e.getMessage().contains("Event Publisher EmailPublisher.xml is already")) {
+                // If this error is thrown, tenant is created successfully.
+                if (log.isDebugEnabled()) {
+                    log.debug("Error while creating tenant.", e);
+                }
+            } else {
+                throw e;
+            }
         }
     }
 
