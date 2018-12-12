@@ -56,7 +56,7 @@ import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final Long WAIT_TIME = 3000L;
+    private static final Long WAIT_TIME = 10000L;
     private AuthenticatorClient logManger;
     private String adminUsername;
     private String adminPassword;
@@ -272,8 +272,9 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
         long terminationTime = System.currentTimeMillis() + WAIT_TIME;
         while (System.currentTimeMillis() < terminationTime) {
-            if (thriftServer.getPreservedEventList().size() == eventCount) ;
-            break;
+            if (thriftServer.getPreservedEventList().size() >= eventCount) {
+                break;
+            }
         }
     }
 }
