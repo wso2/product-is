@@ -502,6 +502,16 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.identity.integration.common.clients</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.equinox</groupId>
+                    <artifactId>org.apache.jasper.glassfish</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.equinox</groupId>
+                    <artifactId>javax.servlet.jsp</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.is</groupId>
