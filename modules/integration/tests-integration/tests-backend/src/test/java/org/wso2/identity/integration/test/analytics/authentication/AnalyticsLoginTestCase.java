@@ -97,8 +97,8 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private SAMLConfig config;
     private Tomcat tomcatServer;
     private ThriftServer thriftServer;
-    private ServerConfigurationManager serverConfigurationManager;
-    private CloseableHttpClient sharedHttpClient = HttpClientBuilder.create().build();
+    protected ServerConfigurationManager serverConfigurationManager;
+    protected CloseableHttpClient sharedHttpClient = HttpClientBuilder.create().build();
     private static final Long WAIT_TIME = 10000L;
 
     protected enum HttpBinding {
