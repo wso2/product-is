@@ -39,6 +39,7 @@ public final class OAuth2Constant {
     public static final String OAUTH_2 = "oauth2";
     public final static String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
     public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
+    public final static String TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/oauth2/revoke";
     public final static String USER_INFO_ENDPOINT = "https://localhost:9853/oauth2/userinfo?schema=openid";
     public final static String AUTHTOKEN_VALIDATE_SERVICE = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
     public final static String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
