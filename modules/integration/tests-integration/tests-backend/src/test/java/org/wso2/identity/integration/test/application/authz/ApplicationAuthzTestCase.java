@@ -106,15 +106,6 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         createApplication(APPLICATION_NAME);
         createSAMLApp(APPLICATION_NAME, true, true, true);
         setupXACMLPolicy(POLICY_ID, POLICY);
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-        Utils.startTomcat(tomcatServer, "/" + APPLICATION_NAME, resourceUrl.getPath());
-
     }
 
     protected void setupXACMLPolicy(String policyId, String xacmlPolicy)
@@ -145,10 +136,6 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClientAzUser = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
 

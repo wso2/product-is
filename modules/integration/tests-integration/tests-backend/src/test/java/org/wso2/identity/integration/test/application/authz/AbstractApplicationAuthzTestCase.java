@@ -72,7 +72,6 @@ public class AbstractApplicationAuthzTestCase extends ISIntegrationTest {
 
     protected HttpClient httpClientAzUser;
     protected HttpClient httpClientNonAzUser;
-    protected Tomcat tomcatServer;
 
     protected HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
 

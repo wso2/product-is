@@ -60,7 +60,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private SAMLConfig config;
-    private Tomcat tomcatServer;
 
     private String resultPage;
 
@@ -79,15 +78,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         super.testInit();
         super.createUser(config);
         super.createApplication(config, APPLICATION_NAME);
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
-        Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -97,11 +87,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         super.deleteApplication(APPLICATION_NAME);
 
         super.testClear();
-
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

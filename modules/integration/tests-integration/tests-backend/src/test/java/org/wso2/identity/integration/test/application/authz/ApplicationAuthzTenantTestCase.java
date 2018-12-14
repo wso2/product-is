@@ -105,14 +105,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         createApplication(APPLICATION_NAME);
         createSAMLApp(APPLICATION_NAME, true, false, false);
         setupXACMLPolicy(POLICY_ID, POLICY);
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com-saml-tenantwithoutsigning.war");
-        Utils.startTomcat(tomcatServer, "/" + APPLICATION_NAME, resourceUrl.getPath());
     }
 
     @AfterClass(alwaysRun = true)
@@ -128,10 +120,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClientAzUser = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(alwaysRun = true, description = "Test authorized tenant user login by evaluating the policy", groups = "wso2.is")

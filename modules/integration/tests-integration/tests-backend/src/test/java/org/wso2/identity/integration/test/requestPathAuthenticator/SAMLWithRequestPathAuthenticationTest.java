@@ -82,12 +82,11 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
 
     protected String adminUsername;
     protected String adminPassword;
-    private Tomcat tomcat;
     private AuthenticatorClient logManger;
     private ApplicationManagementServiceClient appMgtclient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private ServiceProvider serviceProvider;
-    protected DefaultHttpClient client;
+    protected CloseableHttpClient client;
     protected String isURL;
 
     @BeforeClass(alwaysRun = true) public void testInit() throws Exception {
@@ -103,18 +102,8 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
-        client = new DefaultHttpClient();
+        client = HttpClientBuilder.create().build();
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
-
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass()
-                    .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-            startTomcat(tomcat, "/travelocity.com", resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("travelocity.com application deployment failed.", e);
-        }
 
         ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
         serviceProvider = new ServiceProvider();
@@ -149,11 +138,7 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
         appMgtclient.deleteApplication(serviceProvider.getApplicationName());
-        if (tomcat != null) {
-            tomcat.stop();
-            tomcat.destroy();
-            Thread.sleep(10000);
-        }
+        client.close();
     }
 
     @Test(alwaysRun = true, description = "Request path authenticator login success")
@@ -367,28 +352,6 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
             Assert.fail("Error while decoding SAML response", e);
             return "";
         }
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
-    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
     }
 
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {

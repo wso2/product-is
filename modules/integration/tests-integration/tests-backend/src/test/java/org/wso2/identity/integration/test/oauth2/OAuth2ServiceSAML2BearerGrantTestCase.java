@@ -82,7 +82,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
 
-    private Tomcat tomcat;
     private CloseableHttpClient client;
 
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -94,7 +93,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        deployTravelocity();
 
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
@@ -113,9 +111,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         deleteApplication();
         removeOAuthApplicationData();
-
-        tomcat.stop();
-        tomcat.destroy();
     }
 
     @Test
@@ -394,18 +389,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         return client.execute(request);
-    }
-
-    /**
-     * Deploy the travelocity.com war in the Tomcat.
-     * @throws Exception If error occurred.
-     */
-    private void deployTravelocity() throws Exception {
-
-        tomcat = getTomcat();
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
-                "travelocity.com.war");
-        startTomcat(tomcat, OAuth2Constant.TRAVELOCITY_APP_CONTEXT_ROOT, resourceUrl.getPath());
     }
 
     private boolean requestMissingClaims(HttpResponse response) {

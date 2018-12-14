@@ -52,35 +52,11 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
 
     private static final Log log = LogFactory.getLog(OIDCAbstractIntegrationTest.class);
 
-    protected Tomcat tomcat;
-
     @Override
     protected void init(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         setSystemproperties();
-    }
-
-    /**
-     * Starts a tomcat server instance
-     *
-     * @throws LifecycleException
-     */
-    public void startTomcat() throws LifecycleException {
-
-        tomcat = getTomcat();
-        tomcat.start();
-    }
-
-    /**
-     * Stops tomcat server instance
-     *
-     * @throws LifecycleException
-     */
-    public void stopTomcat() throws LifecycleException {
-
-        tomcat.stop();
-        tomcat.destroy();
     }
 
     /**

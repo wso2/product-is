@@ -85,7 +85,6 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private DefaultHttpClient httpClient;
-    private Tomcat tomcatServer;
 
     private boolean isSAMLReturned;
 
@@ -137,17 +136,6 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
 
         createUser();
         createApplication();
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = getTomcat();
-
-        //TODO: Uncomment below once the tomcat dependency issue is resolved
-//        URL resourceUrl = getClass()
-//                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "org.wso2.sample.is .sso.agent.war");
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-        startTomcat(tomcatServer, "/travelocity.com", resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -158,9 +146,6 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",

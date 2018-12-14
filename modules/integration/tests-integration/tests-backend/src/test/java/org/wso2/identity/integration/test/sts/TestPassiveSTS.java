@@ -56,7 +56,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private String sessionDataKey;
     private String resultPage;
     private Header locationHeader;
-    private Tomcat tomcat;
     private String passiveStsURL;
 
     private AuthenticatorClient logManger;
@@ -86,26 +85,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        if(tomcat != null){
-            tomcat.stop();
-            tomcat.destroy();
-            Thread.sleep(10000);
-        }
     }
-
-    @Test(alwaysRun = true, description = "Deploy PassiveSTSSampleApp")
-    public void testDeployPassiveSTSSampleApp() {
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples"
-                    + ISIntegrationTest.URL_SEPARATOR + "PassiveSTSSampleApp.war");
-            startTomcat(tomcat, PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("PassiveSTSSampleApp application deployment failed.", e);
-        }
-    }
-
 
     @Test(alwaysRun = true, description = "Add service provider")
     public void testAddSP() throws Exception {
@@ -166,7 +146,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
-            dependsOnMethods = {"testDeployPassiveSTSSampleApp", "testAddClaimConfiguration"})
+            dependsOnMethods = {"testAddClaimConfiguration"})
     public void testInvokePassiveSTSSampleApp() throws IOException, LifecycleException, InterruptedException {
 
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
@@ -309,29 +289,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
 //        Assert.assertTrue(resultPage.contains(EMAIL_CLAIM_URI), "Claim email is expected");
 //        Assert.assertTrue(resultPage.contains(ADMIN_EMAIL), "Claim value email is expected");
 //    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
-    }
 
     private void setSystemProperties() {
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR

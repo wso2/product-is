@@ -71,7 +71,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
     private static final String DYNAMIC_QUERY = "dynamic_query={inbound_request_param_key}";
     private static final String FEDERATED_AUTHENTICATION_TYPE = "federated";
     private static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
-    private Tomcat tomcat;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -85,39 +84,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
         idpMgtClient = new IdentityProviderMgtServiceClient(userName, password, backendURL);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, userName, password);
 
-        tomcat = startTomcatAndDeployTravelocityApp();
-    }
-
-    private Tomcat startTomcatAndDeployTravelocityApp() {
-
-        Tomcat tomcat = null;
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass()
-                    .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-            tomcat.addWebapp(tomcat.getHost(), "/travelocity.com", resourceUrl.getPath());
-            tomcat.start();
-        } catch (Exception e) {
-            Assert.fail("travelocity.com application deployment failed.", e);
-        }
-        return tomcat;
-    }
-
-    private Tomcat getTomcat() {
-
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-        return tomcat;
     }
 
     @AfterClass(alwaysRun = true)
@@ -128,12 +94,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
 
         appMgtclient = null;
         idpMgtClient = null;
-
-        if (tomcat != null) {
-            tomcat.stop();
-            tomcat.destroy();
-            Thread.sleep(10000);
-        }
     }
 
     @Test(groups = "wso2.is", description = "Test federated IDP creation with SAML Federated Authenticator")
