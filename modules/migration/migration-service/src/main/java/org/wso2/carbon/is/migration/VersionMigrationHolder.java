@@ -23,6 +23,7 @@ import org.wso2.carbon.is.migration.service.v540.V540Migration;
 import org.wso2.carbon.is.migration.service.v550.V550Migration;
 import org.wso2.carbon.is.migration.service.v560.V560Migration;
 import org.wso2.carbon.is.migration.service.v570.V570Migration;
+import org.wso2.carbon.is.migration.service.v580.V580Migration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class VersionMigrationHolder {
         versionMigrationList.add(new V550Migration());
         versionMigrationList.add(new V560Migration());
         versionMigrationList.add(new V570Migration());
+        versionMigrationList.add(new V580Migration());
     }
 
     public static VersionMigrationHolder getInstance(){
