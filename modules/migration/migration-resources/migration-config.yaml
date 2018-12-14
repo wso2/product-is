@@ -1,7 +1,7 @@
 migrationEnable: "true"
 
-currentVersion: "5.6.0"
-migrateVersion: "5.7.0"
+currentVersion: "5.7.0"
+migrateVersion: "5.8.0"
 
 continueOnError: "true"
 batchUpdate: "true"
@@ -267,4 +267,13 @@ versions:
       name: "OAuthDataMigrator"
       order: 4
       parameters:
+        schema: "identity"
+  -
+  version: "5.8.0"
+  migratorConfigs:
+    -
+      name: "SchemaMigrator"
+      order: 1
+      parameter:
+        location: "step1"
         schema: "identity"
