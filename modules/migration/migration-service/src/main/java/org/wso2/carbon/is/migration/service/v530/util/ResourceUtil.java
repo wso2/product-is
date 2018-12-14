@@ -29,16 +29,20 @@ import javax.sql.DataSource;
 public class ResourceUtil {
 
     public static String setMySQLDBName(Connection conn) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
-        ResultSet rs = ps.executeQuery();
-        String name = null;
-        if(rs.next()){
-            name = rs.getString(1);
-            ps = conn.prepareStatement("SET @databasename = ?;");
-            ps.setString(1, name);
-            ps.execute();
+
+        try (PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;")) {
+            try (ResultSet rs = ps.executeQuery();) {
+                String name = null;
+                if (rs.next()) {
+                    name = rs.getString(1);
+                    try (PreparedStatement ps1 = conn.prepareStatement("SET @databasename = ?;")) {
+                        ps1.setString(1, name);
+                        ps1.execute();
+                    }
+                }
+                return name;
+            }
         }
-        return name;
     }
 
 
