@@ -67,7 +67,7 @@ import java.util.Map;
 
 public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
+    protected static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     protected static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
@@ -286,6 +286,12 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     }
 
     public void testSAMLToSAMLFederation() throws Exception {
+        testSAMLToSAMLFederation(true);
+
+    }
+
+
+    public void testSAMLToSAMLFederation(boolean authenticatingAuthorityAssertionRequired) throws Exception {
 
         HttpClient client = new DefaultHttpClient();
 
@@ -308,8 +314,11 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         String decodedSAMLResponse = new String(Base64.decode(samlResponse));
         Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received" +
                 ".");
-        Assert.assertTrue(decodedSAMLResponse.contains("AuthenticatingAuthority"), "AuthenticatingAuthority is not " +
-                "received.");
+
+        if (authenticatingAuthorityAssertionRequired) {
+            Assert.assertTrue(decodedSAMLResponse.contains("AuthenticatingAuthority"), "AuthenticatingAuthority is " +
+                    "not received.");
+        }
 
         boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
         Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
@@ -643,7 +652,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         }
         bufferedReader.close();
         assertLocalClaims(buffer.toString());
-        return buffer.toString().contains("You are logged in as " + userName);
+        return buffer.toString().contains("<h2> You are logged in as " + userName + "</h2>");
     }
 
 }
