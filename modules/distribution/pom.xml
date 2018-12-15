@@ -44,11 +44,6 @@
             <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
         </dependency>
         <dependency>
-          <groupId>org.wso2.carbon.privacy</groupId>
-          <artifactId>org.wso2.carbon.privacy.forgetme.rest</artifactId>
-          <type>war</type>
-        </dependency>
-        <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
