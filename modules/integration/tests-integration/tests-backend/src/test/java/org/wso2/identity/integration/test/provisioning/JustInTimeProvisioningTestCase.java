@@ -27,6 +27,7 @@ import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
@@ -168,6 +169,18 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         }
     }
 
+    @Test(priority = 8, groups = "wso2.is", description = "test Just in time provisioning with association")
+    public void testSAMLToSAMLFederationWithAssociation() throws Exception {
+
+        updateIdentityProviderJitConfiguration(false, false, false, UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME);
+        updateServiceProviderAssociationConfiguration(true);
+        super.testSAMLToSAMLFederation(false);
+
+
+        Assert.assertTrue(userStoreClient.isExistingUser(getFederatedTestUser()));
+        userStoreClient.deleteUser(getFederatedTestUser());
+    }
+
     /**
      * To check whether login is success for the newly created user with the provided password.
      *
@@ -202,6 +215,20 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         justInTimeProvisioningConfig.setProvisioningUserStore(userStore);
         identityProvider.setJustInTimeProvisioningConfig(justInTimeProvisioningConfig);
         super.updateIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME, identityProvider);
+    }
+
+    /**
+     * To update the Service provider association configuration.
+     *
+     * @param isModifyUserNameAllowed To mention whether isModifyUserNameAllowed.
+     * @throws Exception Exception.
+     */
+    private void updateServiceProviderAssociationConfiguration(boolean assertIdentityUsingMappedLocalSubjectIdentifierEnabled) throws Exception {
+
+        ServiceProvider serviceProvider = super.getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+        serviceProvider.getClaimConfig().
+                setAlwaysSendMappedLocalSubjectId(assertIdentityUsingMappedLocalSubjectIdentifierEnabled);
+        super.updateServiceProvider(PORT_OFFSET_0, serviceProvider);
     }
 
     /**
