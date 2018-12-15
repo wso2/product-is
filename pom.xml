@@ -1494,12 +1494,6 @@
                 <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
                 <version>${forgetme.tool.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.privacy</groupId>
-                <artifactId>org.wso2.carbon.privacy.forgetme.rest</artifactId>
-                <type>war</type>
-                <version>${forgetme.tool.version}</version>
-            </dependency>
 
             <!--Conditional authenticator functions-->
             <dependency>
@@ -1870,7 +1864,7 @@
         <conditional.authentication.functions.version>0.1.30</conditional.authentication.functions.version>
 
         <!-- Forget-me tool -->
-        <forgetme.tool.version>1.1.21</forgetme.tool.version>
+        <forgetme.tool.version>1.1.22</forgetme.tool.version>
 
         <!--Identity Repo Versions End-->
 
