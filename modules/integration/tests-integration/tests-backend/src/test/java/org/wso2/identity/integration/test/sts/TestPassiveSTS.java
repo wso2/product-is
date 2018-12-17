@@ -147,7 +147,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
             dependsOnMethods = {"testAddClaimConfiguration"})
-    public void testInvokePassiveSTSSampleApp() throws IOException, LifecycleException, InterruptedException {
+    public void testInvokePassiveSTSSampleApp() throws IOException {
 
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
         HttpResponse response = client.execute(request);
@@ -324,7 +324,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private boolean requestMissingClaims (HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("consent.do") ? true : false;
+        return redirectUrl.contains("consent.do");
 
     }
 

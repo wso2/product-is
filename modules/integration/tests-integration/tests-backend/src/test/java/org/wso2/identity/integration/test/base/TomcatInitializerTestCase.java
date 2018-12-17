@@ -58,6 +58,7 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
 
     @BeforeTest(alwaysRun = true)
     public void initTest() throws Exception {
+
         super.init();
         startTomcat();
     }
@@ -76,13 +77,14 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
             URL resourceUrl = getClass()
                     .getResource(File.separator + "samples" + File.separator + application + ".war");
             tomcat.addWebapp(tomcat.getHost(), "/" + application, resourceUrl.getPath());
-            LOG.info("Deployed tomcat application "+application);
+            LOG.info("Deployed tomcat application " + application);
         }
         tomcat.start();
         LOG.info("Tomcat server started.");
     }
 
     private void stopTomcat() throws LifecycleException {
+
         tomcat.stop();
         tomcat.destroy();
         LOG.info("Tomcat server stopped.");

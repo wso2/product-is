@@ -46,9 +46,6 @@
     <test name="is-tests-usr-mgt" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.user.mgt.CARBON15502ReadWriteLDAPUserStoreManagerTestCase"/>-->
@@ -255,6 +252,22 @@
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
         </classes>
     </test>
+
+    <!--
+    ====================================================================================================================
+        IMPORTANT : All the tests below this section, should be the ones that requires configuration changes and
+        restarts.
+
+        To minimize the number of restarts, at each test, do the configuration update and restart. Then do the test
+        and finally restore the configuration without restarting. The next test will perform the restart with the
+        configuration changes required for it.
+
+        If multiple tests can be run with one configuration change, group them into a test group and do the above at
+        @BeforeTest, and @AfterTest. See 'is-tests-jdbc-userstore' for example.
+    ====================================================================================================================
+
+    -->
+
     <test name="is-tests-jdbc-userstore" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.JDBCUserStoreInitializerTestCase"/>
@@ -264,7 +277,7 @@
     </test>
     <test name="is-tests-read-only-userstore" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase"/>
         </classes>
     </test>
 </suite>

@@ -1,5 +1,6 @@
 package org.wso2.identity.integration.test.sts;
 
+import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -19,22 +20,30 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.*;
+import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase {
+
     private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     private static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
@@ -43,11 +52,10 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
-                                               ".HTTPBinding=HTTP-Redirect";
+            ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
@@ -66,6 +74,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private String resultPage;
     private String adminUsername;
     private String adminPassword;
+    private Tomcat tomcat;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -75,17 +84,19 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
 
-        Map<String, String> startupParameterMap = new HashMap<String, String>();
-        startupParameterMap.put("-DportOffset", String.valueOf(PORT_OFFSET_1  + CommonConstants.IS_DEFAULT_OFFSET));
+        Map<String, String> startupParameterMap = new HashMap<>();
+        startupParameterMap.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
         AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
 
         startCarbonServer(PORT_OFFSET_1, context, startupParameterMap);
 
-        super.startTomcat(TOMCAT_8490);
-        super.addWebAppToTomcat(TOMCAT_8490, PASSIVE_STS_SAMPLE_APP_NAME,
-                                getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "PassiveSTSSampleApp.war").getPath());
-        //servers getting ready...
-        Thread.sleep(30000);
+        tomcat = Utils.getTomcat(getClass());
+        URL resourceUrl = getClass()
+                .getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war");
+        tomcat.addWebapp(tomcat.getHost(), PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
+        log.info("Deployed tomcat application PassiveSTSSampleApp");
+        tomcat.start();
+        log.info("Tomcat server started.");
 
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
                 .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
@@ -103,8 +114,11 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
+        tomcat.stop();
+        tomcat.destroy();
+        log.info("Tomcat server stopped.");
+
         super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8490);
 
         super.stopHttpClient();
     }
@@ -128,7 +142,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     }
 
     @Test(groups = "wso2.is", description = "Check create service provider in primary IS", dependsOnMethods = {
-            "testCreateIdentityProviderInPrimaryIS" })
+            "testCreateIdentityProviderInPrimaryIS"})
     public void testCreateServiceProviderInPrimaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
@@ -163,14 +177,14 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
             }
         }
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs " +
-                                   "in primary IS");
+                "in primary IS");
     }
 
-
     @Test(groups = "wso2.is", description = "Check update service provider in primary IS with " +
-                                            "Passive STS configs",
-          dependsOnMethods = "testCreateServiceProviderInPrimaryIS")
+            "Passive STS configs",
+            dependsOnMethods = "testCreateServiceProviderInPrimaryIS")
     public void testUpdateServiceProviderInPrimaryISWithPassiveSTSConfigs() throws Exception {
+
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(serviceProvider, "Service provider in Primary IS not Exists");
         serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
@@ -197,20 +211,20 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         if (configs != null) {
             for (InboundAuthenticationRequestConfig config : configs) {
                 if (PASSIVESTS_REALM.equals(config.getInboundAuthKey()) && PASSIVESTS_INBOUND_AUTH_TYPE.equals(config
-                                                                                                                       .getInboundAuthType())) {
+                        .getInboundAuthType())) {
                     success = true;
                     break;
                 }
             }
         }
         Assert.assertTrue(success, "Failed to update service provider with inbound PASSIVESTS " +
-                                   "configs in primary IS");
+                "configs in primary IS");
 
     }
 
     @Test(alwaysRun = true, description = "Update primary IS service provider with claim " +
-                                          "configurations",
-          dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithPassiveSTSConfigs")
+            "configurations",
+            dependsOnMethods = "testUpdateServiceProviderInPrimaryISWithPassiveSTSConfigs")
     public void testUpdateServiceProviderInPrimaryISWithClaimConfigs() throws Exception {
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
@@ -220,15 +234,16 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
         Assert.assertEquals(updatedClaimConfig.getClaimMappings()[0].getLocalClaim().getClaimUri(),
-                            givenNameClaimURI, "Failed update given name claim uri");
+                givenNameClaimURI, "Failed update given name claim uri");
 
         Assert.assertEquals(updatedClaimConfig.getClaimMappings()[1].getLocalClaim().getClaimUri(),
-                            emailClaimURI, "Failed update email claim uri");
+                emailClaimURI, "Failed update email claim uri");
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
-          dependsOnMethods = "testCreateServiceProviderInSecondaryIS")
+            dependsOnMethods = "testCreateServiceProviderInSecondaryIS")
     public void testInvokePassiveSTSSampleApp() throws IOException {
+
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
         HttpResponse response = client.execute(request);
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null");
@@ -238,7 +253,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
-                                                                                           keyPositionMap);
+                keyPositionMap);
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
@@ -272,7 +287,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     }
 
     @Test(groups = "wso2.is", description = "Check create service provider in secondary IS", dependsOnMethods = {
-            "testUpdateServiceProviderInPrimaryISWithClaimConfigs" })
+            "testUpdateServiceProviderInPrimaryISWithClaimConfigs"})
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
@@ -298,7 +313,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
     }
-
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
 
@@ -480,6 +494,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     }
 
     private ClaimMapping[] getClaimMappings() {
+
         List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
 
         Claim givenNameClaim = new Claim();
@@ -500,6 +515,4 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
     }
-
-
 }
