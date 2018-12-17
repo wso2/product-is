@@ -61,8 +61,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
     private SAMLConfig samlConfigOne;
     private SAMLConfig samlConfigTwo;
-
-    private Tomcat tomcatServer;
     private String resultPage;
     private SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs;
 
@@ -102,12 +100,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.createApplication(samlConfigOne, APPLICATION_ONE);
         super.createApplication(samlConfigTwo, APPLICATION_TWO);
 
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-        deployApplication(tomcatServer, samlConfigOne);
-        deployApplication(tomcatServer, samlConfigTwo);
-        tomcatServer.start();
-
         logAdmin = new LoggingAdminClient(backendURL, sessionCookie);
         logViewer = new LogViewerClient(backendURL, sessionCookie);
     }
@@ -120,10 +112,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.deleteApplication(APPLICATION_TWO);
 
         super.testClear();
-
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
     }
 
     @Test(description = "Add service providers", groups = "wso2.is", priority = 1)
