@@ -123,8 +123,8 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
         remoteUSMServiceClient = null;
 
-        super.stopCarbonServer(PORT_OFFSET_1);
         super.stopTomcat(TOMCAT_8490);
+        super.stopCarbonServer(PORT_OFFSET_1);
         super.stopHttpClient();
 
         removeConfigurationsFromPrimaryIS();

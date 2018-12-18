@@ -30,7 +30,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
-import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
@@ -48,7 +47,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -215,15 +213,13 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         tomcat.start();
     }
 
-    public void stopTomcat(int port) throws LifecycleException, InterruptedException {
+    public void stopTomcat(int port) throws LifecycleException {
         tomcatServers.get(port).stop();
         tomcatServers.get(port).destroy();
         tomcatServers.remove(port);
-        Thread.sleep(10000);
     }
 
-    public void addWebAppToTomcat(int port, String webAppUrl, String webAppPath)
-            throws LifecycleException {
+    public void addWebAppToTomcat(int port, String webAppUrl, String webAppPath) {
         tomcatServers.get(port).addWebapp(tomcatServers.get(port).getHost(), webAppUrl, webAppPath);
     }
 

@@ -139,8 +139,8 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         //delete added users to secondary IS
         deleteAddedUsers();
 
-        super.stopCarbonServer(PORT_OFFSET_1);
         super.stopTomcat(TOMCAT_8490);
+        super.stopCarbonServer(PORT_OFFSET_1);
 
         super.stopHttpClient();
 
