@@ -50,13 +50,15 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void configureServer() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
 
         scm = new ServerConfigurationManager(isServer);
         // The server configurations are now restored without restart. And is supposed to restart along with the
         // configuration changes by the next test. In this case we need to handle this as a special case, as we need
         // to initialize the database with some data.
         scm.restartGracefully();
+
+        super.init();
 
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
@@ -79,6 +81,21 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void restoreServer() throws Exception {
+
+        //Need to restart here itself (unlike other test cases) to perform the rest of the cleanup.
+        scm.restoreToLastConfiguration(true);
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
+        if (nameExists(userMgtClient.listAllUsers(newUserName, 10), newUserName)) {
+            userMgtClient.deleteUser(newUserName);
+        }
+        if (userMgtClient.roleNameExists(newUserRole)) {
+            userMgtClient.deleteRole(newUserRole);
+        }
     }
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
@@ -241,21 +258,6 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
                 Assert.fail("invalid user retrieved with claim : " + name.getItemName());
 
             }
-        }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void restoreServer() throws Exception {
-
-        //Need to restart here itself (unlike other test cases) to perform the rest of the cleanup.
-        scm.restoreToLastConfiguration(true);
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-        if (nameExists(userMgtClient.listAllUsers(newUserName, 10), newUserName)) {
-            userMgtClient.deleteUser(newUserName);
-        }
-        if (userMgtClient.roleNameExists(newUserRole)) {
-            userMgtClient.deleteRole(newUserRole);
         }
     }
 

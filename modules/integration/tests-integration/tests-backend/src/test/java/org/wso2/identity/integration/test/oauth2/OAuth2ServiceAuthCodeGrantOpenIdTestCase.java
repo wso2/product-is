@@ -39,15 +39,12 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -61,11 +58,9 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUT
 
 public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private ServerConfigurationManager serverConfigurationManager;
     private Oauth2TokenValidationClient oAuth2TokenValidationClient;
     private AuthenticatorClient logManger;
 
-    private File identityXML;
     private String adminUsername;
     private String adminPassword;
     private String accessToken;
@@ -90,8 +85,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
-        changeISConfiguration();
-        super.init(TestUserMode.SUPER_TENANT_USER);
 
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
@@ -114,7 +107,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         logManger = null;
         consumerKey = null;
         accessToken = null;
-        resetISConfiguration();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
@@ -337,31 +329,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
             Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/everyone"), "Invalid JWT Token Role " +
                     "Values");
         }
-    }
-
-    private void changeISConfiguration() throws Exception {
-
-        log.info("Replacing identity.xml changing the entity id of SSOService");
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        identityXML = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File
-                .separator + "identity.xml");
-        File configuredIdentityXML = new File(getISResourceLocation()
-                + File.separator + "oauth" + File.separator
-                + "jwt-token-gen-enabled-identity.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
-    }
-
-    private void resetISConfiguration() throws Exception {
-
-        log.info("Replacing identity.xml with default configurations");
-        File defaultIdentityXml = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXml,
-                identityXML, true);
-        serverConfigurationManager.restartForcefully();
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {

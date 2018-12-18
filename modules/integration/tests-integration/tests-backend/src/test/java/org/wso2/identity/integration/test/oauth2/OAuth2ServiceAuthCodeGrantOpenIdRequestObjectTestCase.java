@@ -31,7 +31,9 @@ import org.json.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.ClaimMetadataManagementServiceClaimMetadataException;
@@ -108,10 +110,21 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
             "2U6aW5jb21tb246aWFwOnNpbHZlciJdfX19LCJpc3MiOiJLUjFwS0x1Z2RSUTlCbmNsTTV0YUMzVjNHZjBhIiwiZXhwIjoxNTE2Nzg2" +
             "ODc4LCJpYXQiOjE1MTY3ODMyNzgsImp0aSI6IjEwMDMifQ.";
 
+    @BeforeTest(alwaysRun = true)
+    public void initConfiguration() throws Exception {
+
+        super.init();
+        changeISConfiguration();
+    }
+
+    @AfterTest(alwaysRun = true)
+    public void restoreConfiguration() throws Exception {
+
+        resetISConfiguration();
+    }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
-        changeISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_USER);
 
         logManger = new AuthenticatorClient(backendURL);
@@ -148,7 +161,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         logManger = null;
         consumerKey = null;
         accessToken = null;
-        resetISConfiguration();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
@@ -398,10 +410,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private void resetISConfiguration() throws Exception {
 
         log.info("Replacing identity.xml with default configurations");
-        File defaultIdentityXml = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXml,
-                identityXML, true);
-        serverConfigurationManager.restartForcefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
