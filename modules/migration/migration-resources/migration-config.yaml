@@ -1,7 +1,9 @@
 migrationEnable: "true"
 
-currentVersion: "5.7.0"
-migrateVersion: "5.8.0"
+# Migration Start Version
+currentVersion: "5.x.x"
+# Migration End Version
+migrateVersion: "5.x.x"
 
 continueOnError: "true"
 batchUpdate: "true"
