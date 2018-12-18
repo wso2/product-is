@@ -28,12 +28,15 @@ import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
+import com.nimbusds.oauth2.sdk.TokenRevocationRequest;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.nimbusds.oauth2.sdk.token.Token;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
@@ -329,6 +332,29 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
                 "Duplicated claims while adding missing attributes.");
     }
 
+    @Test(description = "This test case tests access token revocation flow of JWTBearerGrant.", dependsOnMethods =
+            "testRefreshTokenFlow")
+    public void testAccessTokenRevokeFlow() throws Exception {
+        OIDCTokens firstTokenSet = makeJWTBearerGrantRequest();
+        AccessToken firstAccessToken = firstTokenSet.getAccessToken();
+        makeTokenRevokeRequest(firstAccessToken);
+        OIDCTokens secondTokenSet = makeJWTBearerGrantRequest();
+        AccessToken secondAccessToken = secondTokenSet.getAccessToken();
+        Assert.assertFalse(firstAccessToken.toJSONString().equals(secondAccessToken.toJSONString()), "Same access " +
+                "token is returned even after the access token issued from JWT Bearer grant has been revoked. ");
+    }
+    @Test(description = "This test case tests refresh token revocation flow of JWTBearerGrant.", dependsOnMethods =
+            "testRefreshTokenFlow")
+    public void testRefreshTokenRevokeFlow() throws Exception {
+        OIDCTokens firstTokenSet = makeJWTBearerGrantRequest();
+        RefreshToken firstRefreshToken = firstTokenSet.getRefreshToken();
+        makeTokenRevokeRequest(firstRefreshToken);
+        OIDCTokens secondTokenSet = makeJWTBearerGrantRequest();
+        RefreshToken refreshToken = secondTokenSet.getRefreshToken();
+        Assert.assertFalse(firstRefreshToken.toJSONString().equals(refreshToken.toJSONString()), "Same refresh " +
+                "token is returned even after the refresh token issued from JWT Bearer grant has been revoked ");
+    }
+
     /**
      * To make the JWT Bearer Grant request.
      *
@@ -534,5 +560,15 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         externalClaimDTO.setMappedLocalClaimURI(COUNTRY_LOCAL_CLAIM_URI);
         externalClaimDTO.setExternalClaimURI(COUNTRY_NEW_OIDC_CLAIM);
         claimMetadataManagementServiceClient.addExternalClaim(externalClaimDTO);
+    }
+
+    private void makeTokenRevokeRequest(Token token) throws URISyntaxException, IOException {
+        ClientID clientID = new ClientID(consumerKey);
+        Secret clientSecret = new Secret(consumerSecret);
+        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+        URI tokenRevokeEndpoint = new URI(OAuth2Constant.TOKEN_REVOKE_ENDPOINT);
+        TokenRevocationRequest revocationRequest = new TokenRevocationRequest(tokenRevokeEndpoint, clientAuth, token);
+        HTTPResponse revocationResp = revocationRequest.toHTTPRequest().send();
+        Assert.assertNotNull(revocationResp, "Token revocation response is null.");
     }
 }
