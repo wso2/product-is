@@ -32,7 +32,7 @@ public class JDBCUserStoreInitializerTestCase extends ISIntegrationTest {
     public void resetUserstoreConfig() throws Exception {
 
         super.init();
-        scm.restoreToLastConfiguration(true);
+        scm.restoreToLastConfiguration(false);
     }
 
 }

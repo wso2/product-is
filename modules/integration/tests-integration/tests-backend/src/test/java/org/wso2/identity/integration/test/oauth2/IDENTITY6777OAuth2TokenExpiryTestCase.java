@@ -15,8 +15,6 @@
  */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.startup.Tomcat;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -56,7 +54,6 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
     private String consumerSecret;
 
     private DefaultHttpClient client;
-    private Tomcat tomcat;
 
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 

@@ -1,8 +1,5 @@
 package org.wso2.identity.integration.test.sts;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,14 +14,19 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.application.common.model.xsd.*;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,11 +43,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String ADMIN_EMAIL = "admin@wso2.com";
     private static final String SERVICE_PROVIDER_NAME = "PassiveSTSSampleApp";
     private static final String SERVICE_PROVIDER_Desc = "PassiveSTS Service Provider";
-    private static final String PASSIVE_STS_SAMPLE_APP_NAME = "/PassiveSTSSampleApp";
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL =
-            "http://localhost:8490/PassiveSTSSampleApp";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:8490/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URL =
             "https://localhost:9853/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";

@@ -19,7 +19,6 @@ package org.wso2.identity.integration.test.analytics.authentication;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +28,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -60,10 +58,8 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.xml.xpath.XPathExpressionException;
 
 public class AnalyticsLoginTestCase extends ISIntegrationTest {
@@ -95,7 +91,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private SAMLConfig config;
-    private Tomcat tomcatServer;
     private ThriftServer thriftServer;
     protected ServerConfigurationManager serverConfigurationManager;
     protected CloseableHttpClient sharedHttpClient = HttpClientBuilder.create().build();
@@ -257,15 +252,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         createUser();
         createApplication();
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp()
-                .getArtifact() + ".war");
-        Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -278,10 +264,6 @@ public class AnalyticsLoginTestCase extends ISIntegrationTest {
         remoteUSMServiceClient = null;
         thriftServer.stop();
         replaceIdentityXml();
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(1000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

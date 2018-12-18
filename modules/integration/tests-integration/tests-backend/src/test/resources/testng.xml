@@ -14,6 +14,7 @@
     <test name="is-tests-initialize" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
         </classes>
     </test>
 
@@ -217,14 +218,13 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
         </classes>
     </test>
-    <test name="xacml-entitlement-testcases" preserve-order="true" parallel="false">
-        <classes>
+    <!--<test name="xacml-entitlement-testcases" preserve-order="true" parallel="false">-->
+        <!--<classes>-->
             <!--<class name="org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase"/>-->
-        </classes>
-    </test>
-    <test name="is-tests-tomcat" preserve-order="true" parallel="false" group-by-instances="true">
+        <!--</classes>-->
+    <!--</test>-->
+    <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTenantTestCase"/>
@@ -244,10 +244,6 @@
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
-        </classes>
-    </test>
-    <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
         </classes>

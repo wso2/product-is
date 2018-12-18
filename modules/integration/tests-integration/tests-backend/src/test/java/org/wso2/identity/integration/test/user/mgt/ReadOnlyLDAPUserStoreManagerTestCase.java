@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.identity.integration.test.user.mgt;
 
@@ -37,6 +37,7 @@ import java.io.File;
 import java.rmi.RemoteException;
 
 public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
+
     private ServerConfigurationManager scm;
     private File userMgtServerFile;
 
@@ -46,10 +47,17 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     private String newUserRole = "ReadOnlyLDAPUserRole";
     private String newUserPassword = "ReadOnlyLDAPUserPass";
 
-
     @BeforeClass(alwaysRun = true)
     public void configureServer() throws Exception {
+
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
+
+        scm = new ServerConfigurationManager(isServer);
+        // The server configurations are now restored without restart. And is supposed to restart along with the
+        // configuration changes by the next test. In this case we need to handle this as a special case, as we need
+        // to initialize the database with some data.
+        scm.restartGracefully();
+
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
 
@@ -64,11 +72,10 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
         String carbonHome = ServerConfigurationManager.getCarbonHome();
         userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
-                                     + "conf" + File.separator + "user-mgt.xml");
+                + "conf" + File.separator + "user-mgt.xml");
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                                          + File.separator + "readOnlyLdapUserMgtConfig.xml");
+                + File.separator + "readOnlyLdapUserMgtConfig.xml");
 
-        scm = new ServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
@@ -76,27 +83,34 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void userLoginTest() throws Exception {
+
         String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
     }
+
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void getUsersOfRole() throws Exception {
+
         Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 10), newUserName), "List does not contains the user");
     }
+
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void getRolesOfUser() throws Exception {
+
         Assert.assertTrue(nameExists(userMgtClient.getRolesOfUser(newUserName, newUserRole, 10), newUserRole), "List does not contains the role");
     }
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void getAllRolesNames() throws Exception {
-        Assert.assertTrue(userMgtClient.getAllRolesNames("*", 10).length >=1, "No role listed");
+
+        Assert.assertTrue(userMgtClient.getAllRolesNames("*", 10).length >= 1, "No role listed");
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check role addition")
     public void testAddRole() throws RemoteException, UserAdminUserAdminException {
+
         Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(newUserRole + "1", 100), newUserRole + "1"), "User Role already exist");
         try {
             userMgtClient.addRole(newUserRole + "1", null, new String[]{"login"}, false);
@@ -113,6 +127,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is")
     public void addNewUser() throws RemoteException {
+
         try {
             userMgtClient.addUser(newUserName + "1", newUserPassword, new String[]{newUserRole}, null);
         } catch (UserAdminUserAdminException e) {
@@ -123,6 +138,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Check update role name")
     public void testUpdateRoleName() {
+
         try {
             userMgtClient.updateRoleName(newUserRole, newUserRole + "updated");
         } catch (Exception e) {
@@ -153,7 +169,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
             userMgtClient.updateUsersOfRole("admin", userFlagList);
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "UserAdminUserAdminException",
-                                "Error Message mismatched");
+                    "Error Message mismatched");
         }
 
     }
@@ -171,7 +187,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
                     ((UserAdminUserAdminException) e).getFaultMessage().getUserAdminException().getMessage();
             Assert.assertTrue(faultMessage.contains("Error occurred while updating hybrid role list of user")
                     , "Error Message mismatched, expected 'Error occurred while updating hybrid role list of user', " +
-                    "but was '" + faultMessage + " ,");
+                            "but was '" + faultMessage + " ,");
         }
     }
 
@@ -197,6 +213,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check delete role")
     public void testListAllUsers() throws Exception {
+
         FlaggedName[] userList = userMgtClient.listAllUsers("*", 100);
         Assert.assertTrue(userList.length > 0, "List all users return empty list");
         Assert.assertTrue(nameExists(userList, newUserName), "User Not Exist in the user list");
@@ -205,6 +222,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check delete role")
     public void testListUsers() throws Exception {
+
         String[] usersList = userMgtClient.listUsers("*", 100);
         Assert.assertNotNull(usersList, "UserList null");
         Assert.assertTrue(usersList.length > 0, "List users return empty list");
@@ -218,8 +236,8 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         claimValue.setValue("*");
         FlaggedName[] flaggedNames = userMgtClient.listUserByClaim(claimValue, "*", 1000);
 
-        for (FlaggedName name : flaggedNames){
-            if(name.getItemName().equals("krbtgt") || name.getItemName().equals("ldap")){
+        for (FlaggedName name : flaggedNames) {
+            if (name.getItemName().equals("krbtgt") || name.getItemName().equals("ldap")) {
                 Assert.fail("invalid user retrieved with claim : " + name.getItemName());
 
             }
@@ -229,7 +247,8 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void restoreServer() throws Exception {
 
-        scm.restoreToLastConfiguration();
+        //Need to restart here itself (unlike other test cases) to perform the rest of the cleanup.
+        scm.restoreToLastConfiguration(true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         if (nameExists(userMgtClient.listAllUsers(newUserName, 10), newUserName)) {
@@ -241,6 +260,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     }
 
     private boolean nameExists(FlaggedName[] allNames, String inputName) {
+
         boolean exists = false;
 
         for (FlaggedName flaggedName : allNames) {
@@ -256,6 +276,4 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
         return exists;
     }
-
-
 }

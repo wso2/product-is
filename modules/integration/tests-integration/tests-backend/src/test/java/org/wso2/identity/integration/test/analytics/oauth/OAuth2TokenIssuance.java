@@ -19,7 +19,6 @@ package org.wso2.identity.integration.test.analytics.oauth;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -36,21 +35,19 @@ import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.analytics.commons.ThriftServer;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
@@ -66,7 +63,6 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
     private ThriftServer thriftServer;
     private ServerConfigurationManager serverConfigurationManager;
     private DefaultHttpClient client;
-    private Tomcat tomcat;
     private OAuthConsumerAppDTO appDto;
 
     @BeforeClass(alwaysRun = true)
@@ -94,28 +90,13 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
         removeOAuthApplicationData();
         thriftServer.stop();
         replaceIdentityXml();
-        stopTomcat(tomcat);
 
         logManger = null;
         consumerKey = null;
         accessToken = null;
     }
 
-    @Test(alwaysRun = true, description = "Deploy playground application")
-    public void testDeployPlaygroundApp() {
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl =
-                    getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
-                            "playground2.war");
-            startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("Playground application deployment failed.", e);
-        }
-    }
-
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods = "testDeployPlaygroundApp")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         appDto = createApplication();

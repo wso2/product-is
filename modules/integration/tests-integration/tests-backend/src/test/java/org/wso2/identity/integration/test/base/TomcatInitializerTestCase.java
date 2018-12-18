@@ -4,8 +4,8 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -13,25 +13,8 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * Test class that will start and stop tomcat server for the tests in the test suite. This can be used once per test
- * as belows.
+ * Test class that will start and stop tomcat server for the tests in the test suite.
  *
- *     <test name="is-test-xxxxx" preserve-order="true" parallel="false">
- *         <classes>
- *             <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
- *             <class name="testClassX1"/>
- *             <class name="testClassX2"/>
- *             <class name="testClassX3"/>
- *         </classes>
- *     </test>
- *     <test name="is-test-yyyyy" preserve-order="true" parallel="false">
- *         <classes>
- *             <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
- *             <class name="testClassY1"/>
- *             <class name="testClassY2"/>
- *             <class name="testClassY3"/>
- *         </classes>
- *     </test>
  */
 public class TomcatInitializerTestCase extends ISIntegrationTest {
 
@@ -56,14 +39,14 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
 
     private Tomcat tomcat;
 
-    @BeforeTest(alwaysRun = true)
+    @BeforeSuite(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.init();
         startTomcat();
     }
 
-    @AfterTest(alwaysRun = true)
+    @AfterSuite(alwaysRun = true)
     public void tearDownTest() throws Exception {
 
         super.init();

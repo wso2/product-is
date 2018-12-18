@@ -16,7 +16,6 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -26,7 +25,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -40,21 +38,18 @@ import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,7 +58,6 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -83,7 +77,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private String consumerSecret;
 
     private DefaultHttpClient client;
-    private Tomcat tomcat;
 
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
@@ -117,7 +110,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     public void atEnd() throws Exception {
         deleteApplication();
         removeOAuthApplicationData();
-        stopTomcat(tomcat);
 
         logManger = null;
         consumerKey = null;
@@ -125,21 +117,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         resetISConfiguration();
     }
 
-    @Test(alwaysRun = true, description = "Deploy playground application")
-    public void testDeployPlaygroundApp() {
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl =
-                    getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
-                            "playground2.war");
-            startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-        } catch (Exception e) {
-            Assert.fail("Playground application deployment failed.", e);
-        }
-    }
-
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods =
-            "testDeployPlaygroundApp")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
         OAuthConsumerAppDTO appDto = createApplication();
         Assert.assertNotNull(appDto, "Application creation failed.");

@@ -1,6 +1,5 @@
 package org.wso2.identity.integration.test.sts;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,14 +28,11 @@ import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisionin
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +70,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private String resultPage;
     private String adminUsername;
     private String adminPassword;
-    private Tomcat tomcat;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -89,14 +84,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
 
         startCarbonServer(PORT_OFFSET_1, context, startupParameterMap);
-
-        tomcat = Utils.getTomcat(getClass());
-        URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + "PassiveSTSSampleApp.war");
-        tomcat.addWebapp(tomcat.getHost(), PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
-        log.info("Deployed tomcat application PassiveSTSSampleApp");
-        tomcat.start();
-        log.info("Tomcat server started.");
 
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
                 .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
@@ -113,10 +100,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        tomcat.stop();
-        tomcat.destroy();
-        log.info("Tomcat server stopped.");
 
         super.stopCarbonServer(PORT_OFFSET_1);
 

@@ -1,28 +1,25 @@
 /*
-*  Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.identity.integration.test.application.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -57,20 +54,19 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
     protected Map<Integer, AutomationContext> automationContextMap;
-    private Map<Integer, Tomcat> tomcatServers;
     protected HttpClient httpClient;
     private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
 
     public void initTest() throws Exception {
+
         super.init();
 
-        applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
-        identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
-        samlSSOConfigServiceClients = new HashMap<Integer, SAMLSSOConfigServiceClient>();
-        automationContextMap = new HashMap<Integer, AutomationContext>();
+        applicationManagementServiceClients = new HashMap<>();
+        identityProviderMgtServiceClients = new HashMap<>();
+        samlSSOConfigServiceClients = new HashMap<>();
+        automationContextMap = new HashMap<>();
         httpClient = new DefaultHttpClient();
-        tomcatServers = new HashMap<Integer, Tomcat>();
         manager = new MultipleServersManager();
 
         automationContextMap.put(0, isServer);
@@ -81,19 +77,22 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
         automationContextMap.put(portOffset, context);
         CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
-                                                                      startupParameters);
+                startupParameters);
         manager.startServers(server);
     }
 
     public void stopCarbonServer(int portOffset) throws Exception {
+
         manager.stopAllServers();
     }
 
     public HttpClient getHttpClient() {
+
         return httpClient;
     }
 
     public void stopHttpClient() {
+
         httpClient.getConnectionManager().shutdown();
     }
 
@@ -106,18 +105,18 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         }
 
         String serviceUrl = getSecureServiceUrl(portOffset,
-                                                automationContextMap.get(portOffset).getContextUrls()
-                                                        .getSecureServiceUrl());
+                automationContextMap.get(portOffset).getContextUrls()
+                        .getSecureServiceUrl());
 
         if (sessionCookie == null) {
             AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
             sessionCookie = authenticatorClient.login(automationContextMap.get(portOffset).getSuperTenant().getTenantAdmin()
-                                                              .getUserName(),
-                                                      automationContextMap.get(portOffset).getSuperTenant()
-                                                              .getTenantAdmin().getPassword(),
-                                                      automationContextMap.get(portOffset).getDefaultInstance()
-                                                              .getHosts().get("default"));
+                            .getUserName(),
+                    automationContextMap.get(portOffset).getSuperTenant()
+                            .getTenantAdmin().getPassword(),
+                    automationContextMap.get(portOffset).getDefaultInstance()
+                            .getHosts().get("default"));
         }
 
         if (sessionCookie != null) {
@@ -129,7 +128,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
                             (sessionCookie, serviceUrl, configContext));
                 } else if (IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT.equals(clientType)) {
                     identityProviderMgtServiceClients.put(portOffset, new IdentityProviderMgtServiceClient(sessionCookie,
-                                                                                                           serviceUrl));
+                            serviceUrl));
                 } else if (IdentityConstants.ServiceClientType.SAML_SSO_CONFIG.equals(clientType)) {
                     samlSSOConfigServiceClients.put(portOffset, new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie));
                 }
@@ -138,6 +137,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     public void addServiceProvider(int portOffset, String applicationName) throws Exception {
+
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(applicationName);
         serviceProvider.setDescription("This is a test Service Provider");
@@ -146,39 +146,47 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
     public ServiceProvider getServiceProvider(int portOffset, String applicationName)
             throws Exception {
+
         return applicationManagementServiceClients.get(portOffset).getApplication(applicationName);
     }
 
     public void updateServiceProvider(int portOffset, ServiceProvider serviceProvider)
             throws Exception {
+
         applicationManagementServiceClients.get(portOffset).updateApplicationData(serviceProvider);
     }
 
     public void deleteServiceProvider(int portOffset, String applicationName) throws Exception {
+
         applicationManagementServiceClients.get(portOffset).deleteApplication(applicationName);
     }
 
     public void addIdentityProvider(int portOffset, IdentityProvider identityProvider)
             throws Exception {
+
         identityProviderMgtServiceClients.get(portOffset).addIdP(identityProvider);
     }
 
     public IdentityProvider getIdentityProvider(int portOffset, String idPName) throws Exception {
+
         return identityProviderMgtServiceClients.get(portOffset).getIdPByName(idPName);
     }
 
     public void updateIdentityProvider(int portOffset, String oldIdPName,
                                        IdentityProvider identityProvider) throws Exception {
+
         identityProviderMgtServiceClients.get(portOffset).updateIdP(oldIdPName, identityProvider);
     }
 
     public void deleteIdentityProvider(int portOffset, String idPName) throws Exception {
+
         identityProviderMgtServiceClients.get(portOffset).deleteIdP(idPName);
     }
 
     public String createSAML2WebSSOConfiguration(int portOffset,
                                                  SAMLSSOServiceProviderDTO samlssoServiceProviderDTO)
             throws Exception {
+
         samlSSOConfigServiceClients.get(portOffset).addServiceProvider(samlssoServiceProviderDTO);
         SAMLSSOServiceProviderInfoDTO serviceProviders = samlSSOConfigServiceClients.get(portOffset).getServiceProviders();
         if (serviceProviders != null && serviceProviders.getServiceProviders() != null) {
@@ -192,39 +200,13 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     public void deleteSAML2WebSSOConfiguration(int portOffset, String issuer) throws Exception {
+
         samlSSOConfigServiceClients.get(portOffset).removeServiceProvider(issuer);
-    }
-
-    public void startTomcat(int port) throws LifecycleException {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(port);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        setSystemProperties();
-        tomcatServers.put(port, tomcat);
-        tomcat.start();
-    }
-
-    public void stopTomcat(int port) throws LifecycleException {
-        tomcatServers.get(port).stop();
-        tomcatServers.get(port).destroy();
-        tomcatServers.remove(port);
-    }
-
-    public void addWebAppToTomcat(int port, String webAppUrl, String webAppPath) {
-        tomcatServers.get(port).addWebapp(tomcatServers.get(port).getHost(), webAppUrl, webAppPath);
     }
 
     public String extractValueFromResponse(HttpResponse response, String key, int token)
             throws IOException {
+
         String value = null;
         String line = null;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -242,7 +224,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public Map<String, String> extractValuesFromResponse(HttpResponse response,
                                                          Map<String, Integer> keyMap)
             throws IOException {
-        Map<String, String> values = new HashMap<String, String>();
+
+        Map<String, String> values = new HashMap<>();
         String line = null;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         while ((line = bufferedReader.readLine()) != null && keyMap.size() > 0) {
@@ -261,6 +244,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     public String getHeaderValue(HttpResponse response, String headerName) {
+
         Header[] headers = response.getAllHeaders();
         String headerValue = null;
         for (Header header : headers) {
@@ -273,6 +257,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer buffer = new StringBuffer();
         String line = "";
@@ -284,6 +269,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     }
 
     public void closeHttpConnection(HttpResponse response) throws IOException {
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         bufferedReader.close();
     }
@@ -291,12 +277,13 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private void setSystemProperties() {
 
         System.setProperty("javax.net.ssl.trustStore", FrameworkPathUtil.getSystemResourceLocation() + File.separator +
-                "keystores" + File.separator  + "products" + File.separator + "wso2carbon.jks");
+                "keystores" + File.separator + "products" + File.separator + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {
+
         return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
     }
 

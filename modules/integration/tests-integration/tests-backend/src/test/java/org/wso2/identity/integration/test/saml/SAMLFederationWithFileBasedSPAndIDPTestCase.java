@@ -101,10 +101,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         AutomationContext secondaryISServer = new AutomationContext("IDENTITY", "identity002", TestUserMode
                 .SUPER_TENANT_ADMIN);
         startCarbonServer(PORT_OFFSET_1, secondaryISServer, startupParameters);
-        // Deploy webapp in Tomcat
-        super.startTomcat(TOMCAT_8490);
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
         // Create service clients
         super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants
                 .ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
@@ -122,8 +118,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         deleteUserInSecondaryIS();
 
         remoteUSMServiceClient = null;
-
-        super.stopTomcat(TOMCAT_8490);
         super.stopCarbonServer(PORT_OFFSET_1);
         super.stopHttpClient();
 

@@ -109,12 +109,6 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         startCarbonServer(PORT_OFFSET_1, context, startupParameters);
 
-        super.startTomcat(TOMCAT_8490);
-
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
-
-
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
                 .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
         super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
@@ -200,7 +194,6 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
         super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8490);
 
         super.stopHttpClient();
 

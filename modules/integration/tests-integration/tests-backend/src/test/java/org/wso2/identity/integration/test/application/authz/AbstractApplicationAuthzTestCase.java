@@ -19,7 +19,6 @@
 
 package org.wso2.identity.integration.test.application.authz;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
