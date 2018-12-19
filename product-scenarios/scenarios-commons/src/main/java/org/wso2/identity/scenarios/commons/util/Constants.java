@@ -63,6 +63,16 @@ public class Constants {
     public static final String TOCOMMONAUTH = "tocommonauth";
     public static final String COOKIE = "Cookie";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
+    public static final String AUTHN_CONTEXT_CLASS_REF = "AuthnContextClassRef";
+    public static final String AUTHN_REQUEST = "AuthnRequest";
+    public static final String INBOUND_AUTH_TYPE_SAML = "samlsso";
+    public static final String ISSUER = "Issuer";
+    public static final String NAMESPACE_PREFIX = "samlp";
+    public static final String PASSWORD_PROTECTED_TRANSPORT_CLASS =
+            "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport";
+    public static final String SAML_ASSERTION_URN = "urn:oasis:names:tc:SAML:2.0:assertion";
+    public static final String SAML_PROTOCOL_URN = "urn:oasis:names:tc:SAML:2.0:protocol";
+
 
     /**
      * SCIM Endpoints.
