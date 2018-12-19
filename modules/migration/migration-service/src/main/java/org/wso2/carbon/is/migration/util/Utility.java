@@ -164,7 +164,6 @@ public class Utility {
             }
         } catch (UserStoreException e) {
             String msg = "Error while retrieving the tenants.";
-            log.error(msg, e);
             throw new MigrationClientException(msg, e);
         }
         return tenants;
@@ -196,7 +195,6 @@ public class Utility {
         } catch (UserStoreException e) {
             String msg = "Error while getting tenant range (" + startingTenantID + " - " + endingTenantID
                     + ") specified.";
-            log.error(msg, e);
             throw new MigrationClientException(msg, e);
         }
         return tenantsRange;
