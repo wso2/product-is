@@ -37,6 +37,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -61,13 +62,13 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public void initTest() throws Exception {
 
         super.init();
-
+        TestDataHolder testDataHolder = TestDataHolder.getInstance();
         applicationManagementServiceClients = new HashMap<>();
         identityProviderMgtServiceClients = new HashMap<>();
         samlSSOConfigServiceClients = new HashMap<>();
-        automationContextMap = new HashMap<>();
         httpClient = new DefaultHttpClient();
-        manager = new MultipleServersManager();
+        automationContextMap = testDataHolder.getAutomationContextMap();
+        manager = testDataHolder.getManager();
 
         automationContextMap.put(0, isServer);
     }
