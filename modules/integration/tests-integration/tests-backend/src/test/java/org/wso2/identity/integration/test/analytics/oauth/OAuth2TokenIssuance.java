@@ -17,8 +17,6 @@
 */
 package org.wso2.identity.integration.test.analytics.oauth;
 
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -30,24 +28,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.databridge.commons.Event;
-import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.test.analytics.commons.ThriftServer;
+import org.wso2.identity.integration.test.analytics.commons.AnalyticsDataHolder;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
@@ -60,20 +51,12 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
     private String accessToken;
     private String consumerKey;
     private String consumerSecret;
-    private ThriftServer thriftServer;
-    private ServerConfigurationManager serverConfigurationManager;
     private DefaultHttpClient client;
     private OAuthConsumerAppDTO appDto;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
-        changeIdentityXml();
-        super.init(TestUserMode.SUPER_TENANT_USER);
-        thriftServer = new ThriftServer("Wso2EventTestCase", 8021, true);
-        thriftServer.start(8021);
-        log.info("Thrift Server is Started on port 8462");
-        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
@@ -88,8 +71,6 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
     public void atEnd() throws Exception {
         deleteApplication();
         removeOAuthApplicationData();
-        thriftServer.stop();
-        replaceIdentityXml();
 
         logManger = null;
         consumerKey = null;
@@ -113,8 +94,9 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorozedPost() throws Exception {
        try {
+           AnalyticsDataHolder.getInstance().getThriftServer().resetPreservedEventList();
            String tokenIssuanceStreamId = "org.wso2.is.analytics.stream.OauthTokenIssuance:1.0.0";
-           List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+           List<NameValuePair> urlParameters = new ArrayList<>();
            urlParameters.add(new BasicNameValuePair(
                    "grantType",
                    OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
@@ -131,7 +113,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
            response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
 
-           Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+           Map<String, Integer> keyPositionMap = new HashMap<>(1);
            keyPositionMap.put("name=\"accessToken\"", 1);
 
            List<KeyValue> keyValues =
@@ -144,9 +126,9 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
            Assert.assertNotNull(accessToken, "Access token is null.");
            waitUntilEventsReceive(1);
-           Assert.assertNotNull(thriftServer.getPreservedEventList());
+           Assert.assertNotNull(AnalyticsDataHolder.getInstance().getThriftServer().getPreservedEventList());
            Event tokenIssuanceEvent = null;
-           for (Event event : thriftServer.getPreservedEventList()) {
+           for (Event event : AnalyticsDataHolder.getInstance().getThriftServer().getPreservedEventList()) {
                String streamId = event.getStreamId();
                if (tokenIssuanceStreamId.equalsIgnoreCase(streamId)) {
                    tokenIssuanceEvent = event;
@@ -160,100 +142,15 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
            Assert.assertEquals("default", tokenIssuanceEvent.getPayloadData()[6]);
 
        } finally {
-           thriftServer.resetPreservedEventList();
+           AnalyticsDataHolder.getInstance().getThriftServer().resetPreservedEventList();
        }
-    }
-
-    public void changeIdentityXml() {
-
-        log.info("Changing identity.xml file to enable analytics");
-        String carbonHome = CarbonUtils.getCarbonHome();
-
-        String analyticsEnabledIdentityXml = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "identity_token_analytics_enabled.xml";
-        File defaultIdentityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
-        try {
-
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            File configuredNotificationProperties = new File(analyticsEnabledIdentityXml);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
-                    defaultIdentityXml, true);
-            copyAuthenticationDataPublisher();
-            serverConfigurationManager.restartForcefully();
-
-        } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in identity.xml");
-        } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in identity.xml");
-        } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in identity.xml");
-        } catch (IOException e) {
-            log.error("Error while changing configurations in identity.xml");
-        }
-    }
-
-    public void copyAuthenticationDataPublisher() {
-        log.info("Changing AuthenticationDataPublisher.xml file to change default port");
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "IsAnalytics-Publisher-wso2event-OauthTokenIssueRefresh.xml";
-        File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
-                + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
-                "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-OauthTokenIssueRefresh.xml");
-
-        try {
-            File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,
-                    defaultAuthenticationDataPublisher, true);
-
-        } catch (AutomationUtilException e) {
-            log.error("Error while changing publisher configurations");
-        } catch (XPathExpressionException e) {
-            log.error("Error while changing publisher configurations");
-        } catch (MalformedURLException e) {
-            log.error("Error while changing publisher configurations");
-        } catch (IOException e) {
-            log.error("Error while changing publisher configurations");
-        }
-    }
-
-    public void replaceIdentityXml() {
-        log.info("Changing identity.xml file to enable analytics");
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-
-        String defaultIdentityXml = getISResourceLocation() + File.separator + "default-identity.xml";
-        File defaultIdentityXmlLocation = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
-        try {
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            File configuredNotificationProperties = new File(defaultIdentityXml);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
-            serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
-                    defaultIdentityXmlLocation, true);
-            copyAuthenticationDataPublisher();
-            serverConfigurationManager.restartForcefully();
-
-        } catch (AutomationUtilException e) {
-            log.error("Error while changing configurations in identity.xml to default configurations");
-        } catch (XPathExpressionException e) {
-            log.error("Error while changing configurations in identity.xml to default configurations");
-        } catch (MalformedURLException e) {
-            log.error("Error while changing configurations in identity.xml to default configurations");
-        } catch (IOException e) {
-            log.error("Error while changing configurations in identity.xml to default configurations");
-        }
     }
 
     private void waitUntilEventsReceive(int eventCount) {
 
         long terminationTime = System.currentTimeMillis() + WAIT_TIME;
         while (System.currentTimeMillis() < terminationTime) {
-            if (thriftServer.getPreservedEventList().size() >= eventCount) {
+            if (AnalyticsDataHolder.getInstance().getThriftServer().getPreservedEventList().size() >= eventCount) {
                 break;
             }
         }

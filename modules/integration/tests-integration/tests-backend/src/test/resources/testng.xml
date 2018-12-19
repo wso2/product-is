@@ -54,14 +54,6 @@
         </classes>
     </test>
 
-    <test name="is-analytics-tests" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
-            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginDataPublishHandlingTestCase"/>
-            <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
-        </classes>
-    </test>
-
     <test name="is-tests-scim" preserve-order="true" parallel="false">
         <classes>
             <!--SCIM Test Cases-->
@@ -276,6 +268,18 @@
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase"/>
+        </classes>
+    </test>
+    <test name="is-analytics-tests-deprecated-config" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.analytics.base.AnalyticsBaseTestCase"/>
+            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
+            <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
+        </classes>
+    </test>
+    <test name="is-analytics-tests-new-config" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginDataPublishHandlingTestCase"/>
         </classes>
     </test>
     <test name="is-tests-with-individual-configuration-changes" preserve-order="true" parallel="false" group-by-instances="true">
