@@ -94,7 +94,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, false);
+                applicationAuthenticationXml, true);
 
         serverConfigurationManager.restartGracefully();
 
@@ -184,15 +184,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator +
-                "application-authentication-default.xml");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, false);
-
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(true);
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
