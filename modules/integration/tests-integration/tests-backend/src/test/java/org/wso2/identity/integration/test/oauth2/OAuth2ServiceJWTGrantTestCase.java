@@ -105,6 +105,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     public void setup() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         changeISConfiguration("jwt-token-issuer-enabled-identity.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         OAuthConsumerAppDTO appDto = createApplication(createApplicationWithJWTGrantType());
@@ -126,6 +127,16 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         String[] openidValue = new String[1];
         openidValue[0] = COUNTRY_NEW_OIDC_CLAIM;
         oauthAdminClient.updateScope(openIdScope, openidValue, null);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+
+        deleteApplication();
+        removeOAuthApplicationData();
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        identityProviderMgtServiceClient.deleteIdP(issuer);
+        resetISConfiguration();
     }
 
     @Test(description = "This test case tests the JWT self contained access token generation using password grant "
@@ -195,7 +206,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
             + "false", dependsOnMethods = "testJWTGrantTypeWithConvertOIDCDialectFalse")
     public void testJWTGrantTypeWithConvertOIDCDialectWithoutIDPMappingWithSPMapping() throws Exception {
 
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastConfiguration(false);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt-token-issuer-convertToOIDC.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -290,7 +301,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
         serviceProvider = setServiceProviderClaimConfig(serviceProvider);
         appMgtclient.updateApplicationData(serviceProvider);
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastConfiguration(false);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt-token-issuer-addremaininguserattribute.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -430,7 +441,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private void resetISConfiguration() throws Exception {
 
         log.info("Replacing identity.xml with default configurations");
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     /**
@@ -504,7 +515,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
                         + File.separator + "identity.xml");
         File configuredIdentityXML = new File(
                 getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
         serverConfigurationManager.restartGracefully();
     }
@@ -542,16 +552,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         fields[2] = email;
         profile.setFieldValues(fields);
         userProfileMgtServiceClient.setUserProfile(JWT_USER, profile);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
-
-        deleteApplication();
-        removeOAuthApplicationData();
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        identityProviderMgtServiceClient.deleteIdP(issuer);
-        resetISConfiguration();
     }
 
     /**

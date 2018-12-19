@@ -153,7 +153,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         applicationManagementServiceClient =
                 new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
         deleteApplication();
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         httpClient = null;

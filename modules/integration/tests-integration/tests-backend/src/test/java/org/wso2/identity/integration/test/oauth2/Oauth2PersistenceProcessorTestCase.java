@@ -123,14 +123,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
 
     private void resetISConfiguration() throws Exception {
 
-        log.info("Replacing identity.xml with default configurations");
-        String carbonHome = CarbonUtils.getCarbonHome();
-        File identityXML = new File(carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "identity.xml");
-        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
 }

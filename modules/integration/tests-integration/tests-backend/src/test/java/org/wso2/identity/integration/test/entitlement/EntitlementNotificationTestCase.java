@@ -129,7 +129,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     private void changeISConfiguration() throws Exception {
         changeEntitlementPropertyConfig();
         changeNotificationMgtPropertyConfig();
-        serverConfigurationManager.restartForcefully();
+        serverConfigurationManager.restartGracefully();
     }
 
     private void changeEntitlementPropertyConfig() throws Exception {
@@ -167,8 +167,6 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
                 "msg-mgt.properties");
 
         File configuredNotificationProperties = new File(msgMgtPropertiesFileLocation);
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                 notificationMgtProperties, true);
     }
@@ -201,30 +199,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     }
 
     private void resetISConfiguration() throws Exception {
-        resetEntitlementProperties();
-        resetMsgMgtProperties();
-        serverConfigurationManager.restartGracefully();
+
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
-
-    private void resetEntitlementProperties() throws Exception {
-        log.info("Replacing entitlement.properties with default configurations");
-
-        File defaultEntitlementProperties = new File(getISResourceLocation()
-                + File.separator + "entitlement" + File.separator + "config" + File.separator
-                + "entitlement_default.properties");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultEntitlementProperties, entitlementProperties, true);
-    }
-
-    private void resetMsgMgtProperties() throws Exception {
-        log.info("Replacing msg-mgt.properties with default configurations");
-
-        File defaultMsgMgtPropertiesFile = new File(getISResourceLocation()
-                + File.separator + "notification-mgt" + File.separator + "config" + File.separator
-                + "msg-mgt-default.properties");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultMsgMgtPropertiesFile, notificationMgtProperties, true);
-
-    }
-
 }

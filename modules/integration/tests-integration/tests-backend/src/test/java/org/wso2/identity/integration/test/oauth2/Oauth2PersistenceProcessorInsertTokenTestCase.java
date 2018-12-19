@@ -69,7 +69,6 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
                 + "identity.xml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         File srcFile = new File(identityXMLFile);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
                 defaultIdentityXml, true);
         serverConfigurationManager.restartForcefully();
@@ -94,15 +93,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         consumerKey = null;
         accessToken = null;
 
-        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-
-        String carbonHome = Utils.getResidentCarbonHome();
-        File identityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-                + "identity.xml");
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
-        serverConfigurationManager.restartGracefully();
-        serverConfigurationManager = null;
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request")

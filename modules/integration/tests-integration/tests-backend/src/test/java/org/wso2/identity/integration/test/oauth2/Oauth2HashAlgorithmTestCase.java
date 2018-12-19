@@ -70,9 +70,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
                 + "identity.xml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         File srcFile = new File(identityXMLFile);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
-                defaultIdentityXml, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, defaultIdentityXml, true);
         serverConfigurationManager.restartGracefully();
         super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
@@ -93,7 +91,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         logManger = null;
         consumerKey = null;
         accessToken = null;
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request")

@@ -78,7 +78,6 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
                 + "identity.xml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         File srcFile = new File(identityXMLFile);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
                 defaultIdentityXml, true);
         serverConfigurationManager.restartForcefully();

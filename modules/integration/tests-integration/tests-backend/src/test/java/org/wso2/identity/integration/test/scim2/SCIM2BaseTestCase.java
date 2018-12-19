@@ -69,11 +69,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     private void resetISConfiguration() throws Exception {
         log.info("Replacing identity.xml with default configurations");
 
-        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
 }
