@@ -18,6 +18,17 @@
         </classes>
     </test>
 
+    <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
+            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
+            <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-consent" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
@@ -110,8 +121,6 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>
-            <!--Provisioning Test Cases-->
-            <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
             <!--OAuth Test Cases-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RequestObjectSignatureValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2IDTokenEncryptionTestCase"/>
@@ -141,8 +150,6 @@
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
             <!--<class name="org.wso2.identity.integration.test.openid.OpenIDUserProfileTestCase"/>-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>
-            <!--PassiveSTS Test Cases-->
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--User Profile Management Test Cases-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
             <!--SAML Test Cases-->
@@ -169,7 +176,6 @@
 
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.dashboard.IDENTITY5811TestCase" />
-            <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <!--<class name="org.wso2.identity.integration.test.auth.IdentifierFirstLoginTestCase" />-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
 
@@ -195,8 +201,6 @@
     </test>
     <test name="is-tests-saml-sequential" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
         </classes>
     </test>

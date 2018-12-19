@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.saml;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -32,8 +31,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
@@ -45,17 +42,15 @@ import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilExcepti
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,16 +91,12 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         applyConfigurationsForPrimaryIS();
         // Start secondary IS server
-        Map<String, String> startupParameters = new HashMap<>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext secondaryISServer = new AutomationContext("IDENTITY", "identity002", TestUserMode
-                .SUPER_TENANT_ADMIN);
-        startCarbonServer(PORT_OFFSET_1, secondaryISServer, startupParameters);
+        TestDataHolder testDataHolder = TestDataHolder.getInstance();
         // Create service clients
         super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants
                 .ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(getSecondaryISURI(), secondaryISServer
-                .getContextTenant().getContextUser().getUserName(), secondaryISServer.getContextTenant()
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(getSecondaryISURI(), testDataHolder.getAutomationContext()
+                .getContextTenant().getContextUser().getUserName(), testDataHolder.getAutomationContext().getContextTenant()
                 .getContextUser().getPassword());
         // Create user in secondary IS server
         createUserInSecondaryIS();
@@ -118,7 +109,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         deleteUserInSecondaryIS();
 
         remoteUSMServiceClient = null;
-        super.stopCarbonServer(PORT_OFFSET_1);
         super.stopHttpClient();
 
         removeConfigurationsFromPrimaryIS();
