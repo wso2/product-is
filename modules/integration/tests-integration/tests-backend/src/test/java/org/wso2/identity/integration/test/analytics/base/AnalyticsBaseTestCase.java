@@ -62,11 +62,13 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
                 + "config" + File.separator + "identit_analytics_enabled.xml";
         File defaultIdentityXml = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
+
         String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
                 + "config" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
         File defaultAuthenticationDataPublisher = new File(carbonHome + File.separator
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
                 "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml");
+
         String sessionDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
                 + "config" + File.separator + "IsAnalytics-Publisher-wso2event-SessionData.xml";
         File defaultSessionDataPublisher = new File(carbonHome + File.separator
@@ -92,7 +94,6 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
                     defaultTokenDataPublisher, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                     defaultIdentityXml, true);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,
                     defaultAuthenticationDataPublisher, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredSessionPublisherFile,
