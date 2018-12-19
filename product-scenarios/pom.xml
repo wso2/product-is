@@ -91,6 +91,7 @@
         <identity.inbound.auth.saml.version>5.4.23</identity.inbound.auth.saml.version>
         <identity.user.ws.version>5.1.11</identity.user.ws.version>
         <identity.inbound.auth.oauth.version>6.0.63</identity.inbound.auth.oauth.version>
+        <opensaml.version>2.6.4</opensaml.version>
     </properties>
 
     <dependencyManagement>
@@ -220,6 +221,11 @@
                 <groupId>org.wso2.carbon.identity.user.ws</groupId>
                 <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
                 <version>${identity.user.ws.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${opensaml.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
