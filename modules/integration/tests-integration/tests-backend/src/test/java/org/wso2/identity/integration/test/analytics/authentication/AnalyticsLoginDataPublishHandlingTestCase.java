@@ -56,7 +56,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
         }
     }
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
         changeIdentityXml();
@@ -64,7 +64,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
         super.testInit();
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
         super.testClear();
         stopThriftServer();

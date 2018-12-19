@@ -130,7 +130,8 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         appMgtclient.deleteApplication(serviceProvider.getApplicationName());
         client.close();
     }

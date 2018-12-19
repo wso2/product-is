@@ -37,7 +37,7 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeTest
+    @BeforeTest(alwaysRun = true)
     public void enableAnalytics() throws Exception {
 
         super.init();
@@ -45,7 +45,7 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
         startThriftServer();
     }
 
-    @AfterTest
+    @AfterTest(alwaysRun = true)
     public void disableAnalytics() throws Exception {
 
         stopThriftServer();
