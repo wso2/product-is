@@ -131,9 +131,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         deleteAddedUsers();
 
         super.stopCarbonServer(PORT_OFFSET_1);
-
-        super.stopHttpClient();
-
     }
 
     @Test(priority = 1, groups = "wso2.is", description = "Check create identity provider in primary IS")

@@ -25,6 +25,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -109,7 +111,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         deleteUserInSecondaryIS();
 
         remoteUSMServiceClient = null;
-        super.stopHttpClient();
 
         removeConfigurationsFromPrimaryIS();
     }
@@ -150,26 +151,26 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     @Test(priority = 5, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
-        HttpClient client = getHttpClient();
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            String sessionId = sendSAMLRequestToPrimaryIS(client);
+            Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
 
-        String sessionId = sendSAMLRequestToPrimaryIS(client);
-        Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
+            String redirectURL = authenticateWithSecondaryIS(client, sessionId);
+            Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
 
-        String redirectURL = authenticateWithSecondaryIS(client, sessionId);
-        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
+            Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
+            Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
+            Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
 
-        Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
-        Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
-        Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
+            redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
+            Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
 
-        redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
-        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
+            String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
+            Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
-        String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
-        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
-
-        boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
-        Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+            boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
+            Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+        }
     }
 
     protected String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {

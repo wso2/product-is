@@ -279,16 +279,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
         Assert.assertTrue(resultPage2.contains("Authentication Error!"), "Session hijacking is possible.");
         EntityUtils.consume(response.getEntity());
     }
-//    @Test(alwaysRun = true, description = "Test PassiveSTS Claims",
-//            dependsOnMethods = { "testSendLoginRequestPost" })
-//    public void testPassiveSTSClaims() {
-//
-//        Assert.assertTrue(resultPage.contains(GIVEN_NAME_CLAIM_URI), "Claim givenname is expected");
-//        Assert.assertTrue(resultPage.contains(adminUsername), "Claim value givenname is expected");
-//
-//        Assert.assertTrue(resultPage.contains(EMAIL_CLAIM_URI), "Claim email is expected");
-//        Assert.assertTrue(resultPage.contains(ADMIN_EMAIL), "Claim value email is expected");
-//    }
 
     private void setSystemProperties() {
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR

@@ -55,7 +55,6 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
     protected Map<Integer, AutomationContext> automationContextMap;
-    protected HttpClient httpClient;
     private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
 
@@ -66,7 +65,6 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         applicationManagementServiceClients = new HashMap<>();
         identityProviderMgtServiceClients = new HashMap<>();
         samlSSOConfigServiceClients = new HashMap<>();
-        httpClient = new DefaultHttpClient();
         automationContextMap = testDataHolder.getAutomationContextMap();
         manager = testDataHolder.getManager();
 
@@ -85,16 +83,6 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public void stopCarbonServer(int portOffset) throws Exception {
 
         manager.stopAllServers();
-    }
-
-    public HttpClient getHttpClient() {
-
-        return httpClient;
-    }
-
-    public void stopHttpClient() {
-
-        httpClient.getConnectionManager().shutdown();
     }
 
     public void createServiceClients(int portOffset, String sessionCookie,
@@ -273,14 +261,6 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         bufferedReader.close();
-    }
-
-    private void setSystemProperties() {
-
-        System.setProperty("javax.net.ssl.trustStore", FrameworkPathUtil.getSystemResourceLocation() + File.separator +
-                "keystores" + File.separator + "products" + File.separator + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {

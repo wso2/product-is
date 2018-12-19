@@ -7,15 +7,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
@@ -28,8 +28,6 @@ import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisionin
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
-import org.wso2.identity.integration.test.base.TestDataHolder;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -67,7 +65,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     private static final String PASSIVE_STS_SAMPLE_APP_NAME = "/PassiveSTSSampleApp";
     private String sessionDataKey;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
     private String resultPage;
     private String adminUsername;
     private String adminPassword;
@@ -79,8 +77,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-
-        TestDataHolder testDataHolder = TestDataHolder.getInstance();
         super.createServiceClients(PORT_OFFSET_0, sessionCookie,
                 new IdentityConstants.ServiceClientType[]{
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
@@ -90,20 +86,19 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
                 new IdentityConstants.ServiceClientType[]{
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                         IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        client = new DefaultHttpClient();
+        client = HttpClientBuilder.create().build();
     }
 
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
-        super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+        deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
+        deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+        deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
-        super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        super.stopHttpClient();
+        deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
+        deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check create identity provider in primary IS")
@@ -180,11 +175,8 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
             authRequestList.add(opicAuthenticationRequest);
         }
         if (authRequestList.size() > 0) {
-            serviceProvider.getInboundAuthenticationConfig()
-                    .setInboundAuthenticationRequestConfigs(
-                            authRequestList
-                                    .toArray(new InboundAuthenticationRequestConfig[authRequestList
-                                            .size()]));
+            serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList.
+                    toArray(new InboundAuthenticationRequestConfig[0]));
         }
         updateServiceProvider(PORT_OFFSET_0, serviceProvider);
         serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
@@ -427,7 +419,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9453/samlsso");
+        property.setValue("https://localhost:9854/samlsso");
         properties[2] = property;
 
         property = new Property();
