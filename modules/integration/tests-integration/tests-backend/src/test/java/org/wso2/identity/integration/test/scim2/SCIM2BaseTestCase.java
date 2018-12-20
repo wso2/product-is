@@ -37,7 +37,6 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String RESOURCE_TYPE_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:ResourceType";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
 
-    private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeTest(alwaysRun = true)
@@ -55,15 +54,15 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     private void changeISConfiguration() throws Exception {
 
         String carbonHome = CarbonUtils.getCarbonHome();
-        identityXML = new File(carbonHome + File.separator
+        File identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
                 ".xml");
-        File configuredIdentityXML = new File(getISResourceLocation()
-                + File.separator + "scim2" + File.separator + "me-unsecured-identity.xml");
+        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "scim2" + File.separator +
+                "me-unsecured-identity.xml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartForcefully();
     }
 
     private void resetISConfiguration() throws Exception {
