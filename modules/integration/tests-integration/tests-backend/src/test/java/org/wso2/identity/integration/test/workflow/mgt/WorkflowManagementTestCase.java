@@ -85,8 +85,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private void startOtherCarbonServers() throws Exception {
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(servicesUrl);
-        Thread.sleep(2500);
-
         sessionCookie2 = authenticatorClient.login("admin", "admin", "localhost");
     }
 

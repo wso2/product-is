@@ -102,10 +102,10 @@
         <classes>
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
         </classes>
     </test>
