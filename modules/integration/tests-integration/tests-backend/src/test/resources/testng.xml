@@ -64,7 +64,6 @@
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
-            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementRestServiceTestCase"/>
@@ -107,6 +106,7 @@
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
         </classes>
     </test>
 
