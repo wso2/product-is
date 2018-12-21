@@ -114,6 +114,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         deleteUser(NON_AZ_TEST_TENANT_USER);
         deleteRole(AZ_TEST_TENANT_ROLE);
         deleteApplication(APPLICATION_NAME);
+        entitlementPolicyClient.publishPolicies(new String[]{POLICY_ID}, new String[]{"PDP " +
+                "Subscriber"}, "DELETE", true, null, 1);
         entitlementPolicyClient.removePolicy(POLICY_ID);
 
         ssoConfigServiceClient = null;
