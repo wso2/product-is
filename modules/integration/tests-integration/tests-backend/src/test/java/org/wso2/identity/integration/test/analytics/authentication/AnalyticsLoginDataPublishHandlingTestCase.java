@@ -100,7 +100,6 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
             serverConfigurationManager = new ServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                     defaultIdentityEventProperties, true);
-//            copyAuthenticationDataPublisher();
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,
                     defaultAuthenticationDataPublisher, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredSessionPublisherFile,

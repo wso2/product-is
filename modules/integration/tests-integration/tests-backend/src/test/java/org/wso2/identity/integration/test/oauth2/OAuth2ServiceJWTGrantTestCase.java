@@ -105,7 +105,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     public void setup() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         changeISConfiguration("jwt-token-issuer-enabled-identity.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         OAuthConsumerAppDTO appDto = createApplication(createApplicationWithJWTGrantType());
@@ -206,7 +205,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
             + "false", dependsOnMethods = "testJWTGrantTypeWithConvertOIDCDialectFalse")
     public void testJWTGrantTypeWithConvertOIDCDialectWithoutIDPMappingWithSPMapping() throws Exception {
 
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt-token-issuer-convertToOIDC.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -301,7 +300,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
         serviceProvider = setServiceProviderClaimConfig(serviceProvider);
         appMgtclient.updateApplicationData(serviceProvider);
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt-token-issuer-addremaininguserattribute.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -515,8 +514,9 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
                         + File.separator + "identity.xml");
         File configuredIdentityXML = new File(
                 getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartForcefully();
     }
 
     /**
