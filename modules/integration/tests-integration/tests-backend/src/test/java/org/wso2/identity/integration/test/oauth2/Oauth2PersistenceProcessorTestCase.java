@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
@@ -111,7 +111,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
 
         log.info("Enabling EncryptionDecryptionPersistenceProcessor.");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         File identityXML = new File(carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator
                 + "identity" + File.separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "oauth" + File.separator

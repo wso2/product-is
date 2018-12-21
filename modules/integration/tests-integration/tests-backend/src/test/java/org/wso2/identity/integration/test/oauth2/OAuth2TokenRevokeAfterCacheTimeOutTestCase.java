@@ -32,7 +32,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
     private void changeISConfiguration() throws Exception {
         log.info("Replacing repository/conf/tomcat/carbon/WEB-INF/web.xml reducing idle cache timeout");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         File webXml = new File(carbonHome + File.separator
                                + "repository" + File.separator + "conf" + File.separator + "tomcat" + File.separator
                                + "carbon" + File.separator + "WEB-INF" + File.separator + "web.xml");

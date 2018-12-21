@@ -25,12 +25,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -133,9 +133,10 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     }
 
     private void changeEntitlementPropertyConfig() throws Exception {
+
         log.info("Changing entitlement.properties to add EntitlementNotificationExtension");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         entitlementProperties = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator +
                 "entitlement.properties");
@@ -149,9 +150,10 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     }
 
     private void changeNotificationMgtPropertyConfig() throws Exception {
+
         log.info("Changing msg-mgt.properties to add EntitlementNotificationExtension");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         String templateLocation = getISResourceLocation()
                 + File.separator + "notification-mgt" + File.separator + "templates" + File.separator
                 + "entitlement";
@@ -159,7 +161,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
                 + File.separator + "notification-mgt" + File.separator + "config" + File.separator
                 + "entitlementNotificationMgt.properties";
 
-        HashMap<String, String> newProperties = new HashMap<String, String>();
+        HashMap<String, String> newProperties = new HashMap<>();
         newProperties.put("json.subscription.policyUpdate.jsonContentTemplate", templateLocation);
         replaceProperties(newProperties, msgMgtPropertiesFileLocation);
         notificationMgtProperties = new File(carbonHome + File.separator

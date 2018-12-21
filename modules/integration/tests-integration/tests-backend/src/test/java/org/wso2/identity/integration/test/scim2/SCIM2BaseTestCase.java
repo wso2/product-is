@@ -3,8 +3,8 @@ package org.wso2.identity.integration.test.scim2;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 
@@ -53,7 +53,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
 
     private void changeISConfiguration() throws Exception {
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         File identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
                 ".xml");

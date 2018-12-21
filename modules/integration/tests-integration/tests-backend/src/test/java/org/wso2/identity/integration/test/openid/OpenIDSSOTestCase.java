@@ -41,9 +41,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -411,7 +411,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private void changeISConfiguration() throws Exception {
         log.info("Replacing identity.xml with OpenIDSkipUserConsent property set to true");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" +File.separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation()

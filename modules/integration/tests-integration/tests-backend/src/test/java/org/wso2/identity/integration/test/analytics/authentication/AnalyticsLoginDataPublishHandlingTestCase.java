@@ -28,11 +28,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
-import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.analytics.commons.AnalyticsDataHolder;
 import org.wso2.identity.integration.test.analytics.commons.ThriftServer;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
 
         log.info("Changing identity-event.properties file to enable analytics");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
 
         String analyticsEnabledIdentityEventProperties = getISResourceLocation() + File.separator + "analytics" +
                 File.separator + "config" + File.separator + "identity-event_analytics_enabled.properties";

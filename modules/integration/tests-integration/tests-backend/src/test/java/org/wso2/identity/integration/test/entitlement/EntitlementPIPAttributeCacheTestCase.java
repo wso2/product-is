@@ -25,11 +25,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementServiceException;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
-import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementServiceClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -127,8 +127,7 @@ public class EntitlementPIPAttributeCacheTestCase extends ISIntegrationTest {
                                               + File.separator + "entitlement" + File.separator
                                                + "config" + File.separator
                                               + "entitlement_default.properties");
-        File targetConfigFile = new File(
-                System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "repository"
+        File targetConfigFile = new File(Utils.getResidentCarbonHome() + File.separator + "repository"
                         + File.separator + "conf" + File.separator + "identity" + File.separator +
                         "entitlement.properties");
 
@@ -158,8 +157,7 @@ public class EntitlementPIPAttributeCacheTestCase extends ISIntegrationTest {
                                               + File.separator + "entitlement" + File.separator
                                               +  "config" +  File.separator +
                                               "entitlement_custom_attribute_finder.properties");
-        File targetConfigFile = new File(
-                System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "repository"
+        File targetConfigFile = new File(Utils.getResidentCarbonHome() + File.separator + "repository"
                         + File.separator + "conf" + File.separator + "identity" + File.separator +
                         "entitlement.properties");
 

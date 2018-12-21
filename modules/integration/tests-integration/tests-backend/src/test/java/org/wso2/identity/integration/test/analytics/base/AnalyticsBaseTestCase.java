@@ -22,12 +22,12 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
-import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.analytics.commons.AnalyticsDataHolder;
 import org.wso2.identity.integration.test.analytics.commons.ThriftServer;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
 
         log.info("Changing identity.xml file to enable analytics");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
 
         String analyticsEnabledIdentityXml = getISResourceLocation() + File.separator + "analytics" + File.separator
                 + "config" + File.separator + "identit_analytics_enabled.xml";

@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 
@@ -43,7 +43,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
 
         super.testInit();
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
                 + "conf" + File.separator + "user-mgt.xml");
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"

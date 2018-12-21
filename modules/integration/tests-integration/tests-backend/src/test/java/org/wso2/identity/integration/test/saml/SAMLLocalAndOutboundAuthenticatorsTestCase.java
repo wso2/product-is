@@ -445,7 +445,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
 
         log.info("Replacing application-authentication.xml setting showAuthFailureReason true");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         File applicationXML = new File(carbonHome + File.separator + "repository" + File.separator + "conf" + File
                 .separator + "identity" + File.separator + "application-authentication.xml");
         File configuredApplicationXML = new File(getISResourceLocation() + File.separator + "saml" + File.separator +

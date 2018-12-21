@@ -30,8 +30,8 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,12 +53,13 @@ public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
         String pathToCarbonXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" + File.separator +
                 "userMgt" + File.separator + "carbon15051" + File.separator + "carbon.xml";
         String targetCarbonXML =
-                CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf" + File.separator + "carbon.xml";
+                Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf" + File.separator + "carbon.xml";
 
         String pathToUserMgtXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" +
                 File.separator +
                 "userMgt" + File.separator + "carbon15051" + File.separator + "user-mgt.xml";
-        String targetUserMgtXML = CarbonUtils.getCarbonHome()+ File.separator + "repository" + File.separator + "conf" + File.separator + "user-mgt.xml";
+        String targetUserMgtXML = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf" + File.separator +
+                "user-mgt.xml";
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(new File(pathToCarbonXML),

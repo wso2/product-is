@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -243,7 +243,7 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
     private void changeISConfiguration() throws Exception {
         log.info("Replacing repository/conf/identity/identity.xml to configure expiry time");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File
                 .separator + "identity.xml");
