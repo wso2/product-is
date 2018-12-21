@@ -223,25 +223,19 @@ versions:
       order: 1
       parameters:
         location: "step1"
-        schema: "uma"
-    -
-      name: "SchemaMigrator"
-      order: 2
-      parameters:
-        location: "step1"
         schema: "identity"
     -
       name: "SpClaimDialectSchemaMigrator"
-      order: 3
+      order: 2
       parameters:
         location: "step2"
         schema: "identity"
     -
       name: "ClaimDataMigrator"
-      order: 4
+      order: 3
     -
       name: "SessionDataMigrator"
-      order: 5
+      order: 4
       parameters:
         schema: "identity"
  -
