@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.saml;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,12 +35,10 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.identity.integration.common.clients.LoggingAdminClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 
 /**
@@ -61,8 +58,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
     private SAMLConfig samlConfigOne;
     private SAMLConfig samlConfigTwo;
-
-    private Tomcat tomcatServer;
     private String resultPage;
     private SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs;
 
@@ -102,12 +97,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.createApplication(samlConfigOne, APPLICATION_ONE);
         super.createApplication(samlConfigTwo, APPLICATION_TWO);
 
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-        deployApplication(tomcatServer, samlConfigOne);
-        deployApplication(tomcatServer, samlConfigTwo);
-        tomcatServer.start();
-
         logAdmin = new LoggingAdminClient(backendURL, sessionCookie);
         logViewer = new LogViewerClient(backendURL, sessionCookie);
     }
@@ -120,10 +109,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.deleteApplication(APPLICATION_TWO);
 
         super.testClear();
-
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
     }
 
     @Test(description = "Add service providers", groups = "wso2.is", priority = 1)
@@ -282,13 +267,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + samlConfigTwo.getApp().getArtifact(), e);
         }
-    }
-
-    protected void deployApplication(Tomcat tomcatServer, SAMLConfig config) {
-
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" +
-                ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
-        tomcatServer.addWebapp(tomcatServer.getHost(), "/" + config.getApp().getArtifact(), resourceUrl.getPath());
     }
 
     protected static boolean checkForLog(LogViewerClient logViewerClient, String expected) throws

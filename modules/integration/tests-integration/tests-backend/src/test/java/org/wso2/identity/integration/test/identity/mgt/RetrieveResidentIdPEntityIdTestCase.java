@@ -29,10 +29,10 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 
@@ -109,7 +109,7 @@ public class RetrieveResidentIdPEntityIdTestCase extends ISIntegrationTest {
 
         log.info("Replacing identity.xml changing the entity id of SSOService");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         identityXML = new File(carbonHome + File.separator
                                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
                 + "identity.xml");

@@ -1,8 +1,5 @@
 package org.wso2.identity.integration.test.sts;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,14 +14,19 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.application.common.model.xsd.*;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,11 +43,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String ADMIN_EMAIL = "admin@wso2.com";
     private static final String SERVICE_PROVIDER_NAME = "PassiveSTSSampleApp";
     private static final String SERVICE_PROVIDER_Desc = "PassiveSTS Service Provider";
-    private static final String PASSIVE_STS_SAMPLE_APP_NAME = "/PassiveSTSSampleApp";
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL =
-            "http://localhost:8490/PassiveSTSSampleApp";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:8490/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URL =
             "https://localhost:9853/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
@@ -56,7 +56,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private String sessionDataKey;
     private String resultPage;
     private Header locationHeader;
-    private Tomcat tomcat;
     private String passiveStsURL;
 
     private AuthenticatorClient logManger;
@@ -86,26 +85,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        if(tomcat != null){
-            tomcat.stop();
-            tomcat.destroy();
-            Thread.sleep(10000);
-        }
     }
-
-    @Test(alwaysRun = true, description = "Deploy PassiveSTSSampleApp")
-    public void testDeployPassiveSTSSampleApp() {
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples"
-                    + ISIntegrationTest.URL_SEPARATOR + "PassiveSTSSampleApp.war");
-            startTomcat(tomcat, PASSIVE_STS_SAMPLE_APP_NAME, resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("PassiveSTSSampleApp application deployment failed.", e);
-        }
-    }
-
 
     @Test(alwaysRun = true, description = "Add service provider")
     public void testAddSP() throws Exception {
@@ -166,8 +146,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
-            dependsOnMethods = {"testDeployPassiveSTSSampleApp", "testAddClaimConfiguration"})
-    public void testInvokePassiveSTSSampleApp() throws IOException, LifecycleException, InterruptedException {
+            dependsOnMethods = {"testAddClaimConfiguration"})
+    public void testInvokePassiveSTSSampleApp() throws IOException {
 
         HttpGet request = new HttpGet(PASSIVE_STS_SAMPLE_APP_URL);
         HttpResponse response = client.execute(request);
@@ -299,39 +279,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
         Assert.assertTrue(resultPage2.contains("Authentication Error!"), "Session hijacking is possible.");
         EntityUtils.consume(response.getEntity());
     }
-//    @Test(alwaysRun = true, description = "Test PassiveSTS Claims",
-//            dependsOnMethods = { "testSendLoginRequestPost" })
-//    public void testPassiveSTSClaims() {
-//
-//        Assert.assertTrue(resultPage.contains(GIVEN_NAME_CLAIM_URI), "Claim givenname is expected");
-//        Assert.assertTrue(resultPage.contains(adminUsername), "Claim value givenname is expected");
-//
-//        Assert.assertTrue(resultPage.contains(EMAIL_CLAIM_URI), "Claim email is expected");
-//        Assert.assertTrue(resultPage.contains(ADMIN_EMAIL), "Claim value email is expected");
-//    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
-    }
 
     private void setSystemProperties() {
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
@@ -367,7 +314,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private boolean requestMissingClaims (HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("consent.do") ? true : false;
+        return redirectUrl.contains("consent.do");
 
     }
 
