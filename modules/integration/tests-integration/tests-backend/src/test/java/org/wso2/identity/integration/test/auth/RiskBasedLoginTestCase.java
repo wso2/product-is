@@ -55,7 +55,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +64,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 
@@ -172,10 +170,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar");
         jarDestFile.delete();
         boolean deleted = deleteWebApp("sample-auth");
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.restartGracefully();
-
         deleted = deleted || deleteWebApp("sample-auth");
         Assert.assertTrue(deleted, "sample-auth webapp deletion failed.");
     }

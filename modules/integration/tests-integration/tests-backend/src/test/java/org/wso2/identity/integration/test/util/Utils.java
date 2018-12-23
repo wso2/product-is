@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.util;
 
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
@@ -73,6 +72,7 @@ public class Utils {
     private static final Log log = LogFactory.getLog(Utils.class);
 
     public static boolean nameExists(FlaggedName[] allNames, String inputName) {
+
         boolean exists = false;
 
         for (FlaggedName flaggedName : allNames) {
@@ -90,6 +90,7 @@ public class Utils {
     }
 
     public static String getResidentCarbonHome() {
+
         if (StringUtils.isEmpty(RESIDENT_CARBON_HOME)) {
             RESIDENT_CARBON_HOME = System.getProperty("carbon.home");
         }
@@ -97,6 +98,7 @@ public class Utils {
     }
 
     public static Tomcat getTomcat(Class testClass) {
+
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
         tomcat.setPort(CommonConstants.DEFAULT_TOMCAT_PORT);
@@ -122,14 +124,9 @@ public class Utils {
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
-    public static void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
     public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
+
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         post.addHeader("Referer", String.format(acsUrl, artifact));
@@ -257,9 +254,9 @@ public class Utils {
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
                                                       String referer, HttpClient httpClient, String
                                                               pastreCookie) throws Exception {
+
         String redirectUrl = getRedirectUrl(response);
         Map<String, String> queryParams = getQueryParams(redirectUrl);
-
 
         String sessionKey = queryParams.get("sessionDataKey");
         String mandatoryClaims = queryParams.get("mandatoryClaims");
@@ -332,6 +329,7 @@ public class Utils {
 
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
             artifact, HttpClient httpClient) throws IOException {
+
         Header[] headers = response.getAllHeaders();
         String url = "";
         for (Header header : headers) {
@@ -347,6 +345,7 @@ public class Utils {
     }
 
     public static String getRedirectUrl(HttpResponse response) {
+
         Header[] headers = response.getAllHeaders();
         String url = "";
         for (Header header : headers) {
@@ -369,6 +368,7 @@ public class Utils {
     }
 
     public static HttpResponse sendGetRequest(String url, String userAgent, HttpClient httpClient) throws Exception {
+
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", userAgent);
         return httpClient.execute(request);
@@ -376,6 +376,7 @@ public class Utils {
 
     public static HttpResponse sendECPPostRequest(String url, String userAgent, HttpClient httpClient,
                                                   String username, String password, String soapRequest) throws Exception {
+
         HttpPost request = new HttpPost(url);
         HttpResponse response;
         String auth = username + ":" + password;
@@ -390,6 +391,7 @@ public class Utils {
     }
 
     public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, TestUserMode userMode, String tenantDomainParam, String tenantDomain, HttpClient httpClient) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
@@ -405,6 +407,7 @@ public class Utils {
 
     public static String extractDataFromResponse(HttpResponse response, String key, int token)
             throws IOException {
+
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         String line;

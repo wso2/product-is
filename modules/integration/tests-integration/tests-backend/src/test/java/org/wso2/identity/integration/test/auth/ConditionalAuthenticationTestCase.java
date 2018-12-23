@@ -47,6 +47,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
+import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -82,6 +83,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private ServiceProvider serviceProvider;
     private HttpResponse response;
     private CookieStore cookieStore;
+    private TestDataHolder testDataHolder;
 
     private String initialCarbonHome;
 
@@ -90,6 +92,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testInit() throws Exception {
 
         super.init();
+        testDataHolder = TestDataHolder.getInstance();
         initialCarbonHome = System.getProperty("carbon.home");
         logManger = new AuthenticatorClient(backendURL);
         String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
@@ -101,7 +104,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        manager = new MultipleServersManager();
+        manager = testDataHolder.getManager();
 
         client = new DefaultHttpClient();
         cookieStore = new BasicCookieStore();
@@ -133,7 +136,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
         this.logManger.logOut();
         logManger = null;
-        manager.stopAllServers();
         //Restore carbon.home system property to initial value
         System.setProperty("carbon.home", initialCarbonHome);
     }
@@ -377,11 +379,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
     private void startSecondaryIS() throws Exception {
 
-        Map<String, String> startupParameters = new HashMap<>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(context, startupParameters);
+        AutomationContext context = testDataHolder.getAutomationContext();
         String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
                 .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
 
@@ -398,13 +396,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
                     configContext);
             samlSSOConfigServiceClient = new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie);
         }
-    }
-
-    private void startCarbonServer(AutomationContext context, Map<String, String> startupParameters) throws Exception {
-
-        CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
-                startupParameters);
-        manager.startServers(server);
     }
 
     private void createServiceProviderInSecondaryIS() throws Exception {

@@ -1,24 +1,22 @@
 /*
-*  Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.identity.integration.test.requestPathAuthenticator;
 
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -46,7 +44,6 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +65,6 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
 
     protected String adminUsername;
     protected String adminPassword;
-    private Tomcat tomcat;
     private AuthenticatorClient logManger;
     private ApplicationManagementServiceClient appMgtclient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -77,7 +73,9 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
     protected CloseableHttpClient client;
     protected String isURL;
 
-    @BeforeClass(alwaysRun = true) public void testInit() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+
         super.init();
 
         logManger = new AuthenticatorClient(backendURL);
@@ -92,22 +90,6 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
 
         client = HttpClientBuilder.create().build();
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
-
-        try {
-            tomcat = getTomcat();
-            URL travelocityResourceUrl = getClass()
-                    .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
-                            "travelocity.com.war");
-            URL avisResourceUrl = getClass()
-                    .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
-                            "avis.com.war");
-            tomcat.addWebapp(tomcat.getHost(), "/travelocity.com", travelocityResourceUrl.getPath());
-            tomcat.addWebapp(tomcat.getHost(), "/avis.com", avisResourceUrl.getPath());
-            tomcat.start();
-
-        } catch (Exception e) {
-            Assert.fail("travelocity.com application deployment failed.", e);
-        }
 
         ssoConfigServiceClient.addServiceProvider(createSAMLServiceProviderDTO(ISSUER_TRAVELOCITY_COM));
         ssoConfigServiceClient.addServiceProvider(createSAMLServiceProviderDTO(ISSUER_AVIS_COM));
@@ -125,17 +107,17 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
         Property attributeConsumerServiceIndexProp = new Property();
         attributeConsumerServiceIndexProp.setName("attrConsumServiceIndex");
         attributeConsumerServiceIndexProp.setValue("1239245949");
-        requestConfig.setProperties(new Property[] { attributeConsumerServiceIndexProp });
+        requestConfig.setProperties(new Property[]{attributeConsumerServiceIndexProp});
 
         inboundAuthenticationConfig
-                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[] { requestConfig });
+                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
 
         serviceProviderTravelocity.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         RequestPathAuthenticatorConfig requestPathAuthenticatorConfig = new RequestPathAuthenticatorConfig();
         requestPathAuthenticatorConfig.setName("BasicAuthRequestPathAuthenticator");
 
         serviceProviderTravelocity.setRequestPathAuthenticatorConfigs(
-                new RequestPathAuthenticatorConfig[] { requestPathAuthenticatorConfig });
+                new RequestPathAuthenticatorConfig[]{requestPathAuthenticatorConfig});
         appMgtclient.updateApplicationData(serviceProviderTravelocity);
         serviceProviderTravelocity = appMgtclient.getApplication(SERVICE_PROVIDER_NAME_TRAVELOCITY);
 
@@ -153,28 +135,26 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
         attributeConsumerServiceIndexProp = new Property();
         attributeConsumerServiceIndexProp.setName("attrConsumServiceIndex");
         attributeConsumerServiceIndexProp.setValue("1239245949");
-        requestConfig.setProperties(new Property[] { attributeConsumerServiceIndexProp });
+        requestConfig.setProperties(new Property[]{attributeConsumerServiceIndexProp});
 
         inboundAuthenticationConfig
-                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[] { requestConfig });
+                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
 
         serviceProviderAvis.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         appMgtclient.updateApplicationData(serviceProviderAvis);
         serviceProviderAvis = appMgtclient.getApplication(SERVICE_PROVIDER_NAME_AVIS);
     }
 
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+
         appMgtclient.deleteApplication(serviceProviderTravelocity.getApplicationName());
         appMgtclient.deleteApplication(serviceProviderAvis.getApplicationName());
-        if (tomcat != null) {
-            tomcat.stop();
-            tomcat.destroy();
-            Thread.sleep(10000);
-        }
     }
 
     @Test(alwaysRun = true, description = "Request path authenticator login success")
     public void testLoginSuccessRequestPath() throws Exception {
+
         HttpPost request = new HttpPost(String.format(SAMPLE_APP_URL, ISSUER_TRAVELOCITY_COM) + "/samlsso" +
                 "?SAML2.HTTPBinding=HTTP-POST");
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -233,8 +213,9 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Basic auth authenticator login success when user is authenticated with " +
-            "request path", dependsOnMethods = { "testLoginSuccessRequestPath" })
+            "request path", dependsOnMethods = {"testLoginSuccessRequestPath"})
     public void testLoginSuccessBasicAuth() throws Exception {
+
         HttpPost request = new HttpPost(String.format(SAMPLE_APP_URL, ISSUER_AVIS_COM) + "/samlsso" +
                 "?SAML2.HTTPBinding=HTTP-POST");
         HttpResponse response = client.execute(request);
@@ -282,28 +263,12 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
     }
 
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
-    }
-
     private SAMLSSOServiceProviderDTO createSAMLServiceProviderDTO(String issuer) {
+
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(issuer);
         samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]
-                { String.format(SAMPLE_APP_URL, issuer) + "/home.jsp" });
+                {String.format(SAMPLE_APP_URL, issuer) + "/home.jsp"});
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(SAMPLE_APP_URL, issuer) +
                 "/home.jsp");
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex("1239245949");
