@@ -19,7 +19,6 @@ package org.wso2.identity.integration.test.saml;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,11 +33,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
@@ -54,7 +53,6 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,7 +86,6 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
 
     private ServerConfigurationManager serverConfigurationManager;
     private SPConfig config;
-    private Tomcat tomcatServer;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
@@ -258,15 +255,6 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
         createLocalAndOutBoundAuthenticator();
         createApplication();
         ssoConfigServiceClient.addServiceProvider(getSsoServiceProviderDTO());
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApplication
-                ().getArtifact() + "" + ".war");
-        Utils.startTomcat(tomcatServer, "/" + config.getApplication().getArtifact(), resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -278,11 +266,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
         resetISConfiguration();
-        Thread.sleep(10000);
     }
 
     @Test(description = "Test whether error code included in redirect URL with DefaultAuthenticator", groups = "wso2" +
@@ -461,7 +445,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
 
         log.info("Replacing application-authentication.xml setting showAuthFailureReason true");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         File applicationXML = new File(carbonHome + File.separator + "repository" + File.separator + "conf" + File
                 .separator + "identity" + File.separator + "application-authentication.xml");
         File configuredApplicationXML = new File(getISResourceLocation() + File.separator + "saml" + File.separator +

@@ -115,16 +115,19 @@ public class Utility {
 
     public static String setMySQLDBName(Connection conn) throws SQLException {
 
-        PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
-        ResultSet rs = ps.executeQuery();
-        String name = null;
-        if (rs.next()) {
-            name = rs.getString(1);
-            ps = conn.prepareStatement("SET @databasename = ?;");
-            ps.setString(1, name);
-            ps.execute();
+        try (PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;")) {
+            try (ResultSet rs = ps.executeQuery();) {
+                String name = null;
+                if (rs.next()) {
+                    name = rs.getString(1);
+                    try (PreparedStatement ps1 = conn.prepareStatement("SET @databasename = ?;")) {
+                        ps1.setString(1, name);
+                        ps1.execute();
+                    }
+                }
+                return name;
+            }
         }
-        return name;
     }
 
     /**
@@ -163,7 +166,6 @@ public class Utility {
             }
         } catch (UserStoreException e) {
             String msg = "Error while retrieving the tenants.";
-            log.error(msg, e);
             throw new MigrationClientException(msg, e);
         }
         return tenants;
@@ -195,7 +197,6 @@ public class Utility {
         } catch (UserStoreException e) {
             String msg = "Error while getting tenant range (" + startingTenantID + " - " + endingTenantID
                     + ") specified.";
-            log.error(msg, e);
             throw new MigrationClientException(msg, e);
         }
         return tenantsRange;

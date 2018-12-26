@@ -187,10 +187,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private void resetISConfiguration() throws Exception {
         log.info("Replacing identity.xml with default configurations");
-        File defaultIdentityXml = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXml,
-                identityXML, true);
-        serverConfigurationManager.restartForcefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
 

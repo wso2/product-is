@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m13-SNAPSHOT</version>
+        <version>5.8.0-m15-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -42,11 +42,6 @@
         <dependency>
             <groupId>org.wso2.carbon.privacy</groupId>
             <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.wso2.carbon.privacy</groupId>
-          <artifactId>org.wso2.carbon.privacy.forgetme.rest</artifactId>
-          <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>

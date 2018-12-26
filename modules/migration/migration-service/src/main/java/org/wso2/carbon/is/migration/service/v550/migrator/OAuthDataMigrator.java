@@ -16,6 +16,7 @@
 package org.wso2.carbon.is.migration.service.v550.migrator;
 
 import org.apache.commons.io.Charsets;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.util.CryptoException;
@@ -106,15 +107,15 @@ public class OAuthDataMigrator extends Migrator {
         log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 access token table.");
         List<OauthTokenInfo> oauthTokenList;
         try (Connection connection = getDataSource().getConnection()) {
-            oauthTokenList = TokenDAO.getInstance().getAllAccessTokens(connection);
+            oauthTokenList = TokenDAO.getInstance().getAllAccessTokensWithHash(connection);
         }
         try {
             //migrating RSA encrypted tokens to OAEP encryption
-            if(!isTokenHashColumnsAvailable && OAuth2Util.isEncryptionWithTransformationEnabled()) {
+            if (OAuth2Util.isEncryptionWithTransformationEnabled()) {
                 migrateOldEncryptedTokens(oauthTokenList);
             }
             //migrating plaintext tokens with hashed tokens.
-            if(!isTokenHashColumnsAvailable && !OAuth2Util.isTokenEncryptionEnabled()){
+            if (!OAuth2Util.isTokenEncryptionEnabled()) {
                 migratePlainTextTokens(oauthTokenList);
             }
         } catch (IdentityOAuth2Exception e) {
@@ -136,7 +137,7 @@ public class OAuthDataMigrator extends Migrator {
             }
 
         } catch (CryptoException e) {
-            e.printStackTrace();
+            throw new MigrationClientException("Error occurred while re-encrypting tokens.", e);
         } catch (IdentityOAuth2Exception e) {
             throw new IdentityOAuth2Exception("Error while migration old encrypted tokens",e);
         }
@@ -161,24 +162,24 @@ public class OAuthDataMigrator extends Migrator {
         } catch (IdentityOAuth2Exception e) {
             throw new IdentityOAuth2Exception("Error while migration plain text tokens", e);
         }
-
     }
 
 
     private List<OauthTokenInfo> transformFromOldToNewEncryption(List<OauthTokenInfo> oauthTokenList)
             throws CryptoException, IdentityOAuth2Exception {
+
         List<OauthTokenInfo> updatedOauthTokenList = new ArrayList<>();
 
-        for(OauthTokenInfo oauthTokenInfo : oauthTokenList){
-            if(!CryptoUtil.getDefaultCryptoUtil().base64DecodeAndIsSelfContainedCipherText(oauthTokenInfo
-                    .getAccessToken())){
+        for (OauthTokenInfo oauthTokenInfo : oauthTokenList) {
+            String accessToken = oauthTokenInfo.getAccessToken();
+            String refreshToken = oauthTokenInfo.getRefreshToken();
+            if (!isBase64DecodeAndIsSelfContainedCipherText(accessToken)) {
                 byte[] decryptedAccessToken = CryptoUtil.getDefaultCryptoUtil()
-                        .base64DecodeAndDecrypt(oauthTokenInfo.getAccessToken(), "RSA");
-                String newEncryptedAccesTOken = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode
+                        .base64DecodeAndDecrypt(accessToken, "RSA");
+                String newEncryptedAccessToken = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode
                         (decryptedAccessToken);
                 byte[] decryptedRefreshToken = null;
                 String newEncryptedRefreshToken = null;
-                String refreshToken = oauthTokenInfo.getRefreshToken();
                 if (refreshToken != null) {
                     decryptedRefreshToken = CryptoUtil.getDefaultCryptoUtil()
                             .base64DecodeAndDecrypt(refreshToken, "RSA");
@@ -186,7 +187,7 @@ public class OAuthDataMigrator extends Migrator {
                             .encryptAndBase64Encode(decryptedRefreshToken);
                 }
                 TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
-                String accessTokenHash = null;
+                String accessTokenHash;
                 String refreshTokenHash = null;
 
                 accessTokenHash = tokenPersistenceProcessor
@@ -196,8 +197,38 @@ public class OAuthDataMigrator extends Migrator {
                             .getProcessedRefreshToken(new String(decryptedRefreshToken, Charsets.UTF_8));
                 }
 
-                OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(newEncryptedAccesTOken,newEncryptedRefreshToken,
-                        oauthTokenInfo.getTokenId()));
+                OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(newEncryptedAccessToken,
+                                                                           newEncryptedRefreshToken,
+                                                                           oauthTokenInfo.getTokenId()));
+                updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
+                if(refreshToken != null) {
+                    updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
+                }
+                updatedOauthTokenList.add(updatedOauthTokenInfo);
+            } else if (isBase64DecodeAndIsSelfContainedCipherText(accessToken) && StringUtils
+                    .isBlank(oauthTokenInfo.getAccessTokenHash())) {
+
+                byte[] decryptedAccessToken = CryptoUtil.getDefaultCryptoUtil()
+                                                        .base64DecodeAndDecrypt(accessToken);
+                byte[] decryptedRefreshToken = null;
+                if (refreshToken != null) {
+                    decryptedRefreshToken = CryptoUtil.getDefaultCryptoUtil()
+                                                      .base64DecodeAndDecrypt(refreshToken);
+                }
+                TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+                String accessTokenHash;
+                String refreshTokenHash = null;
+
+                accessTokenHash = tokenPersistenceProcessor
+                        .getProcessedAccessTokenIdentifier(new String(decryptedAccessToken, Charsets.UTF_8));
+                if (refreshToken != null) {
+                    refreshTokenHash = tokenPersistenceProcessor
+                            .getProcessedRefreshToken(new String(decryptedRefreshToken, Charsets.UTF_8));
+                }
+
+                OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(accessToken,
+                                                                           refreshToken,
+                                                                           oauthTokenInfo.getTokenId()));
                 updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
                 if(refreshToken != null) {
                     updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
@@ -209,26 +240,32 @@ public class OAuthDataMigrator extends Migrator {
         return updatedOauthTokenList;
     }
 
+    private boolean isBase64DecodeAndIsSelfContainedCipherText(String text) throws CryptoException {
+
+        return CryptoUtil.getDefaultCryptoUtil().base64DecodeAndIsSelfContainedCipherText(text);
+    }
+
     private List<OauthTokenInfo> generateTokenHashValues(List<OauthTokenInfo> oauthTokenList)
             throws IdentityOAuth2Exception {
 
         List<OauthTokenInfo> updatedOauthTokenList = new ArrayList<>();
 
         for (OauthTokenInfo oauthTokenInfo : oauthTokenList) {
-
-            String accessToken = oauthTokenInfo.getAccessToken();
-            String refreshToken = oauthTokenInfo.getRefreshToken();
-            TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
-            String accessTokenHash = tokenPersistenceProcessor.getProcessedAccessTokenIdentifier(accessToken);
-            String refreshTokenHash = null;
-            if(refreshToken != null) {
-                refreshTokenHash = tokenPersistenceProcessor.getProcessedRefreshToken(refreshToken);
+            if (StringUtils.isBlank(oauthTokenInfo.getAccessTokenHash())) {
+                String accessToken = oauthTokenInfo.getAccessToken();
+                String refreshToken = oauthTokenInfo.getRefreshToken();
+                TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+                String accessTokenHash = tokenPersistenceProcessor.getProcessedAccessTokenIdentifier(accessToken);
+                String refreshTokenHash = null;
+                if (refreshToken != null) {
+                    refreshTokenHash = tokenPersistenceProcessor.getProcessedRefreshToken(refreshToken);
+                }
+                OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(accessToken, refreshToken,
+                                                                           oauthTokenInfo.getTokenId()));
+                updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
+                updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
+                updatedOauthTokenList.add(updatedOauthTokenInfo);
             }
-            OauthTokenInfo updatedOauthTokenInfo = (new OauthTokenInfo(accessToken, refreshToken,
-                    oauthTokenInfo.getTokenId()));
-            updatedOauthTokenInfo.setAccessTokenHash(accessTokenHash);
-            updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
-            updatedOauthTokenList.add(updatedOauthTokenInfo);
         }
         return updatedOauthTokenList;
     }
@@ -244,15 +281,15 @@ public class OAuthDataMigrator extends Migrator {
         log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 authorization code table.");
         List<AuthzCodeInfo> authzCodeInfoList;
         try (Connection connection = getDataSource().getConnection()) {
-            authzCodeInfoList = AuthzCodeDAO.getInstance().getAllAuthzCodes(connection);
+            authzCodeInfoList = AuthzCodeDAO.getInstance().getAllAuthzCodesWithHashes(connection);
         }
         try {
             //migrating RSA encrypted authz codes to OAEP encryption
-            if (!isAuthzCodeHashColumnAvailable && OAuth2Util.isEncryptionWithTransformationEnabled()) {
+            if (OAuth2Util.isEncryptionWithTransformationEnabled()) {
                 migrateOldEncryptedAuthzCodes(authzCodeInfoList);
             }
             //migrating plaintext authz codes with hashed authz codes.
-            if(!isAuthzCodeHashColumnAvailable && !OAuth2Util.isTokenEncryptionEnabled()){
+            if (!OAuth2Util.isTokenEncryptionEnabled()) {
                 migratePlainTextAuthzCodes(authzCodeInfoList);
             }
         } catch (IdentityOAuth2Exception e) {
@@ -314,19 +351,31 @@ public class OAuthDataMigrator extends Migrator {
 
         List<AuthzCodeInfo> updatedAuthzCodeInfoList = new ArrayList<>();
         for (AuthzCodeInfo authzCodeInfo : authzCodeInfoList) {
-            if (!CryptoUtil.getDefaultCryptoUtil()
-                    .base64DecodeAndIsSelfContainedCipherText(authzCodeInfo.getAuthorizationCode())) {
+            if (!isBase64DecodeAndIsSelfContainedCipherText(authzCodeInfo.getAuthorizationCode())) {
                 byte[] decryptedAuthzCode = CryptoUtil.getDefaultCryptoUtil()
                         .base64DecodeAndDecrypt(authzCodeInfo.getAuthorizationCode(), "RSA");
                 String newEncryptedAuthzCode = CryptoUtil.getDefaultCryptoUtil()
                         .encryptAndBase64Encode(decryptedAuthzCode);
                 TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
-                String authzCodeHash = null;
+                String authzCodeHash;
                 authzCodeHash = tokenPersistenceProcessor
                         .getProcessedAuthzCode(new String(decryptedAuthzCode, Charsets.UTF_8));
 
                 AuthzCodeInfo updatedAuthzCodeInfo = (new AuthzCodeInfo(newEncryptedAuthzCode,
                         authzCodeInfo.getCodeId()));
+                updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
+                updatedAuthzCodeInfoList.add(updatedAuthzCodeInfo);
+            } else if (isBase64DecodeAndIsSelfContainedCipherText(authzCodeInfo.getAuthorizationCode()) &&
+                       StringUtils.isBlank(authzCodeInfo.getAuthorizationCodeHash())) {
+                byte[] decryptedAuthzCode = CryptoUtil.getDefaultCryptoUtil()
+                                                      .base64DecodeAndDecrypt(authzCodeInfo.getAuthorizationCode());
+                TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+                String authzCodeHash;
+                authzCodeHash = tokenPersistenceProcessor
+                        .getProcessedAuthzCode(new String(decryptedAuthzCode, Charsets.UTF_8));
+
+                AuthzCodeInfo updatedAuthzCodeInfo = (new AuthzCodeInfo(authzCodeInfo.getAuthorizationCode(),
+                                                                        authzCodeInfo.getCodeId()));
                 updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
                 updatedAuthzCodeInfoList.add(updatedAuthzCodeInfo);
             }
@@ -340,13 +389,14 @@ public class OAuthDataMigrator extends Migrator {
         List<AuthzCodeInfo> updatedAuthzCodeInfoList = new ArrayList<>();
         for (AuthzCodeInfo authzCodeInfo : authzCodeInfoList) {
 
-            String authorizationCode = authzCodeInfo.getAuthorizationCode();
-            TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
-            String authzCodeHash = tokenPersistenceProcessor.getProcessedAuthzCode(authorizationCode);
-            AuthzCodeInfo updatedAuthzCodeInfo = new AuthzCodeInfo(authorizationCode, authzCodeInfo.getCodeId());
-            updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
-            updatedAuthzCodeInfoList.add(updatedAuthzCodeInfo);
-
+            if (StringUtils.isBlank(authzCodeInfo.getAuthorizationCodeHash())) {
+                String authorizationCode = authzCodeInfo.getAuthorizationCode();
+                TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+                String authzCodeHash = tokenPersistenceProcessor.getProcessedAuthzCode(authorizationCode);
+                AuthzCodeInfo updatedAuthzCodeInfo = new AuthzCodeInfo(authorizationCode, authzCodeInfo.getCodeId());
+                updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
+                updatedAuthzCodeInfoList.add(updatedAuthzCodeInfo);
+            }
         }
         return updatedAuthzCodeInfoList;
     }
@@ -361,7 +411,7 @@ public class OAuthDataMigrator extends Migrator {
         log.info(Constant.MIGRATION_LOG + "Migration starting on OAuth2 consumer apps table.");
         try {
             try {
-                if (!isClientSecretHashColumnsAvailable && OAuth2Util.isEncryptionWithTransformationEnabled()) {
+                if (OAuth2Util.isEncryptionWithTransformationEnabled()) {
                     List<ClientSecretInfo> clientSecretInfoList;
                     try (Connection connection = getDataSource().getConnection()) {
                         clientSecretInfoList = OAuthDAO.getInstance().getAllClientSecrets(connection);

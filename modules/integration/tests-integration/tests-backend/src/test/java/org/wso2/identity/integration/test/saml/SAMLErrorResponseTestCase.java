@@ -20,9 +20,6 @@ package org.wso2.identity.integration.test.saml;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -34,6 +31,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -61,10 +59,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertTrue;
-import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 
 public class SAMLErrorResponseTestCase extends ISIntegrationTest {
@@ -93,8 +89,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    private HttpClient httpClient;
-    private Tomcat tomcatServer;
+    private CloseableHttpClient httpClient;
     private CookieStore cookieStore = new BasicCookieStore();
 
     @BeforeClass(alwaysRun = true)
@@ -109,14 +104,6 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         createApplication();
-
-        // Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = getTomcat();
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + ARTIFACT_ID + ".war");
-        startTomcat(tomcatServer, "/" + ARTIFACT_ID, resourceUrl.getPath());
     }
 
     @AfterClass(alwaysRun = true)
@@ -126,11 +113,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
-        httpClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
+        httpClient.close();
     }
 
     /**
@@ -215,24 +198,6 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 
-    private Tomcat getTomcat() {
-
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(DEFAULT_TOMCAT_PORT);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-
-        tomcat.setHost(stdHost);
-        setSystemProperties();
-        return tomcat;
-    }
-
     private void setSystemProperties() {
 
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
@@ -240,12 +205,6 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         System.setProperty(JAVAX_NET_SSL_TRUSTORE, resourceUrl.getPath());
         System.setProperty(JAVAX_NET_SSL_TRUSTORE_PASSWORD, "wso2carbon");
         System.setProperty(JAVAX_NET_SSL_TRUSTORE_TYPE, "JKS");
-    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
-
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
     }
 
     private HttpResponse sendSAMLMessage(String url, Map<String, String> parameters) throws Exception {

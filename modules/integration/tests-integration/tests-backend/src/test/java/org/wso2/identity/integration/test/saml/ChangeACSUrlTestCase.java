@@ -24,15 +24,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
@@ -42,17 +42,14 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,23 +94,11 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, false);
+                applicationAuthenticationXml, true);
 
         serverConfigurationManager.restartGracefully();
 
         super.initTest();
-
-        Map<String, String> startupParameters = new HashMap<String, String>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(PORT_OFFSET_1, context, startupParameters);
-
-        super.startTomcat(TOMCAT_8490);
-
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "travelocity.com.war");
-        super.addWebAppToTomcat(TOMCAT_8490, "/travelocity.com", resourceUrl.getPath());
-
 
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
                 .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
@@ -167,26 +152,27 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     @Test(priority = 1, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testChangeACSUrl() throws Exception {
 
-        HttpClient client = getHttpClient();
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            String sessionId = sendSAMLRequestToPrimaryIS(client);
+            Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
 
-        String sessionId = sendSAMLRequestToPrimaryIS(client);
-        Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
+            String redirectURL = authenticateWithSecondaryIS(client, sessionId);
+            Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
 
-        String redirectURL = authenticateWithSecondaryIS(client, sessionId);
-        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after login to secondary IS");
+            Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
+            Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
+            Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
 
-        Map<String, String> responseParameters = getSAMLResponseFromSecondaryIS(client, redirectURL);
-        Assert.assertNotNull(responseParameters.get("SAMLResponse"), "Unable to acquire 'SAMLResponse' value");
-        Assert.assertNotNull(responseParameters.get("RelayState"), "Unable to acquire 'RelayState' value");
+            redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
+            Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
 
-        redirectURL = sendSAMLResponseToPrimaryIS(client, responseParameters);
-        Assert.assertNotNull(redirectURL, "Unable to acquire redirect url after sending SAML response to primary IS");
+            String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
+            Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
-        String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectURL);
-        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
+            boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
+            Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
+        }
 
-        boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
-        Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
     }
 
     @AfterClass(alwaysRun = true)
@@ -198,22 +184,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        super.stopCarbonServer(PORT_OFFSET_1);
-        super.stopTomcat(TOMCAT_8490);
-
-        super.stopHttpClient();
-
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator +
-                "application-authentication-default.xml");
-
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, false);
-
-        serverConfigurationManager.restartGracefully();
-
+        serverConfigurationManager.restoreToLastConfiguration(true);
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {

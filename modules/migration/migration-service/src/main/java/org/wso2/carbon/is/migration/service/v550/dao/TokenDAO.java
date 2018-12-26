@@ -32,6 +32,7 @@ import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AC
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_MYSQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ACCESS_TOKEN_TABLE_ORACLE;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_TOKENS;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_TOKENS_WITH_HASHES;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_ENCRYPTED_ACCESS_TOKEN;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.UPDATE_PLAIN_TEXT_ACCESS_TOKEN;
 
@@ -101,7 +102,6 @@ public class TokenDAO {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_REFRESH_TOKEN_HASH_COLUMN)) {
             preparedStatement.executeUpdate();
-            //connection.commit();
         }
     }
 
@@ -116,6 +116,33 @@ public class TokenDAO {
             connection.commit();
         }
         return oauthTokenInfos;
+    }
+
+
+    /**
+     * Get all tokens and token hashes from DB.
+     *
+     * @param connection JDBC connection.
+     * @return List of access tokens.
+     * @throws SQLException If an error occurs while retrieving tokens.
+     */
+    public List<OauthTokenInfo> getAllAccessTokensWithHash(Connection connection) throws SQLException {
+
+        List<OauthTokenInfo> oauthTokenInfoList = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(RETRIEVE_ALL_TOKENS_WITH_HASHES);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                OauthTokenInfo tokenInfo = new OauthTokenInfo(resultSet.getString("ACCESS_TOKEN"),
+                                                              resultSet.getString("REFRESH_TOKEN"),
+                                                              resultSet.getString("TOKEN_ID"));
+                tokenInfo.setAccessTokenHash(resultSet.getString("ACCESS_TOKEN_HASH"));
+                tokenInfo.setRefreshTokenhash(resultSet.getString("REFRESH_TOKEN_HASH"));
+                oauthTokenInfoList.add(tokenInfo);
+            }
+            connection.commit();
+        }
+        return oauthTokenInfoList;
     }
 
     public void updateNewEncryptedTokens(List<OauthTokenInfo> updatedOauthTokenList,Connection connection) throws SQLException {

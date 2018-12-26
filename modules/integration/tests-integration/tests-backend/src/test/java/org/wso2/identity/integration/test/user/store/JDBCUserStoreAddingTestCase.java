@@ -160,19 +160,6 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
         authenticatorClient.logOut();
     }
 
-//    @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
-//    public void disableUserStore() throws Exception {
-//        propertyDTOs[6].setValue("true");
-//        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId,
-//                                                                                         propertyDTOs);
-//        userStoreConfigAdminServiceClient.updateUserStore(userStoreDTO);
-//        Thread.sleep(5000);
-//        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer
-//                .getInstance().getHosts().get("default"));
-//        Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
-//        authenticatorClient.logOut();
-//    }
-
     @Test(groups = "wso2.is", dependsOnMethods = "testAddJDBCUserStore")
     public void testUserRoleCacheWithSecondary() throws Exception {
 
