@@ -1,9 +1,12 @@
-# 2.1 Applications can be create through APIs
+# 2.1 On-boarding and Managing an Application. 
 
 ## Business use-case narrative
-An application needs to be configured in Identity server to support Single sign on. This configuration can be done 
-via API calls. 
+
+
+## Persona
+Developer
 
 ## Sub-Scenarios
-- [2.1.1 DCR/DCRM](2.1.1-dcr-api/README.md)
-- [2.1.2 SOAP APIs](2.1.2-soap-apis/README.md)
+- [2.1.1 Create an Application Using SOAP APIs](2.1.1-dcr-api/README.md)
+- [2.1.2 Manage Applications Using SOAP APIs](2.1.2-soap-apis/README.md)
+
