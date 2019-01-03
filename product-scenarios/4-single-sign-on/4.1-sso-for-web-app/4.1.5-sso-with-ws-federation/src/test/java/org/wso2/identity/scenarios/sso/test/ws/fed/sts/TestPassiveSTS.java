@@ -130,7 +130,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         super.deleteUser(config, remoteUSMServiceClient);
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.1")
+    @Test(alwaysRun = true, description = "4.1.5.1")
     public void testAddSP() throws Exception {
 
         serviceProvider = new ServiceProvider();
@@ -141,7 +141,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         Assert.assertNotNull(serviceProvider, "Service provider registration failed.");
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.2",
+    @Test(alwaysRun = true, description = "4.1.5.2",
             dependsOnMethods = {"testAddSP"})
     public void testUpdateSP() throws Exception {
 
@@ -172,7 +172,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
                 0, "Fail to update service provider with passiveSTS configs");
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.3",
+    @Test(alwaysRun = true, description = "4.1.5.3",
             dependsOnMethods = {"testUpdateSP"})
     public void testAddClaimConfiguration() throws Exception {
 
@@ -188,7 +188,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
                 EMAIL_CLAIM_URI, "Failed update email claim uri");
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.4",
+    @Test(alwaysRun = true, description = "4.1.5.4",
             dependsOnMethods = {"testAddClaimConfiguration"})
     public void testInvokePassiveSTSSampleApp() throws IOException, URISyntaxException {
 
@@ -206,7 +206,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.5", dependsOnMethods =
+    @Test(alwaysRun = true, description = "4.1.5.5", dependsOnMethods =
             {"testInvokePassiveSTSSampleApp"})
     public void testSendLoginRequestPost() throws Exception {
 
@@ -250,7 +250,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
                 " " + this.config);
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.6", dependsOnMethods = {"testSendLoginRequestPost"})
+    @Test(alwaysRun = true, description = "4.1.5.6", dependsOnMethods = {"testSendLoginRequestPost"})
     public void testPassiveSAML2Assertion() throws Exception {
         String passiveParams = "?wa=wsignin1.0&wreply=" + passiveStsSampleAppURL + "&wtrealm=PassiveSTSSampleApp";
         String wreqParam = "&wreq=%3Cwst%3ARequestSecurityToken+xmlns%3Awst%3D%22http%3A%2F%2Fdocs.oasis-open.org"
@@ -275,7 +275,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         return responseString;
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.7",
+    @Test(alwaysRun = true, description = "4.1.5.7",
             dependsOnMethods = {"testPassiveSAML2Assertion"})
     public void testPassiveSAML2AssertionWithoutWReply() throws Exception {
         String passiveParams = "?wa=wsignin1.0&wtrealm=PassiveSTSSampleApp";
@@ -289,7 +289,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
                 "No SAML2 Assertion found for the SAML2 request without WReply in passive-sts request.");
     }
 
-    @Test(alwaysRun = true, description = "2.1.1.3.8", dependsOnMethods = {
+    @Test(alwaysRun = true, description = "4.1.5.8", dependsOnMethods = {
             "testPassiveSAML2AssertionWithoutWReply"})
     public void testPassiveSAML2AssertionForInvalidWReply() throws Exception {
 
