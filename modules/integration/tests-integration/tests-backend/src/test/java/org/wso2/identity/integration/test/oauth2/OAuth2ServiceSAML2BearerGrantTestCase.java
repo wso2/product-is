@@ -16,7 +16,6 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -49,11 +48,9 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -81,7 +78,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
 
-    private Tomcat tomcat;
     private CloseableHttpClient client;
 
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -93,7 +89,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        deployTravelocity();
 
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
@@ -112,9 +107,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         deleteApplication();
         removeOAuthApplicationData();
-
-        tomcat.stop();
-        tomcat.destroy();
     }
 
     @Test

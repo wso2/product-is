@@ -17,9 +17,6 @@
 */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -455,55 +452,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public void removeOAuthApplicationData() throws Exception {
 		adminClient.removeOAuthApplicationData(consumerKey);
-	}
-
-	/**
-	 * Start Tomcat server instance
-	 *
-	 * @param tomcat
-	 *            - Tomcat Instance
-	 * @param webAppUrl
-	 *            - Web Application URL
-	 * @param webAppPath
-	 *            - Application war file path
-	 * @throws LifecycleException
-	 */
-	public void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
-		tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-		tomcat.start();
-	}
-
-	/**
-	 * Stop
-	 *
-	 * @param tomcat
-	 * @throws LifecycleException
-	 */
-	public void stopTomcat(Tomcat tomcat) throws LifecycleException {
-		tomcat.stop();
-		tomcat.destroy();
-	}
-
-	/**
-	 * Create Tomcat server instance
-	 *
-	 * @return tomcat instance
-	 */
-	public Tomcat getTomcat() {
-		Tomcat tomcat = new Tomcat();
-		tomcat.getService().setContainer(tomcat.getEngine());
-		tomcat.setPort(TOMCAT_PORT);
-		tomcat.setBaseDir("");
-
-		StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-		stdHost.setAppBase("");
-		stdHost.setAutoDeploy(true);
-		stdHost.setDeployOnStartup(true);
-		stdHost.setUnpackWARs(true);
-		tomcat.setHost(stdHost);
-
-		return tomcat;
 	}
 
     /**

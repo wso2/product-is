@@ -3,8 +3,8 @@ package org.wso2.identity.integration.test.scim2;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 
@@ -31,7 +31,6 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String DISPLAY_ATTRIBUTE = "display";
     public static final String MEMBERS_ATTRIBUTE = "members";
 
-    private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeTest(alwaysRun = true)
@@ -48,26 +47,22 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
 
     private void changeISConfiguration() throws Exception {
 
-        String carbonHome = CarbonUtils.getCarbonHome();
-        identityXML = new File(carbonHome + File.separator
+        String carbonHome = Utils.getResidentCarbonHome();
+        File identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
                 ".xml");
-        File configuredIdentityXML = new File(getISResourceLocation()
-                + File.separator + "scim2" + File.separator + "me-unsecured-identity.xml");
+        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "scim2" + File.separator +
+                "me-unsecured-identity.xml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartForcefully();
     }
 
     private void resetISConfiguration() throws Exception {
         log.info("Replacing identity.xml with default configurations");
 
-        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
 }

@@ -112,9 +112,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         initApplications();
         createApplications();
 
-        startTomcat();
-        deployApplications();
-
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
     }
@@ -124,8 +121,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         deleteUser(user);
         deleteApplications();
-
-        stopTomcat();
 
         appMgtclient = null;
         remoteUSMServiceClient = null;

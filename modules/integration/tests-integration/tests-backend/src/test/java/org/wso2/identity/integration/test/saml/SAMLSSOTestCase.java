@@ -102,7 +102,6 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private HttpClient httpClient;
     private SAMLConfig config;
-    private Tomcat tomcatServer;
 
     private String resultPage;
 
@@ -269,14 +268,6 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         createUser();
         createApplication();
 
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + config.getApp().getArtifact() + ".war");
-        Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -288,10 +279,6 @@ public class SAMLSSOTestCase extends ISIntegrationTest {
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

@@ -56,7 +56,6 @@ public class DBSeperationTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
-        super.init();
 
         serverConfDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf";
         artifactsDir = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" + File
@@ -76,13 +75,14 @@ public class DBSeperationTestCase extends ISIntegrationTest {
         registryXml = new File(serverConfDir + File.separator + "registry.xml");
         File registryXmlToCopy = new File(artifactsDir + File.separator + "registry-dbseperated.xml");
 
+
+        super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(masterDatasourcesXmlToCopy, masterDatasourceXml,
                 true);
         serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy, identityXml, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(userMgtXmlToCopy, userMgtXml, true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy, registryXml,
-                true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy, registryXml, true);
         serverConfigurationManager.restartGracefully();
 
         super.init();
@@ -97,18 +97,7 @@ public class DBSeperationTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        File masterDatasourcesXmlToCopy = new File(artifactsDir + File.separator + "master-datasources-default.xml");
-        File identityXmlToCopy = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-        File userMgtXmlToCopy = new File(artifactsDir + File.separator + "user-mgt-default.xml");
-        File registryXmlToCopy = new File(artifactsDir + File.separator + "registry-default.xml");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(masterDatasourcesXmlToCopy, masterDatasourceXml,
-                true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy, identityXml, true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(userMgtXmlToCopy, userMgtXml, true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy, registryXml,
-                true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(alwaysRun = true, description = "Testing update Identity Provider")

@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.openid;
 
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,18 +32,23 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +73,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private HttpClient client;
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
-    private Tomcat tomcatServer;
 
     @Factory(dataProvider = "openIdConfigBeanProvider")
     public OpenIDSSOTestCase(OpenIDUtils.OpenIDConfig configBean) {
@@ -91,7 +93,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        startTomcat();
     }
 
     @AfterClass(alwaysRun = true)
@@ -101,7 +102,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = null;
-        stopTomcat();
     }
 
     @BeforeMethod
@@ -455,7 +455,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private void changeISConfiguration() throws Exception {
         log.info("Replacing identity.xml with OpenIDSkipUserConsent property set to true");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" +File.separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation()

@@ -20,9 +20,6 @@ package org.wso2.identity.integration.test.saml;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -59,7 +56,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +99,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private String artifact = "travelocity.com-registrymount";
 
     private HttpClient httpClient;
-    private Tomcat tomcatServer;
 
     private File registryXml;
 
@@ -165,14 +160,10 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         applicationManagementServiceClient =
                 new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
         deleteApplication();
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         httpClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is")
@@ -208,29 +199,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + artifact, e);
         }
-    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
     }
 
     private String extractDataFromResponse(HttpResponse response, String key, int token)

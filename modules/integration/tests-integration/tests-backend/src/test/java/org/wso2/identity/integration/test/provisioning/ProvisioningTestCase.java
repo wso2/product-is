@@ -51,6 +51,7 @@ import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
@@ -70,6 +71,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, AutomationContext> automationContextMap;
+    private TestDataHolder testDataHolder;
 
     private String scimUserId = null;
     String scim_url_0;
@@ -107,7 +109,8 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         identityProviderMgtServiceClients = new HashMap<Integer, IdentityProviderMgtServiceClient>();
         applicationManagementServiceClients = new HashMap<Integer, ApplicationManagementServiceClient>();
         automationContextMap = new HashMap<Integer, AutomationContext>();
-        manager = new MultipleServersManager();
+        testDataHolder = TestDataHolder.getInstance();
+        manager = testDataHolder.getManager();
 
         automationContextMap.put(PORT_OFFSET_0, isServer);
 
@@ -143,9 +146,6 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 identityProviderMgtServiceClient.deleteIdP("sample");
             }
         }
-
-        manager.stopAllServers();
-
     }
 
 
@@ -430,7 +430,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         CarbonTestServerManager server2 = new CarbonTestServerManager(context2, System.getProperty("carbon.zip"),
                                                                       startupParameterMap2);
 
-        manager.startServers(server1, server2);
+        manager.startServers(server2);
     }
 
     //TODO: Need to remove

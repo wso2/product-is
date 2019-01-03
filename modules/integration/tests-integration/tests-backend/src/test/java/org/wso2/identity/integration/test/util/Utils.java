@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.util;
 
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang.StringUtils;
@@ -82,6 +81,7 @@ public class Utils {
     }
 
     public static Tomcat getTomcat(Class testClass) {
+
         Tomcat tomcat = new Tomcat();
         tomcat.getService().setContainer(tomcat.getEngine());
         tomcat.setPort(CommonConstants.DEFAULT_TOMCAT_PORT);
@@ -107,14 +107,9 @@ public class Utils {
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
-    public static void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
     public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
+
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         post.addHeader("Referer", String.format(acsUrl, artifact));
@@ -183,9 +178,9 @@ public class Utils {
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
                                                     String referer,  HttpClient httpClient, String
                                                               pastreCookie) throws Exception {
+
         String redirectUrl = getRedirectUrl(response);
         Map<String, String> queryParams = getQueryParams(redirectUrl);
-
 
         String sessionKey = queryParams.get("sessionDataKey");
         String mandatoryClaims = queryParams.get("mandatoryClaims");
@@ -258,6 +253,7 @@ public class Utils {
 
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String acsUrl, String
             artifact, HttpClient httpClient) throws IOException {
+
         Header[] headers = response.getAllHeaders();
         String url = "";
         for (Header header : headers) {
@@ -273,6 +269,7 @@ public class Utils {
     }
 
     public static String getRedirectUrl(HttpResponse response) {
+
         Header[] headers = response.getAllHeaders();
         String url = "";
         for (Header header : headers) {
@@ -295,6 +292,7 @@ public class Utils {
     }
 
     public static HttpResponse sendGetRequest(String url, String userAgent, HttpClient httpClient) throws Exception {
+
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", userAgent);
         return httpClient.execute(request);
