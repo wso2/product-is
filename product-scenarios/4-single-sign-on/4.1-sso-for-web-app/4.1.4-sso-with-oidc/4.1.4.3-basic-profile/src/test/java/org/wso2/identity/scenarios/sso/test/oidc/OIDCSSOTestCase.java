@@ -79,14 +79,14 @@ public class OIDCSSOTestCase extends OAuth2TestBase {
         client.close();
     }
 
-    @Test(description = "2.1.1.2.1")
+    @Test(description = "4.1.4.3")
     public void sendAuthorizeRequestForSP1() throws Exception {
 
         setSessionDataKey(sendAuthorizeGet(client, oAuthConsumerAppDTO1, "openid", null));
         Assert.assertNotNull(getSessionDataKey(), "Authorization request failed. sessionDataKey is null");
     }
 
-    @Test(description = "2.1.1.2.2",
+    @Test(description = "4.1.4.2",
           dependsOnMethods = "sendAuthorizeRequestForSP1")
     public void authenticateForSP1() throws Exception {
 
@@ -94,7 +94,7 @@ public class OIDCSSOTestCase extends OAuth2TestBase {
         Assert.assertNotNull(getConsentUrl(), "Authentication failed. Consent URL is null");
     }
 
-    @Test(description = "2.1.1.2.3",
+    @Test(description = "4.1.4.3",
           dependsOnMethods = "authenticateForSP1")
     public void initOAuthConsentForSP1() throws Exception {
 
@@ -103,7 +103,7 @@ public class OIDCSSOTestCase extends OAuth2TestBase {
                 "Failed to get the consent url. SessionDataKeyConsent is null");
     }
 
-    @Test(description = "2.1.1.2.4",
+    @Test(description = "4.1.4.4",
           dependsOnMethods = "initOAuthConsentForSP1")
     public void submitOAuthConsentForSP1() throws Exception {
 
@@ -112,7 +112,7 @@ public class OIDCSSOTestCase extends OAuth2TestBase {
         clearRuntimeVariables();
     }
 
-    @Test(description = "2.1.1.2.5",
+    @Test(description = "4.1.4.5",
           dependsOnMethods = "submitOAuthConsentForSP1")
     public void sendAuthorizeRequestForSP2() throws Exception {
 
@@ -126,7 +126,7 @@ public class OIDCSSOTestCase extends OAuth2TestBase {
                 "Failed to get the consent url. SessionDataKeyConsent is null");
     }
 
-    @Test(description = "2.1.1.2.6",
+    @Test(description = "4.1.4.6",
           dependsOnMethods = "sendAuthorizeRequestForSP2")
     public void submitOAuthConsentForSP2() throws Exception {
 

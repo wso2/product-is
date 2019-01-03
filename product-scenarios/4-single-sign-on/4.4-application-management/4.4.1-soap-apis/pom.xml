@@ -23,7 +23,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>2.1.2-soap-api</artifactId>
+    <artifactId>4.4.1-soap-apis</artifactId>
     <packaging>jar</packaging>
     <name>Manage Applications Using SOAP APIs</name>
 
