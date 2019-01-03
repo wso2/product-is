@@ -1,28 +1,50 @@
 # Identity Server Product Scenarios
 
-## [01. Manage Users and Roles](1-manage-users-roles/README.md)
+## [01. Manage Users and Roles](1-manage-users-and-roles/README.md)
 
 ### Business use-case narrative
-Let us take a scenario where an organization has a web application that provides a particular service. To consume 
-that service, end users need to create an account in this organization. Also, it is required to do other user 
-operations such as delete/update users as well.
 
 
-## [02. Single sign-on across multiple applications](2-single-sign-on/README.md)
+## [02. User account management](2-user-account-management/README.md)
 
 ### Business use-case narrative
-An organization can have two or more web applications. Single sign on can be used to support seamless login to the 
-multiple applications. 
 
 
-## [03. Access delegation ](3-secure-apis/README.md)
+## [03. Identity Provisioning ](3-identity-provisioning/README.md)
 
 ### Business use-case narrative
-APIs should be accessed by the authorized parties only.   
  
  
-## [04.Fine grained access control ](4-access-control/README.md)
+## [04. Single Sign-On ](4-single-sign-on/README.md)
 
 ### Business use-case narrative
-An organization can have an application which should be able to access during day time only (9AM-5PM). Access control
- can be used to deny/permit authorization based on such predefined policies (rules)
+
+## [05. SSO with Identity Federation ](5-sso-with-identity-federation/README.md)
+
+### Business use-case narrative
+
+## [06. Adaptive and Strong Authentication ](6-adaptive-and-strong-authentication/README.md)
+
+### Business use-case narrative
+
+## [07. Single Sign-On with Controlled Access ](7-single-sign-on-with-controlled-access/README.md)
+
+### Business use-case narrative
+
+## [08. Single Sign-On with Delegated Access Control ](8-single-sign-on-with-delegated-access-control/README.md)
+
+### Business use-case narrative
+
+
+## [09. Access Delegation ](9-access-delegation/README.md)
+
+### Business use-case narrative
+
+
+## [10. Fine grained access control ](10-fine-grained-access-control/README.md)
+
+### Business use-case narrative
+
+## [11. Monitor User Logins and Sessions ](11-monitor-user-logins-and-sessions/README.md)
+
+### Business use-case narrative
