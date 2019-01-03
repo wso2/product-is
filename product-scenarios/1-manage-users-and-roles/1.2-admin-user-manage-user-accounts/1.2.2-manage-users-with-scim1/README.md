@@ -1,4 +1,4 @@
-# 1.1.2.1.1. SCIM 1.1
+# 1.2.2 Manage users with SCIM 1.1. 
 
 ## Business use-case narrative
 
@@ -7,3 +7,4 @@
 Developer
 
 ## Sub-Scenarios
+
