@@ -35,9 +35,10 @@
     <modules>
         <module>scenarios-commons</module>
         <module>1-manage-users-and-roles</module>
-        <module>4-single-sign-on</module>
-        <module>3-access-delegation</module>
         <module>2-user-account-management</module>
+        <module>3-identity-provisioning</module>
+        <module>4-single-sign-on</module>
+        <module>5-sso-with-identity-federation</module>
         <module>6-adaptive-and-strong-authentication</module>
         <module>7-single-sign-on-with-controlled-access</module>
         <module>8-single-sign-on-with-delegated-access-control</module>

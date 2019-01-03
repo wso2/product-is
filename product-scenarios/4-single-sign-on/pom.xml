@@ -32,6 +32,8 @@
     <modules>
         <module>4.1-sso-for-web-app</module>
         <module>2.1-application-management</module>
+        <module>4.2-sso-for-mobile</module>
+        <module>4.3-sso-for-spa</module>
     </modules>
 
     <pluginRepositories>
