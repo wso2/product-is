@@ -264,6 +264,9 @@ versions:
       order: 4
       parameters:
         schema: "identity"
+    -
+      name: "OIDCScopeDataMigrator"
+      order: 5
   -
   version: "5.8.0"
   migratorConfigs:
