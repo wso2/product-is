@@ -23,12 +23,12 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>2.1-application-management</artifactId>
+    <artifactId>4.3-application-management</artifactId>
     <name>On-boarding and Managing an Application</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>2.1.2-soap-apis</module>
+        <module>4.4.1-soap-apis</module>
     </modules>
 
     <dependencyManagement>
