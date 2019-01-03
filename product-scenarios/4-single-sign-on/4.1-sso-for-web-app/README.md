@@ -1,14 +1,17 @@
-# 2.1.1 SSO for web applications with the centralized Identity Provider. Authenticate with username password of a local user.
+# 4.1 SSingle Sign On / Federated authentication for web application. 
 
 ## Business use-case narrative
-An organization can have two or more web applications. Single sign on can be used to support seamless login to the 
-multiple applications. SSO can be support by the centralized Identity provider in following different protocols.
+
 
 ## Persona
-End User
+Developer
 
 ## Sub-Scenarios
-- [2.1.1.1 Single sign-on for  web applications using SAML](2.1.1-sso-with-saml/README.md)
-- [2.1.1.2 Single sign-on for  web applications using OIDC](2.1.2-sso-with-oidc/README.md)
-- [2.1.1.3 Single sign-on for  web applications using WS-Federation](2.1.3-sso-with-ws-federation/README.md)
-- [2.1.1.4 Single sign-on for  web applications using Multiple Protocols](4.1.6-sso-with-cross-protocol/README.md)
+- [4.1.1 SSO with SAML Protocol](4.1.1-sso-with-saml/README.md)
+- [4.1.2 SAML eIDAS support](4.1.2-saml-eidas/README.md)
+- [4.1.3 SAML 2.0 artifact binding support ](4.1.3-saml-2-artifact-binding/README.md)
+- [4.1.4 SSO with OIDC Protocol](4.1.4-sso-with-oidc/README.md)
+- [4.1.5 SSO with WS-Fed Protocol](4.1.5-sso-with-ws-federation/README.md)
+- [4.1.6 Single sign-on for  web applications using multiple protocols](4.1.6-sso-with-cross-protocol/README.md)
+- [4.1.7 Single sign on with end user consent](4.1.7-sso-with-end-user-consent/README.md)
+
