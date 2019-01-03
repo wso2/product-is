@@ -1,9 +1,10 @@
-# 2.3 SSO for Single Page Applications (SPA)
+# 4.3 Single Sign On Single Sign On / Federated authentication for SPA. 
 
 ## Business use-case narrative
-An organization can have two or more SPAs. Single sign on can be used to support seamless login to the 
-multiple applications
+
 
 ## Persona
-End User
+Developer
+
+## Sub-Scenarios
 

@@ -1,11 +1,13 @@
-
-# 01. Admin User manages Users
+# 1.2 Admin user manage user accounts. 
 
 ## Business use-case narrative
 
-## Sub-Scenarios
 
-- [1.2.1 Manage users with SCIM 2.0](1.2.1-manage-users-with-scim2/README.md)
+## Persona
+Developer
+
+## Sub-Scenarios
+- [1.2.1 Manage Users with SCIM 2.0](1.2.1-manage-users-with-scim2/README.md)
 - [1.2.2 Manage users with SCIM 1.1](1.2.2-manage-users-with-scim1/README.md)
 - [1.2.3 Manage users with SOAP services](1.2.3-manage-users-with-soap-services/README.md)
 - [1.2.4 Register users with email verification](1.2.4-register-user-with-email-verification/README.md)
@@ -21,3 +23,4 @@
 - [1.2.14 Manage Challenge Questions](1.2.14-manage-challenge-questions/README.md)
 - [1.2.15 User session management](1.2.15-user-session-management/README.md)
 - [1.2.16 Claim management](1.2.16-claim-management/README.md)
+

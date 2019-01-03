@@ -1,15 +1,14 @@
+# 4 Single sign on. 
 
-# [02. Single sign on accross multiple applications]()
+## Business use-case narrative
 
-### Business use-case narrative
 
-An organization can have two or more web applications. Single sign on can be used to support seamless login to the 
-multiple applications. 
+## Persona
+Developer
 
 ## Sub-Scenarios
-- [2.1 SSO for web applications with the centralized Identity Provider. Authenticate with username password of a 
-local user](2.1-sso-with-central-idp/README.md)
-- [2.2 Single sign-on for  web applications with the federated Identity Provider](2.2-sso-with-federated-idp/README.md)
-- [2.3 Single sign-on for  web applications with strong authentication](2.3-sso-with-strong-auth/README.md)
-- [2.4 Control access to an application while authentication](2.4-sso-with-access-control/README.md)
-- [2.5 Single Sign On with delegated access control](2.5-sso-with-deligated-access-control/README.md)
+- [2.1 On-boarding and Managing an Application](2.1-application-management/README.md)
+- [4.1 SSingle Sign On / Federated authentication for web application](4.1-sso-for-web-app/README.md)
+- [4.2 Single Sign On / Federated authentication for mobile](4.2-sso-for-mobile/README.md)
+- [4.3 Single Sign On Single Sign On / Federated authentication for SPA](4.3-sso-for-spa/README.md)
+
