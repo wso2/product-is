@@ -412,14 +412,8 @@ public class ProvisioningTestCase extends ISIntegrationTest {
      */
     private void startOtherCarbonServers() throws Exception {
 
-        Map<String, String> startupParameterMap1 = new HashMap<String, String>();
-        startupParameterMap1.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_1));
-
-        AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext context1 = testDataHolder.getAutomationContext();
         automationContextMap.put(PORT_OFFSET_1, context1);
-
-        CarbonTestServerManager server1 = new CarbonTestServerManager(context1, System.getProperty("carbon.zip"),
-                                                                      startupParameterMap1);
 
         Map<String, String> startupParameterMap2 = new HashMap<String, String>();
         startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_2));

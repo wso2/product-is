@@ -84,7 +84,7 @@ public class OAuth2TokenIssuance extends OAuth2ServiceAbstractIntegrationTest {
 
 
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods = "testDeployPlaygroundApp")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         appDto = createApplication();

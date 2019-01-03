@@ -179,23 +179,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
     }
 
-    private void startTomcat() throws Exception {
-        log.info("Starting Tomcat");
-        tomcatServer = getTomcat();
-        URL resourceURL =
-                getClass().getResource(File.separator + "samples" + File.separator + config.getAppType().getArtifact()
-                                       + ".war");
-        tomcatServer.addWebapp(tomcatServer.getHost(), "/" + config.getAppType().getArtifact(), resourceURL.getPath());
-        tomcatServer.start();
-    }
-
-    private void stopTomcat() throws Exception {
-        log.info("Stopping Tomcat");
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
-    }
-
     private HttpResponse executePhaseBeforeApproval() throws IOException {
         HttpResponse response;
         String sessionKey;
@@ -270,33 +253,6 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
                 {new OpenIDUtils.OpenIDConfig(OpenIDUtils.User.USER1,
                         OpenIDUtils.UserConsent.SKIP, OpenIDUtils.AppType.DUMB_WITHOUT_CLAIMS)},*/
         };
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        setSystemProperties();
-        return tomcat;
-    }
-
-    private void setSystemProperties() {
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword",
-                "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
     private List<KeyValue> extractDataFromResponse(HttpResponse response, Map<String,

@@ -110,8 +110,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         accessToken = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods =
-            "testDeployPlaygroundApp")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
         OAuthConsumerAppDTO appDto = createApplication();
         Assert.assertNotNull(appDto, "Application creation failed.");

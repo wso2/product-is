@@ -69,7 +69,6 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
-	private Tomcat tomcat;
 	private ServerConfigurationManager serverConfigurationManager;
 
 	@BeforeClass(alwaysRun = true)
@@ -121,7 +120,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 	}
 
 
-	@Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods = "testDeployPlaygroundApp")
+	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		OAuthConsumerAppDTO appDto = createApplication();

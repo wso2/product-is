@@ -68,6 +68,7 @@ import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServi
 import org.wso2.identity.integration.common.clients.registry.PropertiesAdminServiceClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;

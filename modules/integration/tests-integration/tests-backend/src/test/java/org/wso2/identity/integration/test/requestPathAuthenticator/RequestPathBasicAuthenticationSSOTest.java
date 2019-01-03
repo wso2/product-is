@@ -112,22 +112,6 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
         client = HttpClientBuilder.create().build();
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
 
-        try {
-            tomcat = getTomcat();
-            URL travelocityResourceUrl = getClass()
-                    .getResource(URL_SEPARATOR + "samples" + URL_SEPARATOR +
-                            "travelocity.com.war");
-            URL avisResourceUrl = getClass()
-                    .getResource(URL_SEPARATOR + "samples" + URL_SEPARATOR +
-                            "avis.com.war");
-            tomcat.addWebapp(tomcat.getHost(), "/travelocity.com", travelocityResourceUrl.getPath());
-            tomcat.addWebapp(tomcat.getHost(), "/avis.com", avisResourceUrl.getPath());
-            tomcat.start();
-
-        } catch (Exception e) {
-            Assert.fail("travelocity.com application deployment failed.", e);
-        }
-
         ssoConfigServiceClient.addServiceProvider(createSAMLServiceProviderDTO(ISSUER_TRAVELOCITY_COM));
         ssoConfigServiceClient.addServiceProvider(createSAMLServiceProviderDTO(ISSUER_AVIS_COM));
         serviceProviderTravelocity = new ServiceProvider();

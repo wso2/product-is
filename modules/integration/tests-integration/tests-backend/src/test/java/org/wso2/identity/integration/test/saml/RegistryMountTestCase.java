@@ -141,13 +141,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
         createApplication();
 
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = getTomcat();
-
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + artifact + ".war");
-        startTomcat(tomcatServer, "/" + artifact, resourceUrl.getPath());
-
         ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
         serverConfigurationManager.restartGracefully();

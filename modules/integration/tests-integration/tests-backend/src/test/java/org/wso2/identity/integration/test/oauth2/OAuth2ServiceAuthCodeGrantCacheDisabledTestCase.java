@@ -110,22 +110,7 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
         serverConfigurationManager = null;
     }
 
-    @Test(alwaysRun = true, description = "Deploy playground application")
-    public void testDeployPlaygroundApp() {
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl =
-                    getClass().getResource(File.separator + "samples" + File.separator +
-                            "playground2.war");
-            startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("Playground application deployment failed.", e);
-        }
-    }
-
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration",
-            dependsOnMethods = "testDeployPlaygroundApp")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         OAuthConsumerAppDTO appDto = createApplication();

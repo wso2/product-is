@@ -387,18 +387,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         return client.execute(request);
     }
 
-    /**
-     * Deploy the travelocity.com war in the Tomcat.
-     * @throws Exception If error occurred.
-     */
-    private void deployTravelocity() throws Exception {
-
-        tomcat = getTomcat();
-        URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator +
-                "travelocity.com.war");
-        startTomcat(tomcat, OAuth2Constant.TRAVELOCITY_APP_CONTEXT_ROOT, resourceUrl.getPath());
-    }
-
     private boolean requestMissingClaims(HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);

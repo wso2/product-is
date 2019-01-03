@@ -99,16 +99,6 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
         client = HttpClientBuilder.create().build();
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
 
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass()
-                    .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-            startTomcat(tomcat, "/travelocity.com", resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("travelocity.com application deployment failed.", e);
-        }
-
         ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
         serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
