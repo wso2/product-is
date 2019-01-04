@@ -22,11 +22,12 @@ import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -35,12 +36,12 @@ import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
-import org.apache.http.client.methods.HttpPut;
+
 import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
 public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
@@ -61,7 +62,6 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
         createUser();

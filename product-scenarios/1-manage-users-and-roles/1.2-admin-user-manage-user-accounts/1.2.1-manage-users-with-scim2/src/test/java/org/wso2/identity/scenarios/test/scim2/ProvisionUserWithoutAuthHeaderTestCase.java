@@ -31,7 +31,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
+
 import static org.testng.Assert.assertEquals;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 
 public class ProvisionUserWithoutAuthHeaderTestCase extends ScenarioTestBase {
 
@@ -43,14 +45,13 @@ public class ProvisionUserWithoutAuthHeaderTestCase extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
         client = HttpClients.createDefault();
     }
 
     @Test(description = "1.1.2.1.2.5")
     public void testSCIMUserWithoutAuthHeader() throws Exception {
 
-        String scimEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
+        String scimEndpoint = getDeploymentProperty(IS_HTTPS_URL) + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR + Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
         HttpPost request = new HttpPost(scimEndpoint);
         request.addHeader(HttpHeaders.CONTENT_TYPE, SCIMConstants.CONTENT_TYPE_APPLICATION_JSON);
 
