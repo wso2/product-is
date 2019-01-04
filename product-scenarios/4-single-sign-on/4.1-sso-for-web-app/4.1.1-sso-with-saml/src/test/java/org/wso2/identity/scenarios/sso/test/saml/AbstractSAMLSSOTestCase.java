@@ -156,6 +156,7 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
 
     public void testInit() throws Exception {
         super.init();
+        loginAndObtainSessionCookie();
         commonAuthUrl = String.format(COMMON_AUTH_URL, backendURL);
         samlSSOIDPUrl = String.format(SAML_SSO_URL, backendURL);
         samlIdpSloUrl = String.format(SAML_IDP_SLO_URL, backendURL);

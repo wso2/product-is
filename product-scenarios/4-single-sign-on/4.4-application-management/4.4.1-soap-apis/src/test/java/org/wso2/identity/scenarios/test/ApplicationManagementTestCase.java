@@ -75,6 +75,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     public void testInit() throws Exception {
 
         super.init();
+        loginAndObtainSessionCookie();
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
                 configContext);
         userMgtClient = new UserManagementClient(backendServiceURL, sessionCookie);
