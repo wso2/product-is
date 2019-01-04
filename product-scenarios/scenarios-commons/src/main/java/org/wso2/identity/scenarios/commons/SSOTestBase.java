@@ -35,6 +35,7 @@ import java.util.Map;
 
 import static org.wso2.identity.scenarios.commons.util.Constants.COMMONAUTH_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY_CONSENT;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractDataFromResponse;
@@ -57,6 +58,7 @@ public class SSOTestBase extends ScenarioTestBase {
     public void init() throws Exception {
 
         super.init();
+        loginAndObtainSessionCookie();
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
                 configContext);
     }
@@ -64,7 +66,7 @@ public class SSOTestBase extends ScenarioTestBase {
     public String getCommonauthEndpoint() {
 
         if (commonauthEndpoint == null) {
-            commonauthEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + COMMONAUTH_URI_CONTEXT;
+            commonauthEndpoint = getDeploymentProperty(IS_HTTPS_URL) + COMMONAUTH_URI_CONTEXT;
         }
         return commonauthEndpoint;
     }

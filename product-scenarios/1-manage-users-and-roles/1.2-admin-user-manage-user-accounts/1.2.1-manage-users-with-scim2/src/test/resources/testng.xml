@@ -3,6 +3,10 @@
 <suite name="Identity-Scenario-Results">
     <parameter name="useDefaultListeners" value="false"/>
 
+    <listeners>
+        <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
+    </listeners>
+
     <test name="is-usr-mgt-scim2" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2TestCase"/>
@@ -12,7 +16,7 @@
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2FullRequestTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithAllAttributesTestCase"/>
             <!--The ProvisionEmailUserSCIM2TestCase works only with jdbc user store and fails with embedded ldap due to regex -->
-	    <class name="org.wso2.identity.scenarios.test.scim2.ProvisionEmailUserSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.ProvisionEmailUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateProvisionedUserSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.AnonymousProvisioningTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserSCIM2EnterpriseUserRequestTestCase" />

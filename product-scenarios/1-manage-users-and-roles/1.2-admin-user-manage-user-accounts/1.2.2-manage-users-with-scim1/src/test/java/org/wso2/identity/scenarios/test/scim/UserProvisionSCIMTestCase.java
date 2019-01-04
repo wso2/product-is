@@ -34,14 +34,14 @@ import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 
 public class UserProvisionSCIMTestCase extends ScenarioTestBase {
 
@@ -52,9 +52,8 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
         client = HttpClients.createDefault();
-        scimUsersEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + SCIMConstants.SCIM_ENDPOINT + "/Users";
+        scimUsersEndpoint = getDeploymentProperty(IS_HTTPS_URL) + SCIMConstants.SCIM_ENDPOINT + "/Users";
     }
 
     @Test(description = "1.1.1.2.1")

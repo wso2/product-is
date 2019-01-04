@@ -45,6 +45,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.COMMONAUTH_URI_
 import static org.wso2.identity.scenarios.commons.util.Constants.DCR_REGISTER_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.Constants.OAUTH_AUTHORIZE_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.OAUTH_TOKEN_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_ACCESS_TOKEN;
@@ -81,8 +82,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
-        String serverURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
+        String serverURL = getDeploymentProperty(IS_HTTPS_URL);
         dcrEndpoint = serverURL + DCR_REGISTER_URI_CONTEXT;
         authzEndpoint = serverURL + OAUTH_AUTHORIZE_URI_CONTEXT;
         tokenEndpoint = serverURL + OAUTH_TOKEN_URI_CONTEXT;
