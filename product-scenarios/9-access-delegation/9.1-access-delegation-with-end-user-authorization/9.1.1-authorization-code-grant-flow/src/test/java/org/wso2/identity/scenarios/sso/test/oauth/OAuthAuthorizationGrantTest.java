@@ -120,7 +120,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
                      "Application deletion failed.");
     }
 
-    @Test(description = "2.1.1.1.1")
+    @Test(description = "9.1.1.1")
     public void intiAuthorizeRequest() throws Exception {
 
         HttpResponse response = sendAuthorizeGet(client, authzEndpoint, clientId, REDIRECT_URL, null, null);
@@ -131,7 +131,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "intiAuthorizeRequest")
+    @Test(description = "9.1.1.1", dependsOnMethods = "intiAuthorizeRequest")
     public void authenticate() throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey, commonauthEndpoint, ADMIN_USERNAME,
@@ -144,7 +144,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "authenticate")
+    @Test(description = "9.1.1.1", dependsOnMethods = "authenticate")
     public void initOAuthConsent() throws Exception {
 
         HttpResponse response = sendGetRequest(client, oAuthConsentUrl, null);
@@ -156,7 +156,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "initOAuthConsent")
+    @Test(description = "9.1.1.1", dependsOnMethods = "initOAuthConsent")
     public void submitOAuthConsent() throws Exception {
 
         HttpResponse response = sendOAuthConsentApproveOncePost(client, sessionDataKeyConsent, authzEndpoint);
@@ -164,7 +164,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
         authzCode = getAuthzCode(response);
     }
 
-    @Test(description = "2.1.1.1.1", dependsOnMethods = "submitOAuthConsent")
+    @Test(description = "9.1.1.1", dependsOnMethods = "submitOAuthConsent")
     public void getOAuthToken() throws Exception {
 
         HttpResponse response = sendTokenRequest(client, authzCode, tokenEndpoint, clientId, clientSecret,
