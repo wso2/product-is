@@ -21,7 +21,11 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="Identity-Scenario-Results">
+
     <parameter name="useDefaultListeners" value="false"/>
+    <listeners>
+        <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
+    </listeners>
 
     <test name="is-application-mgt" preserve-order="true" parallel="false">
         <classes>

@@ -2,6 +2,9 @@
 
 <suite name="Identity-Scenario-Results">
     <parameter name="useDefaultListeners" value="false"/>
+    <listeners>
+        <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
+    </listeners>
 
     <test name="is-usr-mgt-scim1" preserve-order="true" parallel="false">
         <classes>

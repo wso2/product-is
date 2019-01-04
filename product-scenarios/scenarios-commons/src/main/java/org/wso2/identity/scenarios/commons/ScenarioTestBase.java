@@ -22,44 +22,30 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
 import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.scenarios.commons.data.DeploymentDataHolder;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.util.Base64;
-import java.util.Properties;
 
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_SAMPLES_HTTP_URL;
 
 /**
  * Base test case for IS scenario tests.
  */
 public class ScenarioTestBase {
 
-    private static final String INPUTS_LOCATION = System.getenv("DATA_BUCKET_LOCATION");
-    private static final String INFRASTRUCTURE_PROPERTIES = "infrastructure.properties";
-    private static final String DEPLOYMENT_PROPERTIES = "deployment.properties";
-    private static final String JOB_PROPERTIES = "testplan-props.properties";
     private static final Logger LOG = LoggerFactory.getLogger(ScenarioTestBase.class);
 
-    public static final String MGT_CONSOLE_URL = "MgtConsoleUrl";
-    public static final String CARBON_SERVER_URL = "CarbonServerUrl";
-    public static final String IS_HTTP_URL = "ISHttpUrl";
-    public static final String IS_HTTPS_URL = "ISHttpsUrl";
-    public static final String IS_SAMPLES_HTTP_URL = "ISSamplesHttpUrl";
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "admin";
-
-    protected static final int ARTIFACT_DEPLOYMENT_WAIT_TIME_MS = 120000;
-    protected static final String RESOURCE_LOCATION = System.getProperty("common.resource.location");
 
     protected String backendURL;
     protected String backendServiceURL;
@@ -70,46 +56,13 @@ public class ScenarioTestBase {
     protected ConfigurationContext configContext;
 
     /**
-     * This is a utility method to load the deployment details.
-     * The deployment details are available as key-value pairs in {@link #INFRASTRUCTURE_PROPERTIES},
-     * {@link #DEPLOYMENT_PROPERTIES}, and {@link #JOB_PROPERTIES} under the
-     * {@link #INPUTS_LOCATION}.
-     * <p>
-     * This method loads these files into one single properties, and return it.
+     * This is a utility method to get a deployment detail.
      *
-     * @return properties the deployment properties.
+     * @return String value of the property identified by the key.
      */
-    public static Properties getDeploymentProperties() {
+    public static String getDeploymentProperty(String key) {
 
-        Path infraPropsFile = Paths.get(INPUTS_LOCATION + File.separator + INFRASTRUCTURE_PROPERTIES);
-        Path deployPropsFile = Paths.get(INPUTS_LOCATION + File.separator + DEPLOYMENT_PROPERTIES);
-        Path jobPropsFile = Paths.get(INPUTS_LOCATION + File.separator + JOB_PROPERTIES);
-
-        Properties props = new Properties();
-        loadProperties(infraPropsFile, props);
-        loadProperties(deployPropsFile, props);
-        loadProperties(jobPropsFile, props);
-        return props;
-    }
-
-    private static void loadProperties(Path propsFile, Properties props) {
-
-        if (!Files.exists(propsFile)) {
-            LOG.warn("Deployment property file not found: " + propsFile);
-            return;
-        }
-        try (InputStream propsIS = Files.newInputStream(propsFile)) {
-            props.load(propsIS);
-        } catch (IOException ex) {
-            LOG.error(ex.getMessage(), ex);
-        }
-    }
-
-    public static void setKeyStoreProperties() {
-
-        System.setProperty("javax.net.ssl.trustStore", RESOURCE_LOCATION + "keystores/products/wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        return DeploymentDataHolder.getInstance().getProperties().getProperty(key);
     }
 
     public String getAuthzHeader() {
@@ -119,14 +72,17 @@ public class ScenarioTestBase {
         return String.join(" ", "Basic", encodedHeader);
     }
 
-    public void init() throws Exception {
-        setKeyStoreProperties();
-        backendURL = getDeploymentProperties().getProperty(IS_HTTPS_URL);
-        webAppHost = getDeploymentProperties().getProperty(IS_SAMPLES_HTTP_URL);
-        backendServiceURL = backendURL + SERVICES;
-        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+    protected void loginAndObtainSessionCookie() throws LoginAuthenticationExceptionException, RemoteException {
         loginClient = new AuthenticatorClient(backendServiceURL);
         sessionCookie = loginClient.login(ADMIN_USERNAME, ADMIN_PASSWORD, null);
+    }
+
+    public void init() throws Exception {
+
+        backendURL = getDeploymentProperty(IS_HTTPS_URL);
+        webAppHost = getDeploymentProperty(IS_SAMPLES_HTTP_URL);
+        backendServiceURL = backendURL + SERVICES;
+        configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
     }
 
     public void createUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient, String profileName) {
