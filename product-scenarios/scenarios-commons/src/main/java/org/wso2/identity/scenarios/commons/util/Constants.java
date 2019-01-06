@@ -63,6 +63,9 @@ public class Constants {
     public static final String TOCOMMONAUTH = "tocommonauth";
     public static final String COOKIE = "Cookie";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
+    public static final String HEADER_USER_AGENT = "User-Agent";
+    public static final String RESPONSE_TAG_NAME = "Response";
+    public static final String ASSERTION_TAG_NAME = "Assertion";
     public static final String AUTHN_CONTEXT_CLASS_REF = "AuthnContextClassRef";
     public static final String AUTHN_REQUEST = "AuthnRequest";
     public static final String INBOUND_AUTH_TYPE_SAML = "samlsso";
@@ -72,7 +75,10 @@ public class Constants {
             "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport";
     public static final String SAML_ASSERTION_URN = "urn:oasis:names:tc:SAML:2.0:assertion";
     public static final String SAML_PROTOCOL_URN = "urn:oasis:names:tc:SAML:2.0:protocol";
-
+    public static final String XML_DOCUMENT_BUILDER_FACTORY =
+            "javax.xml.parsers.DocumentBuilderFactory";
+    public static final String XML_DOCUMENT_BUILDER_FACTORY_IMPL =
+            "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
 
     /**
      * SCIM Endpoints.

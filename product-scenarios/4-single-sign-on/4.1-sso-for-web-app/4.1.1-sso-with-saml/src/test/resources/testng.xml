@@ -25,7 +25,8 @@
 
     <test name="is-application-mgt" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.sso.test.saml.SAMLSSOTestCase"/>
+            <class name="org.wso2.identity.scenarios.sso.test.saml.SAMLSSOWithExternalAppTestCase"/>
+            <class name="org.wso2.identity.scenarios.sso.test.saml.SAMLSSOBySPConfigTestCase"/>
         </classes>
     </test>
 </suite>
