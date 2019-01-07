@@ -16,8 +16,8 @@
 
 package org.wso2.identity.scenarios.commons.util;
 
-import org.apache.http.HttpHeaders;
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;

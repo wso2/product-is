@@ -29,8 +29,8 @@ import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
-import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 import org.wso2.identity.scenarios.commons.util.Constants;
+import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -49,7 +49,6 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
     }
