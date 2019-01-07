@@ -140,14 +140,15 @@ public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
             Response samlResponse = extractAndProcessSAMLResponse(response);
             Assertion assertion = getAssertionFromSAMLResponse(samlResponse, samlssoServiceProviderDTO,
                     getDefaultX509Cred());
-            Assert.assertNotNull(assertion, "SAML Assertion was not found in the response.");
+            Assert.assertNotNull(assertion, "SAML Assertion was not found in the response for " + samlConfig.toString
+                    ());
 
             Assert.assertTrue(validateAudienceRestrictionBySAMLSSOSPConfig(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred()), "Audience restriction validation failed.");
+                    getDefaultX509Cred()), "Audience restriction validation failed for " + samlConfig.toString());
             Assert.assertTrue(validateSAMLAssertionSignature(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred()), "Assertion signature validation failed.");
+                    getDefaultX509Cred()), "Assertion signature validation failed for " + samlConfig.toString());
             Assert.assertTrue(validateSAMLResponseSignature(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred()), "SAML response signature validation failed.");
+                    getDefaultX509Cred()), "SAML response signature validation failed for " + samlConfig.toString());
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + samlConfig.toString(), e);
         }
