@@ -37,6 +37,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ONCE;
 import static org.wso2.identity.scenarios.commons.util.Constants.DCR_REGISTER_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.DENY;
 import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.Constants.OAUTH_AUTHORIZE_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.OAUTH_TOKEN_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CODE;
@@ -57,13 +58,14 @@ public class OAuth2TestBase extends SSOTestBase {
     public void init() throws Exception {
 
         super.init();
+        loginAndObtainSessionCookie();
         oauthAdminClient = new OauthAdminClient(backendServiceURL, sessionCookie);
     }
 
     public String getDcrEndpoint() {
 
         if (dcrEndpoint == null) {
-            dcrEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + DCR_REGISTER_URI_CONTEXT;
+            dcrEndpoint = getDeploymentProperty(IS_HTTPS_URL) + DCR_REGISTER_URI_CONTEXT;
         }
         return dcrEndpoint;
     }
@@ -76,7 +78,7 @@ public class OAuth2TestBase extends SSOTestBase {
     public String getTokenEndpoint() {
 
         if (tokenEndpoint == null) {
-            tokenEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + OAUTH_TOKEN_URI_CONTEXT;
+            tokenEndpoint = getDeploymentProperty(IS_HTTPS_URL) + OAUTH_TOKEN_URI_CONTEXT;
         }
         return tokenEndpoint;
     }
@@ -89,7 +91,7 @@ public class OAuth2TestBase extends SSOTestBase {
     public String getAuthorizeEndpoint() {
 
         if (authorizeEndpoint == null) {
-            authorizeEndpoint = getDeploymentProperties().getProperty(IS_HTTPS_URL) + OAUTH_AUTHORIZE_URI_CONTEXT;
+            authorizeEndpoint = getDeploymentProperty(IS_HTTPS_URL) + OAUTH_AUTHORIZE_URI_CONTEXT;
         }
         return authorizeEndpoint;
     }

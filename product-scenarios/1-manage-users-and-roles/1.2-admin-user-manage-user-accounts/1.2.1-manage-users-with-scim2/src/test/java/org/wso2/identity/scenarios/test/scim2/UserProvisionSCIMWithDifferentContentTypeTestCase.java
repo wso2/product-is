@@ -35,9 +35,8 @@ import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 
 import static org.testng.Assert.assertEquals;
-
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 
 public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioTestBase {
 
@@ -52,7 +51,6 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
         scimUsersEndpoint = backendURL + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +

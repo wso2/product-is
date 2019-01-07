@@ -28,12 +28,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
-
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 
@@ -51,7 +50,6 @@ public class ProvisionEmailUserSCIM2TestCase extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        setKeyStoreProperties();
         client = HttpClients.createDefault();
         super.init();
     }

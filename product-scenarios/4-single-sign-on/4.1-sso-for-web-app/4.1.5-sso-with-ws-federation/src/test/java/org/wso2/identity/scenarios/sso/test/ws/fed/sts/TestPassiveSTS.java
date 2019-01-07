@@ -110,8 +110,9 @@ public class TestPassiveSTS extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        logManger = new AuthenticatorClient(backendURL);
+        loginAndObtainSessionCookie();
 
+        logManger = new AuthenticatorClient(backendURL);
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL, configContext);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
 

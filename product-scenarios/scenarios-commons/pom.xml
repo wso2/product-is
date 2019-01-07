@@ -48,6 +48,12 @@
                             </value>
                         </property>
                         <property>
+                            <name>common.resource.location</name>
+                            <value>
+                                ${basedir}/src/main/resources/
+                            </value>
+                        </property>
+                        <property>
                             <name>server.list</name>
                             <value>
                                 IS
@@ -132,6 +138,10 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.user.ws</groupId>
             <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
         <dependency>
             <groupId>org.opensaml</groupId>

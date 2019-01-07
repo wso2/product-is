@@ -23,6 +23,10 @@
 <suite name="Identity-Scenario-Results">
     <parameter name="useDefaultListeners" value="false"/>
 
+    <listeners>
+        <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
+    </listeners>
+
     <test name="sso-test-oidc" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.scenarios.sso.test.oidc.OIDCSSOTestCase"/>
