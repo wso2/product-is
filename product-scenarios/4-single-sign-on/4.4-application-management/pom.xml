@@ -23,7 +23,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>4.3-application-management</artifactId>
+    <artifactId>4.4-application-management</artifactId>
     <name>On-boarding and Managing an Application</name>
     <packaging>pom</packaging>
 
