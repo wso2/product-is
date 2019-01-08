@@ -92,6 +92,9 @@ public class Utility {
                 log.error(errorMessage, e);
                 throw new MigrationClientException(errorMessage, e);
             }
+        } else {
+            throw new MigrationClientException(Constant.MIGRATION_CONFIG_FILE_NAME + " file does not exist at: " +
+                                               configFilePath);
         }
         return config;
     }
