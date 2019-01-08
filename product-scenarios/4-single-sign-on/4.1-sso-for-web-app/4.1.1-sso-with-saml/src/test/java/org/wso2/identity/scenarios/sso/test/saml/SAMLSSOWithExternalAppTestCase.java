@@ -25,6 +25,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.apache.xml.security.signature.XMLSignature;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -32,6 +33,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.scenarios.commons.SAMLConfig;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil;
@@ -104,14 +106,14 @@ public class SAMLSSOWithExternalAppTestCase extends AbstractSAMLSSOTestCase {
 
         SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
                 .getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
+        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getArtifact(),
                 "Adding a service provider has failed for " + config);
     }
 
     @Test(description = "4.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
     public void testRemoveSP()
             throws Exception {
-        Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
+        Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getArtifact());
         assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
 
@@ -121,12 +123,12 @@ public class SAMLSSOWithExternalAppTestCase extends AbstractSAMLSSOTestCase {
 
             CloseableHttpClient client = HttpClients.createDefault();
             HttpResponse response;
-            response = sendGetRequest(client, String.format(webAppHost + SAML_SSO_INDEX_URL, config.getApp()
-                    .getArtifact(), config.getHttpBinding().binding), null, new Header[]{userAgentHeader});
+            response = sendGetRequest(client, String.format(webAppHost + SAML_SSO_INDEX_URL, config.getArtifact(),
+                    config.getHttpBinding()), null, new Header[]{userAgentHeader});
             String samlResponse = extractSAMLResponse(response);
             assertNotNull(samlResponse, "SAMLResponse is not recived in Passive Login.");
             samlResponse = IdentityScenarioUtil.bese64Decode(samlResponse);
-            assertTrue(samlResponse.contains("Destination=\"" + String.format(webAppHost + ACS_URL, config.getApp()
+            assertTrue(samlResponse.contains("Destination=\"" + String.format(webAppHost + ACS_URL, config
                     .getArtifact()) + "\""));
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
@@ -139,24 +141,22 @@ public class SAMLSSOWithExternalAppTestCase extends AbstractSAMLSSOTestCase {
         try {
             HttpResponse response;
 
-            response = sendGetRequest(httpClient, String.format(webAppHost + SAML_SSO_LOGIN_URL, config.getApp
-                    ().getArtifact(), config.getHttpBinding().binding), null, new Header[]{userAgentHeader});
+            response = sendGetRequest(httpClient, String.format(webAppHost + SAML_SSO_LOGIN_URL, config.getArtifact()
+                    , config.getHttpBinding()), null, new Header[]{userAgentHeader});
 
-            if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
+            if (HttpBinding.HTTP_POST.equals(config.getHttpBinding())) {
                 String samlRequest = extractSAMLRequest(response);
                 assertNotNull(samlRequest, "SAML Request is not available");
                 response = super.sendSAMLMessage(samlSSOIDPUrl, SAML_REQUEST_PARAM, samlRequest, config);
                 EntityUtils.consume(response.getEntity());
 
-                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getApp()
-                                .getArtifact(),
+                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getArtifact(),
                         httpClient);
             }
 
             String sessionKey = getSessionDataKey(response);
             assertNotNull(sessionKey, "SessionDataKey is not available in the response.");
-            response = sendLoginPostMessage(sessionKey, samlSSOIDPUrl, USER_AGENT, webAppHost + ACS_URL, config
-                            .getApp().getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(),
+            response = sendLoginPostMessage(sessionKey, samlSSOIDPUrl, USER_AGENT, webAppHost + ACS_URL, config.getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(),
                     httpClient);
 
             if (isConsentRequested(response)) {
@@ -165,19 +165,19 @@ public class SAMLSSOWithExternalAppTestCase extends AbstractSAMLSSOTestCase {
                 EntityUtils.consume(response.getEntity());
 
                 response = sendPOSTConsentMessage(response, commonAuthUrl, USER_AGENT, String.format(webAppHost +
-                        ACS_URL, config.getApp().getArtifact()), httpClient, pastrCookie);
+                        ACS_URL, config.getArtifact()), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
             String redirectUrl = getRedirectUrlFromResponse(response);
             if (StringUtils.isNotBlank(redirectUrl)) {
-                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getApp()
-                        .getArtifact(), httpClient);
+                response = sendRedirectRequest(response, USER_AGENT, webAppHost + ACS_URL, config.getArtifact(),
+                        httpClient);
             }
             String samlResponse = extractSAMLResponse(response);
             EntityUtils.consume(response.getEntity());
 
-            response = super.sendSAMLMessage(String.format(webAppHost + ACS_URL, config.getApp().getArtifact()),
+            response = super.sendSAMLMessage(String.format(webAppHost + ACS_URL, config.getArtifact()),
                     SAML_RESPONSE_PARAM, samlResponse, config);
             resultPage = extractFullContentFromResponse(response);
 
@@ -191,8 +191,10 @@ public class SAMLSSOWithExternalAppTestCase extends AbstractSAMLSSOTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
         return new SAMLConfig[][]{
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, TestConfig.User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        TestConfig.ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)}
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, TestConfig.User.SUPER_TENANT_USER, TestConfig
+                        .ClaimType.NONE, HttpBinding.HTTP_REDIRECT.binding, null, App.SUPER_TENANT_APP_WITH_SIGNING
+                        .getArtifact(),"", XMLSignature.ALGO_ID_SIGNATURE_RSA, "",
+                        true)}
         };
     }
 
