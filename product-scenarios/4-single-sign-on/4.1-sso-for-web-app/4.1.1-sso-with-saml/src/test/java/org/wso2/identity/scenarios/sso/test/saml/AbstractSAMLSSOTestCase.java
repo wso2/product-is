@@ -30,6 +30,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.scenarios.commons.SAMLConfig;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
@@ -112,48 +113,6 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         }
     }
 
-    protected static class SAMLConfig extends TestConfig {
-
-        private TestUserMode userMode;
-        private HttpBinding httpBinding;
-        private App app;
-
-        protected SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
-            super(userMode, user, claimType);
-
-            this.userMode = userMode;
-            this.httpBinding = httpBinding;
-            this.app = app;
-        }
-
-        public TestUserMode getUserMode() {
-
-            return userMode;
-        }
-
-        public App getApp() {
-
-            return app;
-        }
-
-        public HttpBinding getHttpBinding() {
-
-            return httpBinding;
-        }
-
-        @Override
-        public String toString() {
-
-            return "SAMLConfig[" +
-                    "  userMode=" + userMode.name() +
-                    ", user=" + super.getUser().getUsername() +
-                    ", httpBinding=" + httpBinding +
-                    ", claimType=" + super.getClaimType() +
-                    ", app=" + app.getArtifact() +
-                    ']';
-        }
-    }
-
     public void testInit() throws Exception {
         super.init();
         loginAndObtainSessionCookie();
@@ -192,7 +151,7 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
 
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        requestConfig.setInboundAuthKey(config.getApp().getArtifact());
+        requestConfig.setInboundAuthKey(config.getArtifact());
 
         Property attributeConsumerServiceIndexProp = new Property();
         attributeConsumerServiceIndexProp.setName(ATTRIBUTE_CS_INDEX_NAME);
@@ -220,15 +179,15 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
     public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config) {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
+        samlssoServiceProviderDTO.setIssuer(config.getArtifact());
         samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(webAppHost + ACS_URL,
-                config.getApp().getArtifact())});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(webAppHost + ACS_URL, config.getApp()
+                config.getArtifact())});
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(webAppHost + ACS_URL, config
                 .getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
-        samlssoServiceProviderDTO.setDoSignAssertions(config.getApp().isSigningEnabled());
-        samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
+        samlssoServiceProviderDTO.setDoSignAssertions(config.isSigningEnabled());
+        samlssoServiceProviderDTO.setDoSignResponse(config.isSigningEnabled());
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
         if (config.getClaimType() != TestConfig.ClaimType.NONE) {
