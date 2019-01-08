@@ -58,9 +58,9 @@ import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.sendLoginPost
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendPOSTConsentMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectRequest;
 
-public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
+public class SAMLSSOWithExternalAppTestCase extends AbstractSAMLSSOTestCase {
 
-    private static final Log log = LogFactory.getLog(SAMLSSOTestCase.class);
+    private static final Log log = LogFactory.getLog(SAMLSSOWithExternalAppTestCase.class);
 
     // SAML Application attributes
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
@@ -74,7 +74,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     private String resultPage;
 
     @Factory(dataProvider = "samlConfigProvider")
-    public SAMLSSOTestCase(SAMLConfig config) {
+    public SAMLSSOWithExternalAppTestCase(SAMLConfig config) {
         if (log.isDebugEnabled()) {
             log.info("SAML SSO Test initialized for " + config);
         }
