@@ -63,6 +63,12 @@
                             </value>
                         </property>
                         <property>
+                            <name>service.providers.location</name>
+                            <value>
+                                ${basedir}/src/test/resources/service-providers/
+                            </value>
+                        </property>
+                        <property>
                             <name>server.list</name>
                             <value>
                                 IS
