@@ -19,6 +19,12 @@ package org.wso2.carbon.is.migration.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.identity.core.migrate.MigrationClient;
 import org.wso2.carbon.is.migration.MigrationClientImpl;
@@ -27,15 +33,9 @@ import org.wso2.carbon.user.core.service.RealmService;
 
 
 /**
- * @scr.component name="org.wso2.carbon.is.migration.client" immediate="true"
- * @scr.reference name="realm.service"
- * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
- * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
- * @scr.reference name="server.configuration.service" interface="org.wso2.carbon.base.api.ServerConfigurationService"
- * cardinality="1..1" policy="dynamic"  bind="setServerConfigurationService" unbind="unsetServerConfigurationService"
- * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
+ * Service activation component for the migration client.
  */
+@Component(name = "org.wso2.carbon.is.migration.client", immediate = true)
 public class ISMigrationServiceComponent {
 
     private static final Log log = LogFactory.getLog(ISMigrationServiceComponent.class);
@@ -45,6 +45,7 @@ public class ISMigrationServiceComponent {
      *
      * @param context OSGi component context.
      */
+    @Activate
     protected void activate(ComponentContext context) {
         try {
             ISMigrationServiceDataHolder.setIdentityOracleUser(System.getProperty("identityOracleUser"));
@@ -64,6 +65,7 @@ public class ISMigrationServiceComponent {
      *
      * @param context OSGi component context.
      */
+    @Deactivate
     protected void deactivate(ComponentContext context) {
         if(log.isDebugEnabled()) {
             log.debug("WSO2 IS migration bundle is deactivated");
@@ -76,6 +78,8 @@ public class ISMigrationServiceComponent {
      *
      * @param realmService service to get tenant data.
      */
+    @Reference(name = "realm.service", cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService")
     protected void setRealmService(RealmService realmService) {
         if(log.isDebugEnabled()) {
             log.debug("Setting RealmService to WSO2 IS Config component");
@@ -95,6 +99,8 @@ public class ISMigrationServiceComponent {
         ISMigrationServiceDataHolder.setRealmService(null);
     }
 
+    @Reference(name = "server.configuration.service", cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC,
+        unbind = "unsetServerConfigurationService")
     protected void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
         ISMigrationServiceDataHolder.setServerConfigurationService(serverConfigurationService);
     }
@@ -103,6 +109,8 @@ public class ISMigrationServiceComponent {
         ISMigrationServiceDataHolder.setServerConfigurationService(null);
     }
 
+    @Reference(name = "registry.service", cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC,
+        unbind = "unsetRegistryService")
     protected void setRegistryService(RegistryService registryService) {
         ISMigrationServiceDataHolder.setRegistryService(registryService);
     }
