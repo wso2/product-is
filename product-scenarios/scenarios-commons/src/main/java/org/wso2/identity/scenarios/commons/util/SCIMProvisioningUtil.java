@@ -43,7 +43,7 @@ public class SCIMProvisioningUtil {
      * @param username Authenticating username.
      * @param password Authenticating user password.
      */
-    private static Header[] getCommonHeaders(String username, String password) {
+    public static Header[] getCommonHeaders(String username, String password) {
 
         Header[] headers = {
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, Constants.CONTENT_TYPE_APPLICATION_JSON),
