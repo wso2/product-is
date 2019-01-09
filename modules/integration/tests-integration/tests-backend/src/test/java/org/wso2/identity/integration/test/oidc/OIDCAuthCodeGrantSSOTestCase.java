@@ -112,9 +112,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         initApplications();
         createApplications();
 
-        startTomcat();
-        deployApplications();
-
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
     }
@@ -124,8 +121,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         deleteUser(user);
         deleteApplications();
-
-        stopTomcat();
 
         appMgtclient = null;
         remoteUSMServiceClient = null;
@@ -432,15 +427,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
             deleteApplication(entry.getValue());
-        }
-    }
-
-    protected void deployApplications() {
-
-        for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
-            URL resourceUrl = getClass().getResource(File.separator + "samples" + File.separator + entry.getKey() +
-                    "" + ".war");
-            tomcat.addWebapp(tomcat.getHost(), entry.getValue().getApplicationContext(), resourceUrl.getPath());
         }
     }
 

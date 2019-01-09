@@ -89,7 +89,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         };
     }
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
         client = HttpClients.createDefault();
@@ -123,7 +123,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         userId2 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void deleteUsers() throws IOException {
         HttpResponse response = deleteUser(userId1);
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +

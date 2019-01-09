@@ -86,6 +86,9 @@ public class EntitlementRestServiceTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void testEnd() throws Exception {
 
+        entitlementPolicyClient.publishPolicies(new String[]{POLICY_ID}, new String[]{"PDP " +
+                "Subscriber"}, "DELETE", true, null, 1);
+        entitlementPolicyClient.removePolicy(POLICY_ID);
         entitlementPolicyClient = null;
         httpClient = null;
     }

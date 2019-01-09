@@ -106,14 +106,6 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         createSAMLApp(APPLICATION_NAME, true, true, true);
         setupXACMLPolicy(POLICY_ID, POLICY);
 
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-        Utils.startTomcat(tomcatServer, "/" + APPLICATION_NAME, resourceUrl.getPath());
-
     }
 
     protected void setupXACMLPolicy(String policyId, String xacmlPolicy)
@@ -138,16 +130,14 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         deleteUser(NON_AZ_TEST_USER);
         deleteRole(AZ_TEST_ROLE);
         deleteApplication(APPLICATION_NAME);
+        entitlementPolicyClient.publishPolicies(new String[]{POLICY_ID}, new String[]{"PDP " +
+                "Subscriber"}, "DELETE", true, null, 1);
         entitlementPolicyClient.removePolicy(POLICY_ID);
 
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
         httpClientAzUser = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
 

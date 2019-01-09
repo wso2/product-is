@@ -444,7 +444,10 @@
                        orderId="11" enable="true"/>
         <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
                        name="org.wso2.carbon.identity.data.publisher.application.authentication.AuthnDataPublisherProxy"
-                       orderId="11" enable="true"/>
+                       orderId="12" enable="true"/>
+        <EventListener type="org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+                       name="org.wso2.carbon.identity.data.publisher.oauth.listener.OAuthTokenIssuanceDASDataPublisher"
+                       orderId="13" enable="true"/>
     </EventListeners>
 
     <CacheConfig>

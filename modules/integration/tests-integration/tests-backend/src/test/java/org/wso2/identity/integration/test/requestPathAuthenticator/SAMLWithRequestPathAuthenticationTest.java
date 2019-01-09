@@ -17,9 +17,6 @@
 */
 package org.wso2.identity.integration.test.requestPathAuthenticator;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -52,11 +49,9 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -81,12 +76,11 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
 
     protected String adminUsername;
     protected String adminPassword;
-    private Tomcat tomcat;
     private AuthenticatorClient logManger;
     private ApplicationManagementServiceClient appMgtclient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private ServiceProvider serviceProvider;
-    protected DefaultHttpClient client;
+    protected CloseableHttpClient client;
     protected String isURL;
 
     @BeforeClass(alwaysRun = true) public void testInit() throws Exception {
@@ -102,18 +96,8 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
-        client = new DefaultHttpClient();
+        client = HttpClientBuilder.create().build();
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
-
-        try {
-            tomcat = getTomcat();
-            URL resourceUrl = getClass()
-                    .getResource(File.separator + "samples" + File.separator + "travelocity.com.war");
-            startTomcat(tomcat, "/travelocity.com", resourceUrl.getPath());
-
-        } catch (Exception e) {
-            Assert.fail("travelocity.com application deployment failed.", e);
-        }
 
         ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO());
         serviceProvider = new ServiceProvider();
@@ -146,13 +130,10 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         appMgtclient.deleteApplication(serviceProvider.getApplicationName());
-        if (tomcat != null) {
-            tomcat.stop();
-            tomcat.destroy();
-            Thread.sleep(10000);
-        }
+        client.close();
     }
 
     @Test(alwaysRun = true, description = "Request path authenticator login success")
@@ -366,28 +347,6 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
             Assert.fail("Error while decoding SAML response", e);
             return "";
         }
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        return tomcat;
-    }
-
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath) throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
     }
 
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {

@@ -64,11 +64,11 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.registry.properties.stub.beans.xsd.PropertiesBean;
 import org.wso2.carbon.registry.properties.stub.utils.xsd.Property;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.registry.PropertiesAdminServiceClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
@@ -132,6 +132,16 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         }
         propertiesAdminServiceClient.removeProperty(oidcRegistryResourcePath, openIdScope);
         propertiesAdminServiceClient.setProperty(oidcRegistryResourcePath, openIdScope, openidValue);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+
+        deleteApplication();
+        removeOAuthApplicationData();
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        identityProviderMgtServiceClient.deleteIdP(issuer);
+        resetISConfiguration();
     }
 
     @Test(description = "This test case tests the JWT self contained access token generation using password grant "
@@ -201,7 +211,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
             + "false", dependsOnMethods = "testJWTGrantTypeWithConvertOIDCDialectFalse")
     public void testJWTGrantTypeWithConvertOIDCDialectWithoutIDPMappingWithSPMapping() throws Exception {
 
-        serverConfigurationManager.restoreToLastConfiguration();
+        resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt-token-issuer-convertToOIDC.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -296,7 +306,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
         serviceProvider = setServiceProviderClaimConfig(serviceProvider);
         appMgtclient.updateApplicationData(serviceProvider);
-        serverConfigurationManager.restoreToLastConfiguration();
+        resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt-token-issuer-addremaininguserattribute.xml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -415,7 +425,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private void resetISConfiguration() throws Exception {
 
         log.info("Replacing identity.xml with default configurations");
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     /**
@@ -483,7 +493,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private void changeISConfiguration(String fileName) throws Exception {
 
         log.info("Replacing identity.xml to use the JWT Token Generator instead of default token generator");
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         File identityXML = new File(
                 carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator + "identity"
                         + File.separator + "identity.xml");
@@ -491,7 +501,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
                 getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartForcefully();
     }
 
     /**
@@ -527,16 +537,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         fields[2] = email;
         profile.setFieldValues(fields);
         userProfileMgtServiceClient.setUserProfile(JWT_USER, profile);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
-
-        deleteApplication();
-        removeOAuthApplicationData();
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        identityProviderMgtServiceClient.deleteIdP(issuer);
-        resetISConfiguration();
     }
 
     /**

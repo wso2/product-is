@@ -58,6 +58,8 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.base.TestDataHolder;
+
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -97,6 +99,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     private ServiceProvider serviceProvider;
     private LocalAndOutboundAuthenticationConfig outboundAuthConfig;
     private HttpResponse response;
+    private TestDataHolder testDataHolder;
 
     private String consumerKey;
     private String consumerSecret;
@@ -111,6 +114,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
     public void testInit() throws Exception {
 
         super.init();
+        testDataHolder = TestDataHolder.getInstance();
         initialCarbonHome = System.getProperty("carbon.home");
         logManger = new AuthenticatorClient(backendURL);
         String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
@@ -122,7 +126,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        manager = new MultipleServersManager();
+        manager = testDataHolder.getManager();
 
         client = new DefaultHttpClient();
 
@@ -151,7 +155,6 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
         this.logManger.logOut();
         logManger = null;
-        manager.stopAllServers();
         //Restore carbon.home system property to initial value
         System.setProperty("carbon.home", initialCarbonHome);
     }
@@ -519,11 +522,7 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
 
     private void startSecondaryIS() throws Exception {
 
-        Map<String, String> startupParameters = new HashMap<>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(context, startupParameters);
+        AutomationContext context = testDataHolder.getAutomationContext();
         String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
                 .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
 
@@ -540,13 +539,6 @@ public class ConditionalAuthenticationTestCase extends OAuth2ServiceAbstractInte
                     configContext);
             samlSSOConfigServiceClient = new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie);
         }
-    }
-
-    private void startCarbonServer(AutomationContext context, Map<String, String> startupParameters) throws Exception {
-
-        CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
-                startupParameters);
-        manager.startServers(server);
     }
 
     private void createServiceProviderInSecondaryIS() throws Exception {
