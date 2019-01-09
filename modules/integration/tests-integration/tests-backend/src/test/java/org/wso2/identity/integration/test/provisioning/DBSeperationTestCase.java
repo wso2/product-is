@@ -75,7 +75,6 @@ public class DBSeperationTestCase extends ISIntegrationTest {
         registryXml = new File(serverConfDir + File.separator + "registry.xml");
         File registryXmlToCopy = new File(artifactsDir + File.separator + "registry-dbseperated.xml");
 
-
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(masterDatasourcesXmlToCopy, masterDatasourceXml,

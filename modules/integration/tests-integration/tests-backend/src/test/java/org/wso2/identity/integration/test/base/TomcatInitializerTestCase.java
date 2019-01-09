@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -32,7 +32,6 @@ import java.net.URL;
 
 /**
  * Test class that will start and stop tomcat server for the tests in the test suite.
- *
  */
 public class TomcatInitializerTestCase extends ISIntegrationTest {
 
@@ -45,13 +44,10 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
             "playground.appone",
             "playground.apptwo",
             "playground2",
-            // TODO: Check and remove the following with openid tests
             "travelocity.com-openid-smartconsumerwithclaims",
             "travelocity.com-openid-smartconsumerwithoutclaims",
             "travelocity.com-openid-dumbconsumerwithclaims",
             "travelocity.com-openid-dumbconsumerwithoutclaims"
-            // TODO: End of openid apps
-
     };
     private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);
 
