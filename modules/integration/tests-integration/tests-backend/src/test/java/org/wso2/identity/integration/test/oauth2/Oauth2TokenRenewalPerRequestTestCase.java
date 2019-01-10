@@ -82,7 +82,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         removeOAuthApplicationData();
 
         log.info("Replacing identity.xml with default configurations.");
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(description = "Test token renewal per request and old token revocation using authzCode grant type.")
