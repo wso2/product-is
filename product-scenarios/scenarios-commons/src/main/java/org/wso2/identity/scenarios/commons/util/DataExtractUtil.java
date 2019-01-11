@@ -16,6 +16,7 @@
 
 package org.wso2.identity.scenarios.commons.util;
 
+import org.apache.axis2.json.gson.factory.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -23,13 +24,22 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.wso2.identity.scenarios.commons.ScenarioTestException;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +49,7 @@ import java.util.regex.Pattern;
 
 import static org.wso2.identity.scenarios.commons.util.Constants.HEADER_SET_COOKIE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY;
+import static org.wso2.identity.scenarios.commons.util.Constants.SystemProperties.TEST_USERS_LOCATION;
 
 /**
  * Use to extract data from HttpResponse.
@@ -432,4 +443,47 @@ public class DataExtractUtil {
         rd.close();
         return result.toString();
     }
+
+    public static JSONObject readJSONObject(JSONParser parser, String filePath, String fileName) throws
+            ScenarioTestException {
+
+        String pathToFile = "";
+        try {
+            pathToFile = getFilePath(fileName, filePath);
+            return (JSONObject) parser.parse(new FileReader(pathToFile));
+        } catch (IOException e) {
+            throw new ScenarioTestException("Error while reading from :" + pathToFile);
+        } catch (ParseException e) {
+            throw new ScenarioTestException("Error while parsing to JSON :" + pathToFile);
+        }
+    }
+
+
+    /**
+     * Get file path.
+     *
+     * @param fileName File name.
+     * @return File path.
+     * @throws Exception Exception.
+     */
+    public static String getFilePath(String fileName, String filePath) throws ScenarioTestException {
+
+        Path path = Paths.get(filePath + fileName);
+        if (!Files.exists(path)) {
+            throw new ScenarioTestException("Failed to find file: " + path.toString());
+        }
+        return path.toString();
+    }
+
+    /**
+     * Create service provider.
+     *
+     * @param fileName Service provider configuration file name.
+     * @return Service provider name.
+     * @throws Exception If error occurs while creating service provider.
+     */
+    public static JSONObject getTestUser(String fileName) throws Exception {
+        return readJSONObject(new JSONParser(),System.getProperty(TEST_USERS_LOCATION),fileName );
+    }
+
 }

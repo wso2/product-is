@@ -20,6 +20,7 @@ package org.wso2.identity.scenarios.commons;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -30,6 +31,7 @@ import org.wso2.identity.scenarios.commons.data.DeploymentDataHolder;
 
 import java.rmi.RemoteException;
 import java.util.Base64;
+import java.util.Map;
 
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
@@ -91,7 +93,7 @@ public class ScenarioTestBase {
         try {
             // creating the user
             remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
-                    null, getUserClaims(config.getUser().getSetUserClaims(), config),
+                    null, getUserClaims(config),
                     profileName, true);
         } catch (Exception e) {
             LOG.error("Error while creating the user", e);
@@ -108,36 +110,24 @@ public class ScenarioTestBase {
         }
     }
 
-    public ClaimValue[] getUserClaims(boolean setClaims, TestConfig config) {
+    public ClaimValue[] getUserClaims(TestConfig config) {
 
-        ClaimValue[] claimValues;
+        ClaimValue[] claimValues = null;
 
-        if (setClaims) {
-            claimValues = new ClaimValue[3];
+        if (MapUtils.isNotEmpty(config.getUser().getUserClaims())) {
 
-            ClaimValue firstName = new ClaimValue();
-            firstName.setClaimURI(FIRST_NAME_CLAIM_URI);
-            firstName.setValue(config.getUser().getNickname());
-            claimValues[0] = firstName;
+            Map<String, String> userClaims = config.getUser().getUserClaims();
+            claimValues = new ClaimValue[userClaims.size()];
+            int claimNo = 0;
+            for (Map.Entry entry: userClaims.entrySet()) {
+                ClaimValue claimValue = new ClaimValue();
+                claimValue.setClaimURI(entry.getKey().toString());
+                claimValue.setValue(entry.getValue().toString());
+                claimValues[claimNo] = claimValue;
+                claimNo++;
+            }
 
-            ClaimValue lastName = new ClaimValue();
-            lastName.setClaimURI(LAST_NAME_CLAIM_URI);
-            lastName.setValue(config.getUser().getUsername());
-            claimValues[1] = lastName;
-
-            ClaimValue email = new ClaimValue();
-            email.setClaimURI(EMAIL_CLAIM_URI);
-            email.setValue(config.getUser().getEmail());
-            claimValues[2] = email;
-        } else {
-            claimValues = new ClaimValue[1];
-
-            ClaimValue lastName = new ClaimValue();
-            lastName.setClaimURI(LAST_NAME_CLAIM_URI);
-            lastName.setValue(config.getUser().getUsername());
-            claimValues[0] = lastName;
         }
-
         return claimValues;
     }
 }

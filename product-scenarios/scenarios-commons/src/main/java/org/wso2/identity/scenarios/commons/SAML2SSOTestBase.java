@@ -101,6 +101,16 @@ import org.wso2.identity.scenarios.commons.security.SSOAgentX509KeyStoreCredenti
 import org.wso2.identity.scenarios.commons.security.X509CredentialImpl;
 import org.xml.sax.SAXException;
 
+import javax.crypto.SecretKey;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -118,16 +128,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
-import javax.crypto.SecretKey;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import static org.opensaml.DefaultBootstrap.bootstrap;
 import static org.wso2.identity.scenarios.commons.util.Constants.ASSERTION_TAG_NAME;
@@ -143,6 +143,8 @@ import static org.wso2.identity.scenarios.commons.util.Constants.SAML_ASSERTION_
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_PROTOCOL_URN;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_REQUEST_PARAM;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_RESPONSE_PARAM;
+import static org.wso2.identity.scenarios.commons.util.Constants.SigningProperties.SIGNATURE_ALGORITHM_SHA1_RSA;
+import static org.wso2.identity.scenarios.commons.util.Constants.SigningProperties.XML_DIGEST_ALGORITHM_SHA1;
 import static org.wso2.identity.scenarios.commons.util.Constants.TOCOMMONAUTH;
 import static org.wso2.identity.scenarios.commons.util.Constants.XML_DOCUMENT_BUILDER_FACTORY;
 import static org.wso2.identity.scenarios.commons.util.Constants.XML_DOCUMENT_BUILDER_FACTORY_IMPL;
@@ -159,8 +161,8 @@ public class SAML2SSOTestBase extends SSOTestBase {
     private static final Log log = LogFactory.getLog(SAML2SSOTestBase.class);
 
     protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String SIGNATURE_ALGORITHM_SHA1_RSA = "SHA1withRSA";
-    private static final String XML_DIGEST_ALGORITHM_SHA1 = "http://www.w3.org/2000/09/xmldsig#sha1";
+//    private static final String SIGNATURE_ALGORITHM_SHA1_RSA = "SHA1withRSA";
+//    private static final String XML_DIGEST_ALGORITHM_SHA1 = "http://www.w3.org/2000/09/xmldsig#sha1";
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String TRUSTSTORE_LOCATION = "javax.net.ssl.trustStore";
     private static final String TRUSTSTORE_PASSWORD = "javax.net.ssl.trustStorePassword";
@@ -1097,4 +1099,35 @@ public class SAML2SSOTestBase extends SSOTestBase {
 
         return String.valueOf(chars);
     }
+
+//    protected boolean validateAttributeProfile(ServiceProvider serviceProvider, SAMLSSOServiceProviderDTO
+//            samlssoServiceProviderDTO, Assertion assertion, String multiAttributeSeparator, SAMLConfig config) {
+//        if (!samlssoServiceProviderDTO.isEnableAttributeProfileSpecified()) {
+//            return CollectionUtils.isEmpty(assertion.getAttributeStatements());
+//        }
+//
+//
+//        List<ClaimMapping> claimMappings = null;
+//        if (serviceProvider.getClaimConfig() != null && serviceProvider.getClaimConfig().getClaimMappings() != null) {
+//            if (CollectionUtils.isEmpty(assertion.getAttributeStatements())) {
+//                return false;
+//            }
+//            claimMappings = Arrays.asList(serviceProvider.getClaimConfig().getClaimMappings());
+//        }
+//        Map<String, String> attributes = getAttributesMapFromAssertion(assertion, multiAttributeSeparator);
+//        for (ClaimMapping claimMapping: claimMappings) {
+//            if(claimMapping.isRequestedSpecified()){
+//                if (serviceProvider.getClaimConfig().isClaimMappingsSpecified()) {
+//
+//                } else {
+//                    if (attributes.get(claimMapping.getLocalClaim()) == null) {
+//                        return false;
+//                    } else {
+//                        attributes.get(claimMapping.getLocalClaim()).equals(config.getUser().)
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 }
