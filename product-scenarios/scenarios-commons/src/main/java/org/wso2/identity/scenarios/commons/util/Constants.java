@@ -86,6 +86,9 @@ public class Constants {
             "javax.xml.parsers.DocumentBuilderFactory";
     public static final String XML_DOCUMENT_BUILDER_FACTORY_IMPL =
             "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+    public static final String MULTI_ATTRIBUTE_SEPARATOR = ",";
+    public static final String TENANT_DOMAIN = "tenantDomain";
+    public static final String PASSWORD = "password";
 
     /**
      * SCIM Endpoints.
@@ -105,6 +108,18 @@ public class Constants {
         public static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
         public static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
         public static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
+        public static final String USER_NAME_CLAIM_URI = "http://wso2.org/claims/username";
+        public static final String ROLE_CLAIM_URI = "http://wso2.org/claims/role";
+    }
+
+    public static class SystemProperties {
+        public static final String TEST_USERS_LOCATION = "test.users.location";
+    }
+
+    public static class SigningProperties {
+        public static final String XML_DIGEST_ALGORITHM_SHA1 = "http://www.w3.org/2000/09/xmldsig#sha1";
+        public static final String SIGNATURE_ALGORITHM_SHA1_RSA = "SHA1withRSA";
+
     }
 
 }
