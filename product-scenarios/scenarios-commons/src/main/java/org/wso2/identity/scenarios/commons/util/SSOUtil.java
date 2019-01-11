@@ -47,6 +47,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.DENY;
 import static org.wso2.identity.scenarios.commons.util.Constants.GRANT_TYPE_AUTHORIZATION_CODE;
+import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CLIENT_ID;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CODE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_CONSENT;
@@ -73,17 +74,17 @@ public class SSOUtil {
     /**
      * Sent OAuth authorization request.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client        HttpClient to be used for request sending.
      * @param authzEndpoint Authorization endpoint URL.
-     * @param clientId Client ID of the application.
-     * @param redirectUri Redirect URI of the application.
-     * @param scope Authorization request scopes.
-     * @param params Additional request parameters.
+     * @param clientId      Client ID of the application.
+     * @param redirectUri   Redirect URI of the application.
+     * @param scope         Authorization request scopes.
+     * @param params        Additional request parameters.
      * @return HttpResponse with the authorization response.
      * @throws Exception If error occurs while sending the authorize request.
      */
-    public static HttpResponse sendAuthorizeGet(HttpClient client, String authzEndpoint, String clientId, String
-            redirectUri, String scope, Map<String, String> params) throws Exception {
+    public static HttpResponse sendAuthorizeGet(HttpClient client, String authzEndpoint, String clientId,
+            String redirectUri, String scope, Map<String, String> params) throws Exception {
 
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put(PARAM_RESPONSE_TYPE, PARAM_CODE);
@@ -109,8 +110,8 @@ public class SSOUtil {
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"" + PARAM_SESSION_DATA_KEY_CONSENT + "\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(
-                response, keyPositionMap);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil
+                .extractSessionConsentDataFromResponse(response, keyPositionMap);
 
         if (keyValues.get(0) != null) {
             return keyValues.get(0).getValue();
@@ -122,16 +123,16 @@ public class SSOUtil {
     /**
      * Submits user credentials at SSO basic auth login page.
      *
-     * @param client HttpClient to be used for request sending.
-     * @param sessionDataKey Session key related to the authentication request.
+     * @param client                HttpClient to be used for request sending.
+     * @param sessionDataKey        Session key related to the authentication request.
      * @param commonauthEndpointUrl IS commonauth endpoint URL.
-     * @param username Authenticating username.
-     * @param password Authenticating user password.
+     * @param username              Authenticating username.
+     * @param password              Authenticating user password.
      * @return @return HttpResponse with the credential submit response.
      * @throws IOException If error occurs while credential submit.
      */
     public static HttpResponse sendLoginPost(HttpClient client, String sessionDataKey, String commonauthEndpointUrl,
-                                             String username, String password) throws IOException {
+            String username, String password) throws IOException {
 
         List<NameValuePair> urlParameters = getBasicLoginParams(sessionDataKey, username, password);
         return sendPostRequestWithParameters(client, urlParameters, commonauthEndpointUrl, null);
@@ -140,18 +141,17 @@ public class SSOUtil {
     /**
      * Submits user credentials at SSO basic auth login page.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client         HttpClient to be used for request sending.
      * @param sessionDataKey Session key related to the authentication request.
-     * @param endpointUrl IS login endpoint URL.
-     * @param username Authenticating username.
-     * @param password Authenticating user password.
+     * @param endpointUrl    IS login endpoint URL.
+     * @param username       Authenticating username.
+     * @param password       Authenticating user password.
      * @return @return HttpResponse with the credential submit response.
      * @throws IOException If error occurs while credential submit.
      */
-    public static HttpResponse sendLoginPostWithParamsAndHeaders(HttpClient client, String sessionDataKey, String
-            endpointUrl, String username, String password, Map<String,String> params, Header[] headers)
-            throws
-            IOException {
+    public static HttpResponse sendLoginPostWithParamsAndHeaders(HttpClient client, String sessionDataKey,
+            String endpointUrl, String username, String password, Map<String, String> params, Header[] headers)
+            throws IOException {
 
         List<NameValuePair> urlParameters = getBasicLoginParams(sessionDataKey, username, password);
         if (!params.isEmpty()) {
@@ -174,14 +174,14 @@ public class SSOUtil {
      * Sends OAuth consent submit request. This consent will be an 'Approve Once' submit and only for OAuth and not
      * for user attribute sharing related consent.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client                HttpClient to be used for request sending.
      * @param sessionDataKeyConsent Session key related to the consent request.
-     * @param authzEndpointUrl Authorization endpoint URL.
+     * @param authzEndpointUrl      Authorization endpoint URL.
      * @return @return HttpResponse with the consent submit response.
      * @throws IOException If error occurs while sending the consent submit.
      */
-    public static HttpResponse sendOAuthConsentApproveOncePost(HttpClient client, String sessionDataKeyConsent, String
-            authzEndpointUrl) throws IOException {
+    public static HttpResponse sendOAuthConsentApproveOncePost(HttpClient client, String sessionDataKeyConsent,
+            String authzEndpointUrl) throws IOException {
 
         return sendOAuthConsentPost(client, sessionDataKeyConsent, authzEndpointUrl, APPROVE_ONCE);
     }
@@ -190,14 +190,14 @@ public class SSOUtil {
      * Sends OAuth consent submit request. This consent will be an 'Approve Always' submit and only for OAuth and not
      * for user attribute sharing related consent.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client                HttpClient to be used for request sending.
      * @param sessionDataKeyConsent Session key related to the consent request.
-     * @param authzEndpointUrl Authorization endpoint URL.
+     * @param authzEndpointUrl      Authorization endpoint URL.
      * @return @return HttpResponse with the consent submit response.
      * @throws IOException If error occurs while sending the consent submit.
      */
     public static HttpResponse sendOAuthConsentApproveAlwaysPost(HttpClient client, String sessionDataKeyConsent,
-                                                                 String authzEndpointUrl) throws IOException {
+            String authzEndpointUrl) throws IOException {
 
         return sendOAuthConsentPost(client, sessionDataKeyConsent, authzEndpointUrl, APPROVE_ALWAYS);
     }
@@ -206,14 +206,14 @@ public class SSOUtil {
      * Sends OAuth consent submit request. This consent will be a 'Deny' submit and only for OAuth and not
      * for user attribute sharing related consent.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client                HttpClient to be used for request sending.
      * @param sessionDataKeyConsent Session key related to the consent request.
-     * @param authzEndpointUrl Authorization endpoint URL.
+     * @param authzEndpointUrl      Authorization endpoint URL.
      * @return @return HttpResponse with the consent submit response.
      * @throws IOException If error occurs while sending the consent submit.
      */
     public static HttpResponse sendOAuthConsentDenyPost(HttpClient client, String sessionDataKeyConsent,
-                                                                 String authzEndpointUrl) throws IOException {
+            String authzEndpointUrl) throws IOException {
 
         return sendOAuthConsentPost(client, sessionDataKeyConsent, authzEndpointUrl, DENY);
     }
@@ -222,15 +222,15 @@ public class SSOUtil {
      * Sends OAuth consent submit request. This consent will only for OAuth and not for user attribute sharing
      * related consent.
      *
-     * @param client HttpClient to be used for request sending.
+     * @param client                HttpClient to be used for request sending.
      * @param sessionDataKeyConsent Session key related to the consent request.
-     * @param authzEndpointUrl Authorization endpoint URL.
-     * @param consentInput OAuth consent input. Applicable values: approve, approveAlways, deny.
+     * @param authzEndpointUrl      Authorization endpoint URL.
+     * @param consentInput          OAuth consent input. Applicable values: approve, approveAlways, deny.
      * @return @return HttpResponse with the consent submit response.
      * @throws IOException If error occurs while sending the consent submit.
      */
-    public static HttpResponse sendOAuthConsentPost(HttpClient client, String sessionDataKeyConsent, String
-            authzEndpointUrl, String consentInput) throws IOException {
+    public static HttpResponse sendOAuthConsentPost(HttpClient client, String sessionDataKeyConsent,
+            String authzEndpointUrl, String consentInput) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(PARAM_CONSENT, consentInput));
@@ -242,23 +242,23 @@ public class SSOUtil {
     /**
      * Sends OAuth token request.
      *
-     * @param client HttpClient to be used for request sending.
-     * @param authzCode Authorization code.
+     * @param client        HttpClient to be used for request sending.
+     * @param authzCode     Authorization code.
      * @param tokenEndpoint Token endpoint URL.
-     * @param clientId Client ID of the application.
-     * @param clientSecret Client secret of the application.
-     * @param redirectUri Redirect URI of the application.
-     * @param scope Token request scopes.
-     * @param params Additional request parameters.
+     * @param clientId      Client ID of the application.
+     * @param clientSecret  Client secret of the application.
+     * @param redirectUri   Redirect URI of the application.
+     * @param scope         Token request scopes.
+     * @param params        Additional request parameters.
      * @return HttpResponse with the token response.
      * @throws IOException If error occurs while sending the token request.
      */
-    public static HttpResponse sendTokenRequest(HttpClient client,String authzCode, String tokenEndpoint, String
-            clientId, String clientSecret, String redirectUri, String scope, Map<String, String> params) throws
-            IOException {
+    public static HttpResponse sendTokenRequest(HttpClient client, String authzCode, String tokenEndpoint,
+            String clientId, String clientSecret, String redirectUri, String scope, Map<String, String> params)
+            throws IOException {
 
-        Header authzHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, IdentityScenarioUtil.constructBasicAuthzHeader
-                (clientId, clientSecret));
+        Header authzHeader = new BasicHeader(HttpHeaders.AUTHORIZATION,
+                IdentityScenarioUtil.constructBasicAuthzHeader(clientId, clientSecret));
         Header contentTypeHeader = new BasicHeader(CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM);
         List<NameValuePair> requestParams = new ArrayList<>();
         requestParams.add(new BasicNameValuePair(PARAM_GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE));
@@ -269,27 +269,29 @@ public class SSOUtil {
             requestParams.add(new BasicNameValuePair(PARAM_SCOPE, scope));
         }
         if (params != null) {
-            for (Map.Entry<String, String> entry: params.entrySet()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 requestParams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
             }
         }
 
-        return sendPostRequestWithParameters(client, requestParams, tokenEndpoint, new Header[]{authzHeader,
-                contentTypeHeader});
+        return sendPostRequestWithParameters(client, requestParams, tokenEndpoint, new Header[] {
+                authzHeader, contentTypeHeader
+        });
     }
 
     /**
      * Send redirect request
-     * @param response HttpResponse to be referred for request sending.
-     * @param userAgent User-Agent
-     * @param referrer Referer Url
+     *
+     * @param response   HttpResponse to be referred for request sending.
+     * @param userAgent  User-Agent
+     * @param referrer   Referer Url
      * @param artifact
      * @param httpClient HttpClient to be used for request sending.
      * @return HttpResponse after redirect
      * @throws IOException
      */
-    public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String referrer, String
-            artifact, HttpClient httpClient) throws IOException, URISyntaxException {
+    public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String referrer,
+            String artifact, HttpClient httpClient) throws IOException, URISyntaxException {
         String url = getRedirectUrlFromResponse(response);
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
@@ -299,21 +301,20 @@ public class SSOUtil {
 
     /**
      * Post user consent to Consent page
-     * @param response HttpResponse to be referred for request sending.
+     *
+     * @param response      HttpResponse to be referred for request sending.
      * @param commonAuthUrl commonauth URL
-     * @param userAgent user-Agent
-     * @param referer referer URL
-     * @param httpClient HttpClient to be used for request sending.
-     * @param pastreCookie 'pastre' Cookie
+     * @param userAgent     user-Agent
+     * @param referer       referer URL
+     * @param httpClient    HttpClient to be used for request sending.
+     * @param pastreCookie  'pastre' Cookie
      * @return response after submitting consent
      * @throws Exception
      */
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
-                                                      String referer, HttpClient httpClient, String
-                                                              pastreCookie) throws Exception {
+            String referer, HttpClient httpClient, String pastreCookie) throws Exception {
         String redirectUrl = getRedirectUrlFromResponse(response);
         Map<String, String> queryParams = getQueryParams(redirectUrl);
-
 
         String sessionKey = queryParams.get(PARAM_SESSION_DATA_KEY);
         String mandatoryClaims = queryParams.get(PARAM_MANDATORY_CLAIMS);
@@ -367,6 +368,14 @@ public class SSOUtil {
         addClaimMapping(claimMappingList, EMAIL_CLAIM_URI);
 
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
+    }
+
+    public static String getLocationHeader(HttpResponse response) {
+
+        if (response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION) != null) {
+            return response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION).getValue();
+        }
+        return null;
     }
 
     private static void addClaimMapping(List<ClaimMapping> claimMappingList, String emailClaimUri) {
