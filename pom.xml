@@ -1798,7 +1798,7 @@
         <identity.user.account.association.version>5.1.5</identity.user.account.association.version>
         <identity.user.workflow.version>5.1.5</identity.user.workflow.version>
         <identity.user.ws.version>5.1.11</identity.user.ws.version>
-        <identity.userstore.ldap.version>5.1.6</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>5.1.7</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.1.4</identity.userstore.remote.version>
         <identity.workflow.impl.bps.version>5.1.13</identity.workflow.impl.bps.version>
         <identity.carbon.auth.iwa.version>5.1.6</identity.carbon.auth.iwa.version>
