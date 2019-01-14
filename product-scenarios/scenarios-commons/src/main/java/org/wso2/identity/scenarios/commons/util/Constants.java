@@ -68,6 +68,7 @@ public class Constants {
     public static final String SAML_REQUEST_PARAM = "SAMLRequest";
     public static final String SAML_RESPONSE_PARAM = "SAMLResponse";
     public static final String TOCOMMONAUTH = "tocommonauth";
+    public static final String INTROSPECTION_URI = "/oauth2/introspect";
     public static final String COOKIE = "Cookie";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
     public static final String HEADER_USER_AGENT = "User-Agent";
@@ -86,6 +87,8 @@ public class Constants {
             "javax.xml.parsers.DocumentBuilderFactory";
     public static final String XML_DOCUMENT_BUILDER_FACTORY_IMPL =
             "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+    public static final String SCOPE_OPENID = "openid";
+    public static final String TOKEN = "token";
 
     /**
      * SCIM Endpoints.

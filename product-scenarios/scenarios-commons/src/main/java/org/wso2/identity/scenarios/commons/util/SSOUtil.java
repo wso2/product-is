@@ -61,6 +61,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SCOPE;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY_CONSENT;
 import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_USERNAME;
+import static org.wso2.identity.scenarios.commons.util.Constants.TOKEN;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getQueryParams;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getRedirectUrlFromResponse;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
@@ -254,14 +255,14 @@ public class SSOUtil {
      * @throws IOException If error occurs while sending the token request.
      */
     public static HttpResponse sendTokenRequest(HttpClient client, String authzCode, String tokenEndpoint,
-            String clientId, String clientSecret, String redirectUri, String scope, Map<String, String> params)
-            throws IOException {
+            String clientId, String clientSecret, String redirectUri, String grantType, String scope,
+            Map<String, String> params) throws IOException {
 
         Header authzHeader = new BasicHeader(HttpHeaders.AUTHORIZATION,
                 IdentityScenarioUtil.constructBasicAuthzHeader(clientId, clientSecret));
         Header contentTypeHeader = new BasicHeader(CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM);
         List<NameValuePair> requestParams = new ArrayList<>();
-        requestParams.add(new BasicNameValuePair(PARAM_GRANT_TYPE, GRANT_TYPE_AUTHORIZATION_CODE));
+        requestParams.add(new BasicNameValuePair(PARAM_GRANT_TYPE, grantType));
         requestParams.add(new BasicNameValuePair(PARAM_CODE, authzCode));
         requestParams.add(new BasicNameValuePair(PARAM_REDIRECT_URI, redirectUri));
 
@@ -277,6 +278,29 @@ public class SSOUtil {
         return sendPostRequestWithParameters(client, requestParams, tokenEndpoint, new Header[] {
                 authzHeader, contentTypeHeader
         });
+    }
+
+    /**
+     * Sends request to invoke introspection endpoint to validate the access token.
+     *
+     * @param client                HttpClient to be used for request sending.
+     * @param username              Authenticating username.
+     * @param password              Authenticating password.
+     * @param token                 Generated access token
+     * @param introspectionEndpoint Introspection endpoint URL.
+     * @return HttpResponse with the introspection response..
+     * @throws IOException If error occurs while sending the token request.
+     */
+    public static HttpResponse sendTokenValidateRequest(HttpClient client, String username, String password,
+            String token, String introspectionEndpoint) throws IOException {
+
+        Header authzHeader = new BasicHeader(HttpHeaders.AUTHORIZATION,
+                IdentityScenarioUtil.constructBasicAuthzHeader(username, password));
+        Header contentTypeHeader = new BasicHeader(CONTENT_TYPE, CONTENT_TYPE_APPLICATION_FORM);
+        List<NameValuePair> requestParams = new ArrayList<>();
+        requestParams.add(new BasicNameValuePair(TOKEN, token));
+        return sendPostRequestWithParameters(client, requestParams, introspectionEndpoint,
+                new Header[] { authzHeader, contentTypeHeader });
     }
 
     /**
