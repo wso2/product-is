@@ -56,8 +56,8 @@ public class SSOCommonClient {
             ConfigurationContext configContext) throws Exception {
 
         this.identityServerHttpsUrl = identityServerHttpsUrl;
-        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
-                configContext);
+        this.applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie,
+                backendServiceURL, configContext);
     }
 
     public String getCommonauthEndpoint() {

@@ -17,6 +17,16 @@
 package org.wso2.identity.scenarios.commons;
 
 
+import org.json.simple.JSONObject;
+import org.wso2.identity.scenarios.commons.util.Constants;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.wso2.identity.scenarios.commons.util.Constants.MULTI_ATTRIBUTE_SEPARATOR;
+
 public class TestConfig {
 
     public enum ClaimType {
@@ -24,36 +34,61 @@ public class TestConfig {
         LOCAL, CUSTOM, NONE
     }
 
-    public enum User {
+    public static class User {
 
-        SUPER_TENANT_USER("user1name", "user1pass", "carbon.super", "user1name", "user1@test.com", "nickuser1",
-                true),
-        TENANT_USER("user2name", "user2pass", "wso2.com", "user2name", "user2@abc.com", "Nickuser2",
-                true),
-        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("user3", "user3", "carbon.super", "user3", "providedClaimValue",
-                "providedClaimValue", false)
-        ,
-        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("user4", "user4", "wso2.com", "user4", "providedClaimValue",
-                "providedClaimValue", false);
+//        SUPER_TENANT_USER("user1name", "user1pass", "carbon.super", "user1name", "user1@test.com", "nickuser1",
+//                true),
+//        TENANT_USER("user2name", "user2pass", "wso2.com", "user2name", "user2@abc.com", "Nickuser2",
+//                true),
+//        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("user3", "user3", "carbon.super", "user3", "providedClaimValue",
+//                "providedClaimValue", false)
+//        ,
+//        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("user4", "user4", "wso2.com", "user4", "providedClaimValue",
+//                "providedClaimValue", false);
 
         private String username;
         private String password;
         private String tenantDomain;
         private String tenantAwareUsername;
-        private String email;
-        private String nickname;
-        private boolean setUserClaims;
+        private Map<String, String> userClaims;
+        private List<String> roles;
 
-        User(String username, String password, String tenantDomain, String tenantAwareUsername, String email,
-             String nickname, boolean setUserClaims) {
+        public User(String username, String password, String tenantDomain, String tenantAwareUsername, Map<String,
+                String> userClaims, List<String> roles) {
 
             this.username = username;
             this.password = password;
             this.tenantDomain = tenantDomain;
             this.tenantAwareUsername = tenantAwareUsername;
-            this.email = email;
-            this.nickname = nickname;
-            this.setUserClaims = setUserClaims;
+            this.userClaims = userClaims;
+            this.roles = roles;
+        }
+
+        public User(JSONObject userInfo, String tenantDomain) {
+            this.tenantDomain = tenantDomain;
+            populateUserInfo(userInfo);
+            this.tenantAwareUsername = this.username;
+        }
+
+        protected void populateUserInfo(JSONObject userInfo) {
+
+            JSONObject basicUserClaims = (JSONObject) userInfo.get("basic");
+            this.userClaims = new HashMap<>();
+            for (Object key : basicUserClaims.keySet()) {
+                String claimUri = (String)key;
+                String claimValue = basicUserClaims.get(claimUri).toString();
+                if (Constants.ClaimURIs.USER_NAME_CLAIM_URI.equals(claimUri)) {
+                    this.username = claimValue;
+                } else if (Constants.ClaimURIs.ROLE_CLAIM_URI.equals(claimUri)) {
+                    this.roles = Arrays.asList(claimValue.split(MULTI_ATTRIBUTE_SEPARATOR));
+                } else if (Constants.TENANT_DOMAIN.equals(claimUri)) {
+                    this.tenantDomain = claimValue;
+                } else if (Constants.PASSWORD.equals(claimUri)) {
+                    this.password = claimValue;
+                } else {
+                    this.userClaims.put(claimUri, claimValue);
+                }
+            }
         }
 
         public String getUsername() {
@@ -76,19 +111,24 @@ public class TestConfig {
             return tenantAwareUsername;
         }
 
-        public String getEmail() {
-
-            return email;
+        public Map<String, String> getUserClaims() {
+            return userClaims;
         }
 
-        public String getNickname() {
-
-            return nickname;
+        public void setUserClaims(Map<String, String> userClaims) {
+            this.userClaims = userClaims;
         }
 
-        public boolean getSetUserClaims() {
+        public String getUserClaim(String claimURi) {
+            return userClaims.get(claimURi);
+        }
 
-            return setUserClaims;
+        public List<String> getRoles() {
+            return roles;
+        }
+
+        public void setRoles(List<String> roles) {
+            this.roles = roles;
         }
     }
 

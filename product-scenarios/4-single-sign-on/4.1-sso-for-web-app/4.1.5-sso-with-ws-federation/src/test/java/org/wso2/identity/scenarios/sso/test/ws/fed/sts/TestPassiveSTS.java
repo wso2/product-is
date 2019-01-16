@@ -52,11 +52,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.COMMONAUTH_URI_CONTEXT;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractFullContentFromResponse;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getCookieFromResponse;
+import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getTestUser;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsentRequested;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.getClaimMappings;
@@ -101,9 +103,10 @@ public class TestPassiveSTS extends ScenarioTestBase {
     }
 
     @DataProvider(name = "stsConfigProvider")
-    public static TestConfig[][] samlConfigProvider() {
+    public static TestConfig[][] samlConfigProvider() throws Exception {
         return new TestConfig[][]{
-                {new TestConfig(TestUserMode.SUPER_TENANT_USER, User.SUPER_TENANT_USER, ClaimType.NONE)}
+                {new TestConfig(TestUserMode.SUPER_TENANT_USER, new TestConfig.User(getTestUser("super-tenant-user" +
+                        ".json"), SUPER_TENANT_DOMAIN_NAME), ClaimType.NONE)}
         };
     }
 
@@ -247,7 +250,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         Assert.assertTrue(resultPage.contains(username), "Claim value givenname is expected for: " + this.config);
 
         Assert.assertTrue(resultPage.contains(EMAIL_CLAIM_URI), "Claim email is expected for: " + this.config);
-        Assert.assertTrue(resultPage.contains(this.config.getUser().getEmail()), "Claim value email is expected for:" +
+        Assert.assertTrue(resultPage.contains(this.config.getUser().getUserClaim(EMAIL_CLAIM_URI)), "Claim value email is expected for:" +
                 " " + this.config);
     }
 
