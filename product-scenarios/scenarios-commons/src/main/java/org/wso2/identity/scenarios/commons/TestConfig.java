@@ -36,16 +36,6 @@ public class TestConfig {
 
     public static class User {
 
-//        SUPER_TENANT_USER("user1name", "user1pass", "carbon.super", "user1name", "user1@test.com", "nickuser1",
-//                true),
-//        TENANT_USER("user2name", "user2pass", "wso2.com", "user2name", "user2@abc.com", "Nickuser2",
-//                true),
-//        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("user3", "user3", "carbon.super", "user3", "providedClaimValue",
-//                "providedClaimValue", false)
-//        ,
-//        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("user4", "user4", "wso2.com", "user4", "providedClaimValue",
-//                "providedClaimValue", false);
-
         private String username;
         private String password;
         private String tenantDomain;

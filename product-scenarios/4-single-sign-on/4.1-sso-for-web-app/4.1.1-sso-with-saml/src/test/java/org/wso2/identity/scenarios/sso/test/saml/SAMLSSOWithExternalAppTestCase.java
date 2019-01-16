@@ -50,6 +50,7 @@ import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENA
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.DEFAULT_PROFILE_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.HttpBinding.HTTP_POST;
 import static org.wso2.identity.scenarios.commons.util.Constants.HttpBinding.HTTP_REDIRECT;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_REQUEST_PARAM;
@@ -61,8 +62,6 @@ import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getSessio
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getTestUser;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsentRequested;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
-import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractSAMLRequest;
-import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.extractSAMLResponse;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.sendLoginPostMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendPOSTConsentMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectRequest;
@@ -80,7 +79,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     private SAMLConfig config;
     private Header userAgentHeader;
 
-    private SAMLSSOExternalAppTestClient abstractSAMLSSOTestCase;
+    private SAMLSSOExternalAppTestClient samlssoExternalAppClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private CloseableHttpClient httpClient;
 
@@ -100,27 +99,35 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
         super.init();
         loginAndObtainSessionCookie();
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
-        abstractSAMLSSOTestCase = new SAMLSSOExternalAppTestClient(backendURL, sessionCookie, backendServiceURL,
+        samlssoExternalAppClient = new SAMLSSOExternalAppTestClient(backendURL, sessionCookie, backendServiceURL,
                 webAppHost, configContext, config);
 
-        super.createUser(config, remoteUSMServiceClient, "default");
-        abstractSAMLSSOTestCase.createApplication(config, APPLICATION_NAME);
+        populateTestData();
 
+    }
+
+    private void populateTestData() throws Exception {
+        super.createUser(config, remoteUSMServiceClient, DEFAULT_PROFILE_NAME);
+        samlssoExternalAppClient.createApplication(config, APPLICATION_NAME);
+    }
+
+    private void cleanUpTestData() throws Exception {
+        super.deleteUser(config, remoteUSMServiceClient);
+        samlssoExternalAppClient.deleteApplication(APPLICATION_NAME);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
-        super.deleteUser(config, remoteUSMServiceClient);
-        abstractSAMLSSOTestCase.deleteApplication(APPLICATION_NAME);
-        abstractSAMLSSOTestCase.clear();
+        cleanUpTestData();
+        samlssoExternalAppClient.clear();
     }
 
     @Test(description = "4.1.1.1", priority = 1)
     public void testAddSP() throws Exception {
-        Boolean isAddSuccess = abstractSAMLSSOTestCase.createSAMLconfigForServiceProvider();
+        Boolean isAddSuccess = samlssoExternalAppClient.createSAMLconfigForServiceProvider();
         assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
 
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTOs = abstractSAMLSSOTestCase
+        SAMLSSOServiceProviderDTO samlssoServiceProviderDTOs = samlssoExternalAppClient
                 .getSAMLSSOServiceProviderByIssuer(config.getArtifact());
         Assert.assertNotNull(samlssoServiceProviderDTOs, "Adding a service provider has failed for " + config);
     }
@@ -128,7 +135,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     @Test(description = "4.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
     public void testRemoveSP()
             throws Exception {
-        Boolean isAddSuccess = abstractSAMLSSOTestCase.removeServiceProvider(config);
+        Boolean isAddSuccess = samlssoExternalAppClient.removeServiceProvider(config);
         assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
 
@@ -138,12 +145,12 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
 
             CloseableHttpClient client = HttpClients.createDefault();
             HttpResponse response;
-            response = sendGetRequest(client, abstractSAMLSSOTestCase.getSamlAppIndexUrl(), null, new
+            response = sendGetRequest(client, samlssoExternalAppClient.getSamlAppIndexUrl(), null, new
                     Header[]{userAgentHeader});
-            String samlResponse = extractSAMLResponse(response);
+            String samlResponse = samlssoExternalAppClient.extractSAMLResponse(response);
             assertNotNull(samlResponse, "SAMLResponse is not recived in Passive Login.");
             samlResponse = IdentityScenarioUtil.bese64Decode(samlResponse);
-            assertTrue(samlResponse.contains("Destination=\"" + abstractSAMLSSOTestCase.getAcsUrl() + "\""));
+            assertTrue(samlResponse.contains("Destination=\"" + samlssoExternalAppClient.getAcsUrl() + "\""));
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
@@ -155,24 +162,24 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
         try {
             HttpResponse response;
 
-            response = sendGetRequest(httpClient, abstractSAMLSSOTestCase.getSamlSSOLoginUrl(), null, new
+            response = sendGetRequest(httpClient, samlssoExternalAppClient.getSamlSSOLoginUrl(), null, new
                     Header[]{userAgentHeader});
 
             if (HTTP_POST.equals(config.getHttpBinding())) {
-                String samlRequest = extractSAMLRequest(response);
+                String samlRequest = samlssoExternalAppClient.extractSAMLRequest(response);
                 assertNotNull(samlRequest, "SAML Request is not available");
-                response = abstractSAMLSSOTestCase.sendSAMLMessage(abstractSAMLSSOTestCase.getSamlSSOIDPUrl(),
+                response = samlssoExternalAppClient.sendSAMLMessage(samlssoExternalAppClient.getSamlSSOIDPUrl(),
                         SAML_REQUEST_PARAM, samlRequest, config, httpClient);
                 EntityUtils.consume(response.getEntity());
 
-                response = sendRedirectRequest(response, USER_AGENT, abstractSAMLSSOTestCase.getAcsUrl(),
+                response = sendRedirectRequest(response, USER_AGENT, samlssoExternalAppClient.getAcsUrl(),
                         httpClient);
             }
 
             String sessionKey = getSessionDataKey(response);
             assertNotNull(sessionKey, "SessionDataKey is not available in the response.");
-            response = sendLoginPostMessage(sessionKey, abstractSAMLSSOTestCase.getSamlSSOIDPUrl(), USER_AGENT,
-                    abstractSAMLSSOTestCase.getAcsUrl(), config.getUser().getUsername(), config.getUser().getPassword(),
+            response = sendLoginPostMessage(sessionKey, samlssoExternalAppClient.getSamlSSOIDPUrl(), USER_AGENT,
+                    samlssoExternalAppClient.getAcsUrl(), config.getUser().getUsername(), config.getUser().getPassword(),
                     httpClient);
 
             if (isConsentRequested(response)) {
@@ -180,20 +187,20 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
                 assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
 
-                response = sendPOSTConsentMessage(response, abstractSAMLSSOTestCase.getCommonAuthUrl(), USER_AGENT,
-                        abstractSAMLSSOTestCase.getAcsUrl(), httpClient, pastrCookie);
+                response = sendPOSTConsentMessage(response, samlssoExternalAppClient.getCommonAuthUrl(), USER_AGENT,
+                        samlssoExternalAppClient.getAcsUrl(), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
             String redirectUrl = getRedirectUrlFromResponse(response);
             if (StringUtils.isNotBlank(redirectUrl)) {
-                response = sendRedirectRequest(response, USER_AGENT, abstractSAMLSSOTestCase.getAcsUrl(),
+                response = sendRedirectRequest(response, USER_AGENT, samlssoExternalAppClient.getAcsUrl(),
                         httpClient);
             }
-            String samlResponse = extractSAMLResponse(response);
+            String samlResponse = samlssoExternalAppClient.extractSAMLResponse(response);
             EntityUtils.consume(response.getEntity());
 
-            response = abstractSAMLSSOTestCase.sendSAMLMessage(abstractSAMLSSOTestCase.getAcsUrl(),
+            response = samlssoExternalAppClient.sendSAMLMessage(samlssoExternalAppClient.getAcsUrl(),
                     SAML_RESPONSE_PARAM, samlResponse, config, httpClient);
             String resultPage = extractFullContentFromResponse(response);
 
